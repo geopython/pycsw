@@ -1,0 +1,125 @@
+<csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:py="http://genshi.edgewall.org/" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <py:if test="si">
+  <ows:ServiceIdentification>
+    <ows:Title>${config['identification']['title']}</ows:Title>
+    <ows:Abstract>${config['identification']['abstract']}</ows:Abstract>
+    <ows:Keywords>
+      <py:for each="keyword in config['identification']['keywords'].split(',')">
+      <ows:Keyword>${keyword}</ows:Keyword>
+      </py:for>
+    </ows:Keywords>
+    <ows:ServiceType codeSpace="OGC">CSW</ows:ServiceType>
+    <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
+    <ows:Fees>${config['identification']['fees']}</ows:Fees>
+    <ows:AccessConstraints>${config['identification']['accessconstraints']}</ows:AccessConstraints>
+  </ows:ServiceIdentification>
+  </py:if>
+  <py:if test="sp">
+  <ows:ServiceProvider>
+    <ows:ProviderName>${config['provider']['name']}</ows:ProviderName>
+    <ows:ProviderSite xlink:type="simple" xlink:href="${config['provider']['url']}"/>
+    <ows:ServiceContact>
+      <ows:IndividualName>${config['contact']['name']}</ows:IndividualName>
+      <ows:PositionName>${config['contact']['position']}</ows:PositionName>
+      <ows:ContactInfo>
+        <ows:Phone>
+          <ows:Voice>${config['contact']['phone']}</ows:Voice>
+          <ows:Facsimile>${config['contact']['fax']}</ows:Facsimile>
+        </ows:Phone>
+        <ows:Address>
+          <ows:DeliveryPoint>${config['contact']['address']}</ows:DeliveryPoint>
+          <ows:City>${config['contact']['city']}</ows:City>
+          <ows:AdministrativeArea>${config['contact']['stateorprovince']}</ows:AdministrativeArea>
+          <ows:PostalCode>${config['contact']['postalcode']}</ows:PostalCode>
+          <ows:Country>${config['contact']['country']}</ows:Country>
+          <ows:ElectronicMailAddress>${config['contact']['email']}</ows:ElectronicMailAddress>
+        </ows:Address>
+        <ows:OnlineResource xlink:type="simple" xlink:href="${config['contact']['url']}"/>
+        <ows:HoursOfService>${config['contact']['hours']}</ows:HoursOfService>
+        <ows:ContactInstructions>${config['contact']['contactinstructions']}</ows:ContactInstructions>
+      </ows:ContactInfo>
+      <ows:Role>${config['contact']['role']}</ows:Role>
+    </ows:ServiceContact>
+  </ows:ServiceProvider>
+  </py:if>
+  <py:if test="om">
+  <ows:OperationsMetadata>
+    <py:for each="o in model['operations'].keys()">
+    <ows:Operation name="${o}">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:href="${config['server']['baseurl']}"/>
+          <ows:Post xlink:href="${config['server']['baseurl']}"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <py:for each="p in model['operations'][o]['parameters']">
+        <ows:Parameter name="${p}">
+          <py:for each="v in model['operations'][o]['parameters'][p]['values']">
+            <ows:Value>${v}</ows:Value>
+          </py:for>
+        </ows:Parameter>
+      </py:for>
+    </ows:Operation>
+    </py:for>
+
+    <py:for each="n in model['parameters'].keys()">
+    <ows:Parameter name="${n}">
+      <py:for each="v in model['parameters'][n]['values']">
+        <ows:Value>${v}</ows:Value>
+      </py:for>
+    </ows:Parameter>
+    </py:for>
+
+    <py:for each="n in model['constraints'].keys()">
+     <ows:Constraint name="${n}">
+       <py:for each="v in model['constraints'][n]['values']">
+           <ows:Value>${v}</ows:Value>
+       </py:for>
+     </ows:Constraint>
+    </py:for>
+  </ows:OperationsMetadata>
+  </py:if>
+  <ogc:Filter_Capabilities>
+    <ogc:Spatial_Capabilities>
+      <ogc:GeometryOperands>
+        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+        <ogc:GeometryOperand>gml:Point</ogc:GeometryOperand>
+        <ogc:GeometryOperand>gml:LineString</ogc:GeometryOperand>
+        <ogc:GeometryOperand>gml:Polygon</ogc:GeometryOperand>
+      </ogc:GeometryOperands>
+      <ogc:SpatialOperators>
+        <ogc:SpatialOperator name="BBOX"/>
+        <ogc:SpatialOperator name="Equals"/>
+        <ogc:SpatialOperator name="Overlaps"/>
+        <ogc:SpatialOperator name="Disjoint"/>
+        <ogc:SpatialOperator name="Intersects"/>
+        <ogc:SpatialOperator name="Touches"/>
+        <ogc:SpatialOperator name="Crosses"/>
+        <ogc:SpatialOperator name="Within"/>
+        <ogc:SpatialOperator name="Contains"/>
+        <!--
+                <ogc:SpatialOperator name="Beyond"/>
+                <ogc:SpatialOperator name="DWithin"/>
+                 The 'SpatialOperator' element can have a GeometryOperands child -->
+      </ogc:SpatialOperators>
+    </ogc:Spatial_Capabilities>
+    <ogc:Scalar_Capabilities>
+      <ogc:LogicalOperators/>
+      <ogc:ComparisonOperators>
+        <ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>
+      </ogc:ComparisonOperators>
+    </ogc:Scalar_Capabilities>
+    <ogc:Id_Capabilities>
+      <ogc:EID/>
+      <ogc:FID/>
+    </ogc:Id_Capabilities>
+  </ogc:Filter_Capabilities>
+</csw:Capabilities>
