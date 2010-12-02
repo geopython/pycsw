@@ -1,0 +1,5 @@
+<ows:ExceptionReport xmlns:py="http://genshi.edgewall.org/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ows="http://www.opengis.net/ows" version="$version" language="$language" xsi:schemaLocation="http://www.opengis.net/ows http://schemas.opengis.net/ows/1.0.0/owsExceptionReport.xsd">
+  <ows:Exception exceptionCode="$code" locator="$locator">
+    <ows:ExceptionText>$text</ows:ExceptionText>
+  </ows:Exception>
+</ows:ExceptionReport>
