@@ -69,16 +69,19 @@ The pycsw source code is available at svn co https://pycsw.svn.sourceforge.net/s
 You can find out about software metrics at the pycsw ohloh page at http://www.ohloh.net/p/pycsw
 
 Configuration
--------------
+=============
 
 
 Testing
--------
+=======
+
+OGC CITE
+--------
 
 Support
 =======
 
-The pycsw mailing list is the primary means for users and developers to exchange ideas, discuss improvements, and ask questions.  To subscribe, visit https://lists.sourceforge.net/lists/listinfo/pycsw-devel
+The pycsw mailing list is the primary means for users and developers to exchange ideas, discuss improvements, and ask questions.  To subscribe, visit https://lists.sourceforge.net/lists/listinfo/pycsw-devel.
 
 License
 =======

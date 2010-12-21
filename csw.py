@@ -42,8 +42,4 @@ csw = server.Csw('./default.cfg')
 
 csw.dispatch()
 
-# output response
-print 'Content-type:%s\n' % csw.config['server']['mimetype']
-print '<?xml version="1.0" encoding="%s" standalone="no"?>' % \
-    csw.config['server']['encoding']
 print csw.response
