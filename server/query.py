@@ -30,38 +30,24 @@
 #
 # =================================================================
 
-def get_version_integer(version):
-    if version is not None:  # split and make integer
-        a = version.split('.')
-        if len(a) != 3:
-            return -1
-        try:
-            return int(a[0]) * 10000 + int(a[1]) * 100 + int(a[2])
-        except:
-            return -1
-    else:  # not a valid version string
-         return -1
+from sqlalchemy import *
+from sqlalchemy.orm import *
 
-def nspath(path, ns='http://www.opengis.net/cat/csw/2.0.2'):
+class dsc(object):
+    pass
 
-    """
+class Query(object):
+    def __init__(self, db):
+        db = create_engine('sqlite:///%s' % db, echo=False)
 
-    Prefix the given path with the given namespace identifier.
-    
-    Parameters
-    ----------
-
-    - path: ElementTree API Compatible path expression
-    - ns: the XML namespace URI.
-
-    """
-
-    if ns is None or path is None:
-        return -1
-
-    components = []
-    for component in path.split('/'):
-        if component != '*':
-            component = '{%s}%s' % (ns, component)
-        components.append(component)
-    return '/'.join(components)
+        dst = Table('dataset', MetaData(db), autoload=True)
+       
+        mapper(dsc,dst)
+        
+        self.session=create_session()
+       
+    def get(self,ids=None): 
+        if ids is not None:
+            return self.session.query(dsc).filter(dsc.identifier.in_(ids)).all()
+        else:
+            return self.session.query(dsc).all()
