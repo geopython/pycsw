@@ -65,3 +65,42 @@ def nspath(path, ns='http://www.opengis.net/cat/csw/2.0.2'):
             component = '{%s}%s' % (ns, component)
         components.append(component)
     return '/'.join(components)
+
+def bbox2polygon(bbox):
+    # like '-180,-90,180,90'
+    minx,miny,maxx,maxy=bbox.split(',')
+    poly = []
+    poly.append((float(minx),float(miny)))
+    poly.append((float(minx),float(maxy)))
+    poly.append((float(maxx),float(maxy)))
+    poly.append((float(maxx),float(miny)))
+    return poly
+
+def point_inside_polygon(x,y,poly):
+    # from http://www.ariel.com.au/a/python-point-int-poly.html
+    n = len(poly)
+    inside =False
+
+    p1x,p1y = poly[0]
+    for i in range(n+1):
+        p2x,p2y = poly[i % n]
+        if y > min(p1y,p2y):
+            if y <= max(p1y,p2y):
+                if x <= max(p1x,p2x):
+                    if p1y != p2y:
+                        xinters = (y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x
+                    if p1x == p2x or x <= xinters:
+                        inside = not inside
+        p1x,p1y = p2x,p2y
+
+    return inside
+
+def bbox_query(bbox_data,bbox_input):
+    b1 = bbox2polygon(bbox_data)
+    b2 = bbox2polygon(bbox_input)
+
+    # check if any points of the dataset bbox are inside the query bbox
+    for xy in b1:  # each pair
+        if point_inside_polygon(xy[0],xy[1],b2):  # match, return true right away
+            return 'true'
+    return 'false'
