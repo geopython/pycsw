@@ -32,6 +32,24 @@
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
+import logging
+import util
+
+#logging.basicConfig(filename='/tmp/f.txt',level=logging.DEBUG)
+#logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+#logging.getLogger('sqlalchemy.orm.unitofwork').setLevel(logging.DEBUG)
+
+
+mappings = {
+    'dc:identifier': 'dataset_identifier',
+    'dc:title': 'dataset_title',
+    'dct:abstract': 'dataset_abstract',
+    'dc:type': 'dataset_type',
+    'dc:format': 'dataset_format',
+    'dc:date': 'dataset_date',
+    'dc:relation': 'dataset_relation',
+    'csw:AnyText': 'dataset_metadata'
+}
 
 class dsc(object):
     pass
@@ -45,9 +63,21 @@ class Query(object):
         mapper(dsc,dst)
         
         self.session=create_session()
+        self.connection = db.raw_connection()
+        self.connection.create_function('bbox_query',2,util.bbox_query)
        
-    def get(self,ids=None): 
-        if ids is not None:
-            return self.session.query(dsc).filter(dsc.identifier.in_(ids)).all()
-        else:
-            return self.session.query(dsc).all()
+    def get(self,filter=None,ids=None,sortby=None):
+        if ids is not None:  # it's a GetRecordById request
+            q = self.session.query(dsc).filter(dsc.identifier.in_(ids))
+        elif filter is not None:  # it's a GetRecords with filter
+            q = self.session.query(dsc).filter(filter.where)
+        elif filter is None:  # it's a GetRecords sans filter
+            q = self.session.query(dsc)
+
+        if sortby is not None:
+            if sortby['order'] == 'DESC':
+                return q.order_by(desc(mappings[sortby['propertyname']])).all()
+            else: 
+                return q.order_by(mappings[sortby['propertyname']]).all()
+
+        return q.all()

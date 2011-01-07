@@ -36,7 +36,7 @@ import time
 import ConfigParser
 import sqlite3
 from lxml import etree
-import query, util
+import filter, query, util
 
 namespaces = {
     None : 'http://www.opengis.net/cat/csw/2.0.2',
@@ -134,59 +134,67 @@ class Csw(object):
     
         if cgifs.file:  # it's a POST request
             postdata = cgifs.file.read()
+            self.request = postdata
             self.kvp = self.parse_postdata(postdata)
+            if isinstance(self.kvp, str) is True:  # it's an exception
+                error = 1
+                locator = 'service'
+                code = 'InvalidRequest'
+                text = self.kvp
     
         else:  # it's a GET request
             self.kvp = {}
+            self.request = os.environ['HTTP_HOST'] + '?' + os.environ['REQUEST_URI']
             for key in cgifs.keys():
                 self.kvp[key.lower()] = cgifs[key].value
-    
-        # test for the basic keyword values (service, version, request)
-        for k in ['service', 'version', 'request']:
-            if self.kvp.has_key(k) == False:
-                if k == 'version' and self.kvp.has_key('request') and self.kvp['request'] == 'GetCapabilities':
-                    pass
-                else:
-                    error   = 1
-                    locator = k
-                    code = 'MissingParameterValue'
-                    text = 'Missing keyword: %s' % k
-                    break
-    
-        # test each of the basic keyword values
+
         if error == 0:
-            # test service
-            if self.kvp['service'] != 'CSW':
-                error = 1
-                locator = 'service'
-                code = 'InvalidParameterValue'
-                text = 'Invalid value for service: %s.  Value MUST be CSW' % self.kvp['service']
-    
-            # test version
-            if self.kvp.has_key('version') and util.get_version_integer(self.kvp['version']) != \
-                util.get_version_integer('2.0.2') and self.kvp['request'] != 'GetCapabilities':
-                error = 1
-                locator = 'version'
-                code = 'InvalidParameterValue'
-                text = 'Invalid value for version: %s.  Value MUST be 2.0.2' % self.kvp['version']
-    
-            # check for GetCapabilities acceptversions
-            if self.kvp.has_key('acceptversions'):
-                for v in self.kvp['acceptversions'].split(','):
-                    if util.get_version_integer(v) == util.get_version_integer('2.0.2'):
-                        break
+            # test for the basic keyword values (service, version, request)
+            for k in ['service', 'version', 'request']:
+                if self.kvp.has_key(k) == False:
+                    if k == 'version' and self.kvp.has_key('request') and self.kvp['request'] == 'GetCapabilities':
+                        pass
                     else:
-                        error = 1
-                        locator = 'acceptversions'
-                        code = 'VersionNegotiationFailed'
-                        text = 'Invalid parameter value in acceptversions: %s.  Value MUST be 2.0.2' % self.kvp['acceptversions']
-    
-            # test request
-            if self.kvp['request'] not in self.model['operations'].keys():
-                error = 1
-                locator = 'request'
-                code = 'InvalidParameterValue'
-                text = 'Invalid value for request: %s' % self.kvp['request']
+                        error   = 1
+                        locator = k
+                        code = 'MissingParameterValue'
+                        text = 'Missing keyword: %s' % k
+                        break
+        
+            # test each of the basic keyword values
+            if error == 0:
+                # test service
+                if self.kvp['service'] != 'CSW':
+                    error = 1
+                    locator = 'service'
+                    code = 'InvalidParameterValue'
+                    text = 'Invalid value for service: %s.  Value MUST be CSW' % self.kvp['service']
+        
+                # test version
+                if self.kvp.has_key('version') and util.get_version_integer(self.kvp['version']) != \
+                    util.get_version_integer('2.0.2') and self.kvp['request'] != 'GetCapabilities':
+                    error = 1
+                    locator = 'version'
+                    code = 'InvalidParameterValue'
+                    text = 'Invalid value for version: %s.  Value MUST be 2.0.2' % self.kvp['version']
+        
+                # check for GetCapabilities acceptversions
+                if self.kvp.has_key('acceptversions'):
+                    for v in self.kvp['acceptversions'].split(','):
+                        if util.get_version_integer(v) == util.get_version_integer('2.0.2'):
+                            break
+                        else:
+                            error = 1
+                            locator = 'acceptversions'
+                            code = 'VersionNegotiationFailed'
+                            text = 'Invalid parameter value in acceptversions: %s.  Value MUST be 2.0.2' % self.kvp['acceptversions']
+        
+                # test request
+                if self.kvp['request'] not in self.model['operations'].keys():
+                    error = 1
+                    locator = 'request'
+                    code = 'InvalidParameterValue'
+                    text = 'Invalid value for request: %s' % self.kvp['request']
     
     
         if error == 1:  # return an ExceptionReport
@@ -320,7 +328,7 @@ class Csw(object):
     
         co = etree.SubElement(sc, util.nspath('ComparisonOperators', namespaces['ogc']))
 
-        for c in ['LessThan','GreaterThan','LessThanEqualTo','GreaterThanEqualTo','EqualTo','NotEqualTo','Like','Between','NullCheck']:
+        for c in ['LessThan','GreaterThan','LessThanEqualTo','GreaterThanEqualTo','EqualTo','NotEqualTo','Like','Between']:
             etree.SubElement(co, util.nspath('ComparisonOperator', namespaces['ogc'])).text = c
 
         ic = etree.SubElement(fi, util.nspath('Id_Capabilities', namespaces['ogc']))
@@ -374,42 +382,98 @@ class Csw(object):
 
         timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
 
+        if self.kvp['outputschema'] not in self.model['constraints']['outputSchema']['values']:
+            return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputSchema parameter value: %s' % self.kvp['outputschema'])
+
+        if self.kvp['outputformat'] not in self.model['constraints']['outputFormat']['values']:
+            return self.exceptionreport('InvalidParameterValue', 'outputformat', 'Invalid outputFormat parameter value: %s' % self.kvp['outputformat'])
+
+        if self.kvp['resulttype'] not in self.model['operations']['GetRecords']['parameters']['resultType']['values']:
+            return self.exceptionreport('InvalidParameterValue', 'resulttype', 'Invalid resultType parameter value: %s' % self.kvp['resulttype'])
+
         if self.kvp.has_key('elementsetname') is False:
             return self.exceptionreport('MissingParameterValue', 'elementsetname', 'Missing ElementSetName parameter')
 
+        #if self.kvp['filter'] is None:
+        #    return self.exceptionreport('InvalidParameterValue', 'filter', 'Invalid Filter request: %s' % self.request)
+
+        #if self.kvp['elementsetname'] in ['brief','summary']:
+        #    return self.exceptionreport('InvalidParameterValue', 'elementsetname', 'Invalid ElementSetName parameter: %s' % self.kvp['elementsetname'])
+
+        if self.kvp['resulttype'] == 'validate':
+            node = etree.Element(util.nspath('Acknowledgement', namespaces['csw']), nsmap=namespaces, timeStamp=timestamp)
+            node.attrib['{'+namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % namespaces['csw']
+
+            node1 = etree.SubElement(node, util.nspath('EchoedRequest', namespaces['csw']))
+            node1.append(etree.fromstring(self.request))
+
+            return etree.tostring(node,pretty_print=True)
+        
         esn = self.kvp['elementsetname']
 
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
 
         q = query.Query(self.config['server']['data'])
-        results = q.get()
+        results = q.get(self.kvp['filter'], sortby=self.kvp['sortby'])
+
+        if results is None:
+            matched = '0'
+            returned = '0'
+            next = '0'
+
+        else:
+            matched = str(len(results))
+            if int(matched) < int(self.kvp['maxrecords']):
+                returned = str(int(matched))
+                next = '0'
+            else:
+                returned = str(self.kvp['maxrecords'])
+                next = str(int(self.kvp['startposition'])+int(self.kvp['maxrecords']))
+            if int(self.kvp['maxrecords']) == 0:
+                next = '1'
 
         node = etree.Element(util.nspath('GetRecordsResponse', namespaces['csw']), nsmap=namespaces, version='2.0.2')
         node.attrib['{'+namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % namespaces['csw']
 
         etree.SubElement(node, util.nspath('SearchStatus', namespaces['csw']), timestamp=timestamp)
 
-        sr = etree.SubElement(node, util.nspath('SearchResults', namespaces['csw']), numberOfRecordsMatched=str(len(results)), numberOfRecordsReturned=str(self.kvp['maxrecords']), nextRecord=str(int(self.kvp['maxrecords'])+1))
+        sr = etree.SubElement(node, util.nspath('SearchResults', namespaces['csw']), numberOfRecordsMatched=matched, numberOfRecordsReturned=returned, nextRecord=next)
 
-        for r in results[0:int(self.kvp['maxrecords'])]:
-            if esn == 'brief':
-                el = 'BriefRecord'
-            elif esn == 'summary':
-                el = 'SummaryRecord'
-            else:
-                el = 'Record'
+        max = int(self.kvp['startposition']) + int(self.kvp['maxrecords'])
 
-            record = etree.SubElement(sr, util.nspath(el, namespaces['csw']))
-
-            if self.kvp.has_key('elementname') is True and len(self.kvp['elementname']) > 0:
-                for e in self.kvp['elementname']:
-                    ns,el, = e.split(':')
-                    etree.SubElement(record, util.nspath(el, namespaces[ns])).text=eval('r.%s'%el)
-            elif self.kvp.has_key('elementsetname') is True:
-                etree.SubElement(record, util.nspath('identifier', namespaces['dc'])).text=r.identifier
-                etree.SubElement(record, util.nspath('title', namespaces['dc'])).text=r.title
-                etree.SubElement(record, util.nspath('type', namespaces['dc'])).text=r.type
+        if results is not None:
+            for r in results[int(self.kvp['startposition']):max]:
+            #for r in results:
+                if esn == 'brief':
+                    el = 'BriefRecord'
+                elif esn == 'summary':
+                    el = 'SummaryRecord'
+                else:
+                    el = 'Record'
+    
+                record = etree.SubElement(sr, util.nspath(el, namespaces['csw']))
+    
+                if self.kvp.has_key('elementname') is True and len(self.kvp['elementname']) > 0:
+                    for e in self.kvp['elementname']:
+                        ns,el, = e.split(':')
+                        if el == 'BoundingBox':
+                            bbox = r.bbox.split(',')
+                            b = etree.SubElement(record, util.nspath('BoundingBox', namespaces['ows']), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
+                            etree.SubElement(b, util.nspath('LowerCorner', namespaces['ows'])).text = '%s %s' % (bbox[0],bbox[1])
+                            etree.SubElement(b, util.nspath('UpperCorner', namespaces['ows'])).text = '%s %s' % (bbox[2],bbox[3])
+ 
+                        else:
+                            if eval('r.%s'%el) != 'None':
+                                etree.SubElement(record, util.nspath(el, namespaces[ns])).text=eval('r.%s'%el)
+                elif self.kvp.has_key('elementsetname') is True:
+                    etree.SubElement(record, util.nspath('identifier', namespaces['dc'])).text=r.identifier
+                    etree.SubElement(record, util.nspath('title', namespaces['dc'])).text=r.title
+                    etree.SubElement(record, util.nspath('type', namespaces['dc'])).text=r.type
+                    if self.kvp['elementsetname'] == 'full':
+                        etree.SubElement(record, util.nspath('date', namespaces['dc'])).text=r.date
+                    if self.kvp['elementsetname'] == 'summary':
+                        etree.SubElement(record, util.nspath('format', namespaces['dc'])).text=r.format
 
         return etree.tostring(node, pretty_print=True)
 
@@ -427,7 +491,6 @@ class Csw(object):
 
         if self.kvp.has_key('outputschema') and self.kvp['outputschema'] not in self.model['constraints']['outputSchema']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputschema parameter %s' % self.kvp['outputschema'])
-
 
         if self.kvp.has_key('elementsetname') is False:
             esn = 'summary'
@@ -477,7 +540,11 @@ class Csw(object):
 
     def parse_postdata(self,postdata):
         request = {}
-        doc = etree.fromstring(postdata)
+        try:
+            doc = etree.fromstring(postdata)
+        except Exception, err:
+            return str(err)
+
         request['request'] = doc.tag.split('}')[1]
         tmp = doc.find('./').attrib.get('service')
         if tmp is not None:
@@ -496,7 +563,7 @@ class Csw(object):
         # DescribeRecord
         if request['request'] == 'DescribeRecord':
             request['typename'] = []
-            for d in doc.findall('{http://www.opengis.net/cat/csw/2.0.2}TypeName'):
+            for d in doc.findall(util.nspath('TypeName', namespaces['csw'])):
                 request['typename'].append(d.text)
     
             tmp = doc.find('./').attrib.get('schemaLanguage')
@@ -513,15 +580,21 @@ class Csw(object):
             if tmp is not None:
                 request['outputschema'] = tmp
             else:
-                request['outputschema'] = 'http://www.opengis.net/cat/csw/2.0.2'
-            tmp = doc.find('./').attrib.get('outputFormat')
+                request['outputschema'] = namespaces['csw']
 
+            tmp = doc.find('./').attrib.get('resultType')
+            if tmp is not None:
+                request['resulttype'] = tmp
+            else:
+                request['resulttype'] = 'results'
+
+            tmp = doc.find('./').attrib.get('outputFormat')
             if tmp is not None:
                 request['outputformat'] = tmp
             else:
                 request['outputformat'] = 'application/xml'
 
-            tmp = doc.find('./').attrib.get('startposition')
+            tmp = doc.find('./').attrib.get('startPosition')
             if tmp is not None:
                 request['startposition'] = tmp
             else:
@@ -533,8 +606,8 @@ class Csw(object):
             else:
                 request['maxrecords'] = self.config['server']['maxrecords']
 
-            client_mr = request['maxrecords']
-            server_mr = self.config['server']['maxrecords']
+            client_mr = int(request['maxrecords'])
+            server_mr = int(self.config['server']['maxrecords'])
 
             if client_mr < server_mr:
                 request['maxrecords'] = client_mr
@@ -551,6 +624,34 @@ class Csw(object):
             for e in doc.findall('{http://www.opengis.net/cat/csw/2.0.2}Query/{http://www.opengis.net/cat/csw/2.0.2}ElementName'):
                 request['elementname'].append(e.text)
 
+            if doc.find(util.nspath('Query/Constraint', namespaces['csw'])):
+                tmp = doc.find(util.nspath('Query/Constraint', namespaces['csw'])+'/'+ util.nspath('Filter', namespaces['ogc']))
+                if tmp is not None:
+                    try:
+                        request['filter'] = filter.Filter(tmp)
+                    except Exception, err:
+                        return 'Invalid Filter request2: %s' % err
+                else:
+                    try:
+                        t=tmp.tag
+                    except Exception, err:
+                        return 'Invalid Filter request declaration'
+            else:
+                request['filter'] = None  
+
+            tmp = doc.find('{http://www.opengis.net/cat/csw/2.0.2}Query/{http://www.opengis.net/ogc}SortBy')
+            if tmp is not None:
+                request['sortby'] = {}
+                request['sortby']['propertyname'] = tmp.find(util.nspath('SortProperty/PropertyName', namespaces['ogc'])).text
+
+                tmp2 =  tmp.find(util.nspath('SortProperty/SortOrder', namespaces['ogc']))
+                if tmp2 is not None:                   
+                    request['sortby']['order'] = tmp2.text
+                else:
+                    request['sortby']['order'] = 'asc'
+            else:
+                request['sortby'] = None
+
         if request['request'] == 'GetRecordById':
             tmp = doc.find('{http://www.opengis.net/cat/csw/2.0.2}Id')
             if tmp is not None:
@@ -564,5 +665,4 @@ class Csw(object):
             else:
                 request['elementsetname'] = None
 
- 
         return request
