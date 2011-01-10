@@ -328,7 +328,7 @@ class Csw(object):
     
         co = etree.SubElement(sc, util.nspath('ComparisonOperators', namespaces['ogc']))
 
-        for c in ['LessThan','GreaterThan','LessThanEqualTo','GreaterThanEqualTo','EqualTo','NotEqualTo','Like','Between']:
+        for c in ['LessThan','GreaterThan','LessThanEqualTo','GreaterThanEqualTo','EqualTo','NotEqualTo','Like','Between','NullCheck']:
             etree.SubElement(co, util.nspath('ComparisonOperator', namespaces['ogc'])).text = c
 
         ic = etree.SubElement(fi, util.nspath('Id_Capabilities', namespaces['ogc']))
