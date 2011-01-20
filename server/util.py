@@ -101,6 +101,16 @@ def bbox_query(bbox_data,bbox_input):
 
     # check if any points of the dataset bbox are inside the query bbox
     for xy in b1:  # each pair
-        if point_inside_polygon(xy[0],xy[1],b2):  # match, return true right away
+        if point_inside_polygon(xy[0],xy[1],b2):  # match
+            return 'true'
+    return 'false'
+
+def anytext_query(xml, searchterm):
+    # perform fulltext search against XML
+    for el in xml.xpath('//text()'):  # all elements
+        if el.lower().find(searchterm.lower()) != -1:
+            return 'true'
+    for att in xml.xpath('//attribute::*'):  # all attributes
+        if att.lower().find(searchterm.lower()) != -1:
             return 'true'
     return 'false'
