@@ -366,10 +366,8 @@ class Csw(object):
 
         if csw is True:
             sc = etree.SubElement(node, util.nspath('SchemaComponent', namespaces['csw']), schemaLanguage='XMLSCHEMA', targetNamespace=namespaces['csw'])
-            dc = etree.parse('/usr/local/wwwsites/apache/devgeo.cciw.ca/htdocs/pycsw/trunk/server/record.xsd').getroot()
+            dc = etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','record.xsd')).getroot()
             sc.append(dc)
-            #xs = etree.SubElement(sc, util.nspath('schema', namespaces['xs']), elementFormDefault='qualified',targetNamespace=namespaces['csw'])
-            #etree.SubElement(xs, util.nspath('include', namespaces['xs']), schemaLocation='http://schemas.opengis.net/csw/2.0.2/record.xsd')
 
         if gmd is True:
             sc = etree.SubElement(node, util.nspath('SchemaComponent', namespaces['csw']), schemaLanguage='XMLSCHEMA', targetNamespace=namespaces['gmd'])
