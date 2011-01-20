@@ -121,7 +121,10 @@ class Filter(object):
                     co = 'like'
     
                 #self.where = '%s %s "%s"' % (pname,co,pvalue)
-                queries.append('%s %s "%s"' % (pname,co,pvalue))
+                if self.boq == ' not ':
+                    queries.append('not %s %s "%s"' % (pname,co,pvalue))
+                else:
+                    queries.append('%s %s "%s"' % (pname,co,pvalue))
 
             if c.tag == '{http://www.opengis.net/ogc}PropertyIsBetween':
                 co = 'between'
@@ -130,7 +133,7 @@ class Filter(object):
                 #self.where = '%s and "%s"' % (lb, ub)
                 queries.append('%s and "%s"' % (lb, ub))
 
-        if self.boq is not None:
+        if self.boq is not None and self.boq != ' not ':
             self.where = self.boq.join(queries)
         else:
             self.where = queries[0]
