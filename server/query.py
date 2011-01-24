@@ -32,12 +32,7 @@
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
-import logging
 import config, util
-
-#logging.basicConfig(filename='/tmp/f.txt',level=logging.DEBUG)
-#logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-#logging.getLogger('sqlalchemy.orm.unitofwork').setLevel(logging.DEBUG)
 
 class dsc(object):
     pass
