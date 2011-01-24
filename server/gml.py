@@ -31,7 +31,6 @@
 # =================================================================
 
 from lxml import etree
-import gml
 
 def get_bbox(bbox):
     tmp = bbox.find('{http://www.opengis.net/ogc}PropertyName')

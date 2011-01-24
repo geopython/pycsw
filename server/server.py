@@ -31,8 +31,10 @@
 # =================================================================
 
 import os
+import re
 import sys
 import time
+import cgi
 import sqlite3
 from lxml import etree
 import config, filter, query, util
@@ -42,11 +44,6 @@ class Csw(object):
         self.config = config.get_config(configfile)
 
     def dispatch(self):
-        import sys
-        import re
-        import cgi
-        import util
-    
         error = 0
 
         cgifs = cgi.FieldStorage(keep_blank_values=1)
