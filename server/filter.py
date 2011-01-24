@@ -31,21 +31,7 @@
 # =================================================================
 
 from lxml import etree
-import gml
-
-mappings = {
-    'dc:identifier': 'uuid',
-    'dc:title': 'dataset_title',
-    'dc:format': 'dataset_format',
-    'dc:relation': 'dataset_relation',
-    'dc:date': 'dataset_date',
-    'dc:subject': 'dataset_subject_list',
-    'dct:abstract': 'dataset_abstract',
-    'dc:type': 'dataset_type',
-    'csw:AnyText': 'dataset_metadata',
-    '/ows:BoundingBox': 'dataset_bbox',
-    'ows:BoundingBox': 'dataset_bbox'
-}
+import config, gml
 
 class Filter(object):
     def __init__(self, flt):
@@ -91,7 +77,7 @@ class Filter(object):
                     singlechar = '_'
     
                 try:
-                    pname = mappings[c.find('{http://www.opengis.net/ogc}PropertyName').text]
+                    pname = config.mappings[c.find('{http://www.opengis.net/ogc}PropertyName').text]
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s' % c.find('{http://www.opengis.net/ogc}PropertyName').text)
     

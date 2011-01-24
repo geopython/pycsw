@@ -33,23 +33,11 @@
 from sqlalchemy import *
 from sqlalchemy.orm import *
 import logging
-import util
+import config, util
 
 #logging.basicConfig(filename='/tmp/f.txt',level=logging.DEBUG)
 #logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 #logging.getLogger('sqlalchemy.orm.unitofwork').setLevel(logging.DEBUG)
-
-
-mappings = {
-    'dc:identifier': 'dataset_identifier',
-    'dc:title': 'dataset_title',
-    'dct:abstract': 'dataset_abstract',
-    'dc:type': 'dataset_type',
-    'dc:format': 'dataset_format',
-    'dc:date': 'dataset_date',
-    'dc:relation': 'dataset_relation',
-    'csw:AnyText': 'dataset_metadata'
-}
 
 class dsc(object):
     pass
@@ -77,8 +65,8 @@ class Query(object):
 
         if sortby is not None:
             if sortby['order'] == 'DESC':
-                return q.order_by(desc(mappings[sortby['propertyname']])).all()
+                return q.order_by(desc(config.mappings[sortby['propertyname']])).all()
             else: 
-                return q.order_by(mappings[sortby['propertyname']]).all()
+                return q.order_by(config.mappings[sortby['propertyname']]).all()
 
         return q.all()
