@@ -33,94 +33,13 @@
 import os
 import sys
 import time
-import ConfigParser
 import sqlite3
 from lxml import etree
-import filter, query, util
-
-namespaces = {
-    None : 'http://www.opengis.net/cat/csw/2.0.2',
-    'csw': 'http://www.opengis.net/cat/csw/2.0.2',
-    'dc' : 'http://purl.org/dc/elements/1.1/',
-    'dct': 'http://purl.org/dc/terms/',
-    'gml': 'http://www.opengis.net/gml',
-    'gmd': 'http://www.isotc211.org/2005/gmd',
-    'ogc': 'http://www.opengis.net/ogc',
-    'ows': 'http://www.opengis.net/ows',
-    'xlink': 'http://www.w3.org/1999/xlink',
-    'xs': 'http://www.w3.org/2001/XMLSchema',
-    'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
-}
+import config, filter, query, util
 
 class Csw(object):
-    def __init__(self,config=None):
-        if file is not None:
-            cp = ConfigParser.SafeConfigParser()
-            cp.readfp(open(config))
-
-        self.config = {}
-        for i in cp.sections():
-            s = i.lower()
-            self.config[s] = {}
-            for j in cp.options(i):
-                k = j.lower()
-                self.config[s][k] = unicode(cp.get(i,j).decode('latin-1')).strip()
-
-        self.model =  {
-            'operations': {
-                'GetCapabilities': {
-                    'parameters': {
-                        'sections': {
-                            'values': ['ServiceIdentification', 'ServiceProvider', 'OperationsMetadata', 'FilterCapabilities']
-                        }
-                    }
-                },
-                'DescribeRecord': {
-                    'parameters': {
-                        'schemaLanguage': {
-                            #'values': ['XMLSCHEMA']
-                            'values': ['http://www.w3.org/XML/Schema']
-                        }
-                    }
-                },
-                'GetRecords': {
-                    'parameters': {
-                        'resultType': {
-                            'values': ['hits', 'results', 'validate']
-                        }
-                    }
-                },
-                'GetRecordById': {
-                    'parameters': {
-                    }
-                }
-            },
-            'parameters': {
-                'version': { 
-                    'values': ['2.0.2']
-                },
-                'service': {
-                    'values': ['CSW']
-                }
-            },
-            'constraints': {
-                'PostEncoding': {
-                    'values': ['XML']
-                },
-                'outputFormat': {
-                    'values': ['application/xml']
-                },
-                'outputSchema': {
-                    'values': ['http://www.opengis.net/cat/csw/2.0.2', 'http://www.isotc211.org/2005/gmd']
-                },
-                'TypeNames': {
-                    'values': ['csw:Record','gmd:MD_Metadata']
-                },
-                'ElementSetName': {
-                    'values': ['brief', 'summary', 'full']
-                }
-            }
-        }
+    def __init__(self,configfile=None):
+        self.config = config.get_config(configfile)
 
     def dispatch(self):
         import sys
@@ -190,7 +109,7 @@ class Csw(object):
                             text = 'Invalid parameter value in acceptversions: %s.  Value MUST be 2.0.2' % self.kvp['acceptversions']
         
                 # test request
-                if self.kvp['request'] not in self.model['operations'].keys():
+                if self.kvp['request'] not in config.model['operations'].keys():
                     error = 1
                     locator = 'request'
                     code = 'InvalidParameterValue'
@@ -215,15 +134,16 @@ class Csw(object):
         # set HTTP response headers and XML declaration
         hh = 'Content-type:%s\n\n' % self.config['server']['mimetype']
         xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.config['server']['encoding']
-        self.response = '%s%s%s' % (hh, xmldecl, self.response)
+        appinfo = '<!-- pycsw %s -->\n' % config.version
+        self.response = '%s%s%s%s' % (hh, xmldecl, appinfo, self.response)
 
     def exceptionreport(self,code,locator,text):
 
-        node = etree.Element(util.nspath('ExceptionReport', namespaces['ows']), nsmap=namespaces, version='1.0.2', language=self.config['server']['language'])
-        node.attrib['{'+namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/ows/1.0.0/owsExceptionReport.xsd' % namespaces['ows']
+        node = etree.Element(util.nspath('ExceptionReport', config.namespaces['ows']), nsmap=config.namespaces, version='1.0.2', language=self.config['server']['language'])
+        node.attrib['{'+config.namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/ows/1.0.0/owsExceptionReport.xsd' % config.namespaces['ows']
 
-        e = etree.SubElement(node, util.nspath('Exception', namespaces['ows']), exceptionCode=code, locator=locator)
-        etree.SubElement(e, util.nspath('ExceptionText', namespaces['ows'])).text=text
+        e = etree.SubElement(node, util.nspath('Exception', config.namespaces['ows']), exceptionCode=code, locator=locator)
+        etree.SubElement(e, util.nspath('ExceptionText', config.namespaces['ows'])).text=text
 
         return etree.tostring(node, pretty_print=True)
     
@@ -243,97 +163,97 @@ class Csw(object):
                 if s == 'OperationsMetadata':
                     om = True
 
-        node = etree.Element(util.nspath('Capabilities', namespaces['csw']), nsmap=namespaces, version='2.0.2')
-        node.attrib['{'+namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % namespaces['csw']
+        node = etree.Element(util.nspath('Capabilities', config.namespaces['csw']), nsmap=config.namespaces, version='2.0.2')
+        node.attrib['{'+config.namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
 
         if si is True:
-            si = etree.SubElement(node, util.nspath('ServiceIdentification', namespaces['ows']))
-            etree.SubElement(si, util.nspath('Title', namespaces['ows'])).text=self.config['identification']['title']
-            etree.SubElement(si, util.nspath('Abstract', namespaces['ows'])).text=self.config['identification']['abstract']
-            keywords = etree.SubElement(si, util.nspath('Keywords', namespaces['ows']))
+            si = etree.SubElement(node, util.nspath('ServiceIdentification', config.namespaces['ows']))
+            etree.SubElement(si, util.nspath('Title', config.namespaces['ows'])).text=self.config['identification']['title']
+            etree.SubElement(si, util.nspath('Abstract', config.namespaces['ows'])).text=self.config['identification']['abstract']
+            keywords = etree.SubElement(si, util.nspath('Keywords', config.namespaces['ows']))
             for k in self.config['identification']['keywords'].split(','):
-                etree.SubElement(keywords, util.nspath('Keyword', namespaces['ows'])).text=k
-            etree.SubElement(si, util.nspath('ServiceType', namespaces['ows']), codeSpace='OGC').text='CSW'
-            etree.SubElement(si, util.nspath('ServiceTypeVersion', namespaces['ows'])).text='2.0.2'
-            etree.SubElement(si, util.nspath('Fees', namespaces['ows'])).text=self.config['identification']['fees']
-            etree.SubElement(si, util.nspath('AccessConstraints', namespaces['ows'])).text=self.config['identification']['accessconstraints']
+                etree.SubElement(keywords, util.nspath('Keyword', config.namespaces['ows'])).text=k
+            etree.SubElement(si, util.nspath('ServiceType', config.namespaces['ows']), codeSpace='OGC').text='CSW'
+            etree.SubElement(si, util.nspath('ServiceTypeVersion', config.namespaces['ows'])).text='2.0.2'
+            etree.SubElement(si, util.nspath('Fees', config.namespaces['ows'])).text=self.config['identification']['fees']
+            etree.SubElement(si, util.nspath('AccessConstraints', config.namespaces['ows'])).text=self.config['identification']['accessconstraints']
 
         if sp is True:
-            sp = etree.SubElement(node, util.nspath('ServiceProvider', namespaces['ows']))
-            etree.SubElement(sp, util.nspath('ProviderName', namespaces['ows'])).text=self.config['provider']['name']
-            ps = etree.SubElement(sp, util.nspath('ProviderSite', namespaces['ows']))
-            ps.attrib['{'+namespaces['xlink']+'}type'] = 'simple'
-            ps.attrib['{'+namespaces['xlink']+'}href'] = self.config['provider']['url']
-            sc = etree.SubElement(sp, util.nspath('ServiceContact', namespaces['ows']))
-            etree.SubElement(sc, util.nspath('IndividualName', namespaces['ows'])).text=self.config['contact']['name']
-            etree.SubElement(sc, util.nspath('PositionName', namespaces['ows'])).text=self.config['contact']['position']
-            ci = etree.SubElement(sc, util.nspath('ContactInfo', namespaces['ows']))
-            ph = etree.SubElement(ci, util.nspath('Phone', namespaces['ows']))
-            etree.SubElement(ph, util.nspath('Voice', namespaces['ows'])).text=self.config['contact']['phone']
-            etree.SubElement(ph, util.nspath('Facsimile', namespaces['ows'])).text=self.config['contact']['fax']
-            address = etree.SubElement(ci, util.nspath('Address', namespaces['ows']))
-            etree.SubElement(address, util.nspath('DeliveryPoint', namespaces['ows'])).text=self.config['contact']['address']
-            etree.SubElement(address, util.nspath('City', namespaces['ows'])).text=self.config['contact']['city']
-            etree.SubElement(address, util.nspath('AdministrativeArea', namespaces['ows'])).text=self.config['contact']['stateorprovince']
-            etree.SubElement(address, util.nspath('PostalCode', namespaces['ows'])).text=self.config['contact']['postalcode']
-            etree.SubElement(address, util.nspath('Country', namespaces['ows'])).text=self.config['contact']['country']
-            etree.SubElement(address, util.nspath('ElectronicMailAddress', namespaces['ows'])).text=self.config['contact']['email']
+            sp = etree.SubElement(node, util.nspath('ServiceProvider', config.namespaces['ows']))
+            etree.SubElement(sp, util.nspath('ProviderName', config.namespaces['ows'])).text=self.config['provider']['name']
+            ps = etree.SubElement(sp, util.nspath('ProviderSite', config.namespaces['ows']))
+            ps.attrib['{'+config.namespaces['xlink']+'}type'] = 'simple'
+            ps.attrib['{'+config.namespaces['xlink']+'}href'] = self.config['provider']['url']
+            sc = etree.SubElement(sp, util.nspath('ServiceContact', config.namespaces['ows']))
+            etree.SubElement(sc, util.nspath('IndividualName', config.namespaces['ows'])).text=self.config['contact']['name']
+            etree.SubElement(sc, util.nspath('PositionName', config.namespaces['ows'])).text=self.config['contact']['position']
+            ci = etree.SubElement(sc, util.nspath('ContactInfo', config.namespaces['ows']))
+            ph = etree.SubElement(ci, util.nspath('Phone', config.namespaces['ows']))
+            etree.SubElement(ph, util.nspath('Voice', config.namespaces['ows'])).text=self.config['contact']['phone']
+            etree.SubElement(ph, util.nspath('Facsimile', config.namespaces['ows'])).text=self.config['contact']['fax']
+            address = etree.SubElement(ci, util.nspath('Address', config.namespaces['ows']))
+            etree.SubElement(address, util.nspath('DeliveryPoint', config.namespaces['ows'])).text=self.config['contact']['address']
+            etree.SubElement(address, util.nspath('City', config.namespaces['ows'])).text=self.config['contact']['city']
+            etree.SubElement(address, util.nspath('AdministrativeArea', config.namespaces['ows'])).text=self.config['contact']['stateorprovince']
+            etree.SubElement(address, util.nspath('PostalCode', config.namespaces['ows'])).text=self.config['contact']['postalcode']
+            etree.SubElement(address, util.nspath('Country', config.namespaces['ows'])).text=self.config['contact']['country']
+            etree.SubElement(address, util.nspath('ElectronicMailAddress', config.namespaces['ows'])).text=self.config['contact']['email']
 
-            ps = etree.SubElement(ci, util.nspath('OnlineResource', namespaces['ows']))
-            ps.attrib['{'+namespaces['xlink']+'}type'] = 'simple'
-            ps.attrib['{'+namespaces['xlink']+'}href'] = self.config['contact']['url']
-            etree.SubElement(ci, util.nspath('HoursOfService', namespaces['ows'])).text=self.config['contact']['hours']
-            etree.SubElement(ci, util.nspath('ContactInstructions', namespaces['ows'])).text=self.config['contact']['contactinstructions']
-            etree.SubElement(sc, util.nspath('Role', namespaces['ows'])).text=self.config['contact']['role']
+            ps = etree.SubElement(ci, util.nspath('OnlineResource', config.namespaces['ows']))
+            ps.attrib['{'+config.namespaces['xlink']+'}type'] = 'simple'
+            ps.attrib['{'+config.namespaces['xlink']+'}href'] = self.config['contact']['url']
+            etree.SubElement(ci, util.nspath('HoursOfService', config.namespaces['ows'])).text=self.config['contact']['hours']
+            etree.SubElement(ci, util.nspath('ContactInstructions', config.namespaces['ows'])).text=self.config['contact']['contactinstructions']
+            etree.SubElement(sc, util.nspath('Role', config.namespaces['ows'])).text=self.config['contact']['role']
 
         if om is True:
-            om = etree.SubElement(node, util.nspath('OperationsMetadata', namespaces['ows']))
-            for o in self.model['operations'].keys():
-                op = etree.SubElement(om, util.nspath('Operation', namespaces['ows']), name=o)
-                dcp = etree.SubElement(op, util.nspath('DCP', namespaces['ows']))
-                http = etree.SubElement(dcp, util.nspath('HTTP', namespaces['ows']))
+            om = etree.SubElement(node, util.nspath('OperationsMetadata', config.namespaces['ows']))
+            for o in config.model['operations'].keys():
+                op = etree.SubElement(om, util.nspath('Operation', config.namespaces['ows']), name=o)
+                dcp = etree.SubElement(op, util.nspath('DCP', config.namespaces['ows']))
+                http = etree.SubElement(dcp, util.nspath('HTTP', config.namespaces['ows']))
 
-                get = etree.SubElement(http, util.nspath('Get', namespaces['ows']))
-                get.attrib['{'+namespaces['xlink']+'}type'] = 'simple'
-                get.attrib['{'+namespaces['xlink']+'}href'] = self.config['server']['baseurl']
-                post = etree.SubElement(http, util.nspath('Post', namespaces['ows']))
-                post.attrib['{'+namespaces['xlink']+'}type'] = 'simple'
-                post.attrib['{'+namespaces['xlink']+'}href'] = self.config['server']['baseurl']
+                get = etree.SubElement(http, util.nspath('Get', config.namespaces['ows']))
+                get.attrib['{'+config.namespaces['xlink']+'}type'] = 'simple'
+                get.attrib['{'+config.namespaces['xlink']+'}href'] = self.config['server']['baseurl']
+                post = etree.SubElement(http, util.nspath('Post', config.namespaces['ows']))
+                post.attrib['{'+config.namespaces['xlink']+'}type'] = 'simple'
+                post.attrib['{'+config.namespaces['xlink']+'}href'] = self.config['server']['baseurl']
 
-                for p in self.model['operations'][o]['parameters']:
-                    param = etree.SubElement(op, util.nspath('Parameter', namespaces['ows']), name=p)
-                    for v in self.model['operations'][o]['parameters'][p]['values']:
-                        etree.SubElement(param, util.nspath('Value', namespaces['ows'])).text = v
+                for p in config.model['operations'][o]['parameters']:
+                    param = etree.SubElement(op, util.nspath('Parameter', config.namespaces['ows']), name=p)
+                    for v in config.model['operations'][o]['parameters'][p]['values']:
+                        etree.SubElement(param, util.nspath('Value', config.namespaces['ows'])).text = v
 
-            for p in self.model['parameters'].keys():
-                param = etree.SubElement(om, util.nspath('Parameter', namespaces['ows']), name=p)
-                for v in self.model['parameters'][p]['values']:
-                    etree.SubElement(param, util.nspath('Value', namespaces['ows'])).text = v
+            for p in config.model['parameters'].keys():
+                param = etree.SubElement(om, util.nspath('Parameter', config.namespaces['ows']), name=p)
+                for v in config.model['parameters'][p]['values']:
+                    etree.SubElement(param, util.nspath('Value', config.namespaces['ows'])).text = v
 
-            for p in self.model['constraints'].keys():
-                param = etree.SubElement(om, util.nspath('Constraint', namespaces['ows']), name=p)
-                for v in self.model['constraints'][p]['values']:
-                    etree.SubElement(param, util.nspath('Value', namespaces['ows'])).text = v
+            for p in config.model['constraints'].keys():
+                param = etree.SubElement(om, util.nspath('Constraint', config.namespaces['ows']), name=p)
+                for v in config.model['constraints'][p]['values']:
+                    etree.SubElement(param, util.nspath('Value', config.namespaces['ows'])).text = v
 
-        fi = etree.SubElement(node, util.nspath('Filter_Capabilities', namespaces['ogc']))
-        sc = etree.SubElement(fi, util.nspath('Spatial_Capabilities', namespaces['ogc']))
-        go = etree.SubElement(sc, util.nspath('GeometryOperands', namespaces['ogc']))
-        etree.SubElement(go, util.nspath('GeometryOperand', namespaces['ogc'])).text = 'gml:Envelope'
+        fi = etree.SubElement(node, util.nspath('Filter_Capabilities', config.namespaces['ogc']))
+        sc = etree.SubElement(fi, util.nspath('Spatial_Capabilities', config.namespaces['ogc']))
+        go = etree.SubElement(sc, util.nspath('GeometryOperands', config.namespaces['ogc']))
+        etree.SubElement(go, util.nspath('GeometryOperand', config.namespaces['ogc'])).text = 'gml:Envelope'
 
-        so = etree.SubElement(sc, util.nspath('SpatialOperators', namespaces['ogc']))
-        etree.SubElement(so, util.nspath('SpatialOperator', namespaces['ogc']), name='BBOX')
+        so = etree.SubElement(sc, util.nspath('SpatialOperators', config.namespaces['ogc']))
+        etree.SubElement(so, util.nspath('SpatialOperator', config.namespaces['ogc']), name='BBOX')
 
-        sc = etree.SubElement(fi, util.nspath('Scalar_Capabilities', namespaces['ogc']))
-        etree.SubElement(sc, util.nspath('LogicalOperators', namespaces['ogc']))
+        sc = etree.SubElement(fi, util.nspath('Scalar_Capabilities', config.namespaces['ogc']))
+        etree.SubElement(sc, util.nspath('LogicalOperators', config.namespaces['ogc']))
     
-        co = etree.SubElement(sc, util.nspath('ComparisonOperators', namespaces['ogc']))
+        co = etree.SubElement(sc, util.nspath('ComparisonOperators', config.namespaces['ogc']))
 
         for c in ['LessThan','GreaterThan','LessThanEqualTo','GreaterThanEqualTo','EqualTo','NotEqualTo','Like','Between','NullCheck']:
-            etree.SubElement(co, util.nspath('ComparisonOperator', namespaces['ogc'])).text = c
+            etree.SubElement(co, util.nspath('ComparisonOperator', config.namespaces['ogc'])).text = c
 
-        ic = etree.SubElement(fi, util.nspath('Id_Capabilities', namespaces['ogc']))
-        etree.SubElement(ic, util.nspath('EID', namespaces['ogc']))
-        etree.SubElement(ic, util.nspath('FID', namespaces['ogc']))
+        ic = etree.SubElement(fi, util.nspath('Id_Capabilities', config.namespaces['ogc']))
+        etree.SubElement(ic, util.nspath('EID', config.namespaces['ogc']))
+        etree.SubElement(ic, util.nspath('FID', config.namespaces['ogc']))
 
         return etree.tostring(node, pretty_print=True)
     
@@ -355,24 +275,24 @@ class Csw(object):
             csw = True
             gmd = True
     
-        if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in self.model['constraints']['outputFormat']['values']:
+        if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue','outputformat', 'Invalid value for outputformat: %s' % self.kvp['outputformat'])
     
-        if self.kvp.has_key('schemalanguage') and self.kvp['schemalanguage'] not in self.model['operations']['DescribeRecord']['parameters']['schemaLanguage']['values']:
+        if self.kvp.has_key('schemalanguage') and self.kvp['schemalanguage'] not in config.model['operations']['DescribeRecord']['parameters']['schemaLanguage']['values']:
             return self.exceptionreport('InvalidParameterValue','schemalanguage', 'Invalid value for schemalanguage: %s' % self.kvp['schemalanguage'])
 
-        node = etree.Element(util.nspath('DescribeRecordResponse', namespaces['csw']), nsmap=namespaces)
-        node.attrib['{'+namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % namespaces['csw']
+        node = etree.Element(util.nspath('DescribeRecordResponse', config.namespaces['csw']), nsmap=config.namespaces)
+        node.attrib['{'+config.namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
 
         if csw is True:
-            sc = etree.SubElement(node, util.nspath('SchemaComponent', namespaces['csw']), schemaLanguage='XMLSCHEMA', targetNamespace=namespaces['csw'])
+            sc = etree.SubElement(node, util.nspath('SchemaComponent', config.namespaces['csw']), schemaLanguage='XMLSCHEMA', targetNamespace=config.namespaces['csw'])
             dc = etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','record.xsd')).getroot()
             sc.append(dc)
 
         if gmd is True:
-            sc = etree.SubElement(node, util.nspath('SchemaComponent', namespaces['csw']), schemaLanguage='XMLSCHEMA', targetNamespace=namespaces['gmd'])
-            xs = etree.SubElement(sc, util.nspath('schema', namespaces['xs']), elementFormDefault='qualified',targetNamespace=namespaces['gmd'])
-            etree.SubElement(xs, util.nspath('include', namespaces['xs']), schemaLocation='http://www.isotc211.org/2005/gmd/gmd.xsd')
+            sc = etree.SubElement(node, util.nspath('SchemaComponent', config.namespaces['csw']), schemaLanguage='XMLSCHEMA', targetNamespace=config.namespaces['gmd'])
+            xs = etree.SubElement(sc, util.nspath('schema', config.namespaces['xs']), elementFormDefault='qualified',targetNamespace=config.namespaces['gmd'])
+            etree.SubElement(xs, util.nspath('include', config.namespaces['xs']), schemaLocation='http://www.isotc211.org/2005/gmd/gmd.xsd')
 
         return etree.tostring(node, pretty_print=True)
     
@@ -380,13 +300,13 @@ class Csw(object):
 
         timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
 
-        if self.kvp['outputschema'] not in self.model['constraints']['outputSchema']['values']:
+        if self.kvp['outputschema'] not in config.model['constraints']['outputSchema']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputSchema parameter value: %s' % self.kvp['outputschema'])
 
-        if self.kvp['outputformat'] not in self.model['constraints']['outputFormat']['values']:
+        if self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputformat', 'Invalid outputFormat parameter value: %s' % self.kvp['outputformat'])
 
-        if self.kvp['resulttype'] not in self.model['operations']['GetRecords']['parameters']['resultType']['values']:
+        if self.kvp['resulttype'] not in config.model['operations']['GetRecords']['parameters']['resultType']['values']:
             return self.exceptionreport('InvalidParameterValue', 'resulttype', 'Invalid resultType parameter value: %s' % self.kvp['resulttype'])
 
         if self.kvp.has_key('elementsetname') is False:
@@ -399,10 +319,10 @@ class Csw(object):
         #    return self.exceptionreport('InvalidParameterValue', 'elementsetname', 'Invalid ElementSetName parameter: %s' % self.kvp['elementsetname'])
 
         if self.kvp['resulttype'] == 'validate':
-            node = etree.Element(util.nspath('Acknowledgement', namespaces['csw']), nsmap=namespaces, timeStamp=timestamp)
-            node.attrib['{'+namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % namespaces['csw']
+            node = etree.Element(util.nspath('Acknowledgement', config.namespaces['csw']), nsmap=config.namespaces, timeStamp=timestamp)
+            node.attrib['{'+config.namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
 
-            node1 = etree.SubElement(node, util.nspath('EchoedRequest', namespaces['csw']))
+            node1 = etree.SubElement(node, util.nspath('EchoedRequest', config.namespaces['csw']))
             node1.append(etree.fromstring(self.request))
 
             return etree.tostring(node,pretty_print=True)
@@ -431,12 +351,12 @@ class Csw(object):
             if int(self.kvp['maxrecords']) == 0:
                 next = '1'
 
-        node = etree.Element(util.nspath('GetRecordsResponse', namespaces['csw']), nsmap=namespaces, version='2.0.2')
-        node.attrib['{'+namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % namespaces['csw']
+        node = etree.Element(util.nspath('GetRecordsResponse', config.namespaces['csw']), nsmap=config.namespaces, version='2.0.2')
+        node.attrib['{'+config.namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
 
-        etree.SubElement(node, util.nspath('SearchStatus', namespaces['csw']), timestamp=timestamp)
+        etree.SubElement(node, util.nspath('SearchStatus', config.namespaces['csw']), timestamp=timestamp)
 
-        sr = etree.SubElement(node, util.nspath('SearchResults', namespaces['csw']), numberOfRecordsMatched=matched, numberOfRecordsReturned=returned, nextRecord=next)
+        sr = etree.SubElement(node, util.nspath('SearchResults', config.namespaces['csw']), numberOfRecordsMatched=matched, numberOfRecordsReturned=returned, nextRecord=next)
 
         max = int(self.kvp['startposition']) + int(self.kvp['maxrecords'])
 
@@ -450,28 +370,28 @@ class Csw(object):
                 else:
                     el = 'Record'
     
-                record = etree.SubElement(sr, util.nspath(el, namespaces['csw']))
+                record = etree.SubElement(sr, util.nspath(el, config.namespaces['csw']))
     
                 if self.kvp.has_key('elementname') is True and len(self.kvp['elementname']) > 0:
                     for e in self.kvp['elementname']:
                         ns,el, = e.split(':')
                         if el == 'BoundingBox':
                             bbox = r.bbox.split(',')
-                            b = etree.SubElement(record, util.nspath('BoundingBox', namespaces['ows']), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
-                            etree.SubElement(b, util.nspath('LowerCorner', namespaces['ows'])).text = '%s %s' % (bbox[0],bbox[1])
-                            etree.SubElement(b, util.nspath('UpperCorner', namespaces['ows'])).text = '%s %s' % (bbox[2],bbox[3])
+                            b = etree.SubElement(record, util.nspath('BoundingBox', config.namespaces['ows']), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
+                            etree.SubElement(b, util.nspath('LowerCorner', config.namespaces['ows'])).text = '%s %s' % (bbox[0],bbox[1])
+                            etree.SubElement(b, util.nspath('UpperCorner', config.namespaces['ows'])).text = '%s %s' % (bbox[2],bbox[3])
  
                         else:
                             if eval('r.%s'%el) != 'None':
-                                etree.SubElement(record, util.nspath(el, namespaces[ns])).text=eval('r.%s'%el)
+                                etree.SubElement(record, util.nspath(el, config.namespaces[ns])).text=eval('r.%s'%el)
                 elif self.kvp.has_key('elementsetname') is True:
-                    etree.SubElement(record, util.nspath('identifier', namespaces['dc'])).text=r.identifier
-                    etree.SubElement(record, util.nspath('title', namespaces['dc'])).text=r.title
-                    etree.SubElement(record, util.nspath('type', namespaces['dc'])).text=r.type
+                    etree.SubElement(record, util.nspath('identifier', config.namespaces['dc'])).text=r.identifier
+                    etree.SubElement(record, util.nspath('title', config.namespaces['dc'])).text=r.title
+                    etree.SubElement(record, util.nspath('type', config.namespaces['dc'])).text=r.type
                     if self.kvp['elementsetname'] == 'full':
-                        etree.SubElement(record, util.nspath('date', namespaces['dc'])).text=r.date
+                        etree.SubElement(record, util.nspath('date', config.namespaces['dc'])).text=r.date
                     if self.kvp['elementsetname'] == 'summary':
-                        etree.SubElement(record, util.nspath('format', namespaces['dc'])).text=r.format
+                        etree.SubElement(record, util.nspath('format', config.namespaces['dc'])).text=r.format
 
         return etree.tostring(node, pretty_print=True)
 
@@ -484,16 +404,16 @@ class Csw(object):
 
         ids = self.kvp['id'].split(',')
 
-        if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in self.model['constraints']['outputFormat']['values']:
+        if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputformat', 'Invalid outputformat parameter %s' % self.kvp['outputformat'])
 
-        if self.kvp.has_key('outputschema') and self.kvp['outputschema'] not in self.model['constraints']['outputSchema']['values']:
+        if self.kvp.has_key('outputschema') and self.kvp['outputschema'] not in config.model['constraints']['outputSchema']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputschema parameter %s' % self.kvp['outputschema'])
 
         if self.kvp.has_key('elementsetname') is False:
             esn = 'summary'
         else:
-            if self.kvp['elementsetname'] not in self.model['constraints']['ElementSetName']['values']:
+            if self.kvp['elementsetname'] not in config.model['constraints']['ElementSetName']['values']:
                 return self.exceptionreport('InvalidParameterValue', 'elementsetname', 'Invalid elementsetname parameter %s' % self.kvp['elementsetname'])
             if self.kvp['elementsetname'] == 'full':
                 esn = ''
@@ -507,8 +427,8 @@ class Csw(object):
 
         results = q.get(ids=ids)
 
-        node = etree.Element(util.nspath('GetRecordByIdResponse', namespaces['csw']), nsmap=namespaces)
-        node.attrib['{'+namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % namespaces['csw']
+        node = etree.Element(util.nspath('GetRecordByIdResponse', config.namespaces['csw']), nsmap=config.namespaces)
+        node.attrib['{'+config.namespaces['xsi']+'}schemaLocation'] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
 
         node.append(etree.Comment('hi'))
 
@@ -519,20 +439,20 @@ class Csw(object):
                 el = 'SummaryRecord'
             else:
                 el = 'Record'
-            record = etree.SubElement(node, util.nspath(el, namespaces['csw']))
+            record = etree.SubElement(node, util.nspath(el, config.namespaces['csw']))
 
-            etree.SubElement(record, util.nspath('identifier', namespaces['dc'])).text=r.identifier
+            etree.SubElement(record, util.nspath('identifier', config.namespaces['dc'])).text=r.identifier
             if r.title != 'None':
-                etree.SubElement(record, util.nspath('title', namespaces['dc'])).text=r.title
-            etree.SubElement(record, util.nspath('type', namespaces['dc'])).text=r.type
+                etree.SubElement(record, util.nspath('title', config.namespaces['dc'])).text=r.title
+            etree.SubElement(record, util.nspath('type', config.namespaces['dc'])).text=r.type
 
             if self.kvp.has_key('elementsetname') is False:
                 for k in r.subject_list.split(','):
-                    etree.SubElement(record, util.nspath('subject', namespaces['dc'])).text=k
+                    etree.SubElement(record, util.nspath('subject', config.namespaces['dc'])).text=k
 
-                etree.SubElement(record, util.nspath('format', namespaces['dc'])).text=r.format
-                etree.SubElement(record, util.nspath('modified', namespaces['dct'])).text=r.modified
-                etree.SubElement(record, util.nspath('abstract', namespaces['dct'])).text=r.abstract
+                etree.SubElement(record, util.nspath('format', config.namespaces['dc'])).text=r.format
+                etree.SubElement(record, util.nspath('modified', config.namespaces['dct'])).text=r.modified
+                etree.SubElement(record, util.nspath('abstract', config.namespaces['dct'])).text=r.abstract
 
         return etree.tostring(node, pretty_print=True)
 
@@ -561,7 +481,7 @@ class Csw(object):
         # DescribeRecord
         if request['request'] == 'DescribeRecord':
             request['typename'] = []
-            for d in doc.findall(util.nspath('TypeName', namespaces['csw'])):
+            for d in doc.findall(util.nspath('TypeName', config.namespaces['csw'])):
                 request['typename'].append(d.text)
     
             tmp = doc.find('./').attrib.get('schemaLanguage')
@@ -578,7 +498,7 @@ class Csw(object):
             if tmp is not None:
                 request['outputschema'] = tmp
             else:
-                request['outputschema'] = namespaces['csw']
+                request['outputschema'] = config.namespaces['csw']
 
             tmp = doc.find('./').attrib.get('resultType')
             if tmp is not None:
@@ -622,8 +542,8 @@ class Csw(object):
             for e in doc.findall('{http://www.opengis.net/cat/csw/2.0.2}Query/{http://www.opengis.net/cat/csw/2.0.2}ElementName'):
                 request['elementname'].append(e.text)
 
-            if doc.find(util.nspath('Query/Constraint', namespaces['csw'])):
-                tmp = doc.find(util.nspath('Query/Constraint', namespaces['csw'])+'/'+ util.nspath('Filter', namespaces['ogc']))
+            if doc.find(util.nspath('Query/Constraint', config.namespaces['csw'])):
+                tmp = doc.find(util.nspath('Query/Constraint', config.namespaces['csw'])+'/'+ util.nspath('Filter', config.namespaces['ogc']))
                 if tmp is not None:
                     try:
                         request['filter'] = filter.Filter(tmp)
@@ -640,9 +560,9 @@ class Csw(object):
             tmp = doc.find('{http://www.opengis.net/cat/csw/2.0.2}Query/{http://www.opengis.net/ogc}SortBy')
             if tmp is not None:
                 request['sortby'] = {}
-                request['sortby']['propertyname'] = tmp.find(util.nspath('SortProperty/PropertyName', namespaces['ogc'])).text
+                request['sortby']['propertyname'] = tmp.find(util.nspath('SortProperty/PropertyName', config.namespaces['ogc'])).text
 
-                tmp2 =  tmp.find(util.nspath('SortProperty/SortOrder', namespaces['ogc']))
+                tmp2 =  tmp.find(util.nspath('SortProperty/SortOrder', config.namespaces['ogc']))
                 if tmp2 is not None:                   
                     request['sortby']['order'] = tmp2.text
                 else:
