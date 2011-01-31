@@ -33,7 +33,7 @@
 version = '0.0.1'
 
 namespaces = {
-    None : 'http://www.opengis.net/cat/csw/2.0.2',
+    #None : 'http://www.opengis.net/cat/csw/2.0.2',
     'csw': 'http://www.opengis.net/cat/csw/2.0.2',
     'dc' : 'http://purl.org/dc/elements/1.1/',
     'dct': 'http://purl.org/dc/terms/',
