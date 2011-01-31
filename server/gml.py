@@ -31,20 +31,21 @@
 # =================================================================
 
 from lxml import etree
+import util
 
 def get_bbox(bbox):
-    tmp = bbox.find('{http://www.opengis.net/ogc}PropertyName')
+    tmp = bbox.find(util.nspath_eval('ogc:PropertyName'))
     if tmp is not None:
         pname = tmp.text
         if pname not in ['ows:BoundingBox','/ows:BoundingBox']:
             return 'Invalid PropertyName: %s' % pname 
-        tmp2 = bbox.find('{http://www.opengis.net/gml}Envelope/{http://www.opengis.net/gml}lowerCorner')
+        tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml}lowerCorner'))
         if tmp2 is None:
             return 'Missing gml:lowerCorner'
         else:
            ll = tmp2.text
 
-        tmp2 = bbox.find('{http://www.opengis.net/gml}Envelope/{http://www.opengis.net/gml}upperCorner')
+        tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml:upperCorner'))
         if tmp2 is None:
             return 'Missing gml:upperCorner'
         else:

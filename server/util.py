@@ -30,6 +30,8 @@
 #
 # =================================================================
 
+import config
+
 def get_version_integer(version):
     if version is not None:  # split and make integer
         a = version.split('.')
@@ -66,6 +68,13 @@ def nspath(path, ns='http://www.opengis.net/cat/csw/2.0.2'):
         components.append(component)
     return '/'.join(components)
 
+def nspath_eval(xpath, mappings=config.namespaces):
+    out = []
+    for s in xpath.split('/'):
+        ns, el = s.split(':')
+        out.append('{%s}%s' % (mappings[ns],el))
+    return '/'.join(out)
+
 def bbox2polygon(bbox):
     # like '-180,-90,180,90'
     minx,miny,maxx,maxy=bbox.split(',')
@@ -79,7 +88,7 @@ def bbox2polygon(bbox):
 def point_inside_polygon(x,y,poly):
     # from http://www.ariel.com.au/a/python-point-int-poly.html
     n = len(poly)
-    inside =False
+    inside=False
 
     p1x,p1y = poly[0]
     for i in range(n+1):
@@ -96,6 +105,9 @@ def point_inside_polygon(x,y,poly):
     return inside
 
 def bbox_query(bbox_data,bbox_input):
+    if bbox_data == 'None':
+        return 'false'
+
     b1 = bbox2polygon(bbox_data)
     b2 = bbox2polygon(bbox_input)
 

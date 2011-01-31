@@ -31,14 +31,14 @@
 # =================================================================
 
 from lxml import etree
-import config, gml
+import config, gml, util
 
 class Filter(object):
     def __init__(self, flt):
 
         self.boq = None
 
-        tmp = flt.xpath('ogc:And|ogc:Or|ogc:Not', namespaces={'ogc':'http://www.opengis.net/ogc'})
+        tmp = flt.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=config.namespaces)
         if len(tmp) > 0:  # this is binary logic query
             self.boq = ' %s ' % tmp[0].tag.split('}')[1].lower()
             tmp = tmp[0]
@@ -51,8 +51,8 @@ class Filter(object):
             co = ''
             bquery = 'true'
 
-            if c.tag == '{http://www.opengis.net/ogc}BBOX':
-                pn = c.find('{http://www.opengis.net/ogc}PropertyName')
+            if c.tag == util.nspath_eval('ogc:BBOX'):
+                pn = c.find(util.nspath_eval('ogc:PropertyName'))
                 if pn is None:
                     raise RuntimeError, ('Missing PropertyName in spatial filter')
                 elif pn is not None and pn.text not in ['ows:BoundingBox', '/ows:BoundingBox']:
@@ -77,29 +77,29 @@ class Filter(object):
                     singlechar = '_'
     
                 try:
-                    pname = config.mappings[c.find('{http://www.opengis.net/ogc}PropertyName').text]
+                    pname = config.mappings[c.find(util.nspath_eval('ogc:PropertyName')).text]
                 except Exception, err:
-                    raise RuntimeError, ('Invalid PropertyName: %s' % c.find('{http://www.opengis.net/ogc}PropertyName').text)
+                    raise RuntimeError, ('Invalid PropertyName: %s' % c.find(util.nspath_eval('ogc:PropertyName')).text)
     
-                pv = c.find('{http://www.opengis.net/ogc}Literal').text
+                pv = c.find(util.nspath_eval('ogc:Literal')).text
     
                 pvalue = pv.replace(wildcard,'%').replace(singlechar,'_')
 
-                if c.tag == '{http://www.opengis.net/ogc}PropertyIsEqualTo':
+                if c.tag == util.nspath_eval('ogc:PropertyIsEqualTo'):
                     co = '=='
-                elif c.tag == '{http://www.opengis.net/ogc}PropertyIsNotEqualTo':
+                elif c.tag == util.nspath_eval('ogc:PropertyIsNotEqualTo'):
                     co = '!='
-                elif c.tag == '{http://www.opengis.net/ogc}PropertyIsLessThan':
+                elif c.tag == util.nspath_eval('ogc:PropertyIsLessThan'):
                     co = '<'
-                elif c.tag == '{http://www.opengis.net/ogc}PropertyIsGreaterThan':
+                elif c.tag == util.nspath_eval('ogc:PropertyIsGreaterThan'):
                     co = '>'
-                elif c.tag == '{http://www.opengis.net/ogc}PropertyIsLessThanOrEqualTo':
+                elif c.tag == util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo'):
                     co = '<='
-                elif c.tag == '{http://www.opengis.net/ogc}PropertyIsGreaterThanOrEqualTo':
+                elif c.tag == util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo'):
                     co = '>='
-                elif c.tag == '{http://www.opengis.net/ogc}PropertyIsLike':
+                elif c.tag == util.nspath_eval('ogc:PropertyIsLike'):
                     co = 'like'
-                elif c.tag == '{http://www.opengis.net/ogc}PropertyIsNull':
+                elif c.tag == util.nspath_eval('ogc:PropertyIsNull'):
                     co = 'is null'
     
                 # if this is a case insensitive search, then set the LIKE comparison operator
@@ -112,33 +112,13 @@ class Filter(object):
                 else:
                     queries.append('%s %s "%s"' % (pname,co,pvalue))
 
-            if c.tag == '{http://www.opengis.net/ogc}PropertyIsBetween':
+            if c.tag == util.nspath_eval('ogc:PropertyIsBetween'):
                 co = 'between'
-                lb = c.find('{http://www.opengis.net/ogc}LowerBoundary/{http://www.opengis.net/ogc}Literal').text
-                ub = c.find('{http://www.opengis.net/ogc}UpperBoundary/{http://www.opengis.net/ogc}Literal').text
-                #self.where = '%s and "%s"' % (lb, ub)
+                lb = c.find(util.nspath_eval('ogc:LowerBoundary/ogc:Literal')).text
+                ub = c.find(util.nspath_eval('ogc:UpperBoundary/ogc:Literal')).text
                 queries.append('%s and "%s"' % (lb, ub))
 
         if self.boq is not None and self.boq != ' not ':
             self.where = self.boq.join(queries)
         else:
             self.where = queries[0]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
