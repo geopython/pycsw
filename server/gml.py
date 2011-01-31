@@ -39,7 +39,7 @@ def get_bbox(bbox):
         pname = tmp.text
         if pname not in ['ows:BoundingBox','/ows:BoundingBox']:
             return 'Invalid PropertyName: %s' % pname 
-        tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml}lowerCorner'))
+        tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml:lowerCorner'))
         if tmp2 is None:
             return 'Missing gml:lowerCorner'
         else:
@@ -54,6 +54,5 @@ def get_bbox(bbox):
         min = ll.split()
         max = ur.split()
 
-        #bbox2 = '%s,%s,%s,%s' %(min[0],min[1],max[0],max[1])
         bbox2 = '%s,%s,%s,%s' %(min[1],min[0],max[1],max[0])
         return bbox2
