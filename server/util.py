@@ -85,6 +85,19 @@ def bbox2polygon(bbox):
     poly.append((float(maxx),float(miny)))
     return poly
 
+def bbox2wkt(bbox):
+    # like '-180,-90,180,90'
+    minx,miny,maxx,maxy=bbox.split(',')
+    return poly
+
+def bbox2wkt(bbox):
+    tmp=bbox.split(',')
+    minx = float(tmp[0])
+    miny = float(tmp[1])
+    maxx = float(tmp[2])
+    maxy = float(tmp[3])
+    return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
+
 def point_inside_polygon(x,y,poly):
     # from http://www.ariel.com.au/a/python-point-int-poly.html
     n = len(poly)
@@ -105,6 +118,19 @@ def point_inside_polygon(x,y,poly):
     return inside
 
 def bbox_query(bbox_data,bbox_input):
+
+    from shapely.wkt import loads
+    from shapely.geometry import Polygon
+
+    b1 = loads(bbox2wkt(bbox_data))
+    b2 = loads(bbox2wkt(bbox_input))
+
+    if b1.intersects(b2) is True or b1.equals(b2) is True:
+        return 'true' 
+    else:
+        return 'false'
+
+def bbox_query2(bbox_data,bbox_input):
     if bbox_data == 'None':
         return 'false'
 
