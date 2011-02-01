@@ -62,7 +62,6 @@ class Filter(object):
                 if self.boq is not None and self.boq == ' not ':
                     queries.append('bbox_query(bbox,"%s") = "false"' % bbox)
                 else:
-                #self.where = 'bbox_query(bbox,"%s") = "true"' % bbox
                     queries.append('bbox_query(bbox,"%s") = "true"' % bbox)
 
             else:
@@ -106,7 +105,6 @@ class Filter(object):
                 if matchcase is not None and matchcase == 'false':
                     co = 'like'
     
-                #self.where = '%s %s "%s"' % (pname,co,pvalue)
                 if self.boq == ' not ':
                     queries.append('not %s %s "%s"' % (pname,co,pvalue))
                 else:
