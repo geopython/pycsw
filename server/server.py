@@ -375,9 +375,10 @@ class Csw(object):
                         ns,el, = e.split(':')
                         if el == 'BoundingBox':
                             bbox = r.bbox.split(',')
-                            b = etree.SubElement(record, util.nspath_eval('ows:BoundingBox'), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
-                            etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox[0],bbox[1])
-                            etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[2],bbox[3])
+                            if len(bbox) == 4:
+                                b = etree.SubElement(record, util.nspath_eval('ows:BoundingBox'), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
+                                etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox[0],bbox[1])
+                                etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[2],bbox[3])
  
                         else:
                             if eval('r.%s'%el) != 'None':
@@ -525,8 +526,8 @@ class Csw(object):
 
             if client_mr < server_mr:
                 request['maxrecords'] = client_mr
-            else:
-                request['maxrecords'] = server_mr
+#            else:
+#                request['maxrecords'] = server_mr
 
             tmp = doc.find(util.nspath_eval('csw:Query/csw:ElementSetName'))
             if tmp is not None:
