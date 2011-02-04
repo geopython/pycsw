@@ -119,16 +119,25 @@ def point_inside_polygon(x,y,poly):
 
 def bbox_query(bbox_data,bbox_input):
 
+    if bbox_data == 'None' or bbox_input == 'None':
+        return 'false'
+
     from shapely.wkt import loads
     from shapely.geometry import Polygon
 
     b1 = loads(bbox2wkt(bbox_data))
     b2 = loads(bbox2wkt(bbox_input))
 
-    if b1.intersects(b2) is True or b1.equals(b2) is True:
+    if b1.intersects(b2) is True:
         return 'true' 
     else:
         return 'false'
+
+    #if b1.disjoint(b2) is False:
+    #    return 'true' 
+    #else:
+    #    return 'false'
+
 
 def bbox_query2(bbox_data,bbox_input):
     if bbox_data == 'None':
