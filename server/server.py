@@ -33,7 +33,6 @@
 import os
 import re
 import sys
-import time
 import cgi
 import sqlite3
 from lxml import etree
@@ -212,11 +211,11 @@ class Csw(object):
 
                 get = etree.SubElement(http, util.nspath_eval('ows:Get'))
                 get.attrib[util.nspath_eval('xlink:type')] = 'simple'
-                get.attrib[util.nspath_eval('xlink:href')] = self.config['server']['baseurl']
+                get.attrib[util.nspath_eval('xlink:href')] = self.config['server']['url']
 
                 post = etree.SubElement(http, util.nspath_eval('ows:Post'))
                 post.attrib[util.nspath_eval('xlink:type')] = 'simple'
-                post.attrib[util.nspath_eval('xlink:href')] = self.config['server']['baseurl']
+                post.attrib[util.nspath_eval('xlink:href')] = self.config['server']['url']
 
                 for p in config.model['operations'][o]['parameters']:
                     param = etree.SubElement(op, util.nspath_eval('ows:Parameter'), name=p)
@@ -257,7 +256,7 @@ class Csw(object):
     
     def describerecord(self):
         csw = False
-        gmd = False
+        #gmd = False
     
         if self.kvp.has_key('typename') and len(self.kvp['typename']) > 0:
             for t in self.kvp['typename']:
@@ -267,11 +266,11 @@ class Csw(object):
                 #else:
                 if t == 'csw:Record':  # return only csw
                     csw = True
-                if t == 'gmd:MD_Metadata':  # return only iso
-                    gmd = True
+        #        if t == 'gmd:MD_Metadata':  # return only iso
+        #            gmd = True
         else:
             csw = True
-            gmd = True
+        #    gmd = True
     
         if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue','outputformat', 'Invalid value for outputformat: %s' % self.kvp['outputformat'])
@@ -287,16 +286,16 @@ class Csw(object):
             dc = etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','record.xsd')).getroot()
             sc.append(dc)
 
-        if gmd is True:
-            sc = etree.SubElement(node, util.nspath_eval('csw:SchemaComponent'), schemaLanguage='XMLSCHEMA', targetNamespace=config.namespaces['gmd'])
-            xs = etree.SubElement(sc, util.nspath_eval('xs:schema'), elementFormDefault='qualified',targetNamespace=config.namespaces['gmd'])
-            etree.SubElement(xs, util.nspath_eval('xs:include'), schemaLocation='http://www.isotc211.org/2005/gmd/gmd.xsd')
+        #if gmd is True:
+        #    sc = etree.SubElement(node, util.nspath_eval('csw:SchemaComponent'), schemaLanguage='XMLSCHEMA', targetNamespace=config.namespaces['gmd'])
+        #    xs = etree.SubElement(sc, util.nspath_eval('xs:schema'), elementFormDefault='qualified',targetNamespace=config.namespaces['gmd'])
+        #    etree.SubElement(xs, util.nspath_eval('xs:include'), schemaLocation='http://www.isotc211.org/2005/gmd/gmd.xsd')
 
         return etree.tostring(node, pretty_print=True)
     
     def getrecords(self):
 
-        timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
+        timestamp = util.get_today_and_now()
 
         if self.kvp['outputschema'] not in config.model['constraints']['outputSchema']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputSchema parameter value: %s' % self.kvp['outputschema'])
@@ -419,7 +418,7 @@ class Csw(object):
             else:
                 esn = self.kvp['elementsetname']
 
-        timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
+        timestamp = util.get_today_and_now()
 
         # init the query
         q = query.Query(self.config['server']['data'])
