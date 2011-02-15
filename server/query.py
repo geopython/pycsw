@@ -47,7 +47,8 @@ class Query(object):
         
         self.session=create_session()
         self.connection = db.raw_connection()
-        self.connection.create_function('bbox_query',2,util.bbox_query)
+        self.connection.create_function('query_bbox',2,util.query_bbox)
+        self.connection.create_function('query_not_bbox',2,util.query_not_bbox)
         self.connection.create_function('anytext_query',2,util.anytext_query)
        
     def get(self,filter=None,ids=None,sortby=None):

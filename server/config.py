@@ -91,10 +91,10 @@ model =  {
             'values': ['application/xml']
         },
         'outputSchema': {
-            'values': ['http://www.opengis.net/cat/csw/2.0.2', 'http://www.isotc211.org/2005/gmd']
+            'values': ['http://www.opengis.net/cat/csw/2.0.2']
         },
         'TypeNames': {
-            'values': ['csw:Record','gmd:MD_Metadata']
+            'values': ['csw:Record']
         },
         'ElementSetName': {
             'values': ['brief', 'summary', 'full']
@@ -112,6 +112,7 @@ mappings = {
     'dct:abstract': 'dataset_abstract',
     'dc:type': 'dataset_type',
     'csw:AnyText': 'dataset_metadata',
+    'AnyText': 'dataset_metadata',
     '/ows:BoundingBox': 'dataset_bbox',
     'ows:BoundingBox': 'dataset_bbox'
 }

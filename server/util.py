@@ -32,6 +32,10 @@
 
 import config
 
+def get_today_and_now():
+    import time
+    return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
+
 def get_version_integer(version):
     if version is not None:  # split and make integer
         a = version.split('.')
@@ -43,30 +47,6 @@ def get_version_integer(version):
             return -1
     else:  # not a valid version string
          return -1
-
-def nspath(path, ns='http://www.opengis.net/cat/csw/2.0.2'):
-
-    """
-
-    Prefix the given path with the given namespace identifier.
-    
-    Parameters
-    ----------
-
-    - path: ElementTree API Compatible path expression
-    - ns: the XML namespace URI.
-
-    """
-
-    if ns is None or path is None:
-        return -1
-
-    components = []
-    for component in path.split('/'):
-        if component != '*':
-            component = '{%s}%s' % (ns, component)
-        components.append(component)
-    return '/'.join(components)
 
 def nspath_eval(xpath, mappings=config.namespaces):
     out = []
@@ -86,11 +66,6 @@ def bbox2polygon(bbox):
     return poly
 
 def bbox2wkt(bbox):
-    # like '-180,-90,180,90'
-    minx,miny,maxx,maxy=bbox.split(',')
-    return poly
-
-def bbox2wkt(bbox):
     tmp=bbox.split(',')
     minx = float(tmp[0])
     miny = float(tmp[1])
@@ -98,26 +73,28 @@ def bbox2wkt(bbox):
     maxy = float(tmp[3])
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
 
-def point_inside_polygon(x,y,poly):
-    # from http://www.ariel.com.au/a/python-point-int-poly.html
-    n = len(poly)
-    inside=False
+def query_not_bbox(bbox_data,bbox_input):
 
-    p1x,p1y = poly[0]
-    for i in range(n+1):
-        p2x,p2y = poly[i % n]
-        if y > min(p1y,p2y):
-            if y <= max(p1y,p2y):
-                if x <= max(p1x,p2x):
-                    if p1y != p2y:
-                        xinters = (y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x
-                    if p1x == p2x or x <= xinters:
-                        inside = not inside
-        p1x,p1y = p2x,p2y
+    if bbox_data == 'None' or bbox_input == 'None':
+        return 'false'
 
-    return inside
+    from shapely.wkt import loads
+    from shapely.geometry import Polygon
 
-def bbox_query(bbox_data,bbox_input):
+    b1 = loads(bbox2wkt(bbox_data))
+    b2 = loads(bbox2wkt(bbox_input))
+
+    #if b1.intersects(b2) is False:
+    #    return 'true'
+    #else:
+    #    return 'false'
+
+    if b1.disjoint(b2) is True:
+        return 'true' 
+    else:
+        return 'false'
+
+def query_bbox(bbox_data,bbox_input):
 
     if bbox_data == 'None' or bbox_input == 'None':
         return 'false'
@@ -137,20 +114,6 @@ def bbox_query(bbox_data,bbox_input):
     #    return 'true' 
     #else:
     #    return 'false'
-
-
-def bbox_query2(bbox_data,bbox_input):
-    if bbox_data == 'None':
-        return 'false'
-
-    b1 = bbox2polygon(bbox_data)
-    b2 = bbox2polygon(bbox_input)
-
-    # check if any points of the dataset bbox are inside the query bbox
-    for xy in b1:  # each pair
-        if point_inside_polygon(xy[0],xy[1],b2):  # match
-            return 'true'
-    return 'false'
 
 def anytext_query(xml, searchterm):
     # perform fulltext search against XML
