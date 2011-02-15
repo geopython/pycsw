@@ -51,7 +51,7 @@ model =  {
         'GetCapabilities': {
             'parameters': {
                 'sections': {
-                    'values': ['ServiceIdentification', 'ServiceProvider', 'OperationsMetadata', 'FilterCapabilities']
+                    'values': ['ServiceIdentification', 'ServiceProvider', 'OperationsMetadata', 'Filter_Capabilities']
                 }
             }
         },
@@ -59,7 +59,14 @@ model =  {
             'parameters': {
                 'schemaLanguage': {
                     #'values': ['XMLSCHEMA']
-                    'values': ['http://www.w3.org/XML/Schema']
+                    #'values': ['http://www.w3.org/XML/Schema']
+                    'values': ['http://www.w3.org/XML/Schema', 'http://www.w3.org/TR/xmlschema-1/']
+                },
+                'typeName': {
+                    'values': ['csw:Record']
+                },
+                'outputFormat': {
+                    'values': ['application/xml']
                 }
             }
         },
@@ -67,11 +74,35 @@ model =  {
             'parameters': {
                 'resultType': {
                     'values': ['hits', 'results', 'validate']
+                },
+                'typeNames': {
+                    'values': ['csw:Record']
+                },
+                'outputSchema': {
+                    'values': ['http://www.opengis.net/cat/csw/2.0.2']
+                },
+                'outputFormat': {
+                    'values': ['application/xml']
                 }
             }
         },
         'GetRecordById': {
             'parameters': {
+                'resultType': {
+                    'values': ['hits', 'results', 'validate']
+                },
+                'typeNames': {
+                    'values': ['csw:Record']
+                },
+                'outputSchema': {
+                    'values': ['http://www.opengis.net/cat/csw/2.0.2']
+                },
+                'outputFormat': {
+                    'values': ['application/xml']
+                },
+                'ElementSetName': {
+                    'values': ['brief','summary','full']
+                }
             }
         }
     },
@@ -80,7 +111,7 @@ model =  {
             'values': ['2.0.2']
         },
         'service': {
-            'values': ['CSW']
+            'values': ['http://www.opengis.net/cat/csw/2.0.2']
         }
     },
     'constraints': {
