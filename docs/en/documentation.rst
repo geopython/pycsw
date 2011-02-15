@@ -69,7 +69,7 @@ Edit the following in ``default.cfg``:
 - **language**: the ISO 639-2 language and country code of the service (e.g. en-CA)
 - **encoding**: the content type encoding (e.g. ISO-8859-1)
 - **maxrecords**: the maximum number of records to return by default
-- **data**: the full file path to the SQLite database
+- **metadata_db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
 
 [identification]
 

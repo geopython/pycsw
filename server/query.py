@@ -39,7 +39,7 @@ class dsc(object):
 
 class Query(object):
     def __init__(self, db):
-        db = create_engine('sqlite:///%s' % db, echo=False)
+        db = create_engine('%s' % db, echo=False)
 
         dst = Table('dataset', MetaData(db), autoload=True)
        
