@@ -303,8 +303,9 @@ class Csw(object):
         if self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputformat', 'Invalid outputFormat parameter value: %s' % self.kvp['outputformat'])
 
-        if self.kvp['resulttype'] not in config.model['operations']['GetRecords']['parameters']['resultType']['values']:
-            return self.exceptionreport('InvalidParameterValue', 'resulttype', 'Invalid resultType parameter value: %s' % self.kvp['resulttype'])
+        if self.kvp['resulttype'] is not None:
+            if self.kvp['resulttype'] not in config.model['operations']['GetRecords']['parameters']['resultType']['values']:
+                return self.exceptionreport('InvalidParameterValue', 'resulttype', 'Invalid resultType parameter value: %s' % self.kvp['resulttype'])
 
         if self.kvp.has_key('elementsetname') is False:
             return self.exceptionreport('MissingParameterValue', 'elementsetname', 'Missing ElementSetName parameter')
@@ -324,7 +325,7 @@ class Csw(object):
 
             return etree.tostring(node,pretty_print=True)
         
-        esn = self.kvp['elementsetname']
+        #esn = self.kvp['elementsetname']
 
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
@@ -353,16 +354,22 @@ class Csw(object):
 
         etree.SubElement(node, util.nspath_eval('csw:SearchStatus'), timestamp=timestamp)
 
+        if self.kvp['filter'] is None and self.kvp['resulttype'] is None:
+            returned='0'
+
         sr = etree.SubElement(node, util.nspath_eval('csw:SearchResults'), numberOfRecordsMatched=matched, numberOfRecordsReturned=returned, nextRecord=next)
 
-        max = int(self.kvp['startposition']) + int(self.kvp['maxrecords'])
+        if self.kvp['filter'] is None and self.kvp['resulttype'] is None:
+            return etree.tostring(node, pretty_print=True)
 
+        max = int(self.kvp['startposition']) + int(self.kvp['maxrecords'])
+ 
         if results is not None:
+        #if results is not None and self.kvp['resulttype'] is not None and self.kvp['filter'] is not None:
             for r in results[int(self.kvp['startposition']):max]:
-            #for r in results:
-                if esn == 'brief':
+                if self.kvp['elementsetname'] == 'brief':
                     el = 'BriefRecord'
-                elif esn == 'summary':
+                elif self.kvp['elementsetname'] == 'summary':
                     el = 'SummaryRecord'
                 else:
                     el = 'Record'
@@ -376,8 +383,8 @@ class Csw(object):
                             bbox = r.bbox.split(',')
                             if len(bbox) == 4:
                                 b = etree.SubElement(record, util.nspath_eval('ows:BoundingBox'), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
-                                etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox[0],bbox[1])
-                                etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[2],bbox[3])
+                                etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox[1],bbox[0])
+                                etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[3],bbox[2])
  
                         else:
                             if eval('r.%s'%el) != 'None':
@@ -500,7 +507,7 @@ class Csw(object):
             if tmp is not None:
                 request['resulttype'] = tmp
             else:
-                request['resulttype'] = 'results'
+                request['resulttype'] = None
 
             tmp = doc.find('./').attrib.get('outputFormat')
             if tmp is not None:
