@@ -49,9 +49,23 @@ class Filter(object):
 
         for c in tmp.xpath('child::*'):
             co = ''
-            bquery = 'true'
 
-            if c.tag == util.nspath_eval('ogc:BBOX'):
+            # c= ogc:Not
+            if c.tag == util.nspath_eval('ogc:Not'):
+                f=open('/tmp/ff.txt','a')
+                f.write('NOT')
+                #c = c.xpath('child::*')[0]
+                pn = c.find(util.nspath_eval('ogc:BBOX/ogc:PropertyName'))
+                if pn is None:
+                    raise RuntimeError, ('Missing PropertyName in spatial filter')
+                elif pn is not None and pn.text not in ['ows:BoundingBox', '/ows:BoundingBox']:
+                    raise RuntimeError, ('Invalid PropertyName in spatial filter: %s' % pn.text)
+                bbox = gml.get_bbox(c.xpath('child::*')[0])
+
+                queries.append('query_not_bbox(bbox,"%s") = "true"' % bbox)
+
+
+            elif c.tag == util.nspath_eval('ogc:BBOX'):
                 pn = c.find(util.nspath_eval('ogc:PropertyName'))
                 if pn is None:
                     raise RuntimeError, ('Missing PropertyName in spatial filter')
@@ -60,9 +74,9 @@ class Filter(object):
                 bbox = gml.get_bbox(c)
 
                 if self.boq is not None and self.boq == ' not ':
-                    queries.append('bbox_query(bbox,"%s") = "false"' % bbox)
+                    queries.append('query_not_bbox(bbox,"%s") = "true"' % bbox)
                 else:
-                    queries.append('bbox_query(bbox,"%s") = "true"' % bbox)
+                    queries.append('query_bbox(bbox,"%s") = "true"' % bbox)
 
             else:
                 matchcase = c.attrib.get('matchCase')
@@ -120,3 +134,6 @@ class Filter(object):
             self.where = self.boq.join(queries)
         else:
             self.where = queries[0]
+
+        f=open('/tmp/ff.txt','ab')
+        f.write(self.where)
