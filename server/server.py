@@ -329,7 +329,7 @@ class Csw(object):
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
 
-        q = query.Query(self.config['server']['data'])
+        q = query.Query(self.config['server']['metadata_db'])
         results = q.get(self.kvp['filter'], sortby=self.kvp['sortby'])
 
         if results is None:
@@ -421,7 +421,7 @@ class Csw(object):
         timestamp = util.get_today_and_now()
 
         # init the query
-        q = query.Query(self.config['server']['data'])
+        q = query.Query(self.config['server']['metadata_db'])
 
         results = q.get(ids=ids)
 
