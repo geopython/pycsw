@@ -75,8 +75,11 @@ def bbox2wkt(bbox):
 
 def query_not_bbox(bbox_data,bbox_input):
 
-    if bbox_data == 'None' or bbox_input == 'None':
+    if bbox_input == 'None':
         return 'false'
+
+    if bbox_data == 'None':
+        return 'true'
 
     from shapely.wkt import loads
     from shapely.geometry import Polygon
@@ -109,11 +112,6 @@ def query_bbox(bbox_data,bbox_input):
         return 'true' 
     else:
         return 'false'
-
-    #if b1.disjoint(b2) is False:
-    #    return 'true' 
-    #else:
-    #    return 'false'
 
 def anytext_query(xml, searchterm):
     # perform fulltext search against XML
