@@ -50,11 +50,7 @@ class Filter(object):
         for c in tmp.xpath('child::*'):
             co = ''
 
-            # c= ogc:Not
             if c.tag == util.nspath_eval('ogc:Not'):
-                f=open('/tmp/ff.txt','a')
-                f.write('NOT')
-                #c = c.xpath('child::*')[0]
                 pn = c.find(util.nspath_eval('ogc:BBOX/ogc:PropertyName'))
                 if pn is None:
                     raise RuntimeError, ('Missing PropertyName in spatial filter')
@@ -134,6 +130,3 @@ class Filter(object):
             self.where = self.boq.join(queries)
         else:
             self.where = queries[0]
-
-        f=open('/tmp/ff.txt','ab')
-        f.write(self.where)
