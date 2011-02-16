@@ -74,7 +74,6 @@ def bbox2wkt(bbox):
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
 
 def query_not_bbox(bbox_data,bbox_input):
-
     if bbox_input == 'None':
         return 'false'
 
@@ -98,7 +97,6 @@ def query_not_bbox(bbox_data,bbox_input):
         return 'false'
 
 def query_bbox(bbox_data,bbox_input):
-
     if bbox_data == 'None' or bbox_input == 'None':
         return 'false'
 
@@ -113,7 +111,7 @@ def query_bbox(bbox_data,bbox_input):
     else:
         return 'false'
 
-def anytext_query(xml, searchterm):
+def query_anytext(xml, searchterm):
     # perform fulltext search against XML
     for el in xml.xpath('//text()'):  # all elements
         if el.lower().find(searchterm.lower()) != -1:

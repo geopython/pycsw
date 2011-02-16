@@ -49,7 +49,7 @@ class Query(object):
         self.connection = db.raw_connection()
         self.connection.create_function('query_bbox',2,util.query_bbox)
         self.connection.create_function('query_not_bbox',2,util.query_not_bbox)
-        self.connection.create_function('anytext_query',2,util.anytext_query)
+        self.connection.create_function('query_anytext',2,util.query_anytext)
        
     def get(self,filter=None,ids=None,sortby=None):
         if ids is not None:  # it's a GetRecordById request
