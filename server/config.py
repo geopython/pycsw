@@ -117,18 +117,6 @@ model =  {
     'constraints': {
         'PostEncoding': {
             'values': ['XML']
-        },
-        'outputFormat': {
-            'values': ['application/xml']
-        },
-        'outputSchema': {
-            'values': ['http://www.opengis.net/cat/csw/2.0.2']
-        },
-        'TypeNames': {
-            'values': ['csw:Record']
-        },
-        'ElementSetName': {
-            'values': ['brief', 'summary', 'full']
         }
     }
 }
