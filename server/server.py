@@ -159,7 +159,6 @@ class Csw(object):
             si = False
             sp = False
             om = False
-            #fc = False
             for s in self.kvp['sections'].split(','):
                 if s == 'ServiceIdentification':
                     si = True
@@ -303,11 +302,9 @@ class Csw(object):
 
         timestamp = util.get_today_and_now()
 
-        #if self.kvp['outputschema'] not in config.model['constraints']['outputSchema']['values']:
         if self.kvp['outputschema'] not in config.model['operations']['GetRecords']['parameters']['outputSchema']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputSchema parameter value: %s' % self.kvp['outputschema'])
 
-        #if self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
         if self.kvp['outputformat'] not in config.model['operations']['GetRecords']['parameters']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputformat', 'Invalid outputFormat parameter value: %s' % self.kvp['outputformat'])
 
@@ -390,8 +387,8 @@ class Csw(object):
                                 etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[3],bbox[2])
  
                         else:
-                            if eval('r.%s'%el) != 'None':
-                                etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=eval('r.%s'%el)
+                            if hasattr(r, el) is True:
+                                etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=getattr(r, el)
                 elif self.kvp.has_key('elementsetname') is True:
                     etree.SubElement(record, util.nspath_eval('dc:identifier')).text=r.identifier
                     etree.SubElement(record, util.nspath_eval('dc:title')).text=r.title
@@ -412,18 +409,15 @@ class Csw(object):
 
         ids = self.kvp['id'].split(',')
 
-        #if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
         if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['operations']['GetRecordById']['parameters']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputformat', 'Invalid outputformat parameter %s' % self.kvp['outputformat'])
 
-        #if self.kvp.has_key('outputschema') and self.kvp['outputschema'] not in config.model['constraints']['outputSchema']['values']:
         if self.kvp.has_key('outputschema') and self.kvp['outputschema'] not in config.model['operations']['GetRecordById']['parameters']['outputSchema']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputschema parameter %s' % self.kvp['outputschema'])
 
         if self.kvp.has_key('elementsetname') is False:
             esn = 'summary'
         else:
-            #if self.kvp['elementsetname'] not in config.model['constraints']['ElementSetName']['values']:
             if self.kvp['elementsetname'] not in config.model['operations']['GetRecordById']['parameters']['ElementSetName']['values']:
                 return self.exceptionreport('InvalidParameterValue', 'elementsetname', 'Invalid elementsetname parameter %s' % self.kvp['elementsetname'])
             if self.kvp['elementsetname'] == 'full':
