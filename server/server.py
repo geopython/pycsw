@@ -36,20 +36,30 @@ import sys
 import cgi
 import sqlite3
 from lxml import etree
-import config, filter, query, util
+import config, filter, log, query, util
 
 class Csw(object):
     def __init__(self,configfile=None):
         self.config = config.get_config(configfile)
 
+        try:
+            self.log = log.initlog(self.config)
+        except Exception, err:
+            self.response = self.exceptionreport('NoApplicableCode', 'service', str(err))
+
     def dispatch(self):
         error = 0
+
+        if hasattr(self,'response') is True:
+            self._set_response()
+            return
 
         cgifs = cgi.FieldStorage(keep_blank_values=1)
     
         if cgifs.file:  # it's a POST request
             postdata = cgifs.file.read()
             self.request = postdata
+            self.log.debug('Request type: POST.  Request:\n%s\n', self.request)
             self.kvp = self.parse_postdata(postdata)
             if isinstance(self.kvp, str) is True:  # it's an exception
                 error = 1
@@ -59,7 +69,8 @@ class Csw(object):
     
         else:  # it's a GET request
             self.kvp = {}
-            self.request = os.environ['HTTP_HOST'] + '?' + os.environ['REQUEST_URI']
+            self.request = 'http://%s%s' % (os.environ['HTTP_HOST'], os.environ['REQUEST_URI'])
+            self.log.debug('Request type: GET.  Request:\n%s\n', self.request)
             for key in cgifs.keys():
                 self.kvp[key.lower()] = cgifs[key].value
 
@@ -111,7 +122,6 @@ class Csw(object):
                     code = 'InvalidParameterValue'
                     text = 'Invalid value for request: %s' % self.kvp['request']
     
-    
         if error == 1:  # return an ExceptionReport
             self.response = self.exceptionreport(code, locator, text)
     
@@ -127,11 +137,8 @@ class Csw(object):
             else:
                 self.response = self.exceptionreport('InvalidParameterValue', 'request', 'Invalid request parameter: %s' % self.kvp['request'])
 
-        # set HTTP response headers and XML declaration
-        hh = 'Content-type:%s\n\n' % self.config['server']['mimetype']
-        xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.config['server']['encoding']
-        appinfo = '<!-- pycsw %s -->\n' % config.version
-        self.response = '%s%s%s%s' % (hh, xmldecl, appinfo, self.response)
+        self._set_response()
+        self.log.debug('Response:\n%s\n' % self.response)
 
     def exceptionreport(self,code,locator,text):
 
@@ -147,10 +154,12 @@ class Csw(object):
         si = True
         sp = True
         om = True
+        fc = True
         if self.kvp.has_key('sections'):
             si = False
             sp = False
             om = False
+            #fc = False
             for s in self.kvp['sections'].split(','):
                 if s == 'ServiceIdentification':
                     si = True
@@ -158,11 +167,14 @@ class Csw(object):
                     sp = True
                 if s == 'OperationsMetadata':
                     om = True
+                if s == 'Filter_Capabilities':
+                    fc = True
 
         node = etree.Element(util.nspath_eval('csw:Capabilities'), nsmap=config.namespaces, version='2.0.2')
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
 
         if si is True:
+            self.log.debug('Writing section ServiceIdentification.')
             si = etree.SubElement(node, util.nspath_eval('ows:ServiceIdentification'))
             etree.SubElement(si, util.nspath_eval('ows:Title')).text=self.config['identification']['title']
             etree.SubElement(si, util.nspath_eval('ows:Abstract')).text=self.config['identification']['abstract']
@@ -175,6 +187,7 @@ class Csw(object):
             etree.SubElement(si, util.nspath_eval('ows:AccessConstraints')).text=self.config['identification']['accessconstraints']
 
         if sp is True:
+            self.log.debug('Writing section ServiceProvider.')
             sp = etree.SubElement(node, util.nspath_eval('ows:ServiceProvider'))
             etree.SubElement(sp, util.nspath_eval('ows:ProviderName')).text=self.config['provider']['name']
             ps = etree.SubElement(sp, util.nspath_eval('ows:ProviderSite'))
@@ -203,6 +216,7 @@ class Csw(object):
             etree.SubElement(sc, util.nspath_eval('ows:Role')).text=self.config['contact']['role']
 
         if om is True:
+            self.log.debug('Writing section OperationsMetadata.')
             om = etree.SubElement(node, util.nspath_eval('ows:OperationsMetadata'))
             for o in config.model['operations'].keys():
                 op = etree.SubElement(om, util.nspath_eval('ows:Operation'), name=o)
@@ -232,47 +246,43 @@ class Csw(object):
                 for v in config.model['constraints'][p]['values']:
                     etree.SubElement(param, util.nspath_eval('ows:Value')).text = v
 
-        fi = etree.SubElement(node, util.nspath_eval('ogc:Filter_Capabilities'))
-        sc = etree.SubElement(fi, util.nspath_eval('ogc:Spatial_Capabilities'))
-        go = etree.SubElement(sc, util.nspath_eval('ogc:GeometryOperands'))
-        etree.SubElement(go, util.nspath_eval('ogc:GeometryOperand')).text = 'gml:Envelope'
+            etree.SubElement(om, util.nspath_eval('ows:ExtendedCapabilities'))
 
-        so = etree.SubElement(sc, util.nspath_eval('ogc:SpatialOperators'))
-        etree.SubElement(so, util.nspath_eval('ogc:SpatialOperator'), name='BBOX')
-
-        sc = etree.SubElement(fi, util.nspath_eval('ogc:Scalar_Capabilities'))
-        etree.SubElement(sc, util.nspath_eval('ogc:LogicalOperators'))
+        if fc is True:
+            self.log.debug('Writing section Filter_Capabilities.')
+            fi = etree.SubElement(node, util.nspath_eval('ogc:Filter_Capabilities'))
+            sc = etree.SubElement(fi, util.nspath_eval('ogc:Spatial_Capabilities'))
+            go = etree.SubElement(sc, util.nspath_eval('ogc:GeometryOperands'))
+            etree.SubElement(go, util.nspath_eval('ogc:GeometryOperand')).text = 'gml:Envelope'
     
-        co = etree.SubElement(sc, util.nspath_eval('ogc:ComparisonOperators'))
-
-        for c in ['LessThan','GreaterThan','LessThanEqualTo','GreaterThanEqualTo','EqualTo','NotEqualTo','Like','Between','NullCheck']:
-            etree.SubElement(co, util.nspath_eval('ogc:ComparisonOperator')).text = c
-
-        ic = etree.SubElement(fi, util.nspath_eval('ogc:Id_Capabilities'))
-        etree.SubElement(ic, util.nspath_eval('ogc:EID'))
-        etree.SubElement(ic, util.nspath_eval('ogc:FID'))
+            so = etree.SubElement(sc, util.nspath_eval('ogc:SpatialOperators'))
+            etree.SubElement(so, util.nspath_eval('ogc:SpatialOperator'), name='BBOX')
+    
+            sc = etree.SubElement(fi, util.nspath_eval('ogc:Scalar_Capabilities'))
+            etree.SubElement(sc, util.nspath_eval('ogc:LogicalOperators'))
+        
+            co = etree.SubElement(sc, util.nspath_eval('ogc:ComparisonOperators'))
+    
+            for c in ['LessThan','GreaterThan','LessThanEqualTo','GreaterThanEqualTo','EqualTo','NotEqualTo','Like','Between','NullCheck']:
+                etree.SubElement(co, util.nspath_eval('ogc:ComparisonOperator')).text = c
+    
+            ic = etree.SubElement(fi, util.nspath_eval('ogc:Id_Capabilities'))
+            etree.SubElement(ic, util.nspath_eval('ogc:EID'))
+            etree.SubElement(ic, util.nspath_eval('ogc:FID'))
 
         return etree.tostring(node, pretty_print=True)
     
     def describerecord(self):
         csw = False
-        #gmd = False
     
         if self.kvp.has_key('typename') and len(self.kvp['typename']) > 0:
             for t in self.kvp['typename']:
-                #if t not in ['csw:Record', 'gmd:MD_Metadata']:
-                #    return exceptionreport('InvalidParameterValue', 'typename', \
-                #    'Invalid value for typename: %s' % t)
-                #else:
                 if t == 'csw:Record':  # return only csw
                     csw = True
-        #        if t == 'gmd:MD_Metadata':  # return only iso
-        #            gmd = True
         else:
             csw = True
-        #    gmd = True
     
-        if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
+        if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['operations']['DescribeRecord']['parameters']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue','outputformat', 'Invalid value for outputformat: %s' % self.kvp['outputformat'])
     
         if self.kvp.has_key('schemalanguage') and self.kvp['schemalanguage'] not in config.model['operations']['DescribeRecord']['parameters']['schemaLanguage']['values']:
@@ -282,14 +292,10 @@ class Csw(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
 
         if csw is True:
+            self.log.debug('Writing csw:Record schema.')
             sc = etree.SubElement(node, util.nspath_eval('csw:SchemaComponent'), schemaLanguage='XMLSCHEMA', targetNamespace=config.namespaces['csw'])
             dc = etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','record.xsd')).getroot()
             sc.append(dc)
-
-        #if gmd is True:
-        #    sc = etree.SubElement(node, util.nspath_eval('csw:SchemaComponent'), schemaLanguage='XMLSCHEMA', targetNamespace=config.namespaces['gmd'])
-        #    xs = etree.SubElement(sc, util.nspath_eval('xs:schema'), elementFormDefault='qualified',targetNamespace=config.namespaces['gmd'])
-        #    etree.SubElement(xs, util.nspath_eval('xs:include'), schemaLocation='http://www.isotc211.org/2005/gmd/gmd.xsd')
 
         return etree.tostring(node, pretty_print=True)
     
@@ -297,10 +303,12 @@ class Csw(object):
 
         timestamp = util.get_today_and_now()
 
-        if self.kvp['outputschema'] not in config.model['constraints']['outputSchema']['values']:
+        #if self.kvp['outputschema'] not in config.model['constraints']['outputSchema']['values']:
+        if self.kvp['outputschema'] not in config.model['operations']['GetRecords']['parameters']['outputSchema']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputSchema parameter value: %s' % self.kvp['outputschema'])
 
-        if self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
+        #if self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
+        if self.kvp['outputformat'] not in config.model['operations']['GetRecords']['parameters']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputformat', 'Invalid outputFormat parameter value: %s' % self.kvp['outputformat'])
 
         if self.kvp['resulttype'] is not None:
@@ -310,12 +318,6 @@ class Csw(object):
         if self.kvp.has_key('elementsetname') is False:
             return self.exceptionreport('MissingParameterValue', 'elementsetname', 'Missing ElementSetName parameter')
 
-        #if self.kvp['filter'] is None:
-        #    return self.exceptionreport('InvalidParameterValue', 'filter', 'Invalid Filter request: %s' % self.request)
-
-        #if self.kvp['elementsetname'] in ['brief','summary']:
-        #    return self.exceptionreport('InvalidParameterValue', 'elementsetname', 'Invalid ElementSetName parameter: %s' % self.kvp['elementsetname'])
-
         if self.kvp['resulttype'] == 'validate':
             node = etree.Element(util.nspath_eval('csw:Acknowledgement'), nsmap=config.namespaces, timeStamp=timestamp)
             node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
@@ -324,12 +326,11 @@ class Csw(object):
             node1.append(etree.fromstring(self.request))
 
             return etree.tostring(node,pretty_print=True)
-        
-        #esn = self.kvp['elementsetname']
 
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
 
+        self.log.debug('Querying database with filter: %s, sortby: %s.' % (self.kvp['filter'], self.kvp['sortby']))
         q = query.Query(self.config['server']['metadata_db'])
         results = q.get(self.kvp['filter'], sortby=self.kvp['sortby'])
 
@@ -349,6 +350,7 @@ class Csw(object):
             if int(self.kvp['maxrecords']) == 0:
                 next = '1'
 
+        self.log.debug('Search results: matched: %s, returned: %s, next: %s.' % (matched, returned, next))
         node = etree.Element(util.nspath_eval('csw:GetRecordsResponse'), nsmap=config.namespaces, version='2.0.2')
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
 
@@ -360,12 +362,13 @@ class Csw(object):
         sr = etree.SubElement(node, util.nspath_eval('csw:SearchResults'), numberOfRecordsMatched=matched, numberOfRecordsReturned=returned, nextRecord=next)
 
         if self.kvp['filter'] is None and self.kvp['resulttype'] is None:
+            self.log.debug('Empty result set returned.')
             return etree.tostring(node, pretty_print=True)
 
         max = int(self.kvp['startposition']) + int(self.kvp['maxrecords'])
  
         if results is not None:
-        #if results is not None and self.kvp['resulttype'] is not None and self.kvp['filter'] is not None:
+            self.log.debug('Presenting records %s - %s' % (self.kvp['startposition'], max))
             for r in results[int(self.kvp['startposition']):max]:
                 if self.kvp['elementsetname'] == 'brief':
                     el = 'BriefRecord'
@@ -409,16 +412,19 @@ class Csw(object):
 
         ids = self.kvp['id'].split(',')
 
-        if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
+        #if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['constraints']['outputFormat']['values']:
+        if self.kvp.has_key('outputformat') and self.kvp['outputformat'] not in config.model['operations']['GetRecordById']['parameters']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputformat', 'Invalid outputformat parameter %s' % self.kvp['outputformat'])
 
-        if self.kvp.has_key('outputschema') and self.kvp['outputschema'] not in config.model['constraints']['outputSchema']['values']:
+        #if self.kvp.has_key('outputschema') and self.kvp['outputschema'] not in config.model['constraints']['outputSchema']['values']:
+        if self.kvp.has_key('outputschema') and self.kvp['outputschema'] not in config.model['operations']['GetRecordById']['parameters']['outputSchema']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputschema parameter %s' % self.kvp['outputschema'])
 
         if self.kvp.has_key('elementsetname') is False:
             esn = 'summary'
         else:
-            if self.kvp['elementsetname'] not in config.model['constraints']['ElementSetName']['values']:
+            #if self.kvp['elementsetname'] not in config.model['constraints']['ElementSetName']['values']:
+            if self.kvp['elementsetname'] not in config.model['operations']['GetRecordById']['parameters']['ElementSetName']['values']:
                 return self.exceptionreport('InvalidParameterValue', 'elementsetname', 'Invalid elementsetname parameter %s' % self.kvp['elementsetname'])
             if self.kvp['elementsetname'] == 'full':
                 esn = ''
@@ -427,9 +433,8 @@ class Csw(object):
 
         timestamp = util.get_today_and_now()
 
-        # init the query
+        self.log.debug('Querying database with ids: %s.' % ids)
         q = query.Query(self.config['server']['metadata_db'])
-
         results = q.get(ids=ids)
 
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'), nsmap=config.namespaces)
@@ -462,11 +467,14 @@ class Csw(object):
     def parse_postdata(self,postdata):
         request = {}
         try:
+            self.log.debug('Parsing %s.' % postdata)
             doc = etree.fromstring(postdata)
         except Exception, err:
+            self.log.debug('Exception: %s.' % str(err))
             return str(err)
 
         request['request'] = doc.tag.split('}')[1]
+        self.log.debug('Request operation %s specified.' % request['request'])
         tmp = doc.find('./').attrib.get('service')
         if tmp is not None:
             request['service'] = tmp
@@ -532,8 +540,6 @@ class Csw(object):
 
             if client_mr < server_mr:
                 request['maxrecords'] = client_mr
-#            else:
-#                request['maxrecords'] = server_mr
 
             tmp = doc.find(util.nspath_eval('csw:Query/csw:ElementSetName'))
             if tmp is not None:
@@ -548,6 +554,7 @@ class Csw(object):
             if doc.find(util.nspath_eval('csw:Query/csw:Constraint')):
                 tmp = doc.find(util.nspath_eval('csw:Query/csw:Constraint/ogc:Filter'))
                 if tmp is not None:
+                    self.log.debug('Filter specified.')
                     try:
                         request['filter'] = filter.Filter(tmp)
                     except Exception, err:
@@ -558,10 +565,12 @@ class Csw(object):
                     except Exception, err:
                         return 'Invalid Filter request declaration'
             else:
+                self.log.debug('No Filter specified.')
                 request['filter'] = None  
 
             tmp = doc.find(util.nspath_eval('csw:Query/ogc:SortBy'))
             if tmp is not None:
+                self.log.debug('Sorted query specified.')
                 request['sortby'] = {}
                 request['sortby']['propertyname'] = tmp.find(util.nspath_eval('ogc:SortProperty/ogc:PropertyName')).text
 
@@ -587,3 +596,11 @@ class Csw(object):
                 request['elementsetname'] = None
 
         return request
+
+    def _set_response(self):
+        # set HTTP response headers and XML declaration
+        self.log.debug('Writing response.')
+        hh = 'Content-type:%s\n\n' % self.config['server']['mimetype']
+        xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.config['server']['encoding']
+        appinfo = '<!-- pycsw %s -->\n' % config.version
+        self.response = '%s%s%s%s' % (hh, xmldecl, appinfo, self.response)
