@@ -73,6 +73,6 @@ def initlog(config=None):
             fh.setFormatter(logging.Formatter(msg_format,time_format))
             log.addHandler(fh)
         except Exception, err:
-            raise RuntimeError, ('Invalid server configuration (server.logfile access denied.  Make sure filepath exists and is writable')
+            raise RuntimeError, ('Invalid server configuration: server.logfile access denied.  Make sure filepath exists and is writable.')
     log.info('Logging initalized (level: %s)' % loglevel)
     return log
