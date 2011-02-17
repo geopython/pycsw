@@ -63,13 +63,15 @@ Edit the following in ``default.cfg``:
 
 [server]
 
-- **home**: the full file path to ``pycsw``
+- **home**: the full file path to pycsw
 - **url**: the URL of the resulting service
 - **mimetype**: the MIME type when returning HTTP responses
 - **language**: the ISO 639-2 language and country code of the service (e.g. en-CA)
 - **encoding**: the content type encoding (e.g. ISO-8859-1)
 - **maxrecords**: the maximum number of records to return by default
 - **metadata_db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
+- **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels for more details)
+- **logfile**: the full file path to the logfile
 
 [identification]
 
@@ -107,12 +109,31 @@ Testing
 OGC CITE
 --------
 
+Compliance benchmarking is done via the OGC `Compliance & Interoperability Testing & Evaluation Initiative`_.  The pycsw `wiki <https://sourceforge.net/apps/trac/pycsw/wiki/OGCCITECompliance>`_ documents testing status.
+
+CSW Clients and Servers
+=======================
+
+Clients
+-------
+
+- `OWSLib`_
+- `qgcsw`_ (`QGIS`_ plugin)
+
+Servers
+-------
+
+- `deegree`_
+- `eXcat`_
+- `GeoNetwork opensource`_
+
+
 Support
 =======
 
 The pycsw wiki is located at https://sourceforge.net/apps/trac/pycsw.
 
-The pycsw source code is available at svn co https://pycsw.svn.sourceforge.net/svnroot/pycsw.  You can browse the source code at at https://sourceforge.net/apps/trac/pycsw/browser.
+The pycsw source code is available at https://pycsw.svn.sourceforge.net/svnroot/pycsw.  You can browse the source code at at https://sourceforge.net/apps/trac/pycsw/browser.
 
 You can find out about software metrics at the pycsw `ohloh`_ page.
 
@@ -121,7 +142,7 @@ The pycsw mailing list is the primary means for users and developers to exchange
 License
 =======
 
-Copyright (c) 2010 Tom Kralidis
+Copyright (c) 2010 Tom Kralidis.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -141,10 +162,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-Contact
-=======
+Committers
+==========
 
- * Tom Kralidis <tomkralidis@hotmail.com>
+.. include:: ../../COMMITTERS.txt
 
 .. _`Open Geospatial Consortium`: http://www.opengeospatial.org/
 .. _`OGC CSW`: http://www.opengeospatial.org/standards/cat
@@ -159,3 +180,10 @@ Contact
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`Shapely`: http://trac.gispython.org/lab/wiki/Shapely
 .. _`ohloh`: http://www.ohloh.net/p/pycsw
+.. _`Compliance & Interoperability Testing & Evaluation Initiative`: http://cite.opengeospatial.org/
+.. _`OWSLib`: http://trac.gispython.org/lab/wiki/OwsLib
+.. _`qgcsw`: https://sourceforge.net/apps/trac/qgiscommunitypl/wiki/qgcsw
+.. _`QGIS`: http://qgis.org/
+.. _`deegree`: http://www.deegree.org/
+.. _`eXcat`: http://gdsc.nlr.nl/gdsc/tools/excat
+.. _`GeoNetwork opensource`: http://geonetwork-opensource.org/
