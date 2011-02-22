@@ -49,6 +49,9 @@ class Csw(object):
 
         config.model['operations']['GetDomain'] = config.gen_domains()
 
+        if self.config['server'].has_key('ogc_schemas_base') is False:
+            self.config['server']['ogc_schemas_base'] = config.ogc_schemas_base
+
     def dispatch(self):
         error = 0
 
@@ -147,7 +150,7 @@ class Csw(object):
     def exceptionreport(self,code,locator,text):
 
         node = etree.Element(util.nspath_eval('ows:ExceptionReport'), nsmap=config.namespaces, version='1.0.2', language=self.config['server']['language'])
-        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/ows/1.0.0/owsExceptionReport.xsd' % config.namespaces['ows']
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/ows/1.0.0/owsExceptionReport.xsd' % (config.namespaces['ows'], self.config['server']['ogc_schemas_base'])
 
         e = etree.SubElement(node, util.nspath_eval('ows:Exception'), exceptionCode=code, locator=locator)
         etree.SubElement(e, util.nspath_eval('ows:ExceptionText')).text=text
@@ -174,7 +177,7 @@ class Csw(object):
                     fc = True
 
         node = etree.Element(util.nspath_eval('csw:Capabilities'), nsmap=config.namespaces, version='2.0.2')
-        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
 
         if si is True:
             self.log.debug('Writing section ServiceIdentification.')
@@ -292,7 +295,7 @@ class Csw(object):
             return self.exceptionreport('InvalidParameterValue','schemalanguage', 'Invalid value for schemalanguage: %s' % self.kvp['schemalanguage'])
 
         node = etree.Element(util.nspath_eval('csw:DescribeRecordResponse'), nsmap=config.namespaces)
-        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
 
         if csw is True:
             self.log.debug('Writing csw:Record schema.')
@@ -307,7 +310,7 @@ class Csw(object):
             return self.exceptionreport('MissingParameterValue','parametername', 'Missing value.  One of propertyname or parametername must be specified')
 
         node = etree.Element(util.nspath_eval('csw:GetDomainResponse'), nsmap=config.namespaces)
-        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
 
         if self.kvp.has_key('parametername'):
             for pn in self.kvp['parametername'].split(','):
@@ -359,7 +362,7 @@ class Csw(object):
 
         if self.kvp['resulttype'] == 'validate':
             node = etree.Element(util.nspath_eval('csw:Acknowledgement'), nsmap=config.namespaces, timeStamp=timestamp)
-            node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
+            node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
 
             node1 = etree.SubElement(node, util.nspath_eval('csw:EchoedRequest'))
             node1.append(etree.fromstring(self.request))
@@ -391,7 +394,7 @@ class Csw(object):
 
         self.log.debug('Search results: matched: %s, returned: %s, next: %s.' % (matched, returned, next))
         node = etree.Element(util.nspath_eval('csw:GetRecordsResponse'), nsmap=config.namespaces, version='2.0.2')
-        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
 
         etree.SubElement(node, util.nspath_eval('csw:SearchStatus'), timestamp=timestamp)
 
@@ -474,7 +477,7 @@ class Csw(object):
         results = q.get(ids=ids)
 
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'), nsmap=config.namespaces)
-        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
 
         for r in results:
             if esn == 'brief':
