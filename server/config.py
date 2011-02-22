@@ -32,6 +32,8 @@
 
 version = '0.0.1'
 
+ogc_schemas_base = 'http://schemas.opengis.net'
+
 namespaces = {
     #None : 'http://www.opengis.net/cat/csw/2.0.2',
     'csw': 'http://www.opengis.net/cat/csw/2.0.2',
