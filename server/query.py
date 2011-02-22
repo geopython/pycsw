@@ -51,13 +51,15 @@ class Query(object):
         self.connection.create_function('query_not_bbox',2,util.query_not_bbox)
         self.connection.create_function('query_anytext',2,util.query_anytext)
        
-    def get(self,filter=None,ids=None,sortby=None):
+    def get(self,filter=None,ids=None,sortby=None, propertyname=None):
         if ids is not None:  # it's a GetRecordById request
             q = self.session.query(dsc).filter(dsc.identifier.in_(ids))
         elif filter is not None:  # it's a GetRecords with filter
             q = self.session.query(dsc).filter(filter.where)
-        elif filter is None:  # it's a GetRecords sans filter
+        elif filter is None and propertyname is None:  # it's a GetRecords sans filter
             q = self.session.query(dsc)
+        elif propertyname is not None:  # it's a GetDomain query
+            q = self.session.query(getattr(dsc, propertyname)).distinct()
 
         if sortby is not None:
             if sortby['order'] == 'DESC':
