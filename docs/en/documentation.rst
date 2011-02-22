@@ -1,8 +1,8 @@
 .. _documentation:
 
-=======================================================
-pycsw |release| documentation
-=======================================================
+=============================
+pycsw |release| Documentation
+=============================
 
 .. toctree::
    :maxdepth: 2
@@ -34,6 +34,20 @@ Standards Support
 +-------------------+------------+
 | `Dublin Core`_    | 1.1        |
 +-------------------+------------+
+
+Supported Operations
+--------------------
+
+.. csv-table::
+  :header: Request,Optionality,Supported,HTTP method binding(s)
+
+  GetCapabilities,mandatory,yes,GET (KVP) / POST (XML)
+  DescribeRecord,mandatory,yes,GET (KVP) / POST (XML)
+  GetRecords,mandatory,yes,GET (KVP) / POST (XML)
+  GetRecordById,optional,yes,GET (KVP) / POST (XML)
+  GetDomain,optional,yes,GET (KVP) / POST (XML)
+  Harvest,optional,no,none
+  Transaction,optional,no,none
 
 Installation
 ============
@@ -109,7 +123,7 @@ Testing
 OGC CITE
 --------
 
-Compliance benchmarking is done via the OGC `Compliance & Interoperability Testing & Evaluation Initiative`_.  The pycsw `wiki <https://sourceforge.net/apps/trac/pycsw/wiki/OGCCITECompliance>`_ documents testing status.
+Compliance benchmarking is done via the OGC `Compliance & Interoperability Testing & Evaluation Initiative`_.  The pycsw `wiki <http://sourceforge.net/apps/trac/pycsw/wiki/OGCCITECompliance>`_ documents testing status.
 
 CSW Clients and Servers
 =======================
@@ -131,13 +145,17 @@ Servers
 Support
 =======
 
-The pycsw wiki is located at https://sourceforge.net/apps/trac/pycsw.
+The pycsw wiki is located at http://sourceforge.net/apps/trac/pycsw.
 
-The pycsw source code is available at https://pycsw.svn.sourceforge.net/svnroot/pycsw.  You can browse the source code at at https://sourceforge.net/apps/trac/pycsw/browser.
+The pycsw source code is available at https://pycsw.svn.sourceforge.net/svnroot/pycsw.  You can browse the source code at at http://sourceforge.net/apps/trac/pycsw/browser.
 
 You can find out about software metrics at the pycsw `ohloh`_ page.
 
 The pycsw mailing list is the primary means for users and developers to exchange ideas, discuss improvements, and ask questions.  To subscribe, visit https://lists.sourceforge.net/lists/listinfo/pycsw-devel.
+
+As well, you can visit pycsw on IRC on #pycsw at `freenode <http://freenode.net/>`_ for realtime discussion.
+
+.. _license:
 
 License
 =======
@@ -176,14 +194,14 @@ Committers
 .. _`ISO 19115`: http://www.iso.org/iso/catalogue_detail.htm?csnumber=26020
 .. _`ISO 19139`: http://www.iso.org/iso/catalogue_detail.htm?csnumber=32557
 .. _`Dublin Core`: http://www.dublincore.org/
-.. _`lxml`: http://codespeak.net/lxml
+.. _`lxml`: http://lxml.de/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`Shapely`: http://trac.gispython.org/lab/wiki/Shapely
 .. _`ohloh`: http://www.ohloh.net/p/pycsw
 .. _`Compliance & Interoperability Testing & Evaluation Initiative`: http://cite.opengeospatial.org/
 .. _`OWSLib`: http://trac.gispython.org/lab/wiki/OwsLib
-.. _`qgcsw`: https://sourceforge.net/apps/trac/qgiscommunitypl/wiki/qgcsw
+.. _`qgcsw`: http://sourceforge.net/apps/trac/qgiscommunitypl/wiki/qgcsw
 .. _`QGIS`: http://qgis.org/
 .. _`deegree`: http://www.deegree.org/
-.. _`eXcat`: http://gdsc.nlr.nl/gdsc/tools/excat
+.. _`eXcat`: http://gdsc.nlr.nl/gdsc/en/tools/excat
 .. _`GeoNetwork opensource`: http://geonetwork-opensource.org/
