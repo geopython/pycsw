@@ -38,10 +38,10 @@ class dsc(object):
     pass
 
 class Query(object):
-    def __init__(self, db):
+    def __init__(self, db, table):
         db = create_engine('%s' % db, echo=False)
 
-        dst = Table('dataset', MetaData(db), autoload=True)
+        dst = Table(table, MetaData(db), autoload=True)
        
         mapper(dsc,dst)
         
@@ -64,8 +64,10 @@ class Query(object):
 
         if sortby is not None:
             if sortby['order'] == 'DESC':
-                return q.order_by(desc(config.mappings[sortby['propertyname']])).all()
+                #return q.order_by(desc(config.mappings[sortby['propertyname']])).all()
+                return q.order_by(desc(sortby['cq_mapping'])).all()
             else: 
-                return q.order_by(config.mappings[sortby['propertyname']]).all()
+                #return q.order_by(config.mappings[sortby['propertyname']]).all()
+                return q.order_by(sortby['cq_mapping']).all()
 
         return q.all()

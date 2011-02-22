@@ -52,6 +52,8 @@ class Csw(object):
         if self.config['server'].has_key('ogc_schemas_base') is False:
             self.config['server']['ogc_schemas_base'] = config.ogc_schemas_base
 
+        self.cq_mappings = config.gen_cq_mappings(self.config)
+
     def dispatch(self):
         error = 0
 
@@ -332,7 +334,7 @@ class Csw(object):
                 try:
                     tmp = config.mappings[pn]
                     self.log.debug('Querying database on property %s (%s).' % (pn, tmp))
-                    q = query.Query(self.config['server']['metadata_db'])
+                    q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
                     results = q.get(propertyname=tmp.split('_')[1])
                     self.log.debug('Results: %s' %str(len(results)))
                     lv = etree.SubElement(dv, util.nspath_eval('csw:ListOfValues'))
@@ -374,7 +376,7 @@ class Csw(object):
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
 
         self.log.debug('Querying database with filter: %s, sortby: %s.' % (self.kvp['filter'], self.kvp['sortby']))
-        q = query.Query(self.config['server']['metadata_db'])
+        q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
         results = q.get(self.kvp['filter'], sortby=self.kvp['sortby'])
 
         if results is None:
@@ -445,7 +447,7 @@ class Csw(object):
         timestamp = util.get_today_and_now()
 
         self.log.debug('Querying database with ids: %s.' % ids)
-        q = query.Query(self.config['server']['metadata_db'])
+        q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
         results = q.get(ids=ids)
 
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'), nsmap=config.namespaces)
@@ -559,7 +561,7 @@ class Csw(object):
                 if tmp is not None:
                     self.log.debug('Filter specified.')
                     try:
-                        request['filter'] = filter.Filter(tmp)
+                        request['filter'] = filter.Filter(tmp, self.cq_mappings)
                     except Exception, err:
                         return 'Invalid Filter request2: %s' % err
                 else:
@@ -576,6 +578,7 @@ class Csw(object):
                 self.log.debug('Sorted query specified.')
                 request['sortby'] = {}
                 request['sortby']['propertyname'] = tmp.find(util.nspath_eval('ogc:SortProperty/ogc:PropertyName')).text
+                request['sortby']['cq_mapping'] = self.cq_mappings[tmp.find(util.nspath_eval('ogc:SortProperty/ogc:PropertyName')).text.lower()]
 
                 tmp2 =  tmp.find(util.nspath_eval('ogc:SortProperty/ogc:SortOrder'))
                 if tmp2 is not None:                   
