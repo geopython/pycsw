@@ -48,11 +48,11 @@ def get_version_integer(version):
     else:  # not a valid version string
          return -1
 
-def nspath_eval(xpath, mappings=config.namespaces):
+def nspath_eval(xpath, namespaces=config.namespaces):
     out = []
     for s in xpath.split('/'):
         ns, el = s.split(':')
-        out.append('{%s}%s' % (mappings[ns],el))
+        out.append('{%s}%s' % (namespaces[ns],el))
     return '/'.join(out)
 
 def bbox2polygon(bbox):

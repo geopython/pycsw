@@ -34,7 +34,7 @@ from lxml import etree
 import config, gml, util
 
 class Filter(object):
-    def __init__(self, flt):
+    def __init__(self, flt, cq_mappings):
 
         self.boq = None
 
@@ -86,7 +86,8 @@ class Filter(object):
                     singlechar = '_'
     
                 try:
-                    pname = config.mappings[c.find(util.nspath_eval('ogc:PropertyName')).text]
+                    #pname = config.mappings[c.find(util.nspath_eval('ogc:PropertyName')).text]
+                    pname = cq_mappings[c.find(util.nspath_eval('ogc:PropertyName')).text.lower()]
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s' % c.find(util.nspath_eval('ogc:PropertyName')).text)
     

@@ -75,7 +75,7 @@ Configuration
 
 Edit the following in ``default.cfg``:
 
-[server]
+**[server]**
 
 - **home**: the full file path to pycsw
 - **url**: the URL of the resulting service
@@ -83,12 +83,41 @@ Edit the following in ``default.cfg``:
 - **language**: the ISO 639-2 language and country code of the service (e.g. en-CA)
 - **encoding**: the content type encoding (e.g. ISO-8859-1)
 - **maxrecords**: the maximum number of records to return by default
-- **metadata_db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
 - **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels for more details)
 - **logfile**: the full file path to the logfile
 - **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net).
 
-[identification]
+**[repository]**
+
+- **db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
+- **table**: the name of the metadata records table
+
+**[corequeryables]**
+
+.. note::
+
+  See Metadata Repository Setup for connecting your metadata repository
+
+- **dc_title**: db table column name which maps to dc:title
+- **dc_creator**: db table column name which maps to dc:creator
+- **dc_subject**: db table column name which maps to dc:subject
+- **dct_abstract**: db table column name which maps to dct:abstract
+- **dc_publisher**: db table column name which maps to dc:publisher
+- **dc_contributor**: db table column name which maps to dc:contributor
+- **dct_modified**: db table column name which maps to dc:modified
+- **dc_type**: db table column name which maps to dc:type
+- **dc_format**: db table column name which maps to dc:format
+- **dc_identifier**: db table column name which maps to dc:identifier
+- **dc_source**: db table column name which maps to dc:source
+- **dc_language**: db table column name which maps to dc:language
+- **dc_relation**: db table column name which maps to dc:relation
+- **dc_rights**: db table column name which maps to dc:rights
+- **ows_bbox**: db table column name which stores the geometry (in format 'minx,miny,maxx,maxy')
+- **csw_anytext**: db table column name which stores the full XML metadata record (for fulltext queries)
+
+- **dc_date**: db table column name which maps to dc:date
+
+**[identification]**
 
 - **title**: the title of the service
 - **abstract**: some descriptive text about the service
@@ -96,12 +125,12 @@ Edit the following in ``default.cfg``:
 - **fees**: fees associated with the service
 - **accessconstraints**: access constraints associated with the service
 
-[provider]
+**[provider]**
 
 - **name**: the name of the service provider
 - **url**: the URL of the service provider
 
-[contact]
+**[contact]**
 
 - **name**: the name of the provider contact
 - **position**: the position title of the provider contact
