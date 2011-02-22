@@ -50,6 +50,7 @@ class Query(object):
         self.connection.create_function('query_bbox',2,util.query_bbox)
         self.connection.create_function('query_not_bbox',2,util.query_not_bbox)
         self.connection.create_function('query_anytext',2,util.query_anytext)
+        self.connection.create_function('query_xpath',2,util.query_xpath)
        
     def get(self,filter=None,ids=None,sortby=None, propertyname=None):
         if ids is not None:  # it's a GetRecordById request
