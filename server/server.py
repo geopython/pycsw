@@ -47,6 +47,8 @@ class Csw(object):
         except Exception, err:
             self.response = self.exceptionreport('NoApplicableCode', 'service', str(err))
 
+        config.model['operations']['GetDomain'] = config.gen_domains()
+
     def dispatch(self):
         error = 0
 
@@ -130,6 +132,8 @@ class Csw(object):
                 self.response = self.getcapabilities()
             elif self.kvp['request'] == 'DescribeRecord':
                 self.response = self.describerecord()
+            elif self.kvp['request'] == 'GetDomain':
+                self.response = self.getdomain()
             elif self.kvp['request'] == 'GetRecords':
                 self.response = self.getrecords()
             elif self.kvp['request'] == 'GetRecordById':
@@ -298,6 +302,44 @@ class Csw(object):
 
         return etree.tostring(node, pretty_print=True)
     
+    def getdomain(self):
+        if self.kvp.has_key('parametername') is False and self.kvp.has_key('propertyname') is False:
+            return self.exceptionreport('MissingParameterValue','parametername', 'Missing value.  One of propertyname or parametername must be specified')
+
+        node = etree.Element(util.nspath_eval('csw:GetDomainResponse'), nsmap=config.namespaces)
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd' % config.namespaces['csw']
+
+        if self.kvp.has_key('parametername'):
+            for pn in self.kvp['parametername'].split(','):
+                self.log.debug('Parsing parametername %s.' % pn)
+                dv = etree.SubElement(node, util.nspath_eval('csw:DomainValues'), type='csw:Record')
+                etree.SubElement(dv, util.nspath_eval('csw:ParameterName')).text = pn
+                lv = etree.SubElement(dv, util.nspath_eval('csw:ListOfValues'))
+                o,p = pn.split('.')
+                for v in config.model['operations'][o]['parameters'][p]['values']:
+                    etree.SubElement(lv, util.nspath_eval('csw:Value')).text = v
+
+        if self.kvp.has_key('propertyname'):
+            for pn in self.kvp['propertyname'].split(','):
+                self.log.debug('Parsing propertyname %s.' % pn)
+                dv = etree.SubElement(node, util.nspath_eval('csw:DomainValues'), type='csw:Record')
+                etree.SubElement(dv, util.nspath_eval('csw:PropertyName')).text = pn
+
+                try:
+                    tmp = config.mappings[pn]
+                    self.log.debug('Querying database on property %s (%s).' % (pn, tmp))
+                    q = query.Query(self.config['server']['metadata_db'])
+                    results = q.get(propertyname=tmp.split('_')[1])
+                    self.log.debug('Results: %s' %str(len(results)))
+                    lv = etree.SubElement(dv, util.nspath_eval('csw:ListOfValues'))
+                    for r in results:
+                        etree.SubElement(lv, util.nspath_eval('csw:Value')).text = r[0]
+                except:
+                    self.log.debug('No results for propertyname %s.' % pn)
+                    pass
+
+        return etree.tostring(node, pretty_print=True)
+
     def getrecords(self):
 
         timestamp = util.get_today_and_now()
@@ -496,7 +538,17 @@ class Csw(object):
             tmp = doc.find('./').attrib.get('outputFormat')
             if tmp is not None:
                 request['outputformat'] = tmp
-   
+
+        # GetDomain
+        if request['request'] == 'GetDomain':
+            tmp = doc.find(util.nspath_eval('parametername'))
+            if tmp is not None:
+                request['parametername'] = tmp
+
+            tmp = doc.find(util.nspath_eval('propertyname'))
+            if tmp is not None:
+                request['propertyname'] = tmp
+
         # GetRecords
         if request['request'] == 'GetRecords':
             tmp = doc.find('./').attrib.get('outputSchema')

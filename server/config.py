@@ -83,6 +83,9 @@ model =  {
                 },
                 'outputFormat': {
                     'values': ['application/xml']
+                },
+                'CONSTRAINTLANGUAGE': {
+                    'values': ['FILTER']
                 }
             }
         },
@@ -135,6 +138,16 @@ mappings = {
     '/ows:BoundingBox': 'dataset_bbox',
     'ows:BoundingBox': 'dataset_bbox'
 }
+
+def gen_domains():
+    d = {}
+    d['parameters'] = {}
+    d['parameters']['ParameterName'] = {}
+    d['parameters']['ParameterName']['values'] = []
+    for o in model['operations'].keys():
+        for p in model['operations'][o]['parameters']:
+            d['parameters']['ParameterName']['values'].append('%s.%s' % (o, p))
+    return d
 
 def get_config(file):
     import ConfigParser
