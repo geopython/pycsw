@@ -113,10 +113,24 @@ def query_bbox(bbox_data,bbox_input):
 
 def query_anytext(xml, searchterm):
     # perform fulltext search against XML
-    for el in xml.xpath('//text()'):  # all elements
+    exml=etree.fromstring(xml)
+    for el in exml.xpath('//text()'):  # all elements
         if el.lower().find(searchterm.lower()) != -1:
             return 'true'
-    for att in xml.xpath('//attribute::*'):  # all attributes
+    for att in exml.xpath('//attribute::*'):  # all attributes
         if att.lower().find(searchterm.lower()) != -1:
             return 'true'
     return 'false'
+
+def query_xpath(xml, xpath, searchterm, matchcase=False):
+    # perform search against XPath
+    exml=etree.fromstring(xml)
+    for x in xml.xpath(xpath):  # all elements
+        if matchcase is True:
+            if x.text == searchterm:
+                return 'true'
+        else:
+            if x.text.lower() == searchterm.lower():
+                return 'true'
+    return 'false'
+
