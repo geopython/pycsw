@@ -86,6 +86,7 @@ Edit the following in ``default.cfg``:
 - **metadata_db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
 - **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels for more details)
 - **logfile**: the full file path to the logfile
+- **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net).
 
 [identification]
 
