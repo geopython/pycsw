@@ -411,38 +411,9 @@ class Csw(object):
         max = int(self.kvp['startposition']) + int(self.kvp['maxrecords'])
  
         if results is not None:
-            self.log.debug('Presenting records %s - %s' % (self.kvp['startposition'], max))
+            self.log.debug('Presenting records %s - %s.' % (self.kvp['startposition'], max))
             for r in results[int(self.kvp['startposition']):max]:
-                if self.kvp['elementsetname'] == 'brief':
-                    el = 'BriefRecord'
-                elif self.kvp['elementsetname'] == 'summary':
-                    el = 'SummaryRecord'
-                else:
-                    el = 'Record'
-    
-                record = etree.SubElement(sr, util.nspath_eval('csw:%s' % el))
-    
-                if self.kvp.has_key('elementname') is True and len(self.kvp['elementname']) > 0:
-                    for e in self.kvp['elementname']:
-                        ns,el, = e.split(':')
-                        if el == 'BoundingBox':
-                            bbox = r.bbox.split(',')
-                            if len(bbox) == 4:
-                                b = etree.SubElement(record, util.nspath_eval('ows:BoundingBox'), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
-                                etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox[1],bbox[0])
-                                etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[3],bbox[2])
- 
-                        else:
-                            if hasattr(r, el) is True:
-                                etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=getattr(r, el)
-                elif self.kvp.has_key('elementsetname') is True:
-                    etree.SubElement(record, util.nspath_eval('dc:identifier')).text=r.identifier
-                    etree.SubElement(record, util.nspath_eval('dc:title')).text=r.title
-                    etree.SubElement(record, util.nspath_eval('dc:type')).text=r.type
-                    if self.kvp['elementsetname'] == 'full':
-                        etree.SubElement(record, util.nspath_eval('dc:date')).text=r.date
-                    if self.kvp['elementsetname'] == 'summary':
-                        etree.SubElement(record, util.nspath_eval('dc:format')).text=r.format
+                sr.append(self._write_record(r))
 
         return etree.tostring(node, pretty_print=True)
 
@@ -462,14 +433,14 @@ class Csw(object):
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputschema parameter %s' % self.kvp['outputschema'])
 
         if self.kvp.has_key('elementsetname') is False:
-            esn = 'summary'
+            self.kvp['elementsetname'] = 'summary'
         else:
             if self.kvp['elementsetname'] not in config.model['operations']['GetRecordById']['parameters']['ElementSetName']['values']:
                 return self.exceptionreport('InvalidParameterValue', 'elementsetname', 'Invalid elementsetname parameter %s' % self.kvp['elementsetname'])
             if self.kvp['elementsetname'] == 'full':
-                esn = ''
+                self.kvp['elementsetname'] = ''
             else:
-                esn = self.kvp['elementsetname']
+                self.kvp['elementsetname'] = self.kvp['elementsetname']
 
         timestamp = util.get_today_and_now()
 
@@ -480,27 +451,9 @@ class Csw(object):
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'), nsmap=config.namespaces)
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
 
+        self.log.debug('Presenting %s records.' % str(len(results)))
         for r in results:
-            if esn == 'brief':
-                el = 'BriefRecord'
-            elif esn == 'summary':
-                el = 'SummaryRecord'
-            else:
-                el = 'Record'
-            record = etree.SubElement(node, util.nspath_eval('csw:%s' % el))
-
-            etree.SubElement(record, util.nspath_eval('dc:identifier')).text=r.identifier
-            if r.title != 'None':
-                etree.SubElement(record, util.nspath_eval('dc:title')).text=r.title
-            etree.SubElement(record, util.nspath_eval('dc:type')).text=r.type
-
-            if self.kvp.has_key('elementsetname') is False:
-                for k in r.subject_list.split(','):
-                    etree.SubElement(record, util.nspath_eval('dc:subject')).text=k
-
-                etree.SubElement(record, util.nspath_eval('dc:format')).text=r.format
-                etree.SubElement(record, util.nspath_eval('dct:modified')).text=r.modified
-                etree.SubElement(record, util.nspath_eval('dct:abstract')).text=r.abstract
+             node.append(self._write_record(r))
 
         return etree.tostring(node, pretty_print=True)
 
@@ -525,7 +478,7 @@ class Csw(object):
             request['version'] = tmp
         else:
             request['version'] = None
-        tmp = doc.find('.//{http://www.opengis.net/ows}Version')
+        tmp = doc.find('.//%s' % util.nspath_eval('ows:Version'))
         if tmp is not None:
             request['version'] = tmp.text
     
@@ -646,6 +599,40 @@ class Csw(object):
                 request['elementsetname'] = None
 
         return request
+
+    def _write_record(self, r):
+        if self.kvp['elementsetname'] == 'brief':
+            el = 'BriefRecord'
+        elif self.kvp['elementsetname'] == 'summary':
+            el = 'SummaryRecord'
+        else:
+            el = 'Record'
+
+        record = etree.Element(util.nspath_eval('csw:%s' % el))
+
+        if self.kvp.has_key('elementname') is True and len(self.kvp['elementname']) > 0:
+            for e in self.kvp['elementname']:
+                ns,el, = e.split(':')
+                if el == 'BoundingBox':
+                    bbox = r.bbox.split(',')
+                    if len(bbox) == 4:
+                        b = etree.SubElement(record, util.nspath_eval('ows:BoundingBox'), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
+                        etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox[1],bbox[0])
+                        etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[3],bbox[2])
+
+                else:
+                    if hasattr(r, el) is True:
+                        etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=getattr(r, el)
+        elif self.kvp.has_key('elementsetname') is True:
+            etree.SubElement(record, util.nspath_eval('dc:identifier')).text=r.identifier
+            etree.SubElement(record, util.nspath_eval('dc:title')).text=r.title
+            etree.SubElement(record, util.nspath_eval('dc:type')).text=r.type
+            if self.kvp['elementsetname'] == 'full':
+                etree.SubElement(record, util.nspath_eval('dc:date')).text=r.date
+            if self.kvp['elementsetname'] == 'summary':
+                etree.SubElement(record, util.nspath_eval('dc:format')).text=r.format
+
+        return record
 
     def _set_response(self):
         # set HTTP response headers and XML declaration
