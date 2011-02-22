@@ -317,10 +317,11 @@ class Csw(object):
                 self.log.debug('Parsing parametername %s.' % pn)
                 dv = etree.SubElement(node, util.nspath_eval('csw:DomainValues'), type='csw:Record')
                 etree.SubElement(dv, util.nspath_eval('csw:ParameterName')).text = pn
-                lv = etree.SubElement(dv, util.nspath_eval('csw:ListOfValues'))
                 o,p = pn.split('.')
-                for v in config.model['operations'][o]['parameters'][p]['values']:
-                    etree.SubElement(lv, util.nspath_eval('csw:Value')).text = v
+                if o in config.model['operations'].keys() and p in config.model['operations'][o]['parameters'].keys():
+                    lv = etree.SubElement(dv, util.nspath_eval('csw:ListOfValues'))
+                    for v in config.model['operations'][o]['parameters'][p]['values']:
+                        etree.SubElement(lv, util.nspath_eval('csw:Value')).text = v
 
         if self.kvp.has_key('propertyname'):
             for pn in self.kvp['propertyname'].split(','):
