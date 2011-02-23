@@ -89,6 +89,10 @@ Edit the following in ``default.cfg``:
 
 **[repository]**
 
+.. note::
+
+  See Metadata Repository Setup for connecting your metadata repository.
+
 - **db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
 - **table**: the name of the metadata records table
 
@@ -96,7 +100,7 @@ Edit the following in ``default.cfg``:
 
 .. note::
 
-  See Metadata Repository Setup for connecting your metadata repository
+  See Metadata Repository Setup for connecting your metadata repository.
 
 - **dc_title**: db table column name which maps to dc:title
 - **dc_creator**: db table column name which maps to dc:creator
