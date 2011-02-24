@@ -31,48 +31,62 @@
 #
 # =================================================================
 
-# generate internal database
-
 import os
 import sys
+import glob
 import sqlite3
 
+from lxml import etree
+
+sys.path.append('/home/tkralidi/foss4g/OWSLib/trunk')
+from owslib.csw import CswRecord
+
 if len(sys.argv) < 2:
-    print 'Usage: %s <filename.sqlite3>' % sys.argv[0]
+    print 'Usage: %s <filename.sqlite3> <directory>' % sys.argv[0]
     sys.exit(1)
 
-wkt4326 = 'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]'
-
 conn = sqlite3.connect(sys.argv[1])
-cursor = conn.cursor()
+cur = conn.cursor()
 
-# create OGC SFSQL database
-cursor.execute('''
-    create table spatial_ref_sys (
-        srid integer unique,
-        auth_name text,
-        auth_srid integer,
-        srtext text)''')
+for r in glob.glob(os.path.join('..','data','cite','*.xml')):
 
-cursor.execute('''
-    insert into spatial_ref_sys values
-        (4326, 'EPSG', 4326, '%s')''' % wkt4326)
+    # read dc document
+    e=etree.parse(r)
+    c=CswRecord(e)
 
-cursor.execute('''
-    create table geometry_columns (
-        f_table_name text,
-        f_geometry_column text,
-        geometry_type integer,
-        coord_dimension integer,
-        srid integer, geometry_format text )''')
+    if c.bbox is None:
+        bbox = None
+    else:
+        #bbox = '%s,%s,%s,%s' % (c.bbox.minx,c.bbox.miny,c.bbox.maxx,c.bbox.maxy)
+        bbox = '%s,%s,%s,%s' % (c.bbox.miny,c.bbox.minx,c.bbox.maxy,c.bbox.maxx)
 
-cursor.execute('''
-    insert into geometry_columns values
-        ('records', 'bbox_wkt', 'POLYGON', 2, 4326, 'WKT')''')
+    print 'Inserting csw:Record %s into database %s, table records....' % (c.identifier, sys.argv[1])
 
-sqlfile=os.path.join('..','etc','schemas','sql','records.ddl')
+    sql = '''insert into records values(
+'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')''' % (
+    c.title,
+    c.creator,
+    ','.join(c.subjects),
+    c.abstract,
+    c.publisher,
+    c.contributor,
+    c.date,
+    c.type,
+    c.format,
+    c.identifier,
+    c.source,
+    c.language,
+    c.relation,
+    bbox,
+    ','.join(c.rights),
+    'csw:Record',
+    etree.tostring(e)
+    )
 
-cursor.executescript(open(sqlfile).read())
+    cur.execute(sql)
 
-conn.commit()
-cursor.close()
+    conn.commit()
+
+    print 'Done'
+cur.close()
+
