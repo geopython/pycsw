@@ -1,11 +1,11 @@
 .. _documentation:
 
+.. toctree::
+  :maxdepth: 2
+
 =============================
 pycsw |release| Documentation
 =============================
-
-.. toctree::
-   :maxdepth: 2
 
 :Author: Tom Kralidis
 :Contact: tomkralidis at hotmail.com
@@ -57,14 +57,14 @@ Requirements
 
 pycsw requires the following supporting libraries:
 
-- `lxml`_ for XML support
-- `SQLAlchemy`_ for database bindings
-- `Shapely`_ for geometry support
+- `lxml`_ (version >= 2.2.3) for XML support
+- `SQLAlchemy`_ (version >= 0.0.5) for database bindings
+- `Shapely`_ (version >= 1.2.8) for geometry support
 
 Install
 -------
 
-Download the latest version or fetch svn trunk:
+:ref:`Download <download>` the latest version or fetch svn trunk:
 
 .. code-block:: bash
 
