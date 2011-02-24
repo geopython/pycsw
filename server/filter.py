@@ -53,9 +53,9 @@ class Filter(object):
             if c.tag == util.nspath_eval('ogc:Not'):
                 pn = c.find(util.nspath_eval('ogc:BBOX/ogc:PropertyName'))
                 if pn is None:
-                    raise RuntimeError, ('Missing PropertyName in spatial filter')
+                    raise RuntimeError, ('Missing ogc:PropertyName in spatial filter')
                 elif pn is not None and pn.text not in ['ows:BoundingBox', '/ows:BoundingBox']:
-                    raise RuntimeError, ('Invalid PropertyName in spatial filter: %s' % pn.text)
+                    raise RuntimeError, ('Invalid ogc:PropertyName in spatial filter: %s' % pn.text)
                 bbox = gml.get_bbox(c.xpath('child::*')[0])
 
                 queries.append('query_not_bbox(bbox,"%s") = "true"' % bbox)
@@ -86,7 +86,6 @@ class Filter(object):
                     singlechar = '_'
     
                 try:
-                    #pname = config.mappings[c.find(util.nspath_eval('ogc:PropertyName')).text]
                     pname = cq_mappings[c.find(util.nspath_eval('ogc:PropertyName')).text.lower()]
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s' % c.find(util.nspath_eval('ogc:PropertyName')).text)
