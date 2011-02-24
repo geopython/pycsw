@@ -58,8 +58,7 @@ class Filter(object):
                     raise RuntimeError, ('Invalid ogc:PropertyName in spatial filter: %s' % pn.text)
                 bbox = gml.get_bbox(c.xpath('child::*')[0])
 
-                queries.append('query_not_bbox(bbox,"%s") = "true"' % bbox)
-
+                queries.append('query_not_bbox(%s,"%s") = "true"' % (cq_mappings['ows:bbox'], bbox))
 
             elif c.tag == util.nspath_eval('ogc:BBOX'):
                 pn = c.find(util.nspath_eval('ogc:PropertyName'))
@@ -70,9 +69,13 @@ class Filter(object):
                 bbox = gml.get_bbox(c)
 
                 if self.boq is not None and self.boq == ' not ':
-                    queries.append('query_not_bbox(bbox,"%s") = "true"' % bbox)
+                    queries.append('query_not_bbox(%s,"%s") = "true"' % (cq_mappings['ows:bbox'], bbox))
                 else:
-                    queries.append('query_bbox(bbox,"%s") = "true"' % bbox)
+                    queries.append('query_bbox(%s,"%s") = "true"' % (cq_mappings['ows:bbox'], bbox))
+
+            elif c.tag == util.nspath_eval('ogc:FeatureId'):
+                id = c.attrib.get('fid')
+                queries.append('%s = \'%s\'' % (cq_mappings['dc:identifier'], id))
 
             else:
                 matchcase = c.attrib.get('matchCase')

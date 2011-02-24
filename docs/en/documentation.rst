@@ -15,7 +15,7 @@ pycsw |release| Documentation
 Introduction
 ============
 
-pycsw is an OGC CSW server implementation in Python.
+pycsw is an OGC CSW server implementation written in Python.
 
 Features
 ========

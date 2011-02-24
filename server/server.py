@@ -31,8 +31,6 @@
 # =================================================================
 
 import os
-#import re
-#import sys
 import cgi
 import sqlite3
 from lxml import etree
@@ -306,7 +304,7 @@ class Csw(object):
         if csw is True:
             self.log.debug('Writing csw:Record schema.')
             sc = etree.SubElement(node, util.nspath_eval('csw:SchemaComponent'), schemaLanguage='XMLSCHEMA', targetNamespace=config.namespaces['csw'])
-            dc = etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','record.xsd')).getroot()
+            dc = etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','xsd','record.xsd')).getroot()
             sc.append(dc)
 
         return etree.tostring(node, pretty_print=True)
@@ -621,23 +619,24 @@ class Csw(object):
             for e in self.kvp['elementname']:
                 ns,el, = e.split(':')
                 if el == 'BoundingBox':
-                    bbox = r.bbox.split(',')
+                    bboxcol = self.cq_mappings['ows:bbox'].split('%s_' % self.config['repository']['records_table'])[1]
+                    bbox = getattr(r, bboxcol).split(',')
                     if len(bbox) == 4:
                         b = etree.SubElement(record, util.nspath_eval('ows:BoundingBox'), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
                         etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox[1],bbox[0])
                         etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[3],bbox[2])
 
                 else:
-                    if hasattr(r, el) is True:
-                        etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=getattr(r, el)
+                    if hasattr(r, self.cq_mappings[e].split('_')[1]) is True:
+                        etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=getattr(r, self.cq_mappings[e].split('_')[1])
         elif self.kvp.has_key('elementsetname') is True:
-            etree.SubElement(record, util.nspath_eval('dc:identifier')).text=r.identifier
-            etree.SubElement(record, util.nspath_eval('dc:title')).text=r.title
-            etree.SubElement(record, util.nspath_eval('dc:type')).text=r.type
+            etree.SubElement(record, util.nspath_eval('dc:identifier')).text=getattr(r, self.cq_mappings['dc:identifier'].split('_')[1])
+            etree.SubElement(record, util.nspath_eval('dc:title')).text=getattr(r, self.cq_mappings['dc:title'].split('_')[1])
+            etree.SubElement(record, util.nspath_eval('dc:type')).text=getattr(r, self.cq_mappings['dc:type'].split('_')[1])
             if self.kvp['elementsetname'] == 'full':
-                etree.SubElement(record, util.nspath_eval('dc:date')).text=r.date
+                etree.SubElement(record, util.nspath_eval('dc:date')).text=getattr(r, self.cq_mappings['dc:date'].split('_')[1])
             if self.kvp['elementsetname'] == 'summary':
-                etree.SubElement(record, util.nspath_eval('dc:format')).text=r.format
+                etree.SubElement(record, util.nspath_eval('dc:format')).text=getattr(r, self.cq_mappings['dc:format'].split('_')[1])
 
         return record
 
