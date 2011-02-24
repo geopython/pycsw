@@ -31,8 +31,8 @@
 # =================================================================
 
 import os
-import re
-import sys
+#import re
+#import sys
 import cgi
 import sqlite3
 from lxml import etree
@@ -53,6 +53,10 @@ class Csw(object):
             self.config['server']['ogc_schemas_base'] = config.ogc_schemas_base
 
         self.cq_mappings = config.gen_cq_mappings(self.config)
+
+        self.log.debug('Configuration: %s.' % self.config)
+        self.log.debug('Model: %s.' % config.model)
+        self.log.debug('Core Queryable mappings: %s.' % self.cq_mappings)
 
     def dispatch(self):
         error = 0
@@ -332,7 +336,7 @@ class Csw(object):
                 etree.SubElement(dv, util.nspath_eval('csw:PropertyName')).text = pn
 
                 try:
-                    tmp = config.mappings[pn]
+                    tmp = self.cq_mappings[pn]
                     self.log.debug('Querying database on property %s (%s).' % (pn, tmp))
                     q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
                     results = q.get(propertyname=tmp.split('_')[1])
@@ -500,13 +504,13 @@ class Csw(object):
 
         # GetDomain
         if request['request'] == 'GetDomain':
-            tmp = doc.find(util.nspath_eval('parametername'))
+            tmp = doc.find(util.nspath_eval('csw:ParameterName'))
             if tmp is not None:
-                request['parametername'] = tmp
+                request['parametername'] = tmp.text
 
-            tmp = doc.find(util.nspath_eval('propertyname'))
+            tmp = doc.find(util.nspath_eval('csw:PropertyName'))
             if tmp is not None:
-                request['propertyname'] = tmp
+                request['propertyname'] = tmp.text
 
         # GetRecords
         if request['request'] == 'GetRecords':

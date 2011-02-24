@@ -64,10 +64,8 @@ class Query(object):
 
         if sortby is not None:
             if sortby['order'] == 'DESC':
-                #return q.order_by(desc(config.mappings[sortby['propertyname']])).all()
                 return q.order_by(desc(sortby['cq_mapping'])).all()
             else: 
-                #return q.order_by(config.mappings[sortby['propertyname']]).all()
                 return q.order_by(sortby['cq_mapping']).all()
 
         return q.all()

@@ -86,11 +86,6 @@ def query_not_bbox(bbox_data,bbox_input):
     b1 = loads(bbox2wkt(bbox_data))
     b2 = loads(bbox2wkt(bbox_input))
 
-    #if b1.intersects(b2) is False:
-    #    return 'true'
-    #else:
-    #    return 'false'
-
     if b1.disjoint(b2) is True:
         return 'true' 
     else:
@@ -133,4 +128,3 @@ def query_xpath(xml, xpath, searchterm, matchcase=False):
             if x.text.lower() == searchterm.lower():
                 return 'true'
     return 'false'
-
