@@ -1,8 +1,8 @@
 .. _index:
 
-****************
+================
 Welcome to pycsw
-****************
+================
 
 pycsw is an OGC CSW server implementation in `Python`_.
 
