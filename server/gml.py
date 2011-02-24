@@ -38,21 +38,23 @@ def get_bbox(bbox):
     if tmp is not None:
         pname = tmp.text
         if pname not in ['ows:BoundingBox','/ows:BoundingBox']:
-            return 'Invalid PropertyName: %s' % pname 
+            raise RuntimeError, ('Invalid ogc:PropertyName: %s' % pname)
         tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml:lowerCorner'))
         if tmp2 is None:
-            return 'Missing gml:lowerCorner'
+            raise RuntimeError, ('Invalid gml:Envelope geometry.  Missing gml:lowerCorner')
         else:
            ll = tmp2.text
 
         tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml:upperCorner'))
         if tmp2 is None:
-            return 'Missing gml:upperCorner'
+            raise RuntimeError, ('Invalid gml:Envelope geometry.  Missing gml:upperCorner')
         else:
            ur = tmp2.text
 
         min = ll.split()
         max = ur.split()
 
-        bbox2 = '%s,%s,%s,%s' %(min[1],min[0],max[1],max[0])
-        return bbox2
+        if len(min) != 2 or len(max) != 2:
+            raise RuntimeError, ('Invalid gml:Envelope geometry.  gml:lowerCorner and gml:upperCorner must hold both lat and long.')
+
+        return '%s,%s,%s,%s' %(min[1],min[0],max[1],max[0])

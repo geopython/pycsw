@@ -147,10 +147,6 @@ def gen_cq_mappings(config):
     for cqm in config['corequeryables']:
         k = cqm.replace('_',':') 
         v = '%s_%s' % (table, config['corequeryables'][cqm])
-        #if k == 'csw:anytext':  # hack TODO fix
-        #    m['csw:AnyText'] = v
-        #else:
-        #    m[k] = v
         m[k] = v
     return m
 
