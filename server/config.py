@@ -30,7 +30,7 @@
 #
 # =================================================================
 
-version = '0.0.1'
+version = open('VERSION.txt').read().strip()
 
 ogc_schemas_base = 'http://schemas.opengis.net'
 

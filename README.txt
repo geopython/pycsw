@@ -3,4 +3,4 @@ pycsw README
 
 $Id$
 
-Please read the docs in doc/<lang> for more information.
+Please read the docs at http://pycsw.org/documentation.html for more information.

@@ -4,7 +4,7 @@
 Welcome to pycsw
 ================
 
-pycsw is an OGC CSW server implementation in `Python`_.
+pycsw is an OGC CSW server implementation written in `Python`_.
 
 pycsw implements clause 10 (HTTP protocol binding (Catalogue Services for the Web, CSW)) of the `OpenGIS Catalogue Service Implementation Specification`_, version 2.0.2.  Initial development started in 2010 (more formally announced in `2011`_).
 
