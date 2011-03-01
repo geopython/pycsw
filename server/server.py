@@ -615,30 +615,42 @@ class Csw(object):
 
         record = etree.Element(util.nspath_eval('csw:%s' % el))
 
+        bbox = getattr(r, self.cq.mappings['ows:bbox']['obj_attr'])
+
         if self.kvp.has_key('elementname') is True and len(self.kvp['elementname']) > 0:
             for e in self.kvp['elementname']:
                 ns,el, = e.split(':')
                 if el == 'BoundingBox':
-                    bboxcol = self.cq.mappings['ows:bbox']['obj_attr']
-                    bbox = getattr(r, bboxcol).split(',')
-                    if len(bbox) == 4:
-                        b = etree.SubElement(record, util.nspath_eval('ows:BoundingBox'), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
-                        etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox[1],bbox[0])
-                        etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[3],bbox[2])
-
+                    self._write_bbox(record, bbox)
                 else:
                     if hasattr(r, self.cq.mappings[e]['obj_attr']) is True:
                         etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=getattr(r, self.cq.mappings[e]['obj_attr'])
         elif self.kvp.has_key('elementsetname') is True:
-            etree.SubElement(record, util.nspath_eval('dc:identifier')).text=getattr(r, self.cq.mappings['dc:identifier']['obj_attr'])
-            etree.SubElement(record, util.nspath_eval('dc:title')).text=getattr(r, self.cq.mappings['dc:title']['obj_attr'])
-            etree.SubElement(record, util.nspath_eval('dc:type')).text=getattr(r, self.cq.mappings['dc:type']['obj_attr'])
-            if self.kvp['elementsetname'] == 'full':
-                etree.SubElement(record, util.nspath_eval('dc:date')).text=getattr(r, self.cq.mappings['dc:date']['obj_attr'])
-            if self.kvp['elementsetname'] == 'summary':
-                etree.SubElement(record, util.nspath_eval('dc:format')).text=getattr(r, self.cq.mappings['dc:format']['obj_attr'])
+            if self.kvp['elementsetname'] == 'full':  # dump the full record
+                record = etree.fromstring(getattr(r,self.cq.mappings['csw:anytext']['obj_attr']))
+            else:  # dump brief record first (always required elements) then summary if requests
+                for i in ['dc:identifier','dc:title','dc:type']:
+                    etree.SubElement(record, util.nspath_eval(i)).text=getattr(r, self.cq.mappings[i]['obj_attr'])
+                if self.kvp['elementsetname'] == 'summary':
+                    subjects = getattr(r, self.cq.mappings['dc:subject']['obj_attr'])
+                    if subjects is not None:
+                        for s in subjects.split(','):
+                            etree.SubElement(record, util.nspath_eval('dc:subject')).text=s
+                    for i in ['dc:format','dc:relation','dct:modified','dct:abstract']:
+                        val = getattr(r, self.cq.mappings[i]['obj_attr'])
+                        if val is not None:
+                            etree.SubElement(record, util.nspath_eval(i)).text=val
+                self._write_bbox(record, bbox)
 
         return record
+
+    def _write_bbox(self, record, bbox):
+        if bbox is not None:
+            bbox2 = bbox.split(',')
+            if len(bbox2) == 4:
+                b = etree.SubElement(record, util.nspath_eval('ows:BoundingBox'), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
+                etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox2[1],bbox2[0])
+                etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox2[3],bbox2[2])
 
     def _set_response(self):
         # set HTTP response headers and XML declaration

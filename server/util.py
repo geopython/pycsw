@@ -74,10 +74,10 @@ def bbox2wkt(bbox):
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
 
 def query_not_bbox(bbox_data,bbox_input):
-    if bbox_input == 'None':
+    if bbox_input is None:
         return 'false'
 
-    if bbox_data == 'None':
+    if bbox_data is None:
         return 'true'
 
     from shapely.wkt import loads
@@ -92,7 +92,7 @@ def query_not_bbox(bbox_data,bbox_input):
         return 'false'
 
 def query_bbox(bbox_data,bbox_input):
-    if bbox_data == 'None' or bbox_input == 'None':
+    if bbox_data is None or bbox_input is None:
         return 'false'
 
     from shapely.wkt import loads
