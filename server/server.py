@@ -34,7 +34,7 @@ import os
 import cgi
 import sqlite3
 from lxml import etree
-import config, filter, log, query, util
+import config, core_queryables, filter, log, query, util
 
 class Csw(object):
     def __init__(self,configfile=None):
@@ -50,11 +50,11 @@ class Csw(object):
         if self.config['server'].has_key('ogc_schemas_base') is False:
             self.config['server']['ogc_schemas_base'] = config.ogc_schemas_base
 
-        self.cq_mappings = config.gen_cq_mappings(self.config)
+        self.cq = core_queryables.CoreQueryables(self.config)
 
         self.log.debug('Configuration: %s.' % self.config)
         self.log.debug('Model: %s.' % config.model)
-        self.log.debug('Core Queryable mappings: %s.' % self.cq_mappings)
+        self.log.debug('Core Queryable mappings: %s.' % self.cq.mappings)
 
     def dispatch(self):
         error = 0
@@ -334,7 +334,7 @@ class Csw(object):
                 etree.SubElement(dv, util.nspath_eval('csw:PropertyName')).text = pn
 
                 try:
-                    tmp = self.cq_mappings[pn]
+                    tmp = self.cq.mappings[pn]['db_col']
                     self.log.debug('Querying database on property %s (%s).' % (pn, tmp))
                     q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
                     results = q.get(propertyname=tmp.split('_')[1])
@@ -563,7 +563,7 @@ class Csw(object):
                 if tmp is not None:
                     self.log.debug('Filter specified.')
                     try:
-                        request['filter'] = filter.Filter(tmp, self.cq_mappings)
+                        request['filter'] = filter.Filter(tmp, self.cq.mappings)
                     except Exception, err:
                         return 'Invalid Filter request2: %s' % err
                 else:
@@ -580,7 +580,7 @@ class Csw(object):
                 self.log.debug('Sorted query specified.')
                 request['sortby'] = {}
                 request['sortby']['propertyname'] = tmp.find(util.nspath_eval('ogc:SortProperty/ogc:PropertyName')).text
-                request['sortby']['cq_mapping'] = self.cq_mappings[tmp.find(util.nspath_eval('ogc:SortProperty/ogc:PropertyName')).text.lower()]
+                request['sortby']['cq_mapping'] = self.cq.mappings[tmp.find(util.nspath_eval('ogc:SortProperty/ogc:PropertyName')).text.lower()]['db_col']
 
                 tmp2 =  tmp.find(util.nspath_eval('ogc:SortProperty/ogc:SortOrder'))
                 if tmp2 is not None:                   
@@ -619,7 +619,7 @@ class Csw(object):
             for e in self.kvp['elementname']:
                 ns,el, = e.split(':')
                 if el == 'BoundingBox':
-                    bboxcol = self.cq_mappings['ows:bbox'].split('%s_' % self.config['repository']['records_table'])[1]
+                    bboxcol = self.cq.mappings['ows:bbox']['obj_attr']
                     bbox = getattr(r, bboxcol).split(',')
                     if len(bbox) == 4:
                         b = etree.SubElement(record, util.nspath_eval('ows:BoundingBox'), crs='urn:x-ogc:def:crs:EPSG:6.11:4326')
@@ -627,16 +627,16 @@ class Csw(object):
                         etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox[3],bbox[2])
 
                 else:
-                    if hasattr(r, self.cq_mappings[e].split('_')[1]) is True:
-                        etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=getattr(r, self.cq_mappings[e].split('_')[1])
+                    if hasattr(r, self.cq.mappings[e]['obj_attr']) is True:
+                        etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=getattr(r, self.cq.mappings[e]['obj_attr'])
         elif self.kvp.has_key('elementsetname') is True:
-            etree.SubElement(record, util.nspath_eval('dc:identifier')).text=getattr(r, self.cq_mappings['dc:identifier'].split('_')[1])
-            etree.SubElement(record, util.nspath_eval('dc:title')).text=getattr(r, self.cq_mappings['dc:title'].split('_')[1])
-            etree.SubElement(record, util.nspath_eval('dc:type')).text=getattr(r, self.cq_mappings['dc:type'].split('_')[1])
+            etree.SubElement(record, util.nspath_eval('dc:identifier')).text=getattr(r, self.cq.mappings['dc:identifier']['obj_attr'])
+            etree.SubElement(record, util.nspath_eval('dc:title')).text=getattr(r, self.cq.mappings['dc:title']['obj_attr'])
+            etree.SubElement(record, util.nspath_eval('dc:type')).text=getattr(r, self.cq.mappings['dc:type']['obj_attr'])
             if self.kvp['elementsetname'] == 'full':
-                etree.SubElement(record, util.nspath_eval('dc:date')).text=getattr(r, self.cq_mappings['dc:date'].split('_')[1])
+                etree.SubElement(record, util.nspath_eval('dc:date')).text=getattr(r, self.cq.mappings['dc:date']['obj_attr'])
             if self.kvp['elementsetname'] == 'summary':
-                etree.SubElement(record, util.nspath_eval('dc:format')).text=getattr(r, self.cq_mappings['dc:format'].split('_')[1])
+                etree.SubElement(record, util.nspath_eval('dc:format')).text=getattr(r, self.cq.mappings['dc:format']['obj_attr'])
 
         return record
 
