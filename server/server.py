@@ -409,7 +409,7 @@ class Csw(object):
         if self.kvp['filter'] is None and self.kvp['resulttype'] is None:
             returned='0'
 
-        sr = etree.SubElement(node, util.nspath_eval('csw:SearchResults'), numberOfRecordsMatched=matched, numberOfRecordsReturned=returned, nextRecord=next)
+        sr = etree.SubElement(node, util.nspath_eval('csw:SearchResults'), numberOfRecordsMatched=matched, numberOfRecordsReturned=returned, nextRecord=next,recordSchema=self.kvp['outputschema'])
 
         if self.kvp['filter'] is None and self.kvp['resulttype'] is None:
             self.log.debug('Empty result set returned.')
