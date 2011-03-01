@@ -42,15 +42,16 @@ create table records (
     publisher text,
     contributor text,
     modified text,
+    date text,
     type text,
     format text,
     identifier text not null primary key,
     source text,
     language text,
     relation text,
-    bbox_wkt text,
+    bbox text,
     rights text,
     -- additional properties
-    pycsw_md_typename text,
-    pycsw_md_xml text
+    csw_typename text,
+    csw_anytext text
 );

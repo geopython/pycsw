@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: ISO-8859-15 -*-
 # =================================================================
 #
@@ -31,61 +30,18 @@
 #
 # =================================================================
 
-import os
-import sys
-import glob
-import sqlite3
-
 from lxml import etree
+import util
 
-sys.path.append('/home/tkralidi/foss4g/OWSLib/trunk')
-from owslib.csw import CswRecord
-
-if len(sys.argv) < 2:
-    print 'Usage: %s <filename.sqlite3>' % sys.argv[0]
-    sys.exit(1)
-
-conn = sqlite3.connect(sys.argv[1])
-cur = conn.cursor()
-
-for r in glob.glob(os.path.join('..','data','cite','*.xml')):
-
-    # read dc document
-    e=etree.parse(r)
-    c=CswRecord(e)
-
-    if c.bbox is None:
-        bbox = None
-    else:
-        bbox = '%s,%s,%s,%s' % (c.bbox.miny,c.bbox.minx,c.bbox.maxy,c.bbox.maxx)
-
-    print 'Inserting csw:Record %s into database %s, table records....' % (c.identifier, sys.argv[1])
-
-    values = (
-    c.title,
-    c.creator,
-    ','.join(c.subjects),
-    c.abstract,
-    c.publisher,
-    c.contributor,
-    c.modified,
-    c.date,
-    c.type,
-    c.format,
-    c.identifier,
-    c.source,
-    c.language,
-    c.relation,
-    bbox,
-    ','.join(c.rights),
-    'csw:Record',
-    etree.tostring(e)
-    )
-
-    cur.execute('insert into records values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values)
-
-    conn.commit()
-
-    print 'Done'
-cur.close()
-
+class CoreQueryables(object):
+    def __init__(self, config):
+        self.typename = 'csw:Record'
+        self.mappings = {}
+        table = config['repository']['records_table']
+        for cqm in config['corequeryables']:
+            k = cqm.replace('_',':') 
+            cqv = config['corequeryables'][cqm]
+            v = '%s_%s' % (table, cqv)
+            self.mappings[k] = {}
+            self.mappings[k]['db_col'] = v
+            self.mappings[k]['obj_attr'] = cqv
