@@ -362,8 +362,11 @@ class Csw(object):
             if self.kvp['resulttype'] not in config.model['operations']['GetRecords']['parameters']['resultType']['values']:
                 return self.exceptionreport('InvalidParameterValue', 'resulttype', 'Invalid resultType parameter value: %s' % self.kvp['resulttype'])
 
-        if self.kvp.has_key('elementsetname') is False:
-            return self.exceptionreport('MissingParameterValue', 'elementsetname', 'Missing ElementSetName parameter')
+        if self.kvp['elementsetname'] is None and len(self.kvp['elementname']) == 0:  # mutually exclusive required
+            return self.exceptionreport('MissingParameterValue', 'elementsetname', 'Missing one of ElementSetName or ElementName parameter(s)')
+
+        if len(self.kvp['elementname']) == 0 and self.kvp['elementsetname'] not in config.model['operations']['GetRecords']['parameters']['ElementSetName']['values']:
+            return self.exceptionreport('InvalidParameterValue', 'elementsetname', 'Invalid ElementSetName parameter value: %s' % self.kvp['elementsetname'])
 
         if self.kvp['resulttype'] == 'validate':
             node = etree.Element(util.nspath_eval('csw:Acknowledgement'), nsmap=config.namespaces, timeStamp=timestamp)

@@ -88,6 +88,9 @@ model =  {
                 },
                 'CONSTRAINTLANGUAGE': {
                     'values': ['FILTER']
+                },
+                'ElementSetName': {
+                    'values': ['brief','summary','full']
                 }
             }
         },
