@@ -126,30 +126,6 @@ model =  {
     }
 }
 
-mappings = {
-    'dc:identifier': 'dataset_identifier',
-    'dc:title': 'dataset_title',
-    'dc:format': 'dataset_format',
-    'dc:relation': 'dataset_relation',
-    'dc:date': 'dataset_date',
-    'dc:subject': 'dataset_subject_list',
-    'dct:abstract': 'dataset_abstract',
-    'dc:type': 'dataset_type',
-    'csw:AnyText': 'dataset_metadata',
-    'AnyText': 'dataset_metadata',
-    '/ows:BoundingBox': 'dataset_bbox',
-    'ows:BoundingBox': 'dataset_bbox'
-}
-
-def gen_cq_mappings(config):
-    m = {}
-    table = config['repository']['records_table']
-    for cqm in config['corequeryables']:
-        k = cqm.replace('_',':') 
-        v = '%s_%s' % (table, config['corequeryables'][cqm])
-        m[k] = v
-    return m
-
 def gen_domains():
     d = {}
     d['parameters'] = {}
