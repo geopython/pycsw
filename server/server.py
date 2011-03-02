@@ -34,7 +34,7 @@ import os
 import cgi
 import sqlite3
 from lxml import etree
-import config, core_queryables, filter, log, query, util
+import config, core_queryables, filter, log, repository, util
 
 class Csw(object):
     def __init__(self,configfile=None):
@@ -57,6 +57,8 @@ class Csw(object):
         self.log.debug('Configuration: %s.' % self.config)
         self.log.debug('Model: %s.' % config.model)
         self.log.debug('Core Queryable mappings: %s.' % self.cq.mappings)
+
+        self.db = repository.Repository(self.config['repository']['db'], self.config['repository']['records_table'])
 
     def dispatch(self):
         error = 0
@@ -342,8 +344,7 @@ class Csw(object):
                 try:
                     tmp = self.cq.mappings[pn]['obj_attr']
                     self.log.debug('Querying database on property %s (%s).' % (pn, tmp))
-                    q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
-                    results = q.get(propertyname=tmp)
+                    results = self.db.query(propertyname=tmp)
                     self.log.debug('Results: %s' %str(len(results)))
                     lv = etree.SubElement(dv, util.nspath_eval('csw:ListOfValues'))
                     for r in results:
@@ -389,8 +390,7 @@ class Csw(object):
         self.log.debug('Querying database with filter: %s, cql: %s, sortby: %s.' % (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby']))
 
         try:
-            q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
-            results = q.get(filter=self.kvp['filter'], cql=self.kvp['cql'], sortby=self.kvp['sortby'])
+            results = self.db.query(filter=self.kvp['filter'], cql=self.kvp['cql'], sortby=self.kvp['sortby'])
         except Exception, err:
             return self.exceptionreport('InvalidParameterValue', 'constraint', 'Invalid query: %s' % err)
 
@@ -462,8 +462,7 @@ class Csw(object):
         timestamp = util.get_today_and_now()
 
         self.log.debug('Querying database with ids: %s.' % ids)
-        q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
-        results = q.get(ids=ids)
+        results = self.db.query(ids=ids)
 
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'), nsmap=config.namespaces)
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])

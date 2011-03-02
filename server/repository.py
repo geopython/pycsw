@@ -37,7 +37,7 @@ import config, util
 class dsc(object):
     pass
 
-class Query(object):
+class Repository(object):
     def __init__(self, db, table):
         db = create_engine('%s' % db, echo=False)
 
@@ -52,7 +52,7 @@ class Query(object):
         self.connection.create_function('query_anytext',2,util.query_anytext)
         self.connection.create_function('query_xpath',2,util.query_xpath)
        
-    def get(self,filter=None, cql=None, ids=None, sortby=None, propertyname=None):
+    def query(self,filter=None, cql=None, ids=None, sortby=None, propertyname=None):
         if ids is not None:  # it's a GetRecordById request
             q = self.session.query(dsc).filter(dsc.identifier.in_(ids))
         elif filter is not None:  # it's a GetRecords with filter
