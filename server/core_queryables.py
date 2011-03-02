@@ -30,9 +30,6 @@
 #
 # =================================================================
 
-from lxml import etree
-import util
-
 class CoreQueryables(object):
     def __init__(self, config):
         self.typename = 'csw:Record'

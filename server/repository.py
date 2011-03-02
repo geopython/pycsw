@@ -32,7 +32,7 @@
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
-import config, util
+import util
 
 class dsc(object):
     pass
