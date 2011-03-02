@@ -55,6 +55,9 @@ def nspath_eval(xpath, namespaces=config.namespaces):
         out.append('{%s}%s' % (namespaces[ns],el))
     return '/'.join(out)
 
+def xmltag_split(tag):
+    return tag.split('}')[1]
+
 def bbox2polygon(bbox):
     # like '-180,-90,180,90'
     minx,miny,maxx,maxy=bbox.split(',')

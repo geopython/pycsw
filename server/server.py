@@ -40,6 +40,8 @@ class Csw(object):
     def __init__(self,configfile=None):
         self.config = config.get_config(configfile)
 
+        self._gen_transactions()
+
         try:
             self.log = log.initlog(self.config)
         except Exception, err:
@@ -145,6 +147,8 @@ class Csw(object):
                 self.response = self.getrecords()
             elif self.kvp['request'] == 'GetRecordById':
                 self.response = self.getrecordbyid()
+            elif self.kvp['request'] == 'Transaction':
+                self.response = self.transaction()
             else:
                 self.response = self.exceptionreport('InvalidParameterValue', 'request', 'Invalid request parameter: %s' % self.kvp['request'])
 
@@ -233,13 +237,15 @@ class Csw(object):
                 dcp = etree.SubElement(op, util.nspath_eval('ows:DCP'))
                 http = etree.SubElement(dcp, util.nspath_eval('ows:HTTP'))
 
-                get = etree.SubElement(http, util.nspath_eval('ows:Get'))
-                get.attrib[util.nspath_eval('xlink:type')] = 'simple'
-                get.attrib[util.nspath_eval('xlink:href')] = self.config['server']['url']
+                if config.model['operations'][o]['methods']['get'] is True:
+                    get = etree.SubElement(http, util.nspath_eval('ows:Get'))
+                    get.attrib[util.nspath_eval('xlink:type')] = 'simple'
+                    get.attrib[util.nspath_eval('xlink:href')] = self.config['server']['url']
 
-                post = etree.SubElement(http, util.nspath_eval('ows:Post'))
-                post.attrib[util.nspath_eval('xlink:type')] = 'simple'
-                post.attrib[util.nspath_eval('xlink:href')] = self.config['server']['url']
+                if config.model['operations'][o]['methods']['post'] is True:
+                    post = etree.SubElement(http, util.nspath_eval('ows:Post'))
+                    post.attrib[util.nspath_eval('xlink:type')] = 'simple'
+                    post.attrib[util.nspath_eval('xlink:href')] = self.config['server']['url']
 
                 for p in config.model['operations'][o]['parameters']:
                     param = etree.SubElement(op, util.nspath_eval('ows:Parameter'), name=p)
@@ -334,10 +340,10 @@ class Csw(object):
                 etree.SubElement(dv, util.nspath_eval('csw:PropertyName')).text = pn
 
                 try:
-                    tmp = self.cq.mappings[pn]['db_col']
+                    tmp = self.cq.mappings[pn]['obj_attr']
                     self.log.debug('Querying database on property %s (%s).' % (pn, tmp))
                     q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
-                    results = q.get(propertyname=tmp.split('_')[1])
+                    results = q.get(propertyname=tmp)
                     self.log.debug('Results: %s' %str(len(results)))
                     lv = etree.SubElement(dv, util.nspath_eval('csw:ListOfValues'))
                     for r in results:
@@ -380,9 +386,13 @@ class Csw(object):
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
 
-        self.log.debug('Querying database with filter: %s, sortby: %s.' % (self.kvp['filter'], self.kvp['sortby']))
-        q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
-        results = q.get(self.kvp['filter'], sortby=self.kvp['sortby'])
+        self.log.debug('Querying database with filter: %s, cql: %s, sortby: %s.' % (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby']))
+
+        try:
+            q = query.Query(self.config['repository']['db'], self.config['repository']['records_table'])
+            results = q.get(filter=self.kvp['filter'], cql=self.kvp['cql'], sortby=self.kvp['sortby'])
+        except Exception, err:
+            return self.exceptionreport('InvalidParameterValue', 'constraint', 'Invalid query: %s' % err)
 
         if results is None:
             matched = '0'
@@ -464,6 +474,30 @@ class Csw(object):
 
         return etree.tostring(node, pretty_print=True)
 
+    def transaction(self):
+        if self.config['transactions']['enabled'] != 'true':
+            return self.exceptionreport('OperationNotSupported', 'transaction', 'Transaction operations are not supported')
+        ip = os.environ['REMOTE_ADDR']
+        if ip not in self.config['transactions']['ips'].split(','):
+            return self.exceptionreport('NoApplicableCode', 'transaction', 'Transaction operations are not enabled from this IP address: %s' % ip)
+
+        node = etree.Element(util.nspath_eval('csw:TransactionResponse'), nsmap=config.namespaces, version='2.0.2')
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
+
+        return etree.tostring(node, pretty_print=True)
+
+    def harvest(self):
+        if self.config['transactions']['enabled'] != 'true':
+            return self.exceptionreport('OperationNotSupported', 'harvest', 'Harvest operations are not supported')
+        ip = os.environ['REMOTE_ADDR']
+        if ip not in self.config['transactions']['ips'].split(','):
+            return self.exceptionreport('NoApplicableCode', 'harvest', 'Harvest operations are not enabled from this IP address: %s' % ip)
+
+        node = etree.Element(util.nspath_eval('csw:HarvestResponse'), nsmap=config.namespaces)
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
+
+        return etree.tostring(node, pretty_print=True)
+
     def parse_postdata(self,postdata):
         request = {}
         try:
@@ -473,7 +507,7 @@ class Csw(object):
             self.log.debug('Exception: %s.' % str(err))
             return str(err)
 
-        request['request'] = doc.tag.split('}')[1]
+        request['request'] = util.xmltag_split(doc.tag)
         self.log.debug('Request operation %s specified.' % request['request'])
         tmp = doc.find('./').attrib.get('service')
         if tmp is not None:
@@ -561,22 +595,29 @@ class Csw(object):
             for e in doc.findall(util.nspath_eval('csw:Query/csw:ElementName')):
                 request['elementname'].append(e.text)
 
-            if doc.find(util.nspath_eval('csw:Query/csw:Constraint')):
-                tmp = doc.find(util.nspath_eval('csw:Query/csw:Constraint/ogc:Filter'))
-                if tmp is not None:
-                    self.log.debug('Filter specified.')
-                    try:
-                        request['filter'] = filter.Filter(tmp, self.cq.mappings)
-                    except Exception, err:
-                        return 'Invalid Filter request2: %s' % err
-                else:
-                    try:
-                        t=tmp.tag
-                    except Exception, err:
-                        return 'Invalid Filter request declaration'
-            else:
-                self.log.debug('No Filter specified.')
-                request['filter'] = None  
+            request['filter'] = None
+            request['cql'] = None
+
+            tmp = doc.find(util.nspath_eval('csw:Query/csw:Constraint'))
+            if tmp is not None:
+                ctype = tmp.xpath('child::*')
+
+                try: 
+                    if ctype[0].tag == util.nspath_eval('ogc:Filter'):
+                        self.log.debug('Filter constraint specified.')
+                        try:
+                            request['filter'] = filter.Filter(ctype[0], self.cq.mappings)
+                        except Exception, err:
+                            return 'Invalid Filter request: %s' % err
+                    elif ctype[0].tag == util.nspath_eval('csw:CqlText'):
+                        self.log.debug('CQL constraint specified: %s.' % ctype[0].text)
+                        request['cql'] = self._cql_update_cq_mappings(ctype[0].text)
+                    else:
+                        return '2Invalid csw:Constraint request declaration (ogc:Filter or csw:CqlText is required)'
+                except Exception, err:
+                    return 'Invalid csw:Constraint request declaration (ogc:Filter or csw:CqlText is required)'
+            else: 
+                self.log.debug('No csw:Constraint (ogc:Filter or csw:CqlText) specified.')
 
             tmp = doc.find(util.nspath_eval('csw:Query/ogc:SortBy'))
             if tmp is not None:
@@ -593,6 +634,7 @@ class Csw(object):
             else:
                 request['sortby'] = None
 
+        # GetRecordById
         if request['request'] == 'GetRecordById':
             tmp = doc.find(util.nspath_eval('csw:Id'))
             if tmp is not None:
@@ -606,6 +648,18 @@ class Csw(object):
             else:
                 request['elementsetname'] = None
 
+        # Transaction
+        if request['request'] == 'Transaction':
+            tmp = doc.find(util.nspath_eval('csw:Insert'))
+            if tmp is not None:
+                request['ttype'] = 'insert'
+            tmp = doc.find(util.nspath_eval('csw:Update'))
+            if tmp is not None:
+                request['ttype'] = 'update'
+            tmp = doc.find(util.nspath_eval('csw:Delete'))
+            if tmp is not None:
+                request['ttype'] = 'delete'
+ 
         return request
 
     def _write_record(self, r):
@@ -662,3 +716,25 @@ class Csw(object):
         xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.config['server']['encoding']
         appinfo = '<!-- pycsw %s -->\n' % config.version
         self.response = '%s%s%s%s' % (hh, xmldecl, appinfo, self.response)
+
+    def _gen_transactions(self):
+        if self.config.has_key('transactions') is True and self.config['transactions'].has_key('enabled') is True and self.config['transactions']['enabled'] == 'true':
+            config.model['operations']['Transaction'] = {}
+            config.model['operations']['Transaction']['methods'] = {}
+            config.model['operations']['Transaction']['methods']['get'] = False
+            config.model['operations']['Transaction']['methods']['post'] = True
+            config.model['operations']['Transaction']['parameters'] = {}
+
+            config.model['operations']['Harvest'] = {}
+            config.model['operations']['Harvest']['methods'] = {}
+            config.model['operations']['Harvest']['methods']['get'] = False
+            config.model['operations']['Harvest']['methods']['post'] = True
+            config.model['operations']['Harvest']['parameters'] = {}
+
+    def _cql_update_cq_mappings(self,cql):
+        self.log.debug('Raw CQL text = %s.' % cql)
+        if cql is not None:
+            for k,v in self.cq.mappings.iteritems():
+                cql = cql.replace(k, self.cq.mappings[k]['db_col'])
+            self.log.debug('Interpolated CQL text = %s.' % cql)
+            return cql
