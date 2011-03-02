@@ -40,7 +40,7 @@ class Filter(object):
 
         tmp = flt.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=config.namespaces)
         if len(tmp) > 0:  # this is binary logic query
-            self.boq = ' %s ' % tmp[0].tag.split('}')[1].lower()
+            self.boq = ' %s ' % util.xmltag_split(tmp[0].tag).lower()
             tmp = tmp[0]
         else:
             tmp = flt

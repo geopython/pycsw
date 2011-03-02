@@ -96,6 +96,10 @@ Edit the following in ``default.cfg``:
 - **db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
 - **table**: the name of the metadata records table
 
+**[transactions]**
+- **enabled**: whether to enable transactions ('true' or 'false').  Default is 'false'
+- **ips**: comma delimited list of IP addresses which can perform transactions
+
 **[corequeryables]**
 
 .. note::
