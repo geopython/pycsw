@@ -35,12 +35,10 @@ version = open('VERSION.txt').read().strip()
 ogc_schemas_base = 'http://schemas.opengis.net'
 
 namespaces = {
-    #None : 'http://www.opengis.net/cat/csw/2.0.2',
     'csw': 'http://www.opengis.net/cat/csw/2.0.2',
     'dc' : 'http://purl.org/dc/elements/1.1/',
     'dct': 'http://purl.org/dc/terms/',
     'gml': 'http://www.opengis.net/gml',
-#    'gmd': 'http://www.isotc211.org/2005/gmd',
     'ogc': 'http://www.opengis.net/ogc',
     'ows': 'http://www.opengis.net/ows',
     'xlink': 'http://www.w3.org/1999/xlink',
