@@ -40,7 +40,7 @@ namespaces = {
     'dc' : 'http://purl.org/dc/elements/1.1/',
     'dct': 'http://purl.org/dc/terms/',
     'gml': 'http://www.opengis.net/gml',
-    'gmd': 'http://www.isotc211.org/2005/gmd',
+#    'gmd': 'http://www.isotc211.org/2005/gmd',
     'ogc': 'http://www.opengis.net/ogc',
     'ows': 'http://www.opengis.net/ows',
     'xlink': 'http://www.w3.org/1999/xlink',
@@ -51,6 +51,10 @@ namespaces = {
 model =  {
     'operations': {
         'GetCapabilities': {
+            'methods': {
+                'get': True,
+                'post': True,
+            },
             'parameters': {
                 'sections': {
                     'values': ['ServiceIdentification', 'ServiceProvider', 'OperationsMetadata', 'Filter_Capabilities']
@@ -58,6 +62,10 @@ model =  {
             }
         },
         'DescribeRecord': {
+            'methods': {
+                'get': True,
+                'post': True,
+            },
             'parameters': {
                 'schemaLanguage': {
                     #'values': ['XMLSCHEMA']
@@ -73,6 +81,10 @@ model =  {
             }
         },
         'GetRecords': {
+            'methods': {
+                'get': True,
+                'post': True,
+            },
             'parameters': {
                 'resultType': {
                     'values': ['hits', 'results', 'validate']
@@ -87,7 +99,7 @@ model =  {
                     'values': ['application/xml']
                 },
                 'CONSTRAINTLANGUAGE': {
-                    'values': ['FILTER']
+                    'values': ['FILTER', 'CQL_TEXT']
                 },
                 'ElementSetName': {
                     'values': ['brief','summary','full']
@@ -95,6 +107,10 @@ model =  {
             }
         },
         'GetRecordById': {
+            'methods': {
+                'get': True,
+                'post': True,
+            },
             'parameters': {
                 'resultType': {
                     'values': ['hits', 'results', 'validate']
@@ -131,6 +147,9 @@ model =  {
 
 def gen_domains():
     d = {}
+    d['methods'] = {}
+    d['methods']['get'] = True
+    d['methods']['post'] = True
     d['parameters'] = {}
     d['parameters']['ParameterName'] = {}
     d['parameters']['ParameterName']['values'] = []
