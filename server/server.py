@@ -312,7 +312,7 @@ class Csw(object):
         if csw is True:
             self.log.debug('Writing csw:Record schema.')
             sc = etree.SubElement(node, util.nspath_eval('csw:SchemaComponent'), schemaLanguage='XMLSCHEMA', targetNamespace=config.namespaces['csw'])
-            dc = etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','xsd','record.xsd')).getroot()
+            dc = etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','ogc','csw','2.0.2','record.xsd')).getroot()
             sc.append(dc)
 
         return etree.tostring(node, pretty_print=True)
@@ -535,8 +535,19 @@ class Csw(object):
             self.log.debug('Parsing %s.' % postdata)
             doc = etree.fromstring(postdata)
         except Exception, err:
-            self.log.debug('Exception: %s.' % str(err))
-            return str(err)
+            et = 'Exception: the document is not well-formed.\nError: %s.' % str(err)
+            self.log.debug(et)
+            return et
+
+        try:
+            self.log.debug('Validating %s.' % postdata)
+            schema = etree.XMLSchema(etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','ogc','csw','2.0.2','CSW-publication.xsd')))
+            parser = etree.XMLParser(schema=schema)
+            doc = etree.fromstring(postdata, parser)
+        except Exception, err:
+            et = 'Exception: the document is not valid.\nError: %s.' % str(err)
+            self.log.debug(et)
+            return et
 
         request['request'] = util.xmltag_split(doc.tag)
         self.log.debug('Request operation %s specified.' % request['request'])
