@@ -23,7 +23,6 @@ Features
 - fully passes the `OGC CITE CSW`_ test suite (103 tests)
 - realtime XML Schema validation
 - full transactional capabilities (configurable)
-- distributed searching capabilities for federated catalogue discovery
 - flexible repository configuration
 
 Standards Support
