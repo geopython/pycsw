@@ -41,6 +41,7 @@ namespaces = {
     'gml': 'http://www.opengis.net/gml',
     'ogc': 'http://www.opengis.net/ogc',
     'ows': 'http://www.opengis.net/ows',
+    'soapenv': 'http://www.w3.org/2003/05/soap-envelope',
     'xlink': 'http://www.w3.org/1999/xlink',
     'xs': 'http://www.w3.org/2001/XMLSchema',
     'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
@@ -138,7 +139,7 @@ model =  {
     },
     'constraints': {
         'PostEncoding': {
-            'values': ['XML']
+            'values': ['XML', 'SOAP']
         }
     }
 }

@@ -20,6 +20,12 @@ pycsw is an OGC CSW server implementation written in Python.
 Features
 ========
 
+- fully passes the `OGC CITE CSW`_ test suite (103 tests)
+- realtime XML Schema validation
+- full transactional capabilities (configurable)
+- distributed searching capabilities for federated catalogue discovery
+- flexible repository configuration
+
 Standards Support
 -----------------
 
@@ -34,20 +40,21 @@ Standards Support
 +-------------------+------------+
 | `Dublin Core`_    | 1.1        |
 +-------------------+------------+
-
+| `SOAP`_           | 1.2        |
++-------------------+------------+
 Supported Operations
 --------------------
 
 .. csv-table::
   :header: Request,Optionality,Supported,HTTP method binding(s)
 
-  GetCapabilities,mandatory,yes,GET (KVP) / POST (XML)
-  DescribeRecord,mandatory,yes,GET (KVP) / POST (XML)
-  GetRecords,mandatory,yes,GET (KVP) / POST (XML)
-  GetRecordById,optional,yes,GET (KVP) / POST (XML)
-  GetDomain,optional,yes,GET (KVP) / POST (XML)
-  Harvest,optional,no,none
-  Transaction,optional,no,none
+  GetCapabilities,mandatory,yes,GET (KVP) / POST (XML) / SOAP
+  DescribeRecord,mandatory,yes,GET (KVP) / POST (XML) / SOAP
+  GetRecords,mandatory,yes,GET (KVP) / POST (XML) / SOAP
+  GetRecordById,optional,yes,GET (KVP) / POST (XML) / SOAP
+  GetDomain,optional,yes,GET (KVP) / POST (XML) / SOAP
+  Harvest,optional,yes,GET (KVP) / POST (XML) / SOAP
+  Transaction,optional,yes,POST (XML) / SOAP
 
 Installation
 ============
@@ -243,3 +250,5 @@ Committers
 .. _`deegree`: http://www.deegree.org/
 .. _`eXcat`: http://gdsc.nlr.nl/gdsc/en/tools/excat
 .. _`GeoNetwork opensource`: http://geonetwork-opensource.org/
+.. _`OGC CITE CSW`: http://cite.opengeospatial.org/test_engine/csw/2.0.2
+.. _`SOAP`: http://www.w4.org/TR/SOAP/
