@@ -359,20 +359,29 @@ class Csw(object):
 
         timestamp = util.get_today_and_now()
 
+        if self.kvp.has_key('elementsetname') is False and self.kvp.has_key('elementname') is False:  # mutually exclusive required
+            return self.exceptionreport('MissingParameterValue', 'elementsetname', 'Missing one of ElementSetName or ElementName parameter(s)')
+
+        if self.kvp.has_key('outputschema') is False:
+            self.kvp['outputschema'] = config.namespaces['csw']
+
         if self.kvp['outputschema'] not in config.model['operations']['GetRecords']['parameters']['outputSchema']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputschema', 'Invalid outputSchema parameter value: %s' % self.kvp['outputschema'])
 
+        if self.kvp.has_key('outputformat') is False:
+            self.kvp['outputformat'] = 'application/xml'
+     
         if self.kvp['outputformat'] not in config.model['operations']['GetRecords']['parameters']['outputFormat']['values']:
             return self.exceptionreport('InvalidParameterValue', 'outputformat', 'Invalid outputFormat parameter value: %s' % self.kvp['outputformat'])
+
+        if self.kvp.has_key('resulttype') is False:
+            self.kvp['resulttype'] = 'hits'
 
         if self.kvp['resulttype'] is not None:
             if self.kvp['resulttype'] not in config.model['operations']['GetRecords']['parameters']['resultType']['values']:
                 return self.exceptionreport('InvalidParameterValue', 'resulttype', 'Invalid resultType parameter value: %s' % self.kvp['resulttype'])
 
-        if self.kvp['elementsetname'] is None and len(self.kvp['elementname']) == 0:  # mutually exclusive required
-            return self.exceptionreport('MissingParameterValue', 'elementsetname', 'Missing one of ElementSetName or ElementName parameter(s)')
-
-        if len(self.kvp['elementname']) == 0 and self.kvp['elementsetname'] not in config.model['operations']['GetRecords']['parameters']['ElementSetName']['values']:
+        if (self.kvp.has_key('elementname') is False or len(self.kvp['elementname']) == 0) and self.kvp['elementsetname'] not in config.model['operations']['GetRecords']['parameters']['ElementSetName']['values']:
             return self.exceptionreport('InvalidParameterValue', 'elementsetname', 'Invalid ElementSetName parameter value: %s' % self.kvp['elementsetname'])
 
         if self.kvp['resulttype'] == 'validate':
@@ -386,6 +395,29 @@ class Csw(object):
 
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
+
+        if self.kvp.has_key('constraint') is True and (self.kvp.has_key('filter') is False and self.kvp.has_key('cql') is False):  # GET request
+            if self.kvp.has_key('constraintlanguage') is False:
+                return self.exceptionreport('MissingParameterValue', 'constraintlanguage', 'constraintlanguage required when constraint specified')
+            if self.kvp['constraintlanguage'] not in config.model['operations']['GetRecords']['parameters']['CONSTRAINTLANGUAGE']['values']:
+                return self.exceptionreport('InvalidParameterValue', 'constraintlanguage', 'Invalid constraintlanguage: %s' % self.kvp['constraintlanguage'])
+            if self.kvp['constraintlanguage'] == 'CQL_TEXT':
+                self.kvp['cql'] = self.kvp['constraint']
+                self.kvp['filter'] = None
+            elif self.kvp['constraintlanguage'] == 'FILTER':
+                self.kvp['filter'] = self.kvp['constraint']
+                self.kvp['cql'] = None
+
+        if self.kvp.has_key('filter') is False:
+            self.kvp['filter'] = None
+        if self.kvp.has_key('cql') is False:
+            self.kvp['cql'] = None
+
+        if self.kvp.has_key('sortby') is False:
+            self.kvp['sortby'] = None
+
+        if self.kvp.has_key('startposition') is False:
+            self.kvp['startposition'] = 1
 
         self.log.debug('Querying database with filter: %s, cql: %s, sortby: %s.' % (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby']))
 
@@ -645,7 +677,7 @@ class Csw(object):
             if tmp is not None:
                 request['elementsetname'] = tmp.text
             else:
-                request['elementsetname'] = None
+                request['elementsetname'] = 'summary'
 
         # Transaction
         if request['request'] == 'Transaction':
