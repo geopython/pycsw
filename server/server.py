@@ -132,9 +132,13 @@ class Csw(object):
                 if self.kvp['request'] not in config.model['operations'].keys():
                     error = 1
                     locator = 'request'
-                    code = 'InvalidParameterValue'
-                    text = 'Invalid value for request: %s' % self.kvp['request']
-    
+                    if self.kvp['request'] in ['Transaction','Harvest']:
+                        code = 'OperationNotSupported'
+                        text = '%s operations are not supported' % self.kvp['request']
+                    else:
+                        code = 'InvalidParameterValue'
+                        text = 'Invalid value for request: %s' % self.kvp['request']
+
         if error == 1:  # return an ExceptionReport
             self.response = self.exceptionreport(code, locator, text)
     
@@ -158,6 +162,7 @@ class Csw(object):
         self.log.debug('Response:\n%s\n' % self.response)
 
     def exceptionreport(self,code,locator,text):
+        self.exception = True
 
         node = etree.Element(util.nspath_eval('ows:ExceptionReport'), nsmap=config.namespaces, version='1.0.2', language=self.config['server']['language'])
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/ows/1.0.0/owsExceptionReport.xsd' % (config.namespaces['ows'], self.config['server']['ogc_schemas_base'])
@@ -165,7 +170,7 @@ class Csw(object):
         e = etree.SubElement(node, util.nspath_eval('ows:Exception'), exceptionCode=code, locator=locator)
         etree.SubElement(e, util.nspath_eval('ows:ExceptionText')).text=text
 
-        return etree.tostring(node, pretty_print=True)
+        return node
     
     def getcapabilities(self):
         si = True
@@ -288,7 +293,7 @@ class Csw(object):
             etree.SubElement(ic, util.nspath_eval('ogc:EID'))
             etree.SubElement(ic, util.nspath_eval('ogc:FID'))
 
-        return etree.tostring(node, pretty_print=True)
+        return node
     
     def describerecord(self):
         csw = False
@@ -315,7 +320,7 @@ class Csw(object):
             dc = etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','ogc','csw','2.0.2','record.xsd')).getroot()
             sc.append(dc)
 
-        return etree.tostring(node, pretty_print=True)
+        return node
     
     def getdomain(self):
         if self.kvp.has_key('parametername') is False and self.kvp.has_key('propertyname') is False:
@@ -353,7 +358,7 @@ class Csw(object):
                     self.log.debug('No results for propertyname %s.' % pn)
                     pass
 
-        return etree.tostring(node, pretty_print=True)
+        return node
 
     def getrecords(self):
 
@@ -391,7 +396,7 @@ class Csw(object):
             node1 = etree.SubElement(node, util.nspath_eval('csw:EchoedRequest'))
             node1.append(etree.fromstring(self.request))
 
-            return etree.tostring(node,pretty_print=True)
+            return node
 
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
@@ -455,7 +460,7 @@ class Csw(object):
 
         if self.kvp['filter'] is None and self.kvp['resulttype'] is None:
             self.log.debug('Empty result set returned.')
-            return etree.tostring(node, pretty_print=True)
+            return node
 
         max = int(self.kvp['startposition']) + int(self.kvp['maxrecords'])
  
@@ -464,7 +469,7 @@ class Csw(object):
             for r in results[int(self.kvp['startposition']):max]:
                 sr.append(self._write_record(r))
 
-        return etree.tostring(node, pretty_print=True)
+        return node
 
     def getrecordbyid(self):
 
@@ -503,7 +508,7 @@ class Csw(object):
         for r in results:
              node.append(self._write_record(r))
 
-        return etree.tostring(node, pretty_print=True)
+        return node
 
     def transaction(self):
         if self.config['transactions']['enabled'] != 'true':
@@ -515,7 +520,7 @@ class Csw(object):
         node = etree.Element(util.nspath_eval('csw:TransactionResponse'), nsmap=config.namespaces, version='2.0.2')
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
 
-        return etree.tostring(node, pretty_print=True)
+        return node
 
     def harvest(self):
         if self.config['transactions']['enabled'] != 'true':
@@ -527,7 +532,7 @@ class Csw(object):
         node = etree.Element(util.nspath_eval('csw:HarvestResponse'), nsmap=config.namespaces)
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
 
-        return etree.tostring(node, pretty_print=True)
+        return node
 
     def parse_postdata(self,postdata):
         request = {}
@@ -539,11 +544,23 @@ class Csw(object):
             self.log.debug(et)
             return et
 
+        # if this is a SOAP request, get to SOAP-ENV:Body/csw:*
+        if doc.tag == util.nspath_eval('soapenv:Envelope'):
+            self.log.debug('SOAP request detected.')
+            self.soap = True
+            doc = doc.find(util.nspath_eval('soapenv:Body')).xpath('child::*')[0]
+
+        if doc.tag in [util.nspath_eval('csw:Transaction'), util.nspath_eval('csw:Harvest')]:
+            schema = os.path.join(self.config['server']['home'],'etc','schemas','ogc','csw','2.0.2','CSW-publication.xsd')
+        else:
+            schema = os.path.join(self.config['server']['home'],'etc','schemas','ogc','csw','2.0.2','CSW-discovery.xsd')
+
         try:
             self.log.debug('Validating %s.' % postdata)
-            schema = etree.XMLSchema(etree.parse(os.path.join(self.config['server']['home'],'etc','schemas','ogc','csw','2.0.2','CSW-publication.xsd')))
-            parser = etree.XMLParser(schema=schema)
-            doc = etree.fromstring(postdata, parser)
+            schema = etree.XMLSchema(etree.parse(schema))
+            #parser = etree.XMLParser(schema=schema)
+            #doc = etree.fromstring(postdata, parser)
+            schema.validate(doc)
         except Exception, err:
             et = 'Exception: the document is not valid.\nError: %s.' % str(err)
             self.log.debug(et)
@@ -757,7 +774,29 @@ class Csw(object):
         hh = 'Content-type:%s\n\n' % self.config['server']['mimetype']
         xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.config['server']['encoding']
         appinfo = '<!-- pycsw %s -->\n' % config.version
-        self.response = '%s%s%s%s' % (hh, xmldecl, appinfo, self.response)
+
+        if hasattr(self, 'soap') and self.soap is True:
+            self._gen_soap_wrapper() 
+
+        self.response = '%s%s%s%s' % (hh, xmldecl, appinfo, etree.tostring(self.response, pretty_print=1))
+
+    def _gen_soap_wrapper(self):
+        self.log.debug('Writing SOAP wrapper.')
+        node = etree.Element(util.nspath_eval('soapenv:Envelope'), nsmap=config.namespaces)
+	node2 = etree.SubElement(node, util.nspath_eval('soapenv:Body'))
+
+        if hasattr(self, 'exception') and self.exception is True:
+            node3 = etree.SubElement(node2, util.nspath_eval('soapenv:Fault'))
+            node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Code'))
+            etree.SubElement(node4, util.nspath_eval('soapenv:Value')).text = 'soap:Server'
+            node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Reason'))
+            etree.SubElement(node4, util.nspath_eval('soapenv:Text')).text = 'A server exception was encountered.'
+            node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Detail'))
+            node4.append(self.response)
+        else:
+            node2.append(self.response)
+
+        self.response = node
 
     def _gen_transactions(self):
         if self.config.has_key('transactions') is True and self.config['transactions'].has_key('enabled') is True and self.config['transactions']['enabled'] == 'true':
