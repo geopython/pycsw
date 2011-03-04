@@ -31,6 +31,7 @@
 # =================================================================
 
 import os
+import sys
 import cgi
 import sqlite3
 from lxml import etree
@@ -38,27 +39,42 @@ import config, core_queryables, filter, log, repository, util
 
 class Csw(object):
     def __init__(self,configfile=None):
+        # load user configuration
         self.config = config.get_config(configfile)
 
+        # configure transaction support, if specified in config
         self._gen_transactions()
 
+        # configure logging
         try:
             self.log = log.initlog(self.config)
         except Exception, err:
             self.response = self.exceptionreport('NoApplicableCode', 'service', str(err))
 
+        # generate domain model
         config.model['operations']['GetDomain'] = config.gen_domains()
 
-        if self.config['server'].has_key('ogc_schemas_base') is False:
+        # set OGC schemas location
+        if self.config['server'].has_key('ogc_schemas_base') is False:  # use default value
             self.config['server']['ogc_schemas_base'] = config.ogc_schemas_base
 
+        # configure core queryables
         self.cq = core_queryables.CoreQueryables(self.config)
+
+        # initialize connection to repository
+        self.db = repository.Repository(self.config['repository']['db'], self.config['repository']['records_table'])
+
+        # generate distributed search model, if specified in config
+        if self.config['server'].has_key('federatedcatalogues') is True:
+            self.log.debug('Configuring distributed search.')
+            config.model['constraints']['FederatedCatalogues'] = {}
+            config.model['constraints']['FederatedCatalogues']['values'] = []
+            for fc in self.config['server']['federatedcatalogues'].split(','):
+                config.model['constraints']['FederatedCatalogues']['values'].append(fc)
 
         self.log.debug('Configuration: %s.' % self.config)
         self.log.debug('Model: %s.' % config.model)
         self.log.debug('Core Queryable mappings: %s.' % self.cq.mappings)
-
-        self.db = repository.Repository(self.config['repository']['db'], self.config['repository']['records_table'])
 
     def dispatch(self):
         error = 0
@@ -268,7 +284,7 @@ class Csw(object):
                 param = etree.SubElement(om, util.nspath_eval('ows:Constraint'), name=p)
                 for v in config.model['constraints'][p]['values']:
                     etree.SubElement(param, util.nspath_eval('ows:Value')).text = v
-
+            
             etree.SubElement(om, util.nspath_eval('ows:ExtendedCapabilities'))
 
         if fc is True:
@@ -447,6 +463,21 @@ class Csw(object):
             if int(self.kvp['maxrecords']) == 0:
                 next = '1'
 
+        dsresults = []
+
+        if self.config['server'].has_key('federatedcatalogues') and self.kvp['distributedsearch'] == 'TRUE' and self.kvp['hopcount'] > 0:
+
+            self.log.debug('DistributedSearch specified (hopCount=%s.' % self.kvp['hopcount'])
+
+            from owslib.csw import CatalogueServiceWeb
+            for fc in self.config['server']['federatedcatalogues'].split(','):
+                self.log.debug('Performing distributed search on federated catalogue: %s.' % fc)
+                c = CatalogueServiceWeb(fc)
+                c.getrecords(xml=self.request)
+                self.log.debug('Distirubuted search results from catalogue %s: %s.' % (fc, c.results))
+                matched = str(int(matched) + int(c.results['matches']))
+                dsresults.append(c.records)
+
         self.log.debug('Search results: matched: %s, returned: %s, next: %s.' % (matched, returned, next))
         node = etree.Element(util.nspath_eval('csw:GetRecordsResponse'), nsmap=config.namespaces, version='2.0.2')
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
@@ -468,6 +499,11 @@ class Csw(object):
             self.log.debug('Presenting records %s - %s.' % (self.kvp['startposition'], max))
             for r in results[int(self.kvp['startposition']):max]:
                 sr.append(self._write_record(r))
+
+        if self.kvp['distributedsearch'] == 'TRUE' and self.kvp['hopcount'] > 0:
+            for rs in dsresults:
+                for rec in rs:
+                    sr.append(etree.fromstring(rs[rec].xml))
 
         return node
 
@@ -546,7 +582,7 @@ class Csw(object):
 
         # if this is a SOAP request, get to SOAP-ENV:Body/csw:*
         if doc.tag == util.nspath_eval('soapenv:Envelope'):
-            self.log.debug('SOAP request detected.')
+            self.log.debug('SOAP request specified.')
             self.soap = True
             doc = doc.find(util.nspath_eval('soapenv:Body')).xpath('child::*')[0]
 
@@ -558,9 +594,12 @@ class Csw(object):
         try:
             self.log.debug('Validating %s.' % postdata)
             schema = etree.XMLSchema(etree.parse(schema))
-            #parser = etree.XMLParser(schema=schema)
-            #doc = etree.fromstring(postdata, parser)
-            schema.validate(doc)
+            parser = etree.XMLParser(schema=schema)
+            if hasattr(self, 'soap') is True and self.soap is True:  # validate the body of the SOAP request
+                doc = etree.fromstring(etree.tostring(doc), parser)
+            else:  # validate the request normally
+                doc = etree.fromstring(postdata, parser)
+            self.log.debug('Request is valid XML.')
         except Exception, err:
             et = 'Exception: the document is not valid.\nError: %s.' % str(err)
             self.log.debug(et)
@@ -643,6 +682,18 @@ class Csw(object):
 
             if client_mr < server_mr:
                 request['maxrecords'] = client_mr
+
+ 
+            tmp = doc.find(util.nspath_eval('csw:DistributedSearch'))
+            if tmp is not None:
+                request['distributedsearch'] = 'TRUE'
+                hc = tmp.attrib.get('hopCount')
+                if hc is not None:
+                    request['hopcount'] = int(hc)-1
+                else:
+                    request['hopcount'] = 1
+            else:
+                request['distributedsearch'] = 'FALSE'
 
             tmp = doc.find(util.nspath_eval('csw:Query/csw:ElementSetName'))
             if tmp is not None:
@@ -783,6 +834,8 @@ class Csw(object):
     def _gen_soap_wrapper(self):
         self.log.debug('Writing SOAP wrapper.')
         node = etree.Element(util.nspath_eval('soapenv:Envelope'), nsmap=config.namespaces)
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s' % (config.namespaces['soapenv'], config.namespaces['soapenv']) 
+
 	node2 = etree.SubElement(node, util.nspath_eval('soapenv:Body'))
 
         if hasattr(self, 'exception') and self.exception is True:

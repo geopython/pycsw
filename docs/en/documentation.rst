@@ -22,8 +22,9 @@ Features
 
 - fully passes the `OGC CITE CSW`_ test suite (103 tests)
 - realtime XML Schema validation
-- full transactional capabilities (configurable)
+- full transactional capabilities
 - flexible repository configuration
+- federated discovery via distributed searching
 
 Standards Support
 -----------------
@@ -41,6 +42,7 @@ Standards Support
 +-------------------+------------+
 | `SOAP`_           | 1.2        |
 +-------------------+------------+
+
 Supported Operations
 --------------------
 
@@ -52,8 +54,8 @@ Supported Operations
   GetRecords,mandatory,yes,GET (KVP) / POST (XML) / SOAP
   GetRecordById,optional,yes,GET (KVP) / POST (XML) / SOAP
   GetDomain,optional,yes,GET (KVP) / POST (XML) / SOAP
-  Harvest,optional,yes,GET (KVP) / POST (XML) / SOAP
-  Transaction,optional,yes,POST (XML) / SOAP
+  Harvest,optional,pending,GET (KVP) / POST (XML) / SOAP
+  Transaction,optional,pending,POST (XML) / SOAP
 
 Installation
 ============
@@ -92,6 +94,7 @@ Edit the following in ``default.cfg``:
 - **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels for more details)
 - **logfile**: the full file path to the logfile
 - **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net).
+- **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client
 
 **[repository]**
 
@@ -103,6 +106,7 @@ Edit the following in ``default.cfg``:
 - **table**: the name of the metadata records table
 
 **[transactions]**
+
 - **enabled**: whether to enable transactions ('true' or 'false').  Default is 'false'
 - **ips**: comma delimited list of IP addresses which can perform transactions
 
@@ -193,7 +197,7 @@ The pycsw wiki is located at http://sourceforge.net/apps/trac/pycsw.
 
 The pycsw source code is available at https://pycsw.svn.sourceforge.net/svnroot/pycsw.  You can browse the source code at at http://sourceforge.net/apps/trac/pycsw/browser.
 
-You can find out about software metrics at the pycsw `ohloh`_ page.
+You can find out about software metrics at the pycsw `ohloh`_ page.  pycsw is also registered on `CIA.vc`_.
 
 The pycsw mailing list is the primary means for users and developers to exchange ideas, discuss improvements, and ask questions.  To subscribe, visit https://lists.sourceforge.net/lists/listinfo/pycsw-devel.
 
@@ -250,4 +254,5 @@ Committers
 .. _`eXcat`: http://gdsc.nlr.nl/gdsc/en/tools/excat
 .. _`GeoNetwork opensource`: http://geonetwork-opensource.org/
 .. _`OGC CITE CSW`: http://cite.opengeospatial.org/test_engine/csw/2.0.2
-.. _`SOAP`: http://www.w4.org/TR/SOAP/
+.. _`SOAP`: http://www.w3.org/TR/SOAP/
+.. _`CIA.vc`: http://cia.vc/stats/project/pycsw
