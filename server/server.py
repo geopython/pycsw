@@ -34,6 +34,7 @@ import os
 import sys
 import cgi
 import sqlite3
+import urllib2
 from lxml import etree
 import config, core_queryables, filter, log, repository, util
 
@@ -171,6 +172,8 @@ class Csw(object):
                 self.response = self.getrecordbyid()
             elif self.kvp['request'] == 'Transaction':
                 self.response = self.transaction()
+            elif self.kvp['request'] == 'Harvest':
+                self.response = self.harvest()
             else:
                 self.response = self.exceptionreport('InvalidParameterValue', 'request', 'Invalid request parameter: %s' % self.kvp['request'])
 
@@ -565,8 +568,23 @@ class Csw(object):
         if ip not in self.config['transactions']['ips'].split(','):
             return self.exceptionreport('NoApplicableCode', 'harvest', 'Harvest operations are not enabled from this IP address: %s' % ip)
 
+        # validate resourcetype
+        if self.kvp['resourcetype'] not in config.model['operations']['Harvest']['parameters']['ResourceType']['values']:
+            return self.exceptionreport('InvalidParameterValue', 'resourcetype', 'Invalid resource type parameter: %s.  Allowable resourcetype values: %s' % (self.kvp['resourcetype'], ','.join(config.model['operations']['Harvest']['parameters']['ResourceType']['values'])))
+
+        # fetch resource
+        try:
+            req = urllib2.Request(self.kvp['source'])
+            req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
+            r = urllib2.urlopen(req).read() 
+        except Exception, err:
+            et = 'Error fetching document %s.\nError: %s.' % (self.kvp['source'], str(err))
+            self.log.debug(et)
+            return self.exceptionreport('InvalidParameterValue', 'source', et)
+
         node = etree.Element(util.nspath_eval('csw:HarvestResponse'), nsmap=config.namespaces)
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
+        etree.SubElement(node,'hi').text = r
 
         return node
 
@@ -610,13 +628,11 @@ class Csw(object):
         tmp = doc.find('./').attrib.get('service')
         if tmp is not None:
             request['service'] = tmp
-        else:
-            request['service'] = None
+
         tmp = doc.find('./').attrib.get('version')
         if tmp is not None:
             request['version'] = tmp
-        else:
-            request['version'] = None
+
         tmp = doc.find('.//%s' % util.nspath_eval('ows:Version'))
         if tmp is not None:
             request['version'] = tmp.text
@@ -746,11 +762,11 @@ class Csw(object):
 
         # GetRecordById
         if request['request'] == 'GetRecordById':
-            tmp = doc.find(util.nspath_eval('csw:Id'))
-            if tmp is not None:
-                request['id'] = tmp.text
-            else:
-                request['id'] = None
+            ids = []
+            for id in doc.findall(util.nspath_eval('csw:Id')):
+                ids.append(id.text)
+
+            request['id'] = ','.join(ids)
 
             tmp = doc.find(util.nspath_eval('csw:ElementSetName'))
             if tmp is not None:
@@ -770,6 +786,25 @@ class Csw(object):
             if tmp is not None:
                 request['ttype'] = 'delete'
  
+        # Harvest
+        if request['request'] == 'Harvest':
+            request['source'] = doc.find(util.nspath_eval('csw:Source')).text
+            request['resourcetype'] = doc.find(util.nspath_eval('csw:ResourceType')).text
+
+            tmp = doc.find(util.nspath_eval('csw:ResourceFormat'))
+            if tmp is not None:
+                request['resourceformat'] = tmp
+            else:
+                request['resourceformat'] = 'application/xml'
+
+            tmp = doc.find(util.nspath_eval('csw:HarvestInterval'))
+            if tmp is not None:
+                request['harvestinterval'] = tmp
+
+            tmp = doc.find(util.nspath_eval('csw:ResponseHandler'))
+            if tmp is not None:
+                request['responsehandler'] = tmp
+
         return request
 
     def _write_record(self, r):
@@ -864,6 +899,8 @@ class Csw(object):
             config.model['operations']['Harvest']['methods']['get'] = False
             config.model['operations']['Harvest']['methods']['post'] = True
             config.model['operations']['Harvest']['parameters'] = {}
+            config.model['operations']['Harvest']['parameters']['ResourceType'] = {}
+            config.model['operations']['Harvest']['parameters']['ResourceType']['values'] = config.model['operations']['GetRecords']['parameters']['outputSchema']['values']
 
     def _cql_update_cq_mappings(self,cql):
         self.log.debug('Raw CQL text = %s.' % cql)
