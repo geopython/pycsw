@@ -37,8 +37,6 @@ import glob
 import sqlite3
 
 from lxml import etree
-
-sys.path.append('/home/tkralidi/foss4g/OWSLib/trunk')
 from owslib.csw import CswRecord
 
 if len(sys.argv) < 2:
@@ -82,10 +80,9 @@ for r in glob.glob(os.path.join('..','data','cite','*.xml')):
     etree.tostring(e)
     )
 
-    cur.execute('insert into records values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values)
+    cur.execute('insert into records values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,null,null)', values)
 
     conn.commit()
 
     print 'Done'
 cur.close()
-

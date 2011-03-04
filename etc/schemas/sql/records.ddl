@@ -34,7 +34,7 @@
 -- subclause 10.2.5.3 (Table 53)
 
 create table records (
-    -- core metadata properties
+    -- Table 53 core metadata properties
     title text,
     creator text,
     subject text,
@@ -51,7 +51,10 @@ create table records (
     relation text,
     bbox text,
     rights text,
-    -- additional properties
+    -- CSW additional properties
     csw_typename text,
-    csw_anytext text
+    csw_anytext text,
+    -- pycsw additional properties for harvest support
+    pycsw_source_uri text,
+    pycsw_source_uri_next_fetch text
 );

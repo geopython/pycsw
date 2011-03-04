@@ -94,18 +94,22 @@ Edit the following in ``default.cfg``:
 - **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels for more details)
 - **logfile**: the full file path to the logfile
 - **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net).
-- **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client
+- **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributed-searching` for more details)
 
 **[repository]**
 
 .. note::
 
-  See Metadata Repository Setup for connecting your metadata repository.
+  See :ref:`metadata-repository-setup` for connecting your metadata repository.
 
 - **db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
 - **table**: the name of the metadata records table
 
 **[transactions]**
+
+.. note::
+
+  See :ref:`transactions` for more details.
 
 - **enabled**: whether to enable transactions ('true' or 'false').  Default is 'false'
 - **ips**: comma delimited list of IP addresses which can perform transactions
@@ -114,7 +118,7 @@ Edit the following in ``default.cfg``:
 
 .. note::
 
-  See Metadata Repository Setup for connecting your metadata repository.
+  See :ref:`metadata-repository-setup` for connecting your metadata repository.
 
 - **dc_title**: db table column name which maps to dc:title
 - **dc_creator**: db table column name which maps to dc:creator
@@ -164,6 +168,27 @@ Edit the following in ``default.cfg``:
 - **hours**: the hours of service to contact the provider
 - **contactinstructions**: the how to contact the provider contact
 - **role**: the role of the provider contact
+
+.. _metadata-repository-setup:
+
+Metadata Repository Setup
+=========================
+
+TODO
+
+.. _distributed-searching:
+
+Distributed Searching
+=====================
+
+pycsw has the ability to perform distributed searching against other CSW servers (``server.federatedcatalogues`` must be set).  A CSW client must issue a GetRecords request with ``csw:DistributedSearch`` specified, along with an optional ``hopCount`` attribute (see subclause 10.8.4.13 of the CSW specification).  When enabled, pycsw will search all specified catalogues and return a unified set of search results to the client.  Due to the distributed nature of this functionality, requests will take extra time to process compared to queries against the local repository.
+
+.. _transactions:
+
+Transactions
+============
+
+pycsw has the ability to process CSW Harvest and Transaction requests.  Transactions are enabled in the configuration (``transactions.enabled=true``).  Access to transactional functionality is limited to IP addresses which must be set in ``transactions.ips``.
 
 Testing
 =======
