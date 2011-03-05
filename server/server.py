@@ -195,7 +195,6 @@ class Csw(object):
         si = True
         sp = True
         om = True
-        fc = True
         if self.kvp.has_key('sections'):
             si = False
             sp = False
@@ -207,8 +206,6 @@ class Csw(object):
                     sp = True
                 if s == 'OperationsMetadata':
                     om = True
-                if s == 'Filter_Capabilities':
-                    fc = True
 
         node = etree.Element(util.nspath_eval('csw:Capabilities'), nsmap=config.namespaces, version='2.0.2')
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.namespaces['csw'], self.config['server']['ogc_schemas_base'])
@@ -290,27 +287,27 @@ class Csw(object):
             
             etree.SubElement(om, util.nspath_eval('ows:ExtendedCapabilities'))
 
-        if fc is True:
-            self.log.debug('Writing section Filter_Capabilities.')
-            fi = etree.SubElement(node, util.nspath_eval('ogc:Filter_Capabilities'))
-            sc = etree.SubElement(fi, util.nspath_eval('ogc:Spatial_Capabilities'))
-            go = etree.SubElement(sc, util.nspath_eval('ogc:GeometryOperands'))
-            etree.SubElement(go, util.nspath_eval('ogc:GeometryOperand')).text = 'gml:Envelope'
+        # always write out Filter_Capabilities
+        self.log.debug('Writing section Filter_Capabilities.')
+        fi = etree.SubElement(node, util.nspath_eval('ogc:Filter_Capabilities'))
+        sc = etree.SubElement(fi, util.nspath_eval('ogc:Spatial_Capabilities'))
+        go = etree.SubElement(sc, util.nspath_eval('ogc:GeometryOperands'))
+        etree.SubElement(go, util.nspath_eval('ogc:GeometryOperand')).text = 'gml:Envelope'
     
-            so = etree.SubElement(sc, util.nspath_eval('ogc:SpatialOperators'))
-            etree.SubElement(so, util.nspath_eval('ogc:SpatialOperator'), name='BBOX')
+        so = etree.SubElement(sc, util.nspath_eval('ogc:SpatialOperators'))
+        etree.SubElement(so, util.nspath_eval('ogc:SpatialOperator'), name='BBOX')
     
-            sc = etree.SubElement(fi, util.nspath_eval('ogc:Scalar_Capabilities'))
-            etree.SubElement(sc, util.nspath_eval('ogc:LogicalOperators'))
+        sc = etree.SubElement(fi, util.nspath_eval('ogc:Scalar_Capabilities'))
+        etree.SubElement(sc, util.nspath_eval('ogc:LogicalOperators'))
         
-            co = etree.SubElement(sc, util.nspath_eval('ogc:ComparisonOperators'))
+        co = etree.SubElement(sc, util.nspath_eval('ogc:ComparisonOperators'))
     
-            for c in ['LessThan','GreaterThan','LessThanEqualTo','GreaterThanEqualTo','EqualTo','NotEqualTo','Like','Between','NullCheck']:
-                etree.SubElement(co, util.nspath_eval('ogc:ComparisonOperator')).text = c
+        for c in ['LessThan','GreaterThan','LessThanEqualTo','GreaterThanEqualTo','EqualTo','NotEqualTo','Like','Between','NullCheck']:
+            etree.SubElement(co, util.nspath_eval('ogc:ComparisonOperator')).text = c
     
-            ic = etree.SubElement(fi, util.nspath_eval('ogc:Id_Capabilities'))
-            etree.SubElement(ic, util.nspath_eval('ogc:EID'))
-            etree.SubElement(ic, util.nspath_eval('ogc:FID'))
+        ic = etree.SubElement(fi, util.nspath_eval('ogc:Id_Capabilities'))
+        etree.SubElement(ic, util.nspath_eval('ogc:EID'))
+        etree.SubElement(ic, util.nspath_eval('ogc:FID'))
 
         return node
     
