@@ -41,6 +41,7 @@ namespaces = {
     'gml': 'http://www.opengis.net/gml',
     'ogc': 'http://www.opengis.net/ogc',
     'ows': 'http://www.opengis.net/ows',
+    'sitemap': 'http://www.sitemaps.org/schemas/sitemap/0.9',
     'soapenv': 'http://www.w3.org/2003/05/soap-envelope',
     'xlink': 'http://www.w3.org/1999/xlink',
     'xs': 'http://www.w3.org/2001/XMLSchema',
