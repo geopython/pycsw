@@ -30,8 +30,8 @@
 # =================================================================
 
 [server]
-home=/usr/local/wwwsites/apache/devgeo.cciw.ca/htdocs/pycsw/trunk
-url=http://devgeo.cciw.ca/pycsw/trunk/csw.py
+home=/path/to/pycsw
+url=http://host/pycsw/csw.py
 mimetype=application/xml; charset=iso-8859-1
 encoding=iso-8859-1
 language=en-CA
@@ -46,7 +46,7 @@ enabled=false
 ips=127.0.0.1
 
 [repository]
-db=sqlite:////usr/local/wwwsites/apache/devgeo.cciw.ca/htdocs/pycsw/trunk/data/cite/dc.db
+db=sqlite:////path/to/pycsw/data/cite/dc.db
 records_table=records
 
 [corequeryables]
@@ -64,9 +64,9 @@ dc_identifier=identifier
 dc_source=source
 dc_language=language
 dc_relation=relation
-ows_bbox=bbox
+ows_BoundingBox=bbox
 dc_rights=rights
-csw_anytext=csw_anytext
+csw_AnyText=csw_anytext
 
 [identification]
 title=pycsw Geospatial Catalogue
