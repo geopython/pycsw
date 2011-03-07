@@ -500,7 +500,7 @@ class Csw(object):
             for r in results[int(self.kvp['startposition']):max]:
                 sr.append(self._write_record(r))
 
-        if self.kvp['distributedsearch'] == 'TRUE' and self.kvp['hopcount'] > 0:
+        if self.kvp.has_key('distributedsearch') and self.kvp['distributedsearch'] == 'TRUE' and self.kvp['hopcount'] > 0:
             for rs in dsresults:
                 for rec in rs:
                     sr.append(etree.fromstring(rs[rec].xml))
