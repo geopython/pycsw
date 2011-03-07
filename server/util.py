@@ -30,6 +30,7 @@
 #
 # =================================================================
 
+from lxml import etree
 import config
 
 def get_today_and_now():
@@ -123,7 +124,7 @@ def query_anytext(xml, searchterm):
 def query_xpath(xml, xpath, searchterm, matchcase=False):
     # perform search against XPath
     exml=etree.fromstring(xml)
-    for x in xml.xpath(xpath):  # all elements
+    for x in exml.xpath(xpath, namespaces=config.namespaces):  # all elements
         if matchcase is True:
             if x.text == searchterm:
                 return 'true'
