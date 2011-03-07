@@ -60,9 +60,10 @@ pycsw Tester
          <option value="GetRecords-filter-anytext.xml">GetRecords-filter-anytext</option> 
          <option value="GetRecords-filter-bbox.xml">GetRecords-filter-bbox</option> 
          <option value="GetRecords-filter-not-bbox.xml">GetRecords-filter-not-bbox</option> 
-         <option value="GetRecords-filter-and-bbox-freetext.xml">GetRecords-filter-and-bbox-freetext.xml</option> 
-         <option value="GetRecords-filter-or-bbox-freetext.xml">GetRecords-filter-or-bbox-freetext.xml</option> 
-         <option value="GetRecords-filter-or-title-abstract.xml">GetRecords-filter-or-title-abstract.xml</option> 
+         <option value="GetRecords-filter-and-bbox-freetext.xml">GetRecords-filter-and-bbox-freetext</option> 
+         <option value="GetRecords-filter-or-bbox-freetext.xml">GetRecords-filter-or-bbox-freetext</option> 
+         <option value="GetRecords-filter-or-title-abstract.xml">GetRecords-filter-or-title-abstract</option> 
+         <option value="GetRecords-filter-between.xml">GetRecords-filter-between</option> 
          <option value="GetRecords-cql-title.xml">GetRecords-cql-title</option> 
        </optgroup>
        <optgroup label="GetRecordById">
