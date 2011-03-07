@@ -162,6 +162,7 @@ def get_config(file):
     import ConfigParser
     if file is not None:
         cp = ConfigParser.SafeConfigParser()
+        cp.optionxform = str
         cp.readfp(open(file))
 
     config = {}
@@ -169,6 +170,5 @@ def get_config(file):
         s = i.lower()
         config[s] = {}
         for j in cp.options(i):
-            k = j.lower()
-            config[s][k] = unicode(cp.get(i,j).decode('latin-1')).strip()
+            config[s][j] = unicode(cp.get(i,j).decode('latin-1')).strip()
     return config

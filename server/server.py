@@ -418,15 +418,31 @@ class Csw(object):
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
 
         if self.kvp.has_key('constraint') is True and (self.kvp.has_key('filter') is False and self.kvp.has_key('cql') is False):  # GET request
+            self.log.debug('csw:Constraint passed over HTTP GET.')
             if self.kvp.has_key('constraintlanguage') is False:
                 return self.exceptionreport('MissingParameterValue', 'constraintlanguage', 'constraintlanguage required when constraint specified')
             if self.kvp['constraintlanguage'] not in config.model['operations']['GetRecords']['parameters']['CONSTRAINTLANGUAGE']['values']:
                 return self.exceptionreport('InvalidParameterValue', 'constraintlanguage', 'Invalid constraintlanguage: %s' % self.kvp['constraintlanguage'])
             if self.kvp['constraintlanguage'] == 'CQL_TEXT':
                 self.kvp['cql'] = self.kvp['constraint']
+                self.kvp['cql'] = self._cql_update_cq_mappings(self.kvp['constraint'])
                 self.kvp['filter'] = None
             elif self.kvp['constraintlanguage'] == 'FILTER':
-                self.kvp['filter'] = self.kvp['constraint']
+
+                # validate filter XML
+                try:
+                    schema = os.path.join(self.config['server']['home'],'etc','schemas','ogc','filter','1.1.0','filter.xsd')
+                    self.log.debug('Validating Filter %s.' % self.kvp['constraint'])
+                    schema = etree.XMLSchema(etree.parse(schema))
+                    parser = etree.XMLParser(schema=schema)
+                    doc = etree.fromstring(self.kvp['constraint'], parser)
+                    self.log.debug('Filter is valid XML.')
+                    self.kvp['filter'] = filter.Filter(doc, self.cq.mappings)
+                except Exception, err:
+                    et = 'Exception: the document is not valid.\nError: %s.' % str(err)
+                    self.log.debug(et)
+                    return self.exceptionreport('InvalidParameterValue', 'constraint', 'Invalid Filter query: %s' % et)
+
                 self.kvp['cql'] = None
 
         if self.kvp.has_key('filter') is False:
@@ -814,7 +830,7 @@ class Csw(object):
 
         record = etree.Element(util.nspath_eval('csw:%s' % el))
 
-        bbox = getattr(r, self.cq.mappings['ows:bbox']['obj_attr'])
+        bbox = getattr(r, self.cq.mappings['ows:BoundingBox']['obj_attr'])
 
         if self.kvp.has_key('elementname') is True and len(self.kvp['elementname']) > 0:
             for e in self.kvp['elementname']:
@@ -826,7 +842,7 @@ class Csw(object):
                         etree.SubElement(record, util.nspath_eval('%s:%s' % (ns, el))).text=getattr(r, self.cq.mappings[e]['obj_attr'])
         elif self.kvp.has_key('elementsetname') is True:
             if self.kvp['elementsetname'] == 'full':  # dump the full record
-                record = etree.fromstring(getattr(r,self.cq.mappings['csw:anytext']['obj_attr']))
+                record = etree.fromstring(getattr(r,self.cq.mappings['csw:AnyText']['obj_attr']))
             else:  # dump brief record first (always required elements) then summary if requests
                 for i in ['dc:identifier','dc:title','dc:type']:
                     etree.SubElement(record, util.nspath_eval(i)).text=getattr(r, self.cq.mappings[i]['obj_attr'])
