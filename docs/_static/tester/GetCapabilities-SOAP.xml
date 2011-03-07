@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2003/05/soap-envelope http://www.w3.org/2003/05/soap-envelope">
+	<soapenv:Body>
+		<GetCapabilities xmlns="http://www.opengis.net/cat/csw/2.0.2" xmlns:ows="http://www.opengis.net/ows" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd" service="CSW">
+			<ows:AcceptVersions>
+				<ows:Version>2.0.2</ows:Version>
+			</ows:AcceptVersions>
+			<ows:AcceptFormats>
+				<ows:OutputFormat>application/xml</ows:OutputFormat>
+			</ows:AcceptFormats>
+		</GetCapabilities>
+	</soapenv:Body>
+</soapenv:Envelope>
