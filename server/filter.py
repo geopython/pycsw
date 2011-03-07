@@ -58,7 +58,7 @@ class Filter(object):
                     raise RuntimeError, ('Invalid ogc:PropertyName in spatial filter: %s' % pn.text)
                 bbox = gml.get_bbox(c.xpath('child::*')[0])
 
-                queries.append('query_not_bbox(%s,"%s") = "true"' % (cq_mappings['ows:bbox']['db_col'], bbox))
+                queries.append('query_not_bbox(%s,"%s") = "true"' % (cq_mappings['ows:BoundingBox']['db_col'], bbox))
 
             elif c.tag == util.nspath_eval('ogc:BBOX'):
                 pn = c.find(util.nspath_eval('ogc:PropertyName'))
@@ -69,9 +69,9 @@ class Filter(object):
                 bbox = gml.get_bbox(c)
 
                 if self.boq is not None and self.boq == ' not ':
-                    queries.append('query_not_bbox(%s,"%s") = "true"' % (cq_mappings['ows:bbox']['db_col'], bbox))
+                    queries.append('query_not_bbox(%s,"%s") = "true"' % (cq_mappings['ows:BoundingBox']['db_col'], bbox))
                 else:
-                    queries.append('query_bbox(%s,"%s") = "true"' % (cq_mappings['ows:bbox']['db_col'], bbox))
+                    queries.append('query_bbox(%s,"%s") = "true"' % (cq_mappings['ows:BoundingBox']['db_col'], bbox))
 
             elif c.tag == util.nspath_eval('ogc:FeatureId'):
                 id = c.attrib.get('fid')
@@ -89,7 +89,7 @@ class Filter(object):
                     singlechar = '_'
     
                 try:
-                    pname = cq_mappings[c.find(util.nspath_eval('ogc:PropertyName')).text.lower()]['db_col']
+                    pname = cq_mappings[c.find(util.nspath_eval('ogc:PropertyName')).text]['db_col']
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s' % c.find(util.nspath_eval('ogc:PropertyName')).text)
     
