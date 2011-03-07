@@ -513,7 +513,7 @@ class Csw(object):
  
         if results is not None:
             self.log.debug('Presenting records %s - %s.' % (self.kvp['startposition'], max))
-            for r in results[int(self.kvp['startposition']):max]:
+            for r in results[int(self.kvp['startposition'])-1:int(max)-1]:
                 sr.append(self._write_record(r))
 
         if self.kvp.has_key('distributedsearch') and self.kvp['distributedsearch'] == 'TRUE' and self.kvp['hopcount'] > 0:
@@ -698,7 +698,7 @@ class Csw(object):
             if tmp is not None:
                 request['startposition'] = tmp
             else:
-                request['startposition'] = 0
+                request['startposition'] = 1
 
             tmp = doc.find('./').attrib.get('maxRecords')
             if tmp is not None:
