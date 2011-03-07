@@ -92,10 +92,10 @@ class Filter(object):
                     pname = cq_mappings[c.find(util.nspath_eval('ogc:PropertyName')).text]['db_col']
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s' % c.find(util.nspath_eval('ogc:PropertyName')).text)
-    
-                pv = c.find(util.nspath_eval('ogc:Literal')).text
-    
-                pvalue = pv.replace(wildcard,'%').replace(singlechar,'_')
+
+                if c.tag != util.nspath_eval('ogc:PropertyIsBetween'):
+                    pv = c.find(util.nspath_eval('ogc:Literal')).text
+                    pvalue = pv.replace(wildcard,'%').replace(singlechar,'_')
 
                 if c.tag == util.nspath_eval('ogc:PropertyIsEqualTo'):
                     co = '=='
@@ -117,17 +117,23 @@ class Filter(object):
                 # if this is a case insensitive search, then set the LIKE comparison operator
                 if matchcase is not None and matchcase == 'false':
                     co = 'like'
-    
-                if self.boq == ' not ':
-                    queries.append('not %s %s "%s"' % (pname,co,pvalue))
-                else:
-                    queries.append('%s %s "%s"' % (pname,co,pvalue))
 
-            if c.tag == util.nspath_eval('ogc:PropertyIsBetween'):
-                co = 'between'
-                lb = c.find(util.nspath_eval('ogc:LowerBoundary/ogc:Literal')).text
-                ub = c.find(util.nspath_eval('ogc:UpperBoundary/ogc:Literal')).text
-                queries.append('%s and "%s"' % (lb, ub))
+                if c.tag == util.nspath_eval('ogc:PropertyIsBetween'):
+                    co = 'between'
+                    lb = c.find(util.nspath_eval('ogc:LowerBoundary/ogc:Literal')).text
+                    ub = c.find(util.nspath_eval('ogc:UpperBoundary/ogc:Literal')).text
+                    queries.append('%s %s "%s" and "%s"' % (pname, co, lb, ub))
+
+                elif c.find(util.nspath_eval('ogc:PropertyName')).text == 'csw:AnyText':
+                    # csw:AnyText is a freetext search.  Strip modifiers
+                    pvalue=pvalue.replace('%','')
+                    queries.append('query_anytext(%s, "%s") = "true"' % (cq_mappings['csw:AnyText']['db_col'], pvalue))
+
+                else:
+                    if self.boq == ' not ':
+                        queries.append('not %s %s "%s"' % (pname,co,pvalue))
+                    else:
+                        queries.append('%s %s "%s"' % (pname,co,pvalue))
 
         if self.boq is not None and self.boq != ' not ':
             self.where = self.boq.join(queries)
