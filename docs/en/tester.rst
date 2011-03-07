@@ -25,6 +25,9 @@
            dataType: 'text',
            success: function(data) {
              $('.response').val(data);
+           },
+           error: function(data1) {
+             $('.response').val(data1.responseText);
            }
          });
        });
