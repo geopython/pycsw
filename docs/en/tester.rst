@@ -75,4 +75,4 @@ pycsw Tester
      <h3>Server <input type="text" size="40" class="server" value="http://host/pycsw/csw.py"/> <input type="button" class="send" value="Send"/></h3>
      <h3>Response</h3>
      <textarea rows="15" cols="70" class="response"></textarea>
-   <form>
+   </form>
