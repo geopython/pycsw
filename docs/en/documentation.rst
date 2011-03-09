@@ -218,7 +218,7 @@ Compliance benchmarking is done via the OGC `Compliance & Interoperability Testi
 Sample Requests
 ---------------
 
-You can use the :doc:`sample health check application <tester>` to perform sample requests against your pycsw install.
+You can use the pycsw tester via your web browser to perform sample requests against your pycsw install.  The tester is located in the ``tester`` directory.
 
 CSW Clients and Servers
 =======================
