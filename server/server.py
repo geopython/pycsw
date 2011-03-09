@@ -872,7 +872,7 @@ class Csw(object):
         self.log.debug('Writing response.')
         hh = 'Content-type:%s\n\n' % self.config['server']['mimetype']
         xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.config['server']['encoding']
-        appinfo = '<!-- pycsw %s r$Rev$ -->\n' % config.version
+        appinfo = '<!-- pycsw %s r$Rev: 62 $ -->\n' % config.version
 
         if hasattr(self, 'soap') and self.soap is True:
             self._gen_soap_wrapper() 
