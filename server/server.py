@@ -1,7 +1,7 @@
 # -*- coding: ISO-8859-15 -*-
 # =================================================================
 #
-# $Id$
+# $Id: server.py 56 2011-03-07 16:45:35Z tomkralidis $
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
 #
@@ -872,7 +872,7 @@ class Csw(object):
         self.log.debug('Writing response.')
         hh = 'Content-type:%s\n\n' % self.config['server']['mimetype']
         xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.config['server']['encoding']
-        appinfo = '<!-- pycsw %s -->\n' % config.version
+        appinfo = '<!-- pycsw %s r$Rev$ -->\n' % config.version
 
         if hasattr(self, 'soap') and self.soap is True:
             self._gen_soap_wrapper() 
