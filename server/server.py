@@ -62,6 +62,18 @@ class Csw(object):
         # configure core queryables
         self.cq = core_queryables.CoreQueryables(self.config)
 
+        # set XML pretty print
+        if self.config['server'].has_key('xml_pretty_print') and self.config['server']['xml_pretty_print'] == 'true':
+            self.xml_pretty_print=1
+        else:
+            self.xml_pretty_print=0
+
+        # set compression level
+        if self.config['server'].has_key('gzip_compresslevel'):
+            self.gzip_compresslevel = int(self.config['server']['gzip_compresslevel'])
+        else:
+            self.gzip_compresslevel = 9
+
         # initialize connection to repository
         self.db = repository.Repository(self.config['repository']['db'], self.config['repository']['records_table'])
 
@@ -892,8 +904,8 @@ class Csw(object):
             from cStringIO import StringIO
 
             buf = StringIO()
-            f=gzip.GzipFile(mode='wb',fileobj=buf, compresslevel=9)
-            f.write('%s%s%s' % (xmldecl, appinfo, etree.tostring(self.response)))
+            f=gzip.GzipFile(mode='wb',fileobj=buf, compresslevel=self.gzip_compresslevel)
+            f.write('%s%s%s' % (xmldecl, appinfo, etree.tostring(self.response, pretty_print=self.xml_pretty_print)))
             f.close()
 
             v = buf.getvalue()
@@ -904,7 +916,7 @@ class Csw(object):
             sys.stdout.write('\r\n')
             sys.stdout.write(v)
         else:
-            sys.stdout.write('%s\r\n%s%s%s' % (hh, xmldecl, appinfo, etree.tostring(self.response, pretty_print=1)))
+            sys.stdout.write('%s\r\n%s%s%s' % (hh, xmldecl, appinfo, etree.tostring(self.response, pretty_print=self.xml_pretty_print)))
 
     def _gen_soap_wrapper(self):
         self.log.debug('Writing SOAP wrapper.')
