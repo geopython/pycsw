@@ -640,11 +640,11 @@ class Csw(object):
 
         request['request'] = util.xmltag_split(doc.tag)
         self.log.debug('Request operation %s specified.' % request['request'])
-        tmp = doc.find('./').attrib.get('service')
+        tmp = doc.find('.').attrib.get('service')
         if tmp is not None:
             request['service'] = tmp
 
-        tmp = doc.find('./').attrib.get('version')
+        tmp = doc.find('.').attrib.get('version')
         if tmp is not None:
             request['version'] = tmp
 
@@ -658,11 +658,11 @@ class Csw(object):
             for d in doc.findall(util.nspath_eval('csw:TypeName')):
                 request['typename'].append(d.text)
     
-            tmp = doc.find('./').attrib.get('schemaLanguage')
+            tmp = doc.find('.').attrib.get('schemaLanguage')
             if tmp is not None:
                 request['schemalanguage'] = tmp
     
-            tmp = doc.find('./').attrib.get('outputFormat')
+            tmp = doc.find('.').attrib.get('outputFormat')
             if tmp is not None:
                 request['outputformat'] = tmp
 
@@ -678,31 +678,31 @@ class Csw(object):
 
         # GetRecords
         if request['request'] == 'GetRecords':
-            tmp = doc.find('./').attrib.get('outputSchema')
+            tmp = doc.find('.').attrib.get('outputSchema')
             if tmp is not None:
                 request['outputschema'] = tmp
             else:
                 request['outputschema'] = config.namespaces['csw']
 
-            tmp = doc.find('./').attrib.get('resultType')
+            tmp = doc.find('.').attrib.get('resultType')
             if tmp is not None:
                 request['resulttype'] = tmp
             else:
                 request['resulttype'] = None
 
-            tmp = doc.find('./').attrib.get('outputFormat')
+            tmp = doc.find('.').attrib.get('outputFormat')
             if tmp is not None:
                 request['outputformat'] = tmp
             else:
                 request['outputformat'] = 'application/xml'
 
-            tmp = doc.find('./').attrib.get('startPosition')
+            tmp = doc.find('.').attrib.get('startPosition')
             if tmp is not None:
                 request['startposition'] = tmp
             else:
                 request['startposition'] = 1
 
-            tmp = doc.find('./').attrib.get('maxRecords')
+            tmp = doc.find('.').attrib.get('maxRecords')
             if tmp is not None:
                 request['maxrecords'] = tmp
             else:
