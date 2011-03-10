@@ -104,6 +104,8 @@ class Csw(object):
             for key in cgifs.keys():
                 self.kvp[key.lower()] = cgifs[key].value
 
+        self.log.debug('Parsed request parameters: %s' % self.kvp)
+
         if error == 0:
             # test for the basic keyword values (service, version, request)
             for k in ['service', 'version', 'request']:
