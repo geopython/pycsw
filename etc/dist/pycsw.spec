@@ -47,10 +47,7 @@ pycsw is Open Source, released under an MIT license, and runs on all major platf
 %build
 
 %install
-mkdir -p %{buildroot}/srv
-mkdir -p %{buildroot}/srv/www
 mkdir -p %{buildroot}/srv/www/htdocs
-mkdir -p %{buildroot}%{_sysconfdir}/apache2
 mkdir -p %{buildroot}%{_sysconfdir}/apache2/conf.d
 
 mv pycsw %{buildroot}/srv/www/htdocs/
