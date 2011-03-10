@@ -88,7 +88,18 @@ Ensure that CGI is enabled for your install directory.  For example, on Apache, 
    AddHandler cgi-script .py
   </Location>
 
-If you install pycsw in cgi-bin, this should work as expected.  Note that the :ref:`tester <sample-requests>` application must be moved to a normal location to serve static HTML documents.
+If you install pycsw in ``cgi-bin``, this should work as expected.  Note that the :ref:`tester <sample-requests>` application must be moved to a normal location to serve static HTML documents.
+
+Running on Windows
+------------------
+
+For Windows installs, change the first line of ``csw.py`` to:
+
+.. code-block:: python
+
+  #!/Python27/python -u
+
+Note that the use of -u is required to properly output gzip-compressed responses.
 
 Security
 --------
@@ -126,6 +137,8 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **logfile**: the full file path to the logfile
 - **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net).
 - **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributed-searching` for more details)
+- **xml_pretty_print**: whether to pretty print the output XML (``true`` or ``false``).  Default is ``false``
+- **gzip_compresslevel**: gzip compression level, lowest is 1, highest is 9.  Default is 9
 
 **[repository]**
 
