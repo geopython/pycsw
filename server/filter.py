@@ -131,7 +131,7 @@ class Filter(object):
 
                 else:
                     if self.boq == ' not ':
-                        queries.append('not %s %s "%s"' % (pname,co,pvalue))
+                        queries.append('%s is null or not %s %s "%s"' % (pname,pname,co,pvalue))
                     else:
                         queries.append('%s %s "%s"' % (pname,co,pvalue))
 
