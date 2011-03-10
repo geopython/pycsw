@@ -1,7 +1,7 @@
 # -*- coding: ISO-8859-15 -*-
 # =================================================================
 #
-# $Id: server.py 56 2011-03-07 16:45:35Z tomkralidis $
+# $Id$
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
 #
