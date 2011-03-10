@@ -33,13 +33,8 @@
 
 from server import server
 
-# turn on CGI debugging when in dev mode
-import cgitb
-cgitb.enable()
-
 # get runtime configuration
 csw = server.Csw('./default.cfg')
 
+# go!
 csw.dispatch()
-
-print csw.response

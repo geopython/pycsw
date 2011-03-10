@@ -74,5 +74,11 @@ def initlog(config=None):
             log.addHandler(fh)
         except Exception, err:
             raise RuntimeError, ('Invalid server configuration: server.logfile access denied.  Make sure filepath exists and is writable.')
-    log.info('Logging initalized (level: %s)' % loglevel)
+    log.info('Logging initalized (level: %s).' % loglevel)
+
+    if loglevel == 'DEBUG': #turn on CGI debugging
+        log.info('CGI debugging enabled.')
+        import cgitb
+        cgitb.enable() 
+
     return log
