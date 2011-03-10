@@ -81,7 +81,7 @@ class Csw(object):
         error = 0
 
         if hasattr(self,'response') is True:
-            self._set_response()
+            self._write_response()
             return
 
         cgifs = cgi.FieldStorage(keep_blank_values=1)
@@ -103,6 +103,14 @@ class Csw(object):
             self.log.debug('Request type: GET.  Request:\n%s\n', self.request)
             for key in cgifs.keys():
                 self.kvp[key.lower()] = cgifs[key].value
+
+        # check if Accept-Encoding was passed as an HTTP header
+        self.log.debug('HTTP Headers:\n%s.' % os.environ)
+
+        if os.environ.has_key('HTTP_ACCEPT_ENCODING') and os.environ['HTTP_ACCEPT_ENCODING'].find('gzip') != -1:  # set for gzip compressed response 
+            self.gzip = True
+        else:
+            self.gzip = False
 
         self.log.debug('Parsed request parameters: %s' % self.kvp)
 
@@ -179,7 +187,7 @@ class Csw(object):
             else:
                 self.response = self.exceptionreport('InvalidParameterValue', 'request', 'Invalid request parameter: %s' % self.kvp['request'])
 
-        self._set_response()
+        self._write_response()
         self.log.debug('Response:\n%s\n' % self.response)
 
     def exceptionreport(self,code,locator,text):
@@ -869,17 +877,34 @@ class Csw(object):
                 etree.SubElement(b, util.nspath_eval('ows:LowerCorner')).text = '%s %s' % (bbox2[1],bbox2[0])
                 etree.SubElement(b, util.nspath_eval('ows:UpperCorner')).text = '%s %s' % (bbox2[3],bbox2[2])
 
-    def _set_response(self):
+    def _write_response(self):
         # set HTTP response headers and XML declaration
         self.log.debug('Writing response.')
-        hh = 'Content-type:%s\n\n' % self.config['server']['mimetype']
+        hh = 'Content-type:%s\r\n' % self.config['server']['mimetype']
         xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.config['server']['encoding']
         appinfo = '<!-- pycsw %s -->\n' % config.version
 
         if hasattr(self, 'soap') and self.soap is True:
             self._gen_soap_wrapper() 
 
-        self.response = '%s%s%s%s' % (hh, xmldecl, appinfo, etree.tostring(self.response, pretty_print=1))
+        if self.gzip is True:
+            import gzip
+            from cStringIO import StringIO
+
+            buf = StringIO()
+            f=gzip.GzipFile(mode='wb',fileobj=buf, compresslevel=9)
+            f.write('%s%s%s' % (xmldecl, appinfo, etree.tostring(self.response)))
+            f.close()
+
+            v = buf.getvalue()
+
+            sys.stdout.write(hh)
+            sys.stdout.write('Content-Encoding: gzip\r\n')
+            sys.stdout.write('Content-Length: %d\r\n' % len(v))
+            sys.stdout.write('\r\n')
+            sys.stdout.write(v)
+        else:
+            sys.stdout.write('%s\r\n%s%s%s' % (hh, xmldecl, appinfo, etree.tostring(self.response, pretty_print=1)))
 
     def _gen_soap_wrapper(self):
         self.log.debug('Writing SOAP wrapper.')
