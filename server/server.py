@@ -200,7 +200,6 @@ class Csw(object):
                 self.response = self.exceptionreport('InvalidParameterValue', 'request', 'Invalid request parameter: %s' % self.kvp['request'])
 
         self._write_response()
-        self.log.debug('Response:\n%s\n' % self.response)
 
     def exceptionreport(self,code,locator,text):
         self.exception = True
@@ -899,13 +898,17 @@ class Csw(object):
         if hasattr(self, 'soap') and self.soap is True:
             self._gen_soap_wrapper() 
 
+        response = etree.tostring(self.response, pretty_print=self.xml_pretty_print)
+
+        self.log.debug('Response:\n%s' % response)
+
         if self.gzip is True:
             import gzip
             from cStringIO import StringIO
 
             buf = StringIO()
             f=gzip.GzipFile(mode='wb',fileobj=buf, compresslevel=self.gzip_compresslevel)
-            f.write('%s%s%s' % (xmldecl, appinfo, etree.tostring(self.response, pretty_print=self.xml_pretty_print)))
+            f.write('%s%s%s' % (xmldecl, appinfo, response))
             f.close()
 
             v = buf.getvalue()
@@ -916,7 +919,7 @@ class Csw(object):
             sys.stdout.write('\r\n')
             sys.stdout.write(v)
         else:
-            sys.stdout.write('%s\r\n%s%s%s' % (hh, xmldecl, appinfo, etree.tostring(self.response, pretty_print=self.xml_pretty_print)))
+            sys.stdout.write('%s\r\n%s%s%s' % (hh, xmldecl, appinfo, response))
 
     def _gen_soap_wrapper(self):
         self.log.debug('Writing SOAP wrapper.')
