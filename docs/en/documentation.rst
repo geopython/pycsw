@@ -99,7 +99,7 @@ For Windows installs, change the first line of ``csw.py`` to:
 
   #!/Python27/python -u
 
-Note that the use of -u is required to properly output gzip-compressed responses.
+Note that the use of ``-u`` is required to properly output gzip-compressed responses.
 
 Security
 --------
@@ -138,7 +138,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net).
 - **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributed-searching` for more details)
 - **xml_pretty_print**: whether to pretty print the output XML (``true`` or ``false``).  Default is ``false``
-- **gzip_compresslevel**: gzip compression level, lowest is 1, highest is 9.  Default is 9
+- **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
 
 **[repository]**
 
@@ -155,7 +155,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
   See :ref:`transactions` for more details.
 
-- **enabled**: whether to enable transactions ('true' or 'false').  Default is 'false'
+- **enabled**: whether to enable transactions (``true`` or ``false``).  Default is ``false``
 - **ips**: comma delimited list of IP addresses which can perform transactions
 
 **[corequeryables]**
@@ -225,9 +225,7 @@ TODO
 Distributed Searching
 =====================
 
-pycsw has the ability to perform distributed searching against other CSW servers.  Distributed searching is disabled by default; to enable, ``server.federatedcatalogues`` must be set.  A CSW client must issue a GetRecords request with ``csw:DistributedSearch`` specified, along with an optional ``hopCount`` attribute (see subclause 10.8.4.13 of the CSW specification).  When enabled, pycsw will search all specified catalogues and return a unified set of search results to the client.  Due to the distributed nature of this functionality, requests will take extra time to process compared to queries against the local repository.  Distributed searching 
-
-.. _transactions:
+pycsw has the ability to perform distributed searching against other CSW servers.  Distributed searching is disabled by default; to enable, ``server.federatedcatalogues`` must be set.  A CSW client must issue a GetRecords request with ``csw:DistributedSearch`` specified, along with an optional ``hopCount`` attribute (see subclause 10.8.4.13 of the CSW specification).  When enabled, pycsw will search all specified catalogues and return a unified set of search results to the client.  Due to the distributed nature of this functionality, requests will take extra time to process compared to queries against the local repository.
 
 XML Sitemaps
 ============
@@ -241,6 +239,8 @@ XML Sitemaps
   $ python ./sbin/gen_sitemap.xml > sitemap.xml
 
 Save the output (to ``sitemap.xml``) to an an area on your web server (parallel to or above your pycsw install location) to enable web crawlers to index your repository. 
+
+.. _transactions:
 
 Transactions
 ============
