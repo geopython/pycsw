@@ -2,9 +2,9 @@
 --
 -- $Id: md_metadata.ddl 51 2011-03-17 18:20:18Z kalxas $
 --
--- Authors: Tom Kralidis <tomkralidis@hotmail.com>
+-- Authors: Angelos Tzotsos <tzotsos@gmail.com>
 --
--- Copyright (c) 2011 Tom Kralidis
+-- Copyright (c) 2011 Angelos Tzotsos
 --
 -- Permission is hereby granted, free of charge, to any person
 -- obtaining a copy of this software and associated documentation
