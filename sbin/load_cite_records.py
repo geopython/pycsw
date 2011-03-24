@@ -43,21 +43,23 @@ if len(sys.argv) < 2:
     print 'Usage: %s <filename.sqlite3>' % sys.argv[0]
     sys.exit(1)
 
-conn = sqlite3.connect(sys.argv[1])
-cur = conn.cursor()
+CONN = sqlite3.connect(sys.argv[1])
+CUR = CONN.cursor()
 
-for r in glob.glob(os.path.join('..','data','cite','*.xml')):
+for r in glob.glob(os.path.join('..', 'data', 'cite', '*.xml')):
 
     # read dc document
-    e=etree.parse(r)
-    c=CswRecord(e)
+    e = etree.parse(r)
+    c = CswRecord(e)
 
     if c.bbox is None:
         bbox = None
     else:
-        bbox = '%s,%s,%s,%s' % (c.bbox.miny,c.bbox.minx,c.bbox.maxy,c.bbox.maxx)
+        bbox = '%s,%s,%s,%s' % \
+        (c.bbox.miny, c.bbox.minx, c.bbox.maxy, c.bbox.maxx)
 
-    print 'Inserting csw:Record %s into database %s, table records....' % (c.identifier, sys.argv[1])
+    print 'Inserting csw:Record %s into database %s, table records....' % \
+    (c.identifier, sys.argv[1])
 
     values = (
     c.title,
@@ -80,9 +82,11 @@ for r in glob.glob(os.path.join('..','data','cite','*.xml')):
     etree.tostring(e)
     )
 
-    cur.execute('insert into records values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,null,null)', values)
+    CUR.execute(
+    'insert into records values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,null,null)',
+    values)
 
-    conn.commit()
+    CONN.commit()
 
     print 'Done'
-cur.close()
+CUR.close()
