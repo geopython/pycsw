@@ -32,10 +32,12 @@
 
 import logging
 
-msg_format = '%(asctime)s] [%(levelname)s] file=%(pathname)s line=%(lineno)s module=%(module)s function=%(funcName)s %(message)s'
-time_format = '%a, %d %b %Y %H:%M:%S'
+MSG_FORMAT = '%(asctime)s] [%(levelname)s] file=%(pathname)s \
+line=%(lineno)s module=%(module)s function=%(funcName)s %(message)s'
 
-loglevels = {
+TIME_FORMAT = '%a, %d %b %Y %H:%M:%S'
+
+LOGLEVELS = {
     'CRITICAL': logging.CRITICAL,
     'ERROR': logging.ERROR,
     'WARNING': logging.WARNING,
@@ -45,35 +47,41 @@ loglevels = {
 }
 
 def initlog(config=None):
+    ''' Initialize logging facility '''
     if config is None:
         return None
 
-    logfile=None
-    loglevel='NOTSET'
+    logfile = None
+    loglevel = 'NOTSET'
 
     if config['server'].has_key('loglevel') is True:
         loglevel = config['server']['loglevel']
 
-        if loglevel not in loglevels.keys():
-            raise RuntimeError, ('Invalid server configuration (server.loglevel).')
+        if loglevel not in LOGLEVELS.keys():
+            raise RuntimeError, \
+            ('Invalid server configuration (server.loglevel).')
 
     if config['server'].has_key('logfile'):
         logfile = config['server']['logfile']
 
     if loglevel != 'NOTSET' and logfile is None:
-        raise RuntimeError, ('Invalid server configuration (server.loglevel set, but server.logfile is not).')
+        raise RuntimeError, \
+        ('Invalid server configuration \
+        (server.loglevel set, but server.logfile is not).')
 
-    log=logging.getLogger('pycsw')
-    log.setLevel(loglevels[loglevel])
+    log = logging.getLogger('pycsw')
+    log.setLevel(LOGLEVELS[loglevel])
 
     if logfile:
         try:
-            fh = logging.FileHandler(logfile)
-            fh.setLevel(loglevels[loglevel])
-            fh.setFormatter(logging.Formatter(msg_format,time_format))
-            log.addHandler(fh)
+            filehandler = logging.FileHandler(logfile)
+            filehandler.setLevel(LOGLEVELS[loglevel])
+            filehandler.setFormatter(logging.Formatter(MSG_FORMAT, TIME_FORMAT))
+            log.addHandler(filehandler)
         except Exception, err:
-            raise RuntimeError, ('Invalid server configuration: server.logfile access denied.  Make sure filepath exists and is writable.')
+            raise RuntimeError, \
+            ('Invalid server configuration: server.logfile access denied.\
+            Make sure filepath exists and is writable. %s', str(err))
     log.info('Logging initalized (level: %s).' % loglevel)
 
     if loglevel == 'DEBUG': #turn on CGI debugging

@@ -37,20 +37,27 @@ from lxml import etree
 from server import config, repository, util
 
 # get configuration and init repo connection
-cfg = config.get_config('default.cfg')
-repo = repository.Repository(cfg['repository']['db'], cfg['repository']['records_table'])
+CFG = config.get_config('default.cfg')
+REPO = repository.Repository(CFG['repository']['db'],
+CFG['repository']['records_table'])
 
 # get all records
-records = repo.query()
+RECORDS = REPO.query()
 
 # write out sitemap document
-urlset = etree.Element(util.nspath_eval('sitemap:urlset'), nsmap=config.namespaces)
-urlset.attrib[util.nspath_eval('xsi:schemaLocation')] = '%s http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' % config.namespaces['sitemap']
+URLSET = etree.Element(util.nspath_eval('sitemap:urlset'),
+nsmap=config.NAMESPACES)
 
-for rec in records:
-    url = etree.SubElement(urlset,util.nspath_eval('sitemap:url'))
-    uri = '%s?service=CSW&version=2.0.2&request=GetRecordById&id=%s&elementsetname=full' % (cfg['server']['url'], rec.identifier)
+URLSET.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+'%s http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' % \
+config.NAMESPACES['sitemap']
+
+for rec in RECORDS:
+    url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
+    uri = '%s?service=CSW&version=2.0.2&request=GetRecordById&id=%s&elementsetname=full' % \
+    (CFG['server']['url'], rec.identifier)
     etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
 
 # to stdout
-print etree.tostring(urlset, pretty_print=1, encoding=cfg['server']['encoding'], xml_declaration=1)
+print etree.tostring(URLSET, pretty_print = 1, \
+encoding = CFG['server']['encoding'], xml_declaration=1)

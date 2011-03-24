@@ -1,4 +1,5 @@
 # -*- coding: ISO-8859-15 -*-
+''' GML support'''
 # =================================================================
 #
 # $Id$
@@ -30,10 +31,11 @@
 #
 # =================================================================
 
-from lxml import etree
 import util
 
 def get_bbox(bbox):
+    ''' GML routines '''
+
     tmp = bbox.find(util.nspath_eval('ogc:PropertyName'))
     if tmp is not None:
         pname = tmp.text
@@ -41,20 +43,24 @@ def get_bbox(bbox):
             raise RuntimeError, ('Invalid ogc:PropertyName: %s' % pname)
         tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml:lowerCorner'))
         if tmp2 is None:
-            raise RuntimeError, ('Invalid gml:Envelope geometry.  Missing gml:lowerCorner')
+            raise RuntimeError, \
+            ('Invalid gml:Envelope geometry.  Missing gml:lowerCorner')
         else:
-           ll = tmp2.text
+            lower_left = tmp2.text
 
         tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml:upperCorner'))
         if tmp2 is None:
-            raise RuntimeError, ('Invalid gml:Envelope geometry.  Missing gml:upperCorner')
+            raise RuntimeError, \
+            ('Invalid gml:Envelope geometry.  Missing gml:upperCorner')
         else:
-           ur = tmp2.text
+            upper_right = tmp2.text
 
-        min = ll.split()
-        max = ur.split()
+        xymin = lower_left.split()
+        xymax = upper_right.split()
 
-        if len(min) != 2 or len(max) != 2:
-            raise RuntimeError, ('Invalid gml:Envelope geometry.  gml:lowerCorner and gml:upperCorner must hold both lat and long.')
+        if len(xymin) != 2 or len(xymax) != 2:
+            raise RuntimeError, \
+           ('Invalid gml:Envelope geometry. \
+           gml:lowerCorner and gml:upperCorner must hold both lat and long.')
 
-        return '%s,%s,%s,%s' %(min[1],min[0],max[1],max[0])
+        return '%s,%s,%s,%s' % (xymin[1], xymin[0], xymax[1], xymax[0])

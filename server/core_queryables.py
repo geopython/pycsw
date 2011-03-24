@@ -31,14 +31,24 @@
 # =================================================================
 
 class CoreQueryables(object):
+    ''' Core Queryables for CSW '''
     def __init__(self, config):
+        ''' Generate Core Queryables db and obj bindings '''
         self.typename = 'csw:Record'
         self.mappings = {}
         table = config['repository']['records_table']
         for cqm in config['corequeryables']:
             k = cqm.replace('_',':') 
             cqv = config['corequeryables'][cqm]
-            v = '%s_%s' % (table, cqv)
+            val = '%s_%s' % (table, cqv)
             self.mappings[k] = {}
-            self.mappings[k]['db_col'] = v
+            self.mappings[k]['db_col'] = val
             self.mappings[k]['obj_attr'] = cqv
+
+    def get_db_col(self, term):
+        '''' Return database column of core queryable '''
+        return self.mappings[term]['db_col']
+
+    def get_obj_attr(self, term):
+        '''' Return object attribute of core queryable '''
+        return self.mappings[term]['obj_attr']

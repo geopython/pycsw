@@ -41,24 +41,24 @@ if len(sys.argv) < 2:
     print 'Usage: %s <filename.sqlite3>' % sys.argv[0]
     sys.exit(1)
 
-wkt4326 = 'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]'
+WKT4326 = 'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]'
 
-conn = sqlite3.connect(sys.argv[1])
-cursor = conn.cursor()
+CONN = sqlite3.connect(sys.argv[1])
+CURSOR = CONN.cursor()
 
 # create OGC SFSQL database
-cursor.execute('''
+CURSOR.execute('''
     create table spatial_ref_sys (
         srid integer unique,
         auth_name text,
         auth_srid integer,
         srtext text)''')
 
-cursor.execute('''
+CURSOR.execute('''
     insert into spatial_ref_sys values
-        (4326, 'EPSG', 4326, '%s')''' % wkt4326)
+        (4326, 'EPSG', 4326, '%s')''' % WKT4326)
 
-cursor.execute('''
+CURSOR.execute('''
     create table geometry_columns (
         f_table_name text,
         f_geometry_column text,
@@ -66,13 +66,13 @@ cursor.execute('''
         coord_dimension integer,
         srid integer, geometry_format text )''')
 
-cursor.execute('''
+CURSOR.execute('''
     insert into geometry_columns values
         ('records', 'bbox_wkt', 'POLYGON', 2, 4326, 'WKT')''')
 
-sqlfile=os.path.join('..','etc','schemas','sql','records.ddl')
+SQLDDL = os.path.join('..', 'etc', 'schemas', 'sql', 'records.ddl')
 
-cursor.executescript(open(sqlfile).read())
+CURSOR.executescript(open(SQLDDL).read())
 
-conn.commit()
-cursor.close()
+CONN.commit()
+CURSOR.close()

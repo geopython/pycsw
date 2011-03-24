@@ -30,15 +30,16 @@
 #
 # =================================================================
 
-from lxml import etree
 import config, gml, util
 
 class Filter(object):
+    ''' OGC Filter object support '''
     def __init__(self, flt, cq_mappings):
+        ''' Initialize Filter '''
 
         self.boq = None
 
-        tmp = flt.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=config.namespaces)
+        tmp = flt.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=config.NAMESPACES)
         if len(tmp) > 0:  # this is binary logic query
             self.boq = ' %s ' % util.xmltag_split(tmp[0].tag).lower()
             tmp = tmp[0]
@@ -47,40 +48,54 @@ class Filter(object):
 
         queries = []
 
-        for c in tmp.xpath('child::*'):
-            co = ''
+        for child in tmp.xpath('child::*'):
+            com_op = ''
 
-            if c.tag == util.nspath_eval('ogc:Not'):
-                pn = c.find(util.nspath_eval('ogc:BBOX/ogc:PropertyName'))
-                if pn is None:
-                    raise RuntimeError, ('Missing ogc:PropertyName in spatial filter')
-                elif pn is not None and pn.text not in ['ows:BoundingBox', '/ows:BoundingBox']:
-                    raise RuntimeError, ('Invalid ogc:PropertyName in spatial filter: %s' % pn.text)
-                bbox = gml.get_bbox(c.xpath('child::*')[0])
+            if child.tag == util.nspath_eval('ogc:Not'):
+                property_name = \
+                child.find(util.nspath_eval('ogc:BBOX/ogc:PropertyName'))
+                if property_name is None:
+                    raise RuntimeError, \
+                    ('Missing ogc:PropertyName in spatial filter')
+                elif (property_name is not None and property_name.text not in
+                ['ows:BoundingBox', '/ows:BoundingBox']):
+                    raise RuntimeError, \
+                    ('Invalid ogc:PropertyName in spatial filter: %s' %
+                    property_name.text)
 
-                queries.append('query_not_bbox(%s,"%s") = "true"' % (cq_mappings['ows:BoundingBox']['db_col'], bbox))
+                queries.append('query_not_bbox(%s,"%s") = "true"' %
+                (cq_mappings['ows:BoundingBox']['db_col'],
+                gml.get_bbox(child.xpath('child::*')[0])))
 
-            elif c.tag == util.nspath_eval('ogc:BBOX'):
-                pn = c.find(util.nspath_eval('ogc:PropertyName'))
-                if pn is None:
-                    raise RuntimeError, ('Missing PropertyName in spatial filter')
-                elif pn is not None and pn.text not in ['ows:BoundingBox', '/ows:BoundingBox']:
-                    raise RuntimeError, ('Invalid PropertyName in spatial filter: %s' % pn.text)
-                bbox = gml.get_bbox(c)
+            elif child.tag == util.nspath_eval('ogc:BBOX'):
+                property_name = child.find(util.nspath_eval('ogc:PropertyName'))
+                if property_name is None:
+                    raise RuntimeError, \
+                    ('Missing PropertyName in spatial filter')
+                elif (property_name is not None and
+                      property_name.text not in  \
+                      ['ows:BoundingBox', '/ows:BoundingBox']):
+                    raise RuntimeError, \
+                    ('Invalid PropertyName in spatial filter: %s' %
+                    property_name.text)
+                bbox = gml.get_bbox(child)
 
                 if self.boq is not None and self.boq == ' not ':
-                    queries.append('query_not_bbox(%s,"%s") = "true"' % (cq_mappings['ows:BoundingBox']['db_col'], bbox))
+                    queries.append('query_not_bbox(%s,"%s") = "true"' %
+                    (cq_mappings['ows:BoundingBox']['db_col'], bbox))
                 else:
-                    queries.append('query_bbox(%s,"%s") = "true"' % (cq_mappings['ows:BoundingBox']['db_col'], bbox))
+                    queries.append('query_bbox(%s,"%s") = "true"' %
+                    (cq_mappings['ows:BoundingBox']['db_col'], bbox))
 
-            elif c.tag == util.nspath_eval('ogc:FeatureId'):
-                id = c.attrib.get('fid')
-                queries.append('%s = \'%s\'' % (cq_mappings['dc:identifier']['db_col'], id))
+            elif child.tag == util.nspath_eval('ogc:FeatureId'):
+                iden = child.attrib.get('fid')
+                queries.append('%s = \'%s\'' %
+                (cq_mappings['dc:identifier']['db_col'], iden))
 
             else:
-                matchcase = c.attrib.get('matchCase')
-                wildcard = c.attrib.get('wildCard')
-                singlechar = c.attrib.get('singleChar')
+                matchcase = child.attrib.get('matchCase')
+                wildcard = child.attrib.get('wildCard')
+                singlechar = child.attrib.get('singleChar')
     
                 if wildcard is None:
                     wildcard = '%'
@@ -89,53 +104,68 @@ class Filter(object):
                     singlechar = '_'
     
                 try:
-                    pname = cq_mappings[c.find(util.nspath_eval('ogc:PropertyName')).text]['db_col']
+                    pname = cq_mappings[child.find(
+                    util.nspath_eval('ogc:PropertyName')).text]['db_col']
                 except Exception, err:
-                    raise RuntimeError, ('Invalid PropertyName: %s' % c.find(util.nspath_eval('ogc:PropertyName')).text)
+                    raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
+                    (child.find(util.nspath_eval('ogc:PropertyName')).text,
+                    str(err)))
 
-                if c.tag != util.nspath_eval('ogc:PropertyIsBetween'):
-                    pv = c.find(util.nspath_eval('ogc:Literal')).text
-                    pvalue = pv.replace(wildcard,'%').replace(singlechar,'_')
+                if child.tag != util.nspath_eval('ogc:PropertyIsBetween'):
+                    pval = child.find(util.nspath_eval('ogc:Literal')).text
+                    pvalue = pval.replace(wildcard,'%').replace(singlechar,'_')
 
-                if c.tag == util.nspath_eval('ogc:PropertyIsEqualTo'):
-                    co = '=='
-                elif c.tag == util.nspath_eval('ogc:PropertyIsNotEqualTo'):
-                    co = '!='
-                elif c.tag == util.nspath_eval('ogc:PropertyIsLessThan'):
-                    co = '<'
-                elif c.tag == util.nspath_eval('ogc:PropertyIsGreaterThan'):
-                    co = '>'
-                elif c.tag == util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo'):
-                    co = '<='
-                elif c.tag == util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo'):
-                    co = '>='
-                elif c.tag == util.nspath_eval('ogc:PropertyIsLike'):
-                    co = 'like'
-                elif c.tag == util.nspath_eval('ogc:PropertyIsNull'):
-                    co = 'is null'
-    
-                # if this is a case insensitive search, then set the LIKE comparison operator
+                com_op = _get_operator(child)
+
+                # if this is a case insensitive search
+                # then set the LIKE comparison operator
                 if matchcase is not None and matchcase == 'false':
-                    co = 'like'
+                    com_op = 'like'
 
-                if c.tag == util.nspath_eval('ogc:PropertyIsBetween'):
-                    co = 'between'
-                    lb = c.find(util.nspath_eval('ogc:LowerBoundary/ogc:Literal')).text
-                    ub = c.find(util.nspath_eval('ogc:UpperBoundary/ogc:Literal')).text
-                    queries.append('%s %s "%s" and "%s"' % (pname, co, lb, ub))
+                if child.tag == util.nspath_eval('ogc:PropertyIsBetween'):
+                    com_op = 'between'
+                    lower_boundary = child.find(
+                    util.nspath_eval('ogc:LowerBoundary/ogc:Literal')).text
+                    upper_boundary = child.find(
+                    util.nspath_eval('ogc:UpperBoundary/ogc:Literal')).text
+                    queries.append('%s %s "%s" and "%s"' %
+                    (pname, com_op, lower_boundary, upper_boundary))
 
-                elif c.find(util.nspath_eval('ogc:PropertyName')).text == 'csw:AnyText':
+                elif (child.find(util.nspath_eval('ogc:PropertyName')).text ==
+                'csw:AnyText'):
                     # csw:AnyText is a freetext search.  Strip modifiers
-                    pvalue=pvalue.replace('%','')
-                    queries.append('query_anytext(%s, "%s") = "true"' % (cq_mappings['csw:AnyText']['db_col'], pvalue))
+                    pvalue = pvalue.replace('%','')
+                    queries.append('query_anytext(%s, "%s") = "true"' %
+                    (cq_mappings['csw:AnyText']['db_col'], pvalue))
 
                 else:
                     if self.boq == ' not ':
-                        queries.append('%s is null or not %s %s "%s"' % (pname,pname,co,pvalue))
+                        queries.append('%s is null or not %s %s "%s"' %
+                        (pname, pname, com_op, pvalue))
                     else:
-                        queries.append('%s %s "%s"' % (pname,co,pvalue))
+                        queries.append('%s %s "%s"' % (pname, com_op, pvalue))
 
         if self.boq is not None and self.boq != ' not ':
             self.where = self.boq.join(queries)
         else:
             self.where = queries[0]
+
+def _get_operator(element):
+    ''' return the SQL operator based on Filter query '''
+    if element.tag == util.nspath_eval('ogc:PropertyIsEqualTo'):
+        com_op = '=='
+    elif element.tag == util.nspath_eval('ogc:PropertyIsNotEqualTo'):
+        com_op = '!='
+    elif element.tag == util.nspath_eval('ogc:PropertyIsLessThan'):
+        com_op = '<'
+    elif element.tag == util.nspath_eval('ogc:PropertyIsGreaterThan'):
+        com_op = '>'
+    elif element.tag == util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo'):
+        com_op = '<='
+    elif element.tag == util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo'):
+        com_op = '>='
+    elif element.tag == util.nspath_eval('ogc:PropertyIsLike'):
+        com_op = 'like'
+    elif element.tag == util.nspath_eval('ogc:PropertyIsNull'):
+        com_op = 'is null'
+    return com_op
