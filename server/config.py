@@ -30,14 +30,16 @@
 #
 # =================================================================
 
-version = open('VERSION.txt').read().strip()
+VERSION = open('VERSION.txt').read().strip()
 
-ogc_schemas_base = 'http://schemas.opengis.net'
+OGC_SCHEMAS_BASE = 'http://schemas.opengis.net'
 
-namespaces = {
+NAMESPACES = {
     'csw': 'http://www.opengis.net/cat/csw/2.0.2',
     'dc' : 'http://purl.org/dc/elements/1.1/',
     'dct': 'http://purl.org/dc/terms/',
+    'gco': 'http://www.isotc211.org/2005/gco',
+    'gmd': 'http://www.isotc211.org/2005/gmd',
     'gml': 'http://www.opengis.net/gml',
     'ogc': 'http://www.opengis.net/ogc',
     'ows': 'http://www.opengis.net/ows',
@@ -48,7 +50,7 @@ namespaces = {
     'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
 }
 
-model =  {
+MODEL =  {
     'operations': {
         'GetCapabilities': {
             'methods': {
@@ -57,7 +59,8 @@ model =  {
             },
             'parameters': {
                 'sections': {
-                    'values': ['ServiceIdentification', 'ServiceProvider', 'OperationsMetadata', 'Filter_Capabilities']
+                    'values': ['ServiceIdentification', 'ServiceProvider',
+                    'OperationsMetadata', 'Filter_Capabilities']
                 }
             }
         },
@@ -70,7 +73,8 @@ model =  {
                 'schemaLanguage': {
                     #'values': ['XMLSCHEMA']
                     #'values': ['http://www.w3.org/XML/Schema']
-                    'values': ['http://www.w3.org/XML/Schema', 'http://www.w3.org/TR/xmlschema-1/']
+                    'values': ['http://www.w3.org/XML/Schema',
+                    'http://www.w3.org/TR/xmlschema-1/']
                 },
                 'typeName': {
                     'values': ['csw:Record']
@@ -146,29 +150,32 @@ model =  {
 }
 
 def gen_domains():
-    d = {}
-    d['methods'] = {}
-    d['methods']['get'] = True
-    d['methods']['post'] = True
-    d['parameters'] = {}
-    d['parameters']['ParameterName'] = {}
-    d['parameters']['ParameterName']['values'] = []
-    for o in model['operations'].keys():
-        for p in model['operations'][o]['parameters']:
-            d['parameters']['ParameterName']['values'].append('%s.%s' % (o, p))
-    return d
+    ''' Generate parameter domain model '''
+    domain = {}
+    domain['methods'] = {}
+    domain['methods']['get'] = True
+    domain['methods']['post'] = True
+    domain['parameters'] = {}
+    domain['parameters']['ParameterName'] = {}
+    domain['parameters']['ParameterName']['values'] = []
+    for operation in MODEL['operations'].keys():
+        for parameter in MODEL['operations'][operation]['parameters']:
+            domain['parameters']['ParameterName']['values'].append('%s.%s' %
+            (operation, parameter))
+    return domain
 
-def get_config(file):
+def get_config(configfile):
+    ''' Build main configuration '''
     import ConfigParser
-    if file is not None:
-        cp = ConfigParser.SafeConfigParser()
-        cp.optionxform = str
-        cp.readfp(open(file))
+    if configfile is not None:
+        scp = ConfigParser.SafeConfigParser()
+        scp.optionxform = str
+        scp.readfp(open(configfile))
 
     config = {}
-    for i in cp.sections():
-        s = i.lower()
-        config[s] = {}
-        for j in cp.options(i):
-            config[s][j] = unicode(cp.get(i,j).decode('latin-1')).strip()
+    for i in scp.sections():
+        sect = i.lower()
+        config[sect] = {}
+        for j in scp.options(i):
+            config[sect][j] = unicode(scp.get(i, j).decode('latin-1')).strip()
     return config

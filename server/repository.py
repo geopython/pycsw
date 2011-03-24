@@ -30,44 +30,51 @@
 #
 # =================================================================
 
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from sqlalchemy import create_engine, desc
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import create_session
 import util
 
-class dsc(object):
-    pass
-
 class Repository(object):
-    def __init__(self, db, table):
-        db = create_engine('%s' % db, echo=False)
+    ''' Class to interact with underlying repository '''
+    def __init__(self, database, table):
+        ''' Initialize repository '''
+        engine = create_engine('%s' % database, echo=False)
 
-        dst = Table(table, MetaData(db), autoload=True)
+        base = declarative_base(bind=engine)
+
+        self.dataset = type('dataset', (base,),
+        dict(__tablename__=table,__table_args__={'autoload': True}))
+
+        self.session = create_session(engine)
+        self.connection = engine.raw_connection()
+        self.connection.create_function('query_bbox', 2, util.query_bbox)
+        self.connection.create_function(
+        'query_not_bbox', 2, util.query_not_bbox)
+        self.connection.create_function('query_anytext', 2, util.query_anytext)
+        self.connection.create_function('query_xpath', 2, util.query_xpath)
        
-        mapper(dsc,dst)
-        
-        self.session=create_session()
-        self.connection = db.raw_connection()
-        self.connection.create_function('query_bbox',2,util.query_bbox)
-        self.connection.create_function('query_not_bbox',2,util.query_not_bbox)
-        self.connection.create_function('query_anytext',2,util.query_anytext)
-        self.connection.create_function('query_xpath',2,util.query_xpath)
-       
-    def query(self,filter=None, cql=None, ids=None, sortby=None, propertyname=None):
+    def query(self, flt=None, cql=None, ids=None, sortby=None,
+     propertyname=None):
+        ''' Query records from underlying repository '''
         if ids is not None:  # it's a GetRecordById request
-            q = self.session.query(dsc).filter(dsc.identifier.in_(ids))
-        elif filter is not None:  # it's a GetRecords with filter
-            q = self.session.query(dsc).filter(filter.where)
-        elif filter is None and propertyname is None and cql is None:  # it's a GetRecords sans filter
-            q = self.session.query(dsc)
+            query = self.session.query(
+            self.dataset).filter(self.dataset.identifier.in_(ids))
+        elif flt is not None:  # it's a GetRecords with filter
+            query = self.session.query(self.dataset).filter(flt.where)
+        elif flt is None and propertyname is None and cql is None:
+        # it's a GetRecords sans filter
+            query = self.session.query(self.dataset)
         elif propertyname is not None:  # it's a GetDomain query
-            q = self.session.query(getattr(dsc, propertyname)).filter('%s is not null' % propertyname).distinct()
+            query = self.session.query(getattr(self.dataset,
+            propertyname)).filter('%s is not null' % propertyname).distinct()
         elif cql is not None:  # it's a CQL query
-            q = self.session.query(dsc).filter(cql)
+            query = self.session.query(self.dataset).filter(cql)
 
         if sortby is not None:
             if sortby['order'] == 'DESC':
-                return q.order_by(desc(sortby['cq_mapping'])).all()
+                return query.order_by(desc(sortby['cq_mapping'])).all()
             else: 
-                return q.order_by(sortby['cq_mapping']).all()
+                return query.order_by(sortby['cq_mapping']).all()
 
-        return q.all()
+        return query.all()

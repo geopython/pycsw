@@ -34,50 +34,47 @@ from lxml import etree
 import config
 
 def get_today_and_now():
+    ''' Get the date, right now, in ISO8601 '''
     import time
     return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
 
 def get_version_integer(version):
+    ''' Get an integer of the OGC version valud x.y.z '''
     if version is not None:  # split and make integer
-        a = version.split('.')
-        if len(a) != 3:
+        xyz = version.split('.')
+        if len(xyz) != 3:
             return -1
         try:
-            return int(a[0]) * 10000 + int(a[1]) * 100 + int(a[2])
-        except:
-            return -1
+            return int(xyz[0]) * 10000 + int(xyz[1]) * 100 + int(xyz[2])
+        except Exception, err:
+            raise RuntimeError('%s' % str(err))
     else:  # not a valid version string
-         return -1
+        return -1
 
-def nspath_eval(xpath, namespaces=config.namespaces):
+def nspath_eval(xpath):
+    ''' Return an etree friendly xpath '''
     out = []
-    for s in xpath.split('/'):
-        ns, el = s.split(':')
-        out.append('{%s}%s' % (namespaces[ns],el))
+    for chunks in xpath.split('/'):
+        namespace, element = chunks.split(':')
+        out.append('{%s}%s' % (config.NAMESPACES[namespace], element))
     return '/'.join(out)
 
 def xmltag_split(tag):
+    ''' Return XML element bare tag name (without prefix) '''
     return tag.split('}')[1]
 
-def bbox2polygon(bbox):
-    # like '-180,-90,180,90'
-    minx,miny,maxx,maxy=bbox.split(',')
-    poly = []
-    poly.append((float(minx),float(miny)))
-    poly.append((float(minx),float(maxy)))
-    poly.append((float(maxx),float(maxy)))
-    poly.append((float(maxx),float(miny)))
-    return poly
-
 def bbox2wkt(bbox):
-    tmp=bbox.split(',')
+    ''' Return OGC WKT Polygon of a simple bbox string '''
+    tmp = bbox.split(',')
     minx = float(tmp[0])
     miny = float(tmp[1])
     maxx = float(tmp[2])
     maxy = float(tmp[3])
-    return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
+    return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' \
+    % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
 
-def query_not_bbox(bbox_data,bbox_input):
+def query_not_bbox(bbox_data, bbox_input):
+    ''' perform spatial disjoint query '''
     if bbox_input is None:
         return 'false'
 
@@ -85,50 +82,49 @@ def query_not_bbox(bbox_data,bbox_input):
         return 'true'
 
     from shapely.wkt import loads
-    from shapely.geometry import Polygon
 
-    b1 = loads(bbox2wkt(bbox_data))
-    b2 = loads(bbox2wkt(bbox_input))
+    bbox1 = loads(bbox2wkt(bbox_data))
+    bbox2 = loads(bbox2wkt(bbox_input))
 
-    if b1.disjoint(b2) is True:
+    if bbox1.disjoint(bbox2) is True:
         return 'true' 
     else:
         return 'false'
 
-def query_bbox(bbox_data,bbox_input):
+def query_bbox(bbox_data, bbox_input):
+    ''' perform spatial intersects query '''
     if bbox_data is None or bbox_input is None:
         return 'false'
 
     from shapely.wkt import loads
-    from shapely.geometry import Polygon
 
-    b1 = loads(bbox2wkt(bbox_data))
-    b2 = loads(bbox2wkt(bbox_input))
+    bbox1 = loads(bbox2wkt(bbox_data))
+    bbox2 = loads(bbox2wkt(bbox_input))
 
-    if b1.intersects(b2) is True:
+    if bbox1.intersects(bbox2) is True:
         return 'true' 
     else:
         return 'false'
 
 def query_anytext(xml, searchterm):
-    # perform fulltext search against XML
-    exml=etree.fromstring(xml)
-    for el in exml.xpath('//text()'):  # all elements
-        if el.lower().find(searchterm.lower()) != -1:
+    ''' perform fulltext search against XML '''
+    exml = etree.fromstring(xml)
+    for element in exml.xpath('//text()'):  # all elements
+        if element.lower().find(searchterm.lower()) != -1:
             return 'true'
     for att in exml.xpath('//attribute::*'):  # all attributes
         if att.lower().find(searchterm.lower()) != -1:
             return 'true'
     return 'false'
 
-def query_xpath(xml, xpath, searchterm, matchcase=False):
-    # perform search against XPath
-    exml=etree.fromstring(xml)
-    for x in exml.xpath(xpath, namespaces=config.namespaces):  # all elements
-        if matchcase is True:
-            if x.text == searchterm:
+def query_xpath(xml, xpath_in, searchterm, matchcase=0):
+    ''' perform search against XPath '''
+    exml = etree.fromstring(xml)
+    for xpath in exml.xpath(xpath_in, namespaces=config.NAMESPACES):
+        if matchcase == 1:
+            if xpath.text == searchterm:
                 return 'true'
         else:
-            if x.text.lower() == searchterm.lower():
+            if xpath.text.lower() == searchterm.lower():
                 return 'true'
     return 'false'

@@ -1,12 +1,11 @@
-#!/usr/bin/python -u
-# -*- coding: ISO-8859-15 -*-
+#!/bin/sh
 # =================================================================
 #
-# $Id$
+# $Id: gen_sitemap.py 54 2011-03-07 01:35:57Z tomkralidis $
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
 #
-# Copyright (c) 2010 Tom Kralidis
+# Copyright (c) 2011 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -31,10 +30,7 @@
 #
 # =================================================================
 
-from server import server
+# run pylint without warnings about docstrings on first line
+# and suppress reporting
 
-# get runtime configuration
-CSW = server.Csw('./default.cfg')
-
-# go!
-CSW.dispatch()
+pylint -r n -d C0111 $1
