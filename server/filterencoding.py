@@ -78,19 +78,20 @@ class Filter(object):
                     raise RuntimeError, \
                     ('Invalid PropertyName in spatial filter: %s' %
                     property_name.text)
-                bbox = gml.get_bbox(child)
 
                 if self.boq is not None and self.boq == ' not ':
                     queries.append('query_not_bbox(%s,"%s") = "true"' %
-                    (cq_mappings['ows:BoundingBox']['db_col'], bbox))
+                    (cq_mappings['ows:BoundingBox']['db_col'],
+                     gml.get_bbox(child)))
                 else:
                     queries.append('query_bbox(%s,"%s") = "true"' %
-                    (cq_mappings['ows:BoundingBox']['db_col'], bbox))
+                    (cq_mappings['ows:BoundingBox']['db_col'],
+                    gml.get_bbox(child)))
 
             elif child.tag == util.nspath_eval('ogc:FeatureId'):
-                iden = child.attrib.get('fid')
                 queries.append('%s = \'%s\'' %
-                (cq_mappings['dc:identifier']['db_col'], iden))
+                (cq_mappings['dc:identifier']['db_col'],
+                child.attrib.get('fid')))
 
             else:
                 matchcase = child.attrib.get('matchCase')
