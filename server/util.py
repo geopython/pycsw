@@ -51,6 +51,16 @@ def get_version_integer(version):
     else:  # not a valid version string
         return -1
 
+def find_exml(val, attrib=False):
+    ''' Test that the XML value exists, return value, else return None '''
+    if val is not None:
+        if attrib == True:  # it's an XML attribute
+            return val
+        else:  # it's an XML value
+            return val.text
+    else:
+        return None
+
 def nspath_eval(xpath):
     ''' Return an etree friendly xpath '''
     out = []
