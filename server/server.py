@@ -1180,7 +1180,9 @@ class Csw(object):
             for elemname in self.kvp['elementname']:
                 nspace, elname = elemname.split(':')
                 if elname == 'BoundingBox':
-                    self._write_bbox(record, bbox)
+                    bboxel = write_boundingbox(bbox)
+                    if bboxel is not None:
+                        record.append(bboxel)
                 else:
                     if (hasattr(recobj,
                         self.corequeryables.mappings[elemname]['obj_attr'])
@@ -1212,24 +1214,11 @@ class Csw(object):
                         if val is not None:
                             etree.SubElement(record,
                             util.nspath_eval(i)).text = val
-                self._write_bbox(record, bbox)
+                bboxel = write_boundingbox(bbox)
+                if bboxel is not None:
+                    record.append(bboxel)
 
         return record
-
-    def _write_bbox(self, record, bbox):
-        ''' Generate ows:BoundinBox '''
-        if bbox is not None:
-            bbox2 = bbox.split(',')
-            if len(bbox2) == 4:
-                boundingbox = etree.SubElement(record,
-                util.nspath_eval('ows:BoundingBox'),
-                crs = 'urn:x-ogc:def:crs:EPSG:6.11:4326')
-                etree.SubElement(boundingbox,
-                util.nspath_eval('ows:LowerCorner')).text = \
-                '%s %s' % (bbox2[1], bbox2[0])
-                etree.SubElement(boundingbox,
-                util.nspath_eval('ows:UpperCorner')).text = \
-                '%s %s' % (bbox2[3], bbox2[2])
 
     def _write_response(self):
         ''' Generate response '''
@@ -1325,3 +1314,22 @@ class Csw(object):
                 self.corequeryables.mappings[key]['db_col'])
             self.log.debug('Interpolated CQL text = %s.' % cql)
             return cql
+
+def write_boundingbox(bbox):
+    ''' Generate ows:BoundingBox '''
+    if bbox is not None:
+        bbox2 = bbox.split(',')
+        if len(bbox2) == 4:
+            boundingbox = etree.Element(util.nspath_eval('ows:BoundingBox'),
+            crs = 'urn:x-ogc:def:crs:EPSG:6.11:4326')
+            etree.SubElement(boundingbox,
+            util.nspath_eval('ows:LowerCorner')).text = \
+            '%s %s' % (bbox2[1], bbox2[0])
+            etree.SubElement(boundingbox,
+            util.nspath_eval('ows:UpperCorner')).text = \
+            '%s %s' % (bbox2[3], bbox2[2])
+            return boundingbox
+        else:
+            return None
+    else:
+        return None
