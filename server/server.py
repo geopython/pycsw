@@ -50,6 +50,11 @@ class Csw(object):
         # init kvp
         self.kvp = {}
 
+        self.gzip = False
+        self.soap = False
+        self.request = None
+        self.exception = False
+
         # configure logging
         try:
             self.log = log.initlog(self.config)
@@ -250,19 +255,19 @@ class Csw(object):
     def getcapabilities(self):
         ''' Handle GetCapabilities request '''
         serviceidentification = True
-        sp = True
-        om = True
+        serviceprovider = True
+        operationsmetadata = True
         if self.kvp.has_key('sections'):
             serviceidentification = False
-            sp = False
-            om = False
-            for s in self.kvp['sections'].split(','):
-                if s == 'ServiceIdentification':
+            serviceprovider = False
+            operationsmetadata = False
+            for section in self.kvp['sections'].split(','):
+                if section == 'ServiceIdentification':
                     serviceidentification = True
-                if s == 'ServiceProvider':
-                    sp = True
-                if s == 'OperationsMetadata':
-                    om = True
+                if section == 'ServiceProvider':
+                    serviceprovider = True
+                if section == 'OperationsMetadata':
+                    operationsmetadata = True
 
         node = etree.Element(util.nspath_eval('csw:Capabilities'),
         nsmap=config.NAMESPACES, version='2.0.2')
@@ -304,34 +309,46 @@ class Csw(object):
             util.nspath_eval('ows:AccessConstraints')).text = \
             self.config['identification']['accessconstraints']
 
-        if sp is True:
+        if serviceprovider is True:
             self.log.debug('Writing section ServiceProvider.')
-            sp = etree.SubElement(node, util.nspath_eval('ows:ServiceProvider'))
-            etree.SubElement(sp, util.nspath_eval('ows:ProviderName')).text = \
+            serviceprovider = etree.SubElement(node,
+            util.nspath_eval('ows:ServiceProvider'))
+
+            etree.SubElement(serviceprovider,
+            util.nspath_eval('ows:ProviderName')).text = \
             self.config['provider']['name']
 
-            ps = etree.SubElement(sp, util.nspath_eval('ows:ProviderSite'))
-            ps.attrib[util.nspath_eval('xlink:type')] = 'simple'
-            ps.attrib[util.nspath_eval('xlink:href')] = \
+            providersite = etree.SubElement(serviceprovider,
+            util.nspath_eval('ows:ProviderSite'))
+
+            providersite.attrib[util.nspath_eval('xlink:type')] = 'simple'
+            providersite.attrib[util.nspath_eval('xlink:href')] = \
             self.config['provider']['url']
 
-            sc = etree.SubElement(sp, util.nspath_eval('ows:ServiceContact'))
-            etree.SubElement(sc,
+            servicecontact = etree.SubElement(serviceprovider,
+            util.nspath_eval('ows:ServiceContact'))
+
+            etree.SubElement(servicecontact,
             util.nspath_eval('ows:IndividualName')).text = \
             self.config['contact']['name']
 
-            etree.SubElement(sc, util.nspath_eval('ows:PositionName')).text = \
+            etree.SubElement(servicecontact,
+            util.nspath_eval('ows:PositionName')).text = \
             self.config['contact']['position']
 
-            ci = etree.SubElement(sc, util.nspath_eval('ows:ContactInfo'))
-            ph = etree.SubElement(ci, util.nspath_eval('ows:Phone'))
-            etree.SubElement(ph, util.nspath_eval('ows:Voice')).text = \
+            contactinfo = etree.SubElement(servicecontact,
+            util.nspath_eval('ows:ContactInfo'))
+
+            phone = etree.SubElement(contactinfo, util.nspath_eval('ows:Phone'))
+            etree.SubElement(phone, util.nspath_eval('ows:Voice')).text = \
             self.config['contact']['phone']
 
-            etree.SubElement(ph, util.nspath_eval('ows:Facsimile')).text = \
+            etree.SubElement(phone, util.nspath_eval('ows:Facsimile')).text = \
             self.config['contact']['fax']
 
-            address = etree.SubElement(ci, util.nspath_eval('ows:Address'))
+            address = etree.SubElement(contactinfo,
+            util.nspath_eval('ows:Address'))
+
             etree.SubElement(address,
             util.nspath_eval('ows:DeliveryPoint')).text = \
             self.config['contact']['address']
@@ -354,97 +371,116 @@ class Csw(object):
             util.nspath_eval('ows:ElectronicMailAddress')).text = \
             self.config['contact']['email']
 
-            ps = etree.SubElement(ci, util.nspath_eval('ows:OnlineResource'))
-            ps.attrib[util.nspath_eval('xlink:type')] = 'simple'
-            ps.attrib[util.nspath_eval('xlink:href')] = \
+            url = etree.SubElement(contactinfo,
+            util.nspath_eval('ows:OnlineResource'))
+
+            url.attrib[util.nspath_eval('xlink:type')] = 'simple'
+            url.attrib[util.nspath_eval('xlink:href')] = \
             self.config['contact']['url']
 
-            etree.SubElement(ci,
+            etree.SubElement(contactinfo,
                              util.nspath_eval('ows:HoursOfService')).text = \
                              self.config['contact']['hours']
 
-            etree.SubElement(ci,
+            etree.SubElement(contactinfo,
             util.nspath_eval('ows:ContactInstructions')).text = \
             self.config['contact']['contactinstructions']
 
-            etree.SubElement(sc, util.nspath_eval('ows:Role')).text = \
-            self.config['contact']['role']
+            etree.SubElement(servicecontact,
+            util.nspath_eval('ows:Role')).text = self.config['contact']['role']
 
-        if om is True:
+        if operationsmetadata is True:
             self.log.debug('Writing section OperationsMetadata.')
-            om = etree.SubElement(node,
+            operationsmetadata = etree.SubElement(node,
             util.nspath_eval('ows:OperationsMetadata'))
 
-            for o in config.MODEL['operations'].keys():
-                op = etree.SubElement(om,
-                util.nspath_eval('ows:Operation'), name = o)
+            for operation in config.MODEL['operations'].keys():
+                oper = etree.SubElement(operationsmetadata,
+                util.nspath_eval('ows:Operation'), name = operation)
 
-                dcp = etree.SubElement(op, util.nspath_eval('ows:DCP'))
+                dcp = etree.SubElement(oper, util.nspath_eval('ows:DCP'))
                 http = etree.SubElement(dcp, util.nspath_eval('ows:HTTP'))
 
-                if config.MODEL['operations'][o]['methods']['get'] is True:
+                if (config.MODEL['operations'][operation]['methods']['get']
+                    is True):
                     get = etree.SubElement(http, util.nspath_eval('ows:Get'))
                     get.attrib[util.nspath_eval('xlink:type')] = 'simple'
                     get.attrib[util.nspath_eval('xlink:href')] = \
                     self.config['server']['url']
 
-                if config.MODEL['operations'][o]['methods']['post'] is True:
+                if (config.MODEL['operations'][operation]['methods']['post']
+                    is True):
                     post = etree.SubElement(http, util.nspath_eval('ows:Post'))
                     post.attrib[util.nspath_eval('xlink:type')] = 'simple'
                     post.attrib[util.nspath_eval('xlink:href')] = \
                     self.config['server']['url']
 
-                for p in config.MODEL['operations'][o]['parameters']:
-                    param = etree.SubElement(op,
-                    util.nspath_eval('ows:Parameter'), name = p)
+                for parameter in \
+                config.MODEL['operations'][operation]['parameters']:
+                    param = etree.SubElement(oper,
+                    util.nspath_eval('ows:Parameter'), name = parameter)
 
-                    for v in \
-                    config.MODEL['operations'][o]['parameters'][p]['values']:
+                    for val in \
+                    config.MODEL['operations'][operation]\
+                    ['parameters'][parameter]['values']:
                         etree.SubElement(param,
-                        util.nspath_eval('ows:Value')).text = v
+                        util.nspath_eval('ows:Value')).text = val
 
-            for p in config.MODEL['parameters'].keys():
-                param = etree.SubElement(om,
-                util.nspath_eval('ows:Parameter'), name = p)
-                for v in config.MODEL['parameters'][p]['values']:
+            for parameter in config.MODEL['parameters'].keys():
+                param = etree.SubElement(operationsmetadata,
+                util.nspath_eval('ows:Parameter'), name = parameter)
+                for val in config.MODEL['parameters'][parameter]['values']:
                     etree.SubElement(param,
-                    util.nspath_eval('ows:Value')).text = v
+                    util.nspath_eval('ows:Value')).text = val
 
-            for p in config.MODEL['constraints'].keys():
-                param = etree.SubElement(om,
-                util.nspath_eval('ows:Constraint'), name = p)
-                for v in config.MODEL['constraints'][p]['values']:
+            for constraint in config.MODEL['constraints'].keys():
+                param = etree.SubElement(operationsmetadata,
+                util.nspath_eval('ows:Constraint'), name = constraint)
+                for val in config.MODEL['constraints'][constraint]['values']:
                     etree.SubElement(param,
-                    util.nspath_eval('ows:Value')).text = v
+                    util.nspath_eval('ows:Value')).text = val
             
-            etree.SubElement(om, util.nspath_eval('ows:ExtendedCapabilities'))
+            etree.SubElement(operationsmetadata,
+            util.nspath_eval('ows:ExtendedCapabilities'))
 
         # always write out Filter_Capabilities
         self.log.debug('Writing section Filter_Capabilities.')
-        fi = etree.SubElement(node, util.nspath_eval('ogc:Filter_Capabilities'))
-        sc = etree.SubElement(fi, util.nspath_eval('ogc:Spatial_Capabilities'))
-        go = etree.SubElement(sc, util.nspath_eval('ogc:GeometryOperands'))
-        etree.SubElement(go, util.nspath_eval('ogc:GeometryOperand')).text = \
-        'gml:Envelope'
+        fltcaps = etree.SubElement(node,
+        util.nspath_eval('ogc:Filter_Capabilities'))
+        spatialcaps = etree.SubElement(fltcaps,
+        util.nspath_eval('ogc:Spatial_Capabilities'))
+
+        geomops = etree.SubElement(spatialcaps,
+        util.nspath_eval('ogc:GeometryOperands'))
+
+        etree.SubElement(geomops,
+        util.nspath_eval('ogc:GeometryOperand')).text = 'gml:Envelope'
     
-        so = etree.SubElement(sc, util.nspath_eval('ogc:SpatialOperators'))
-        etree.SubElement(so, util.nspath_eval('ogc:SpatialOperator'), \
+        spatialops = etree.SubElement(spatialcaps,
+        util.nspath_eval('ogc:SpatialOperators'))
+
+        etree.SubElement(spatialops, util.nspath_eval('ogc:SpatialOperator'),
         name = 'BBOX')
     
-        sc = etree.SubElement(fi, util.nspath_eval('ogc:Scalar_Capabilities'))
-        etree.SubElement(sc, util.nspath_eval('ogc:LogicalOperators'))
+        scalarcaps = etree.SubElement(fltcaps,
+        util.nspath_eval('ogc:Scalar_Capabilities'))
+
+        etree.SubElement(scalarcaps, util.nspath_eval('ogc:LogicalOperators'))
         
-        co = etree.SubElement(sc, util.nspath_eval('ogc:ComparisonOperators'))
+        cmpops = etree.SubElement(scalarcaps,
+        util.nspath_eval('ogc:ComparisonOperators'))
     
-        for c in ['LessThan', 'GreaterThan', 'LessThanEqualTo', \
+        for cmpop in ['LessThan', 'GreaterThan', 'LessThanEqualTo', \
         'GreaterThanEqualTo', 'EqualTo', 'NotEqualTo', 'Like', 'Between', \
         'NullCheck']:
-            etree.SubElement(co,
-            util.nspath_eval('ogc:ComparisonOperator')).text = c
+            etree.SubElement(cmpops,
+            util.nspath_eval('ogc:ComparisonOperator')).text = cmpop
     
-        ic = etree.SubElement(fi, util.nspath_eval('ogc:Id_Capabilities'))
-        etree.SubElement(ic, util.nspath_eval('ogc:EID'))
-        etree.SubElement(ic, util.nspath_eval('ogc:FID'))
+        idcaps = etree.SubElement(fltcaps,
+        util.nspath_eval('ogc:Id_Capabilities'))
+
+        etree.SubElement(idcaps, util.nspath_eval('ogc:EID'))
+        etree.SubElement(idcaps, util.nspath_eval('ogc:FID'))
 
         return node
     
@@ -655,10 +691,12 @@ class Csw(object):
                     self.kvp['filter'] = \
                     filterencoding.Filter(doc, self.corequeryables.mappings)
                 except Exception, err:
-                    et = 'Exception: document not valid.\nError: %s.' % str(err)
-                    self.log.debug(et)
+                    errortext = \
+                    'Exception: document not valid.\nError: %s.' % str(err)
+
+                    self.log.debug(errortext)
                     return self.exceptionreport('InvalidParameterValue',
-                    'constraint', 'Invalid Filter query: %s' % et)
+                    'constraint', 'Invalid Filter query: %s' % errortext)
 
                 self.kvp['cql'] = None
 
@@ -715,12 +753,12 @@ class Csw(object):
             self.config['server']['federatedcatalogues'].split(','):
                 self.log.debug('Performing distributed search on federated \
                 catalogue: %s.' % fedcat)
-                c = CatalogueServiceWeb(fedcat)
-                c.getrecords(xml=self.request)
+                remotecsw = CatalogueServiceWeb(fedcat)
+                remotecsw.getrecords(xml=self.request)
                 self.log.debug('Distributed search results from catalogue \
-                %s: %s.' % (fedcat, c.results))
-                matched = str(int(matched) + int(c.results['matches']))
-                dsresults.append(c.records)
+                %s: %s.' % (fedcat, remotecsw.results))
+                matched = str(int(matched) + int(remotecsw.results['matches']))
+                dsresults.append(remotecsw.records)
 
         self.log.debug('Results: matched: %s, returned: %s, next: %s.' % \
         (matched, returned, nextrecord))
@@ -738,7 +776,8 @@ class Csw(object):
         if self.kvp['filter'] is None and self.kvp['resulttype'] is None:
             returned = '0'
 
-        sr = etree.SubElement(node, util.nspath_eval('csw:SearchResults'),
+        searchresults = etree.SubElement(node,
+        util.nspath_eval('csw:SearchResults'),
         numberOfRecordsMatched = matched, numberOfRecordsReturned = returned,
         nextRecord = nextrecord, recordSchema = self.kvp['outputschema'])
 
@@ -752,15 +791,15 @@ class Csw(object):
             self.log.debug('Presenting records %s - %s.' %
             (self.kvp['startposition'], max1))
 
-            for r in results[int(self.kvp['startposition'])-1:int(max1)-1]:
-                sr.append(self._write_record(r))
+            for res in results[int(self.kvp['startposition'])-1:int(max1)-1]:
+                searchresults.append(self._write_record(res))
 
         if (self.kvp.has_key('distributedsearch') and
             self.kvp['distributedsearch'] == 'TRUE' and
             self.kvp['hopcount'] > 0):
-            for rs in dsresults:
-                for rec in rs:
-                    sr.append(etree.fromstring(rs[rec].xml))
+            for resultset in dsresults:
+                for rec in resultset:
+                    searchresults.append(etree.fromstring(resultset[rec].xml))
 
         return node
 
@@ -891,9 +930,11 @@ class Csw(object):
             self.log.debug('Parsing %s.' % postdata)
             doc = etree.fromstring(postdata)
         except Exception, err:
-            et = 'Exception: document not well-formed.\nError: %s.' % str(err)
-            self.log.debug(et)
-            return et
+            errortext = \
+            'Exception: document not well-formed.\nError: %s.' % str(err)
+
+            self.log.debug(errortext)
+            return errortext
 
         # if this is a SOAP request, get to SOAP-ENV:Body/csw:*
         if doc.tag == util.nspath_eval('soapenv:Envelope'):
@@ -921,9 +962,10 @@ class Csw(object):
                 doc = etree.fromstring(postdata, parser)
             self.log.debug('Request is valid XML.')
         except Exception, err:
-            et = 'Exception: the document is not valid.\nError: %s.' % str(err)
-            self.log.debug(et)
-            return et
+            errortext = \
+            'Exception: the document is not valid.\nError: %s.' % str(err)
+            self.log.debug(errortext)
+            return errortext
 
         request['request'] = util.xmltag_split(doc.tag)
         self.log.debug('Request operation %s specified.' % request['request'])
@@ -942,8 +984,8 @@ class Csw(object):
         # DescribeRecord
         if request['request'] == 'DescribeRecord':
             request['typename'] = []
-            for d in doc.findall(util.nspath_eval('csw:TypeName')):
-                request['typename'].append(d.text)
+            for typename in doc.findall(util.nspath_eval('csw:TypeName')):
+                request['typename'].append(typename.text)
     
             tmp = doc.find('.').attrib.get('schemaLanguage')
             if tmp is not None:
@@ -1004,9 +1046,9 @@ class Csw(object):
             tmp = doc.find(util.nspath_eval('csw:DistributedSearch'))
             if tmp is not None:
                 request['distributedsearch'] = 'TRUE'
-                hc = tmp.attrib.get('hopCount')
-                if hc is not None:
-                    request['hopcount'] = int(hc)-1
+                hopcount = tmp.attrib.get('hopCount')
+                if hopcount is not None:
+                    request['hopcount'] = int(hopcount)-1
                 else:
                     request['hopcount'] = 1
             else:
@@ -1019,8 +1061,9 @@ class Csw(object):
                 request['elementsetname'] = None
 
             request['elementname'] = []
-            for e in doc.findall(util.nspath_eval('csw:Query/csw:ElementName')):
-                request['elementname'].append(e.text)
+            for elname in \
+            doc.findall(util.nspath_eval('csw:Query/csw:ElementName')):
+                request['elementname'].append(elname.text)
 
             request['filter'] = None
             request['cql'] = None
@@ -1118,52 +1161,53 @@ class Csw(object):
 
         return request
 
-    def _write_record(self, r):
+    def _write_record(self, recobj):
         ''' Generate csw:Record '''
         if self.kvp['elementsetname'] == 'brief':
-            el = 'BriefRecord'
+            elname = 'BriefRecord'
         elif self.kvp['elementsetname'] == 'summary':
-            el = 'SummaryRecord'
+            elname = 'SummaryRecord'
         else:
-            el = 'Record'
+            elname = 'Record'
 
-        record = etree.Element(util.nspath_eval('csw:%s' % el))
+        record = etree.Element(util.nspath_eval('csw:%s' % elname))
 
-        bbox = getattr(r,
+        bbox = getattr(recobj,
         self.corequeryables.mappings['ows:BoundingBox']['obj_attr'])
 
         if (self.kvp.has_key('elementname') is True and
             len(self.kvp['elementname']) > 0):
-            for e in self.kvp['elementname']:
-                ns, el = e.split(':')
-                if el == 'BoundingBox':
+            for elemname in self.kvp['elementname']:
+                nspace, elname = elemname.split(':')
+                if elname == 'BoundingBox':
                     self._write_bbox(record, bbox)
                 else:
-                    if (hasattr(r,
-                        self.corequeryables.mappings[e]['obj_attr']) is True):
+                    if (hasattr(recobj,
+                        self.corequeryables.mappings[elemname]['obj_attr'])
+                        is True):
                         etree.SubElement(record, util.nspath_eval('%s:%s' %
-                        (ns, el))).text=getattr(r,
-                        self.corequeryables.mappings[e]['obj_attr'])
+                        (nspace, elname))).text=getattr(recobj,
+                        self.corequeryables.mappings[elemname]['obj_attr'])
         elif self.kvp.has_key('elementsetname') is True:
             if self.kvp['elementsetname'] == 'full':  # dump the full record
-                record = etree.fromstring(getattr(r,
+                record = etree.fromstring(getattr(recobj,
                 self.corequeryables.mappings['csw:AnyText']['obj_attr']))
             else:  # dump BriefRecord (always required), summary if requested
                 for i in ['dc:identifier', 'dc:title', 'dc:type']:
                     etree.SubElement(record, util.nspath_eval(i)).text = \
-                    getattr(r, self.corequeryables.mappings[i]['obj_attr'])
+                    getattr(recobj, self.corequeryables.mappings[i]['obj_attr'])
                 if self.kvp['elementsetname'] == 'summary':
-                    subjects = getattr(r,
+                    subjects = getattr(recobj,
                     self.corequeryables.mappings['dc:subject']['obj_attr'])
 
                     if subjects is not None:
-                        for s in subjects.split(','):
+                        for subject in subjects.split(','):
                             etree.SubElement(record, 
-                            util.nspath_eval('dc:subject')).text=s
+                            util.nspath_eval('dc:subject')).text=subject
 
                     for i in ['dc:format', 'dc:relation', \
                     'dct:modified', 'dct:abstract']:
-                        val = getattr(r,
+                        val = getattr(recobj,
                         self.corequeryables.mappings[i]['obj_attr'])
                         if val is not None:
                             etree.SubElement(record,
