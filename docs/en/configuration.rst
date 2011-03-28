@@ -20,7 +20,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels for more details)
 - **logfile**: the full file path to the logfile
 - **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net).
-- **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributed-searching` for more details)
+- **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributedsearching` for more details)
 - **xml_pretty_print**: whether to pretty print the output XML (``true`` or ``false``).  Default is ``false``
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
 
@@ -28,7 +28,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
 .. note::
 
-  See :ref:`metadata-repository-setup` for connecting your metadata repository.
+  See :ref:`repository` for connecting your metadata repository.
 
 - **db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
 - **table**: the name of the metadata records table
@@ -46,7 +46,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
 .. note::
 
-  See :ref:`metadata-repository-setup` for connecting your metadata repository.
+  See :ref:`repository` for connecting your metadata repository.
 
 - **dc_title**: db table column name which maps to dc:title
 - **dc_creator**: db table column name which maps to dc:creator

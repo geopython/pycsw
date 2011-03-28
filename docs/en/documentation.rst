@@ -21,6 +21,7 @@ pycsw |release| Documentation
    transactions
    testing
    clients-servers
+   development
    support
    license
    committers

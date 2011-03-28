@@ -1,5 +1,5 @@
 #
-# spec file for package pycsw (0.0.1)
+# spec file for package pycsw
 #
 # Copyright (c) 2011 Angelos Tzotsos <tzotsos@opensuse.org>
 #

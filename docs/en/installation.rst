@@ -59,9 +59,6 @@ By default, ``default.cfg`` is within root of the pycsw install.  If you have se
    deny from all
   </Files>
 
-
-.. include:: ../../COMMITTERS.txt
-
 .. _`lxml`: http://lxml.de/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`Shapely`: http://trac.gispython.org/lab/wiki/Shapely
