@@ -50,4 +50,4 @@ Supported Operations
 .. _`OGC OWS Common`: http://www.opengeospatial.org/standards/common
 .. _`Dublin Core`: http://www.dublincore.org/
 .. _`OGC CITE CSW`: http://cite.opengeospatial.org/test_engine/csw/2.0.2
-.. _`SOAP`: http://www.w3.org/TR/SOAP/
+.. _`SOAP`: http://www.w3.org/TR/soap/
