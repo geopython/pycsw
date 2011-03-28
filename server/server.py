@@ -426,6 +426,13 @@ class Csw(object):
                         etree.SubElement(param,
                         util.nspath_eval('ows:Value')).text = val
 
+                param = etree.SubElement(oper,
+                util.nspath_eval('ows:Constraint'), name = 'CoreQueryables')
+
+                for val in self.corequeryables.mappings.keys():
+                    etree.SubElement(param,
+                    util.nspath_eval('ows:Value')).text = val
+
             for parameter in config.MODEL['parameters'].keys():
                 param = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows:Parameter'), name = parameter)
