@@ -426,12 +426,13 @@ class Csw(object):
                         etree.SubElement(param,
                         util.nspath_eval('ows:Value')).text = val
 
-                param = etree.SubElement(oper,
-                util.nspath_eval('ows:Constraint'), name = 'CoreQueryables')
+                if operation == 'GetRecords':
+                    param = etree.SubElement(oper,
+                    util.nspath_eval('ows:Constraint'), name = 'SupportedDublinCoreQueryables')
 
-                for val in self.corequeryables.mappings.keys():
-                    etree.SubElement(param,
-                    util.nspath_eval('ows:Value')).text = val
+                    for val in self.corequeryables.mappings.keys():
+                        etree.SubElement(param,
+                        util.nspath_eval('ows:Value')).text = val
 
             for parameter in config.MODEL['parameters'].keys():
                 param = etree.SubElement(operationsmetadata,
