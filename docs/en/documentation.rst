@@ -19,6 +19,7 @@ pycsw |release| Documentation
    distributedsearching
    sitemaps
    transactions
+   profiles
    testing
    clients-servers
    development
