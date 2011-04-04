@@ -1,0 +1,61 @@
+# -*- coding: ISO-8859-15 -*-
+# =================================================================
+#
+# $Id$
+#
+# Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#
+# Copyright (c) 2011 Tom Kralidis
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+# =================================================================
+
+from lxml import etree
+from server import profile
+
+NAMESPACES = {
+    'gco': 'http://www.isotc211.org/2005/gco',
+    'gmd': 'http://www.isotc211.org/2005/gmd'
+}
+
+class APISO(profile.Profile):
+    def __init__(self):
+        profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES, 'gmd:MD_Metadata')
+
+    def extend_config(self, model, namespaces):
+        ''' Extend core configuration '''
+
+        # model
+        model['operations']['DescribeRecord']['parameters']['typeName']['values'].append(self.typename)
+        model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.namespaces['gmd'])
+        model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
+        model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.namespaces['gmd'])
+        model['constraints']['IsoProfiles'] = {}
+        model['constraints']['IsoProfiles']['values'] = [self.namespaces['gmd']]
+
+        # namespaces 
+        namespaces.update(self.namespaces)
+
+    def get_extendedcapabilities(self):
+        ''' Add child to ows:ExtendedCapabilities Element '''
+        pass
