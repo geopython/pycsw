@@ -1,0 +1,39 @@
+.. _profiles:
+
+Profile Plugins
+===============
+
+Overview
+--------
+
+pycsw allows for the implementation of profiles to the core standard. Profiles allow specification of additional metadata format types (i.e. ISO 19139:2007, DIF, Inspire etc.) to the repository, which can be queried and presented to the client.  pycsw supports a plugin architecture while allows for runtime loading of Python code.
+
+All profiles must be placed in ``profiles``.
+
+Requirements
+------------
+
+.. code-block:: none
+
+   pycsw/
+    server/
+      profile.py # defines abstract profile object (properties and methods) and functions to load plugins
+      profiles/ # directory to store profiles
+        __init__.py # empty
+        apiso/ # profile directory
+          apiso.py # profile code
+          ... # supporting files, etc.
+
+Abstract Base Class Definition
+------------------------------
+
+All profile code must be instantiated as a subclass of ``profile.Profile``.  For example:
+
+.. code-block:: python
+
+   from server import profile
+
+   class FooProfile(profile.Profile):
+       profile.Profile.__init__(self, 'foo', '1.0.0', 'My Profile', 'http://example.org/', {'foo': 'http://example.org/foons'}, 'foo:TypeName')
+
+Your profile plugin class (``FooProfile``) must implement methods as per ``profile.Profile``.
