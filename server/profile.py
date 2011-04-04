@@ -51,10 +51,9 @@ class Profile(object):
         ''' Return ExtendedCapabilities child as lxml.etree.Element '''
         raise NotImplementedError
 
-    def describerecord(self):
+    def get_schemacomponent(self):
         ''' Return SchemaComponent child as lxml.etree.Element '''
         raise NotImplementedError
-
 
     def write_record(self):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
