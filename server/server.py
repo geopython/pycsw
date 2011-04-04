@@ -465,8 +465,9 @@ class Csw(object):
             util.nspath_eval('ows:ExtendedCapabilities'))
 
             for prof in self.profiles['loaded'].keys():
-                extended_capabilities.append(
-                self.profiles['loaded'][prof].get_extendedcapabilities())
+                ecnode = self.profiles['loaded'][prof].get_extendedcapabilities()
+                if ecnode is not None:
+                    extended_capabilities.append(ecnode)
 
         # always write out Filter_Capabilities
         self.log.debug('Writing section Filter_Capabilities.')
