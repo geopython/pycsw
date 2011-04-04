@@ -38,8 +38,6 @@ NAMESPACES = {
     'csw': 'http://www.opengis.net/cat/csw/2.0.2',
     'dc' : 'http://purl.org/dc/elements/1.1/',
     'dct': 'http://purl.org/dc/terms/',
-    'gco': 'http://www.isotc211.org/2005/gco',
-    'gmd': 'http://www.isotc211.org/2005/gmd',
     'gml': 'http://www.opengis.net/gml',
     'ogc': 'http://www.opengis.net/ogc',
     'ows': 'http://www.opengis.net/ows',
@@ -116,12 +114,6 @@ MODEL =  {
                 'post': True,
             },
             'parameters': {
-                'resultType': {
-                    'values': ['hits', 'results', 'validate']
-                },
-                'typeNames': {
-                    'values': ['csw:Record']
-                },
                 'outputSchema': {
                     'values': ['http://www.opengis.net/cat/csw/2.0.2']
                 },

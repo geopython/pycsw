@@ -35,7 +35,7 @@ import sys
 import cgi
 import urllib2
 from lxml import etree
-import config, core_queryables, filterencoding, log, repository, util
+import config, core_queryables, filterencoding, log, profile, repository, util
 
 class Csw(object):
     ''' Base CSW server '''
@@ -104,6 +104,18 @@ class Csw(object):
         self.log.debug('Model: %s.' % config.MODEL)
         self.log.debug('Core Queryable mappings: %s.' %
         self.corequeryables.mappings)
+
+        # load profiles
+        self.log.debug('Loading profiles.')
+        self.profiles = profile.load_profiles(
+        os.path.join('server', 'profiles'), profile.Profile)
+
+        for prof in self.profiles['plugins'].keys():
+            self.profiles['loaded'][prof] = self.profiles['plugins'][prof]()
+            self.profiles['loaded'][prof].extend_config(
+            config.MODEL, config.NAMESPACES)
+
+        self.log.debug('Profiles loaded: %s.' % self.profiles.keys())
 
     def dispatch(self):
         ''' Handle incoming HTTP request '''
@@ -428,7 +440,8 @@ class Csw(object):
 
                 if operation == 'GetRecords':
                     param = etree.SubElement(oper,
-                    util.nspath_eval('ows:Constraint'), name = 'SupportedDublinCoreQueryables')
+                    util.nspath_eval('ows:Constraint'),
+                    name = 'SupportedDublinCoreQueryables')
 
                     for val in self.corequeryables.mappings.keys():
                         etree.SubElement(param,
@@ -448,8 +461,12 @@ class Csw(object):
                     etree.SubElement(param,
                     util.nspath_eval('ows:Value')).text = val
             
-            etree.SubElement(operationsmetadata,
+            extended_capabilities = etree.SubElement(operationsmetadata,
             util.nspath_eval('ows:ExtendedCapabilities'))
+
+            for prof in self.profiles['loaded'].keys():
+                extended_capabilities.append(
+                self.profiles['loaded'][prof].get_extendedcapabilities())
 
         # always write out Filter_Capabilities
         self.log.debug('Writing section Filter_Capabilities.')
