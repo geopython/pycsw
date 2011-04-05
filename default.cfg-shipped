@@ -38,7 +38,7 @@ language=en-CA
 maxrecords=10
 #loglevel=DEBUG
 #logfile=/tmp/pycsw.log
-#ogc_schemas_base: http://foo
+#ogc_schemas_base=http://foo
 #federatedcatalogues=http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw
 #xml_pretty_print=true
 #gzip_compresslevel=8

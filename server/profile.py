@@ -34,7 +34,8 @@ import os
 
 class Profile(object):
     ''' base Profile class '''
-    def __init__(self, name, version, title, url, namespaces, typename):
+    def __init__(self, name, version, title, url,
+    namespaces, typename, outputschema):
         ''' Initialize profile '''
         self.name = name
         self.version = version
@@ -42,6 +43,7 @@ class Profile(object):
         self.url = url
         self.namespaces = namespaces
         self.typename = typename
+        self.outputschema = outputschema
 
     def extend_config(self, model, namespaces):
         ''' Extend config.MODEL and config.NAMESPACES '''

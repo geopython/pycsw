@@ -111,11 +111,13 @@ class Csw(object):
         os.path.join('server', 'profiles'), profile.Profile)
 
         for prof in self.profiles['plugins'].keys():
-            self.profiles['loaded'][prof] = self.profiles['plugins'][prof]()
-            self.profiles['loaded'][prof].extend_config(
+            tmp = self.profiles['plugins'][prof]()
+            key = tmp.outputschema  # to ref by outputschema
+            self.profiles['loaded'][key] = tmp
+            self.profiles['loaded'][key].extend_config(
             config.MODEL, config.NAMESPACES)
 
-        self.log.debug('Profiles loaded: %s.' % self.profiles.keys())
+        self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
 
     def dispatch(self):
         ''' Handle incoming HTTP request '''

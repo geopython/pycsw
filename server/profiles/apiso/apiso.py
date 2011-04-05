@@ -40,7 +40,7 @@ NAMESPACES = {
 
 class APISO(profile.Profile):
     def __init__(self):
-        profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES, 'gmd:MD_Metadata')
+        profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES, 'gmd:MD_Metadata', NAMESPACES['gmd'])
 
     def extend_config(self, model, namespaces):
         ''' Extend core configuration '''
