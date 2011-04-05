@@ -35,13 +35,13 @@ import os
 class Profile(object):
     ''' base Profile class '''
     def __init__(self, name, version, title, url,
-    namespaces, typename, outputschema):
+    namespace, typename, outputschema):
         ''' Initialize profile '''
         self.name = name
         self.version = version
         self.title = title
         self.url = url
-        self.namespaces = namespaces
+        self.namespace = namespace
         self.typename = typename
         self.outputschema = outputschema
 
