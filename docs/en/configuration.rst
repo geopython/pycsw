@@ -23,6 +23,12 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributedsearching` for more details)
 - **xml_pretty_print**: whether to pretty print the output XML (``true`` or ``false``).  Default is ``false``
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
+- **transactions**: whether to enable transactions (``true`` or ``false``).  Default is ``false``
+- **transactions_ips**: comma delimited list of IP addresses which can perform transactions
+
+.. note::
+
+  See :ref:`transactions` for more details.
 
 **[repository]**
 
@@ -32,15 +38,6 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
 - **db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
 - **table**: the name of the metadata records table
-
-**[transactions]**
-
-.. note::
-
-  See :ref:`transactions` for more details.
-
-- **enabled**: whether to enable transactions (``true`` or ``false``).  Default is ``false``
-- **ips**: comma delimited list of IP addresses which can perform transactions
 
 **[corequeryables]**
 
