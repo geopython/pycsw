@@ -39,7 +39,7 @@ from server import config, repository, util
 # get configuration and init repo connection
 CFG = config.get_config('default.cfg')
 REPO = repository.Repository(CFG['repository']['db'],
-CFG['repository']['records_table'])
+CFG['repository']['db_table'])
 
 # get all records
 RECORDS = REPO.query()
