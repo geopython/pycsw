@@ -42,10 +42,8 @@ maxrecords=10
 #federatedcatalogues=http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw
 #xml_pretty_print=true
 #gzip_compresslevel=8
-
-[transactions]
-enabled=false
-ips=127.0.0.1
+transactions=false
+transactions_ips=127.0.0.1
 
 [repository]
 db=sqlite:////path/to/pycsw/data/cite/dc.db
