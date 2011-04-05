@@ -904,11 +904,12 @@ class Csw(object):
     def transaction(self):
         ''' Handle Transaction request '''
 
-        if self.config['transactions']['enabled'] != 'true':
+        if self.config['server']['transactions'] != 'true':
             return self.exceptionreport('OperationNotSupported',
             'transaction', 'Transaction operations are not supported')
         ipaddress = os.environ['REMOTE_ADDR']
-        if ipaddress not in self.config['transactions']['ips'].split(','):
+        if ipaddress not in \
+        self.config['server']['transactions_ips'].split(','):
             return self.exceptionreport('NoApplicableCode', 'transaction',
             'Transactions not enabled from this IP address: %s' % ipaddress)
 
@@ -924,11 +925,12 @@ class Csw(object):
     def harvest(self):
         ''' Handle Harvest request '''
 
-        if self.config['transactions']['enabled'] != 'true':
+        if self.config['server']['transactions'] != 'true':
             return self.exceptionreport('OperationNotSupported', 'harvest',
             'Harvest is not supported')
         ipaddress = os.environ['REMOTE_ADDR']
-        if ipaddress not in self.config['transactions']['ips'].split(','):
+        if ipaddress not in \
+        self.config['server']['transactions_ips'].split(','):
             return self.exceptionreport('NoApplicableCode', 'harvest',
             'Harvest operations are not enabled from this IP address: %s' %
             ipaddress)
@@ -1327,9 +1329,8 @@ class Csw(object):
 
     def _gen_transactions(self):
         ''' Update config.MODEL with CSW-T advertising '''
-        if (self.config.has_key('transactions') is True and
-            self.config['transactions'].has_key('enabled') is True and
-            self.config['transactions']['enabled'] == 'true'):
+        if (self.config['server'].has_key('transactions') is True and
+            self.config['server']['transactions'] == 'true'):
             config.MODEL['operations']['Transaction'] = {}
             config.MODEL['operations']['Transaction']['methods'] = {}
             config.MODEL['operations']['Transaction']['methods']['get'] = False
