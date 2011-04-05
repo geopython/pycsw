@@ -32,33 +32,26 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
   See :ref:`repository` for connecting your metadata repository.
 
+- **typename**: the typename of the repository (csw:Record)
 - **db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
-- **table**: the name of the metadata records table
-
-**[corequeryables]**
-
-.. note::
-
-  See :ref:`repository` for connecting your metadata repository.
-
-- **dc_title**: db table column name which maps to dc:title
-- **dc_creator**: db table column name which maps to dc:creator
-- **dc_subject**: db table column name which maps to dc:subject
-- **dct_abstract**: db table column name which maps to dct:abstract
-- **dc_publisher**: db table column name which maps to dc:publisher
-- **dc_contributor**: db table column name which maps to dc:contributor
-- **dct_modified**: db table column name which maps to dc:modified
-- **dc_type**: db table column name which maps to dc:type
-- **dc_format**: db table column name which maps to dc:format
-- **dc_identifier**: db table column name which maps to dc:identifier
-- **dc_source**: db table column name which maps to dc:source
-- **dc_language**: db table column name which maps to dc:language
-- **dc_relation**: db table column name which maps to dc:relation
-- **dc_rights**: db table column name which maps to dc:rights
-- **ows_BoundingBox**: db table column name which stores the geometry (in format 'minx,miny,maxx,maxy')
-- **csw_AnyText**: db table column name which stores the full XML metadata record (for fulltext queries)
-
-- **dc_date**: db table column name which maps to dc:date
+- **db_table**: the name of the metadata records table
+- **cq_dc_title**: db table column name which maps to dc:title
+- **cq_dc_creator**: db table column name which maps to dc:creator
+- **cq_dc_subject**: db table column name which maps to dc:subject
+- **cq_dct_abstract**: db table column name which maps to dct:abstract
+- **cq_dc_publisher**: db table column name which maps to dc:publisher
+- **cq_dc_contributor**: db table column name which maps to dc:contributor
+- **cq_dct_modified**: db table column name which maps to dc:modified
+- **cq_dc_type**: db table column name which maps to dc:type
+- **cq_dc_format**: db table column name which maps to dc:format
+- **cq_dc_identifier**: db table column name which maps to dc:identifier
+- **cq_dc_source**: db table column name which maps to dc:source
+- **cq_dc_language**: db table column name which maps to dc:language
+- **cq_dc_relation**: db table column name which maps to dc:relation
+- **cq_dc_rights**: db table column name which maps to dc:rights
+- **cq_ows_BoundingBox**: db table column name which stores the geometry (in format 'minx,miny,maxx,maxy')
+- **cq_csw_AnyText**: db table column name which stores the full XML metadata record (for fulltext queries)
+- **cq_dc_date**: db table column name which maps to dc:date
 
 **[identification]**
 
