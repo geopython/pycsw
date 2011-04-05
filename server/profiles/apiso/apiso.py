@@ -40,22 +40,26 @@ NAMESPACES = {
 
 class APISO(profile.Profile):
     def __init__(self):
-        profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES, 'gmd:MD_Metadata', NAMESPACES['gmd'])
+        profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES['gmd'], 'gmd:MD_Metadata', NAMESPACES['gmd'])
 
     def extend_config(self, model, namespaces):
         ''' Extend core configuration '''
 
         # model
         model['operations']['DescribeRecord']['parameters']['typeName']['values'].append(self.typename)
-        model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.namespaces['gmd'])
+        model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.namespace)
         model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
-        model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.namespaces['gmd'])
+        model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.namespace)
         model['constraints']['IsoProfiles'] = {}
-        model['constraints']['IsoProfiles']['values'] = [self.namespaces['gmd']]
+        model['constraints']['IsoProfiles']['values'] = [self.namespace]
 
         # namespaces 
-        namespaces.update(self.namespaces)
+        namespaces.update(NAMESPACES)
 
     def get_extendedcapabilities(self):
         ''' Add child to ows:ExtendedCapabilities Element '''
         pass
+
+    def get_schemacomponent(self):
+        ''' Return schema as lxml.etree.Element '''
+        return etree.Element('TODO')

@@ -514,14 +514,14 @@ class Csw(object):
     
     def describerecord(self):
         ''' Handle DescribeRecord request '''
-        csw = False
     
-        if self.kvp.has_key('typename') and len(self.kvp['typename']) > 0:
-            for typename in self.kvp['typename']:
-                if typename == 'csw:Record':  # return only csw
-                    csw = True
-        else:
-            csw = True
+        if self.kvp.has_key('typename') is False or \
+        len(self.kvp['typename']) == 0:
+        # set to return all typenames
+            self.kvp['typename'].append('csw:Record')
+            for prof in self.profiles['loaded'].keys():
+                self.kvp['typename'].append(
+                self.profiles['loaded'][prof].typename)
     
         if (self.kvp.has_key('outputformat') and
             self.kvp['outputformat'] not in
@@ -546,16 +546,30 @@ class Csw(object):
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
         (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
 
-        if csw is True:
-            self.log.debug('Writing csw:Record schema.')
-            schemacomponent = etree.SubElement(node,
-            util.nspath_eval('csw:SchemaComponent'),
-            schemaLanguage='XMLSCHEMA',
-            targetNamespace = config.NAMESPACES['csw'])
-            dublincore = etree.parse(os.path.join(self.config['server']['home'],
-            'etc', 'schemas', 'ogc', 'csw', '2.0.2', 'record.xsd')).getroot()
+        for typename in self.kvp['typename']:
+            if typename == 'csw:Record':   # load core schema    
+                self.log.debug('Writing csw:Record schema.')
+                schemacomponent = etree.SubElement(node,
+                util.nspath_eval('csw:SchemaComponent'),
+                schemaLanguage='XMLSCHEMA',
+                targetNamespace = config.NAMESPACES['csw'])
+                dublincore = etree.parse(os.path.join(
+                self.config['server']['home'],
+                'etc', 'schemas', 'ogc', 'csw',
+                '2.0.2', 'record.xsd')).getroot()
 
-            schemacomponent.append(dublincore)
+                schemacomponent.append(dublincore)
+
+            for prof in self.profiles['loaded'].keys():
+                if self.profiles['loaded'][prof].typename == typename:
+                    scnode = self.profiles['loaded'][prof].get_schemacomponent()
+                    if scnode is not None:
+                        schemacomponent = etree.SubElement(node,
+                        util.nspath_eval('csw:SchemaComponent'),
+                        schemaLanguage='XMLSCHEMA',
+                        targetNamespace = self.profiles['loaded'][prof].namespace)
+
+                        schemacomponent.append(scnode)
 
         return node
     
