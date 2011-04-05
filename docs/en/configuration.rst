@@ -19,16 +19,12 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **maxrecords**: the maximum number of records to return by default
 - **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels for more details)
 - **logfile**: the full file path to the logfile
-- **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net).
+- **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net)
 - **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributedsearching` for more details)
 - **xml_pretty_print**: whether to pretty print the output XML (``true`` or ``false``).  Default is ``false``
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
-- **transactions**: whether to enable transactions (``true`` or ``false``).  Default is ``false``
-- **transactions_ips**: comma delimited list of IP addresses which can perform transactions
-
-.. note::
-
-  See :ref:`transactions` for more details.
+- **transactions**: whether to enable transactions (``true`` or ``false``).  Default is ``false``.  See :ref:`transactions` for more details
+- **transactions_ips**: comma delimited list of IP addresses which can perform transactions.  See :ref:`transactions` for more details
 
 **[repository]**
 
