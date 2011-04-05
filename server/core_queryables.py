@@ -36,14 +36,15 @@ class CoreQueryables(object):
         ''' Generate Core Queryables db and obj bindings '''
         self.typename = 'csw:Record'
         self.mappings = {}
-        table = config['repository']['records_table']
-        for cqm in config['corequeryables']:
-            k = cqm.replace('_',':') 
-            cqv = config['corequeryables'][cqm]
-            val = '%s_%s' % (table, cqv)
-            self.mappings[k] = {}
-            self.mappings[k]['db_col'] = val
-            self.mappings[k]['obj_attr'] = cqv
+        table = config['repository']['db_table']
+        for cqm in config['repository']:
+            if cqm.find('cq_') != -1:  # it's a cq
+                k = cqm.replace('cq_','').replace('_',':') 
+                cqv = config['repository'][cqm]
+                val = '%s_%s' % (table, cqv)
+                self.mappings[k] = {}
+                self.mappings[k]['db_col'] = val
+                self.mappings[k]['obj_attr'] = cqv
 
     def get_db_col(self, term):
         '''' Return database column of core queryable '''

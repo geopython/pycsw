@@ -88,7 +88,7 @@ class Csw(object):
 
         # initialize connection to repository
         self.database = repository.Repository(self.config['repository']['db'],
-        self.config['repository']['records_table'])
+        self.config['repository']['db_table'])
 
         # generate distributed search model, if specified in config
         if self.config['server'].has_key('federatedcatalogues') is True:

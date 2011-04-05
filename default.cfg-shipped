@@ -46,27 +46,26 @@ transactions=false
 transactions_ips=127.0.0.1
 
 [repository]
-db=sqlite:////path/to/pycsw/data/cite/dc.db
-records_table=records
-
-[corequeryables]
-dc_title=title
-dc_creator=creator
-dc_subject=subject
-dct_abstract=abstract
-dc_publisher=publisher
-dc_contributor=contributor
-dct_modified=modified
-dc_date=date
-dc_type=type
-dc_format=format
-dc_identifier=identifier
-dc_source=source
-dc_language=language
-dc_relation=relation
-ows_BoundingBox=bbox
-dc_rights=rights
-csw_AnyText=csw_anytext
+typename=csw:Record
+db=sqlite:////usr/local/wwwsites/apache/devgeo.cciw.ca/htdocs/pycsw/trunk/data/cite/dc.db
+db_table=records
+cq_dc_title=title
+cq_dc_creator=creator
+cq_dc_subject=subject
+cq_dct_abstract=abstract
+cq_dc_publisher=publisher
+cq_dc_contributor=contributor
+cq_dct_modified=modified
+cq_dc_date=date
+cq_dc_type=type
+cq_dc_format=format
+cq_dc_identifier=identifier
+cq_dc_source=source
+cq_dc_language=language
+cq_dc_relation=relation
+cq_ows_BoundingBox=bbox
+cq_dc_rights=rights
+cq_csw_AnyText=csw_anytext
 
 [identification]
 title=pycsw Geospatial Catalogue
