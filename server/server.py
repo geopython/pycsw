@@ -86,8 +86,11 @@ class Csw(object):
         else:
             self.gzip_compresslevel = 9
 
-        # initialize connection to repository
-        self.database = repository.Repository(self.config['repository']['db'],
+        # initialize connection to main repository
+        # others are populated later via profile plugins
+        self.repos = {}
+        self.repos[self.config['repository']['typename']] = \
+        repository.Repository(self.config['repository']['db'],
         self.config['repository']['db_table'])
 
         # generate distributed search model, if specified in config
@@ -114,8 +117,8 @@ class Csw(object):
             tmp = self.profiles['plugins'][prof]()
             key = tmp.outputschema  # to ref by outputschema
             self.profiles['loaded'][key] = tmp
-            self.profiles['loaded'][key].extend_config(
-            config.MODEL, config.NAMESPACES)
+            self.profiles['loaded'][key].extend_core(
+            config.MODEL, config.NAMESPACES, self.repos)
 
         self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
 
@@ -617,9 +620,9 @@ class Csw(object):
 
                 try:
                     tmp = self.corequeryables.mappings[pname]['obj_attr']
-                    self.log.debug('Querying database on property %s (%s).' %
+                    self.log.debug('Querying repository on property %s (%s).' %
                     (pname, tmp))
-                    results = self.database.query(propertyname=tmp)
+                    results = self.repos['csw:Record'].query(propertyname=tmp)
                     self.log.debug('Results: %s' %str(len(results)))
                     listofvalues = etree.SubElement(domainvalue,
                     util.nspath_eval('csw:ListOfValues'))
@@ -753,12 +756,12 @@ class Csw(object):
         if self.kvp.has_key('startposition') is False:
             self.kvp['startposition'] = 1
 
-        self.log.debug('Querying database with filter: %s,\
+        self.log.debug('Querying repository with filter: %s,\
         cql: %s, sortby: %s.' %
         (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby']))
 
         try:
-            results = self.database.query(flt = self.kvp['filter'],
+            results = self.repos['csw:Record'].query(flt = self.kvp['filter'],
             cql = self.kvp['cql'], sortby=self.kvp['sortby'])
         except Exception, err:
             return self.exceptionreport('InvalidParameterValue', 'constraint',
@@ -886,8 +889,8 @@ class Csw(object):
             else:
                 self.kvp['elementsetname'] = self.kvp['elementsetname']
 
-        self.log.debug('Querying database with ids: %s.' % ids)
-        results = self.database.query(ids=ids)
+        self.log.debug('Querying repository with ids: %s.' % ids)
+        results = self.repos['csw:Record'].query(ids=ids)
 
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'),
         nsmap = config.NAMESPACES)
