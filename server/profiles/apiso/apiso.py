@@ -33,6 +33,9 @@
 from lxml import etree
 from server import profile
 
+DB = 'sqlite:////path/to/data/iso-inspire/iso-inspire.db'
+DB_TABLE = 'md_metadata'
+
 NAMESPACES = {
     'gco': 'http://www.isotc211.org/2005/gco',
     'gmd': 'http://www.isotc211.org/2005/gmd'
@@ -42,7 +45,7 @@ class APISO(profile.Profile):
     def __init__(self):
         profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES['gmd'], 'gmd:MD_Metadata', NAMESPACES['gmd'])
 
-    def extend_config(self, model, namespaces):
+    def extend_core(self, model, namespaces, databases):
         ''' Extend core configuration '''
 
         # model
@@ -55,6 +58,12 @@ class APISO(profile.Profile):
 
         # namespaces 
         namespaces.update(NAMESPACES)
+
+        # databases
+
+        databases[self.typename] = {}
+        databases[self.typename]['db'] = DB
+        databases[self.typename]['db_table'] = DB_TABLE
 
     def get_extendedcapabilities(self):
         ''' Add child to ows:ExtendedCapabilities Element '''

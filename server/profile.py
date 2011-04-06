@@ -45,7 +45,7 @@ class Profile(object):
         self.typename = typename
         self.outputschema = outputschema
 
-    def extend_config(self, model, namespaces):
+    def extend_core(self, model, namespaces):
         ''' Extend config.MODEL and config.NAMESPACES '''
         raise NotImplementedError
 
