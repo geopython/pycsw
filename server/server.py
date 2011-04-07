@@ -531,6 +531,7 @@ class Csw(object):
         if self.kvp.has_key('typename') is False or \
         len(self.kvp['typename']) == 0:
         # set to return all typenames
+            self.kvp['typename'] = []
             self.kvp['typename'].append('csw:Record')
             for prof in self.profiles['loaded'].keys():
                 self.kvp['typename'].append(
