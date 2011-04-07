@@ -452,6 +452,16 @@ class Csw(object):
                         etree.SubElement(param,
                         util.nspath_eval('ows:Value')).text = val
 
+                    if len(self.profiles['plugins'].keys()) > 0:
+                        for con in config.MODEL[\
+                        'operations']['GetRecords']['constraints'].keys():
+                            param = etree.SubElement(oper,
+                            util.nspath_eval('ows:Constraint'), name = con)
+                            for q in config.MODEL['operations']\
+                            ['GetRecords']['constraints'][con]['values']:
+                                etree.SubElement(param,
+                                util.nspath_eval('ows:Value')).text = q
+
             for parameter in config.MODEL['parameters'].keys():
                 param = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows:Parameter'), name = parameter)

@@ -4,8 +4,10 @@
 # $Id$
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#                Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2011 Tom Kralidis
+# Copyright (c) 2011 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -30,11 +32,9 @@
 #
 # =================================================================
 
+import os
 from lxml import etree
-from server import profile
-
-DB = 'sqlite:////path/to/data/iso-inspire/iso-inspire.db'
-DB_TABLE = 'md_metadata'
+from server import profile, config, core_queryables
 
 NAMESPACES = {
     'gco': 'http://www.isotc211.org/2005/gco',
@@ -44,17 +44,29 @@ NAMESPACES = {
 class APISO(profile.Profile):
     def __init__(self):
         profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES['gmd'], 'gmd:MD_Metadata', NAMESPACES['gmd'])
+        self.config=config.get_config(os.path.join('server', 'profiles', 'apiso', 'apiso.cfg'))
+        
+        self.corequeryables = core_queryables.CoreQueryables(self.config)
+        
 
     def extend_core(self, model, namespaces, databases):
         ''' Extend core configuration '''
 
         # model
         model['operations']['DescribeRecord']['parameters']['typeName']['values'].append(self.typename)
-        model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.namespace)
+        model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.outputschema)
         model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
-        model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.namespace)
+        model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.outputschema)
         model['constraints']['IsoProfiles'] = {}
         model['constraints']['IsoProfiles']['values'] = [self.namespace]
+        model['operations']['GetRecords']['constraints'] = {
+                    'SupportedISOQueryables': {
+                        'values': ['apiso:RevisionDate','apiso:AlternateTitle','apiso:CreationDate','apiso:PublicationDate','apiso:OrganisationName','apiso:HasSecurityConstraints','apiso:Language','apiso:ResourceIdentifier','apiso:ParentIdentifier','apiso:KeywordType']
+                    },
+                    'AdditionalQueryables': {
+                        'values': ['apiso:TopicCategory','apiso:ResourceLanguage','apiso:GeographicDescriptionCode','apiso:Denominator','apiso:DistanceValue','apiso:DistanceUOM','apiso:TempExtent_begin', 'apiso:TempExtent_end']
+                    }
+                }
 
         # namespaces 
         namespaces.update(NAMESPACES)
@@ -62,8 +74,8 @@ class APISO(profile.Profile):
         # databases
 
         databases[self.typename] = {}
-        databases[self.typename]['db'] = DB
-        databases[self.typename]['db_table'] = DB_TABLE
+        databases[self.typename]['db'] = self.config['repository']['db']
+        databases[self.typename]['db_table'] = self.config['repository']['db_table']
 
     def get_extendedcapabilities(self):
         ''' Add child to ows:ExtendedCapabilities Element '''
@@ -71,4 +83,9 @@ class APISO(profile.Profile):
 
     def get_schemacomponent(self):
         ''' Return schema as lxml.etree.Element '''
-        return etree.Element('TODO')
+        schema = etree.parse(os.path.join(
+                'server', 'profiles', 'apiso',
+                'etc', 'schemas', 'ogc', 'iso', '19139',
+                '20060504', 'gmd', 'identification.xsd')).getroot()
+
+        return schema
