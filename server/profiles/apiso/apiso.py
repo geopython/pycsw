@@ -34,7 +34,7 @@
 
 import os
 from lxml import etree
-from server import profile, config, core_queryables
+from server import profile, config, core_queryables, util
 
 NAMESPACES = {
     'gco': 'http://www.isotc211.org/2005/gco',
@@ -77,7 +77,9 @@ class APISO(profile.Profile):
 
     def get_extendedcapabilities(self):
         ''' Add child to ows:ExtendedCapabilities Element '''
-        pass
+        extended_capabilities = etree.Element(
+                util.nspath_eval('ows:ExtendedCapabilities'))
+        return extended_capabilities
 
     def get_schemacomponent(self):
         ''' Return schema as lxml.etree.Element '''

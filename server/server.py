@@ -480,15 +480,15 @@ class Csw(object):
                     etree.SubElement(param,
                     util.nspath_eval('ows:Value')).text = val
             
-            extended_capabilities = etree.SubElement(operationsmetadata,
-            util.nspath_eval('ows:ExtendedCapabilities'))
-
-            if self.profiles is not None:
+            if self.profiles is None:
+                extended_capabilities = etree.SubElement(operationsmetadata,
+                util.nspath_eval('ows:ExtendedCapabilities'))
+            else:
                 for prof in self.profiles['loaded'].keys():
                     ecnode = \
                     self.profiles['loaded'][prof].get_extendedcapabilities()
                     if ecnode is not None:
-                        extended_capabilities.append(ecnode)
+                        operationsmetadata.append(ecnode)
 
         # always write out Filter_Capabilities
         self.log.debug('Writing section Filter_Capabilities.')
