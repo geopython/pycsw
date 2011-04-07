@@ -1,0 +1,63 @@
+# =================================================================
+#
+# $Id$
+#
+# Authors: Angelos Tzotsos <tzotsos@gmail.com>
+#
+# Copyright (c) 2011 Angelos Tzotsos
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+# =================================================================
+
+[repository]
+typename=gmd:MD_Metadata
+#db=sqlite:////srv/www/htdocs/pycsw/server/profiles/apiso/data/apiso.db
+db=sqlite://///home/kalxas/public_html/pycsw/server/profiles/apiso/data/apiso.db
+db_table=md_metadata
+cq_apiso_Subject=subject
+cq_apiso_Title=title
+cq_apiso_Abstract=abstract
+cq_apiso_Format=format
+cq_apiso_Identifier=resource_identifier
+cq_apiso_Modified=date
+cq_apiso_Type=type
+cq_apiso_BoundingBox=bbox
+cq_apiso_CRS=crs
+cq_apiso_RevisionDate=revision_date
+cq_apiso_AlternateTitle=alternate_title
+cq_apiso_CreationDate=creation_date
+cq_apiso_PublicationDate=publication_date
+cq_apiso_OrganisationName=organisation_name
+cq_apiso_HasSecurityConstraints=conditions_access_use
+cq_apiso_Language=language
+cq_apiso_ParentIdentifier=parent_identifier
+cq_apiso_KeywordType=keyword_type
+cq_apiso_TopicCategory=topic_category
+cq_apiso_ResourceLanguage=resource_language
+cq_apiso_GeographicDescriptionCode=geographic_description_code
+cq_apiso_Denominator=scale_denominator
+cq_apiso_DistanceValue=distance_value
+cq_apiso_DistanceUOM=distance_unit
+cq_apiso_TempExtend_begin=temporal_extend_begin
+cq_apiso_TempExtend_End=temporal_extend_end
+cq_apiso_AnyText=csw_anytext
