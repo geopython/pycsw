@@ -37,3 +37,9 @@ All profile code must be instantiated as a subclass of ``profile.Profile``.  For
        profile.Profile.__init__(self, 'foo', '1.0.0', 'My Profile', 'http://example.org/', {'foo': 'http://example.org/foons'}, 'foo:TypeName')
 
 Your profile plugin class (``FooProfile``) must implement methods as per ``profile.Profile``.
+
+Enabling Profiles
+-----------------
+
+All profiles are disabled by default.  To specify profiles at runtime, set the server.profiles value in the :ref:`configuration` to the name of the package (in ``profiles/``).  To enable multiple profiles, specify as a comma separated value.  See :ref:`configuration` for more information.
+

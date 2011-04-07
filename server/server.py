@@ -54,6 +54,7 @@ class Csw(object):
         self.soap = False
         self.request = None
         self.exception = False
+        self.profiles = None
 
         # configure logging
         try:
@@ -110,17 +111,20 @@ class Csw(object):
 
         # load profiles
         self.log.debug('Loading profiles.')
-        self.profiles = profile.load_profiles(
-        os.path.join('server', 'profiles'), profile.Profile)
 
-        for prof in self.profiles['plugins'].keys():
-            tmp = self.profiles['plugins'][prof]()
-            key = tmp.outputschema  # to ref by outputschema
-            self.profiles['loaded'][key] = tmp
-            self.profiles['loaded'][key].extend_core(
-            config.MODEL, config.NAMESPACES, self.repos)
-
-        self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
+        if self.config['server'].has_key('profiles'):
+            self.profiles = profile.load_profiles(
+            os.path.join('server', 'profiles'), profile.Profile,
+            self.config['server']['profiles'])
+    
+            for prof in self.profiles['plugins'].keys():
+                tmp = self.profiles['plugins'][prof]()
+                key = tmp.outputschema  # to ref by outputschema
+                self.profiles['loaded'][key] = tmp
+                self.profiles['loaded'][key].extend_core(
+                config.MODEL, config.NAMESPACES, self.repos)
+    
+            self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
 
     def dispatch(self):
         ''' Handle incoming HTTP request '''
@@ -452,7 +456,7 @@ class Csw(object):
                         etree.SubElement(param,
                         util.nspath_eval('ows:Value')).text = val
 
-                    if len(self.profiles['plugins'].keys()) > 0:
+                    if self.profiles is not None:
                         for con in config.MODEL[\
                         'operations']['GetRecords']['constraints'].keys():
                             param = etree.SubElement(oper,
@@ -479,10 +483,12 @@ class Csw(object):
             extended_capabilities = etree.SubElement(operationsmetadata,
             util.nspath_eval('ows:ExtendedCapabilities'))
 
-            for prof in self.profiles['loaded'].keys():
-                ecnode = self.profiles['loaded'][prof].get_extendedcapabilities()
-                if ecnode is not None:
-                    extended_capabilities.append(ecnode)
+            if self.profiles is not None:
+                for prof in self.profiles['loaded'].keys():
+                    ecnode = \
+                    self.profiles['loaded'][prof].get_extendedcapabilities()
+                    if ecnode is not None:
+                        extended_capabilities.append(ecnode)
 
         # always write out Filter_Capabilities
         self.log.debug('Writing section Filter_Capabilities.')
@@ -533,9 +539,11 @@ class Csw(object):
         # set to return all typenames
             self.kvp['typename'] = []
             self.kvp['typename'].append('csw:Record')
-            for prof in self.profiles['loaded'].keys():
-                self.kvp['typename'].append(
-                self.profiles['loaded'][prof].typename)
+
+            if self.profiles is not None:
+                for prof in self.profiles['loaded'].keys():
+                    self.kvp['typename'].append(
+                    self.profiles['loaded'][prof].typename)
     
         if (self.kvp.has_key('outputformat') and
             self.kvp['outputformat'] not in
@@ -574,16 +582,17 @@ class Csw(object):
 
                 schemacomponent.append(dublincore)
 
-            for prof in self.profiles['loaded'].keys():
-                if self.profiles['loaded'][prof].typename == typename:
-                    scnode = self.profiles['loaded'][prof].get_schemacomponent()
-                    if scnode is not None:
-                        schemacomponent = etree.SubElement(node,
-                        util.nspath_eval('csw:SchemaComponent'),
-                        schemaLanguage='XMLSCHEMA',
-                        targetNamespace = self.profiles['loaded'][prof].namespace)
-
-                        schemacomponent.append(scnode)
+            if self.profiles is not None:
+                for prof in self.profiles['loaded'].keys():
+                    if self.profiles['loaded'][prof].typename == typename:
+                        scnode = self.profiles['loaded'][prof].get_schemacomponent()
+                        if scnode is not None:
+                            schemacomponent = etree.SubElement(node,
+                            util.nspath_eval('csw:SchemaComponent'),
+                            schemaLanguage='XMLSCHEMA',
+                            targetNamespace = self.profiles['loaded'][prof].namespace)
+    
+                            schemacomponent.append(scnode)
 
         return node
     

@@ -44,6 +44,7 @@ maxrecords=10
 #gzip_compresslevel=8
 transactions=false
 transactions_ips=127.0.0.1
+#profiles=apiso
 
 [repository]
 typename=csw:Record
