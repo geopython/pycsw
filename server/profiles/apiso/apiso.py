@@ -59,14 +59,12 @@ class APISO(profile.Profile):
         model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.outputschema)
         model['constraints']['IsoProfiles'] = {}
         model['constraints']['IsoProfiles']['values'] = [self.namespace]
-        model['operations']['GetRecords']['constraints'] = {
-                    'SupportedISOQueryables': {
+        model['operations']['GetRecords']['constraints']['SupportedISOQueryables'] = {
                         'values': ['apiso:RevisionDate','apiso:AlternateTitle','apiso:CreationDate','apiso:PublicationDate','apiso:OrganisationName','apiso:HasSecurityConstraints','apiso:Language','apiso:ResourceIdentifier','apiso:ParentIdentifier','apiso:KeywordType']
-                    },
-                    'AdditionalQueryables': {
+                    }
+        model['operations']['GetRecords']['constraints']['AdditionalQueryables'] = {
                         'values': ['apiso:TopicCategory','apiso:ResourceLanguage','apiso:GeographicDescriptionCode','apiso:Denominator','apiso:DistanceValue','apiso:DistanceUOM','apiso:TempExtent_begin', 'apiso:TempExtent_end']
                     }
-                }
 
         # namespaces 
         namespaces.update(NAMESPACES)

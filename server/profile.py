@@ -61,13 +61,9 @@ class Profile(object):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
         raise NotImplementedError
 
-def load_profiles(path, cls):
+def load_profiles(path, cls, profiles):
     ''' load CSW profiles, return dict by class name ''' 
 
-    aps = {}
-    aps['plugins'] = {}
-    aps['loaded'] = {}
- 
     def look_for_subclass(modulename):
         module = __import__(modulename)
  
@@ -85,10 +81,14 @@ def load_profiles(path, cls):
             except TypeError:
                 continue
  
+    aps = {}
+    aps['plugins'] = {}
+    aps['loaded'] = {}
+ 
     for root, dirs, files in os.walk(path):
         for name in files:
             if name.endswith('.py') and not name.startswith('__') and \
-                root.find('sbin') == -1:
+                root.find('sbin') == -1 and name.split('.')[0] in profiles:
                 path = os.path.join(root, name)
                 modulename = path.rsplit('.', 1)[0].replace('/', '.')
                 look_for_subclass(modulename)
