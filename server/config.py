@@ -106,6 +106,8 @@ MODEL =  {
                 'ElementSetName': {
                     'values': ['brief','summary','full']
                 }
+            },
+            'constraints': {
             }
         },
         'GetRecordById': {

@@ -25,6 +25,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
 - **transactions**: whether to enable transactions (``true`` or ``false``).  Default is ``false``.  See :ref:`transactions` for more details
 - **transactions_ips**: comma delimited list of IP addresses which can perform transactions.  See :ref:`transactions` for more details
+- **profiles**: comma separated list of profiles to load at runtime (default is none).  See :ref:`profiles` for more details
 
 **[repository]**
 
