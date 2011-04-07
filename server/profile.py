@@ -87,7 +87,8 @@ def load_profiles(path, cls):
  
     for root, dirs, files in os.walk(path):
         for name in files:
-            if name.endswith(".py") and not name.startswith("__"):
+            if name.endswith('.py') and not name.startswith('__') and \
+                root.find('sbin') == -1:
                 path = os.path.join(root, name)
                 modulename = path.rsplit('.', 1)[0].replace('/', '.')
                 look_for_subclass(modulename)
