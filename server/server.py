@@ -535,7 +535,7 @@ class Csw(object):
         ''' Handle DescribeRecord request '''
     
         if self.kvp.has_key('typename') is False or \
-        len(self.kvp['typename']) == 0:
+        len(self.kvp['typename']) == 0:  # missing typename
         # set to return all typenames
             self.kvp['typename'] = []
             self.kvp['typename'].append('csw:Record')
@@ -544,7 +544,10 @@ class Csw(object):
                 for prof in self.profiles['loaded'].keys():
                     self.kvp['typename'].append(
                     self.profiles['loaded'][prof].typename)
-    
+
+        if isinstance(self.kvp['typename'], str):
+            self.kvp['typename'] = self.kvp['typename'].split(',')
+
         if (self.kvp.has_key('outputformat') and
             self.kvp['outputformat'] not in
             config.MODEL['operations']['DescribeRecord']
@@ -585,12 +588,14 @@ class Csw(object):
             if self.profiles is not None:
                 for prof in self.profiles['loaded'].keys():
                     if self.profiles['loaded'][prof].typename == typename:
-                        scnode = self.profiles['loaded'][prof].get_schemacomponent()
+                        scnode = \
+                        self.profiles['loaded'][prof].get_schemacomponent()
                         if scnode is not None:
                             schemacomponent = etree.SubElement(node,
                             util.nspath_eval('csw:SchemaComponent'),
                             schemaLanguage='XMLSCHEMA',
-                            targetNamespace = self.profiles['loaded'][prof].namespace)
+                            targetNamespace = \
+                            self.profiles['loaded'][prof].namespace)
     
                             schemacomponent.append(scnode)
 
