@@ -3,16 +3,14 @@
 Download
 ========
 
-Current Release
----------------
+* Current Release
 
-Past Releases
--------------
+* `All Releases <http://sourceforge.net/projects/pycsw/files/>`_
 
-Development Source
+Source Code
 ------------------
 
-* Current svn trunk: https://pycsw.svn.sourceforge.net/svnroot/pycsw/trunk
+* `SVN repository <https://pycsw.svn.sourceforge.net/svnroot/pycsw/trunk>`_
 
 Packages
 --------
