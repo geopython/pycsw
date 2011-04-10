@@ -80,14 +80,34 @@ class APISO(profile.Profile):
                 util.nspath_eval('ows:ExtendedCapabilities'))
         return extended_capabilities
 
-    def get_schemacomponent(self):
-        ''' Return schema as lxml.etree.Element '''
+    def get_schemacomponents(self):
+        ''' Return schema components as lxml.etree.Element list '''
+
+        node1 = etree.Element(
+        util.nspath_eval('csw:SchemaComponent'),
+        schemaLanguage = 'XMLSCHEMA', targetNamespace = self.namespace,
+        parentSchema = 'gmd.xsd')
+
         schema = etree.parse(os.path.join(
                 'server', 'profiles', 'apiso',
                 'etc', 'schemas', 'ogc', 'iso', '19139',
                 '20060504', 'gmd', 'identification.xsd')).getroot()
 
-        return schema
+        node1.append(schema)
+
+        node2 = etree.Element(
+        util.nspath_eval('csw:SchemaComponent'),
+        schemaLanguage = 'XMLSCHEMA', targetNamespace = self.namespace,
+        parentSchema = 'gmd.xsd')
+
+        schema = etree.parse(os.path.join(
+                'server', 'profiles', 'apiso',
+                'etc', 'schemas', 'ogc', 'iso', '19139',
+                '20060504', 'srv', 'serviceMetadata.xsd')).getroot()
+
+        node2.append(schema)
+
+        return [node1, node2]
     
     def check_getdomain(self, kvp):
         '''Perform extra profile specific checks in the GetDomain request'''
