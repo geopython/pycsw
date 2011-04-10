@@ -70,7 +70,6 @@ class APISO(profile.Profile):
         namespaces.update(NAMESPACES)
 
         # databases
-
         databases[self.typename] = {}
         databases[self.typename]['db'] = self.config['repository']['db']
         databases[self.typename]['db_table'] = self.config['repository']['db_table']
@@ -95,8 +94,9 @@ class APISO(profile.Profile):
         check = {}
         if (kvp.has_key('propertyname') is False or
             kvp.has_key('parametername') is True):
-            text='GetDomain request must only have a PropertyName parameter in APISO. ParameterName is not supported'
-            check = {'error':'true',  'locator':'propertyname',\
-                'code':'WrongParameterValue',  'text':text}
+            text = 'GetDomain request must only have a PropertyName parameter \
+            in APISO. ParameterName is not supported'
+            check = {'error': 'true',  'locator': 'propertyname',\
+                'code': 'InvalidParameterValue',  'text': text}
         return check
     
