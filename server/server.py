@@ -589,17 +589,11 @@ class Csw(object):
             if self.profiles is not None:
                 for prof in self.profiles['loaded'].keys():
                     if self.profiles['loaded'][prof].typename == typename:
-                        scnode = \
-                        self.profiles['loaded'][prof].get_schemacomponent()
-                        if scnode is not None:
-                            schemacomponent = etree.SubElement(node,
-                            util.nspath_eval('csw:SchemaComponent'),
-                            schemaLanguage='XMLSCHEMA',
-                            targetNamespace = \
-                            self.profiles['loaded'][prof].namespace)
-    
-                            schemacomponent.append(scnode)
-
+                        scnodes = \
+                        self.profiles['loaded'][prof].get_schemacomponents()
+                        if scnodes is not None:
+                            for scn in scnodes:
+                                node.append(scn)
         return node
     
     def getdomain(self):

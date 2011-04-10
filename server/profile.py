@@ -55,8 +55,8 @@ class Profile(object):
         ''' Return ExtendedCapabilities child as lxml.etree.Element '''
         raise NotImplementedError
 
-    def get_schemacomponent(self):
-        ''' Return SchemaComponent child as lxml.etree.Element '''
+    def get_schemacomponents(self):
+        ''' Return schema components as lxml.etree.Element list '''
         raise NotImplementedError
     
     def check_getdomain(self, kvp):
