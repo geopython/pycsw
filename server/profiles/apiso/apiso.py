@@ -89,3 +89,14 @@ class APISO(profile.Profile):
                 '20060504', 'gmd', 'identification.xsd')).getroot()
 
         return schema
+    
+    def check_getdomain(self, kvp):
+        '''Perform extra profile specific checks in the GetDomain request'''
+        check = {}
+        if (kvp.has_key('propertyname') is False or
+            kvp.has_key('parametername') is True):
+            text='GetDomain request must only have a PropertyName parameter in APISO. ParameterName is not supported'
+            check = {'error':'true',  'locator':'propertyname',\
+                'code':'WrongParameterValue',  'text':text}
+        return check
+    
