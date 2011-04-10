@@ -4,6 +4,7 @@
 # $Id$
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#                Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2011 Tom Kralidis
 #
@@ -44,6 +45,7 @@ class Profile(object):
         self.namespace = namespace
         self.typename = typename
         self.outputschema = outputschema
+        self.corequeryables = None
 
     def extend_core(self, model, namespaces):
         ''' Extend config.MODEL and config.NAMESPACES '''
@@ -55,6 +57,10 @@ class Profile(object):
 
     def get_schemacomponent(self):
         ''' Return SchemaComponent child as lxml.etree.Element '''
+        raise NotImplementedError
+    
+    def check_getdomain(self, kvp):
+        '''Perform extra profile specific checks in the GetDomain request'''
         raise NotImplementedError
 
     def write_record(self):
