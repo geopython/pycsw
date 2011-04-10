@@ -612,7 +612,8 @@ class Csw(object):
         
         if self.profiles is not None:
             for prof in self.profiles['loaded'].keys():
-                profile_check = self.profiles['loaded'][prof].check_getdomain(self.kvp)
+                profile_check = \
+                self.profiles['loaded'][prof].check_getdomain(self.kvp)
                 if profile_check.has_key('error'):
                     return self.exceptionreport(profile_check['code'],
                     profile_check['locator'], profile_check['text'])
@@ -649,14 +650,17 @@ class Csw(object):
                     for prof in self.profiles['loaded'].keys():
                         self.log.debug('Parsing propertyname %s.' % pname)
                         domainvalue = etree.SubElement(node,
-                        util.nspath_eval('csw:DomainValues'), type = self.profiles['loaded'][prof].typename)
+                        util.nspath_eval('csw:DomainValues'),
+                        type = self.profiles['loaded'][prof].typename)
                         etree.SubElement(domainvalue,
                         util.nspath_eval('csw:PropertyName')).text = pname
                         try:
-                            tmp = self.profiles['loaded'][prof].corequeryables.mappings[pname]['obj_attr']
+                            tmp = self.profiles['loaded']\
+                            [prof].corequeryables.mappings[pname]['obj_attr']
                             self.log.debug('Querying repository on property %s (%s).' %
                             (pname, tmp))
-                            results = self.repos[self.profiles['loaded'][prof].typename].query(propertyname=tmp)
+                            results = self.repos[self.profiles['loaded']\
+                            [prof].typename].query(propertyname = tmp)
                             self.log.debug('Results: %s' %str(len(results)))
                             listofvalues = etree.SubElement(domainvalue,
                             util.nspath_eval('csw:ListOfValues'))
