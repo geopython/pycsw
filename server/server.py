@@ -124,6 +124,11 @@ class Csw(object):
                 self.profiles['loaded'][key] = tmp
                 self.profiles['loaded'][key].extend_core(
                 config.MODEL, config.NAMESPACES, self.repos)
+
+                self.repos[self.profiles['loaded'][key].typename] = \
+                repository.Repository(
+                self.profiles['loaded'][key].config['repository']['db'],
+                self.profiles['loaded'][key].config['repository']['db_table'])
     
             self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
 
@@ -640,31 +645,7 @@ class Csw(object):
 
         if self.kvp.has_key('propertyname'):
             for pname in self.kvp['propertyname'].split(','):
-                if self.profiles is not None:
-                    for prof in self.profiles['loaded'].keys():
-                        self.log.debug('Parsing propertyname %s.' % pname)
-                        domainvalue = etree.SubElement(node,
-                        util.nspath_eval('csw:DomainValues'),
-                        type = self.profiles['loaded'][prof].typename)
-                        etree.SubElement(domainvalue,
-                        util.nspath_eval('csw:PropertyName')).text = pname
-                        try:
-                            tmp = self.profiles['loaded']\
-                            [prof].corequeryables.mappings[pname]['obj_attr']
-                            self.log.debug('Querying repository on property %s (%s).' %
-                            (pname, tmp))
-                            results = self.repos[self.profiles['loaded']\
-                            [prof].typename].query(propertyname = tmp)
-                            self.log.debug('Results: %s' %str(len(results)))
-                            listofvalues = etree.SubElement(domainvalue,
-                            util.nspath_eval('csw:ListOfValues'))
-                            for result in results:
-                                etree.SubElement(listofvalues,
-                                util.nspath_eval('csw:Value')).text = result[0]
-                        except Exception, err:
-                            self.log.debug('No results for propertyname %s: %s.' %
-                            (pname, str(err)))
-                else:
+                if pname in self.corequeryables.mappings.keys():
                     self.log.debug('Parsing propertyname %s.' % pname)
                     domainvalue = etree.SubElement(node,
                     util.nspath_eval('csw:DomainValues'), type = 'csw:Record')
@@ -685,7 +666,34 @@ class Csw(object):
                     except Exception, err:
                         self.log.debug('No results for propertyname %s: %s.' %
                         (pname, str(err)))
-
+                else:
+                    if self.profiles is not None:
+                        for prof in self.profiles['loaded'].keys():
+                            self.log.debug('Parsing propertyname %s.' % pname)
+                            domainvalue = etree.SubElement(node,
+                            util.nspath_eval('csw:DomainValues'),
+                            type = self.profiles['loaded'][prof].typename)
+                            etree.SubElement(domainvalue,
+                            util.nspath_eval('csw:PropertyName')).text = pname
+                            try:
+                                tmp = self.profiles['loaded']\
+                                [prof].corequeryables.mappings[pname]['obj_attr']
+                                self.log.debug(
+                                'Querying repository on property %s (%s).' %
+                                (pname, tmp))
+                                results = self.repos[self.profiles['loaded']\
+                                [prof].typename].query(propertyname = tmp)
+                                self.log.debug('Results: %s' %str(len(results)))
+                                listofvalues = etree.SubElement(domainvalue,
+                                util.nspath_eval('csw:ListOfValues'))
+                                for result in results:
+                                    etree.SubElement(listofvalues,
+                                    util.nspath_eval('csw:Value')).text = result[0]
+                            except Exception, err:
+                                self.log.debug(
+                                'No results for propertyname %s: %s.' %
+                                (pname, str(err)))
+    
         return node
 
     def getrecords(self):
