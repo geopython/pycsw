@@ -459,8 +459,9 @@ class Csw(object):
                     name = 'SupportedDublinCoreQueryables')
 
                     for val in self.corequeryables.mappings.keys():
-                        etree.SubElement(param,
-                        util.nspath_eval('ows:Value')).text = val
+                        if val != 'id':
+                            etree.SubElement(param,
+                            util.nspath_eval('ows:Value')).text = val
 
                     if self.profiles is not None:
                         for con in config.MODEL[\
@@ -945,13 +946,15 @@ class Csw(object):
                 return self.exceptionreport('InvalidParameterValue',
                 'elementsetname', 'Invalid elementsetname parameter %s' %
                 self.kvp['elementsetname'])
-            if self.kvp['elementsetname'] == 'full':
-                self.kvp['elementsetname'] = ''
+            #if self.kvp['elementsetname'] == 'full':
+            #    self.kvp['elementsetname'] = ''
             else:
                 self.kvp['elementsetname'] = self.kvp['elementsetname']
 
         self.log.debug('Querying repository with ids: %s.' % ids)
-        results = self.repos['csw:Record'].query(ids=ids)
+        results = self.repos['csw:Record'].query(ids=ids,
+        propertyname = 
+        self.corequeryables.mappings['id']['obj_attr'])
 
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'),
         nsmap = config.NAMESPACES)
@@ -962,6 +965,22 @@ class Csw(object):
         self.log.debug('Presenting %s records.' % str(len(results)))
         for result in results:
             node.append(self._write_record(result))
+
+        # query against profile repositories
+        if self.profiles is not None:
+            for prof in self.profiles['loaded'].keys():
+                self.log.debug('Querying repository with ids: %s.' % ids)
+                results = \
+                self.repos[self.profiles['loaded'][prof].typename].query(
+                ids=ids, propertyname =
+                self.profiles['loaded'][prof].corequeryables.mappings\
+                ['id']['obj_attr'])
+                self.log.debug('Presenting %s records.' % str(len(results)))
+                for result in results:
+                    node.append(
+                    self.profiles['loaded'][prof].write_record(
+                    result, self.kvp['elementsetname'],
+                    self.kvp['outputschema']))
 
         return node
 
@@ -1234,6 +1253,12 @@ class Csw(object):
                 request['elementsetname'] = tmp.text
             else:
                 request['elementsetname'] = 'summary'
+
+            tmp = doc.find('.').attrib.get('outputSchema')
+            if tmp is not None:
+                request['outputschema'] = tmp
+            else:
+                request['outputschema'] = config.NAMESPACES['csw']
 
         # Transaction
         if request['request'] == 'Transaction':

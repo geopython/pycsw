@@ -41,6 +41,9 @@ NAMESPACES = {
     'gmd': 'http://www.isotc211.org/2005/gmd'
 }
 
+CODELIST = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml'
+CODESPACE = 'ISOTC211/19115'
+
 class APISO(profile.Profile):
     def __init__(self):
         profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES['gmd'], 'gmd:MD_Metadata', NAMESPACES['gmd'])
@@ -60,7 +63,7 @@ class APISO(profile.Profile):
         model['constraints']['IsoProfiles'] = {}
         model['constraints']['IsoProfiles']['values'] = [self.namespace]
         model['operations']['GetRecords']['constraints']['SupportedISOQueryables'] = {
-                        'values': ['apiso:Title','apiso:Abstract','apiso:Subject','apiso:RevisionDate','apiso:AlternateTitle','apiso:CreationDate','apiso:PublicationDate','apiso:OrganisationName','apiso:HasSecurityConstraints','apiso:Language','apiso:ResourceIdentifier','apiso:ParentIdentifier','apiso:KeywordType']
+                        'values': ['apiso:Title','apiso:Abstract','apiso:Subject','apiso:RevisionDate','apiso:AlternateTitle','apiso:CreationDate','apiso:PublicationDate','apiso:OrganisationName','apiso:HasSecurityConstraints','apiso:Language','apiso:ResourceIdentifier','apiso:ParentIdentifier','apiso:KeywordType','apiso:AnyText', 'apiso:BoundingBox']
                     }
         model['operations']['GetRecords']['constraints']['AdditionalQueryables'] = {
                         'values': ['apiso:TopicCategory','apiso:ResourceLanguage','apiso:GeographicDescriptionCode','apiso:Denominator','apiso:DistanceValue','apiso:DistanceUOM','apiso:TempExtent_begin', 'apiso:TempExtent_end']
@@ -120,3 +123,59 @@ class APISO(profile.Profile):
                 'code': 'InvalidParameterValue',  'text': text}
         return check
     
+
+    def write_record(self, result, esn, outputschema):
+        if outputschema == self.namespace:
+            if esn == 'full':
+                xml = getattr(result,
+                self.corequeryables.mappings['apiso:AnyText']['obj_attr'])
+
+                node = etree.fromstring(xml)
+
+            elif esn == 'brief':
+                node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
+                node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+                '%s http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd' % self.namespace 
+
+                # identifier
+                val = getattr(result, self.corequeryables.mappings['apiso:Identifier']['obj_attr'])
+
+                identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
+                tmp = etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
+
+                # hierarchyLevel
+                val = getattr(result, self.corequeryables.mappings['apiso:Type']['obj_attr'])
+
+                hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
+                codeList = '%s#MD_ScopeCode' % CODELIST,
+                codeListValue = val,
+                codeSpace = CODESPACE).text = val
+                
+                # title
+                val = getattr(result, self.corequeryables.mappings['apiso:Title']['obj_attr'])
+                identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
+                tmp = etree.SubElement(identification, util.nspath_eval('gmd:MD_IdentificationInfo'))
+                tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:citation'))
+                tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
+                tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
+                etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
+
+                # bbox extent
+                val = getattr(result, self.corequeryables.mappings['apiso:BoundingBox']['obj_attr'])
+                extent = etree.SubElement(identification, util.nspath_eval('gmd:extent'))
+                tmp = etree.SubElement(extent, util.nspath_eval('gmd:EX_Extent'))
+                tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:geographicElement'))
+                tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:EX_GeographicBoundingBox'))
+                west = etree.SubElement(tmp3, util.nspath_eval('gmd:westBoundLongitude'))
+                east = etree.SubElement(tmp3, util.nspath_eval('gmd:eastBoundLongitude'))
+                north = etree.SubElement(tmp3, util.nspath_eval('gmd:northBoundLatitude'))
+                south = etree.SubElement(tmp3, util.nspath_eval('gmd:southBoundLatitude'))
+
+                bbox = val.split(',')
+                etree.SubElement(west, util.nspath_eval('gco:Decimal')).text = bbox[0]
+                etree.SubElement(south, util.nspath_eval('gco:Decimal')).text = bbox[1]
+                etree.SubElement(east, util.nspath_eval('gco:Decimal')).text = bbox[2]
+                etree.SubElement(north, util.nspath_eval('gco:Decimal')).text = bbox[3]
+        else:
+            node = etree.Element('TODO')
+        return node
