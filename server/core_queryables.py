@@ -34,7 +34,7 @@ class CoreQueryables(object):
     ''' Core Queryables for CSW '''
     def __init__(self, config):
         ''' Generate Core Queryables db and obj bindings '''
-        self.typename = 'csw:Record'
+        self.typename = config['repository']['typename']
         self.mappings = {}
         table = config['repository']['db_table']
         for cqm in config['repository']:
@@ -45,6 +45,11 @@ class CoreQueryables(object):
                 self.mappings[k] = {}
                 self.mappings[k]['db_col'] = val
                 self.mappings[k]['obj_attr'] = cqv
+                # check for identifier field, and set
+                if k.split(':')[1].lower() == 'identifier':
+                    self.mappings['id'] = {}
+                    self.mappings['id']['db_col'] = val
+                    self.mappings['id']['obj_attr'] = cqv
 
     def get_db_col(self, term):
         '''' Return database column of core queryable '''

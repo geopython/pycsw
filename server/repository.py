@@ -59,7 +59,7 @@ class Repository(object):
         ''' Query records from underlying repository '''
         if ids is not None:  # it's a GetRecordById request
             query = self.session.query(
-            self.dataset).filter(self.dataset.identifier.in_(ids))
+            self.dataset).filter(getattr(self.dataset, propertyname).in_(ids))
         elif flt is not None:  # it's a GetRecords with filter
             query = self.session.query(self.dataset).filter(flt.where)
         elif flt is None and propertyname is None and cql is None:
