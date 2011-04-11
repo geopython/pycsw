@@ -60,7 +60,7 @@ class APISO(profile.Profile):
         model['constraints']['IsoProfiles'] = {}
         model['constraints']['IsoProfiles']['values'] = [self.namespace]
         model['operations']['GetRecords']['constraints']['SupportedISOQueryables'] = {
-                        'values': ['apiso:RevisionDate','apiso:AlternateTitle','apiso:CreationDate','apiso:PublicationDate','apiso:OrganisationName','apiso:HasSecurityConstraints','apiso:Language','apiso:ResourceIdentifier','apiso:ParentIdentifier','apiso:KeywordType']
+                        'values': ['apiso:Title','apiso:Abstract','apiso:Subject','apiso:RevisionDate','apiso:AlternateTitle','apiso:CreationDate','apiso:PublicationDate','apiso:OrganisationName','apiso:HasSecurityConstraints','apiso:Language','apiso:ResourceIdentifier','apiso:ParentIdentifier','apiso:KeywordType']
                     }
         model['operations']['GetRecords']['constraints']['AdditionalQueryables'] = {
                         'values': ['apiso:TopicCategory','apiso:ResourceLanguage','apiso:GeographicDescriptionCode','apiso:Denominator','apiso:DistanceValue','apiso:DistanceUOM','apiso:TempExtent_begin', 'apiso:TempExtent_end']
