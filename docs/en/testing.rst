@@ -13,6 +13,6 @@ Compliance benchmarking is done via the OGC `Compliance & Interoperability Testi
 Sample Requests
 ---------------
 
-You can use the pycsw tester via your web browser to perform sample requests against your pycsw install.  The tester is located in ``tester/index.html``.
+You can also use the pycsw tester via your web browser to perform sample requests against your pycsw install.  The tester is located in ``tester/index.html``.
 
 .. _`Compliance & Interoperability Testing & Evaluation Initiative`: http://cite.opengeospatial.org/

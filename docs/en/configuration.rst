@@ -11,7 +11,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
 **[server]**
 
-- **home**: the full file path to pycsw
+- **home**: the full filesystem path to pycsw
 - **url**: the URL of the resulting service
 - **mimetype**: the MIME type when returning HTTP responses
 - **language**: the ISO 639-2 language and country code of the service (e.g. en-CA)
