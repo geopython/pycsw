@@ -6,7 +6,7 @@ Support
 Bugs
 ----
 
-Bugs, enhancements and related issues can be filed on the pycsw `trac`_.  To submit a `bug`_ (you need a sourceforge account), be sure to specify the version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform.  If you are submitting a patch, please enter the keywords ``has-patch`` in the ``Keywords`` field (so tickets with patches can be easily searched on). Also read the :ref:`faq` before submitting.
+Bugs, enhancements and related issues can be filed on the pycsw `trac`_.  To submit a `bug`_ (you need a sourceforge account), be sure to specify the version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform.  If you are submitting a patch, please enter the keywords ``has-patch`` in the ``Keywords`` field (so tickets with patches can be easily filtered). Also read the :ref:`faq` before submitting.
 
 The pycsw source code is available at https://pycsw.svn.sourceforge.net/svnroot/pycsw.  You can browse the source code at at http://sourceforge.net/apps/trac/pycsw/browser.
 
