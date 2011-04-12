@@ -9,10 +9,12 @@ Features
 ========
 
 - fully passes the `OGC CITE CSW`_ test suite (103 tests)
+- support for `ISO Metadata Application Profile 1.0.0`_
 - realtime XML Schema validation
+- extensible profile plugin architecture
 - full transactional capabilities
 - flexible repository configuration
-- federated discovery via distributed searching
+- federated catalogue distributed searching
 
 Standards Support
 -----------------
@@ -46,6 +48,7 @@ Supported Operations
   Transaction,optional,pending,POST (XML) / SOAP
 
 .. _`OGC CSW`: http://www.opengeospatial.org/standards/cat
+.. _`ISO Metadata Application Profile 1.0.0`: http://portal.opengeospatial.org/files/?artifact_id=21460
 .. _`OGC Filter`: http://www.opengeospatial.org/standards/filter
 .. _`OGC OWS Common`: http://www.opengeospatial.org/standards/common
 .. _`Dublin Core`: http://www.dublincore.org/

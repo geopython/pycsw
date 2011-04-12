@@ -6,9 +6,9 @@ Profile Plugins
 Overview
 --------
 
-pycsw allows for the implementation of profiles to the core standard. Profiles allow specification of additional metadata format types (i.e. ISO 19139:2007, DIF, Inspire etc.) to the repository, which can be queried and presented to the client.  pycsw supports a plugin architecture while allows for runtime loading of Python code.
+pycsw allows for the implementation of profiles to the core standard. Profiles allow specification of additional metadata format types (i.e. ISO 19139:2007, DIF, Inspire etc.) to the repository, which can be queried and presented to the client.  pycsw supports a plugin architecture which allows for runtime loading of Python code.
 
-All profiles must be placed in ``profiles``.
+All profiles must be placed in the ``profiles`` directory.
 
 Requirements
 ------------
@@ -36,10 +36,14 @@ All profile code must be instantiated as a subclass of ``profile.Profile``.  For
    class FooProfile(profile.Profile):
        profile.Profile.__init__(self, 'foo', '1.0.0', 'My Profile', 'http://example.org/', {'foo': 'http://example.org/foons'}, 'foo:TypeName')
 
-Your profile plugin class (``FooProfile``) must implement methods as per ``profile.Profile``.
+Your profile plugin class (``FooProfile``) must implement all methods as per ``profile.Profile``.  Profile methods always return ``lxml.etree.Element`` types, or ``None``.
 
 Enabling Profiles
 -----------------
 
 All profiles are disabled by default.  To specify profiles at runtime, set the server.profiles value in the :ref:`configuration` to the name of the package (in ``profiles/``).  To enable multiple profiles, specify as a comma separated value.  See :ref:`configuration` for more information.
 
+Testing
+-------
+
+Profiles must provide a ``tester`` interface, which must provide example requests specific to the profile.
