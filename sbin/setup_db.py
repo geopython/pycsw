@@ -37,13 +37,13 @@ import os
 import sys
 import sqlite3
 
-if len(sys.argv) < 2:
-    print 'Usage: %s <filename.sqlite3>' % sys.argv[0]
+if len(sys.argv) < 3:
+    print 'Usage: %s <ddl file> <filename.sqlite3>' % sys.argv[0]
     sys.exit(1)
 
 WKT4326 = 'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]'
 
-CONN = sqlite3.connect(sys.argv[1])
+CONN = sqlite3.connect(sys.argv[2])
 CURSOR = CONN.cursor()
 
 # create OGC SFSQL database
@@ -72,7 +72,7 @@ CURSOR.execute('''
 
 SQLDDL = os.path.join('..', 'etc', 'schemas', 'sql', 'records.ddl')
 
-CURSOR.executescript(open(SQLDDL).read())
+CURSOR.executescript(open(sys.argv[1]).read())
 
 CONN.commit()
 CURSOR.close()

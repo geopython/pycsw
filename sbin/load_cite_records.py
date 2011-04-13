@@ -39,14 +39,14 @@ import sqlite3
 from lxml import etree
 from owslib.csw import CswRecord
 
-if len(sys.argv) < 2:
-    print 'Usage: %s <filename.sqlite3>' % sys.argv[0]
+if len(sys.argv) < 3:
+    print 'Usage: %s <xml directory path> <filename.sqlite3>' % sys.argv[0]
     sys.exit(1)
 
-CONN = sqlite3.connect(sys.argv[1])
+CONN = sqlite3.connect(sys.argv[2])
 CUR = CONN.cursor()
 
-for r in glob.glob(os.path.join('..', 'data', 'cite', '*.xml')):
+for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
 
     # read dc document
     e = etree.parse(r)
@@ -59,7 +59,7 @@ for r in glob.glob(os.path.join('..', 'data', 'cite', '*.xml')):
         (c.bbox.miny, c.bbox.minx, c.bbox.maxy, c.bbox.maxx)
 
     print 'Inserting csw:Record %s into database %s, table records....' % \
-    (c.identifier, sys.argv[1])
+    (c.identifier, sys.argv[2])
 
     values = (
     c.title,

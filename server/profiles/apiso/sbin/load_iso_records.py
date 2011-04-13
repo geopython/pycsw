@@ -39,13 +39,13 @@ from lxml import etree
 from owslib.iso import *
 
 if len(sys.argv) < 3:
-    print 'Usage: %s <filename.sqlite3> <xml directory path>' % sys.argv[0]
+    print 'Usage: %s <xml directory path> <filename.sqlite3>' % sys.argv[0]
     sys.exit(1)
 
-CONN = sqlite3.connect(sys.argv[1])
+CONN = sqlite3.connect(sys.argv[2])
 CUR = CONN.cursor()
 
-for r in glob.glob(os.path.join(sys.argv[2], '*.xml')):
+for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     # read iso document
     e = etree.parse(r)
     x = etree.parse(r)
@@ -111,7 +111,7 @@ for r in glob.glob(os.path.join(sys.argv[2], '*.xml')):
     
     #insert metadata
     print 'Inserting file %s with GUID %s into database %s, table records....' % \
-    (r,  c.identifier, sys.argv[1])
+    (r,  c.identifier, sys.argv[2])
     
     values = (
     c.identification.title,
