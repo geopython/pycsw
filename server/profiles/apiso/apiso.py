@@ -50,8 +50,7 @@ class APISO(profile.Profile):
         profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES['gmd'], 'gmd:MD_Metadata', NAMESPACES['gmd'])
         self.config=config.get_config(os.path.join('server', 'profiles', 'apiso', 'apiso.cfg'))
         
-        self.corequeryables = core_queryables.CoreQueryables(self.config)
-        
+        self.corequeryables = core_queryables.CoreQueryables(self.config, 'SupportedISOQueryables')
 
     def extend_core(self, model, namespaces, databases):
         ''' Extend core configuration '''
@@ -129,7 +128,7 @@ class APISO(profile.Profile):
             elif esn == 'brief':
                 node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-                '%s http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd' % self.namespace 
+                '%s http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % self.namespace 
 
                 # identifier
                 val = getattr(result, self.corequeryables.mappings['apiso:Identifier']['obj_attr'])

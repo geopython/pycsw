@@ -32,9 +32,10 @@
 
 class CoreQueryables(object):
     ''' Core Queryables for CSW '''
-    def __init__(self, config):
+    def __init__(self, config, name):
         ''' Generate Core Queryables db and obj bindings '''
         self.typename = config['repository']['typename']
+        self.name = name
         self.mappings = {}
         table = config['repository']['db_table']
         for cqm in config['repository']:
