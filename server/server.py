@@ -610,14 +610,6 @@ class Csw(object):
             'parametername', 'Missing value. \
             One of propertyname or parametername must be specified')
         
-        if self.profiles is not None:
-            for prof in self.profiles['loaded'].keys():
-                profile_check = \
-                self.profiles['loaded'][prof].check_getdomain(self.kvp)
-                if profile_check.has_key('error'):
-                    return self.exceptionreport(profile_check['code'],
-                    profile_check['locator'], profile_check['text'])
-
         node = etree.Element(util.nspath_eval('csw:GetDomainResponse'),
         nsmap = config.NAMESPACES)
 
