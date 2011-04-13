@@ -132,6 +132,10 @@ class Csw(object):
                 repository.Repository(
                 self.profiles['loaded'][key].config['repository']['db'],
                 self.profiles['loaded'][key].config['repository']['db_table'])
+
+                self.repos[self.profiles['loaded'][key]\
+                .typename].corequeryables = \
+                self.profiles['loaded'][key].corequeryables
     
             self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
 
@@ -464,7 +468,7 @@ class Csw(object):
 
                     for val in self.repos[self.config['repository']\
                     ['typename']].corequeryables.mappings.keys():
-                        if val != 'id':
+                        if val not in ['_id', '_bbox', '_anytext']:
                             etree.SubElement(param,
                             util.nspath_eval('ows:Value')).text = val
 
@@ -857,7 +861,8 @@ class Csw(object):
         (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby']))
 
         try:
-            results = self.repos['csw:Record'].query(flt = self.kvp['filter'],
+            #results = self.repos['csw:Record'].query(flt = self.kvp['filter'],
+            results = self.repos[self.kvp['typenames'][0]].query(flt = self.kvp['filter'],
             cql = self.kvp['cql'], sortby=self.kvp['sortby'])
         except Exception, err:
             return self.exceptionreport('InvalidParameterValue', 'constraint',
@@ -933,7 +938,13 @@ class Csw(object):
             (self.kvp['startposition'], max1))
 
             for res in results[int(self.kvp['startposition'])-1:int(max1)-1]:
-                searchresults.append(self._write_record(res))
+                if self.kvp['outputschema'] == 'http://www.opengis.net/cat/csw/2.0.2':
+                    searchresults.append(self._write_record(res))
+                else:
+                    searchresults.append(
+                    self.profiles['loaded'][self.kvp['outputschema']].\
+                    write_record(res, self.kvp['elementsetname'],
+                    self.kvp['outputschema']))
 
         if (self.kvp.has_key('distributedsearch') and
             self.kvp['distributedsearch'] == 'TRUE' and
@@ -989,7 +1000,7 @@ class Csw(object):
         results = self.repos['csw:Record'].query(ids=ids,
         propertyname = 
         self.repos[self.config['repository']\
-        ['typename']].corequeryables.mappings['id']['obj_attr'])
+        ['typename']].corequeryables.mappings['_id']['obj_attr'])
 
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'),
         nsmap = config.NAMESPACES)
@@ -1009,7 +1020,7 @@ class Csw(object):
                 self.repos[self.profiles['loaded'][prof].typename].query(
                 ids=ids, propertyname =
                 self.profiles['loaded'][prof].corequeryables.mappings\
-                ['id']['obj_attr'])
+                ['_id']['obj_attr'])
                 self.log.debug('Presenting %s records.' % str(len(results)))
                 for result in results:
                     node.append(
@@ -1247,15 +1258,14 @@ class Csw(object):
                         try:
                             request['filter'] = \
                             filterencoding.Filter(ctype[0],
-                            self.repos[self.config['repository']\
-                            ['typename']].corequeryables.mappings)
+                            self.repos[request['typenames'][0]].corequeryables.mappings)
                         except Exception, err:
                             return 'Invalid Filter request: %s' % err
                     elif ctype[0].tag == util.nspath_eval('csw:CqlText'):
                         self.log.debug('CQL specified: %s.' % ctype[0].text)
                         request['cql'] = \
                         self._cql_update_cq_mappings(ctype[0].text,
-                        self.repos[self.kvp['typenames'][0]].corequeryables.mappings)
+                        self.repos[request['typenames'][0]].corequeryables.mappings)
                     else:
                         return 'ogc:Filter or csw:CqlText is required'
                 except Exception, err:

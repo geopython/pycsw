@@ -39,7 +39,7 @@ def get_bbox(bbox):
     tmp = bbox.find(util.nspath_eval('ogc:PropertyName'))
     if tmp is not None:
         pname = tmp.text
-        if pname not in ['ows:BoundingBox','/ows:BoundingBox']:
+        if pname.find('BoundingBox') == -1:
             raise RuntimeError, ('Invalid ogc:PropertyName: %s' % pname)
         tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml:lowerCorner'))
         if tmp2 is None:
