@@ -964,6 +964,8 @@ class Csw(object):
         if len(self.kvp['id']) < 1:
             return self.exceptionreport('InvalidParameterValue', 'id',
             'Invalid id parameter')
+        if self.kvp.has_key('outputschema') is False:
+            self.kvp['outputschema'] = config.NAMESPACES['csw']
 
         ids = self.kvp['id'].split(',')
 
