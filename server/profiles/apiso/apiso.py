@@ -169,6 +169,102 @@ class APISO(profile.Profile):
                 etree.SubElement(south, util.nspath_eval('gco:Decimal')).text = bbox[1]
                 etree.SubElement(east, util.nspath_eval('gco:Decimal')).text = bbox[2]
                 etree.SubElement(north, util.nspath_eval('gco:Decimal')).text = bbox[3]
+                
+            else:#Summary
+                node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
+                node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+                '%s http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % self.namespace 
+                
+                # identifier
+                val = getattr(result, self.corequeryables.mappings['apiso:Identifier']['obj_attr'])
+
+                identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
+                tmp = etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
+                
+                #language
+                val = getattr(result, self.corequeryables.mappings['apiso:Language']['obj_attr'])
+                lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
+                tmp = etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
+                
+                # hierarchyLevel
+                val = getattr(result, self.corequeryables.mappings['apiso:Type']['obj_attr'])
+                hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
+                codeList = '%s#MD_ScopeCode' % CODELIST,
+                codeListValue = val,
+                codeSpace = CODESPACE).text = val
+                
+                # contact
+                val = getattr(result, self.corequeryables.mappings['apiso:OrganisationName']['obj_attr'])
+                contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
+                CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
+                org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
+                tmp = etree.SubElement(org_name, util.nspath_eval('gco:ChracterString')).text = val
+                
+                # date
+                val = getattr(result, self.corequeryables.mappings['apiso:Modified']['obj_attr'])
+                date = etree.SubElement(node, util.nspath_eval('gmd:dateStamp'))
+                etree.SubElement(date, util.nspath_eval('gco:Date')).text = val
+                
+                #metadata standard name
+                standard = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
+                tmp = etree.SubElement(standard, util.nspath_eval('gco:ChracterString')).text = 'ISO19115'
+                
+                #metadata standard version
+                standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
+                tmp = etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
+                
+                # title
+                val = getattr(result, self.corequeryables.mappings['apiso:Title']['obj_attr'])
+                identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
+                mdidentification = etree.SubElement(identification, util.nspath_eval('gmd:MD_IdentificationInfo'))
+                tmp2 = etree.SubElement(mdidentification, util.nspath_eval('gmd:citation'))
+                tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
+                tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
+                etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
+                
+                #abstract
+                val = getattr(result, self.corequeryables.mappings['apiso:Abstract']['obj_attr'])
+                tmp2 = etree.SubElement(mdidentification, util.nspath_eval('gmd:abstract'))
+                tmp = etree.SubElement(tmp2, util.nspath_eval('gco:ChracterString')).text = val
+                
+                #spatial resolution
+                val = getattr(result, self.corequeryables.mappings['apiso:Denominator']['obj_attr'])
+                tmp = etree.SubElement(mdidentification, util.nspath_eval('gmd:spatialResolution'))
+                tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:spatialResolution'))
+                tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:MD_Resolution'))
+                tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:equivalentScale'))
+                tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:MD_RepresentativeFraction'))
+                tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
+                tmp7 = etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = val
+                
+                #resource language
+                val = getattr(result, self.corequeryables.mappings['apiso:ResourceLanguage']['obj_attr'])
+                tmp = etree.SubElement(mdidentification, util.nspath_eval('gmd:language'))
+                etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
+                
+                #topic category
+                val = getattr(result, self.corequeryables.mappings['apiso:TopicCategory']['obj_attr'])
+                for v in val.split(','):
+                    tmp = etree.SubElement(mdidentification, util.nspath_eval('gmd:topicCategory'))
+                    etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
+                
+                # bbox extent
+                val = getattr(result, self.corequeryables.mappings['apiso:BoundingBox']['obj_attr'])
+                extent = etree.SubElement(mdidentification, util.nspath_eval('gmd:extent'))
+                tmp = etree.SubElement(extent, util.nspath_eval('gmd:EX_Extent'))
+                tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:geographicElement'))
+                tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:EX_GeographicBoundingBox'))
+                west = etree.SubElement(tmp3, util.nspath_eval('gmd:westBoundLongitude'))
+                east = etree.SubElement(tmp3, util.nspath_eval('gmd:eastBoundLongitude'))
+                north = etree.SubElement(tmp3, util.nspath_eval('gmd:northBoundLatitude'))
+                south = etree.SubElement(tmp3, util.nspath_eval('gmd:southBoundLatitude'))
+
+                bbox = val.split(',')
+                etree.SubElement(west, util.nspath_eval('gco:Decimal')).text = bbox[0]
+                etree.SubElement(south, util.nspath_eval('gco:Decimal')).text = bbox[1]
+                etree.SubElement(east, util.nspath_eval('gco:Decimal')).text = bbox[2]
+                etree.SubElement(north, util.nspath_eval('gco:Decimal')).text = bbox[3]
+                
         else:
             node = etree.Element('TODO')
         return node
