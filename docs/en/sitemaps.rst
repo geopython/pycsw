@@ -9,7 +9,7 @@ XML Sitemaps
 
   $ cd /path/to/pycsw
   $ export PYTHONPATH=`pwd`
-  $ python ./sbin/gen_sitemap.xml > sitemap.xml
+  $ python ./sbin/gen_sitemap.py > sitemap.xml
 
 Save the output (to ``sitemap.xml``) to an an area on your web server (parallel to or above your pycsw install location) to enable web crawlers to index your repository. 
 
