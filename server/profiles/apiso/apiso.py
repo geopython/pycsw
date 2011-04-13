@@ -114,14 +114,7 @@ class APISO(profile.Profile):
     
     def check_getdomain(self, kvp):
         '''Perform extra profile specific checks in the GetDomain request'''
-        check = {}
-        if (kvp.has_key('propertyname') is False or
-            kvp.has_key('parametername') is True):
-            text = 'GetDomain request must only have a PropertyName parameter \
-            in APISO. ParameterName is not supported'
-            check = {'error': 'true',  'locator': 'propertyname',\
-                'code': 'InvalidParameterValue',  'text': text}
-        return check
+        return None
     
 
     def write_record(self, result, esn, outputschema):
