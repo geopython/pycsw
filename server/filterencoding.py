@@ -57,14 +57,14 @@ class Filter(object):
                 if property_name is None:
                     raise RuntimeError, \
                     ('Missing ogc:PropertyName in spatial filter')
-                elif (property_name is not None and property_name.text not in
-                ['ows:BoundingBox', '/ows:BoundingBox']):
+                elif (property_name is not None and
+                      property_name.text.find('BoundingBox') == -1):
                     raise RuntimeError, \
                     ('Invalid ogc:PropertyName in spatial filter: %s' %
                     property_name.text)
 
                 queries.append('query_not_bbox(%s,"%s") = "true"' %
-                (cq_mappings['ows:BoundingBox']['db_col'],
+                (cq_mappings['_bbox']['db_col'],
                 gml.get_bbox(child.xpath('child::*')[0])))
 
             elif child.tag == util.nspath_eval('ogc:BBOX'):
@@ -73,19 +73,18 @@ class Filter(object):
                     raise RuntimeError, \
                     ('Missing PropertyName in spatial filter')
                 elif (property_name is not None and
-                      property_name.text not in  \
-                      ['ows:BoundingBox', '/ows:BoundingBox']):
+                      property_name.text.find('BoundingBox') == -1):
                     raise RuntimeError, \
                     ('Invalid PropertyName in spatial filter: %s' %
                     property_name.text)
 
                 if self.boq is not None and self.boq == ' not ':
                     queries.append('query_not_bbox(%s,"%s") = "true"' %
-                    (cq_mappings['ows:BoundingBox']['db_col'],
+                    (cq_mappings['_bbox']['db_col'],
                      gml.get_bbox(child)))
                 else:
                     queries.append('query_bbox(%s,"%s") = "true"' %
-                    (cq_mappings['ows:BoundingBox']['db_col'],
+                    (cq_mappings['_bbox']['db_col'],
                     gml.get_bbox(child)))
 
             elif child.tag == util.nspath_eval('ogc:FeatureId'):
@@ -132,12 +131,13 @@ class Filter(object):
                     queries.append('%s %s "%s" and "%s"' %
                     (pname, com_op, lower_boundary, upper_boundary))
 
-                elif (child.find(util.nspath_eval('ogc:PropertyName')).text ==
-                'csw:AnyText'):
-                    # csw:AnyText is a freetext search.  Strip modifiers
+                elif (child.find(
+                util.nspath_eval(
+                'ogc:PropertyName')).text.lower().find('anytext') != -1):
+                    # *:AnyText is a freetext search.  Strip modifiers
                     pvalue = pvalue.replace('%','')
                     queries.append('query_anytext(%s, "%s") = "true"' %
-                    (cq_mappings['csw:AnyText']['db_col'], pvalue))
+                    (cq_mappings['_anytext']['db_col'], pvalue))
 
                 else:
                     if self.boq == ' not ':

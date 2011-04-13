@@ -46,11 +46,22 @@ class CoreQueryables(object):
                 self.mappings[k] = {}
                 self.mappings[k]['db_col'] = val
                 self.mappings[k]['obj_attr'] = cqv
-                # check for identifier field, and set
+                # check for identifier, bbox, and anytext fields, and set
+                # as internal keys
+                # need to catch these to perform id, bbox, or anytext queries
                 if k.split(':')[1].lower() == 'identifier':
-                    self.mappings['id'] = {}
-                    self.mappings['id']['db_col'] = val
-                    self.mappings['id']['obj_attr'] = cqv
+                    self.mappings['_id'] = {}
+                    self.mappings['_id']['db_col'] = val
+                    self.mappings['_id']['obj_attr'] = cqv
+                if k.split(':')[1].lower().find('boundingbox') != -1:
+                    self.mappings['_bbox'] = {}
+                    self.mappings['_bbox']['db_col'] = val
+                    self.mappings['_bbox']['obj_attr'] = cqv
+                if k.split(':')[1].lower().find('anytext') != -1:
+                    self.mappings['_anytext'] = {}
+                    self.mappings['_anytext']['db_col'] = val
+                    self.mappings['_anytext']['obj_attr'] = cqv
+
 
     def get_db_col(self, term):
         '''' Return database column of core queryable '''
