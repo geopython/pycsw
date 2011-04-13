@@ -738,6 +738,19 @@ class Csw(object):
             'elementsetname', 'Invalid ElementSetName parameter value: %s' %
             self.kvp['elementsetname'])
 
+        if (self.kvp.has_key('elementname') and
+            isinstance(self.kvp['elementname'], str)):  # passed via GET
+            self.kvp['elementname'] = self.kvp['elementname'].split(',')
+            self.kvp['elementsetname'] = 'summary'
+        
+        # check elementname's
+        if self.kvp.has_key('elementname'):
+            for ename in self.kvp['elementname']:
+                if ename not in self.corequeryables.mappings.keys():
+                    return self.exceptionreport('InvalidParameterValue',
+                    'elementname', 'Invalid ElementName parameter value: %s' %
+                    ename)
+
         if self.kvp['resulttype'] == 'validate':
             node = etree.Element(util.nspath_eval('csw:Acknowledgement'),
             nsmap = config.NAMESPACES, timeStamp = timestamp)
