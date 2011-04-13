@@ -37,6 +37,7 @@ from lxml import etree
 from server import profile, config, core_queryables, util
 
 NAMESPACES = {
+    'apiso': 'http://www.opengis.net/cat/csw/apiso/1.0',
     'gco': 'http://www.isotc211.org/2005/gco',
     'gmd': 'http://www.isotc211.org/2005/gmd'
 }

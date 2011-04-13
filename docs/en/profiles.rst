@@ -8,7 +8,7 @@ Overview
 
 pycsw allows for the implementation of profiles to the core standard. Profiles allow specification of additional metadata format types (i.e. ISO 19139:2007, NASA DIF, INSPIRE, etc.) to the repository, which can be queried and presented to the client.  pycsw supports a plugin architecture which allows for runtime loading of Python code.
 
-All profiles must be placed in the ``profiles`` directory.
+All profiles must be placed in the ``server/profiles`` directory.
 
 Requirements
 ------------
@@ -41,7 +41,7 @@ Your profile plugin class (``FooProfile``) must implement all methods as per ``p
 Enabling Profiles
 -----------------
 
-All profiles are disabled by default.  To specify profiles at runtime, set the server.profiles value in the :ref:`configuration` to the name of the package (in ``profiles/``).  To enable multiple profiles, specify as a comma separated value.  See :ref:`configuration` for more information.
+All profiles are disabled by default.  To specify profiles at runtime, set the server.profiles value in the :ref:`configuration` to the name of the package (in the ``server/profiles`` directory).  To enable multiple profiles, specify as a comma separated value.  See :ref:`configuration` for more information.
 
 Testing
 -------
