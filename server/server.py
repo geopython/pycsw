@@ -939,9 +939,21 @@ class Csw(object):
             (self.kvp['startposition'], max1))
 
             for res in results[int(self.kvp['startposition'])-1:int(max1)-1]:
-                if self.kvp['outputschema'] == 'http://www.opengis.net/cat/csw/2.0.2':
+                if (self.kvp['outputschema'] == 
+                    'http://www.opengis.net/cat/csw/2.0.2' and
+                    self.kvp['typenames'][0] == 'csw:Record'):
+                    # serialize csw:Record inline
                     searchresults.append(self._write_record(res))
-                else:
+                elif (self.kvp['outputschema'] == 
+                      'http://www.opengis.net/cat/csw/2.0.2' and
+                      self.kvp['typenames'][0] != 'csw:Record'):
+                    # use profile serializer to output csw:Record
+                    searchresults.append(
+                    self.profiles['loaded']\
+                    [config.NAMESPACES[self.kvp['typenames'][0].split(':')[0]]].
+                    write_record(res, self.kvp['elementsetname'],
+                    self.kvp['outputschema']))
+                else:  # use profile serializer to output native output format
                     searchresults.append(
                     self.profiles['loaded'][self.kvp['outputschema']].\
                     write_record(res, self.kvp['elementsetname'],
