@@ -266,5 +266,70 @@ class APISO(profile.Profile):
                 etree.SubElement(north, util.nspath_eval('gco:Decimal')).text = bbox[3]
                 
         else:
-            node = etree.Element('TODO')
+            if esn == 'brief':
+                node = etree.Element(util.nspath_eval('csw:BriefRecord'))
+                val = getattr(result, self.corequeryables.mappings['apiso:Identifier']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:identifier')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Title']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:title')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Type']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:type')).text = val
+                
+            elif esn == 'full':
+                node = etree.Element(util.nspath_eval('csw:Record'))
+                val = getattr(result, self.corequeryables.mappings['apiso:OrganisationName']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:creator')).text = val
+                etree.SubElement(node, util.nspath_eval('dc:publisher')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Subject']['obj_attr'])
+                for s in val.split(','):
+                    etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:TopicCategory']['obj_attr'])
+                for s in val.split(','):
+                    etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Abstract']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dct:abstract')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Identifier']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:identifier')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:ParentIdentifier']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:relation')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Format']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:format')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Type']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:type')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Title']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:title')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Modified']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dct:modified')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:BoundingBox']['obj_attr'])
+                s = val.split(',')
+                if len(s) == 4:
+                    tmp=etree.SubElement(node, util.nspath_eval('ows:BoundingBox'))
+                    etree.SubElement(tmp,
+                    util.nspath_eval('ows:LowerCorner')).text = \
+                    '%s %s' % (s[1], s[0])
+                    etree.SubElement(tmp,
+                    util.nspath_eval('ows:UpperCorner')).text = \
+                    '%s %s' % (s[3], s[2])
+            
+            else:#Summary
+                node = etree.Element(util.nspath_eval('csw:SummaryRecord'))
+                val = getattr(result, self.corequeryables.mappings['apiso:Identifier']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:identifier')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Title']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:title')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Type']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:type')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Subject']['obj_attr'])
+                for s in val.split(','):
+                    etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:TopicCategory']['obj_attr'])
+                for s in val.split(','):
+                    etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Format']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dc:format')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Modified']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dct:modified')).text = val
+                val = getattr(result, self.corequeryables.mappings['apiso:Abstract']['obj_attr'])
+                etree.SubElement(node, util.nspath_eval('dct:abstract')).text = val
+            
         return node
