@@ -47,3 +47,8 @@ Testing
 -------
 
 Profiles must provide a ``tester`` interface (similar to ``tester/index.html'``), which must provide example requests specific to the profile.
+
+Supported Profiles
+==================
+
+.. include:: ../../server/profiles/apiso/docs/apiso.rst
