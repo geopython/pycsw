@@ -255,6 +255,8 @@ class Csw(object):
                 self.response = self.getrecords()
             elif self.kvp['request'] == 'GetRecordById':
                 self.response = self.getrecordbyid()
+            elif self.kvp['request'] == 'GetRepositoryItem':
+                self.response = self.getrepositoryitem()
             elif self.kvp['request'] == 'Transaction':
                 self.response = self.transaction()
             elif self.kvp['request'] == 'Harvest':
@@ -861,7 +863,6 @@ class Csw(object):
         (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby']))
 
         try:
-            #results = self.repos['csw:Record'].query(flt = self.kvp['filter'],
             results = self.repos[self.kvp['typenames'][0]].query(flt = self.kvp['filter'],
             cql = self.kvp['cql'], sortby=self.kvp['sortby'])
         except Exception, err:
@@ -955,7 +956,7 @@ class Csw(object):
 
         return node
 
-    def getrecordbyid(self):
+    def getrecordbyid(self, raw=False):
         ''' Handle GetRecordById request '''
 
         if self.kvp.has_key('id') is False:
@@ -993,16 +994,19 @@ class Csw(object):
                 return self.exceptionreport('InvalidParameterValue',
                 'elementsetname', 'Invalid elementsetname parameter %s' %
                 self.kvp['elementsetname'])
-            #if self.kvp['elementsetname'] == 'full':
-            #    self.kvp['elementsetname'] = ''
-            else:
-                self.kvp['elementsetname'] = self.kvp['elementsetname']
 
         self.log.debug('Querying repository with ids: %s.' % ids)
         results = self.repos['csw:Record'].query(ids=ids,
         propertyname = 
         self.repos[self.config['repository']\
         ['typename']].corequeryables.mappings['_id']['obj_attr'])
+
+        if raw is True:  # GetRepositoryItem request
+            self.log.debug('GetRepositoryItem request.')
+            if len(results) > 0:
+                return etree.fromstring(getattr(results[0],
+                self.repos[self.config['repository']['typename']]\
+                .corequeryables.mappings['_anytext']['obj_attr']))
 
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'),
         nsmap = config.NAMESPACES)
@@ -1023,6 +1027,14 @@ class Csw(object):
                 ids=ids, propertyname =
                 self.profiles['loaded'][prof].corequeryables.mappings\
                 ['_id']['obj_attr'])
+
+                if raw is True:  # GetRepositoryItem request
+                    self.log.debug('GetRepositoryItem request.')
+                    if len(results) > 0:
+                        return etree.fromstring(getattr(results[0],
+                        self.repos[self.config['repository']['typename']]\
+                        .corequeryables.mappings['_anytext']['obj_attr']))
+
                 self.log.debug('Presenting %s records.' % str(len(results)))
                 for result in results:
                     node.append(
@@ -1030,7 +1042,21 @@ class Csw(object):
                     result, self.kvp['elementsetname'],
                     self.kvp['outputschema']))
 
+        if raw is True and len(results) == 0:
+            return None
+
         return node
+
+    def getrepositoryitem(self):
+        ''' Handle GetRepositoryItem request '''
+
+        # similar to GetRecordById without csw:* wrapping
+        node = self.getrecordbyid(raw=True)
+        if node is None:
+            return self.exceptionreport('NotFound', 'id',
+            'No repository item found for \'%s\'' % self.kvp['id'])
+        else:
+            return node
 
     def transaction(self):
         ''' Handle Transaction request '''
@@ -1387,7 +1413,7 @@ class Csw(object):
             if self.kvp['elementsetname'] == 'full':  # dump the full record
                 record = etree.fromstring(getattr(recobj,
                 self.repos[self.config['repository']['typename']]\
-                .corequeryables.mappings['csw:AnyText']['obj_attr']))
+                .corequeryables.mappings['_anytext']['obj_attr']))
             else:  # dump BriefRecord (always required), summary if requested
                 for i in ['dc:identifier', 'dc:title', 'dc:type']:
                     etree.SubElement(record, util.nspath_eval(i)).text = \
