@@ -116,11 +116,8 @@ def query_crosses(bbox_data, bbox_input):
 
 def query_disjoint(bbox_data, bbox_input):
     ''' perform spatial Disjoint query '''
-    if bbox_input is None:
+    if bbox_input is None or bbox_data is None:
         return 'false'
-
-    if bbox_data is None:
-        return 'true'
 
     bbox1 = loads(bbox2wkt(bbox_data))
     bbox2 = loads(bbox2wkt(bbox_input))
