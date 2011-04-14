@@ -115,11 +115,10 @@ class APISO(profile.Profile):
     def check_getdomain(self, kvp):
         '''Perform extra profile specific checks in the GetDomain request'''
         return None
-    
 
     def write_record(self, result, esn, outputschema):
         if outputschema == self.namespace:
-            if esn == 'full':
+            if esn == 'full':  # dump the full record
                 xml = getattr(result,
                 self.corequeryables.mappings['apiso:AnyText']['obj_attr'])
 
@@ -170,7 +169,7 @@ class APISO(profile.Profile):
                 etree.SubElement(east, util.nspath_eval('gco:Decimal')).text = bbox[2]
                 etree.SubElement(north, util.nspath_eval('gco:Decimal')).text = bbox[3]
                 
-            else:#Summary
+            else:  # summary
                 node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
                 '%s http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % self.namespace 
@@ -181,7 +180,7 @@ class APISO(profile.Profile):
                 identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
                 tmp = etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
                 
-                #language
+                # language
                 val = getattr(result, self.corequeryables.mappings['apiso:Language']['obj_attr'])
                 lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
                 tmp = etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
@@ -205,11 +204,11 @@ class APISO(profile.Profile):
                 date = etree.SubElement(node, util.nspath_eval('gmd:dateStamp'))
                 etree.SubElement(date, util.nspath_eval('gco:Date')).text = val
                 
-                #metadata standard name
+                # metadata standard name
                 standard = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
                 tmp = etree.SubElement(standard, util.nspath_eval('gco:ChracterString')).text = 'ISO19115'
                 
-                #metadata standard version
+                # metadata standard version
                 standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
                 tmp = etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
                 
@@ -222,12 +221,12 @@ class APISO(profile.Profile):
                 tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
                 etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
                 
-                #abstract
+                # abstract
                 val = getattr(result, self.corequeryables.mappings['apiso:Abstract']['obj_attr'])
                 tmp2 = etree.SubElement(mdidentification, util.nspath_eval('gmd:abstract'))
                 tmp = etree.SubElement(tmp2, util.nspath_eval('gco:ChracterString')).text = val
                 
-                #spatial resolution
+                # spatial resolution
                 val = getattr(result, self.corequeryables.mappings['apiso:Denominator']['obj_attr'])
                 tmp = etree.SubElement(mdidentification, util.nspath_eval('gmd:spatialResolution'))
                 tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:spatialResolution'))
@@ -237,12 +236,12 @@ class APISO(profile.Profile):
                 tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
                 tmp7 = etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = val
                 
-                #resource language
+                # resource language
                 val = getattr(result, self.corequeryables.mappings['apiso:ResourceLanguage']['obj_attr'])
                 tmp = etree.SubElement(mdidentification, util.nspath_eval('gmd:language'))
                 etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
                 
-                #topic category
+                # topic category
                 val = getattr(result, self.corequeryables.mappings['apiso:TopicCategory']['obj_attr'])
                 for v in val.split(','):
                     tmp = etree.SubElement(mdidentification, util.nspath_eval('gmd:topicCategory'))
@@ -311,7 +310,7 @@ class APISO(profile.Profile):
                     util.nspath_eval('ows:UpperCorner')).text = \
                     '%s %s' % (s[3], s[2])
             
-            else:#Summary
+            else: # summary
                 node = etree.Element(util.nspath_eval('csw:SummaryRecord'))
                 val = getattr(result, self.corequeryables.mappings['apiso:Identifier']['obj_attr'])
                 etree.SubElement(node, util.nspath_eval('dc:identifier')).text = val
