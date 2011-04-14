@@ -43,6 +43,7 @@ Supported Operations
   DescribeRecord,mandatory,yes,GET (KVP) / POST (XML) / SOAP
   GetRecords,mandatory,yes,GET (KVP) / POST (XML) / SOAP
   GetRecordById,optional,yes,GET (KVP) / POST (XML) / SOAP
+  GetRepositoryItem,optional,yes,GET (KVP)
   GetDomain,optional,yes,GET (KVP) / POST (XML) / SOAP
   Harvest,optional,pending,GET (KVP) / POST (XML) / SOAP
   Transaction,optional,pending,POST (XML) / SOAP

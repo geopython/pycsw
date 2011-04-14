@@ -69,8 +69,6 @@ MODEL =  {
             },
             'parameters': {
                 'schemaLanguage': {
-                    #'values': ['XMLSCHEMA']
-                    #'values': ['http://www.w3.org/XML/Schema']
                     'values': ['http://www.w3.org/XML/Schema',
                     'http://www.w3.org/TR/xmlschema-1/']
                 },
@@ -125,6 +123,14 @@ MODEL =  {
                 'ElementSetName': {
                     'values': ['brief','summary','full']
                 }
+            }
+        },
+        'GetRepositoryItem': {
+            'methods': {
+                'get': True,
+                'post': False,
+            },
+            'parameters': {
             }
         }
     },
