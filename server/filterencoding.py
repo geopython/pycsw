@@ -40,7 +40,7 @@ SPATIAL_COMPARISONS = [
     util.nspath_eval('ogc:Equals'),
     util.nspath_eval('ogc:Intersects'),
     util.nspath_eval('ogc:Touches'),
-    util.nspath_eval('ogc:Within'),
+    util.nspath_eval('ogc:Within')
 ]
 
 class Filter(object):
@@ -66,7 +66,6 @@ class Filter(object):
                 queries.append('%s = "false"' %
                 _get_spatial_operator(child.xpath('child::*')[0], cq_mappings))
 
-            #elif child.tag == util.nspath_eval('ogc:BBOX'):
             elif child.tag in SPATIAL_COMPARISONS:
                 if self.boq is not None and self.boq == ' not ':
                     queries.append('%s = "false"' %
