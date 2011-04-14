@@ -524,15 +524,11 @@ class Csw(object):
         spatialops = etree.SubElement(spatialcaps,
         util.nspath_eval('ogc:SpatialOperators'))
 
-        etree.SubElement(spatialops, util.nspath_eval('ogc:SpatialOperator'),
-        name = 'BBOX')
+        for spatial_comparison in ['BBOX', 'Contains', 'Crosses', \
+        'Disjoint', 'Equals', 'Intersects', 'Touches', 'Within']:
+            etree.SubElement(spatialops,
+            util.nspath_eval('ogc:SpatialOperator'), name = spatial_comparison)
     
-        etree.SubElement(spatialops, util.nspath_eval('ogc:SpatialOperator'),
-        name = 'Intersects')
-
-        etree.SubElement(spatialops, util.nspath_eval('ogc:SpatialOperator'),
-        name = 'Disjoint')
-
         scalarcaps = etree.SubElement(fltcaps,
         util.nspath_eval('ogc:Scalar_Capabilities'))
 

@@ -32,6 +32,17 @@
 
 import config, gml, util
 
+SPATIAL_COMPARISONS = [
+    util.nspath_eval('ogc:BBOX'),
+    util.nspath_eval('ogc:Contains'),
+    util.nspath_eval('ogc:Crosses'),
+    util.nspath_eval('ogc:Disjoint'),
+    util.nspath_eval('ogc:Equals'),
+    util.nspath_eval('ogc:Intersects'),
+    util.nspath_eval('ogc:Touches'),
+    util.nspath_eval('ogc:Within'),
+]
+
 class Filter(object):
     ''' OGC Filter object support '''
     def __init__(self, flt, cq_mappings):
@@ -52,40 +63,17 @@ class Filter(object):
             com_op = ''
 
             if child.tag == util.nspath_eval('ogc:Not'):
-                property_name = \
-                child.find(util.nspath_eval('ogc:BBOX/ogc:PropertyName'))
-                if property_name is None:
-                    raise RuntimeError, \
-                    ('Missing ogc:PropertyName in spatial filter')
-                elif (property_name is not None and
-                      property_name.text.find('BoundingBox') == -1):
-                    raise RuntimeError, \
-                    ('Invalid ogc:PropertyName in spatial filter: %s' %
-                    property_name.text)
+                queries.append('%s = "false"' %
+                _get_spatial_operator(child.xpath('child::*')[0], cq_mappings))
 
-                queries.append('query_bbox(%s,"%s") = "false"' %
-                (cq_mappings['_bbox']['db_col'],
-                gml.get_bbox(child.xpath('child::*')[0])))
-
-            elif child.tag == util.nspath_eval('ogc:BBOX'):
-                property_name = child.find(util.nspath_eval('ogc:PropertyName'))
-                if property_name is None:
-                    raise RuntimeError, \
-                    ('Missing PropertyName in spatial filter')
-                elif (property_name is not None and
-                      property_name.text.find('BoundingBox') == -1):
-                    raise RuntimeError, \
-                    ('Invalid PropertyName in spatial filter: %s' %
-                    property_name.text)
-
+            #elif child.tag == util.nspath_eval('ogc:BBOX'):
+            elif child.tag in SPATIAL_COMPARISONS:
                 if self.boq is not None and self.boq == ' not ':
-                    queries.append('query_bbox(%s,"%s") = "false"' %
-                    (cq_mappings['_bbox']['db_col'],
-                     gml.get_bbox(child)))
+                    queries.append('%s = "false"' %
+                    _get_spatial_operator(child, cq_mappings))
                 else:
-                    queries.append('query_bbox(%s,"%s") = "true"' %
-                    (cq_mappings['_bbox']['db_col'],
-                    gml.get_bbox(child)))
+                    queries.append('%s = "true"' % 
+                    _get_spatial_operator(child, cq_mappings))
 
             elif child.tag == util.nspath_eval('ogc:FeatureId'):
                 queries.append('%s = \'%s\'' %
@@ -115,7 +103,7 @@ class Filter(object):
                     pval = child.find(util.nspath_eval('ogc:Literal')).text
                     pvalue = pval.replace(wildcard,'%').replace(singlechar,'_')
 
-                com_op = _get_operator(child)
+                com_op = _get_comparison_operator(child)
 
                 # if this is a case insensitive search
                 # then set the LIKE comparison operator
@@ -151,7 +139,25 @@ class Filter(object):
         else:
             self.where = queries[0]
 
-def _get_operator(element):
+def _get_spatial_operator(element, cq_mappings):
+    ''' return the spatial predicate function '''
+    property_name = element.find(util.nspath_eval('ogc:PropertyName'))
+    if property_name is None:
+        raise RuntimeError, \
+        ('Missing ogc:PropertyName in spatial filter')
+    elif (property_name is not None and
+          property_name.text.find('BoundingBox') == -1):
+        raise RuntimeError, \
+        ('Invalid ogc:PropertyName in spatial filter: %s' %
+        property_name.text)
+
+    spatial_query = 'query_%s(%s,"%s")' % \
+    (util.xmltag_split(element.tag).lower(),cq_mappings['_bbox']['db_col'],
+    gml.get_bbox(element))
+
+    return spatial_query
+
+def _get_comparison_operator(element):
     ''' return the SQL operator based on Filter query '''
     if element.tag == util.nspath_eval('ogc:PropertyIsEqualTo'):
         com_op = '=='

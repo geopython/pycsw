@@ -30,6 +30,7 @@
 #
 # =================================================================
 
+from shapely.wkt import loads
 from lxml import etree
 import config
 
@@ -83,42 +84,103 @@ def bbox2wkt(bbox):
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' \
     % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
 
+def query_bbox(bbox_data, bbox_input):
+    ''' perform spatial BBOX query '''
+    return query_intersects(bbox_data, bbox_input)
+
+def query_contains(bbox_data, bbox_input):
+    ''' perform spatial Contains query '''
+    if bbox_input is None or bbox_data is None:
+        return 'false'
+
+    bbox1 = loads(bbox2wkt(bbox_data))
+    bbox2 = loads(bbox2wkt(bbox_input))
+
+    if bbox1.contains(bbox2) is True:
+        return 'true'
+    else:
+        return 'false'
+
+def query_crosses(bbox_data, bbox_input):
+    ''' perform spatial Crosses query '''
+    if bbox_input is None or bbox_data is None:
+        return 'false'
+
+    bbox1 = loads(bbox2wkt(bbox_data))
+    bbox2 = loads(bbox2wkt(bbox_input))
+
+    if bbox1.crosses(bbox2) is True:
+        return 'true'
+    else:
+        return 'false'
+
 def query_disjoint(bbox_data, bbox_input):
-    ''' perform spatial disjoint query '''
+    ''' perform spatial Disjoint query '''
     if bbox_input is None:
         return 'false'
 
     if bbox_data is None:
         return 'true'
 
-    from shapely.wkt import loads
-
     bbox1 = loads(bbox2wkt(bbox_data))
     bbox2 = loads(bbox2wkt(bbox_input))
 
     if bbox1.disjoint(bbox2) is True:
-        return 'true' 
+        return 'true'
+    else:
+        return 'false'
+
+def query_equals(bbox_data, bbox_input):
+    ''' perform spatial Equals query '''
+    if bbox_data is None or bbox_input is None:
+        return 'false'
+
+    bbox1 = loads(bbox2wkt(bbox_data))
+    bbox2 = loads(bbox2wkt(bbox_input))
+
+    if bbox1.equals(bbox2) is True:
+        return 'true'
     else:
         return 'false'
 
 def query_intersects(bbox_data, bbox_input):
-    ''' perform spatial intersects query '''
+    ''' perform spatial Intersects query '''
     if bbox_data is None or bbox_input is None:
         return 'false'
-
-    from shapely.wkt import loads
 
     bbox1 = loads(bbox2wkt(bbox_data))
     bbox2 = loads(bbox2wkt(bbox_input))
 
     if bbox1.intersects(bbox2) is True:
-        return 'true' 
+        return 'true'
     else:
         return 'false'
 
-def query_bbox(bbox_data, bbox_input):
-    ''' perform spatial BBOX query '''
-    return query_intersects(bbox_data, bbox_input)
+def query_touches(bbox_data, bbox_input):
+    ''' perform spatial Touches query '''
+    if bbox_data is None or bbox_input is None:
+        return 'false'
+
+    bbox1 = loads(bbox2wkt(bbox_data))
+    bbox2 = loads(bbox2wkt(bbox_input))
+
+    if bbox1.touches(bbox2) is True:
+        return 'true'
+    else:
+        return 'false'
+
+def query_within(bbox_data, bbox_input):
+    ''' perform spatial Within query '''
+    if bbox_data is None or bbox_input is None:
+        return 'false'
+
+    bbox1 = loads(bbox2wkt(bbox_data))
+    bbox2 = loads(bbox2wkt(bbox_input))
+
+    if bbox1.within(bbox2) is True:
+        return 'true'
+    else:
+        return 'false'
 
 def query_anytext(xml, searchterm):
     ''' perform fulltext search against XML '''
