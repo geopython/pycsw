@@ -33,16 +33,33 @@
 
 # generate an XML sitemap from all records in repository
 
+import os
 from lxml import etree
-from server import config, repository, util
+from server import config, core_queryables, profile, repository, util
 
 # get configuration and init repo connection
 CFG = config.get_config('default.cfg')
-REPO = repository.Repository(CFG['repository']['db'],
-CFG['repository']['db_table'])
+REPOS = {}
 
-# get all records
-RECORDS = REPO.query()
+REPOS[CFG['repository']['typename']] = \
+repository.Repository(CFG['repository']['db'], CFG['repository']['db_table'])
+
+REPOS[CFG['repository']['typename']].cq = \
+core_queryables.CoreQueryables(CFG, 'na')
+
+if CFG['server'].has_key('profiles'):
+    PROFILES = profile.load_profiles(
+    os.path.join('server', 'profiles'), profile.Profile,
+    CFG['server']['profiles'])
+
+for prof in PROFILES['plugins'].keys():
+    tmp = PROFILES['plugins'][prof]()
+    REPOS[tmp.typename] = \
+    repository.Repository(
+    tmp.config['repository']['db'],
+    tmp.config['repository']['db_table'])
+    REPOS[tmp.typename].cq = \
+    core_queryables.CoreQueryables(tmp.config, 'na')
 
 # write out sitemap document
 URLSET = etree.Element(util.nspath_eval('sitemap:urlset'),
@@ -52,11 +69,16 @@ URLSET.attrib[util.nspath_eval('xsi:schemaLocation')] = \
 '%s http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' % \
 config.NAMESPACES['sitemap']
 
-for rec in RECORDS:
-    url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
-    uri = '%s?service=CSW&version=2.0.2&request=GetRecordById&id=%s&elementsetname=full' % \
-    (CFG['server']['url'], rec.identifier)
-    etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
+# get all records
+for repo in REPOS:
+    RECORDS = REPOS[repo].query()
+
+    for rec in RECORDS:
+        url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
+        uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
+        (CFG['server']['url'],
+        getattr(rec, REPOS[repo].cq.mappings['_id']['obj_attr']))
+        etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
 
 # to stdout
 print etree.tostring(URLSET, pretty_print = 1, \
