@@ -63,7 +63,7 @@ class Filter(object):
                     ('Invalid ogc:PropertyName in spatial filter: %s' %
                     property_name.text)
 
-                queries.append('query_not_bbox(%s,"%s") = "true"' %
+                queries.append('query_bbox(%s,"%s") = "false"' %
                 (cq_mappings['_bbox']['db_col'],
                 gml.get_bbox(child.xpath('child::*')[0])))
 
@@ -79,7 +79,7 @@ class Filter(object):
                     property_name.text)
 
                 if self.boq is not None and self.boq == ' not ':
-                    queries.append('query_not_bbox(%s,"%s") = "true"' %
+                    queries.append('query_bbox(%s,"%s") = "false"' %
                     (cq_mappings['_bbox']['db_col'],
                      gml.get_bbox(child)))
                 else:

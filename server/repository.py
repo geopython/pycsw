@@ -49,8 +49,6 @@ class Repository(object):
         self.session = create_session(engine)
         self.connection = engine.raw_connection()
         self.connection.create_function('query_bbox', 2, util.query_bbox)
-        self.connection.create_function(
-        'query_not_bbox', 2, util.query_not_bbox)
         self.connection.create_function('query_anytext', 2, util.query_anytext)
         self.connection.create_function('query_xpath', 2, util.query_xpath)
        
