@@ -83,7 +83,7 @@ def bbox2wkt(bbox):
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' \
     % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
 
-def query_not_bbox(bbox_data, bbox_input):
+def query_disjoint(bbox_data, bbox_input):
     ''' perform spatial disjoint query '''
     if bbox_input is None:
         return 'false'
@@ -101,7 +101,7 @@ def query_not_bbox(bbox_data, bbox_input):
     else:
         return 'false'
 
-def query_bbox(bbox_data, bbox_input):
+def query_intersects(bbox_data, bbox_input):
     ''' perform spatial intersects query '''
     if bbox_data is None or bbox_input is None:
         return 'false'
@@ -115,6 +115,10 @@ def query_bbox(bbox_data, bbox_input):
         return 'true' 
     else:
         return 'false'
+
+def query_bbox(bbox_data, bbox_input):
+    ''' perform spatial BBOX query '''
+    return query_intersects(bbox_data, bbox_input)
 
 def query_anytext(xml, searchterm):
     ''' perform fulltext search against XML '''
