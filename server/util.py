@@ -179,6 +179,33 @@ def query_within(bbox_data, bbox_input):
     else:
         return 'false'
 
+def query_spatial(bbox_data, bbox_input, predicate):
+    ''' perform spatial query '''
+    if bbox_data is None or bbox_input is None:
+        return 'false'
+
+    bbox1 = loads(bbox2wkt(bbox_data))
+    bbox2 = loads(bbox2wkt(bbox_input))
+
+    if predicate == 'bbox':
+        result = bbox1.intersects(bbox2)
+    elif predicate == 'contains':
+        result = bbox1.containts(bbox2)
+    elif predicate == 'crosses':
+        result = bbox1.crosses(bbox2)
+    elif predicate == 'disjoint':
+        result = bbox1.disjoint(bbox2)
+    elif predicate == 'equals':
+        result = bbox1.equals(bbox2)
+    elif predicate == 'intersects':
+        result = bbox1.intersects(bbox2)
+    elif predicate == 'touches':
+        result = bbox1.touches(bbox2)
+    elif predicate == 'within':
+        result = bbox1.within(bbox2)
+
+    return str(result).lower()
+
 def query_anytext(xml, searchterm):
     ''' perform fulltext search against XML '''
     exml = etree.fromstring(xml)

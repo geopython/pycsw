@@ -32,16 +32,31 @@
 
 import config, gml, util
 
-SPATIAL_COMPARISONS = [
-    util.nspath_eval('ogc:BBOX'),
-    util.nspath_eval('ogc:Contains'),
-    util.nspath_eval('ogc:Crosses'),
-    util.nspath_eval('ogc:Disjoint'),
-    util.nspath_eval('ogc:Equals'),
-    util.nspath_eval('ogc:Intersects'),
-    util.nspath_eval('ogc:Touches'),
-    util.nspath_eval('ogc:Within')
-]
+MODEL =  {
+    'GeometryOperands': {
+        'values': ['gml:Envelope']
+    },
+    'SpatialOperators': {
+        'values': ['BBOX', 'Contains', 'Crosses', 'Disjoint', 'Equals',
+        'Intersects', 'Touches', 'Within']
+    },
+    'ComparisonOperators': {
+        'ogc:PropertyIsBetween': { 'opname': 'Between', 'opvalue': 'and'},
+        'ogc:PropertyIsEqualTo': { 'opname': 'EqualTo', 'opvalue': '='},
+        'ogc:PropertyIsGreaterThan': { 'opname': 'GreaterThan', 'opvalue': '>'},
+        'ogc:PropertyIsGreaterThanOrEqualTo': { 
+            'opname': 'GreaterThanEqualTo', 'opvalue': '>='},
+        'ogc:PropertyIsLessThan': { 'opname': 'LessThan', 'opvalue': '<'},
+        'ogc:PropertyIsLessThanOrEqualTo': {
+            'opname': 'LessThanEqualTo', 'opvalue': '<='},
+        'ogc:PropertyIsLike': { 'opname': 'Like', 'opvalue': 'like'},
+        'ogc:PropertyIsNotEqualTo': { 'opname': 'NotEqualTo', 'opvalue': '!='},
+        'ogc:PropertyIsNull': { 'opname': 'NullCheck', 'opvalue': 'is null'},
+    },
+    'Ids': {
+        'values': ['EID', 'FID']
+    }
+}
 
 class Filter(object):
     ''' OGC Filter object support '''
@@ -66,7 +81,9 @@ class Filter(object):
                 queries.append('%s = "false"' %
                 _get_spatial_operator(child.xpath('child::*')[0], cq_mappings))
 
-            elif child.tag in SPATIAL_COMPARISONS:
+            elif child.tag in \
+            [util.nspath_eval('ogc:%s' % n) for n in \
+            MODEL['SpatialOperators']['values']]:
                 if self.boq is not None and self.boq == ' not ':
                     queries.append('%s = "false"' %
                     _get_spatial_operator(child, cq_mappings))
@@ -154,24 +171,14 @@ def _get_spatial_operator(element, cq_mappings):
     (util.xmltag_split(element.tag).lower(),cq_mappings['_bbox']['db_col'],
     gml.get_bbox(element))
 
+    #spatial_query = 'query_spatial(%s,"%s","%s")' % \
+    #(cq_mappings['_bbox']['db_col'],
+    #gml.get_bbox(element), util.xmltag_split(element.tag).lower())
+
     return spatial_query
 
 def _get_comparison_operator(element):
     ''' return the SQL operator based on Filter query '''
-    if element.tag == util.nspath_eval('ogc:PropertyIsEqualTo'):
-        com_op = '=='
-    elif element.tag == util.nspath_eval('ogc:PropertyIsNotEqualTo'):
-        com_op = '!='
-    elif element.tag == util.nspath_eval('ogc:PropertyIsLessThan'):
-        com_op = '<'
-    elif element.tag == util.nspath_eval('ogc:PropertyIsGreaterThan'):
-        com_op = '>'
-    elif element.tag == util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo'):
-        com_op = '<='
-    elif element.tag == util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo'):
-        com_op = '>='
-    elif element.tag == util.nspath_eval('ogc:PropertyIsLike'):
-        com_op = 'like'
-    elif element.tag == util.nspath_eval('ogc:PropertyIsNull'):
-        com_op = 'is null'
-    return com_op
+
+    return MODEL['ComparisonOperators']\
+    ['ogc:%s'%util.xmltag_split(element.tag)]['opvalue'] 
