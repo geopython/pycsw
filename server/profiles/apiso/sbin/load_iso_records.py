@@ -107,7 +107,7 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     
     alt_title = None
     parent_id = None
-    geo_desc_code = None
+    geo_desc_code = c.identification.bbox.description_code
     
     #insert metadata
     print 'Inserting file %s with GUID %s into database %s, table records....' % \
