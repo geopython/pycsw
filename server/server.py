@@ -518,14 +518,16 @@ class Csw(object):
         geomops = etree.SubElement(spatialcaps,
         util.nspath_eval('ogc:GeometryOperands'))
 
-        etree.SubElement(geomops,
-        util.nspath_eval('ogc:GeometryOperand')).text = 'gml:Envelope'
+        for geomtype in \
+        filterencoding.MODEL['GeometryOperands']['values']:
+            etree.SubElement(geomops,
+            util.nspath_eval('ogc:GeometryOperand')).text = geomtype
     
         spatialops = etree.SubElement(spatialcaps,
         util.nspath_eval('ogc:SpatialOperators'))
 
-        for spatial_comparison in ['BBOX', 'Contains', 'Crosses', \
-        'Disjoint', 'Equals', 'Intersects', 'Touches', 'Within']:
+        for spatial_comparison in \
+        filterencoding.MODEL['SpatialOperators']['values']:
             etree.SubElement(spatialops,
             util.nspath_eval('ogc:SpatialOperator'), name = spatial_comparison)
     
@@ -537,17 +539,16 @@ class Csw(object):
         cmpops = etree.SubElement(scalarcaps,
         util.nspath_eval('ogc:ComparisonOperators'))
     
-        for cmpop in ['LessThan', 'GreaterThan', 'LessThanEqualTo', \
-        'GreaterThanEqualTo', 'EqualTo', 'NotEqualTo', 'Like', 'Between', \
-        'NullCheck']:
+        for cmpop in filterencoding.MODEL['ComparisonOperators'].keys():
             etree.SubElement(cmpops,
-            util.nspath_eval('ogc:ComparisonOperator')).text = cmpop
+            util.nspath_eval('ogc:ComparisonOperator')).text = \
+            filterencoding.MODEL['ComparisonOperators'][cmpop]['opname']
     
         idcaps = etree.SubElement(fltcaps,
         util.nspath_eval('ogc:Id_Capabilities'))
 
-        etree.SubElement(idcaps, util.nspath_eval('ogc:EID'))
-        etree.SubElement(idcaps, util.nspath_eval('ogc:FID'))
+        for idcap in filterencoding.MODEL['Ids']['values']:
+            etree.SubElement(idcaps, util.nspath_eval('ogc:%s' % idcap))
 
         return node
     
