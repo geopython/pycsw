@@ -49,15 +49,6 @@ class Repository(object):
         self.session = create_session(engine)
         self.connection = engine.raw_connection()
         self.connection.create_function('query_spatial', 3, util.query_spatial)
-        self.connection.create_function('query_bbox', 2, util.query_bbox)
-        self.connection.create_function('query_contains', 2, util.query_contains)
-        self.connection.create_function('query_crosses', 2, util.query_crosses)
-        self.connection.create_function('query_disjoint', 2, util.query_disjoint)
-        self.connection.create_function('query_equals', 2, util.query_equals)
-        self.connection.create_function('query_intersects', 2, 
-        util.query_intersects)
-        self.connection.create_function('query_touches', 2, util.query_touches)
-        self.connection.create_function('query_within', 2, util.query_within)
         self.connection.create_function('query_anytext', 2, util.query_anytext)
         self.connection.create_function('query_xpath', 2, util.query_xpath)
        
