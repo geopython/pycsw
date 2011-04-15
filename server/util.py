@@ -84,113 +84,20 @@ def bbox2wkt(bbox):
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' \
     % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
 
-def query_bbox(bbox_data, bbox_input):
-    ''' perform spatial BBOX query '''
-    return query_intersects(bbox_data, bbox_input)
-
-def query_contains(bbox_data, bbox_input):
-    ''' perform spatial Contains query '''
-    if bbox_input is None or bbox_data is None:
-        return 'false'
-
-    bbox1 = loads(bbox2wkt(bbox_data))
-    bbox2 = loads(bbox2wkt(bbox_input))
-
-    if bbox1.contains(bbox2) is True:
-        return 'true'
-    else:
-        return 'false'
-
-def query_crosses(bbox_data, bbox_input):
-    ''' perform spatial Crosses query '''
-    if bbox_input is None or bbox_data is None:
-        return 'false'
-
-    bbox1 = loads(bbox2wkt(bbox_data))
-    bbox2 = loads(bbox2wkt(bbox_input))
-
-    if bbox1.crosses(bbox2) is True:
-        return 'true'
-    else:
-        return 'false'
-
-def query_disjoint(bbox_data, bbox_input):
-    ''' perform spatial Disjoint query '''
-    if bbox_input is None or bbox_data is None:
-        return 'false'
-
-    bbox1 = loads(bbox2wkt(bbox_data))
-    bbox2 = loads(bbox2wkt(bbox_input))
-
-    if bbox1.disjoint(bbox2) is True:
-        return 'true'
-    else:
-        return 'false'
-
-def query_equals(bbox_data, bbox_input):
-    ''' perform spatial Equals query '''
-    if bbox_data is None or bbox_input is None:
-        return 'false'
-
-    bbox1 = loads(bbox2wkt(bbox_data))
-    bbox2 = loads(bbox2wkt(bbox_input))
-
-    if bbox1.equals(bbox2) is True:
-        return 'true'
-    else:
-        return 'false'
-
-def query_intersects(bbox_data, bbox_input):
-    ''' perform spatial Intersects query '''
-    if bbox_data is None or bbox_input is None:
-        return 'false'
-
-    bbox1 = loads(bbox2wkt(bbox_data))
-    bbox2 = loads(bbox2wkt(bbox_input))
-
-    if bbox1.intersects(bbox2) is True:
-        return 'true'
-    else:
-        return 'false'
-
-def query_touches(bbox_data, bbox_input):
-    ''' perform spatial Touches query '''
-    if bbox_data is None or bbox_input is None:
-        return 'false'
-
-    bbox1 = loads(bbox2wkt(bbox_data))
-    bbox2 = loads(bbox2wkt(bbox_input))
-
-    if bbox1.touches(bbox2) is True:
-        return 'true'
-    else:
-        return 'false'
-
-def query_within(bbox_data, bbox_input):
-    ''' perform spatial Within query '''
-    if bbox_data is None or bbox_input is None:
-        return 'false'
-
-    bbox1 = loads(bbox2wkt(bbox_data))
-    bbox2 = loads(bbox2wkt(bbox_input))
-
-    if bbox1.within(bbox2) is True:
-        return 'true'
-    else:
-        return 'false'
-
 def query_spatial(bbox_data, bbox_input, predicate):
     ''' perform spatial query '''
+
     if bbox_data is None or bbox_input is None:
         return 'false'
 
     bbox1 = loads(bbox2wkt(bbox_data))
     bbox2 = loads(bbox2wkt(bbox_input))
 
-    if predicate == 'bbox':
+    # map query to Shapely Binary Predicates:
+    if predicate == "bbox":
         result = bbox1.intersects(bbox2)
     elif predicate == 'contains':
-        result = bbox1.containts(bbox2)
+        result = bbox1.contains(bbox2)
     elif predicate == 'crosses':
         result = bbox1.crosses(bbox2)
     elif predicate == 'disjoint':
@@ -204,7 +111,10 @@ def query_spatial(bbox_data, bbox_input, predicate):
     elif predicate == 'within':
         result = bbox1.within(bbox2)
 
-    return str(result).lower()
+    if result is True:
+        return 'true'
+    else:
+        return 'false'
 
 def query_anytext(xml, searchterm):
     ''' perform fulltext search against XML '''
