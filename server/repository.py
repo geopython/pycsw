@@ -48,6 +48,7 @@ class Repository(object):
 
         self.session = create_session(engine)
         self.connection = engine.raw_connection()
+        self.connection.create_function('query_spatial', 3, util.query_spatial)
         self.connection.create_function('query_bbox', 2, util.query_bbox)
         self.connection.create_function('query_contains', 2, util.query_contains)
         self.connection.create_function('query_crosses', 2, util.query_crosses)
