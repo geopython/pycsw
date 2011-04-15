@@ -92,8 +92,7 @@ class Filter(object):
                     _get_spatial_operator(child, cq_mappings))
 
             elif child.tag == util.nspath_eval('ogc:FeatureId'):
-                queries.append('%s = \'%s\'' %
-                (cq_mappings['dc:identifier']['db_col'],
+                queries.append('%s = \'%s\'' % (cq_mappings['_id']['db_col'],
                 child.attrib.get('fid')))
 
             else:
