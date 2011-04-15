@@ -167,13 +167,9 @@ def _get_spatial_operator(element, cq_mappings):
         ('Invalid ogc:PropertyName in spatial filter: %s' %
         property_name.text)
 
-    spatial_query = 'query_%s(%s,"%s")' % \
-    (util.xmltag_split(element.tag).lower(),cq_mappings['_bbox']['db_col'],
-    gml.get_bbox(element))
-
-    #spatial_query = 'query_spatial(%s,"%s","%s")' % \
-    #(cq_mappings['_bbox']['db_col'],
-    #gml.get_bbox(element), util.xmltag_split(element.tag).lower())
+    spatial_query = "query_spatial(%s,'%s','%s')" % \
+    (cq_mappings['_bbox']['db_col'],
+    gml.get_bbox(element), util.xmltag_split(element.tag).lower())
 
     return spatial_query
 

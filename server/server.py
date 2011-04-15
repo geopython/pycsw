@@ -863,7 +863,7 @@ class Csw(object):
 
         self.log.debug('Querying repository with filter: %s,\
         cql: %s, sortby: %s.' %
-        (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby']))
+        (self.kvp['filter'].where, self.kvp['cql'], self.kvp['sortby']))
 
         try:
             results = self.repos[self.kvp['typenames'][0]].query(flt = self.kvp['filter'],
