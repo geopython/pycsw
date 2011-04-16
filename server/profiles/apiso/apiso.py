@@ -39,7 +39,8 @@ from server import profile, config, core_queryables, util
 NAMESPACES = {
     'apiso': 'http://www.opengis.net/cat/csw/apiso/1.0',
     'gco': 'http://www.isotc211.org/2005/gco',
-    'gmd': 'http://www.isotc211.org/2005/gmd'
+    'gmd': 'http://www.isotc211.org/2005/gmd', 
+    'srv': 'http://www.isotc211.org/2005/srv'
 }
 
 CODELIST = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml'
