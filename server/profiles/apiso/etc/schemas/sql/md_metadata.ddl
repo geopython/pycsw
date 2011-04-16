@@ -72,6 +72,12 @@ create table md_metadata (
     parent_identifier           text,
     resource_language           text,
     keyword_type                text,
-    geographic_description_code text 
+    geographic_description_code text,
+    service_type_version        text,
+    operation                   text,
+    coupling_type               text,
+    operates_on                 text,
+    operates_on_identifier      text,
+    operates_on_name            text  
 );
 

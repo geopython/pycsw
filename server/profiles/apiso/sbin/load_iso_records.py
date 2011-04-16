@@ -61,8 +61,28 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     
     if c.serviceidentification is not None:
         service_type = c.serviceidentification.type
+        service_type_ver = c.serviceidentification.version
+        operation = ','.join(c.serviceidentification.operations)
+        coupling = c.serviceidentification.couplingtype
+        op_uuidref = []
+        op_href = []
+        op_title = []
+        for i in (c.serviceidentification.operateson):
+            op_uuidref.append(i['uuidref'])
+            op_href.append(i['href'])
+            op_title.append(i['title'])
+        operates_on = ','.join(op_href)
+        operates_on_id = ','.join(op_uuidref)
+        operates_on_name = ','.join(op_title)
     else:
         service_type = None
+        service_type_ver = None
+        operation = None
+        coupling = None
+        operates_on = None
+        operates_on_id = None
+        operates_on_name = None
+
     
     publication_date = []
     revision_date = []
@@ -151,11 +171,17 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     parent_id, 
     ','.join(c.identification.resourcelanguage),
     c.identification.keywords['type'],
-    geo_desc_code
+    geo_desc_code, 
+    service_type_ver, 
+    operation, 
+    coupling, 
+    operates_on, 
+    operates_on_id, 
+    operates_on_name
     )
     
     CUR.execute(
-    'insert into md_metadata values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+    'insert into md_metadata values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
     values)
 
     CONN.commit()
