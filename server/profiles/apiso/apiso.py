@@ -63,7 +63,7 @@ class APISO(profile.Profile):
         model['constraints']['IsoProfiles'] = {}
         model['constraints']['IsoProfiles']['values'] = [self.namespace]
         model['operations']['GetRecords']['constraints']['SupportedISOQueryables'] = {
-                        'values': ['apiso:Title','apiso:Abstract','apiso:Subject','apiso:RevisionDate','apiso:AlternateTitle','apiso:CreationDate','apiso:PublicationDate','apiso:OrganisationName','apiso:HasSecurityConstraints','apiso:Language','apiso:ResourceIdentifier','apiso:ParentIdentifier','apiso:KeywordType','apiso:AnyText', 'apiso:BoundingBox']
+                        'values': ['apiso:Title','apiso:Abstract','apiso:Subject','apiso:Modified','apiso:Format','apiso:Type','apiso:RevisionDate','apiso:AlternateTitle','apiso:CreationDate','apiso:PublicationDate','apiso:CRS','apiso:OrganisationName','apiso:HasSecurityConstraints','apiso:Language','apiso:ResourceIdentifier','apiso:ParentIdentifier','apiso:KeywordType','apiso:AnyText','apiso:BoundingBox','apiso:ServiceType','apiso:ServiceTypeVersion','apiso:Operation','apiso:CouplingType','apiso:OperatesOn','apiso:OperatesOnIdentifier','apiso:OperatesOnName']
                     }
         model['operations']['GetRecords']['constraints']['AdditionalQueryables'] = {
                         'values': ['apiso:TopicCategory','apiso:ResourceLanguage','apiso:GeographicDescriptionCode','apiso:Denominator','apiso:DistanceValue','apiso:DistanceUOM','apiso:TempExtent_begin', 'apiso:TempExtent_end']

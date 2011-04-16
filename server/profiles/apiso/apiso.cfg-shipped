@@ -31,13 +31,14 @@
 
 [repository]
 typename=gmd:MD_Metadata
-db=sqlite://///home/kalxas/public_html/pycsw/server/profiles/apiso/data/apiso.db
+db=sqlite:////srv/www/htdocs/pycsw/server/profiles/apiso/data/apiso.db
 db_table=md_metadata
 cq_apiso_Subject=subject
 cq_apiso_Title=title
 cq_apiso_Abstract=abstract
 cq_apiso_Format=format
 cq_apiso_Identifier=resource_identifier
+cq_apiso_ResourceIdentifier=resource_identifier
 cq_apiso_Modified=date
 cq_apiso_Type=type
 cq_apiso_BoundingBox=bbox
@@ -60,3 +61,10 @@ cq_apiso_DistanceUOM=distance_unit
 cq_apiso_TempExtent_begin=temporal_extend_begin
 cq_apiso_TempExtent_End=temporal_extend_end
 cq_apiso_AnyText=csw_anytext
+cq_apiso_ServiceType=service_type
+cq_apiso_ServiceTypeVersion=service_type_version
+cq_apiso_Operation=operation
+cq_apiso_CouplingType=coupling_type
+cq_apiso_OperatesOn=operates_on
+cq_apiso_OperatesOnIdentifier=operates_on_identifier
+cq_apiso_OperatesOnName=operates_on_name
