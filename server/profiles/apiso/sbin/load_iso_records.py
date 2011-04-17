@@ -48,7 +48,6 @@ CUR = CONN.cursor()
 for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     # read iso document
     e = etree.parse(r)
-    x = lxml.etree.parse(r)
     c = MD_Metadata(e)
     
     # prepare some elements for the db
@@ -163,7 +162,7 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     ','.join(c.identification.otherconstraints),
     ','.join(role),
     'gmd:MD_Metadata', 
-    lxml.etree.tostring(x), 
+    etree.tostring(c), 
     format, 
     crs, 
     c.datestamp, 
