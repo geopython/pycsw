@@ -48,7 +48,7 @@ class Repository(object):
 
         self.session = create_session(engine)
         self.connection = engine.raw_connection()
-        self.connection.create_function('query_spatial', 3, util.query_spatial)
+        self.connection.create_function('query_spatial', 4, util.query_spatial)
         self.connection.create_function('query_anytext', 2, util.query_anytext)
         self.connection.create_function('query_xpath', 2, util.query_xpath)
        
