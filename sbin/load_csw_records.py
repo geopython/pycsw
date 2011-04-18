@@ -79,7 +79,7 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     bbox,
     ','.join(c.rights),
     'csw:Record',
-    etree.tostring(e)
+    c.xml
     )
 
     CUR.execute(
