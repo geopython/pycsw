@@ -34,11 +34,11 @@ import config, gml, util
 
 MODEL =  {
     'GeometryOperands': {
-        'values': ['gml:Envelope']
+        'values': ['gml:Point', 'gml:LineString', 'gml:Polygon', 'gml:Envelope']
     },
     'SpatialOperators': {
-        'values': ['BBOX', 'Contains', 'Crosses', 'Disjoint', 'Equals',
-        'Intersects', 'Touches', 'Within']
+        'values': ['BBOX', 'Beyond', 'Contains', 'Crosses', 'Disjoint',
+        'DWithin', 'Equals', 'Intersects', 'Overlaps', 'Touches', 'Within']
     },
     'ComparisonOperators': {
         'ogc:PropertyIsBetween': { 'opname': 'Between', 'opvalue': 'and'},
@@ -157,6 +157,13 @@ class Filter(object):
 def _get_spatial_operator(element, cq_mappings):
     ''' return the spatial predicate function '''
     property_name = element.find(util.nspath_eval('ogc:PropertyName'))
+    distance = element.find(util.nspath_eval('ogc:Distance'))
+
+    if distance is None:
+        distance = 'false'
+    else:
+        distance = distance.text
+
     if property_name is None:
         raise RuntimeError, \
         ('Missing ogc:PropertyName in spatial filter')
@@ -166,9 +173,10 @@ def _get_spatial_operator(element, cq_mappings):
         ('Invalid ogc:PropertyName in spatial filter: %s' %
         property_name.text)
 
-    spatial_query = "query_spatial(%s,'%s','%s')" % \
-    (cq_mappings['_bbox']['db_col'],
-    gml.get_bbox(element), util.xmltag_split(element.tag).lower())
+    spatial_query = "query_spatial(%s,'%s','%s','%s')" % \
+    (cq_mappings['_bbox']['db_col'], 
+    gml.get_geometry(element, MODEL['GeometryOperands']['values']),
+    util.xmltag_split(element.tag).lower(), distance)
 
     return spatial_query
 
