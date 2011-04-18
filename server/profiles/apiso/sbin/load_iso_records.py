@@ -162,7 +162,7 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     ','.join(c.identification.otherconstraints),
     ','.join(role),
     'gmd:MD_Metadata', 
-    etree.tostring(c), 
+    etree.tostring(e), 
     format, 
     crs, 
     c.datestamp, 
