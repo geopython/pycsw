@@ -49,7 +49,7 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     # read iso document
     e = etree.parse(r)
     c = MD_Metadata(e)
-    
+ 
     # prepare some elements for the db
     if c.identification.bbox is None:
         bbox = None
@@ -129,7 +129,7 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     geo_desc_code = c.identification.bbox.description_code
     
     #insert metadata
-    print 'Inserting file %s with GUID %s into database %s, table records....' % \
+    print 'Inserting file %s with GUID %s into database %s, table md_metadata' % \
     (r,  c.identifier, sys.argv[2])
     
     values = (
@@ -162,7 +162,7 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     ','.join(c.identification.otherconstraints),
     ','.join(role),
     'gmd:MD_Metadata', 
-    etree.tostring(e), 
+    c.xml,
     format, 
     crs, 
     c.datestamp, 
