@@ -33,34 +33,92 @@
 
 import util
 
-def get_bbox(bbox):
-    ''' GML routines '''
+def get_geometry(geom, geomtypes):
+    ''' return OGC WKT for GML geometry '''
 
-    tmp = bbox.find(util.nspath_eval('ogc:PropertyName'))
-    if tmp is not None:
-        pname = tmp.text
-        if pname.find('BoundingBox') == -1:
-            raise RuntimeError, ('Invalid ogc:PropertyName: %s' % pname)
-        tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml:lowerCorner'))
-        if tmp2 is None:
-            raise RuntimeError, \
-            ('Invalid gml:Envelope geometry.  Missing gml:lowerCorner')
-        else:
-            lower_left = tmp2.text
+    operand = geom.xpath(
+    '|'.join(geomtypes), namespaces={'gml':'http://www.opengis.net/gml'})
 
-        tmp2 = bbox.find(util.nspath_eval('gml:Envelope/gml:upperCorner'))
-        if tmp2 is None:
-            raise RuntimeError, \
-            ('Invalid gml:Envelope geometry.  Missing gml:upperCorner')
-        else:
-            upper_right = tmp2.text
+    if util.xmltag_split(operand[0].tag) == 'Point':
+        return _get_point(geom)
+    elif util.xmltag_split(operand[0].tag) == 'LineString':
+        return _get_linestring(geom)
+    elif util.xmltag_split(operand[0].tag) == 'Polygon':
+        return _get_polygon(geom)
+    elif util.xmltag_split(operand[0].tag) == 'Envelope':
+        return _get_envelope(geom)
 
-        xymin = lower_left.split()
-        xymax = upper_right.split()
+def _get_point(geom):
+    ''' Parse gml:Point '''
 
-        if len(xymin) != 2 or len(xymax) != 2:
-            raise RuntimeError, \
-           ('Invalid gml:Envelope geometry. \
-           gml:lowerCorner and gml:upperCorner must hold both lat and long.')
+    tmp = geom.find(util.nspath_eval('gml:Point/gml:pos'))
 
-        return '%s,%s,%s,%s' % (xymin[1], xymin[0], xymax[1], xymax[0])
+    if tmp is None:
+        raise RuntimeError, ('Invalid gml:Point geometry.  Missing gml:pos')
+    else:
+        xy = tmp.text.split(' ')
+        return 'POINT(%s %s)' % (xy[0], xy[1])
+
+def _get_linestring(geom):
+    ''' Parse gml:LineString'''
+
+    tmp = geom.find(util.nspath_eval('gml:LineString/gml:posList'))
+
+    if tmp is None:
+        raise RuntimeError, \
+        ('Invalid gml:LineString geometry.  Missing gml:posList')
+    else:
+        return 'LINESTRING(%s)' % _poslist2wkt(tmp.text)
+
+def _get_polygon(geom):
+    ''' Parse gml:Polygon'''
+
+    tmp = geom.find('.//%s' % util.nspath_eval('gml:posList'))
+
+    if tmp is None:
+        raise RuntimeError, \
+        ('Invalid gml:LineString geometry.  Missing gml:posList')
+    else:
+        return 'POLYGON((%s))' % _poslist2wkt(tmp.text)
+
+def _get_envelope(geom):
+    ''' Parse gml:Envelope '''
+
+    tmp = geom.find(util.nspath_eval('gml:Envelope/gml:lowerCorner'))
+    if tmp is None:
+        raise RuntimeError, \
+        ('Invalid gml:Envelope geometry.  Missing gml:lowerCorner')
+    else:
+        lower_left = tmp.text
+
+    tmp = geom.find(util.nspath_eval('gml:Envelope/gml:upperCorner'))
+    if tmp is None:
+        raise RuntimeError, \
+        ('Invalid gml:Envelope geometry.  Missing gml:upperCorner')
+    else:
+        upper_right = tmp.text
+
+    xymin = lower_left.split()
+    xymax = upper_right.split()
+
+    if len(xymin) != 2 or len(xymax) != 2:
+        raise RuntimeError, \
+       ('Invalid gml:Envelope geometry. \
+       gml:lowerCorner and gml:upperCorner must hold both lat and long.')
+
+    return util.bbox2wktpolygon('%s,%s,%s,%s' %
+    (xymin[1], xymin[0], xymax[1], xymax[0]))
+
+def _poslist2wkt(poslist):
+    ''' Repurpose gml:posList into WKT aware list '''
+
+    tmp = postlist.split(' ')
+    postlist2 = []
+
+    xlist = tmp[1::2]
+    ylist = tmp[::2]
+
+    for i, j in zip(xlist, ylist):
+        postlist2.append('%s %s' % (i, j))
+
+    return ', '.join(poslist2)

@@ -74,7 +74,7 @@ def xmltag_split(tag):
     ''' Return XML element bare tag name (without prefix) '''
     return tag.split('}')[1]
 
-def bbox2wkt(bbox):
+def bbox2wktpolygon(bbox):
     ''' Return OGC WKT Polygon of a simple bbox string '''
     tmp = bbox.split(',')
     minx = float(tmp[0])
@@ -84,28 +84,40 @@ def bbox2wkt(bbox):
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' \
     % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
 
-def query_spatial(bbox_data, bbox_input, predicate):
+def query_spatial(bbox_data, bbox_input_wkt, predicate, distance):
     ''' perform spatial query '''
 
-    if bbox_data is None or bbox_input is None:
+    if bbox_data is None or bbox_input_wkt is None:
         return 'false'
 
-    bbox1 = loads(bbox2wkt(bbox_data))
-    bbox2 = loads(bbox2wkt(bbox_input))
+    if predicate in ['beyond', 'dwithin'] and distance == 'false':
+        return 'false'
+
+    bbox1 = loads(bbox2wktpolygon(bbox_data))
+    bbox2 = loads(bbox_input_wkt)
 
     # map query to Shapely Binary Predicates:
-    if predicate == "bbox":
+    if predicate == 'bbox':
         result = bbox1.intersects(bbox2)
+    if predicate == 'beyond':
+        result = bbox1.distance(bbox2) > float(distance)
     elif predicate == 'contains':
         result = bbox1.contains(bbox2)
     elif predicate == 'crosses':
         result = bbox1.crosses(bbox2)
     elif predicate == 'disjoint':
         result = bbox1.disjoint(bbox2)
+    elif predicate == 'dwithin':
+        result = bbox1.distance(bbox2) <= float(distance)
     elif predicate == 'equals':
         result = bbox1.equals(bbox2)
     elif predicate == 'intersects':
         result = bbox1.intersects(bbox2)
+    elif predicate == 'overlaps':
+        if bbox1.intersects(bbox2) and not bbox1.touches(bbox2):
+            result = True
+        else:
+            result = False
     elif predicate == 'touches':
         result = bbox1.touches(bbox2)
     elif predicate == 'within':
