@@ -171,14 +171,16 @@ class APISO(profile.Profile):
                 etree.SubElement(north, util.nspath_eval('gco:Decimal')).text = bbox[3]
                 
                 # service identification
-                srv_identification=etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
-                val = getattr(result, self.corequeryables.mappings['apiso:ServiceType']['obj_attr'])
-                tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))
-                etree.SubElement(tmp, util.nspath_eval('gco:LocalName')).text = val
-                val = getattr(result, self.corequeryables.mappings['apiso:ServiceTypeVersion']['obj_attr'])
-                tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceTypeVersion'))
-                etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
                 
+                val = getattr(result, self.corequeryables.mappings['apiso:ServiceType']['obj_attr'])
+                if (val is not None):
+                    srv_identification=etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
+                    tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))
+                    etree.SubElement(tmp, util.nspath_eval('gco:LocalName')).text = val
+                    val = getattr(result, self.corequeryables.mappings['apiso:ServiceTypeVersion']['obj_attr'])
+                    tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceTypeVersion'))
+                    etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
+                    
             else:  # summary
                 node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
@@ -275,23 +277,24 @@ class APISO(profile.Profile):
                 etree.SubElement(north, util.nspath_eval('gco:Decimal')).text = bbox[3]
                 
                 # service identification
-                srv_identification=etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
                 val = getattr(result, self.corequeryables.mappings['apiso:ServiceType']['obj_attr'])
-                tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))
-                etree.SubElement(tmp, util.nspath_eval('gco:LocalName')).text = val
-                val = getattr(result, self.corequeryables.mappings['apiso:ServiceTypeVersion']['obj_attr'])
-                tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceTypeVersion'))
-                etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
-                
-                # service operations
-                val = getattr(result, self.corequeryables.mappings['apiso:Operation']['obj_attr'])
-                temp_oper=val.split(',')
-                oper = etree.SubElement(srv_identification, util.nspath_eval('srv:containsOperations'))
-                for i in temp_oper:
-                    tmp = etree.SubElement(oper, util.nspath_eval('srv:SV_OperationMetadata'))
-                    tmp2 = etree.SubElement(tmp, util.nspath_eval('srv:operationName'))
-                    etree.SubElement(tmp2, util.nspath_eval('gco:CharacterString')).text = i
-                
+                if (val is not None):
+                    srv_identification=etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
+                    tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))
+                    etree.SubElement(tmp, util.nspath_eval('gco:LocalName')).text = val
+                    val = getattr(result, self.corequeryables.mappings['apiso:ServiceTypeVersion']['obj_attr'])
+                    tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceTypeVersion'))
+                    etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
+                    
+                    # service operations
+                    val = getattr(result, self.corequeryables.mappings['apiso:Operation']['obj_attr'])
+                    temp_oper=val.split(',')
+                    oper = etree.SubElement(srv_identification, util.nspath_eval('srv:containsOperations'))
+                    for i in temp_oper:
+                        tmp = etree.SubElement(oper, util.nspath_eval('srv:SV_OperationMetadata'))
+                        tmp2 = etree.SubElement(tmp, util.nspath_eval('srv:operationName'))
+                        etree.SubElement(tmp2, util.nspath_eval('gco:CharacterString')).text = i
+                    
         else:
             if esn == 'brief':
                 node = etree.Element(util.nspath_eval('csw:BriefRecord'))
