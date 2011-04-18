@@ -70,12 +70,24 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
         op_href = []
         op_title = []
         for i in (c.serviceidentification.operateson):
-            op_uuidref.append(i['uuidref'])
-            op_href.append(i['href'])
-            op_title.append(i['title'])
-        operates_on = ','.join(op_href)
-        operates_on_id = ','.join(op_uuidref)
-        operates_on_name = ','.join(op_title)
+            if i['uuidref'] is not None:
+                op_uuidref.append(str(i['uuidref']))
+            if i['href'] is not None:
+                op_href.append(str(i['href']))
+            if i['title'] is not None:
+                op_title.append(str(i['title']))
+        if len(op_href)>0:
+            operates_on = ','.join(op_href)
+        else:
+            operates_on = None
+        if len(op_uuidref)>0:
+            operates_on_id = ','.join(op_uuidref)
+        else:
+            operates_on_id = None
+        if len(op_title)>0:
+            operates_on_name = ','.join(op_title)
+        else:
+            operates_on_name = None
     else:
         service_type = None
         service_type_ver = None
