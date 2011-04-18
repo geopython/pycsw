@@ -61,7 +61,10 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     if c.serviceidentification is not None:
         service_type = c.serviceidentification.type
         service_type_ver = c.serviceidentification.version
-        operation = ','.join(c.serviceidentification.operations)
+        oper = []
+        for i in (c.serviceidentification.operations):
+            oper.append(i['name'])
+        operation = ','.join(oper)
         coupling = c.serviceidentification.couplingtype
         op_uuidref = []
         op_href = []
