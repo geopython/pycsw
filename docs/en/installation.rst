@@ -31,7 +31,7 @@ Ensure that CGI is enabled for your install directory.  For example, on Apache, 
    AddHandler cgi-script .py
   </Location>
 
-If you install pycsw in ``cgi-bin``, this should work as expected.  Note that the :ref:`tester <sample-requests>` application must be moved to a normal location to serve static HTML documents.
+If you install pycsw in ``cgi-bin``, this should work as expected.  Note that the :ref:`tester <tester>` application must be moved to a normal location to serve static HTML documents.
 
 Running on Windows
 ------------------
