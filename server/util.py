@@ -30,7 +30,6 @@
 #
 # =================================================================
 
-from shapely.wkt import loads
 from lxml import etree
 import config
 
@@ -86,6 +85,8 @@ def bbox2wktpolygon(bbox):
 
 def query_spatial(bbox_data, bbox_input_wkt, predicate, distance):
     ''' perform spatial query '''
+
+    from shapely.wkt import loads
 
     if bbox_data is None or bbox_input_wkt is None:
         return 'false'
