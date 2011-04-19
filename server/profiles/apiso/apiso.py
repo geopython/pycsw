@@ -79,7 +79,7 @@ class APISO(profile.Profile):
         databases[self.typename]['db_table'] = self.config['repository']['db_table']
 
     def get_extendedcapabilities(self):
-        ''' Add child to ows:ExtendedCapabilities Element '''
+        ''' Add child to ows:OperationsMetadata Element '''
         extended_capabilities = etree.Element(
                 util.nspath_eval('ows:ExtendedCapabilities'))
         return extended_capabilities
