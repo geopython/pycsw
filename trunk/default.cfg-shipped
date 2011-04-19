@@ -1,0 +1,96 @@
+# =================================================================
+#
+# $Id$
+#
+# Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#
+# Copyright (c) 2010 Tom Kralidis
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+# =================================================================
+
+[server]
+home=/path/to/pycsw
+url=http://host/pycsw/csw.py
+mimetype=application/xml; charset=iso-8859-1
+encoding=iso-8859-1
+language=en-CA
+maxrecords=10
+#loglevel=DEBUG
+#logfile=/tmp/pycsw.log
+#ogc_schemas_base=http://foo
+#federatedcatalogues=http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw
+#xml_pretty_print=true
+#gzip_compresslevel=8
+transactions=false
+transactions_ips=127.0.0.1
+#profiles=apiso
+
+[repository]
+typename=csw:Record
+db=sqlite:////usr/local/wwwsites/apache/devgeo.cciw.ca/htdocs/pycsw/trunk/data/cite/dc.db
+db_table=records
+cq_dc_title=title
+cq_dc_creator=creator
+cq_dc_subject=subject
+cq_dct_abstract=abstract
+cq_dc_publisher=publisher
+cq_dc_contributor=contributor
+cq_dct_modified=modified
+cq_dc_date=date
+cq_dc_type=type
+cq_dc_format=format
+cq_dc_identifier=identifier
+cq_dc_source=source
+cq_dc_language=language
+cq_dc_relation=relation
+cq_ows_BoundingBox=bbox
+cq_dc_rights=rights
+cq_csw_AnyText=csw_anytext
+
+[identification]
+title=pycsw Geospatial Catalogue
+abstract=pycsw is an OGC CSW server implementation written in Python
+keywords=catalogue,discovery
+fees=None
+accessconstraints=None
+
+[provider]
+name=pycsw
+url=http://pycsw.org/
+
+[contact]
+name=Kralidis, Tom
+position=Senior Systems Scientist
+address=TBA
+city=Toronto
+stateorprovince=Ontario
+postalcode=M9C 3Z9
+country=Canada
+phone=+01-416-xxx-xxxx
+fax=+01-416-xxx-xxxx
+email=tomkralidis@hotmail.com
+url=http://www.kralidis.ca/
+hours=0800h - 1600h EST
+contactinstructions=During hours of service.  Off on weekends.
+role=pointOfContact

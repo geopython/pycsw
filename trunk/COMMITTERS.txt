@@ -1,0 +1,6 @@
+============ ===================== =========================== ==================================
+Login(s)     Name                  Email / Contact             Area(s)
+============ ===================== =========================== ==================================
+tomkralidis  Tom Kralidis          tomkralidis at hotmail.com  Overall 
+kalxas	     Angelos Tzotsos       tzotsos at gmail.com        INSPIRE, APISO profiles, Packaging 
+============ ===================== =========================== ==================================

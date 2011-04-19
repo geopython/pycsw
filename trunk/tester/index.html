@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <meta http-equiv="Content-Style-Type" content="text/css"/>
+        <meta http-equiv="pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="Thu, 01 Dec 1994 120000 GMT"/>
+        <title>pycsw Tester</title>
+        <style type="text/css">
+            body {
+                background-color: #ffffff;
+                font-family: arial, verdana, sans-serif;
+                text-align: left;
+                float: left;
+            }
+            .flat {
+                border: 0px;
+            }
+        </style>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.xml').change(function() {
+                    if ($(this).val() != 'none') {
+                        $.ajax({
+                            type: 'GET',
+                            url: $(this).val(),
+                            dataType: 'text',
+                            success: function(data) {
+                                $('.request').val(data);
+                            }
+                        });
+                    }
+                });
+                $('.send').click(function() {
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'text/xml',
+                        url: $('.server').val(),
+                        data: $('.request').val(),
+                        dataType: 'text',
+                        success: function(data) {
+                            $('.response').val(data);
+                        },
+                        error: function(data1) {
+                            $('.response').val(data1.responseText);
+                        }
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h2 class="header">pycsw Tester</h2>
+        <hr/>
+        <form action="#" id="tester">
+            <table>
+                <tr>
+                    <th>Request</th>
+                    <th>Response</th>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="xml">
+                            <option value="none">Select a CSW Request</option> 
+                            <optgroup label="GetCapabilities">
+                                <option value="GetCapabilities.xml">GetCapabilities</option> 
+                                <option value="GetCapabilities-SOAP.xml">GetCapabilities-SOAP</option> 
+                            </optgroup>
+                            <optgroup label="DescribeRecord">
+                                <option value="DescribeRecord.xml">DescribeRecord</option> 
+                            </optgroup>
+                            <optgroup label="GetDomain">
+                                <option value="GetDomain-property.xml">GetDomain-property</option> 
+                                <option value="GetDomain-parameter.xml">GetDomain-parameter</option> 
+                            </optgroup>
+                            <optgroup label="GetRecords">
+                                <option value="GetRecords-all.xml">GetRecords-all</option> 
+                                <option value="GetRecords-filter-anytext.xml">GetRecords-filter-anytext</option> 
+                                <option value="GetRecords-filter-bbox.xml">GetRecords-filter-bbox</option> 
+                                <option value="GetRecords-filter-not-bbox.xml">GetRecords-filter-not-bbox</option> 
+                                <option value="GetRecords-filter-and-bbox-freetext.xml">GetRecords-filter-and-bbox-freetext</option> 
+                                <option value="GetRecords-filter-or-bbox-freetext.xml">GetRecords-filter-or-bbox-freetext</option> 
+                                <option value="GetRecords-filter-or-title-abstract.xml">GetRecords-filter-or-title-abstract</option> 
+                                <option value="GetRecords-filter-between.xml">GetRecords-filter-between</option> 
+                                <option value="GetRecords-cql-title.xml">GetRecords-cql-title</option> 
+                                <option value="GetRecords-elementname.xml">GetRecords-elementname</option> 
+                            </optgroup>
+                            <optgroup label="GetRecordById">
+                                <option value="GetRecordById.xml">GetRecordById</option> 
+                            </optgroup>
+                            <optgroup label="Exceptions">
+                                <option value="Exception-GetRecords-elementname.xml">Exception-GetRecords-elementname</option> 
+                                <option value="Exception-GetRecords-invalid-xml.xml">Exception-GetRecords-invalid-xml</option> 
+                            </optgroup>
+                        </select>
+                        <input type="button" class="send" value="Send"/>
+                    </td>
+                    <td>
+                        Server: <input type="text" size="40" class="server" value="../csw.py"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea rows="20" cols="70" class="request"></textarea>
+                    </td>
+                    <td>
+                        <textarea rows="20" cols="70" class="response"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <p>
+            <a href="http://validator.w3.org/check?verbose=1&amp;uri=referer" title="[ Valid XHTML 1.0! ]"><img class="flat" src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="[ Valid XHTML 1.0! ]" height="31" width="88"/></a>
+            <a href="http://jigsaw.w3.org/css-validator/check/referer" title="[ Valid CSS! ]"><img class="flat" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="[ Valid CSS! ]" height="31" width="88"/></a>
+        </p>
+    </body>
+</html>

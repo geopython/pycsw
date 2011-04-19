@@ -1,0 +1,7 @@
+pycsw Revision History
+===========================
+
+$Id$
+
+See trac history (http://sourceforge.net/apps/trac/pycsw)
+for full commit and release history.
