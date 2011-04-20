@@ -12,7 +12,7 @@ Features
 - support for `ISO Metadata Application Profile 1.0.0`_
 - realtime XML Schema validation
 - extensible profile plugin architecture
-- full transactional capabilities
+- transactional capabilities (pending)
 - flexible repository configuration
 - federated catalogue distributed searching
 
@@ -47,6 +47,45 @@ Supported Operations
   GetDomain,optional,yes,GET (KVP) / POST (XML) / SOAP
   Harvest,optional,pending,GET (KVP) / POST (XML) / SOAP
   Transaction,optional,pending,POST (XML) / SOAP
+
+Supported Filters
+-----------------
+
+Geometry Operands
+^^^^^^^^^^^^^^^^^
+
+- gml:Point
+- gml:LineString
+- gml:Polygon
+- gml:Envelope
+
+Spatial Operators
+^^^^^^^^^^^^^^^^^
+
+- BBOX
+- Beyond
+- Contains
+- Crosses
+- Disjoint
+- DWithin
+- Equals
+- Intersects
+- Overlaps
+- Touches
+- Within
+
+Logical Operators
+^^^^^^^^^^^^^^^^^
+
+- Between
+- EqualTo
+- LessThanEqualTo
+- GreaterThan
+- Like
+- LessThan
+- GreaterThanEqualTo
+- NotEqualTo
+- NullCheck
 
 .. _`OGC CSW`: http://www.opengeospatial.org/standards/cat
 .. _`ISO Metadata Application Profile 1.0.0`: http://portal.opengeospatial.org/files/?artifact_id=21460
