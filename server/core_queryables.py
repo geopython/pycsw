@@ -40,7 +40,8 @@ class CoreQueryables(object):
         table = config['repository']['db_table']
         for cqm in config['repository']:
             if cqm.find('cq_') != -1:  # it's a cq
-                k = cqm.replace('cq_','').replace('_',':') 
+                tmp = cqm.replace('cq_','').split('_', 1)
+                k = ':'.join(tmp)
                 cqv = config['repository'][cqm]
                 val = '%s_%s' % (table, cqv)
                 self.mappings[k] = {}
