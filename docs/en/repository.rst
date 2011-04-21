@@ -32,7 +32,7 @@ This will import all ``*.xml`` records from ``/path/to/records`` into ``records.
 Configuring the Database Connection
 -----------------------------------
 
-By default, ``default.cfg-shipped`` contains all required binding information.  If you are setting up your database as per above,
+By default, ``default-sample.cfg`` contains all required binding information.  If you are setting up your database as per above,
 the default configuration needs only the ``repository.db`` value to be updated.  Otherwise, you can map your own database table and columns.
 
 See :ref:`configuration`, (**[repository]**) for more information.

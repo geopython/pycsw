@@ -43,8 +43,7 @@ This will import all ``*.xml`` records from ``/path/to/records`` into ``md_metad
 Configuring the Database Connection
 -----------------------------------
 
-By default, ``server/profiles/apiso/apiso.cfg-shipped`` contains all required binding information.  If you are setting up your database as per above,
-the default configuration needs only the ``repository.db`` value to be updated.  Otherwise, you can map your own database table and columns.
+APISO runtime configuration is defined by ``apiso.cfg``.  By default, ``server/profiles/apiso/apiso-sample.cfg`` contains all required binding information (Copy the file to ``default.cfg``).  If you are setting up your database as per above, the default configuration needs only the ``repository.db`` value to be updated.  Otherwise, you can map your own database table and columns.
 
 Testing
 -------
