@@ -41,7 +41,7 @@ Your profile plugin class (``FooProfile``) must implement all methods as per ``p
 Enabling Profiles
 -----------------
 
-All profiles are disabled by default.  To specify profiles at runtime, set the server.profiles value in the :ref:`configuration` to the name of the package (in the ``server/profiles`` directory).  To enable multiple profiles, specify as a comma separated value.  See :ref:`configuration` for more information.
+All profiles are disabled by default.  To specify profiles at runtime, set the ``server.profiles`` value in the :ref:`configuration` to the name of the package (in the ``server/profiles`` directory).  To enable multiple profiles, specify as a comma separated value.  See :ref:`configuration` for more information.
 
 Testing
 -------
