@@ -481,8 +481,9 @@ class Csw(object):
                             util.nspath_eval('ows:Constraint'), name = con)
                             for q in config.MODEL['operations']\
                             ['GetRecords']['constraints'][con]['values']:
-                                etree.SubElement(param,
-                                util.nspath_eval('ows:Value')).text = q
+                                if q not in ['_id', '_bbox', '_anytext']:
+                                    etree.SubElement(param,
+                                    util.nspath_eval('ows:Value')).text = q
 
             for parameter in config.MODEL['parameters'].keys():
                 param = etree.SubElement(operationsmetadata,
