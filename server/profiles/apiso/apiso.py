@@ -64,7 +64,7 @@ class APISO(profile.Profile):
         model['constraints']['IsoProfiles'] = {}
         model['constraints']['IsoProfiles']['values'] = [self.namespace]
 
-        model['operations']['GetRecords']['constraints']['SupportedISOQueryables'] = { 'values': self.corequeryables.mappings.keys()}
+        model['operations']['GetRecords']['constraints'][self.corequeryables.name] = { 'values': self.corequeryables.mappings.keys()}
 
         # namespaces 
         namespaces.update(NAMESPACES)
@@ -76,9 +76,7 @@ class APISO(profile.Profile):
 
     def get_extendedcapabilities(self):
         ''' Add child to ows:OperationsMetadata Element '''
-        extended_capabilities = etree.Element(
-                util.nspath_eval('ows:ExtendedCapabilities'))
-        return extended_capabilities
+        return None
 
     def get_schemacomponents(self):
         ''' Return schema components as lxml.etree.Element list '''
