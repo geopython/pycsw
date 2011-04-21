@@ -21,6 +21,7 @@ pycsw |release| Documentation
    transactions
    profiles
    testing
+   demos
    clients-servers
    development
    support
