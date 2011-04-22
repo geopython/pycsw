@@ -12,8 +12,8 @@ pycsw requires the following supporting libraries:
 - `SQLAlchemy`_ (version >= 0.0.5) for database bindings
 - `Shapely`_ (version >= 1.2.8) for geometry support
 
-Install
--------
+Installing from Source
+----------------------
 
 :ref:`Download <download>` the latest version or fetch svn trunk:
 
@@ -32,6 +32,24 @@ Ensure that CGI is enabled for your install directory.  For example, on Apache, 
   </Location>
 
 If you install pycsw in ``cgi-bin``, this should work as expected.  Note that the :ref:`tester <tester>` application must be moved to a normal location to serve static HTML documents.
+
+.. _opensuse:
+
+Installing from OpenSUSE Build Services
+---------------------------------------
+
+In order to install the OBS package in openSUSE 11.4, one can run the following commands as root:
+
+.. code-block:: bash
+
+  $ zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_11.4/ GEO
+  $ zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_11.4/ python
+  $ zypper refresh
+  $ zypper install pycsw
+
+For earlier openSUSE versions change "11.4" with "11.2" or "11.3". For future openSUSE version use "Factory".
+
+An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A11.4&lang=en&include_home=true&exclude_debug=true>`_.
 
 Running on Windows
 ------------------
