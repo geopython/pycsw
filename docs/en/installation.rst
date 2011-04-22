@@ -35,8 +35,8 @@ If you install pycsw in ``cgi-bin``, this should work as expected.  Note that th
 
 .. _opensuse:
 
-Installing from OpenSUSE Build Services
----------------------------------------
+Installing from OpenSUSE Build Service
+--------------------------------------
 
 In order to install the OBS package in openSUSE 11.4, one can run the following commands as root:
 
