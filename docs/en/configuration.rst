@@ -27,6 +27,30 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **transactions_ips**: comma delimited list of IP addresses which can perform transactions.  See :ref:`transactions` for more details
 - **profiles**: comma separated list of profiles to load at runtime (default is none).  See :ref:`profiles` for more details
 
+**[metadata]**
+
+- **identification_title**: the title of the service
+- **identification_abstract**: some descriptive text about the service
+- **identification_keywords**: a comma-seperated keyword list of keywords about the service
+- **identification_fees**: fees associated with the service
+- **identification_accessconstraints**: access constraints associated with the service
+- **provider_name**: the name of the service provider
+- **provider_url**: the URL of the service provider
+- **contact_name**: the name of the provider contact
+- **contact_position**: the position title of the provider contact
+- **contact_address**: the address of the provider contact
+- **contact_city**: the city of the provider contact
+- **contact_stateorprovince**: the province or territory of the provider contact
+- **contact_postalcode**: the postal code of the provider contact
+- **contact_country**: the country of the provider contact
+- **contact_phone**: the phone number of the provider contact
+- **contact_fax**: the facsimile number of the provider contact
+- **contact_email**: the email address of the provider contact
+- **contact_url**: the URL to more information about the provider contact
+- **contact_hours**: the hours of service to contact the provider
+- **contact_instructions**: the how to contact the provider contact
+- **contact_role**: the role of the provider contact
+
 **[repository]**
 
 .. note::
@@ -54,32 +78,3 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **cq_csw_AnyText**: db table column name which stores the full XML metadata record (for fulltext queries)
 - **cq_dc_date**: db table column name which maps to dc:date
 
-**[identification]**
-
-- **title**: the title of the service
-- **abstract**: some descriptive text about the service
-- **keywords**: a comma-seperated keyword list of keywords about the service
-- **fees**: fees associated with the service
-- **accessconstraints**: access constraints associated with the service
-
-**[provider]**
-
-- **name**: the name of the service provider
-- **url**: the URL of the service provider
-
-**[contact]**
-
-- **name**: the name of the provider contact
-- **position**: the position title of the provider contact
-- **address**: the address of the provider contact
-- **city**: the city of the provider contact
-- **stateorprovince**: the province or territory of the provider contact
-- **postalcode**: the postal code of the provider contact
-- **country**: the country of the provider contact
-- **phone**: the phone number of the provider contact
-- **fax**: the facsimile number of the provider contact
-- **email**: the email address of the provider contact
-- **url**: the URL to more information about the provider contact
-- **hours**: the hours of service to contact the provider
-- **contactinstructions**: the how to contact the provider contact
-- **role**: the role of the provider contact
