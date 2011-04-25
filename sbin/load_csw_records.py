@@ -37,6 +37,7 @@ import glob
 import sqlite3
 
 from lxml import etree
+from server import util
 from owslib.csw import CswRecord
 
 if len(sys.argv) < 3:
@@ -55,8 +56,9 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     if c.bbox is None:
         bbox = None
     else:
-        bbox = '%s,%s,%s,%s' % \
+        tmp = '%s,%s,%s,%s' % \
         (c.bbox.miny, c.bbox.minx, c.bbox.maxy, c.bbox.maxx)
+        bbox = util.bbox2wktpolygon(tmp) 
 
     print 'Inserting csw:Record %s into database %s, table records....' % \
     (c.identifier, sys.argv[2])

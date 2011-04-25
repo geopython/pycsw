@@ -83,18 +83,18 @@ def bbox2wktpolygon(bbox):
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' \
     % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
 
-def query_spatial(bbox_data, bbox_input_wkt, predicate, distance):
+def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     ''' perform spatial query '''
 
     from shapely.wkt import loads
 
-    if bbox_data is None or bbox_input_wkt is None:
+    if bbox_data_wkt is None or bbox_input_wkt is None:
         return 'false'
 
     if predicate in ['beyond', 'dwithin'] and distance == 'false':
         return 'false'
 
-    bbox1 = loads(bbox2wktpolygon(bbox_data))
+    bbox1 = loads(bbox_data_wkt)
     bbox2 = loads(bbox_input_wkt)
 
     # map query to Shapely Binary Predicates:

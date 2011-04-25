@@ -37,6 +37,7 @@ import sqlite3
 
 from lxml import etree
 from owslib.iso import *
+from server import util
 
 if len(sys.argv) < 3:
     print 'Usage: %s <xml directory path> <filename.sqlite3>' % sys.argv[0]
@@ -54,9 +55,10 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     if c.identification.bbox is None:
         bbox = None
     else:
-        bbox = '%s,%s,%s,%s' % \
+        tmp = '%s,%s,%s,%s' % \
         (c.identification.bbox.miny, c.identification.bbox.minx, 
         c.identification.bbox.maxy, c.identification.bbox.maxx)
+        bbox = util.bbox2wktpolygon(tmp)
     
     if c.serviceidentification is not None:
         service_type = c.serviceidentification.type
