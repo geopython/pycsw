@@ -38,14 +38,14 @@ If you install pycsw in ``cgi-bin``, this should work as expected.  Note that th
 Installing from OpenSUSE Build Service
 --------------------------------------
 
-In order to install the OBS package in openSUSE 11.4, one can run the following commands as root:
+In order to install the OBS package in openSUSE 11.4, one can run the following commands as user ``root``:
 
 .. code-block:: bash
 
-  $ zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_11.4/ GEO
-  $ zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_11.4/ python
-  $ zypper refresh
-  $ zypper install pycsw
+  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_11.4/ GEO
+  # zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_11.4/ python
+  # zypper refresh
+  # zypper install pycsw
 
 For earlier openSUSE versions change "11.4" with "11.2" or "11.3". For future openSUSE version use "Factory".
 
