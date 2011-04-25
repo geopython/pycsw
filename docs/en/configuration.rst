@@ -74,7 +74,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **cq_dc_language**: db table column name which maps to dc:language
 - **cq_dc_relation**: db table column name which maps to dc:relation
 - **cq_dc_rights**: db table column name which maps to dc:rights
-- **cq_ows_BoundingBox**: db table column name which stores the geometry (in format 'minx,miny,maxx,maxy')
+- **cq_ows_BoundingBox**: db table column name which stores the geometry (in OGC `WKT <http://en.wikipedia.org/wiki/Well-known_text>`_ format)
 - **cq_csw_AnyText**: db table column name which stores the full XML metadata record (for fulltext queries)
 - **cq_dc_date**: db table column name which maps to dc:date
 
