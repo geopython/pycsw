@@ -1557,8 +1557,12 @@ class Csw(object):
 
 def write_boundingbox(bbox):
     ''' Generate ows:BoundingBox '''
+
+    from shapely.wkt import loads
+
     if bbox is not None:
-        bbox2 = bbox.split(',')
+        tmp = loads(bbox)
+        bbox2 = tmp.exterior.bounds
         if len(bbox2) == 4:
             boundingbox = etree.Element(util.nspath_eval('ows:BoundingBox'),
             crs = 'urn:x-ogc:def:crs:EPSG:6.11:4326')
