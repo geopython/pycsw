@@ -50,15 +50,16 @@ class CoreQueryables(object):
                 # check for identifier, bbox, and anytext fields, and set
                 # as internal keys
                 # need to catch these to perform id, bbox, or anytext queries
-                if k.split(':')[-1].lower() == 'identifier':
+                val2 = k.split(':')[-1].lower()
+                if val2.find('identifier') != -1:
                     self.mappings['_id'] = {}
                     self.mappings['_id']['db_col'] = val
                     self.mappings['_id']['obj_attr'] = cqv
-                if k.split(':')[-1].lower().find('boundingbox') != -1:
+                elif val2.find('boundingbox') != -1:
                     self.mappings['_bbox'] = {}
                     self.mappings['_bbox']['db_col'] = val
                     self.mappings['_bbox']['obj_attr'] = cqv
-                if k.split(':')[-1].lower().find('anytext') != -1:
+                elif val2.find('anytext') != -1:
                     self.mappings['_anytext'] = {}
                     self.mappings['_anytext']['db_col'] = val
                     self.mappings['_anytext']['obj_attr'] = cqv
