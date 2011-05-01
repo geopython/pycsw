@@ -124,7 +124,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     elif predicate == 'within':
         result = bbox1.within(bbox2)
     else:
-        raise RuntimeError, ('Invalid spatial queury predicate: %s' % predicate)
+        raise RuntimeError, ('Invalid spatial query predicate: %s' % predicate)
 
     if result is True:
         return 'true'
