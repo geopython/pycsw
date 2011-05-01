@@ -73,7 +73,7 @@ MODEL =  {
                     'http://www.w3.org/TR/xmlschema-1/']
                 },
                 'typeName': {
-                    'values': ['csw:Record']
+                    'values': []
                 },
                 'outputFormat': {
                     'values': ['application/xml']
@@ -90,7 +90,7 @@ MODEL =  {
                     'values': ['hits', 'results', 'validate']
                 },
                 'typeNames': {
-                    'values': ['csw:Record']
+                    'values': []
                 },
                 'outputSchema': {
                     'values': ['http://www.opengis.net/cat/csw/2.0.2']
