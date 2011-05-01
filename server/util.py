@@ -100,7 +100,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     # map query to Shapely Binary Predicates:
     if predicate == 'bbox':
         result = bbox1.intersects(bbox2)
-    if predicate == 'beyond':
+    elif predicate == 'beyond':
         result = bbox1.distance(bbox2) > float(distance)
     elif predicate == 'contains':
         result = bbox1.contains(bbox2)
@@ -123,6 +123,8 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
         result = bbox1.touches(bbox2)
     elif predicate == 'within':
         result = bbox1.within(bbox2)
+    else:
+        raise RuntimeError, ('Invalid spatial queury predicate: %s' % predicate)
 
     if result is True:
         return 'true'
