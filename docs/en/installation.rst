@@ -51,6 +51,18 @@ For earlier openSUSE versions change "11.4" with "11.2" or "11.3". For future op
 
 An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A11.4&lang=en&include_home=true&exclude_debug=true>`_.
 
+Installing on Ubuntu/Xubuntu/Kubuntu
+------------------------------------
+
+In order to install pycsw to an Ubuntu based distribution, one can use the OSGeoLive installation script located in pycsw/etc/dist folder.
+
+.. code-block:: bash
+
+  # cd pycsw/etc/dist
+  # sudo ./install_pycsw.sh
+
+The script installs the dependencies (Apache, lxml, sqlalchemy, shapely) and then pycsw to the /var/www folder.
+  
 Running on Windows
 ------------------
 
