@@ -37,8 +37,12 @@ import util
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, database, table):
+    def __init__(self, repo):
         ''' Initialize repository '''
+
+        database = repo['database']
+        table = repo['table']
+
         engine = create_engine('%s' % database, echo=False)
 
         base = declarative_base(bind=engine)
@@ -51,7 +55,55 @@ class Repository(object):
         self.connection.create_function('query_spatial', 4, util.query_spatial)
         self.connection.create_function('query_anytext', 2, util.query_anytext)
         self.connection.create_function('query_xpath', 2, util.query_xpath)
-       
+
+        # generate core queryables db and obj bindings
+        self.queryables = {}       
+
+        qname = repo['cq_name']
+        self.queryables[qname] = {}
+
+        for cqm in repo:
+            if cqm.find('cq_') != -1 and cqm != 'cq_name':  # it's a cq
+                if cqm != 'cq_name':
+                    tmp = cqm.replace('cq_','').split('_', 1)
+                    k = ':'.join(tmp)
+                    cqv = repo[cqm]
+                    val = '%s_%s' % (table, cqv)
+                    self.queryables[qname][k] = {}
+                    self.queryables[qname][k]['db_col'] = val
+                    self.queryables[qname][k]['obj_attr'] = cqv
+                    # check for identifier, bbox, and anytext fields, and set
+                    # as internal keys
+                    # need to catch these to
+                    # perform id, bbox, or anytext queries
+                    val2 = k.split(':')[-1].lower()
+                    if val2.find('identifier') != -1:
+                        self.queryables[qname]['_id'] = {}
+                        self.queryables[qname]['_id']['db_col'] = val
+                        self.queryables[qname]['_id']['obj_attr'] = cqv
+                    elif val2.find('boundingbox') != -1:
+                        self.queryables[qname]['_bbox'] = {}
+                        self.queryables[qname]['_bbox']['db_col'] = val
+                        self.queryables[qname]['_bbox']['obj_attr'] = cqv
+                    elif val2.find('anytext') != -1:
+                        self.queryables[qname]['_anytext'] = {}
+                        self.queryables[qname]['_anytext']['db_col'] = val
+                        self.queryables[qname]['_anytext']['obj_attr'] = cqv
+
+        # flatten all queryables
+        # TODO smarter way of doing this
+        self.queryables['_all'] = {}
+        for qbl in self.queryables:
+            self.queryables['_all'].update(self.queryables[qbl])
+
+    def get_db_col(self, term):
+        '''' Return database column of core queryable '''
+        return self.mappings[term]['db_col']
+
+    def get_obj_attr(self, term):
+        '''' Return object attribute of core queryable '''
+        return self.mappings[term]['obj_attr']
+
     def query(self, flt=None, cql=None, ids=None, sortby=None,
      propertyname=None):
         ''' Query records from underlying repository '''
