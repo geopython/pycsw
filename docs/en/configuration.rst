@@ -51,12 +51,15 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **contact_instructions**: the how to contact the provider contact
 - **contact_role**: the role of the provider contact
 
-**[repository]**
+**[repository:*]**
+
+Repository sections are namespaced to support definition of multiple repositories within configuration (e.g. ``[repository:cite]``, ``[repository:my_iso_records]``.  Names are up to the user, however the ``typename`` value within a repository section must be a supported information model (e.g. ``csw:Record``).
 
 .. note::
 
   See :ref:`repository` for connecting your metadata repository.
 
+- **enabled**: whether to include the repository at runtime (``true`` or ``false``)
 - **typename**: the typename of the repository (csw:Record)
 - **db**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
 - **db_table**: the name of the metadata records table
