@@ -4,7 +4,7 @@
 Welcome to pycsw
 ================
 
-.. image:: _static/pycsw-logo.png
+.. image:: ../_static/pycsw-logo.png
    :alt: pycsw
    :align: left
 
