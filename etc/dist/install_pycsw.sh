@@ -27,30 +27,40 @@
 # sudo rm /etc/apache2/conf.d/pycsw
 # sudo rm -rf /var/www/pycsw*
 
+VERSION=0.1.0
+
+echo -n 'Installing pycsw $VERSION'
+
+echo -n 'Installing dependencies ...'
+
 # install dependencies
 apt-get install apache2 python-lxml python-sqlalchemy python-shapely
 
 # live disc's username is "user"
-USER_NAME="user"
-USER_HOME="/home/$USER_NAME"
-PYCSW_TMP=/tmp/build_pycsw
+USER_NAME=user
+USER_HOME=/home/$USER_NAME
 
-PYCSW_APACHE_CONF="/etc/apache2/conf.d/pycsw"
-PYCSW_MAIN_CFG="/var/www/pycsw/default.cfg"
-PYCSW_APISO_CFG="/var/www/pycsw/server/profiles/apiso/apiso.cfg"
+# package specific settings
+PYCSW_HOME=/var/www/pycsw
+PYCSW_TMP=/tmp/build_pycsw
+PYCSW_APACHE_CONF=/etc/apache2/conf.d/pycsw
 
 mkdir -p "$PYCSW_TMP"
 
+echo -n 'Downloading package ...'
+
 # Download pycsw LiveDVD tarball.
-wget -N --progress=dot:mega "http://kent.dl.sourceforge.net/project/pycsw/0.1.0/pycsw-0.1.0.tar.gz" \
-     -O "$PYCSW_TMP/pycsw-0.1.0.tar.gz"
+wget -N --progress=dot:mega "https://sourceforge.net/projects/pycsw/files/$VERSION/pycsw-$VERSION.tar.gz/download" \
+     -O "$PYCSW_TMP/pycsw-$VERSION.tar.gz"
+
+echo -n 'Extracting package ...'
 
 # Uncompress pycsw LiveDVD tarball.
-tar -zxvf "$PYCSW_TMP/pycsw-0.1.0.tar.gz" -C "$PYCSW_TMP"
-mv "$PYCSW_TMP/pycsw-0.1.0" "$PYCSW_TMP/pycsw"
+tar -zxvf "$PYCSW_TMP/pycsw-$VERSION.tar.gz" -C "$PYCSW_TMP"
+mv "$PYCSW_TMP/pycsw-$VERSION" "$PYCSW_TMP/pycsw"
 mv "$PYCSW_TMP/pycsw" /var/www/
 
-echo -n "Apache configuration update ..."
+echo -n "Updating Apache configuration ..."
 # Add pycsw apache configuration
 cat << EOF > "$PYCSW_APACHE_CONF"
 
@@ -62,10 +72,10 @@ cat << EOF > "$PYCSW_APACHE_CONF"
 
 EOF
 
-echo -n "Configuration files creation ..."
+echo -n "Generating configuration files ..."
 # Add pycsw configuration files
 
-cat << EOF > "$PYCSW_MAIN_CFG"
+cat << EOF > $PYCSW_HOME/default.cfg
 
 [server]
 home=/var/www/pycsw
@@ -135,7 +145,7 @@ role=pointOfContact
 
 EOF
 
-cat << EOF > "$PYCSW_APISO_CFG"
+cat << EOF > $PYCSW_HOME/server/profiles/apiso/apiso.cfg
 
 [repository]
 typename=gmd:MD_Metadata
