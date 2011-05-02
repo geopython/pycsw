@@ -54,14 +54,14 @@ An alternative method is to use the `One-Click Installer <http://software.opensu
 Installing on Ubuntu/Xubuntu/Kubuntu
 ------------------------------------
 
-In order to install pycsw to an Ubuntu based distribution, one can use the OSGeoLive installation script located in pycsw/etc/dist folder.
+In order to install pycsw to an Ubuntu based distribution, one can use the OSGeoLive installation script located in ``pycsw/etc/dist``.
 
 .. code-block:: bash
 
   # cd pycsw/etc/dist
   # sudo ./install_pycsw.sh
 
-The script installs the dependencies (Apache, lxml, sqlalchemy, shapely) and then pycsw to the /var/www folder.
+The script installs the dependencies (Apache, lxml, sqlalchemy, shapely) and then pycsw to ``/var/www``. 
   
 Running on Windows
 ------------------
