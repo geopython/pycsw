@@ -116,6 +116,10 @@ class Csw(object):
         self.log.debug('Repositories loaded: %s.' % self.repos)
 
         # load profiles
+
+        # turn on APISO by default
+        self.config['server']['profiles'] = 'apiso'
+
         self.log.debug('Loading profiles.')
 
         if self.config['server'].has_key('profiles'):
@@ -128,12 +132,7 @@ class Csw(object):
                 key = tmp.outputschema  # to ref by outputschema
                 self.profiles['loaded'][key] = tmp
                 self.profiles['loaded'][key].extend_core(
-                config.MODEL, config.NAMESPACES, self.repos)
-
-                self.repos[self.profiles['loaded'][key].typename] = \
-                repository.Repository(
-                self.profiles['loaded'][key].config['repository']['db'],
-                self.profiles['loaded'][key].config['repository']['db_table'])
+                config.MODEL, config.NAMESPACES)
     
             self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
 
@@ -669,8 +668,9 @@ class Csw(object):
                         listofvalues = etree.SubElement(domainvalue,
                         util.nspath_eval('csw:ListOfValues'))
                         for result in results:
-                            etree.SubElement(listofvalues,
-                            util.nspath_eval('csw:Value')).text = result[0]
+                            if result[0] != '':  # drop null values
+                                etree.SubElement(listofvalues,
+                                util.nspath_eval('csw:Value')).text = result[0]
                         domainvalue.attrib['type'] = repo
                     except Exception, err:
                         self.log.debug('No results for propertyname %s: %s.' %
@@ -746,11 +746,7 @@ class Csw(object):
         # check elementname's
         if self.kvp.has_key('elementname'):
             for ename in self.kvp['elementname']:
-                if self.kvp['outputschema'] == config.NAMESPACES['csw']:
-                    enamelist = self.repos['csw:Record'].queryables['_all'].keys()
-                else:  # it's a profile elementname
-                    enamelist = self.profiles['loaded']\
-                    [self.kvp['outputschema']].queryables['_all'].keys()
+                enamelist = self.repos[self.kvp['typenames'][0]].queryables['_all'].keys()
                 if ename not in enamelist:
                     return self.exceptionreport('InvalidParameterValue',
                     'elementname', 'Invalid ElementName parameter value: %s' %
@@ -925,7 +921,6 @@ class Csw(object):
 
             for res in results:
                 for rec in res['records'][int(self.kvp['startposition'])-1:int(max1)-1]:
-                #for rec in res['records']:
                     if (self.kvp['outputschema'] == 
                         'http://www.opengis.net/cat/csw/2.0.2' and
                         self.kvp['typenames'][0] == 'csw:Record'):
@@ -939,12 +934,12 @@ class Csw(object):
                         self.profiles['loaded']\
                         [config.NAMESPACES[self.kvp['typenames'][0].split(':')[0]]].
                         write_record(rec, self.kvp['elementsetname'],
-                        self.kvp['outputschema']))
+                        self.kvp['outputschema'], self.repos[self.kvp['typenames'][0]].queryables['_all']))
                     else:  # use profile serializer to output native output format
                         searchresults.append(
                         self.profiles['loaded'][self.kvp['outputschema']].\
                         write_record(rec, self.kvp['elementsetname'],
-                        self.kvp['outputschema']))
+                        self.kvp['outputschema'], self.repos[self.kvp['typenames'][0]].queryables['_all']))
 
         if (self.kvp.has_key('distributedsearch') and
             self.kvp['distributedsearch'] == 'TRUE' and
@@ -1009,7 +1004,7 @@ class Csw(object):
             self.repos[repo].query(ids=ids, propertyname = 
             self.repos[repo].queryables['_all']['_id']['obj_attr'])})
 
-            self.log.debug('Presenting %s records.' % str(len(results)))
+            #self.log.debug('Presenting %s records.' % str(len(results['records'])))
 
             if raw is True:  # GetRepositoryItem request
                 self.log.debug('GetRepositoryItem request.')
@@ -1019,15 +1014,14 @@ class Csw(object):
 
         for result in results:
             for record in result['records']:
-                node.append(self._write_record(
-                record, self.repos[result['typename']].queryables['_all']))
-
-# TODO PROFILE output
-#                for result in results:
-#                    node.append(
-#                    self.profiles['loaded'][prof].write_record(
-#                    result, self.kvp['elementsetname'],
-#                    self.kvp['outputschema']))
+                if result['typename'] == 'csw:Record':
+                    node.append(self._write_record(
+                    record, self.repos[result['typename']].queryables['_all']))
+                else:  # it's a profile output
+                    node.append(
+                    self.profiles['loaded'][self.kvp['outputschema']].write_record(
+                    record, self.kvp['elementsetname'],
+                    self.kvp['outputschema'], self.repos[repo].queryables['_all']))
 
         if raw is True and len(results) == 0:
             return None

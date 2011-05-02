@@ -35,31 +35,18 @@
 
 import os
 from lxml import etree
-from server import config, core_queryables, profile, repository, util
+from server import config, profile, repository, util
 
 # get configuration and init repo connection
 CFG = config.get_config('default.cfg')
 REPOS = {}
 
-REPOS[CFG['repository']['typename']] = \
-repository.Repository(CFG['repository']['db'], CFG['repository']['db_table'])
-
-REPOS[CFG['repository']['typename']].cq = \
-core_queryables.CoreQueryables(CFG, 'na')
-
-if CFG['server'].has_key('profiles'):
-    PROFILES = profile.load_profiles(
-    os.path.join('server', 'profiles'), profile.Profile,
-    CFG['server']['profiles'])
-
-for prof in PROFILES['plugins'].keys():
-    tmp = PROFILES['plugins'][prof]()
-    REPOS[tmp.typename] = \
-    repository.Repository(
-    tmp.config['repository']['db'],
-    tmp.config['repository']['db_table'])
-    REPOS[tmp.typename].cq = \
-    core_queryables.CoreQueryables(tmp.config, 'na')
+for repo in CFG:
+    if repo.find('repository:') != -1 and \
+        CFG[repo]['enabled'] == 'true':  # load repository
+            rtm = CFG[repo]['typename']
+            REPOS[CFG[repo]['typename']] = \
+            repository.Repository(CFG[repo])
 
 # write out sitemap document
 URLSET = etree.Element(util.nspath_eval('sitemap:urlset'),
@@ -77,7 +64,7 @@ for repo in REPOS:
         url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
         uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
         (CFG['server']['url'],
-        getattr(rec, REPOS[repo].cq.mappings['_id']['obj_attr']))
+        getattr(rec, REPOS[repo].queryables['_all']['_id']['obj_attr']))
         etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
 
 # to stdout

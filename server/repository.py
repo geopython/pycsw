@@ -59,13 +59,20 @@ class Repository(object):
         # generate core queryables db and obj bindings
         self.queryables = {}       
 
-        qname = repo['cq_name']
-        self.queryables[qname] = {}
+        if repo.has_key('cq_name'):
+          self.queryables[repo['cq_name']] = {}
+        if repo.has_key('aq_name'):
+          self.queryables[repo['aq_name']] = {}
 
         for cqm in repo:
-            if cqm.find('cq_') != -1 and cqm != 'cq_name':  # it's a cq
-                if cqm != 'cq_name':
-                    tmp = cqm.replace('cq_','').split('_', 1)
+            if cqm.find('cq_') != -1 or cqm.find('aq_') != -1:  # it's a cq/aq
+                if cqm not in ['cq_name', 'aq_name']:  # skip queryable name
+                    if cqm.find('cq_') != -1:
+                        tmp = cqm.replace('cq_','').split('_', 1)
+                        qname = repo['cq_name']
+                    elif cqm.find('aq_') != -1:
+                        tmp = cqm.replace('aq_','').split('_', 1)
+                        qname = repo['aq_name']
                     k = ':'.join(tmp)
                     cqv = repo[cqm]
                     val = '%s_%s' % (table, cqv)
