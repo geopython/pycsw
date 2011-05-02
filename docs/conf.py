@@ -138,7 +138,8 @@ html_last_updated_fmt = '%Y-%m-%dT%H:%M:%SZ'
 
 # Custom sidebar templates, maps document names to template names.
 html_sidebars = {
-    'index':'indexsidebar.html',
+    #'index':'indexsidebar.html',
+    '**':'indexsidebar.html',
 }
 
 # Additional templates that should be rendered to pages, maps page names to
