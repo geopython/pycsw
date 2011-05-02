@@ -12,15 +12,15 @@ Configuration
 
 To expose your geospatial metadata via the APISO, via pycsw, perform the following actions:
 
-- enable APISO support
 - setup the database
 - import metadata
+- configure APISO repository
 - configure the db connection
 
 Enabling APISO Support
 ----------------------
 
-By default, all profiles in pycsw are disabled.  To enable APISO, set ``[server.profiles]=apiso`` in ``default.cfg``.
+APISO support is enabled By default.
 
 Setting up the Database
 -----------------------
@@ -43,7 +43,7 @@ This will import all ``*.xml`` records from ``/path/to/records`` into ``md_metad
 Configuring the Database Connection
 -----------------------------------
 
-APISO runtime configuration is defined by ``apiso.cfg``.  By default, ``server/profiles/apiso/apiso-sample.cfg`` contains all required binding information (Copy the file to ``default.cfg``).  If you are setting up your database as per above, the default configuration needs only the ``repository.db`` value to be updated.  Otherwise, you can map your own database table and columns.
+APISO runtime configuration is defined by specifying a ``[repository:*]`` section and setting the ``typename`` option to ``gmd:MD_Metadata``.  By default, ``default-sample.cfg`` contains all required binding information (see the ``[repository:iso_records]`` section).  If you are setting up your database as per above, the default configuration needs only the ``repository.database`` value to be updated.  Otherwise, you can map your own database table and columns.
 
 Testing
 -------
