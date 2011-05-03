@@ -96,7 +96,7 @@ transactions=false
 transactions_ips=127.0.0.1
 #profiles=apiso
 
-[metadata]
+[metadata:main]
 identification_title=pycsw Geospatial Catalogue
 identification_abstract=pycsw is an OGC CSW server implementation written in Python
 identification_keywords=catalogue,discovery
@@ -194,6 +194,28 @@ aq_apiso_ResponsiblePartyRole=responsible_party_role
 aq_apiso_SpecificationTitle=specification_title
 aq_apiso_SpecificationDate=specification_date
 aq_apiso_SpecificationDateType=specification_date_type
+
+[metadata:inspire]
+enabled=true
+languages_supported=eng,gre
+default_language=eng
+title_eng=pycsw (English)
+title_gre=pycsw (Greek)
+abstract_eng=pycsw abstract (English)
+abstract_gre=pycsw abstract (Greek)
+TemporalExtent_begin=2011-02-01
+TemporalExtent_end=2011-03-30
+SpecificationTitle=Commission Regulation (EC) No 976/2009 of 19 October 2009 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards the Network Services,Commission Regulation (EC) No 1205/2008 of 3 December 2008 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards metadata (Text with E EA relevance)
+SpecificationType=inspire_common:citationInspireNSRegulation_eng,inspire_common:citationInspireMDRegulation_eng
+SpecificationURL=http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:32009R0976:EN:NOT,http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:32008R1205:EN:NOT
+SpecificationURI=CELEX:32009R0976:EN:NOT,CELEX:32008R1205:EN:NOT
+SpecificationDate=2009-10-19,2008-12-03
+SpecificationDegree=notEvaluated,notEvaluated
+MetadataDate=2011-03-29
+OrganisationName=National Technical University of Athens
+PointOfContactEmail=tzotsos@gmail.com
+GemetKeyword=Utility and governmental services
+InspireKeywords=discovery,catalog,csw,ogc
 
 EOF
 
