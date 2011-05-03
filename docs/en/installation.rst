@@ -77,7 +77,7 @@ Note that the use of ``-u`` is required to properly output gzip-compressed respo
 Security
 --------
 
-By default, ``default.cfg`` is within root of the pycsw install.  If you have setup pycsw in a non cgi-bin area, this file could be read.  To protect the configuration, you have a couple of options:
+By default, ``default.cfg`` is at the root of the pycsw install.  If you have setup pycsw outside your HTTP server's ``cgi-bin`` area, this file could be read.  To protect the configuration, you have a couple of options:
 
 - move ``default.cfg`` to a non HTTP accessible area, and modify ``csw.py`` to point to the updated location
 - set your web server to deny access to the configuration.  For example, in Apache, add the following to ``httpd.conf``:
