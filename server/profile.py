@@ -51,6 +51,11 @@ class Profile(object):
         ''' Extend config.MODEL and config.NAMESPACES '''
         raise NotImplementedError
 
+    def check_parameter(self):
+        ''' Perform extra parameters checking.
+            Return or dict with keys "locator", "code", "text" or None ''' 
+        raise NotImplementedError
+
     def get_extendedcapabilities(self):
         ''' Return ExtendedCapabilities child as lxml.etree.Element '''
         raise NotImplementedError

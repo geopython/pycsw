@@ -40,8 +40,10 @@ apt-get install apache2 python-lxml python-sqlalchemy python-shapely
 USER_NAME=user
 USER_HOME=/home/$USER_NAME
 
+WEB=/var/www
+
 # package specific settings
-PYCSW_HOME=/var/www/pycsw
+PYCSW_HOME=$WEB/pycsw
 PYCSW_TMP=/tmp/build_pycsw
 PYCSW_APACHE_CONF=/etc/apache2/conf.d/pycsw
 
@@ -58,13 +60,13 @@ echo -n 'Extracting package ...'
 # Uncompress pycsw LiveDVD tarball.
 tar -zxvf "$PYCSW_TMP/pycsw-$VERSION.tar.gz" -C "$PYCSW_TMP"
 mv "$PYCSW_TMP/pycsw-$VERSION" "$PYCSW_TMP/pycsw"
-mv "$PYCSW_TMP/pycsw" /var/www/
+mv "$PYCSW_TMP/pycsw" $WEB
 
 echo -n "Updating Apache configuration ..."
 # Add pycsw apache configuration
 cat << EOF > "$PYCSW_APACHE_CONF"
 
-        <Directory /var/www/pycsw/>
+        <Directory $PYCSW_HOME>
 	    Options FollowSymLinks +ExecCGI
 	    Allow from all
 	    AddHandler cgi-script .py
@@ -94,10 +96,34 @@ transactions=false
 transactions_ips=127.0.0.1
 #profiles=apiso
 
-[repository]
+[metadata]
+identification_title=pycsw Geospatial Catalogue
+identification_abstract=pycsw is an OGC CSW server implementation written in Python
+identification_keywords=catalogue,discovery
+identification_fees=None
+identification_accessconstraints=None
+provider_name=pycsw
+provider_url=http://pycsw.org/
+contact_name=Kralidis, Tom
+contact_position=Senior Systems Scientist
+contact_address=TBA
+contact_city=Toronto
+contact_stateorprovince=Ontario
+contact_postalcode=M9C 3Z9
+contact_country=Canada
+contact_phone=+01-416-xxx-xxxx
+contact_fax=+01-416-xxx-xxxx
+contact_email=tomkralidis@hotmail.com
+contact_url=http://www.kralidis.ca/
+contact_hours=0800h - 1600h EST
+contact_instructions=During hours of service.  Off on weekends.
+contact_role=pointOfContact
+
+[repository:cite]
 typename=csw:Record
-db=sqlite:////var/www/pycsw/data/cite/dc.db
-db_table=records
+enabled=true
+database=sqlite:////var/www/pycsw/data/cite/dc.db
+table=records
 cq_dc_title=title
 cq_dc_creator=creator
 cq_dc_subject=subject
@@ -116,47 +142,17 @@ cq_ows_BoundingBox=bbox
 cq_dc_rights=rights
 cq_csw_AnyText=csw_anytext
 
-[identification]
-title=pycsw Geospatial Catalogue
-abstract=pycsw is an OGC CSW server implementation written in Python
-keywords=catalogue,discovery
-fees=None
-accessconstraints=None
-
-[provider]
-name=pycsw
-url=http://pycsw.org/
-
-[contact]
-name=Kralidis, Tom
-position=Senior Systems Scientist
-address=TBA
-city=Toronto
-stateorprovince=Ontario
-postalcode=M9C 3Z9
-country=Canada
-phone=+01-416-xxx-xxxx
-fax=+01-416-xxx-xxxx
-email=tomkralidis@hotmail.com
-url=http://www.kralidis.ca/
-hours=0800h - 1600h EST
-contactinstructions=During hours of service.  Off on weekends.
-role=pointOfContact
-
-EOF
-
-cat << EOF > $PYCSW_HOME/server/profiles/apiso/apiso.cfg
-
-[repository]
+[repository:iso_records]
+enabled=true
 typename=gmd:MD_Metadata
-db=sqlite:////var/www/pycsw/server/profiles/apiso/data/apiso.db
-db_table=md_metadata
+database=sqlite:////var/www/pycsw/trunk/server/profiles/apiso/data/apiso.db
+table=md_metadata
+cq_name=SupportedIsoQueryables
 cq_apiso_Subject=subject
 cq_apiso_Title=title
 cq_apiso_Abstract=abstract
 cq_apiso_Format=format
 cq_apiso_Identifier=resource_identifier
-cq_apiso_ResourceIdentifier=resource_identifier
 cq_apiso_Modified=date
 cq_apiso_Type=type
 cq_apiso_BoundingBox=bbox
@@ -176,8 +172,8 @@ cq_apiso_GeographicDescriptionCode=geographic_description_code
 cq_apiso_Denominator=scale_denominator
 cq_apiso_DistanceValue=distance_value
 cq_apiso_DistanceUOM=distance_unit
-cq_apiso_TempExtent_begin=temporal_extend_begin
-cq_apiso_TempExtent_End=temporal_extend_end
+cq_apiso_TempExtent_begin=temporal_extent_begin
+cq_apiso_TempExtent_end=temporal_extent_end
 cq_apiso_AnyText=csw_anytext
 cq_apiso_ServiceType=service_type
 cq_apiso_ServiceTypeVersion=service_type_version
@@ -186,6 +182,18 @@ cq_apiso_CouplingType=coupling_type
 cq_apiso_OperatesOn=operates_on
 cq_apiso_OperatesOnIdentifier=operates_on_identifier
 cq_apiso_OperatesOnName=operates_on_name
+
+aq_name=AdditionalQueryables
+aq_apiso_Degree=degree
+aq_apiso_AccessConstraints=access_constraints
+aq_apiso_OtherConstraints=other_constraints
+aq_apiso_Classification=classification
+aq_apiso_ConditionApplyingToAccessAndUse=conditions_access_use
+aq_apiso_Lineage=lineage
+aq_apiso_ResponsiblePartyRole=responsible_party_role
+aq_apiso_SpecificationTitle=specification_title
+aq_apiso_SpecificationDate=specification_date
+aq_apiso_SpecificationDateType=specification_date_type
 
 EOF
 

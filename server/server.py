@@ -132,7 +132,7 @@ class Csw(object):
                 key = tmp.outputschema  # to ref by outputschema
                 self.profiles['loaded'][key] = tmp
                 self.profiles['loaded'][key].extend_core(
-                config.MODEL, config.NAMESPACES)
+                config.MODEL, config.NAMESPACES, self.config)
     
             self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
 
@@ -302,6 +302,15 @@ class Csw(object):
                 if section == 'OperationsMetadata':
                     operationsmetadata = True
 
+        # check extra parameters that may be def'd by profiles
+        if self.profiles is not None:
+            for prof in self.profiles['loaded'].keys():
+                result = \
+                self.profiles['loaded'][prof].check_parameter(self.kvp)
+                if result is not None:
+                    return self.exceptionreport(result['code'],
+                    result['locator'], result['text'])
+
         node = etree.Element(util.nspath_eval('csw:Capabilities'),
         nsmap=config.NAMESPACES, version='2.0.2')
 
@@ -316,17 +325,17 @@ class Csw(object):
             util.nspath_eval('ows:ServiceIdentification'))
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Title')).text = \
-            self.config['metadata']['identification_title']
+            self.config['metadata:main']['identification_title']
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Abstract')).text = \
-            self.config['metadata']['identification_abstract']
+            self.config['metadata:main']['identification_abstract']
 
             keywords = etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Keywords'))
 
             for k in \
-            self.config['metadata']['identification_keywords'].split(','):
+            self.config['metadata:main']['identification_keywords'].split(','):
                 etree.SubElement(
                 keywords, util.nspath_eval('ows:Keyword')).text = k
             etree.SubElement(serviceidentification,
@@ -337,11 +346,11 @@ class Csw(object):
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Fees')).text = \
-            self.config['metadata']['identification_fees']
+            self.config['metadata:main']['identification_fees']
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:AccessConstraints')).text = \
-            self.config['metadata']['identification_accessconstraints']
+            self.config['metadata:main']['identification_accessconstraints']
 
         if serviceprovider is True:
             self.log.debug('Writing section ServiceProvider.')
@@ -350,79 +359,79 @@ class Csw(object):
 
             etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ProviderName')).text = \
-            self.config['metadata']['provider_name']
+            self.config['metadata:main']['provider_name']
 
             providersite = etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ProviderSite'))
 
             providersite.attrib[util.nspath_eval('xlink:type')] = 'simple'
             providersite.attrib[util.nspath_eval('xlink:href')] = \
-            self.config['metadata']['provider_url']
+            self.config['metadata:main']['provider_url']
 
             servicecontact = etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ServiceContact'))
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:IndividualName')).text = \
-            self.config['metadata']['contact_name']
+            self.config['metadata:main']['contact_name']
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:PositionName')).text = \
-            self.config['metadata']['contact_position']
+            self.config['metadata:main']['contact_position']
 
             contactinfo = etree.SubElement(servicecontact,
             util.nspath_eval('ows:ContactInfo'))
 
             phone = etree.SubElement(contactinfo, util.nspath_eval('ows:Phone'))
             etree.SubElement(phone, util.nspath_eval('ows:Voice')).text = \
-            self.config['metadata']['contact_phone']
+            self.config['metadata:main']['contact_phone']
 
             etree.SubElement(phone, util.nspath_eval('ows:Facsimile')).text = \
-            self.config['metadata']['contact_fax']
+            self.config['metadata:main']['contact_fax']
 
             address = etree.SubElement(contactinfo,
             util.nspath_eval('ows:Address'))
 
             etree.SubElement(address,
             util.nspath_eval('ows:DeliveryPoint')).text = \
-            self.config['metadata']['contact_address']
+            self.config['metadata:main']['contact_address']
 
             etree.SubElement(address, util.nspath_eval('ows:City')).text = \
-            self.config['metadata']['contact_city']
+            self.config['metadata:main']['contact_city']
 
             etree.SubElement(address,
             util.nspath_eval('ows:AdministrativeArea')).text = \
-            self.config['metadata']['contact_stateorprovince']
+            self.config['metadata:main']['contact_stateorprovince']
 
             etree.SubElement(address,
             util.nspath_eval('ows:PostalCode')).text = \
-            self.config['metadata']['contact_postalcode']
+            self.config['metadata:main']['contact_postalcode']
 
             etree.SubElement(address, util.nspath_eval('ows:Country')).text = \
-            self.config['metadata']['contact_country']
+            self.config['metadata:main']['contact_country']
 
             etree.SubElement(address,
             util.nspath_eval('ows:ElectronicMailAddress')).text = \
-            self.config['metadata']['contact_email']
+            self.config['metadata:main']['contact_email']
 
             url = etree.SubElement(contactinfo,
             util.nspath_eval('ows:OnlineResource'))
 
             url.attrib[util.nspath_eval('xlink:type')] = 'simple'
             url.attrib[util.nspath_eval('xlink:href')] = \
-            self.config['metadata']['contact_url']
+            self.config['metadata:main']['contact_url']
 
             etree.SubElement(contactinfo,
                              util.nspath_eval('ows:HoursOfService')).text = \
-                             self.config['metadata']['contact_hours']
+                             self.config['metadata:main']['contact_hours']
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows:ContactInstructions')).text = \
-            self.config['metadata']['contact_instructions']
+            self.config['metadata:main']['contact_instructions']
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:Role')).text = \
-            self.config['metadata']['contact_role']
+            self.config['metadata:main']['contact_role']
 
         if operationsmetadata is True:
             self.log.debug('Writing section OperationsMetadata.')

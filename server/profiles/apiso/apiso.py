@@ -43,6 +43,11 @@ NAMESPACES = {
     'srv': 'http://www.isotc211.org/2005/srv'
 }
 
+INSPIRE_NAMESPACES = {
+    'inspire_ds': 'http://inspire.ec.europa.eu/schemas/inspire_ds/1.0',
+    'inspire_common': 'http://inspire.ec.europa.eu/schemas/common/1.0'
+}
+
 CODELIST = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml'
 CODESPACE = 'ISOTC211/19115'
 
@@ -50,7 +55,7 @@ class APISO(profile.Profile):
     def __init__(self):
         profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES['gmd'], 'gmd:MD_Metadata', NAMESPACES['gmd'])
 
-    def extend_core(self, model, namespaces):
+    def extend_core(self, model, namespaces, config):
         ''' Extend core configuration '''
 
         # model
@@ -64,9 +69,183 @@ class APISO(profile.Profile):
         # namespaces
         namespaces.update(NAMESPACES)
 
+        # update INSPIRE vars
+        namespaces.update(INSPIRE_NAMESPACES)
+
+        # set INSPIRE config
+        if config.has_key('metadata:inspire') and config['metadata:inspire']['enabled'] == 'true':
+            self.inspire_config = config['metadata:inspire']
+            self.url = config['server']['url']
+            self.current_language = self.inspire_config['default_language']
+        else:
+            self.inspire_config = None
+
+    def check_parameter(self, kvp):
+        '''Check for Language parameter in GetCapabilities request'''
+
+        if self.inspire_config is not None:
+            result = None
+            if kvp.has_key('language') == False:
+                self.current_language = self.inspire_config['default_language']
+            else:
+                if kvp['language'] not in self.inspire_config['languages_supported'].split(','):
+                    text = 'Requested Language not supported, Supported languages: %s' % self.inspire_config['languages_supported']
+                    return {'error': 'true', 'locator': 'language', 'code': 'InvalidParameterValue', 'text': text}
+                else:
+                    self.current_language=kvp['language']
+                    return None
+            return None
+        return None
+
     def get_extendedcapabilities(self):
         ''' Add child to ows:OperationsMetadata Element '''
-        return None
+
+        if self.inspire_config is not None:
+            ex_caps = etree.Element(
+                util.nspath_eval('inspire_ds:ExtendedCapabilities'))
+            
+            ex_caps.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+            '%s %s/inspire_ds.xsd' % \
+            (INSPIRE_NAMESPACES['inspire_ds'], INSPIRE_NAMESPACES['inspire_ds'])
+            
+            # Resource Locator
+            res_loc = etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:ResourceLocator'))
+            
+            etree.SubElement(res_loc,
+            util.nspath_eval('inspire_common:URL')).text = '%s?service=CSW&version=2.0.2&request=GetCapabilities' % self.url
+
+            etree.SubElement(res_loc,
+            util.nspath_eval('inspire_common:MediaType')).text= \
+            'application/vnd.ogc.wms_xml'
+            
+            # Resource Type
+            etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:ResourceType')).text = 'service'
+            
+            # Temporal Reference
+            temp_ref = etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:TemporalReference'))
+            
+            temp_extent = etree.SubElement(temp_ref,
+            util.nspath_eval('inspire_common:TemporalExtent'))
+            
+            interval_dates = etree.SubElement(temp_extent,
+            util.nspath_eval('inspire_common:IntervalOfDates'))
+            
+            etree.SubElement(interval_dates,
+            util.nspath_eval('inspire_common:StartingDate')).text = self.inspire_config['TemporalExtent_begin']
+            
+            etree.SubElement(interval_dates,
+            util.nspath_eval('inspire_common:EndDate')).text = self.inspire_config['TemporalExtent_end']
+            
+
+            # TODO: optimize
+            # Conformity
+            k = 0
+            #for a,b,c,d,e,f in zip(map(lambda x: self.inspire_config[x].split(','), ['SpecificationTitle', 'SpecificationType', 'SpecificationDate', 'SpecificationURI', 'SpecificationURL', 'SpecificationDegree'])):
+            for co in (self.inspire_config['SpecificationTitle'].split(',')):
+                cfm = etree.SubElement(ex_caps,
+                util.nspath_eval('inspire_common:Conformity'))
+                
+                spec = etree.SubElement(cfm,
+                util.nspath_eval('inspire_common:Specification'))
+    
+                spec.attrib[util.nspath_eval('xsi:type')] =  \
+                self.inspire_config['SpecificationType'].split(',')[k]
+    
+                etree.SubElement(spec,
+                util.nspath_eval('inspire_common:Title')).text = self.inspire_config['SpecificationTitle'].split(',')[k]
+                
+                etree.SubElement(spec,
+                util.nspath_eval('inspire_common:DateOfPublication')).text = self.inspire_config['SpecificationDate'].split(',')[k]
+    
+                etree.SubElement(spec,
+                util.nspath_eval('inspire_common:URI')).text = self.inspire_config['SpecificationURI'].split(',')[k]
+                
+                spec_loc = etree.SubElement(spec,
+                util.nspath_eval('inspire_common:ResourceLocator'))
+    
+                etree.SubElement(spec_loc,
+                util.nspath_eval('inspire_common:URL')).text = \
+                self.inspire_config['SpecificationURL'].split(',')[k]
+    
+                etree.SubElement(spec_loc,
+                util.nspath_eval('inspire_common:MediaType')).text = 'text/html'
+                
+                spec = etree.SubElement(cfm,
+                util.nspath_eval('inspire_common:Degree')).text = self.inspire_config['SpecificationDegree'].split(',')[k]
+                
+                k=k+1
+            
+            # Metadata Point of Contact
+            poc = etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:MetadataPointOfContact'))
+    
+            etree.SubElement(poc,
+            util.nspath_eval('inspire_common:OrganisationName')).text = self.inspire_config['OrganisationName']
+    
+            etree.SubElement(poc,
+            util.nspath_eval('inspire_common:EmailAddress')).text = self.inspire_config['PointOfContactEmail']
+            
+            # Metadata Date
+            etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:MetadataDate')).text = self.inspire_config['MetadataDate']
+            
+            # Spatial Data Service Type
+            etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:SpatialDataServiceType')).text = 'discovery'
+            
+            # Mandatory Keyword
+            mkey = etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:MandatoryKeyword'))
+    
+            mkey.attrib[util.nspath_eval('xsi:type')] = 'inspire_common:classificationOfSpatialDataService'
+    
+            etree.SubElement(mkey,
+            util.nspath_eval('inspire_common:KeywordValue')).text = 'humanCatalogueViewer'
+            
+            # Gemet Keyword
+            gkey = etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:Keyword'))
+    
+            gkey.attrib[util.nspath_eval('xsi:type')] = 'inspire_common:inspireTheme_eng'
+    
+            ocv = etree.SubElement(gkey,
+            util.nspath_eval('inspire_common:OriginatingControlledVocabulary'))
+    
+            etree.SubElement(ocv,
+            util.nspath_eval('inspire_common:Title')).text = 'GEMET - INSPIRE themes'
+    
+            etree.SubElement(ocv,
+            util.nspath_eval('inspire_common:DateOfPublication')).text = '2008-06-01'
+    
+            etree.SubElement(gkey,
+            util.nspath_eval('inspire_common:KeywordValue')).text = self.inspire_config['GemetKeyword']
+            
+            # Languages
+            slang = etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:SupportedLanguages'))
+    
+            dlang = etree.SubElement(slang,
+            util.nspath_eval('inspire_common:DefaultLanguage'))
+    
+            etree.SubElement(dlang,
+            util.nspath_eval('inspire_common:Language')).text = self.inspire_config['default_language']
+            
+            for l in self.inspire_config['languages_supported'].split(','):
+                lang = etree.SubElement(slang,
+                util.nspath_eval('inspire_common:SupportedLanguage'))
+    
+                etree.SubElement(lang,
+                util.nspath_eval('inspire_common:Language')).text = l
+            
+            clang = etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:ResponseLanguage'))
+            etree.SubElement(clang,
+            util.nspath_eval('inspire_common:Language')).text = self.current_language
+            
+            return ex_caps
 
     def get_schemacomponents(self):
         ''' Return schema components as lxml.etree.Element list '''
