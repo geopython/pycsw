@@ -306,7 +306,7 @@ class Csw(object):
         if self.profiles is not None:
             for prof in self.profiles['loaded'].keys():
                 result = \
-                self.profiles['loaded'][prof].check_parameter(self.kvp)
+                self.profiles['loaded'][prof].check_parameters(self.kvp)
                 if result is not None:
                     return self.exceptionreport(result['code'],
                     result['locator'], result['text'])
