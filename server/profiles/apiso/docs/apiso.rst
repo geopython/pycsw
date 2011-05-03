@@ -49,3 +49,12 @@ Testing
 -------
 
 A testing interface is available in ``server/profiles/apiso/tester/index.html`` which contains tests specific to APISO to demonstrate functionality.  See :ref:`tester` for more information.
+
+INSPIRE Support
+---------------
+
+APISO includes extensions for enabling `INSPIRE Discovery Services 3.0`_ support.  To enable the INSPIRE extension to APISO, create a ``[metadata:inspire]`` section in the main configuration with ``enabled`` set to ``true``.
+
+TODO: describe metadata setup
+
+.. _`INSPIRE Discovery Services 3.0`: http://inspire.jrc.ec.europa.eu/documents/Network_Services/TechnicalGuidance_DiscoveryServices_v3.0.pdf
