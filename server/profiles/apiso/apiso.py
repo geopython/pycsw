@@ -80,7 +80,7 @@ class APISO(profile.Profile):
         else:
             self.inspire_config = None
 
-    def check_parameter(self, kvp):
+    def check_parameters(self, kvp):
         '''Check for Language parameter in GetCapabilities request'''
 
         if self.inspire_config is not None:
