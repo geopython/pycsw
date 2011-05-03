@@ -51,9 +51,9 @@ class Profile(object):
         ''' Extend config.MODEL and config.NAMESPACES '''
         raise NotImplementedError
 
-    def check_parameter(self):
+    def check_parameters(self):
         ''' Perform extra parameters checking.
-            Return or dict with keys "locator", "code", "text" or None ''' 
+            Return dict with keys "locator", "code", "text" or None ''' 
         raise NotImplementedError
 
     def get_extendedcapabilities(self):
