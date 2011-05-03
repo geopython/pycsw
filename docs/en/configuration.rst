@@ -27,7 +27,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **transactions_ips**: comma delimited list of IP addresses which can perform transactions.  See :ref:`transactions` for more details
 - **profiles**: comma separated list of profiles to load at runtime (default is none).  See :ref:`profiles` for more details
 
-**[metadata]**
+**[metadata:main]**
 
 - **identification_title**: the title of the service
 - **identification_abstract**: some descriptive text about the service
