@@ -18,12 +18,12 @@ To expose your geospatial metadata via the APISO, via pycsw, perform the followi
 - configure the db connection
 
 Enabling APISO Support
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 APISO support is enabled By default.
 
 Setting up the Database
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
@@ -32,7 +32,7 @@ Setting up the Database
   $ python ./sbin/setup_db.py ./server/profiles/apiso/etc/schemas/sql/md_metadata.ddl md_metadata.db
 
 Importing Metadata
-------------------
+^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
@@ -41,20 +41,38 @@ Importing Metadata
 This will import all ``*.xml`` records from ``/path/to/records`` into ``md_metadata.db``.
 
 Configuring the Database Connection
------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 APISO runtime configuration is defined by specifying a ``[repository:*]`` section and setting the ``typename`` option to ``gmd:MD_Metadata``.  By default, ``default-sample.cfg`` contains all required binding information (see the ``[repository:iso_records]`` section).  If you are setting up your database as per above, the default configuration needs only the ``repository.database`` value to be updated.  Otherwise, you can map your own database table and columns.
 
 Testing
--------
+^^^^^^^
 
 A testing interface is available in ``server/profiles/apiso/tester/index.html`` which contains tests specific to APISO to demonstrate functionality.  See :ref:`tester` for more information.
 
-INSPIRE Support
----------------
+INSPIRE Extension
+-----------------
 
-APISO includes extensions for enabling `INSPIRE Discovery Services 3.0`_ support.  To enable the INSPIRE extension to APISO, create a ``[metadata:inspire]`` section in the main configuration with ``enabled`` set to ``true``.
+Overview
+^^^^^^^^
 
-TODO: describe metadata setup
+APISO includes an extension for enabling `INSPIRE Discovery Services 3.0`_ support.  To enable the INSPIRE extension to APISO, create a ``[metadata:inspire]`` section in the main configuration with ``enabled`` set to ``true``.
+
+Configuration
+^^^^^^^^^^^^^
+
+**[metadata:inspire]**
+
+- **enabled**: whether to enable the INSPIRE extension (``true`` or ``false``)
+- **languages_supported**: supported languages (see http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, simpleType ``euLanguageISO6392B``)
+- **default_language**: the default language (see http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, simpleType ``euLanguageISO6392B``)
+- **date**: date of INSPIRE metadata offering (in `ISO 8601`_ format)
+- **gemet_keywords**: a comma-seperated keyword list of `GEMET INSPIRE theme keywords`_ about the service (see http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, complexType ``inspireTheme_eng``)
+- **conformity_service**: the level of INSPIRE conformance for spatial data sets and services (``conformant``, ``notConformant``, ``notEvaluated``)
+- **contact_organization**: the organization name responsible for the INSPIRE metadata
+- **contact_email**: the email address of entity responsible for the INSPIRE metadata
+- **temp_extent**: temporal extent of the service (in `ISO 8601`_ format).  Either a single date (i.e. ``yyyy-mm-dd``), or an extent (i.e. ``yyyy-mm-dd/yyyy-mm-dd``)
 
 .. _`INSPIRE Discovery Services 3.0`: http://inspire.jrc.ec.europa.eu/documents/Network_Services/TechnicalGuidance_DiscoveryServices_v3.0.pdf
+.. _`GEMET INSPIRE theme keywords`: http://www.eionet.europa.eu/gemet/inspire_themes
+.. _`ISO 8601`: http://en.wikipedia.org/wiki/ISO_8601
