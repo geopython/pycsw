@@ -63,8 +63,7 @@ class APISO(profile.Profile):
         model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.outputschema)
         model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
         model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.outputschema)
-        model['constraints']['IsoProfiles'] = {}
-        model['constraints']['IsoProfiles']['values'] = [self.namespace]
+        model['constraints']['IsoProfiles'] = { 'values': [self.namespace] }
 
         # namespaces
         namespaces.update(NAMESPACES)
@@ -101,6 +100,7 @@ class APISO(profile.Profile):
         ''' Add child to ows:OperationsMetadata Element '''
 
         if self.inspire_config is not None:
+
             ex_caps = etree.Element(
                 util.nspath_eval('inspire_ds:ExtendedCapabilities'))
 
@@ -116,8 +116,7 @@ class APISO(profile.Profile):
             util.nspath_eval('inspire_common:URL')).text = '%s?service=CSW&version=2.0.2&request=GetCapabilities' % self.url
 
             etree.SubElement(res_loc,
-            util.nspath_eval('inspire_common:MediaType')).text= \
-            'application/xml'
+            util.nspath_eval('inspire_common:MediaType')).text = 'application/xml'
 
             # Resource Type
             etree.SubElement(ex_caps,
@@ -130,59 +129,65 @@ class APISO(profile.Profile):
             temp_extent = etree.SubElement(temp_ref,
             util.nspath_eval('inspire_common:TemporalExtent'))
 
-            interval_dates = etree.SubElement(temp_extent,
-            util.nspath_eval('inspire_common:IntervalOfDates'))
+            val = self.inspire_config['temp_extent'].split('/')
 
-            etree.SubElement(interval_dates,
-            util.nspath_eval('inspire_common:StartingDate')).text = self.inspire_config['TemporalExtent_begin']
+            if len(val) == 1:
+                etree.SubElement(temp_extent,
+                util.nspath_eval('inspire_common:IndividualDate')).text = val[0]
 
-            etree.SubElement(interval_dates,
-            util.nspath_eval('inspire_common:EndDate')).text = self.inspire_config['TemporalExtent_end']
+            else:
+                interval_dates = etree.SubElement(temp_extent,
+                util.nspath_eval('inspire_common:IntervalOfDates'))
 
-            # Conformity
-            for a,b,c,d,e,f in zip(*map(lambda x: self.inspire_config[x].split(','), ['SpecificationTitle', 'SpecificationType', 'SpecificationDate', 'SpecificationURI', 'SpecificationURL', 'SpecificationDegree'])):
-                cfm = etree.SubElement(ex_caps,
-                util.nspath_eval('inspire_common:Conformity'))
+                etree.SubElement(interval_dates,
+                util.nspath_eval('inspire_common:StartingDate')).text = val[0]
 
-                spec = etree.SubElement(cfm,
-                util.nspath_eval('inspire_common:Specification'))
+                etree.SubElement(interval_dates,
+                util.nspath_eval('inspire_common:EndDate')).text = val[1]
 
-                spec.attrib[util.nspath_eval('xsi:type')] =  b
+            # Conformity - service
+            cfm = etree.SubElement(ex_caps,
+            util.nspath_eval('inspire_common:Conformity'))
 
-                etree.SubElement(spec,
-                util.nspath_eval('inspire_common:Title')).text = a
+            spec = etree.SubElement(cfm,
+            util.nspath_eval('inspire_common:Specification'))
 
-                etree.SubElement(spec,
-                util.nspath_eval('inspire_common:DateOfPublication')).text = c
+            spec.attrib[util.nspath_eval('xsi:type')] =  'inspire_common:citationInspireInteroperabilityRegulation_eng'
 
-                etree.SubElement(spec,
-                util.nspath_eval('inspire_common:URI')).text = d
+            etree.SubElement(spec,
+            util.nspath_eval('inspire_common:Title')).text = 'COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services'
 
-                spec_loc = etree.SubElement(spec,
-                util.nspath_eval('inspire_common:ResourceLocator'))
+            etree.SubElement(spec,
+            util.nspath_eval('inspire_common:DateOfPublication')).text = '2010-12-08'
 
-                etree.SubElement(spec_loc,
-                util.nspath_eval('inspire_common:URL')).text = e
+            etree.SubElement(spec,
+            util.nspath_eval('inspire_common:URI')).text = 'OJ:L:2010:323:0011:0102:EN:PDF'
 
-                etree.SubElement(spec_loc,
-                util.nspath_eval('inspire_common:MediaType')).text = 'text/html'
+            spec_loc = etree.SubElement(spec,
+            util.nspath_eval('inspire_common:ResourceLocator'))
 
-                spec = etree.SubElement(cfm,
-                util.nspath_eval('inspire_common:Degree')).text = f
+            etree.SubElement(spec_loc,
+            util.nspath_eval('inspire_common:URL')).text = 'http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:EN:PDF'
+
+            etree.SubElement(spec_loc,
+            util.nspath_eval('inspire_common:MediaType')).text = 'application/pdf'
+
+            spec = etree.SubElement(cfm,
+            util.nspath_eval('inspire_common:Degree')).text = self.inspire_config['conformity_service']
 
             # Metadata Point of Contact
             poc = etree.SubElement(ex_caps,
             util.nspath_eval('inspire_common:MetadataPointOfContact'))
 
             etree.SubElement(poc,
-            util.nspath_eval('inspire_common:OrganisationName')).text = self.inspire_config['OrganisationName']
+            util.nspath_eval('inspire_common:OrganisationName')).text = self.inspire_config['contact_name']
 
             etree.SubElement(poc,
-            util.nspath_eval('inspire_common:EmailAddress')).text = self.inspire_config['PointOfContactEmail']
+            util.nspath_eval('inspire_common:EmailAddress')).text = self.inspire_config['contact_email']
 
             # Metadata Date
             etree.SubElement(ex_caps,
-            util.nspath_eval('inspire_common:MetadataDate')).text = self.inspire_config['MetadataDate']
+            util.nspath_eval('inspire_common:MetadataDate')).text = self.inspire_config['date']
 
             # Spatial Data Service Type
             etree.SubElement(ex_caps,
@@ -195,25 +200,27 @@ class APISO(profile.Profile):
             mkey.attrib[util.nspath_eval('xsi:type')] = 'inspire_common:classificationOfSpatialDataService'
 
             etree.SubElement(mkey,
-            util.nspath_eval('inspire_common:KeywordValue')).text = 'humanCatalogueViewer'
+            util.nspath_eval('inspire_common:KeywordValue')).text = 'infoCatalogueService'
 
-            # Gemet Keyword
-            gkey = etree.SubElement(ex_caps,
-            util.nspath_eval('inspire_common:Keyword'))
+            # Gemet Keywords
 
-            gkey.attrib[util.nspath_eval('xsi:type')] = 'inspire_common:inspireTheme_eng'
+            for gkw in self.inspire_config['gemet_keywords'].split(','):
+                gkey = etree.SubElement(ex_caps,
+                util.nspath_eval('inspire_common:Keyword'))
 
-            ocv = etree.SubElement(gkey,
-            util.nspath_eval('inspire_common:OriginatingControlledVocabulary'))
+                gkey.attrib[util.nspath_eval('xsi:type')] = 'inspire_common:inspireTheme_eng'
 
-            etree.SubElement(ocv,
-            util.nspath_eval('inspire_common:Title')).text = 'GEMET - INSPIRE themes'
+                ocv = etree.SubElement(gkey,
+                util.nspath_eval('inspire_common:OriginatingControlledVocabulary'))
 
-            etree.SubElement(ocv,
-            util.nspath_eval('inspire_common:DateOfPublication')).text = '2008-06-01'
+                etree.SubElement(ocv,
+                util.nspath_eval('inspire_common:Title')).text = 'GEMET - INSPIRE themes'
 
-            etree.SubElement(gkey,
-            util.nspath_eval('inspire_common:KeywordValue')).text = self.inspire_config['GemetKeyword']
+                etree.SubElement(ocv,
+                util.nspath_eval('inspire_common:DateOfPublication')).text = '2008-06-01'
+
+                etree.SubElement(gkey,
+                util.nspath_eval('inspire_common:KeywordValue')).text = gkw
 
             # Languages
             slang = etree.SubElement(ex_caps,
