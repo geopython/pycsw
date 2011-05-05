@@ -796,7 +796,7 @@ class Csw(object):
                 self.kvp['cql'] = self.kvp['constraint']
                 self.kvp['cql'] = \
                 self._cql_update_cq_mappings(self.kvp['constraint'],
-                self.repos['typename'].queryables['_all'])
+                self.repos[self.kvp['typenames'][0]].queryables['_all'])
 
                 self.kvp['filter'] = None
             elif self.kvp['constraintlanguage'] == 'FILTER':
@@ -813,7 +813,7 @@ class Csw(object):
                     self.log.debug('Filter is valid XML.')
                     self.kvp['filter'] = \
                     filterencoding.Filter(doc,
-                    self.repos['typename'].queryables['_all'].keys())
+                    self.repos[self.kvp['typenames'][0]].queryables['_all'].keys())
                 except Exception, err:
                     errortext = \
                     'Exception: document not valid.\nError: %s.' % str(err)
