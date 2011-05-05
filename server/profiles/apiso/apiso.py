@@ -59,9 +59,9 @@ class APISO(profile.Profile):
         ''' Extend core configuration '''
 
         # model
-        model['operations']['DescribeRecord']['parameters']['typeName']['values'].append(self.typename)
+        #model['operations']['DescribeRecord']['parameters']['typeName']['values'].append(self.typename)
         model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.outputschema)
-        model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
+        #model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
         model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.outputschema)
         model['constraints']['IsoProfiles'] = { 'values': [self.namespace] }
 
@@ -75,6 +75,7 @@ class APISO(profile.Profile):
         if config.has_key('metadata:inspire') and config['metadata:inspire']['enabled'] == 'true':
             self.inspire_config = config['metadata:inspire']
             self.url = config['server']['url']
+            self.ogc_schemas_base = config['server']['ogc_schemas_base']
             self.current_language = self.inspire_config['default_language']
         else:
             self.inspire_config = None
@@ -289,7 +290,7 @@ class APISO(profile.Profile):
             elif esn == 'brief':
                 node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-                '%s http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % self.namespace
+                '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
 
                 # identifier
                 val = getattr(result, queryables['apiso:Identifier']['obj_attr'])
@@ -333,7 +334,7 @@ class APISO(profile.Profile):
             else:  # summary
                 node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-                '%s http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % self.namespace
+                '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
 
                 # identifier
                 val = getattr(result, queryables['apiso:Identifier']['obj_attr'])
