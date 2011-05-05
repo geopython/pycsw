@@ -17,6 +17,7 @@ pycsw |release| Documentation
    configuration
    repository
    distributedsearching
+   soap
    sitemaps
    transactions
    profiles
