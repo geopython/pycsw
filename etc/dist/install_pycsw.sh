@@ -124,6 +124,7 @@ typename=csw:Record
 enabled=true
 database=sqlite:////var/www/pycsw/data/cite/dc.db
 table=records
+cq_name=SupportedDublinCoreQueryables
 cq_dc_title=title
 cq_dc_creator=creator
 cq_dc_subject=subject
