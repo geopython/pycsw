@@ -16,6 +16,10 @@ pycsw allows for the publishing and discovery of geospatial metadata.  Existing 
 
 pycsw is `Open Source`_, released under an MIT :ref:`license <license>`, and runs on all major platforms (Windows, Linux, Mac OS X).
 
+Announcements
+-------------
+
+.. include:: ./announcements.inc
 
 .. _`Python`: http://www.python.org/
 .. _`OpenGIS Catalogue Service Implementation Specification`: http://www.opengeospatial.org/standards/cat
