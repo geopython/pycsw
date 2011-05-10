@@ -146,6 +146,85 @@ MODEL =  {
         'PostEncoding': {
             'values': ['XML', 'SOAP']
         }
+    },
+    'repositories': {
+        'csw:Record': {
+            'table': 'records',
+            'queryables': {
+                'SupportedDublinCoreQueryables': {
+                    'dc:title': 'title',
+                    'dc:creator': 'creator',
+                    'dc:subject': 'subject',
+                    'dct:abstract': 'abstract',
+                    'dc:publisher': 'publisher',
+                    'dc:contributor': 'contributor',
+                    'dct:modified': 'modified',
+                    'dc:date': 'date',
+                    'dc:type': 'type',
+                    'dc:format': 'format',
+                    'dc:identifier': 'identifier',
+                    'dc:source': 'source',
+                    'dc:language': 'language',
+                    'dc:relation': 'relation',
+                    'ows:BoundingBox': 'bbox',
+                    'dc:rights': 'rights',
+                    'csw:AnyText': 'csw_anytext'
+                }
+            }
+        },
+        'gmd:MD_Metadata': {
+            'table': 'md_metadata',
+            'queryables': {
+                'SupportedIsoQueryables': {
+                    'apiso:Subject': 'subject',
+                    'apiso:Title': 'title',
+                    'apiso:Abstract': 'abstract',
+                    'apiso:Format': 'format',
+                    'apiso:Identifier': 'resource_identifier',
+                    'apiso:Modified': 'date',
+                    'apiso:Type': 'type',
+                    'apiso:BoundingBox': 'bbox',
+                    'apiso:CRS': 'crs',
+                    'apiso:RevisionDate': 'revision_date',
+                    'apiso:AlternateTitle': 'alternate_title',
+                    'apiso:CreationDate': 'creation_date',
+                    'apiso:PublicationDate': 'publication_date',
+                    'apiso:OrganisationName': 'organisation_name',
+                    'apiso:HasSecurityConstraints': 'conditions_access_use',
+                    'apiso:Language': 'language',
+                    'apiso:ParentIdentifier': 'parent_identifier',
+                    'apiso:KeywordType': 'keyword_type',
+                    'apiso:TopicCategory': 'topic_category',
+                    'apiso:ResourceLanguage': 'resource_language',
+                    'apiso:GeographicDescriptionCode': 'geographic_description_code',
+                    'apiso:Denominator': 'scale_denominator',
+                    'apiso:DistanceValue': 'distance_value',
+                    'apiso:DistanceUOM': 'distance_unit',
+                    'apiso:TempExtent_begin': 'temporal_extent_begin',
+                    'apiso:TempExtent_end': 'temporal_extent_end',
+                    'apiso:AnyText': 'csw_anytext',
+                    'apiso:ServiceType': 'service_type',
+                    'apiso:ServiceTypeVersion': 'service_type_version',
+                    'apiso:Operation': 'operation',
+                    'apiso:CouplingType': 'coupling_type',
+                    'apiso:OperatesOn': 'operates_on',
+                    'apiso:OperatesOnIdentifier': 'operates_on_identifier',
+                    'apiso:OperatesOnName': 'operates_on_name'
+                },
+                'AdditionalQueryables': {
+                    'apiso:Degree': 'degree',
+                    'apiso:AccessConstraints': 'access_constraints',
+                    'apiso:OtherConstraints': 'other_constraints',
+                    'apiso:Classification': 'classification',
+                    'apiso:ConditionApplyingToAccessAndUse': 'conditions_access_use',
+                    'apiso:Lineage': 'lineage',
+                    'apiso:ResponsiblePartyRole': 'responsible_party_role',
+                    'apiso:SpecificationTitle': 'specification_title',
+                    'apiso:SpecificationDate': 'specification_date',
+                    'apiso:SpecificationDateType': 'specification_date_type'
+                }
+            }
+        }
     }
 }
 

@@ -68,9 +68,11 @@ CURSOR.execute('''
 
 CURSOR.execute('''
     insert into geometry_columns values
-        ('records', 'bbox_wkt', 'POLYGON', 2, 4326, 'WKT')''')
+        ('records', 'bbox', 'POLYGON', 2, 4326, 'WKT')''')
 
-SQLDDL = os.path.join('..', 'etc', 'schemas', 'sql', 'records.ddl')
+CURSOR.execute('''
+    insert into geometry_columns values
+        ('md_metadata', 'bbox', 'POLYGON', 2, 4326, 'WKT')''')
 
 CURSOR.executescript(open(sys.argv[1]).read())
 

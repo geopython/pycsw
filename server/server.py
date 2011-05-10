@@ -99,7 +99,7 @@ class Csw(object):
                 ['typeNames']['values'].append(rtm)
 
                 # load active repository
-                self.repos[rtm] =  repository.Repository(self.config[repo])
+                self.repos[rtm] =  repository.Repository(self.config[repo], config.MODEL['repositories'])
 
         # generate distributed search model, if specified in config
         if self.config['server'].has_key('federatedcatalogues') is True:
@@ -118,7 +118,7 @@ class Csw(object):
         # load profiles
 
         # turn on APISO by default
-        self.config['server']['profiles'] = 'apiso'
+        #self.config['server']['profiles'] = 'apiso'
 
         self.log.debug('Loading profiles.')
 
@@ -1013,7 +1013,7 @@ class Csw(object):
             self.repos[repo].query(ids=ids, propertyname = 
             self.repos[repo].queryables['_all']['_id']['obj_attr'])})
 
-            #self.log.debug('Presenting %s records.' % str(len(results['records'])))
+            self.log.debug('JJJ %s llll %s.' % (self.repos[repo].queryables['_all']['_id']['obj_attr'], results))
 
             if raw is True:  # GetRepositoryItem request
                 self.log.debug('GetRepositoryItem request.')
