@@ -58,7 +58,6 @@ Repository sections are namespaced to support definition of multiple repositorie
 - **enabled**: whether to include the repository at runtime (``true`` or ``false``)
 - **typename**: the typename of the repository (``csw:Record``, ``gmd:MD_Metadata``)
 - **database**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
-- **table**: the name of the metadata records table
 
 .. note::
 
