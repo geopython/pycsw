@@ -37,11 +37,11 @@ import util
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, repo):
+    def __init__(self, repo, config):
         ''' Initialize repository '''
 
         database = repo['database']
-        table = repo['table']
+        table = config[repo['typename']]['table']
 
         engine = create_engine('%s' % database, echo=False)
 
@@ -59,43 +59,25 @@ class Repository(object):
         # generate core queryables db and obj bindings
         self.queryables = {}       
 
-        if repo.has_key('cq_name'):
-          self.queryables[repo['cq_name']] = {}
-        if repo.has_key('aq_name'):
-          self.queryables[repo['aq_name']] = {}
+        for qname in config[repo['typename']]['queryables']:
+            self.queryables[qname] = {}
 
-        for cqm in repo:
-            if cqm.find('cq_') != -1 or cqm.find('aq_') != -1:  # it's a cq/aq
-                if cqm not in ['cq_name', 'aq_name']:  # skip queryable name
-                    if cqm.find('cq_') != -1:
-                        tmp = cqm.replace('cq_','').split('_', 1)
-                        qname = repo['cq_name']
-                    elif cqm.find('aq_') != -1:
-                        tmp = cqm.replace('aq_','').split('_', 1)
-                        qname = repo['aq_name']
-                    k = ':'.join(tmp)
-                    cqv = repo[cqm]
-                    val = '%s_%s' % (table, cqv)
-                    self.queryables[qname][k] = {}
-                    self.queryables[qname][k]['db_col'] = val
-                    self.queryables[qname][k]['obj_attr'] = cqv
-                    # check for identifier, bbox, and anytext fields, and set
-                    # as internal keys
-                    # need to catch these to
-                    # perform id, bbox, or anytext queries
-                    val2 = k.split(':')[-1].lower()
-                    if val2.find('identifier') != -1:
-                        self.queryables[qname]['_id'] = {}
-                        self.queryables[qname]['_id']['db_col'] = val
-                        self.queryables[qname]['_id']['obj_attr'] = cqv
-                    elif val2.find('boundingbox') != -1:
-                        self.queryables[qname]['_bbox'] = {}
-                        self.queryables[qname]['_bbox']['db_col'] = val
-                        self.queryables[qname]['_bbox']['obj_attr'] = cqv
-                    elif val2.find('anytext') != -1:
-                        self.queryables[qname]['_anytext'] = {}
-                        self.queryables[qname]['_anytext']['db_col'] = val
-                        self.queryables[qname]['_anytext']['obj_attr'] = cqv
+            for qkey, qvalue in \
+            config[repo['typename']]['queryables'][qname].iteritems():
+                qdct = {'db_col': '%s_%s' % (table, qvalue), 'obj_attr': qvalue}
+                self.queryables[qname][qkey] = qdct
+
+                # check for identifier, bbox, and anytext fields, and set
+                # as internal keys
+                # need to catch these to
+                # perform id, bbox, or anytext queries
+                val = qkey.split(':')[-1].lower()
+                if val == 'identifier':
+                    self.queryables[qname]['_id'] = qdct
+                elif val.find('boundingbox') != -1:
+                    self.queryables[qname]['_bbox'] = qdct
+                elif val.find('anytext') != -1:
+                    self.queryables[qname]['_anytext'] = qdct
 
         # flatten all queryables
         # TODO smarter way of doing this
