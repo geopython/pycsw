@@ -1013,8 +1013,6 @@ class Csw(object):
             self.repos[repo].query(ids=ids, propertyname = 
             self.repos[repo].queryables['_all']['_id']['obj_attr'])})
 
-            self.log.debug('JJJ %s llll %s.' % (self.repos[repo].queryables['_all']['_id']['obj_attr'], results))
-
             if raw is True:  # GetRepositoryItem request
                 self.log.debug('GetRepositoryItem request.')
                 if len(results) > 0:
