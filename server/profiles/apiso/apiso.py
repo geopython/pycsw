@@ -51,6 +51,62 @@ INSPIRE_NAMESPACES = {
 CODELIST = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml'
 CODESPACE = 'ISOTC211/19115'
 
+REPOSITORY = {
+    'gmd:MD_Metadata': {
+        'outputschema': 'http://www.isotc211.org/2005/gmd',
+        'queryables': {
+            'SupportedISOQueryables': {
+                'apiso:Subject': 'gmd:identificationInfo/gmd:MD_Identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode',
+                'apiso:Title': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString',
+                'apiso:Abstract': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString',
+                'apiso:Format': 'gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name',
+                'apiso:Identifier': 'gmd:fileIdentifier/gco:CharacterString',
+                'apiso:Modified': 'gmd:dateStamp/gco:Date',
+                'apiso:Type': 'gmd:hierarchyLevel/gmd:MD_ScopeCode',
+                'apiso:BoundingBox': 'bbox',
+                'apiso:CRS': 'crs',
+                'apiso:AlternateTitle': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString',
+                'apiso:RevisionDate': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date/gco:Date',
+                'apiso:CreationDate': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="creation"]/gmd:date/gco:Date',
+                'apiso:PublicationDate': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="publication"]/gmd:date/gco:Date',
+                'apiso:OrganisationName': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString',
+                'apiso:HasSecurityConstraints': 'gmd:resourceConstraints/gmd:MD_SecurityConstraints',
+                'apiso:Language': 'gmd:language/gmd:LanguageCode|gmd:language/gco:CharacterString',
+                'apiso:ParentIdentifier': 'gmd:parentIdentifier/gco:CharacterString',
+                'apiso:KeywordType': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeyword/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode',
+                'apiso:TopicCategory': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode',
+                'apiso:ResourceLanguage': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:code/gmd:MD_LanguageTypeCode',
+                'apiso:GeographicDescriptionCode': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code',
+                'apiso:Denominator': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator',
+                'apiso:DistanceValue': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance',
+                'apiso:DistanceUOM': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance@uom',
+                'apiso:TempExtent_begin': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition',
+                'apiso:TempExtent_end': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition',
+                'apiso:AnyText': 'xml',
+                'apiso:ServiceType': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName',
+                'apiso:ServiceTypeVersion': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion',
+                'apiso:Operation': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:operationName',
+                'apiso:CouplingType': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType/gmd:code@codeListValue',
+                'apiso:OperatesOn': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier',
+                'apiso:OperatesOnIdentifier': 'operates_on_identifier',
+                'apiso:OperatesOnName': 'operates_on_name'
+            },
+            'AdditionalQueryables': {
+                'apiso:Degree': 'degree',
+                'apiso:AccessConstraints': 'access_constraints',
+                'apiso:OtherConstraints': 'other_constraints',
+                'apiso:Classification': 'classification',
+                'apiso:ConditionApplyingToAccessAndUse': 'conditions_access_use',
+                'apiso:Lineage': 'lineage',
+                'apiso:ResponsiblePartyRole': 'responsible_party_role',
+                'apiso:SpecificationTitle': 'specification_title',
+                'apiso:SpecificationDate': 'specification_date',
+                'apiso:SpecificationDateType': 'specification_date_type'
+            }
+        }
+    }
+}
+
 class APISO(profile.Profile):
     def __init__(self):
         profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES['gmd'], 'gmd:MD_Metadata', NAMESPACES['gmd'])
@@ -59,14 +115,17 @@ class APISO(profile.Profile):
         ''' Extend core configuration '''
 
         # model
-        #model['operations']['DescribeRecord']['parameters']['typeName']['values'].append(self.typename)
+        model['operations']['DescribeRecord']['parameters']['typeName']['values'].append(self.typename)
         model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.outputschema)
-        #model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
+        model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
         model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.outputschema)
         model['constraints']['IsoProfiles'] = { 'values': [self.namespace] }
 
         # namespaces
         namespaces.update(NAMESPACES)
+
+        # repository
+        model['typenames']['gmd:MD_Metadata'] = REPOSITORY['gmd:MD_Metadata']
 
         # update INSPIRE vars
         namespaces.update(INSPIRE_NAMESPACES)
@@ -75,10 +134,11 @@ class APISO(profile.Profile):
         if config.has_key('metadata:inspire') and config['metadata:inspire']['enabled'] == 'true':
             self.inspire_config = config['metadata:inspire']
             self.url = config['server']['url']
-            self.ogc_schemas_base = config['server']['ogc_schemas_base']
             self.current_language = self.inspire_config['default_language']
         else:
             self.inspire_config = None
+
+        self.ogc_schemas_base = config['server']['ogc_schemas_base']
 
     def check_parameters(self, kvp):
         '''Check for Language parameter in GetCapabilities request'''
@@ -281,25 +341,23 @@ class APISO(profile.Profile):
         return None
 
     def write_record(self, result, esn, outputschema, queryables):
+        xml = etree.fromstring(result.xml)
         if outputschema == self.namespace:
             if esn == 'full':  # dump the full record
-                xml = getattr(result, queryables['_anytext']['obj_attr'])
-
-                node = etree.fromstring(xml)
-
+                node = xml
             elif esn == 'brief':
                 node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
                 '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
 
                 # identifier
-                val = getattr(result, queryables['apiso:Identifier']['obj_attr'])
+                val = result.identifier
 
                 identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
                 tmp = etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
 
                 # hierarchyLevel
-                val = getattr(result, queryables['apiso:Type']['obj_attr'])
+                val = util.query_xpath(xml, queryables['apiso:Type'])
 
                 hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
                 codeList = '%s#MD_ScopeCode' % CODELIST,
@@ -307,7 +365,7 @@ class APISO(profile.Profile):
                 codeSpace = CODESPACE).text = val
 
                 # title
-                val = getattr(result, queryables['apiso:Title']['obj_attr'])
+                val = util.query_xpath(xml, queryables['apiso:Title'])
                 identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
                 tmp = etree.SubElement(identification, util.nspath_eval('gmd:MD_IdentificationInfo'))
                 tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:citation'))
@@ -316,13 +374,13 @@ class APISO(profile.Profile):
                 etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
 
                 # bbox extent
-                val = getattr(result, queryables['apiso:BoundingBox']['obj_attr'])
+                val = result.bbox
                 bboxel = write_extent(val)
                 if bboxel is not None:
                     identification.append(bboxel)
 
                 # service identification
-                val = getattr(result, queryables['apiso:ServiceType']['obj_attr'])
+                val = util.query_xpath(xml, queryables['apiso:ServiceType'])
                 if (val is not None):
                     srv_identification=etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
                     tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))

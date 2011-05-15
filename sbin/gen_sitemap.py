@@ -39,14 +39,7 @@ from server import config, profile, repository, util
 
 # get configuration and init repo connection
 CFG = config.get_config('default.cfg')
-REPOS = {}
-
-for repo in CFG:
-    if repo.find('repository:') != -1 and \
-        CFG[repo]['enabled'] == 'true':  # load repository
-            rtm = CFG[repo]['typename']
-            REPOS[CFG[repo]['typename']] = \
-            repository.Repository(CFG[repo])
+REPOS = repository.Repository(CFG['repository'], 'records', config.MODEL['typenames'])
 
 # write out sitemap document
 URLSET = etree.Element(util.nspath_eval('sitemap:urlset'),
@@ -57,15 +50,14 @@ URLSET.attrib[util.nspath_eval('xsi:schemaLocation')] = \
 config.NAMESPACES['sitemap']
 
 # get all records
-for repo in REPOS:
-    RECORDS = REPOS[repo].query()
+RECORDS = REPOS.query()
 
-    for rec in RECORDS:
-        url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
-        uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
-        (CFG['server']['url'],
-        getattr(rec, REPOS[repo].queryables['_all']['_id']['obj_attr']))
-        etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
+for rec in RECORDS:
+    url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
+    uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
+    (CFG['server']['url'],
+    rec.identifier)
+    etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
 
 # to stdout
 print etree.tostring(URLSET, pretty_print = 1, \

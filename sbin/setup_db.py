@@ -41,38 +41,8 @@ if len(sys.argv) < 3:
     print 'Usage: %s <ddl file> <filename.sqlite3>' % sys.argv[0]
     sys.exit(1)
 
-WKT4326 = 'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]'
-
 CONN = sqlite3.connect(sys.argv[2])
 CURSOR = CONN.cursor()
-
-# create OGC SFSQL database
-CURSOR.execute('''
-    create table spatial_ref_sys (
-        srid integer unique,
-        auth_name text,
-        auth_srid integer,
-        srtext text)''')
-
-CURSOR.execute('''
-    insert into spatial_ref_sys values
-        (4326, 'EPSG', 4326, '%s')''' % WKT4326)
-
-CURSOR.execute('''
-    create table geometry_columns (
-        f_table_name text,
-        f_geometry_column text,
-        geometry_type integer,
-        coord_dimension integer,
-        srid integer, geometry_format text )''')
-
-CURSOR.execute('''
-    insert into geometry_columns values
-        ('records', 'bbox', 'POLYGON', 2, 4326, 'WKT')''')
-
-CURSOR.execute('''
-    insert into geometry_columns values
-        ('md_metadata', 'bbox', 'POLYGON', 2, 4326, 'WKT')''')
 
 CURSOR.executescript(open(sys.argv[1]).read())
 

@@ -119,15 +119,8 @@ contact_hours=0800h - 1600h EST
 contact_instructions=During hours of service.  Off on weekends.
 contact_role=pointOfContact
 
-[repository:cite]
-typename=csw:Record
-enabled=true
-database=sqlite:////var/www/pycsw/data/cite/dc.db
-
-[repository:iso_records]
-enabled=true
-typename=gmd:MD_Metadata
-database=sqlite:////var/www/pycsw/trunk/server/profiles/apiso/data/apiso.db
+[repository]
+database=sqlite:////var/www/pycsw/data/cite/records.db
 
 [metadata:inspire]
 enabled=true

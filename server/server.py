@@ -85,22 +85,6 @@ class Csw(object):
         else:
             self.gzip_compresslevel = 9
 
-        # setup repositories
-        self.repos = {}
-
-        for repo in self.config:
-            if repo.find('repository:') != -1 and \
-            self.config[repo]['enabled'] == 'true':  # load repository
-                rtm = self.config[repo]['typename']
-
-                config.MODEL['operations']['DescribeRecord']['parameters']\
-                ['typeName']['values'].append(rtm)
-                config.MODEL['operations']['GetRecords']['parameters']\
-                ['typeNames']['values'].append(rtm)
-
-                # load active repository
-                self.repos[rtm] =  repository.Repository(self.config[repo], config.MODEL['repositories'])
-
         # generate distributed search model, if specified in config
         if self.config['server'].has_key('federatedcatalogues') is True:
             self.log.debug('Configuring distributed search.')
@@ -113,7 +97,6 @@ class Csw(object):
 
         self.log.debug('Configuration: %s.' % self.config)
         self.log.debug('Model: %s.' % config.MODEL)
-        self.log.debug('Repositories loaded: %s.' % self.repos)
 
         # load profiles
 
@@ -135,6 +118,13 @@ class Csw(object):
                 config.MODEL, config.NAMESPACES, self.config)
     
             self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
+
+        # setup repository
+        self.repository = \
+        repository.Repository(self.config['repository'], 'records',
+        config.MODEL['typenames'])
+
+        self.log.debug('Repository loaded: %s.' % self.repository)
 
     def dispatch(self):
         ''' Handle incoming HTTP request '''
@@ -471,16 +461,14 @@ class Csw(object):
                         util.nspath_eval('ows:Value')).text = val
 
                 if operation == 'GetRecords':  # advertise queryables
-                    for repo in self.repos:
-                        for qbl in self.repos[repo].queryables.keys():
-                            if qbl != '_all':
-                                param = etree.SubElement(oper,
-                                util.nspath_eval('ows:Constraint'), name = qbl)
+                    for qbl in self.repository.queryables.keys():
+                        if qbl != '_all':
+                            param = etree.SubElement(oper,
+                            util.nspath_eval('ows:Constraint'), name = qbl)
     
-                                for qbl2 in self.repos[repo].queryables[qbl]:
-                                    if qbl2 not in ['_id', '_bbox', '_anytext']:
-                                        etree.SubElement(param,
-                                        util.nspath_eval('ows:Value')).text = qbl2
+                            for qbl2 in self.repository.queryables[qbl]:
+                                etree.SubElement(param,
+                                util.nspath_eval('ows:Value')).text = qbl2
 
                     if self.profiles is not None:
                         for con in config.MODEL[\
@@ -489,9 +477,8 @@ class Csw(object):
                             util.nspath_eval('ows:Constraint'), name = con)
                             for q in config.MODEL['operations']\
                             ['GetRecords']['constraints'][con]['values']:
-                                if q not in ['_id', '_bbox', '_anytext']:
-                                    etree.SubElement(param,
-                                    util.nspath_eval('ows:Value')).text = q
+                                etree.SubElement(param,
+                                util.nspath_eval('ows:Value')).text = q
 
             for parameter in config.MODEL['parameters'].keys():
                 param = etree.SubElement(operationsmetadata,
@@ -507,10 +494,7 @@ class Csw(object):
                     etree.SubElement(param,
                     util.nspath_eval('ows:Value')).text = val
             
-            if self.profiles is None:
-                extended_capabilities = etree.SubElement(operationsmetadata,
-                util.nspath_eval('ows:ExtendedCapabilities'))
-            else:
+            if self.profiles is not None:
                 for prof in self.profiles['loaded'].keys():
                     ecnode = \
                     self.profiles['loaded'][prof].get_extendedcapabilities()
@@ -662,28 +646,39 @@ class Csw(object):
         if self.kvp.has_key('propertyname'):
             for pname in self.kvp['propertyname'].split(','):
                 self.log.debug('Parsing propertyname %s.' % pname)
+
+                if pname.find('/') == 0:  # it's an XPath
+                    pname2 = pname
+                else:  # it's a core queryable, map to internal typename model
+                    pname2 = self.repository.queryables['_all'][pname]
+
+                # TODO: smarter way of handling domain value type
+                if pname2.find('apiso:') != -1 or pname2.find('gmd:') != -1:
+                    dvtype = 'gmd:MD_Metadata'
+                else:
+                    dvtype = 'csw:Record'
                 domainvalue = etree.SubElement(node,
-                util.nspath_eval('csw:DomainValues'), type = 'csw:Record')
+                util.nspath_eval('csw:DomainValues'), type = dvtype)
                 etree.SubElement(domainvalue,
                 util.nspath_eval('csw:PropertyName')).text = pname
 
-                for repo in self.repos:  # search
-                    try:
-                        tmp = self.repos[repo].queryables['_all'][pname]['obj_attr']
-                        self.log.debug('Querying repository on property %s (%s).' %
-                        (pname, tmp))
-                        results = self.repos[repo].query(propertyname=tmp)
-                        self.log.debug('Results: %s' %str(len(results)))
-                        listofvalues = etree.SubElement(domainvalue,
-                        util.nspath_eval('csw:ListOfValues'))
-                        for result in results:
-                            if result[0] != '':  # drop null values
-                                etree.SubElement(listofvalues,
-                                util.nspath_eval('csw:Value')).text = result[0]
-                        domainvalue.attrib['type'] = repo
-                    except Exception, err:
-                        self.log.debug('No results for propertyname %s: %s.' %
-                        (pname, str(err)))
+                try:
+                    self.log.debug('Querying repository property %s.' % pname2)
+        
+                    results = self.repository.query(
+                    propertyname=pname2,
+                    typenames=[dvtype])
+                    self.log.debug('Results: %s' % str(len(results)))
+                    listofvalues = etree.SubElement(domainvalue,
+                    util.nspath_eval('csw:ListOfValues'))
+                    for result in results:
+                        if result[0] is not None:  # drop null values
+                            etree.SubElement(listofvalues,
+                            util.nspath_eval('csw:Value')).text = result[0]
+                    #domainvalue.attrib['type'] = 'csw:Record'
+                except Exception, err:
+                    self.log.debug('No results for propertyname %s: %s.' %
+                    (pname2, str(err)))
         return node
 
     def getrecords(self):
@@ -755,7 +750,7 @@ class Csw(object):
         # check elementname's
         if self.kvp.has_key('elementname'):
             for ename in self.kvp['elementname']:
-                enamelist = self.repos[self.kvp['typenames'][0]].queryables['_all'].keys()
+                enamelist = self.repository.queryables['_all'].keys()
                 if ename not in enamelist:
                     return self.exceptionreport('InvalidParameterValue',
                     'elementname', 'Invalid ElementName parameter value: %s' %
@@ -796,7 +791,7 @@ class Csw(object):
                 self.kvp['cql'] = self.kvp['constraint']
                 self.kvp['cql'] = \
                 self._cql_update_cq_mappings(self.kvp['constraint'],
-                self.repos[self.kvp['typenames'][0]].queryables['_all'])
+                self.repository.queryables['_all'])
 
                 self.kvp['filter'] = None
             elif self.kvp['constraintlanguage'] == 'FILTER':
@@ -813,7 +808,7 @@ class Csw(object):
                     self.log.debug('Filter is valid XML.')
                     self.kvp['filter'] = \
                     filterencoding.Filter(doc,
-                    self.repos[self.kvp['typenames'][0]].queryables['_all'].keys())
+                    self.repository.queryables['_all'].keys())
                 except Exception, err:
                     errortext = \
                     'Exception: document not valid.\nError: %s.' % str(err)
@@ -835,29 +830,19 @@ class Csw(object):
         if self.kvp.has_key('startposition') is False:
             self.kvp['startposition'] = 1
 
+        # query repository
         self.log.debug('Querying repository with filter: %s,\
-        cql: %s, sortby: %s.' %
-        (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby']))
+        cql: %s, sortby: %s, typenames: %s.' %
+        (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby'],
+        self.kvp['typenames']))
 
-        results = []
-        total = 0
-
-        # query repositories by foreach typeNames passed
-        for tname in self.kvp['typenames']:
-            try:
-                results.append({'typename': tname, 'records': 
-                self.repos[tname].query(flt = self.kvp['filter'],
-                cql = self.kvp['cql'], sortby=self.kvp['sortby'])})
-            except Exception, err:
-                return self.exceptionreport('InvalidParameterValue', 'constraint',
-                'Invalid query: %s' % err)
-
-        # get total result count
-        for res in results:
-            total += len(res['records'])
-
-        self.log.debug('EIEIE %s' % total)
-
+        try:
+            results = self.repository.query(flt = self.kvp['filter'],
+            cql = self.kvp['cql'], sortby=self.kvp['sortby'],
+            typenames=self.kvp['typenames'])
+        except Exception, err:
+            return self.exceptionreport('InvalidParameterValue', 'constraint',
+            'Invalid query: %s' % err)
 
         if len(results) == 0:
             matched = '0'
@@ -865,7 +850,7 @@ class Csw(object):
             nextrecord = '0'
 
         else:
-            matched = str(total)
+            matched = str(len(results))
             if int(matched) < int(self.kvp['maxrecords']):
                 returned = str(int(matched))
                 nextrecord = '0'
@@ -928,27 +913,26 @@ class Csw(object):
             self.log.debug('Presenting records %s - %s.' %
             (self.kvp['startposition'], max1))
 
-            for res in results:
-                for rec in res['records'][int(self.kvp['startposition'])-1:int(max1)-1]:
-                    if (self.kvp['outputschema'] == 
-                        'http://www.opengis.net/cat/csw/2.0.2' and
-                        self.kvp['typenames'][0] == 'csw:Record'):
-                        # serialize csw:Record inline
-                        searchresults.append(self._write_record(rec, self.repos[res['typename']].queryables['_all']))
-                    elif (self.kvp['outputschema'] == 
-                          'http://www.opengis.net/cat/csw/2.0.2' and
-                          self.kvp['typenames'][0] != 'csw:Record'):
-                        # use profile serializer to output csw:Record
-                        searchresults.append(
-                        self.profiles['loaded']\
-                        [config.NAMESPACES[self.kvp['typenames'][0].split(':')[0]]].
-                        write_record(rec, self.kvp['elementsetname'],
-                        self.kvp['outputschema'], self.repos[self.kvp['typenames'][0]].queryables['_all']))
-                    else:  # use profile serializer to output native output format
-                        searchresults.append(
-                        self.profiles['loaded'][self.kvp['outputschema']].\
-                        write_record(rec, self.kvp['elementsetname'],
-                        self.kvp['outputschema'], self.repos[self.kvp['typenames'][0]].queryables['_all']))
+            for res in results[int(self.kvp['startposition'])-1:int(max1)-1]:
+                if (self.kvp['outputschema'] == 
+                    'http://www.opengis.net/cat/csw/2.0.2' and
+                    'csw:Record' in self.kvp['typenames']):
+                    # serialize csw:Record inline
+                    searchresults.append(self._write_record(res, self.repository.queryables['_all']))
+                elif (self.kvp['outputschema'] == 
+                      'http://www.opengis.net/cat/csw/2.0.2' and
+                      'csw:Record' not in self.kvp['typenames'][0]):
+                    # use profile serializer to output csw:Record
+                    searchresults.append(
+                    self.profiles['loaded']\
+                    [config.NAMESPACES[self.kvp['typenames'][0].split(':')[0]]].
+                    write_record(res, self.kvp['elementsetname'],
+                    self.kvp['outputschema'], self.repository.queryables['_all']))
+                else:  # use profile serializer to output native output format
+                    searchresults.append(
+                    self.profiles['loaded'][self.kvp['outputschema']].\
+                    write_record(res, self.kvp['elementsetname'],
+                    self.kvp['outputschema'], self.repository.queryables['_all']))
 
         if (self.kvp.has_key('distributedsearch') and
             self.kvp['distributedsearch'] == 'TRUE' and
@@ -998,37 +982,30 @@ class Csw(object):
                 'elementsetname', 'Invalid elementsetname parameter %s' %
                 self.kvp['elementsetname'])
 
-        # query repositories
-        results = []
-
         node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse'),
         nsmap = config.NAMESPACES)
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
         (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
 
-        for repo in self.repos:
-            self.log.debug('Querying repository with ids: %s.' % ids)
-            results.append({'typename': repo, 'records':
-            self.repos[repo].query(ids=ids, propertyname = 
-            self.repos[repo].queryables['_all']['_id']['obj_attr'])})
+        # query repository
+        self.log.debug('Querying repository with ids: %s.' % ids)
+        results = self.repository.query(ids=ids, propertyname='identifier')
 
-            if raw is True:  # GetRepositoryItem request
-                self.log.debug('GetRepositoryItem request.')
-                if len(results) > 0:
-                    return etree.fromstring(getattr(results[0],
-                    self.repos[repo].queryables['_all']['_anytext']['obj_attr']))
+        if raw is True:  # GetRepositoryItem request
+            self.log.debug('GetRepositoryItem request.')
+            if len(results) > 0:
+                return etree.fromstring(getattr(results[0], 'xml'))
 
         for result in results:
-            for record in result['records']:
-                if result['typename'] == 'csw:Record':
-                    node.append(self._write_record(
-                    record, self.repos[result['typename']].queryables['_all']))
-                else:  # it's a profile output
-                    node.append(
-                    self.profiles['loaded'][self.kvp['outputschema']].write_record(
-                    record, self.kvp['elementsetname'],
-                    self.kvp['outputschema'], self.repos[repo].queryables['_all']))
+            if getattr(result, 'typename') == 'csw:Record':
+                node.append(self._write_record(
+                result, self.repository.queryables['_all']))
+            else:  # it's a profile output
+                node.append(
+                self.profiles['loaded'][getattr(result, 'schema')].write_record(
+                result, self.kvp['elementsetname'],
+                self.kvp['outputschema'], self.repository.queryables['_all']))
 
         if raw is True and len(results) == 0:
             return None
@@ -1274,18 +1251,18 @@ class Csw(object):
                         try:
                             request['filter'] = \
                             filterencoding.Filter(ctype[0],
-                            self.repos[request['typenames'][0]].queryables['_all'])
+                            self.repository.queryables['_all'])
                         except Exception, err:
                             return 'Invalid Filter request: %s' % err
                     elif ctype[0].tag == util.nspath_eval('csw:CqlText'):
                         self.log.debug('CQL specified: %s.' % ctype[0].text)
                         request['cql'] = \
                         self._cql_update_cq_mappings(ctype[0].text,
-                        self.repos[request['typenames'][0]].queryables['_all'])
+                        self.repository.queryables['_all'])
                     else:
                         return 'ogc:Filter or csw:CqlText is required'
                 except Exception, err:
-                    return 'ogc:Filter or csw:CqlText is required'
+                    return 'ogc:Filter or csw:CqlText is required %s' % str(err)
             else: 
                 self.log.debug('No csw:Constraint (ogc:Filter or csw:CqlText) \
                 specified.')
@@ -1298,9 +1275,8 @@ class Csw(object):
                 tmp.find(util.nspath_eval(
                 'ogc:SortProperty/ogc:PropertyName')).text
                 request['sortby']['cq_mapping'] = \
-                self.repos[request['typenames'][0]]\
-                .queryables['_all'][tmp.find(util.nspath_eval(\
-                'ogc:SortProperty/ogc:PropertyName')).text.lower()]['db_col']
+                self.repository.queryables['_all'][tmp.find(util.nspath_eval(
+                'ogc:SortProperty/ogc:PropertyName')).text.lower()]
 
                 tmp2 =  tmp.find(util.nspath_eval(
                 'ogc:SortProperty/ogc:SortOrder'))
@@ -1376,32 +1352,34 @@ class Csw(object):
 
         record = etree.Element(util.nspath_eval('csw:%s' % elname))
 
-        bbox = getattr(recobj, queryables['_bbox']['obj_attr'])
-
         if (self.kvp.has_key('elementname') is True and
             len(self.kvp['elementname']) > 0):
+            xml = etree.fromstring(recobj.xml)
             for elemname in self.kvp['elementname']:
-                nspace, elname = elemname.split(':')
-                if elname == 'BoundingBox':
-                    bboxel = write_boundingbox(bbox)
+                if elemname.find('BoundingBox') != -1:
+                    bboxel = write_boundingbox(recobj.bbox)
                     if bboxel is not None:
                         record.append(bboxel)
                 else:
-                    if (hasattr(recobj, queryables[elemname]['obj_attr'])):  # is True
-                        etree.SubElement(record, util.nspath_eval('%s:%s' %
-                        (nspace, elname))).text=getattr(recobj,
-                        queryables[elemname]['obj_attr'])
+                    value = util.query_xpath(xml, queryables[elemname])
+                    if value:
+                        etree.SubElement(record,
+                        util.nspath_eval(elemname)).text=value
         elif self.kvp.has_key('elementsetname') is True:
             if self.kvp['elementsetname'] == 'full':  # dump the full record
-                record = etree.fromstring(getattr(recobj,
-                queryables['_anytext']['obj_attr']))
+                record = etree.fromstring(recobj.xml)
             else:  # dump BriefRecord (always required), summary if requested
-                for i in ['dc:identifier', 'dc:title', 'dc:type']:
+                xml = etree.fromstring(recobj.xml)
+
+                etree.SubElement(record,
+                util.nspath_eval('dc:identifier')).text = recobj.identifier
+
+                for i in ['dc:title', 'dc:type']:
                     etree.SubElement(record, util.nspath_eval(i)).text = \
-                    getattr(recobj, queryables[i]['obj_attr'])
+                    util.query_xpath(xml, i)
                 if self.kvp['elementsetname'] == 'summary':
-                    subjects = getattr(recobj,
-                    queryables['dc:subject']['obj_attr'])
+                    subjects = util.query_xpath(xml,
+                    queryables['dc:subject'])
 
                     if subjects is not None:
                         for subject in subjects.split(','):
@@ -1410,14 +1388,13 @@ class Csw(object):
 
                     for i in ['dc:format', 'dc:relation', \
                     'dct:modified', 'dct:abstract']:
-                        val = getattr(recobj, queryables[i]['obj_attr'])
+                        val = util.query_xpath(xml, queryables[i])
                         if val is not None:
                             etree.SubElement(record,
                             util.nspath_eval(i)).text = val
-                bboxel = write_boundingbox(bbox)
+                bboxel = write_boundingbox(recobj.bbox)
                 if bboxel is not None:
                     record.append(bboxel)
-
         return record
 
     def _write_response(self):
@@ -1509,7 +1486,7 @@ class Csw(object):
         self.log.debug('Raw CQL text = %s.' % cql)
         if cql is not None:
             for key in mappings.keys():
-                cql = cql.replace(key, mappings[key]['db_col'])
+                cql = cql.replace(key, 'query_xpath(xml, "%s")' % mappings[key])
             self.log.debug('Interpolated CQL text = %s.' % cql)
             return cql
 
