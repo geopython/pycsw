@@ -28,21 +28,21 @@ Setting up the Database
 
   $ cd /path/to/pycsw
   $ export PYTHONPATH=`pwd` 
-  $ python ./sbin/setup_db.py ./server/profiles/apiso/etc/schemas/sql/md_metadata.ddl md_metadata.db
+  $ python ./sbin/setup_db.py /path/to/pycsw/etc/schemas/sql/records.ddl
 
 Importing Metadata
 ^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
-  $ python ./server/profiles/apiso/sbin/load_csw_records.py /path/to/records md_metadata.db
+  $ python ./sbin/load_records.py /path/to/records records.db
 
-This will import all ``*.xml`` records from ``/path/to/records`` into ``md_metadata.db`` and configure the repository to expose queryables as per subclase 7.2.3 of the profile.
+This will import all ``*.xml`` records from ``/path/to/records`` into ``records.db`` and configure the repository to expose queryables as per subclase 7.2.3 of the profile.
 
 Publishing the Repository
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-APISO runtime configuration is defined by specifying a ``[repository:*]`` section and setting the ``typename`` option to ``gmd:MD_Metadata``.  By default, ``default-sample.cfg`` contains all required binding information (see the ``[repository:iso_records]`` section).  To expose the repository, setup a ``repository`` section as specified in :ref:`configuration`.
+APISO runtime configuration is defined by setting ``server.profiles`` to ``apiso``.  To expose the repository, setup a ``repository`` section as specified in :ref:`configuration`.
 
 Testing
 ^^^^^^^

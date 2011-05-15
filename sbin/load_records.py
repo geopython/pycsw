@@ -39,6 +39,7 @@ import sqlite3
 from lxml import etree
 from server import util
 from owslib.csw import CswRecord
+from owslib.iso import MD_Metadata
 
 if len(sys.argv) < 3:
     print 'Usage: %s <xml directory path> <filename.sqlite3>' % sys.argv[0]
@@ -49,44 +50,48 @@ CUR = CONN.cursor()
 
 for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
 
-    # read dc document
+    # read document
     e = etree.parse(r)
-    c = CswRecord(e)
 
-    if c.bbox is None:
-        bbox = None
-    else:
-        tmp = '%s,%s,%s,%s' % \
-        (c.bbox.miny, c.bbox.minx, c.bbox.maxy, c.bbox.maxx)
+    value = e.getroot().tag
+
+    if value == '{http://www.opengis.net/cat/csw/2.0.2}Record':
+        typename = 'csw:Record'
+        schema = 'http://www.opengis.net/cat/csw/2.0.2'
+        c = CswRecord(e)
+
+        if c.bbox is None:
+            bbox = None
+        else:
+            bbox = c.bbox
+    elif value == '{http://www.isotc211.org/2005/gmd}MD_Metadata':
+        typename = 'gmd:MD_Metadata'
+        schema = 'http://www.isotc211.org/2005/gmd'
+        c = MD_Metadata(e)
+
+        if hasattr(c.identification, 'bbox') and c.identification.bbox:
+            bbox = c.identification.bbox
+        else:
+            bbox = None
+
+    if bbox is not None:
+        tmp = '%s,%s,%s,%s' % (bbox.miny, bbox.minx, bbox.maxy, bbox.maxx)
         bbox = util.bbox2wktpolygon(tmp) 
 
-    print 'Inserting csw:Record %s into database %s, table records....' % \
-    (c.identifier, sys.argv[2])
+    print 'Inserting %s %s into database %s, table records....' % \
+    (typename, c.identifier, sys.argv[2])
 
     values = (
-    c.title,
-    c.creator,
-    ','.join(c.subjects),
-    c.abstract,
-    c.publisher,
-    c.contributor,
-    c.modified,
-    c.date,
-    c.type,
-    c.format,
     c.identifier,
-    c.source,
-    c.language,
-    c.relation,
+    typename,
+    schema,
     bbox,
-    ','.join(c.rights),
-    'csw:Record',
-    c.xml
+    c.xml,
+    'local',
+    util.get_today_and_now()
     )
 
-    CUR.execute(
-    'insert into records values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,null,null)',
-    values)
+    CUR.execute('insert into records values(null, ?, ?, ?, ?, ?, ?, ?)', values)
 
     CONN.commit()
 

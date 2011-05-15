@@ -30,7 +30,7 @@ Importing Metadata
 
 .. code-block:: bash
 
-  $ python ./sbin/load_csw_records.py /path/to/records records.db
+  $ python ./sbin/load_records.py /path/to/records records.db
 
 This will import all ``*.xml`` records from ``/path/to/records`` into ``records.db`` and configure the repository to expose queryables as per Table 53 of OGC:CSW.
 
