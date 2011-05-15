@@ -92,8 +92,7 @@ class Filter(object):
                     _get_spatial_operator(child, cq_mappings))
 
             elif child.tag == util.nspath_eval('ogc:FeatureId'):
-                queries.append('%s = \'%s\'' % (cq_mappings['_id']['db_col'],
-                child.attrib.get('fid')))
+                queries.append('identifier = \'%s\'' % child.attrib.get('fid'))
 
             else:
                 matchcase = child.attrib.get('matchCase')
@@ -107,8 +106,8 @@ class Filter(object):
                     singlechar = '_'
     
                 try:
-                    pname = cq_mappings[child.find(
-                    util.nspath_eval('ogc:PropertyName')).text]['db_col']
+                    pname = 'query_xpath(xml, "%s")' % \
+                    child.find(util.nspath_eval('ogc:PropertyName')).text
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
                     (child.find(util.nspath_eval('ogc:PropertyName')).text,
@@ -139,8 +138,8 @@ class Filter(object):
                 'ogc:PropertyName')).text.lower().find('anytext') != -1):
                     # *:AnyText is a freetext search.  Strip modifiers
                     pvalue = pvalue.replace('%','')
-                    queries.append('query_anytext(%s, "%s") = "true"' %
-                    (cq_mappings['_anytext']['db_col'], pvalue))
+                    queries.append('query_anytext(xml, "%s") = "true"' % 
+                    pvalue)
 
                 else:
                     if self.boq == ' not ':
@@ -173,9 +172,8 @@ def _get_spatial_operator(element, cq_mappings):
         ('Invalid ogc:PropertyName in spatial filter: %s' %
         property_name.text)
 
-    spatial_query = "query_spatial(%s,'%s','%s','%s')" % \
-    (cq_mappings['_bbox']['db_col'], 
-    gml.get_geometry(element, MODEL['GeometryOperands']['values']),
+    spatial_query = "query_spatial(bbox,'%s','%s','%s')" % \
+    (gml.get_geometry(element, MODEL['GeometryOperands']['values']),
     util.xmltag_split(element.tag).lower(), distance)
 
     return spatial_query

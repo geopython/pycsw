@@ -142,14 +142,27 @@ def query_anytext(xml, searchterm):
             return 'true'
     return 'false'
 
-def query_xpath(xml, xpath_in, searchterm, matchcase=0):
-    ''' perform search against XPath '''
-    exml = etree.fromstring(xml)
-    for xpath in exml.xpath(xpath_in, namespaces=config.NAMESPACES):
-        if matchcase == 1:
-            if xpath.text == searchterm:
-                return 'true'
-        else:
-            if xpath.text.lower() == searchterm.lower():
-                return 'true'
-    return 'false'
+def query_xpath(xml, xpath):
+    ''' return value(s) from XPath query '''
+
+    if isinstance(xml, unicode):
+        exml = etree.fromstring(xml)
+    else:  # already lxml object
+        exml = xml
+    try:
+        result = exml.xpath(xpath, namespaces=config.NAMESPACES)
+    except Exception, err:
+        raise RuntimeError, ('ERROR: %s' % str(err))
+       
+    if len(result) == 0:  # null
+        return None
+    elif len(result) == 1:  # single result
+        try:
+            return result[0].text
+        except:  # attribute
+            return result[0]
+    else:  # list of results
+        try:
+            return ','.join([x.text for x in result])
+        except:  # attributes
+            return ','.join(result)

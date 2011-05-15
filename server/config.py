@@ -73,7 +73,7 @@ MODEL =  {
                     'http://www.w3.org/TR/xmlschema-1/']
                 },
                 'typeName': {
-                    'values': []
+                    'values': ['csw:Record']
                 },
                 'outputFormat': {
                     'values': ['application/xml']
@@ -90,7 +90,7 @@ MODEL =  {
                     'values': ['hits', 'results', 'validate']
                 },
                 'typeNames': {
-                    'values': []
+                    'values': ['csw:Record']
                 },
                 'outputSchema': {
                     'values': ['http://www.opengis.net/cat/csw/2.0.2']
@@ -145,83 +145,34 @@ MODEL =  {
     'constraints': {
         'PostEncoding': {
             'values': ['XML', 'SOAP']
+        },
+        'XPathQueryables': {
+            'values': ['allowed']
         }
     },
-    'repositories': {
+    'typenames': {
         'csw:Record': {
-            'table': 'records',
             'queryables': {
                 'SupportedDublinCoreQueryables': {
-                    'dc:title': 'title',
-                    'dc:creator': 'creator',
-                    'dc:subject': 'subject',
-                    'dct:abstract': 'abstract',
-                    'dc:publisher': 'publisher',
-                    'dc:contributor': 'contributor',
-                    'dct:modified': 'modified',
-                    'dc:date': 'date',
-                    'dc:type': 'type',
-                    'dc:format': 'format',
-                    'dc:identifier': 'identifier',
-                    'dc:source': 'source',
-                    'dc:language': 'language',
-                    'dc:relation': 'relation',
+                    # map OGC queryables to XPath expressions
+                    'dc:title': 'dc:title',
+                    'dc:creator': 'dc:creator',
+                    'dc:subject': 'dc:subject',
+                    'dct:abstract': 'dct:abstract',
+                    'dc:publisher': 'dc:publisher',
+                    'dc:contributor': 'dc:contributor',
+                    'dct:modified': 'dct:modified',
+                    'dc:date': 'dc:date',
+                    'dc:type': 'dc:type',
+                    'dc:format': 'dc:format',
+                    'dc:identifier': 'dc:identifier',
+                    'dc:source': 'dc:source',
+                    'dc:language': 'dc:language',
+                    'dc:relation': 'dc:relation',
+                    'dc:rights': 'dc:rights',
+                    # bbox and full text map to internal fixed columns
                     'ows:BoundingBox': 'bbox',
-                    'dc:rights': 'rights',
-                    'csw:AnyText': 'csw_anytext'
-                }
-            }
-        },
-        'gmd:MD_Metadata': {
-            'table': 'md_metadata',
-            'queryables': {
-                'SupportedIsoQueryables': {
-                    'apiso:Subject': 'subject',
-                    'apiso:Title': 'title',
-                    'apiso:Abstract': 'abstract',
-                    'apiso:Format': 'format',
-                    'apiso:Identifier': 'resource_identifier',
-                    'apiso:Modified': 'date',
-                    'apiso:Type': 'type',
-                    'apiso:BoundingBox': 'bbox',
-                    'apiso:CRS': 'crs',
-                    'apiso:RevisionDate': 'revision_date',
-                    'apiso:AlternateTitle': 'alternate_title',
-                    'apiso:CreationDate': 'creation_date',
-                    'apiso:PublicationDate': 'publication_date',
-                    'apiso:OrganisationName': 'organisation_name',
-                    'apiso:HasSecurityConstraints': 'conditions_access_use',
-                    'apiso:Language': 'language',
-                    'apiso:ParentIdentifier': 'parent_identifier',
-                    'apiso:KeywordType': 'keyword_type',
-                    'apiso:TopicCategory': 'topic_category',
-                    'apiso:ResourceLanguage': 'resource_language',
-                    'apiso:GeographicDescriptionCode': 'geographic_description_code',
-                    'apiso:Denominator': 'scale_denominator',
-                    'apiso:DistanceValue': 'distance_value',
-                    'apiso:DistanceUOM': 'distance_unit',
-                    'apiso:TempExtent_begin': 'temporal_extent_begin',
-                    'apiso:TempExtent_end': 'temporal_extent_end',
-                    'apiso:AnyText': 'csw_anytext',
-                    'apiso:ServiceType': 'service_type',
-                    'apiso:ServiceTypeVersion': 'service_type_version',
-                    'apiso:Operation': 'operation',
-                    'apiso:CouplingType': 'coupling_type',
-                    'apiso:OperatesOn': 'operates_on',
-                    'apiso:OperatesOnIdentifier': 'operates_on_identifier',
-                    'apiso:OperatesOnName': 'operates_on_name'
-                },
-                'AdditionalQueryables': {
-                    'apiso:Degree': 'degree',
-                    'apiso:AccessConstraints': 'access_constraints',
-                    'apiso:OtherConstraints': 'other_constraints',
-                    'apiso:Classification': 'classification',
-                    'apiso:ConditionApplyingToAccessAndUse': 'conditions_access_use',
-                    'apiso:Lineage': 'lineage',
-                    'apiso:ResponsiblePartyRole': 'responsible_party_role',
-                    'apiso:SpecificationTitle': 'specification_title',
-                    'apiso:SpecificationDate': 'specification_date',
-                    'apiso:SpecificationDateType': 'specification_date_type'
+                    'csw:AnyText': 'xml'
                 }
             }
         }
