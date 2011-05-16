@@ -152,6 +152,7 @@ MODEL =  {
     },
     'typenames': {
         'csw:Record': {
+            'outputschema': 'http://www.opengis.net/cat/csw/2.0.2',
             'queryables': {
                 'SupportedDublinCoreQueryables': {
                     # map OGC queryables to XPath expressions

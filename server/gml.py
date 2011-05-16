@@ -56,8 +56,8 @@ def _get_point(geom):
     if tmp is None:
         raise RuntimeError, ('Invalid gml:Point geometry.  Missing gml:pos')
     else:
-        xy = tmp.text.split(' ')
-        return 'POINT(%s %s)' % (xy[0], xy[1])
+        xypoint = tmp.text.split(' ')
+        return 'POINT(%s %s)' % (xypoint[0], xypoint[1])
 
 def _get_linestring(geom):
     ''' Parse gml:LineString'''
@@ -112,13 +112,13 @@ def _get_envelope(geom):
 def _poslist2wkt(poslist):
     ''' Repurpose gml:posList into WKT aware list '''
 
-    tmp = postlist.split(' ')
-    postlist2 = []
+    tmp = poslist.split(' ')
+    poslist2 = []
 
     xlist = tmp[1::2]
     ylist = tmp[::2]
 
     for i, j in zip(xlist, ylist):
-        postlist2.append('%s %s' % (i, j))
+        poslist2.append('%s %s' % (i, j))
 
     return ', '.join(poslist2)
