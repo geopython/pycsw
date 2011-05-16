@@ -33,7 +33,6 @@
 
 # generate internal database
 
-import os
 import sys
 import sqlite3
 

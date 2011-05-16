@@ -117,7 +117,8 @@ class Csw(object):
                 self.profiles['loaded'][key].extend_core(
                 config.MODEL, config.NAMESPACES, self.config)
     
-            self.log.debug('Profiles loaded: %s.' % self.profiles['loaded'].keys())
+            self.log.debug('Profiles loaded: %s.' %
+            self.profiles['loaded'].keys())
 
         # setup repository
         self.repository = \
@@ -475,10 +476,10 @@ class Csw(object):
                         'operations']['GetRecords']['constraints'].keys():
                             param = etree.SubElement(oper,
                             util.nspath_eval('ows:Constraint'), name = con)
-                            for q in config.MODEL['operations']\
+                            for val in config.MODEL['operations']\
                             ['GetRecords']['constraints'][con]['values']:
                                 etree.SubElement(param,
-                                util.nspath_eval('ows:Value')).text = q
+                                util.nspath_eval('ows:Value')).text = val
 
             for parameter in config.MODEL['parameters'].keys():
                 param = etree.SubElement(operationsmetadata,
@@ -790,7 +791,7 @@ class Csw(object):
             if self.kvp['constraintlanguage'] == 'CQL_TEXT':
                 self.kvp['cql'] = self.kvp['constraint']
                 self.kvp['cql'] = \
-                self._cql_update_cq_mappings(self.kvp['constraint'],
+                self._cql_update_queryables_mappings(self.kvp['constraint'],
                 self.repository.queryables['_all'])
 
                 self.kvp['filter'] = None
@@ -918,7 +919,8 @@ class Csw(object):
                     'http://www.opengis.net/cat/csw/2.0.2' and
                     'csw:Record' in self.kvp['typenames']):
                     # serialize csw:Record inline
-                    searchresults.append(self._write_record(res, self.repository.queryables['_all']))
+                    searchresults.append(self._write_record(
+                    res, self.repository.queryables['_all']))
                 elif (self.kvp['outputschema'] == 
                       'http://www.opengis.net/cat/csw/2.0.2' and
                       'csw:Record' not in self.kvp['typenames'][0]):
@@ -927,12 +929,14 @@ class Csw(object):
                     self.profiles['loaded']\
                     [config.NAMESPACES[self.kvp['typenames'][0].split(':')[0]]].
                     write_record(res, self.kvp['elementsetname'],
-                    self.kvp['outputschema'], self.repository.queryables['_all']))
+                    self.kvp['outputschema'],
+                    self.repository.queryables['_all']))
                 else:  # use profile serializer to output native output format
                     searchresults.append(
                     self.profiles['loaded'][self.kvp['outputschema']].\
                     write_record(res, self.kvp['elementsetname'],
-                    self.kvp['outputschema'], self.repository.queryables['_all']))
+                    self.kvp['outputschema'],
+                    self.repository.queryables['_all']))
 
         if (self.kvp.has_key('distributedsearch') and
             self.kvp['distributedsearch'] == 'TRUE' and
@@ -1051,7 +1055,8 @@ class Csw(object):
             return self.exceptionreport('OperationNotSupported', 'harvest',
             'Harvest is not supported')
         ipaddress = os.environ['REMOTE_ADDR']
-        if ipaddress not in \
+        if self.config['server'].has_key('transaction_ips') and \
+        ipaddress not in \
         self.config['server']['transactions_ips'].split(','):
             return self.exceptionreport('NoApplicableCode', 'harvest',
             'Harvest operations are not enabled from this IP address: %s' %
@@ -1073,18 +1078,46 @@ class Csw(object):
             req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
             content = urllib2.urlopen(req).read() 
         except Exception, err:
-            errortext = 'Error fetching document %s.\nError: %s.' % \
+            errortext = 'Error harvesting %s.\nError: %s.' % \
             (self.kvp['source'], str(err))
             self.log.debug(errortext)
             return self.exceptionreport('InvalidParameterValue', 'source',
             errortext)
 
-        node = etree.Element(util.nspath_eval('csw:HarvestResponse'),
-        nsmap = config.NAMESPACES)
-        node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-        '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.NAMESPACES['csw'],
-        self.config['server']['ogc_schemas_base'])
-        etree.SubElement(node,'hi').text = content
+        # insert resource into repository
+
+        if self.kvp.has_key('responsehandler'):
+            # send acknowledgement response right away
+            # and process the handler
+
+            node = etree.Element(util.nspath_eval('csw:Acknowledgement'),
+            nsmap = config.NAMESPACES,
+            timeStamp=util.get_today_and_now(), version='2.0.2')
+
+            node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+            '%s %s/csw/2.0.2/CSW-publication.xsd' % \
+            (config.NAMESPACES['csw'],
+            self.config['server']['ogc_schemas_base'])
+
+            node1 = etree.SubElement(node,
+            util.nspath_eval('csw:EchoedRequest'))
+            node1.append(etree.fromstring(self.request))
+
+            if self.kvp['responsehandler'].find('mailto:') != -1:  # email
+                import smtplib
+                msg = smtplib.SMTP('localhost')
+                msg.sendmail(self.config['metadata:main']['contact_email'],
+                self.kvp['responsehandler'].split(':')[-1], etree.tostring(node))
+                msg.quit()
+
+        else:  # return via HTTP
+            node = etree.Element(util.nspath_eval('csw:HarvestResponse'),
+            nsmap = config.NAMESPACES)
+            node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+            '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.NAMESPACES['csw'],
+            self.config['server']['ogc_schemas_base'])
+
+            node.append(self._write_transactionsummary(1,1,1))
 
         return node
 
@@ -1257,7 +1290,7 @@ class Csw(object):
                     elif ctype[0].tag == util.nspath_eval('csw:CqlText'):
                         self.log.debug('CQL specified: %s.' % ctype[0].text)
                         request['cql'] = \
-                        self._cql_update_cq_mappings(ctype[0].text,
+                        self._cql_update_queryables_mappings(ctype[0].text,
                         self.repository.queryables['_all'])
                     else:
                         return 'ogc:Filter or csw:CqlText is required'
@@ -1327,17 +1360,17 @@ class Csw(object):
 
             tmp = doc.find(util.nspath_eval('csw:ResourceFormat'))
             if tmp is not None:
-                request['resourceformat'] = tmp
+                request['resourceformat'] = tmp.text
             else:
                 request['resourceformat'] = 'application/xml'
 
             tmp = doc.find(util.nspath_eval('csw:HarvestInterval'))
             if tmp is not None:
-                request['harvestinterval'] = tmp
+                request['harvestinterval'] = tmp.text
 
             tmp = doc.find(util.nspath_eval('csw:ResponseHandler'))
             if tmp is not None:
-                request['responsehandler'] = tmp
+                request['responsehandler'] = tmp.text
 
         return request
 
@@ -1478,10 +1511,9 @@ class Csw(object):
             config.MODEL['operations']['Harvest']['parameters']\
             ['ResourceType'] = {}
             config.MODEL['operations']['Harvest']['parameters']['ResourceType']\
-            ['values'] = config.MODEL['operations']['GetRecords']['parameters']\
-            ['outputSchema']['values']
+            ['values'] = ['http://www.opengis.net/cat/csw/2.0.2']
 
-    def _cql_update_cq_mappings(self, cql, mappings):
+    def _cql_update_queryables_mappings(self, cql, mappings):
         ''' Transform CQL query's properties to underlying DB columns '''
         self.log.debug('Raw CQL text = %s.' % cql)
         if cql is not None:
@@ -1489,6 +1521,19 @@ class Csw(object):
                 cql = cql.replace(key, 'query_xpath(xml, "%s")' % mappings[key])
             self.log.debug('Interpolated CQL text = %s.' % cql)
             return cql
+
+    def _write_transactionsummary(self, inserted, updated, deleted):
+        ''' Write csw:TransactionSummary construct '''
+        node = etree.Element(util.nspath_eval('csw:TransactionSummary'))
+        etree.SubElement(node,
+        util.nspath_eval('csw:totalInserted')).text = str(inserted)
+
+        etree.SubElement(node,
+        util.nspath_eval('csw:totalUpdated')).text = str(updated)
+
+        etree.SubElement(node,
+        util.nspath_eval('csw:totalDeleted')).text = str(deleted)
+        return node
 
 def write_boundingbox(bbox):
     ''' Generate ows:BoundingBox '''

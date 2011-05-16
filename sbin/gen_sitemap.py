@@ -33,13 +33,13 @@
 
 # generate an XML sitemap from all records in repository
 
-import os
 from lxml import etree
-from server import config, profile, repository, util
+from server import config, repository, util
 
 # get configuration and init repo connection
 CFG = config.get_config('default.cfg')
-REPOS = repository.Repository(CFG['repository'], 'records', config.MODEL['typenames'])
+REPOS = repository.Repository(CFG['repository'], 'records',
+config.MODEL['typenames'])
 
 # write out sitemap document
 URLSET = etree.Element(util.nspath_eval('sitemap:urlset'),

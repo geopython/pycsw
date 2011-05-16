@@ -41,11 +41,11 @@ if len(sys.argv) < 3:
 
 print 'Validating %s against schema %s' % (sys.argv[1], sys.argv[2])
 
-schema = etree.XMLSchema(etree.parse(sys.argv[2]))
-parser = etree.XMLParser(schema=schema)
+SCHEMA = etree.XMLSchema(etree.parse(sys.argv[2]))
+PARSER = etree.XMLParser(schema=SCHEMA)
 
 try:
-    valid = etree.parse(sys.argv[1], parser)
+    VALID = etree.parse(sys.argv[1], PARSER)
     print 'Valid XML document'
 except Exception, err:
     print 'ERROR: %s' % str(err)

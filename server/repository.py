@@ -103,3 +103,19 @@ class Repository(object):
                 self.dataset.xml, sortby['propertyname'])).all()
 
         return query.all()
+
+    def insert(self, identifier, typename, schema, bbox, xml, source, insert_date):
+        ''' Insert a record into the repository '''
+
+        ins = self.dataset.__table__.insert()
+        ins.execute(
+        identifier=identifier,
+        typename=typename,
+        schema=schema,
+        bbox=bbox,
+        xml=xml,
+        source=source,
+        insert_date=insert_date)
+
+        self.session.flush()
+

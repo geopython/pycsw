@@ -60,7 +60,7 @@ MODEL =  {
 
 class Filter(object):
     ''' OGC Filter object support '''
-    def __init__(self, flt, cq_mappings):
+    def __init__(self, flt, queryables):
         ''' Initialize Filter '''
 
         self.boq = None
@@ -79,17 +79,17 @@ class Filter(object):
 
             if child.tag == util.nspath_eval('ogc:Not'):
                 queries.append('%s = "false"' %
-                _get_spatial_operator(child.xpath('child::*')[0], cq_mappings))
+                _get_spatial_operator(child.xpath('child::*')[0]))
 
             elif child.tag in \
             [util.nspath_eval('ogc:%s' % n) for n in \
             MODEL['SpatialOperators']['values']]:
                 if self.boq is not None and self.boq == ' not ':
                     queries.append('%s = "false"' %
-                    _get_spatial_operator(child, cq_mappings))
+                    _get_spatial_operator(child))
                 else:
                     queries.append('%s = "true"' % 
-                    _get_spatial_operator(child, cq_mappings))
+                    _get_spatial_operator(child))
 
             elif child.tag == util.nspath_eval('ogc:FeatureId'):
                 queries.append('identifier = \'%s\'' % child.attrib.get('fid'))
@@ -107,7 +107,8 @@ class Filter(object):
     
                 try:
                     pname = 'query_xpath(xml, "%s")' % \
-                    child.find(util.nspath_eval('ogc:PropertyName')).text
+                    queryables[child.find(
+                    util.nspath_eval('ogc:PropertyName')).text]
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
                     (child.find(util.nspath_eval('ogc:PropertyName')).text,
@@ -138,8 +139,7 @@ class Filter(object):
                 'ogc:PropertyName')).text.lower().find('anytext') != -1):
                     # *:AnyText is a freetext search.  Strip modifiers
                     pvalue = pvalue.replace('%','')
-                    queries.append('query_anytext(xml, "%s") = "true"' % 
-                    pvalue)
+                    queries.append('query_anytext(xml, "%s") = "true"' % pvalue)
 
                 else:
                     if self.boq == ' not ':
@@ -153,7 +153,7 @@ class Filter(object):
         else:
             self.where = queries[0]
 
-def _get_spatial_operator(element, cq_mappings):
+def _get_spatial_operator(element):
     ''' return the spatial predicate function '''
     property_name = element.find(util.nspath_eval('ogc:PropertyName'))
     distance = element.find(util.nspath_eval('ogc:Distance'))
@@ -182,4 +182,4 @@ def _get_comparison_operator(element):
     ''' return the SQL operator based on Filter query '''
 
     return MODEL['ComparisonOperators']\
-    ['ogc:%s'%util.xmltag_split(element.tag)]['opvalue'] 
+    ['ogc:%s' % util.xmltag_split(element.tag)]['opvalue'] 
