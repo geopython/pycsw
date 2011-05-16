@@ -145,12 +145,10 @@ def query_anytext(xml, searchterm):
 def query_xpath(xml, xpath):
     ''' return value(s) from XPath query '''
 
-    if isinstance(xml, unicode):
-        exml = etree.fromstring(xml)
-    else:  # already lxml object
-        exml = xml
+    if isinstance(xml, unicode):  # not lxml serialized yet
+        xml = etree.fromstring(xml)
     try:
-        result = exml.xpath(xpath, namespaces=config.NAMESPACES)
+        result = xml.xpath(xpath, namespaces=config.NAMESPACES)
     except Exception, err:
         raise RuntimeError, ('ERROR: %s' % str(err))
        

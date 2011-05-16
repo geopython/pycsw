@@ -59,49 +59,49 @@ REPOSITORY = {
                 'apiso:Subject': 'gmd:identificationInfo/gmd:MD_Identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode',
                 'apiso:Title': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString',
                 'apiso:Abstract': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString',
-                'apiso:Format': 'gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name',
+                'apiso:Format': 'gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString',
                 'apiso:Identifier': 'gmd:fileIdentifier/gco:CharacterString',
                 'apiso:Modified': 'gmd:dateStamp/gco:Date',
                 'apiso:Type': 'gmd:hierarchyLevel/gmd:MD_ScopeCode',
                 'apiso:BoundingBox': 'bbox',
-                'apiso:CRS': 'crs',
+                'apiso:CRS': 'concat("urn:ogc:def:crs:","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:version/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString")',
                 'apiso:AlternateTitle': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString',
                 'apiso:RevisionDate': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date/gco:Date',
                 'apiso:CreationDate': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="creation"]/gmd:date/gco:Date',
                 'apiso:PublicationDate': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="publication"]/gmd:date/gco:Date',
                 'apiso:OrganisationName': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString',
-                'apiso:HasSecurityConstraints': 'gmd:resourceConstraints/gmd:MD_SecurityConstraints',
+                'apiso:HasSecurityConstraints': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_SecurityConstraints',
                 'apiso:Language': 'gmd:language/gmd:LanguageCode|gmd:language/gco:CharacterString',
                 'apiso:ParentIdentifier': 'gmd:parentIdentifier/gco:CharacterString',
-                'apiso:KeywordType': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeyword/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode',
+                'apiso:KeywordType': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode',
                 'apiso:TopicCategory': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode',
                 'apiso:ResourceLanguage': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:code/gmd:MD_LanguageTypeCode',
-                'apiso:GeographicDescriptionCode': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code',
-                'apiso:Denominator': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator',
+                'apiso:GeographicDescriptionCode': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString',
+                'apiso:Denominator': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer',
                 'apiso:DistanceValue': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance',
-                'apiso:DistanceUOM': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance@uom',
+                'apiso:DistanceUOM': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom',
                 'apiso:TempExtent_begin': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition',
                 'apiso:TempExtent_end': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition',
                 'apiso:AnyText': 'xml',
                 'apiso:ServiceType': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName',
-                'apiso:ServiceTypeVersion': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion',
-                'apiso:Operation': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:operationName',
-                'apiso:CouplingType': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType/gmd:code@codeListValue',
-                'apiso:OperatesOn': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier',
-                'apiso:OperatesOnIdentifier': 'operates_on_identifier',
-                'apiso:OperatesOnName': 'operates_on_name'
+                'apiso:ServiceTypeVersion': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString',
+                'apiso:Operation': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString',
+                'apiso:CouplingType': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType',
+                'apiso:OperatesOn': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString',
+                'apiso:OperatesOnIdentifier': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString',
+                'apiso:OperatesOnName': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:operationName/gco:CharacterString'
             },
             'AdditionalQueryables': {
-                'apiso:Degree': 'degree',
-                'apiso:AccessConstraints': 'access_constraints',
-                'apiso:OtherConstraints': 'other_constraints',
-                'apiso:Classification': 'classification',
-                'apiso:ConditionApplyingToAccessAndUse': 'conditions_access_use',
-                'apiso:Lineage': 'lineage',
-                'apiso:ResponsiblePartyRole': 'responsible_party_role',
-                'apiso:SpecificationTitle': 'specification_title',
-                'apiso:SpecificationDate': 'specification_date',
-                'apiso:SpecificationDateType': 'specification_date_type'
+                'apiso:Degree': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean',
+                'apiso:AccessConstraints': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_RestrictionCode',
+                'apiso:OtherConstraints': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString',
+                'apiso:Classification': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_ClassificationCode',
+                'apiso:ConditionApplyingToAccessAndUse': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:useLimitation/gco:CharacterString',
+                'apiso:Lineage': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString',
+                'apiso:ResponsiblePartyRole': 'gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode',
+                'apiso:SpecificationTitle': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString',
+                'apiso:SpecificationDate': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date',
+                'apiso:SpecificationDateType': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode'
             }
         }
     }
@@ -121,6 +121,10 @@ class APISO(profile.Profile):
         model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.outputschema)
         model['constraints']['IsoProfiles'] = { 'values': [self.namespace] }
 
+        if model['operations'].has_key('Harvest'):
+            model['operations']['Harvest']['parameters']['ResourceType']\
+            ['values'].append('http://www.isotc211.org/schemas/2005/gmd/')
+
         # namespaces
         namespaces.update(NAMESPACES)
 
@@ -131,7 +135,7 @@ class APISO(profile.Profile):
         namespaces.update(INSPIRE_NAMESPACES)
 
         # set INSPIRE config
-        if config.has_key('metadata:inspire') and config['metadata:inspire']['enabled'] == 'true':
+        if config.has_key('metadata:inspire') and config['metadata:inspire'].has_key('enabled') and config['metadata:inspire']['enabled'] == 'true':
             self.inspire_config = config['metadata:inspire']
             self.url = config['server']['url']
             self.current_language = self.inspire_config['default_language']
@@ -345,7 +349,7 @@ class APISO(profile.Profile):
         if outputschema == self.namespace:
             if esn == 'full':  # dump the full record
                 node = xml
-            elif esn == 'brief':
+            else:  # it's a brief or summary record
                 node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
                 '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
@@ -356,6 +360,12 @@ class APISO(profile.Profile):
                 identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
                 tmp = etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
 
+                if esn == 'summary':
+                    # language
+                    val = util.query_xpath(xml, queryables['apiso:Language'])
+                    lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
+                    tmp = etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
+
                 # hierarchyLevel
                 val = util.query_xpath(xml, queryables['apiso:Type'])
 
@@ -363,6 +373,27 @@ class APISO(profile.Profile):
                 codeList = '%s#MD_ScopeCode' % CODELIST,
                 codeListValue = val,
                 codeSpace = CODESPACE).text = val
+
+                if esn == 'summary':
+                    # contact
+                    val = util.query_xpath(xml, queryables['apiso:OrganisationName'])
+                    contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
+                    CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
+                    org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
+                    tmp = etree.SubElement(org_name, util.nspath_eval('gco:ChracterString')).text = val
+    
+                    # date
+                    val = util.query_xpath(xml, queryables['apiso:Modified'])
+                    date = etree.SubElement(node, util.nspath_eval('gmd:dateStamp'))
+                    etree.SubElement(date, util.nspath_eval('gco:Date')).text = val
+    
+                    # metadata standard name
+                    standard = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
+                    tmp = etree.SubElement(standard, util.nspath_eval('gco:ChracterString')).text = 'ISO19115'
+    
+                    # metadata standard version
+                    standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
+                    tmp = etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
 
                 # title
                 val = util.query_xpath(xml, queryables['apiso:Title'])
@@ -373,6 +404,34 @@ class APISO(profile.Profile):
                 tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
                 etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
 
+                if esn == 'summary':
+                    # abstract
+                    val = util.query_xpath(xml, queryables['apiso:Abstract'])
+                    tmp2 = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
+                    tmp = etree.SubElement(tmp2, util.nspath_eval('gco:ChracterString')).text = val
+    
+                    # spatial resolution
+                    val = util.query_xpath(xml, queryables['apiso:Denominator'])
+                    tmp = etree.SubElement(identification, util.nspath_eval('gmd:spatialResolution'))
+                    tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:spatialResolution'))
+                    tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:MD_Resolution'))
+                    tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:equivalentScale'))
+                    tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:MD_RepresentativeFraction'))
+                    tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
+                    tmp7 = etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = val
+    
+                    # resource language
+                    val = util.query_xpath(xml, queryables['apiso:ResourceLanguage'])
+                    tmp = etree.SubElement(identification, util.nspath_eval('gmd:language'))
+                    etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
+    
+                    # topic category
+                    val = util.query_xpath(xml, queryables['apiso:TopicCategory'])
+                    if val:
+                        for v in val.split(','):
+                            tmp = etree.SubElement(identification, util.nspath_eval('gmd:topicCategory'))
+                            etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
+
                 # bbox extent
                 val = result.bbox
                 bboxel = write_extent(val)
@@ -380,184 +439,81 @@ class APISO(profile.Profile):
                     identification.append(bboxel)
 
                 # service identification
+
+                # service type
+                # service type version
                 val = util.query_xpath(xml, queryables['apiso:ServiceType'])
+                val2 = util.query_xpath(xml, queryables['apiso:ServiceTypeVersion'])
                 if (val is not None):
-                    srv_identification=etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
+                    srv_identification = etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
                     tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))
                     etree.SubElement(tmp, util.nspath_eval('gco:LocalName')).text = val
-                    val = getattr(result, queryables['apiso:ServiceTypeVersion']['obj_attr'])
                     tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceTypeVersion'))
-                    etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
+                    etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val2
 
-            else:  # summary
-                node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
-                node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-                '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
-
-                # identifier
-                val = getattr(result, queryables['apiso:Identifier']['obj_attr'])
-
-                identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
-                tmp = etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
-
-                # language
-                val = getattr(result, queryables['apiso:Language']['obj_attr'])
-                lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
-                tmp = etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
-
-                # hierarchyLevel
-                val = getattr(result, queryables['apiso:Type']['obj_attr'])
-                hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
-                codeList = '%s#MD_ScopeCode' % CODELIST,
-                codeListValue = val,
-                codeSpace = CODESPACE).text = val
-
-                # contact
-                val = getattr(result, queryables['apiso:OrganisationName']['obj_attr'])
-                contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
-                CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
-                org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
-                tmp = etree.SubElement(org_name, util.nspath_eval('gco:ChracterString')).text = val
-
-                # date
-                val = getattr(result, queryables['apiso:Modified']['obj_attr'])
-                date = etree.SubElement(node, util.nspath_eval('gmd:dateStamp'))
-                etree.SubElement(date, util.nspath_eval('gco:Date')).text = val
-
-                # metadata standard name
-                standard = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
-                tmp = etree.SubElement(standard, util.nspath_eval('gco:ChracterString')).text = 'ISO19115'
-
-                # metadata standard version
-                standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
-                tmp = etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
-
-                # title
-                val = getattr(result, queryables['apiso:Title']['obj_attr'])
-                identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
-                mdidentification = etree.SubElement(identification, util.nspath_eval('gmd:MD_IdentificationInfo'))
-                tmp2 = etree.SubElement(mdidentification, util.nspath_eval('gmd:citation'))
-                tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
-                tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
-                etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
-
-                # abstract
-                val = getattr(result, queryables['apiso:Abstract']['obj_attr'])
-                tmp2 = etree.SubElement(mdidentification, util.nspath_eval('gmd:abstract'))
-                tmp = etree.SubElement(tmp2, util.nspath_eval('gco:ChracterString')).text = val
-
-                # spatial resolution
-                val = getattr(result, queryables['apiso:Denominator']['obj_attr'])
-                tmp = etree.SubElement(mdidentification, util.nspath_eval('gmd:spatialResolution'))
-                tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:spatialResolution'))
-                tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:MD_Resolution'))
-                tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:equivalentScale'))
-                tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:MD_RepresentativeFraction'))
-                tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
-                tmp7 = etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = val
-
-                # resource language
-                val = getattr(result, queryables['apiso:ResourceLanguage']['obj_attr'])
-                tmp = etree.SubElement(mdidentification, util.nspath_eval('gmd:language'))
-                etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
-
-                # topic category
-                val = getattr(result, queryables['apiso:TopicCategory']['obj_attr'])
-                for v in val.split(','):
-                    tmp = etree.SubElement(mdidentification, util.nspath_eval('gmd:topicCategory'))
-                    etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
-
-                # bbox extent
-                val = getattr(result, queryables['apiso:BoundingBox']['obj_attr'])
-                bboxel = write_extent(val)
-                if bboxel is not None:
-                    mdidentification.append(bboxel)
-
-                # service identification
-                val = getattr(result, queryables['apiso:ServiceType']['obj_attr'])
-                if (val is not None):
-                    srv_identification=etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
-                    tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))
-                    etree.SubElement(tmp, util.nspath_eval('gco:LocalName')).text = val
-                    val = getattr(result, queryables['apiso:ServiceTypeVersion']['obj_attr'])
-                    tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceTypeVersion'))
-                    etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
-
+                if esn == 'summary':
                     # service operations
-                    val = getattr(result, queryables['apiso:Operation']['obj_attr'])
-                    temp_oper=val.split(',')
-                    oper = etree.SubElement(srv_identification, util.nspath_eval('srv:containsOperations'))
-                    for i in temp_oper:
-                        tmp = etree.SubElement(oper, util.nspath_eval('srv:SV_OperationMetadata'))
-                        tmp2 = etree.SubElement(tmp, util.nspath_eval('srv:operationName'))
-                        etree.SubElement(tmp2, util.nspath_eval('gco:CharacterString')).text = i
+                    val = util.query_xpath(xml, queryables['apiso:Operation'])
+                    if val:
+                        temp_oper=val.split(',')
+                        oper = etree.SubElement(srv_identification, util.nspath_eval('srv:containsOperations'))
+                        for i in temp_oper:
+                            tmp = etree.SubElement(oper, util.nspath_eval('srv:SV_OperationMetadata'))
+                            tmp2 = etree.SubElement(tmp, util.nspath_eval('srv:operationName'))
+                            etree.SubElement(tmp2, util.nspath_eval('gco:CharacterString')).text = i
 
-        else:
+        else:  # write out Dublin Core
             if esn == 'brief':
-                node = etree.Element(util.nspath_eval('csw:BriefRecord'))
-                val = getattr(result, queryables['apiso:Identifier']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:identifier')).text = val
-                val = getattr(result, queryables['apiso:Title']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:title')).text = val
-                val = getattr(result, queryables['apiso:Type']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:type')).text = val
-
+                esn2 = 0
+                elname = 'BriefRecord'
+            elif esn == 'summary':
+                esn2 = 1
+                elname = 'SummaryRecord'
             elif esn == 'full':
-                node = etree.Element(util.nspath_eval('csw:Record'))
-                val = getattr(result, queryables['apiso:OrganisationName']['obj_attr'])
+                esn2 = 2
+                elname = 'Record'
+
+            node = etree.Element(util.nspath_eval('csw:%s' % elname))
+            val = util.query_xpath(xml, queryables['apiso:Identifier'])
+            etree.SubElement(node, util.nspath_eval('dc:identifier')).text = val
+            val = util.query_xpath(xml, queryables['apiso:Title'])
+            etree.SubElement(node, util.nspath_eval('dc:title')).text = val
+            val = util.query_xpath(xml, queryables['apiso:Type'])
+            etree.SubElement(node, util.nspath_eval('dc:type')).text = val
+            if esn2 > 0:  # summary
+                val = util.query_xpath(xml, queryables['apiso:Subject'])
+                if val:
+                    for s in val.split(','):
+                        etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
+                val = util.query_xpath(xml, queryables['apiso:TopicCategory'])
+
+                if val:
+                    for s in val.split(','):
+                        etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
+                val = util.query_xpath(xml, queryables['apiso:Format'])
+                etree.SubElement(node, util.nspath_eval('dc:format')).text = val
+                val = util.query_xpath(xml, queryables['apiso:Modified'])
+                etree.SubElement(node, util.nspath_eval('dct:modified')).text = val
+                val = util.query_xpath(xml, queryables['apiso:Abstract'])
+                etree.SubElement(node, util.nspath_eval('dct:abstract')).text = val
+
+            if esn2 > 1:  # full
+                val = util.query_xpath(xml, queryables['apiso:OrganisationName'])
                 etree.SubElement(node, util.nspath_eval('dc:creator')).text = val
                 etree.SubElement(node, util.nspath_eval('dc:publisher')).text = val
-                val = getattr(result, queryables['apiso:Subject']['obj_attr'])
-                for s in val.split(','):
-                    etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
-                val = getattr(result, queryables['apiso:TopicCategory']['obj_attr'])
-                for s in val.split(','):
-                    etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
-                val = getattr(result, queryables['apiso:Abstract']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dct:abstract')).text = val
-                val = getattr(result, queryables['apiso:Identifier']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:identifier')).text = val
-                val = getattr(result, queryables['apiso:ParentIdentifier']['obj_attr'])
+                val = util.query_xpath(xml, queryables['apiso:ParentIdentifier'])
                 etree.SubElement(node, util.nspath_eval('dc:relation')).text = val
-                val = getattr(result, queryables['apiso:Format']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:format')).text = val
-                val = getattr(result, queryables['apiso:Type']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:type')).text = val
-                val = getattr(result, queryables['apiso:Title']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:title')).text = val
-                val = getattr(result, queryables['apiso:Modified']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dct:modified')).text = val
-                val = getattr(result, queryables['apiso:BoundingBox']['obj_attr'])
-                s = val.split(',')
-                if len(s) == 4:
-                    tmp=etree.SubElement(node, util.nspath_eval('ows:BoundingBox'))
-                    etree.SubElement(tmp,
-                    util.nspath_eval('ows:LowerCorner')).text = \
-                    '%s %s' % (s[1], s[0])
-                    etree.SubElement(tmp,
-                    util.nspath_eval('ows:UpperCorner')).text = \
-                    '%s %s' % (s[3], s[2])
-
-            else: # summary
-                node = etree.Element(util.nspath_eval('csw:SummaryRecord'))
-                val = getattr(result, queryables['apiso:Identifier']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:identifier')).text = val
-                val = getattr(result, queryables['apiso:Title']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:title')).text = val
-                val = getattr(result, queryables['apiso:Type']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:type')).text = val
-                val = getattr(result, queryables['apiso:Subject']['obj_attr'])
-                for s in val.split(','):
-                    etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
-                val = getattr(result, queryables['apiso:TopicCategory']['obj_attr'])
-                for s in val.split(','):
-                    etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
-                val = getattr(result, queryables['apiso:Format']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dc:format')).text = val
-                val = getattr(result, queryables['apiso:Modified']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dct:modified')).text = val
-                val = getattr(result, queryables['apiso:Abstract']['obj_attr'])
-                etree.SubElement(node, util.nspath_eval('dct:abstract')).text = val
+                val = util.query_xpath(xml, queryables['apiso:BoundingBox'])
+                if val:
+                    s = val.split(',')
+                    if len(s) == 4:
+                        tmp=etree.SubElement(node, util.nspath_eval('ows:BoundingBox'))
+                        etree.SubElement(tmp,
+                        util.nspath_eval('ows:LowerCorner')).text = \
+                        '%s %s' % (s[1], s[0])
+                        etree.SubElement(tmp,
+                        util.nspath_eval('ows:UpperCorner')).text = \
+                        '%s %s' % (s[3], s[2])
 
         return node
 
