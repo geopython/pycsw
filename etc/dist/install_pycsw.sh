@@ -92,9 +92,11 @@ maxrecords=10
 #federatedcatalogues=http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw
 xml_pretty_print=true
 #gzip_compresslevel=8
-transactions=false
-transactions_ips=127.0.0.1
 #profiles=apiso
+
+[manager]
+transactions=true
+allowed_ips=127.0.0.1,199.212.19.130
 
 [metadata:main]
 identification_title=pycsw Geospatial Catalogue

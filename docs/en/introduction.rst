@@ -11,7 +11,7 @@ Features
 - fully passes the `OGC CITE CSW`_ test suite (103 tests)
 - implements `INSPIRE Discovery Services 3.0`_
 - implements `ISO Metadata Application Profile 1.0.0`_
-- transactional capabilities (pending)
+- transactional capabilities (CSW-T)
 - flexible repository configuration
 - federated catalogue distributed searching
 - realtime XML Schema validation
@@ -54,8 +54,8 @@ Supported Operations
   GetRecordById,optional,yes,GET (KVP) / POST (XML) / SOAP
   GetRepositoryItem,optional,yes,GET (KVP)
   GetDomain,optional,yes,GET (KVP) / POST (XML) / SOAP
-  Harvest,optional,pending,GET (KVP) / POST (XML) / SOAP
-  Transaction,optional,pending,POST (XML) / SOAP
+  Harvest,optional,yes,GET (KVP) / POST (XML) / SOAP
+  Transaction,optional,yes,POST (XML) / SOAP
 
 Supported Filters
 -----------------
