@@ -46,7 +46,7 @@ class Csw(object):
         self.config = config.get_config(configfile)
 
         # configure transaction support, if specified in config
-        self._gen_transactions()
+        self._gen_manager()
 
         # init kvp
         self.kvp = {}
@@ -666,9 +666,7 @@ class Csw(object):
                 try:
                     self.log.debug('Querying repository property %s.' % pname2)
         
-                    results = self.repository.query(
-                    propertyname=pname2,
-                    typenames=[dvtype])
+                    results = self.repository.query_domain(pname2,[dvtype])
                     self.log.debug('Results: %s' % str(len(results)))
                     listofvalues = etree.SubElement(domainvalue,
                     util.nspath_eval('csw:ListOfValues'))
@@ -758,18 +756,7 @@ class Csw(object):
                     ename)
 
         if self.kvp['resulttype'] == 'validate':
-            node = etree.Element(util.nspath_eval('csw:Acknowledgement'),
-            nsmap = config.NAMESPACES, timeStamp = timestamp)
-
-            node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-            '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.NAMESPACES['csw'], \
-            self.config['server']['ogc_schemas_base'])
-
-            node1 = etree.SubElement(node,
-            util.nspath_eval('csw:EchoedRequest'))
-            node1.append(etree.fromstring(self.request))
-
-            return node
+            return self._write_acknowledgement()
 
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
@@ -994,7 +981,7 @@ class Csw(object):
 
         # query repository
         self.log.debug('Querying repository with ids: %s.' % ids)
-        results = self.repository.query(ids=ids, propertyname='identifier')
+        results = self.repository.query_ids(ids)
 
         if raw is True:  # GetRepositoryItem request
             self.log.debug('GetRepositoryItem request.')
@@ -1030,14 +1017,70 @@ class Csw(object):
     def transaction(self):
         ''' Handle Transaction request '''
 
-        if self.config['server']['transactions'] != 'true':
-            return self.exceptionreport('OperationNotSupported',
-            'transaction', 'Transaction operations are not supported')
-        ipaddress = os.environ['REMOTE_ADDR']
-        if ipaddress not in \
-        self.config['server']['transactions_ips'].split(','):
+        try:
+            self._test_manager()
+        except Exception, err:
             return self.exceptionreport('NoApplicableCode', 'transaction',
-            'Transactions not enabled from this IP address: %s' % ipaddress)
+            str(err))
+
+        inserted = 0
+        updated = 0
+        deleted = 0
+
+        self.log.debug('Transaction list: %s' % self.kvp['transactions'])
+
+        for ttype in self.kvp['transactions']:
+            if ttype['type'] == 'insert':
+                record = parse_record(ttype['xml'])
+
+                self.log.debug('Transaction operation: %s' % record)
+
+                if record.has_key('identifier') is False:
+                    return self.exceptionreport('NoApplicableCode',
+                    'insert', 'Record requires an identifier')
+
+                record['source'] = 'local'
+                record['insert_date'] = util.get_today_and_now()
+
+                # insert new record
+                try:
+                    self.repository.insert(record)
+                    inserted += 1
+                except Exception, err:
+                    return self.exceptionreport('NoApplicableCode',
+                    'insert', 'Transaction (insert) failed: %s.' % str(err))
+
+            elif ttype['type'] == 'update':
+                if ttype.has_key('constraint') is False:
+                    # update full existing resource in repository
+    
+                    record = parse_record(ttype['xml'])
+                    record['source'] = 'local'
+                    record['insert_date'] = util.get_today_and_now()
+            
+                    # query repository to see if record already exists
+                    self.log.debug('checking if record exists (%s)' % \
+                    record['identifier'])
+
+                    results = self.repository.query_ids(
+                    ids=[record['identifier']])
+            
+                    if len(results) == 0:
+                        self.log.debug('id %s does not exist in repository' % \
+                        record['identifier'])
+                    else:  # existing record, it's an update
+                        try:
+                            self.repository.update(record)
+                            updated += 1
+                        except Exception, err:
+                            return self.exceptionreport('NoApplicableCode',
+                            'update',
+                            'Transaction (update) failed: %s.' % str(err))
+                else: # update by constraint
+                    pass
+
+            elif ttype['type'] == 'delete':
+                pass
 
         node = etree.Element(util.nspath_eval('csw:TransactionResponse'),
         nsmap = config.NAMESPACES, version = '2.0.2')
@@ -1046,21 +1089,19 @@ class Csw(object):
         '%s %s/csw/2.0.2/CSW-publication.xsd' % \
         (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
 
+        node.append(
+        self._write_transactionsummary(
+        inserted=inserted, updated=updated, deleted=deleted))
+
         return node
 
     def harvest(self):
         ''' Handle Harvest request '''
 
-        if self.config['server']['transactions'] != 'true':
-            return self.exceptionreport('OperationNotSupported', 'harvest',
-            'Harvest is not supported')
-        ipaddress = os.environ['REMOTE_ADDR']
-        if self.config['server'].has_key('transaction_ips') and \
-        ipaddress not in \
-        self.config['server']['transactions_ips'].split(','):
-            return self.exceptionreport('NoApplicableCode', 'harvest',
-            'Harvest operations are not enabled from this IP address: %s' %
-            ipaddress)
+        try:
+            self._test_manager()
+        except Exception, err:
+            return self.exceptionreport('NoApplicableCode', 'harvest', str(err))
 
         # validate resourcetype
         if (self.kvp['resourcetype'] not in
@@ -1073,12 +1114,13 @@ class Csw(object):
             ['ResourceType']['values'])))
 
         # fetch resource
+        self.log.debug('Fetching resource %s' % self.kvp['source'])
         try:
             req = urllib2.Request(self.kvp['source'])
             req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
             content = urllib2.urlopen(req).read() 
         except Exception, err:
-            errortext = 'Error harvesting %s.\nError: %s.' % \
+            errortext = 'Error fetching resource %s.\nError: %s.' % \
             (self.kvp['source'], str(err))
             self.log.debug(errortext)
             return self.exceptionreport('InvalidParameterValue', 'source',
@@ -1086,38 +1128,67 @@ class Csw(object):
 
         # insert resource into repository
 
+        record = parse_record(content)
+        record['source'] = self.kvp['source']
+        record['insert_date'] = util.get_today_and_now()
+
+        # query repository to see if record already exists
+        self.log.debug('checking if record exists (%s)' % record['identifier'])
+        results = self.repository.query_ids(ids=[record['identifier']])
+
+        if len(results) == 0:  # new record, it's a new insert
+            inserted = 1
+            updated = 0
+            try:
+                self.repository.insert(record)
+            except Exception, err:
+                return self.exceptionreport('NoApplicableCode',
+                'source', 'Harvest (insert) failed: %s.' % str(err))
+        else:  # existing record, it's an update
+            if record['source'] != results[0].source:
+                # same identifier, but different source
+                return self.exceptionreport('NoApplicableCode',
+                'source', 'Insert failed: identifier %s in repository\
+                has source %s.' % str(err))
+
+            try:
+                self.repository.update(record)
+            except Exception, err:
+                return self.exceptionreport('NoApplicableCode',
+                'source', 'Harvest (update) failed: %s.' % str(err))
+            inserted = 0
+            updated = 1
+
+        node = etree.Element(util.nspath_eval('csw:HarvestResponse'),
+        nsmap = config.NAMESPACES)
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+        '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.NAMESPACES['csw'],
+        self.config['server']['ogc_schemas_base'])
+
         if self.kvp.has_key('responsehandler'):
             # send acknowledgement response right away
             # and process the handler
 
-            node = etree.Element(util.nspath_eval('csw:Acknowledgement'),
-            nsmap = config.NAMESPACES,
-            timeStamp=util.get_today_and_now(), version='2.0.2')
-
-            node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-            '%s %s/csw/2.0.2/CSW-publication.xsd' % \
-            (config.NAMESPACES['csw'],
-            self.config['server']['ogc_schemas_base'])
-
-            node1 = etree.SubElement(node,
-            util.nspath_eval('csw:EchoedRequest'))
-            node1.append(etree.fromstring(self.request))
+            node.append(self._write_acknowledgement(root=False))
 
             if self.kvp['responsehandler'].find('mailto:') != -1:  # email
                 import smtplib
+
+                body = 'Subject: pycsw Harvest result(s)\n\n%s' % \
+                etree.tostring(node, pretty_print=self.xml_pretty_print)
+
                 msg = smtplib.SMTP('localhost')
                 msg.sendmail(self.config['metadata:main']['contact_email'],
-                self.kvp['responsehandler'].split(':')[-1], etree.tostring(node))
+                self.kvp['responsehandler'].split(':')[-1], body)
                 msg.quit()
 
-        else:  # return via HTTP
-            node = etree.Element(util.nspath_eval('csw:HarvestResponse'),
-            nsmap = config.NAMESPACES)
-            node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-            '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.NAMESPACES['csw'],
-            self.config['server']['ogc_schemas_base'])
+            return node
 
-            node.append(self._write_transactionsummary(1,1,1))
+        node2 = etree.SubElement(node,
+        util.nspath_eval('csw:TransactionResponse'), version='2.0.2')
+
+        node2.append(
+        self._write_transactionsummary(inserted=inserted, updated=updated))
 
         return node
 
@@ -1151,15 +1222,20 @@ class Csw(object):
             'schemas', 'ogc', 'csw', '2.0.2', 'CSW-discovery.xsd')
 
         try:
-            self.log.debug('Validating %s.' % postdata)
-            schema = etree.XMLSchema(etree.parse(schema))
-            parser = etree.XMLParser(schema=schema)
-            if hasattr(self, 'soap') is True and self.soap is True:
-            # validate the body of the SOAP request
-                doc = etree.fromstring(etree.tostring(doc), parser)
-            else:  # validate the request normally
-                doc = etree.fromstring(postdata, parser)
-            self.log.debug('Request is valid XML.')
+            # it is virtually impossible to validate a csw:Transaction
+            # XML document.  Only validate non csw:Transaction XML
+            if doc.tag != util.nspath_eval('csw:Transaction'):
+                self.log.debug('Validating %s.' % postdata)
+                schema = etree.XMLSchema(etree.parse(schema))
+                parser = etree.XMLParser(schema=schema)
+                if hasattr(self, 'soap') is True and self.soap is True:
+                # validate the body of the SOAP request
+                    doc = etree.fromstring(etree.tostring(doc), parser)
+                else:  # validate the request normally
+                    doc = etree.fromstring(postdata, parser)
+                self.log.debug('Request is valid XML.')
+            else:  # parse Transaction as best we can
+                doc = etree.fromstring(postdata)
         except Exception, err:
             errortext = \
             'Exception: the document is not valid.\nError: %s.' % str(err)
@@ -1342,19 +1418,43 @@ class Csw(object):
 
         # Transaction
         if request['request'] == 'Transaction':
-            tmp = doc.find(util.nspath_eval('csw:Insert'))
-            if tmp is not None:
-                request['ttype'] = 'insert'
-            tmp = doc.find(util.nspath_eval('csw:Update'))
-            if tmp is not None:
-                request['ttype'] = 'update'
-            tmp = doc.find(util.nspath_eval('csw:Delete'))
-            if tmp is not None:
-                request['ttype'] = 'delete'
+            request['transactions'] = []
+
+            for ttype in \
+            doc.xpath('//csw:Insert', namespaces=config.NAMESPACES):
+                tname = ttype.attrib.get('typeName')
+
+                for mdrec in ttype.xpath('child::*'):
+                    xml = mdrec
+                    request['transactions'].append(
+                    {'type': 'insert', 'typename': tname, 'xml': xml})
+
+            for ttype in \
+            doc.xpath('//csw:Update', namespaces=config.NAMESPACES):
+                child = ttype.xpath('child::*')
+                update = {'type': 'update'}
+
+                if len(child) == 1:  # it's a wholesale update
+                    update['xml'] = child[0]
+                else:  # it's a RecordProperty with Constraint Update
+                    update['constraint'] = self._parse_constraint(
+                    ttype.find(util.nspath_eval('csw:Constraint')))
+
+                request['transactions'].append(update)
+
+            for ttype in \
+            doc.xpath('//csw:Delete', namespaces=config.NAMESPACES):
+                tname = ttype.attrib.get('typeName')
+                constraint = self._parse_constraint(
+                ttype.find(util.nspath_eval('csw:Constraint')))
+
+                request['transactions'].append(
+                {'type': 'delete', 'typename': tname, 'constraint': constraint})
  
         # Harvest
         if request['request'] == 'Harvest':
             request['source'] = doc.find(util.nspath_eval('csw:Source')).text
+
             request['resourcetype'] = \
             doc.find(util.nspath_eval('csw:ResourceType')).text
 
@@ -1493,10 +1593,10 @@ class Csw(object):
 
         self.response = node
 
-    def _gen_transactions(self):
+    def _gen_manager(self):
         ''' Update config.MODEL with CSW-T advertising '''
-        if (self.config['server'].has_key('transactions') is True and
-            self.config['server']['transactions'] == 'true'):
+        if (self.config['manager'].has_key('transactions') is True and
+            self.config['manager']['transactions'] == 'true'):
             config.MODEL['operations']['Transaction'] = {}
             config.MODEL['operations']['Transaction']['methods'] = {}
             config.MODEL['operations']['Transaction']['methods']['get'] = False
@@ -1513,6 +1613,37 @@ class Csw(object):
             config.MODEL['operations']['Harvest']['parameters']['ResourceType']\
             ['values'] = ['http://www.opengis.net/cat/csw/2.0.2']
 
+    def _parse_constraint(self, element):
+        ''' Parse csw:Constraint '''
+
+        if element.tag == util.nspath_eval('ogc:Filter'):
+            self.log.debug('Filter constraint specified.')
+            try:
+                query = filterencoding.Filter(element,
+                self.repository.queryables['_all'])
+            except Exception, err:
+                return 'Invalid Filter request: %s' % err
+        elif element.tag == util.nspath_eval('csw:CqlText'):
+            self.log.debug('CQL specified: %s.' % element.text)
+            query = self._cql_update_queryables_mappings(element.text,
+            self.repository.queryables['_all'])
+        else:
+            return 'ogc:Filter or csw:CqlText is required'
+
+    def _test_manager(self):
+        ''' Verify that transactions are allowed '''
+
+        if self.config['manager']['transactions'] != 'true':
+            raise RuntimeError, 'CSW-T interface is disabled'
+
+        ipaddress = os.environ['REMOTE_ADDR']
+
+        if self.config['manager'].has_key('allowed_ips') is False or \
+        (self.config['manager'].has_key('allowed_ips') and ipaddress not in
+        self.config['manager']['allowed_ips'].split(',')):
+            raise RuntimeError, \
+            'CSW-T operations not allowed for this IP address: %s' % ipaddress
+
     def _cql_update_queryables_mappings(self, cql, mappings):
         ''' Transform CQL query's properties to underlying DB columns '''
         self.log.debug('Raw CQL text = %s.' % cql)
@@ -1522,7 +1653,7 @@ class Csw(object):
             self.log.debug('Interpolated CQL text = %s.' % cql)
             return cql
 
-    def _write_transactionsummary(self, inserted, updated, deleted):
+    def _write_transactionsummary(self, inserted=0, updated=0, deleted=0):
         ''' Write csw:TransactionSummary construct '''
         node = etree.Element(util.nspath_eval('csw:TransactionSummary'))
         etree.SubElement(node,
@@ -1534,6 +1665,68 @@ class Csw(object):
         etree.SubElement(node,
         util.nspath_eval('csw:totalDeleted')).text = str(deleted)
         return node
+
+    def _write_acknowledgement(self, root=True):
+        ''' Generate csw:Acknowledgement '''
+        node = etree.Element(util.nspath_eval('csw:Acknowledgement'),
+        nsmap = config.NAMESPACES, timeStamp=util.get_today_and_now())
+
+        if root is True:
+            node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+            '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.NAMESPACES['csw'], \
+            self.config['server']['ogc_schemas_base'])
+    
+        node1 = etree.SubElement(node,
+        util.nspath_eval('csw:EchoedRequest'))
+        node1.append(etree.fromstring(self.request))
+
+        return node
+
+def parse_record(record):
+    ''' parse metadata '''
+
+    from owslib.csw import CswRecord
+    from owslib.iso import MD_Metadata
+
+    if isinstance(record, str):
+        exml = etree.fromstring(record)
+    else:  # already serialized to lxml
+        exml = record
+
+    root = exml.tag
+
+    recobj = {}
+
+    if root == '{%s}MD_Metadata' % config.NAMESPACES['gmd']:
+        recobj['typename'] = 'gmd:MD_Metadata'
+        recobj['schema'] = config.NAMESPACES['gmd']
+
+        md = MD_Metadata(exml)
+
+        if hasattr(md.identification, 'bbox') and md.identification.bbox:
+            bbox = md.identification.bbox
+        else:
+            bbox = None
+
+    else:  # default
+        recobj['typename'] = 'csw:Record'
+        recobj['schema'] = config.NAMESPACES['csw']
+
+        md = CswRecord(exml)
+
+        if md.bbox is None:
+            bbox = None
+        else:
+            bbox = md.bbox
+
+    recobj['identifier'] = md.identifier
+    recobj['xml'] = md.xml
+
+    if bbox is not None:
+        tmp = '%s,%s,%s,%s' % (bbox.miny, bbox.minx, bbox.maxy, bbox.maxx)
+        recobj['bbox'] = util.bbox2wktpolygon(tmp)
+
+    return recobj
 
 def write_boundingbox(bbox):
     ''' Generate ows:BoundingBox '''

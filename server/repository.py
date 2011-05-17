@@ -72,23 +72,37 @@ class Repository(object):
         for qbl in self.queryables:
             self.queryables['_all'].update(self.queryables[qbl])
 
-    def query(self, flt=None, cql=None, ids=None, sortby=None,
-     propertyname=None, typenames=['csw:Record', 'gmd:MD_Metadata']):
+    def query_ids(self, ids):
+        ''' Query by list of identifiers '''
+        query = self.session.query(
+        self.dataset).filter(self.dataset.identifier.in_(ids))
+        return query.all()
+
+    def query_domain(self, domain, typenames):
+        ''' Query by property domain values '''
+        query = self.session.query(func.query_xpath(
+        self.dataset.xml, domain)).filter(
+        self.dataset.typename.in_(typenames)).distinct()
+        return query.all()
+
+    def query_source(self, source):
+        ''' Query by source '''
+        query = self.session.query(self.dataset).filter(
+        self.dataset.source == source)
+        return query.all() 
+
+    def query(self, flt=None, cql=None, sortby=None,
+    typenames=['csw:Record', 'gmd:MD_Metadata']):
         ''' Query records from underlying repository '''
-        if ids is not None:  # it's a GetRecordById request
-            query = self.session.query(
-            self.dataset).filter(getattr(self.dataset, propertyname).in_(ids))
-        elif flt is not None:  # it's a GetRecords with filter
+
+        if flt is not None:  # it's a GetRecords with filter
             query = self.session.query(self.dataset).filter(
             self.dataset.typename.in_(typenames)).filter(flt.where)
-        elif flt is None and propertyname is None and cql is None:
-        # it's a GetRecords sans filter
+
+        elif flt is None and cql is None: # it's a GetRecords sans filter
             query = self.session.query(self.dataset).filter(
             self.dataset.typename.in_(typenames))
-        elif propertyname is not None:  # it's a GetDomain query
-            query = self.session.query(func.query_xpath(
-            getattr(self.dataset, 'xml'), propertyname)).filter(
-            self.dataset.typename.in_(typenames)).distinct()
+
         elif cql is not None:  # it's a CQL query
             query = self.session.query(self.dataset).filter(
             self.dataset.typename.in_(typenames)).filter(cql)
@@ -104,18 +118,50 @@ class Repository(object):
 
         return query.all()
 
-    def insert(self, identifier, typename, schema, bbox, xml, source, insert_date):
+    def insert(self, record):
         ''' Insert a record into the repository '''
 
-        ins = self.dataset.__table__.insert()
-        ins.execute(
-        identifier=identifier,
-        typename=typename,
-        schema=schema,
-        bbox=bbox,
-        xml=xml,
-        source=source,
-        insert_date=insert_date)
+        record1 = self.dataset(
+        identifier=record['identifier'],
+        typename=record['typename'],
+        schema=record['schema'],
+        bbox=record['bbox'],
+        xml=record['xml'],
+        source=record['source'],
+        insert_date=record['insert_date'])
 
-        self.session.flush()
+        try:
+            self.session.begin()
+            self.session.add(record1)
+            self.session.commit()
+        except Exception, err:
+            self.session.rollback()
+            raise RuntimeError, 'ERROR: %s' % str(err)
 
+    def update(self, record):
+        ''' Update a record in the repository based on identifier '''
+
+        try:
+            self.session.begin()
+            self.session.query(self.dataset).filter_by(
+            identifier=record['identifier']).update(
+            {self.dataset.xml: record['xml'],
+            self.dataset.insert_date: record['insert_date']})
+            self.session.commit()
+        except Exception, err:
+            self.session.rollback()
+            raise RuntimeError, 'ERROR: %s' % str(err)
+
+    def delete(self, record):
+        ''' Delete a record from the repository '''
+
+        try:
+            self.session.begin()
+            self.session.query(self.dataset).filter_by(
+            identifier=record['identifier']).update(
+            {self.dataset.xml: record['xml'],
+            self.dataset.insert_date: record['insert_date']})
+            self.session.commit()
+        except Exception, err:
+            self.session.rollback()
+            raise RuntimeError, 'ERROR: %s' % str(err)
