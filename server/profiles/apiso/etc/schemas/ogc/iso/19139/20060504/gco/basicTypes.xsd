@@ -6,7 +6,7 @@
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
 	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="../gml/gml.xsd"/>
-	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../xlink/1.0.0/xlinks.xsd"/>
+	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../../etc/schemas/ogc/xlink/1.0.0/xlinks.xsd"/>
 	<xs:include schemaLocation="../gco/gcoBase.xsd"/>
 	<!-- ########################################################################### -->
 	<!-- ########################################################################### -->
