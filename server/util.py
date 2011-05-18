@@ -54,7 +54,7 @@ def get_version_integer(version):
 def find_exml(val, attrib=False):
     ''' Test that the XML value exists, return value, else return None '''
     if val is not None:
-        if attrib == True:  # it's an XML attribute
+        if attrib:  # it's an XML attribute
             return val
         else:  # it's an XML value
             return val.text
@@ -126,7 +126,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     else:
         raise RuntimeError, ('Invalid spatial query predicate: %s' % predicate)
 
-    if result is True:
+    if result:
         return 'true'
     else:
         return 'false'
@@ -147,6 +147,7 @@ def query_xpath(xml, xpath):
 
     if isinstance(xml, unicode):  # not lxml serialized yet
         xml = etree.fromstring(xml)
+
     try:
         result = xml.xpath(xpath, namespaces=config.NAMESPACES)
     except Exception, err:
@@ -164,3 +165,24 @@ def query_xpath(xml, xpath):
             return ','.join([x.text for x in result])
         except:  # attributes
             return ','.join(result)
+
+def update_xpath(xml, recprops):
+    ''' Update XML document XPath values '''
+
+    edits = 0
+
+    if isinstance(xml, unicode):  # not lxml serialized yet
+        xml = etree.fromstring(xml)
+
+    for recprop in recprops:  # a list of name/value dicts
+        try:
+            nodes = xml.xpath(recprop['name'], namespaces=config.NAMESPACES)
+            if len(nodes) > 0:  # matches
+                for node in nodes:
+                    if node.text != recprop['value']:  # values differ, update
+                        node.text = recprop['value']
+                        edits += 1
+        except Exception, err:
+            raise RuntimeError, ('ERROR: %s' % str(err))
+    return {'edits': edits, 'xml': etree.tostring(xml)}
+

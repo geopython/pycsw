@@ -54,6 +54,7 @@ class Repository(object):
         self.connection.create_function('query_spatial', 4, util.query_spatial)
         self.connection.create_function('query_anytext', 2, util.query_anytext)
         self.connection.create_function('query_xpath', 2, util.query_xpath)
+        self.connection.create_function('update_xpath', 2, util.update_xpath)
 
         # generate core queryables db and obj bindings
         self.queryables = {}       
@@ -95,18 +96,13 @@ class Repository(object):
     typenames=['csw:Record', 'gmd:MD_Metadata']):
         ''' Query records from underlying repository '''
 
-        if constraint.has_key('filter'):  # it's a GetRecords with filter
+        if constraint.has_key('where'):  # it's a GetRecords with constraint
             query = self.session.query(self.dataset).filter(
-            self.dataset.typename.in_(typenames)).filter(constraint['filter'])
+            self.dataset.typename.in_(typenames)).filter(constraint['where'])
 
-        elif constraint.has_key('filter') is False and \
-        constraint.has_key('cql') is False: # it's a GetRecords sans filter
+        elif constraint.has_key('where') is False: # it's a GetRecords sans constraint
             query = self.session.query(self.dataset).filter(
             self.dataset.typename.in_(typenames))
-
-        elif constraint.has_key('cql'):  # it's a CQL query
-            query = self.session.query(self.dataset).filter(
-            self.dataset.typename.in_(typenames)).filter(constraint['cql'])
 
         if sortby is not None:
             if sortby['order'] == 'DESC':
@@ -139,30 +135,41 @@ class Repository(object):
             self.session.rollback()
             raise RuntimeError, 'ERROR: %s' % str(err)
 
-    def update(self, record):
+    def update(self, record=None, recprops=None, constraint=None):
         ''' Update a record in the repository based on identifier '''
 
-        try:
-            self.session.begin()
-            self.session.query(self.dataset).filter_by(
-            identifier=record['identifier']).update(
-            {self.dataset.xml: record['xml'],
-            self.dataset.insert_date: record['insert_date']})
-            self.session.commit()
-        except Exception, err:
-            self.session.rollback()
-            raise RuntimeError, 'ERROR: %s' % str(err)
+        if recprops is None and constraint is None:  # full update
+            try:
+                self.session.begin()
+                self.session.query(self.dataset).filter_by(
+                identifier=record['identifier']).update(
+                {self.dataset.xml: record['xml'],
+                self.dataset.insert_date: record['insert_date']})
+                self.session.commit()
+            except Exception, err:
+                self.session.rollback()
+                raise RuntimeError, 'ERROR: %s' % str(err)
+        else:  # update based on record properties
+            try:
+                self.session.begin()
+                self.session.query(self.dataset).filter(
+                constraint['where']).update(
+                {self.dataset.xml: func.update_xpath(
+                self.dataset.xml, recprops)}, synchronize_session='fetch')
+            except Exception, err:
+                self.session.rollback()
+                raise RuntimeError, 'ERROR: %s' % str(err)
 
-    def delete(self, record):
+    def delete(self, constraint):
         ''' Delete a record from the repository '''
 
         try:
             self.session.begin()
-            self.session.query(self.dataset).filter_by(
-            identifier=record['identifier']).update(
-            {self.dataset.xml: record['xml'],
-            self.dataset.insert_date: record['insert_date']})
+            rows = self.session.query(self.dataset).filter(
+            constraint['where']).delete(synchronize_session='fetch')
             self.session.commit()
         except Exception, err:
             self.session.rollback()
             raise RuntimeError, 'ERROR: %s' % str(err)
+
+        return rows
