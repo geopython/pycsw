@@ -54,7 +54,7 @@ def initlog(config=None):
     logfile = None
     loglevel = 'NOTSET'
 
-    if config['server'].has_key('loglevel') is True:
+    if config['server'].has_key('loglevel'):
         loglevel = config['server']['loglevel']
 
         if loglevel not in LOGLEVELS.keys():
