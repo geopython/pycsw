@@ -86,7 +86,7 @@ class Csw(object):
             self.gzip_compresslevel = 9
 
         # generate distributed search model, if specified in config
-        if self.config['server'].has_key('federatedcatalogues') is True:
+        if self.config['server'].has_key('federatedcatalogues'):
             self.log.debug('Configuring distributed search.')
             config.MODEL['constraints']['FederatedCatalogues'] = {}
             config.MODEL['constraints']['FederatedCatalogues']['values'] = []
@@ -131,7 +131,7 @@ class Csw(object):
         ''' Handle incoming HTTP request '''
         error = 0
 
-        if hasattr(self,'response') is True:
+        if hasattr(self,'response'):
             self._write_response()
             return
 
@@ -143,7 +143,7 @@ class Csw(object):
             self.request = postdata
             self.log.debug('Request type: POST.  Request:\n%s\n', self.request)
             self.kvp = self.parse_postdata(postdata)
-            if isinstance(self.kvp, str) is True:  # it's an exception
+            if isinstance(self.kvp, str):  # it's an exception
                 error = 1
                 locator = 'service'
                 code = 'InvalidRequest'
@@ -311,7 +311,7 @@ class Csw(object):
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
         (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
 
-        if serviceidentification is True:
+        if serviceidentification:
             self.log.debug('Writing section ServiceIdentification.')
 
             serviceidentification = etree.SubElement(node, \
@@ -345,7 +345,7 @@ class Csw(object):
             util.nspath_eval('ows:AccessConstraints')).text = \
             self.config['metadata:main']['identification_accessconstraints']
 
-        if serviceprovider is True:
+        if serviceprovider:
             self.log.debug('Writing section ServiceProvider.')
             serviceprovider = etree.SubElement(node,
             util.nspath_eval('ows:ServiceProvider'))
@@ -426,7 +426,7 @@ class Csw(object):
             util.nspath_eval('ows:Role')).text = \
             self.config['metadata:main']['contact_role']
 
-        if operationsmetadata is True:
+        if operationsmetadata:
             self.log.debug('Writing section OperationsMetadata.')
             operationsmetadata = etree.SubElement(node,
             util.nspath_eval('ows:OperationsMetadata'))
@@ -438,15 +438,13 @@ class Csw(object):
                 dcp = etree.SubElement(oper, util.nspath_eval('ows:DCP'))
                 http = etree.SubElement(dcp, util.nspath_eval('ows:HTTP'))
 
-                if (config.MODEL['operations'][operation]['methods']['get']
-                    is True):
+                if config.MODEL['operations'][operation]['methods']['get']:
                     get = etree.SubElement(http, util.nspath_eval('ows:Get'))
                     get.attrib[util.nspath_eval('xlink:type')] = 'simple'
                     get.attrib[util.nspath_eval('xlink:href')] = \
                     self.config['server']['url']
 
-                if (config.MODEL['operations'][operation]['methods']['post']
-                    is True):
+                if config.MODEL['operations'][operation]['methods']['post']:
                     post = etree.SubElement(http, util.nspath_eval('ows:Post'))
                     post.attrib[util.nspath_eval('xlink:type')] = 'simple'
                     post.attrib[util.nspath_eval('xlink:href')] = \
@@ -779,11 +777,10 @@ class Csw(object):
             if self.kvp['constraintlanguage'] == 'CQL_TEXT':
                 tmp = self.kvp['constraint']
                 self.kvp['constraint'] = {}
-                self.kvp['constraint']['cql'] = \
+                self.kvp['constraint']['type'] = 'cql'
+                self.kvp['constraint']['where'] = \
                 self._cql_update_queryables_mappings(tmp,
                 self.repository.queryables['_all'])
-
-                self.kvp['constraint']['filter'] = None
             elif self.kvp['constraintlanguage'] == 'FILTER':
                 # validate filter XML
                 try:
@@ -796,7 +793,8 @@ class Csw(object):
                     doc = etree.fromstring(self.kvp['constraint'], parser)
                     self.log.debug('Filter is valid XML.')
                     self.kvp['constraint'] = {}
-                    self.kvp['constraint']['filter'] = \
+                    self.kvp['constraint']['type'] = 'filter'
+                    self.kvp['constraint']['where'] = \
                     fes.parse(doc,
                     self.repository.queryables['_all'].keys())
                 except Exception, err:
@@ -806,17 +804,6 @@ class Csw(object):
                     self.log.debug(errortext)
                     return self.exceptionreport('InvalidParameterValue',
                     'constraint', 'Invalid Filter query: %s' % errortext)
-
-                self.kvp['constraint']['cql'] = None
-
-        self.log.debug('CON: %s' % self.kvp['constraint'])
-
-        if self.kvp.has_key('constraint') and \
-        self.kvp['constraint'].has_key('filter') is False:
-            self.kvp['constraint']['filter'] = None
-        if self.kvp.has_key('constraint') and \
-        self.kvp['constraint'].has_key('cql') is False:
-            self.kvp['constraint']['cql'] = None
 
         if self.kvp.has_key('sortby') is False:
             self.kvp['sortby'] = None
@@ -887,7 +874,8 @@ class Csw(object):
         etree.SubElement(node, util.nspath_eval('csw:SearchStatus'),
         timestamp=timestamp)
 
-        if self.kvp['constraint']['filter'] is None and self.kvp['resulttype'] is None:
+        if self.kvp['constraint'].has_key('where') is False and \
+        self.kvp['resulttype'] is None:
             returned = '0'
 
         searchresults = etree.SubElement(node,
@@ -895,7 +883,8 @@ class Csw(object):
         numberOfRecordsMatched = matched, numberOfRecordsReturned = returned,
         nextRecord = nextrecord, recordSchema = self.kvp['outputschema'])
 
-        if self.kvp['constraint']['filter'] is None and self.kvp['resulttype'] is None:
+        if self.kvp['constraint'].has_key('where') is False \
+        and self.kvp['resulttype'] is None:
             self.log.debug('Empty result set returned.')
             return node
 
@@ -987,7 +976,7 @@ class Csw(object):
         self.log.debug('Querying repository with ids: %s.' % ids)
         results = self.repository.query_ids(ids)
 
-        if raw is True:  # GetRepositoryItem request
+        if raw:  # GetRepositoryItem request
             self.log.debug('GetRepositoryItem request.')
             if len(results) > 0:
                 return etree.fromstring(getattr(results[0], 'xml'))
@@ -1002,7 +991,7 @@ class Csw(object):
                 result, self.kvp['elementsetname'],
                 self.kvp['outputschema'], self.repository.queryables['_all']))
 
-        if raw is True and len(results) == 0:
+        if raw and len(results) == 0:
             return None
 
         return node
@@ -1057,7 +1046,6 @@ class Csw(object):
             elif ttype['type'] == 'update':
                 if ttype.has_key('constraint') is False:
                     # update full existing resource in repository
-    
                     record = parse_record(ttype['xml'])
                     record['source'] = 'local'
                     record['insert_date'] = util.get_today_and_now()
@@ -1080,11 +1068,18 @@ class Csw(object):
                             return self.exceptionreport('NoApplicableCode',
                             'update',
                             'Transaction (update) failed: %s.' % str(err))
-                else: # update by constraint
-                    pass
+                else:  # update by record property and constraint
+                    try:
+                        self.repository.update(record=None,
+                        recprops=ttype['recordproperty'],
+                        constraint=ttype['constraint'])
+                    except Exception, err:
+                        return self.exceptionreport('NoApplicableCode',
+                        'update',
+                        'Transaction (update) failed: %s.' % str(err))
 
             elif ttype['type'] == 'delete':
-                pass
+                deleted += self.repository.delete(ttype['constraint'])
 
         node = etree.Element(util.nspath_eval('csw:TransactionResponse'),
         nsmap = config.NAMESPACES, version = '2.0.2')
@@ -1227,18 +1222,25 @@ class Csw(object):
 
         try:
             # it is virtually impossible to validate a csw:Transaction
-            # XML document.  Only validate non csw:Transaction XML
-            if doc.tag != util.nspath_eval('csw:Transaction'):
+            # csw:Insert|csw:Update (with single child) XML document.
+            # Only validate non csw:Transaction XML
+
+            if doc.find('.//%s' % util.nspath_eval('csw:Insert')) is None:
+
+            #if doc.find('.//%s' % util.nspath_eval('csw:Insert')) is None and \
+            #len(doc.xpath('//csw:Update/child::*',
+            #namespaces=config.NAMESPACES)) > 1 is None:
+
                 self.log.debug('Validating %s.' % postdata)
                 schema = etree.XMLSchema(etree.parse(schema))
                 parser = etree.XMLParser(schema=schema)
-                if hasattr(self, 'soap') is True and self.soap is True:
+                if hasattr(self, 'soap') and self.soap:
                 # validate the body of the SOAP request
                     doc = etree.fromstring(etree.tostring(doc), parser)
                 else:  # validate the request normally
                     doc = etree.fromstring(postdata, parser)
                 self.log.debug('Request is valid XML.')
-            else:  # parse Transaction as best we can
+            else:  # parse Transaction without validation
                 doc = etree.fromstring(postdata)
         except Exception, err:
             errortext = \
@@ -1355,9 +1357,7 @@ class Csw(object):
             tmp = doc.find(util.nspath_eval('csw:Query/csw:Constraint'))
 
             if tmp is not None:
-                ctype = tmp.xpath('child::*')
-
-                request['constraint'] = self._parse_constraint(ctype[0])
+                request['constraint'] = self._parse_constraint(tmp)
                 if isinstance(request['constraint'], str):  # parse error
                     return 'Invalid Constraint: %s' % request['constraint']
 
@@ -1426,6 +1426,17 @@ class Csw(object):
                 if len(child) == 1:  # it's a wholesale update
                     update['xml'] = child[0]
                 else:  # it's a RecordProperty with Constraint Update
+                    update['recordproperty'] = []
+
+                    for recprop in ttype.findall(
+                    util.nspath_eval('csw:RecordProperty')):
+                        rpname = recprop.find(util.nspath_eval('csw:Name')).text
+                        rpvalue = recprop.find(
+                        util.nspath_eval('csw:Value')).text
+
+                        update['recordproperty'].append(
+                        {'name': rpname, 'value': rpvalue})
+
                     update['constraint'] = self._parse_constraint(
                     ttype.find(util.nspath_eval('csw:Constraint')))
 
@@ -1437,9 +1448,12 @@ class Csw(object):
                 constraint = self._parse_constraint(
                 ttype.find(util.nspath_eval('csw:Constraint')))
 
+                if isinstance(constraint, str):  # parse error
+                    return 'Invalid Constraint: %s' % request['constraint']
+
                 request['transactions'].append(
                 {'type': 'delete', 'typename': tname, 'constraint': constraint})
- 
+
         # Harvest
         if request['request'] == 'Harvest':
             request['source'] = doc.find(util.nspath_eval('csw:Source')).text
@@ -1474,7 +1488,7 @@ class Csw(object):
 
         record = etree.Element(util.nspath_eval('csw:%s' % elname))
 
-        if (self.kvp.has_key('elementname') is True and
+        if (self.kvp.has_key('elementname') and
             len(self.kvp['elementname']) > 0):
             xml = etree.fromstring(recobj.xml)
             for elemname in self.kvp['elementname']:
@@ -1487,7 +1501,7 @@ class Csw(object):
                     if value:
                         etree.SubElement(record,
                         util.nspath_eval(elemname)).text=value
-        elif self.kvp.has_key('elementsetname') is True:
+        elif self.kvp.has_key('elementsetname'):
             if self.kvp['elementsetname'] == 'full':  # dump the full record
                 record = etree.fromstring(recobj.xml)
             else:  # dump BriefRecord (always required), summary if requested
@@ -1528,7 +1542,7 @@ class Csw(object):
         self.config['server']['encoding']
         appinfo = '<!-- pycsw %s -->\n' % config.VERSION
 
-        if hasattr(self, 'soap') and self.soap is True:
+        if hasattr(self, 'soap') and self.soap:
             self._gen_soap_wrapper() 
 
         response = etree.tostring(self.response,
@@ -1536,7 +1550,7 @@ class Csw(object):
 
         self.log.debug('Response:\n%s' % response)
 
-        if self.gzip is True:
+        if self.gzip:
             import gzip
             from cStringIO import StringIO
 
@@ -1567,7 +1581,7 @@ class Csw(object):
 
         node2 = etree.SubElement(node, util.nspath_eval('soapenv:Body'))
 
-        if hasattr(self, 'exception') and self.exception is True:
+        if hasattr(self, 'exception') and self.exception:
             node3 = etree.SubElement(node2, util.nspath_eval('soapenv:Fault'))
             node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Code'))
             etree.SubElement(node4, util.nspath_eval('soapenv:Value')).text = \
@@ -1584,7 +1598,7 @@ class Csw(object):
 
     def _gen_manager(self):
         ''' Update config.MODEL with CSW-T advertising '''
-        if (self.config['manager'].has_key('transactions') is True and
+        if (self.config['manager'].has_key('transactions') and
             self.config['manager']['transactions'] == 'true'):
             config.MODEL['operations']['Transaction'] = {}
             config.MODEL['operations']['Transaction']['methods'] = {}
@@ -1607,16 +1621,20 @@ class Csw(object):
 
         query = {}
 
-        if element.tag == util.nspath_eval('ogc:Filter'):
+        tmp = element.find(util.nspath_eval('ogc:Filter'))
+        if tmp is not None:
             self.log.debug('Filter constraint specified.')
             try:
-                query['filter'] = fes.parse(element,
+                query['type'] = 'filter'
+                query['where'] = fes.parse(tmp,
                 self.repository.queryables['_all'])
             except Exception, err:
                 return 'Invalid Filter request: %s' % err
-        elif element.tag == util.nspath_eval('csw:CqlText'):
-            self.log.debug('CQL specified: %s.' % element.text)
-            query['cql'] = self._cql_update_queryables_mappings(element.text,
+        tmp = element.find(util.nspath_eval('csw:CqlText'))
+        if tmp is not None:
+            self.log.debug('CQL specified: %s.' % tmp.text)
+            query['type'] = 'cql'
+            query['where'] = self._cql_update_queryables_mappings(tmp.text,
             self.repository.queryables['_all'])
         return query
 
@@ -1661,7 +1679,7 @@ class Csw(object):
         node = etree.Element(util.nspath_eval('csw:Acknowledgement'),
         nsmap = config.NAMESPACES, timeStamp=util.get_today_and_now())
 
-        if root is True:
+        if root:
             node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
             '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.NAMESPACES['csw'], \
             self.config['server']['ogc_schemas_base'])
