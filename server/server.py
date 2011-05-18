@@ -36,7 +36,7 @@ import sys
 import cgi
 import urllib2
 from lxml import etree
-import config, filterencoding, log, profile, repository, util
+import config, fes, log, profile, repository, util
 
 class Csw(object):
     ''' Base CSW server '''
@@ -139,6 +139,7 @@ class Csw(object):
     
         if cgifs.file:  # it's a POST request
             postdata = cgifs.file.read()
+            self.requesttype = 'POST'
             self.request = postdata
             self.log.debug('Request type: POST.  Request:\n%s\n', self.request)
             self.kvp = self.parse_postdata(postdata)
@@ -149,7 +150,8 @@ class Csw(object):
                 text = self.kvp
     
         else:  # it's a GET request
-            self.request = 'http://%s%s' % \
+            self.type = 'GET'
+            self.requesttype = 'http://%s%s' % \
             (os.environ['HTTP_HOST'], os.environ['REQUEST_URI'])
             self.log.debug('Request type: GET.  Request:\n%s\n', self.request)
             for key in cgifs.keys():
@@ -513,7 +515,7 @@ class Csw(object):
         util.nspath_eval('ogc:GeometryOperands'))
 
         for geomtype in \
-        filterencoding.MODEL['GeometryOperands']['values']:
+        fes.MODEL['GeometryOperands']['values']:
             etree.SubElement(geomops,
             util.nspath_eval('ogc:GeometryOperand')).text = geomtype
     
@@ -521,7 +523,7 @@ class Csw(object):
         util.nspath_eval('ogc:SpatialOperators'))
 
         for spatial_comparison in \
-        filterencoding.MODEL['SpatialOperators']['values']:
+        fes.MODEL['SpatialOperators']['values']:
             etree.SubElement(spatialops,
             util.nspath_eval('ogc:SpatialOperator'), name = spatial_comparison)
     
@@ -533,15 +535,15 @@ class Csw(object):
         cmpops = etree.SubElement(scalarcaps,
         util.nspath_eval('ogc:ComparisonOperators'))
     
-        for cmpop in filterencoding.MODEL['ComparisonOperators'].keys():
+        for cmpop in fes.MODEL['ComparisonOperators'].keys():
             etree.SubElement(cmpops,
             util.nspath_eval('ogc:ComparisonOperator')).text = \
-            filterencoding.MODEL['ComparisonOperators'][cmpop]['opname']
+            fes.MODEL['ComparisonOperators'][cmpop]['opname']
     
         idcaps = etree.SubElement(fltcaps,
         util.nspath_eval('ogc:Id_Capabilities'))
 
-        for idcap in filterencoding.MODEL['Ids']['values']:
+        for idcap in fes.MODEL['Ids']['values']:
             etree.SubElement(idcaps, util.nspath_eval('ogc:%s' % idcap))
 
         return node
@@ -761,9 +763,8 @@ class Csw(object):
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
 
-        if (self.kvp.has_key('constraint') is True and
-            (self.kvp.has_key('filter') is False and
-             self.kvp.has_key('cql') is False)):  # GET request
+        if self.kvp.has_key('constraint') and self.requesttype == 'GET':
+            # GET request
             self.log.debug('csw:Constraint passed over HTTP GET.')
             if self.kvp.has_key('constraintlanguage') is False:
                 return self.exceptionreport('MissingParameterValue',
@@ -776,14 +777,14 @@ class Csw(object):
                 'constraintlanguage', 'Invalid constraintlanguage: %s'
                 % self.kvp['constraintlanguage'])
             if self.kvp['constraintlanguage'] == 'CQL_TEXT':
-                self.kvp['cql'] = self.kvp['constraint']
-                self.kvp['cql'] = \
-                self._cql_update_queryables_mappings(self.kvp['constraint'],
+                tmp = self.kvp['constraint']
+                self.kvp['constraint'] = {}
+                self.kvp['constraint']['cql'] = \
+                self._cql_update_queryables_mappings(tmp,
                 self.repository.queryables['_all'])
 
-                self.kvp['filter'] = None
+                self.kvp['constraint']['filter'] = None
             elif self.kvp['constraintlanguage'] == 'FILTER':
-
                 # validate filter XML
                 try:
                     schema = os.path.join(self.config['server']['home'],
@@ -794,8 +795,9 @@ class Csw(object):
                     parser = etree.XMLParser(schema=schema)
                     doc = etree.fromstring(self.kvp['constraint'], parser)
                     self.log.debug('Filter is valid XML.')
-                    self.kvp['filter'] = \
-                    filterencoding.Filter(doc,
+                    self.kvp['constraint'] = {}
+                    self.kvp['constraint']['filter'] = \
+                    fes.parse(doc,
                     self.repository.queryables['_all'].keys())
                 except Exception, err:
                     errortext = \
@@ -805,12 +807,16 @@ class Csw(object):
                     return self.exceptionreport('InvalidParameterValue',
                     'constraint', 'Invalid Filter query: %s' % errortext)
 
-                self.kvp['cql'] = None
+                self.kvp['constraint']['cql'] = None
 
-        if self.kvp.has_key('filter') is False:
-            self.kvp['filter'] = None
-        if self.kvp.has_key('cql') is False:
-            self.kvp['cql'] = None
+        self.log.debug('CON: %s' % self.kvp['constraint'])
+
+        if self.kvp.has_key('constraint') and \
+        self.kvp['constraint'].has_key('filter') is False:
+            self.kvp['constraint']['filter'] = None
+        if self.kvp.has_key('constraint') and \
+        self.kvp['constraint'].has_key('cql') is False:
+            self.kvp['constraint']['cql'] = None
 
         if self.kvp.has_key('sortby') is False:
             self.kvp['sortby'] = None
@@ -819,15 +825,13 @@ class Csw(object):
             self.kvp['startposition'] = 1
 
         # query repository
-        self.log.debug('Querying repository with filter: %s,\
-        cql: %s, sortby: %s, typenames: %s.' %
-        (self.kvp['filter'], self.kvp['cql'], self.kvp['sortby'],
-        self.kvp['typenames']))
+        self.log.debug('Querying repository with constraint : %s,\
+        sortby: %s, typenames: %s.' %
+        (self.kvp['constraint'], self.kvp['sortby'], self.kvp['typenames']))
 
         try:
-            results = self.repository.query(flt = self.kvp['filter'],
-            cql = self.kvp['cql'], sortby=self.kvp['sortby'],
-            typenames=self.kvp['typenames'])
+            results = self.repository.query(constraint=self.kvp['constraint'],
+            sortby=self.kvp['sortby'], typenames=self.kvp['typenames'])
         except Exception, err:
             return self.exceptionreport('InvalidParameterValue', 'constraint',
             'Invalid query: %s' % err)
@@ -883,7 +887,7 @@ class Csw(object):
         etree.SubElement(node, util.nspath_eval('csw:SearchStatus'),
         timestamp=timestamp)
 
-        if self.kvp['filter'] is None and self.kvp['resulttype'] is None:
+        if self.kvp['constraint']['filter'] is None and self.kvp['resulttype'] is None:
             returned = '0'
 
         searchresults = etree.SubElement(node,
@@ -891,7 +895,7 @@ class Csw(object):
         numberOfRecordsMatched = matched, numberOfRecordsReturned = returned,
         nextRecord = nextrecord, recordSchema = self.kvp['outputschema'])
 
-        if self.kvp['filter'] is None and self.kvp['resulttype'] is None:
+        if self.kvp['constraint']['filter'] is None and self.kvp['resulttype'] is None:
             self.log.debug('Empty result set returned.')
             return node
 
@@ -1347,31 +1351,16 @@ class Csw(object):
             doc.findall(util.nspath_eval('csw:Query/csw:ElementName')):
                 request['elementname'].append(elname.text)
 
-            request['filter'] = None
-            request['cql'] = None
-
+            request['constraint'] = {}
             tmp = doc.find(util.nspath_eval('csw:Query/csw:Constraint'))
+
             if tmp is not None:
                 ctype = tmp.xpath('child::*')
 
-                try: 
-                    if ctype[0].tag == util.nspath_eval('ogc:Filter'):
-                        self.log.debug('Filter constraint specified.')
-                        try:
-                            request['filter'] = \
-                            filterencoding.Filter(ctype[0],
-                            self.repository.queryables['_all'])
-                        except Exception, err:
-                            return 'Invalid Filter request: %s' % err
-                    elif ctype[0].tag == util.nspath_eval('csw:CqlText'):
-                        self.log.debug('CQL specified: %s.' % ctype[0].text)
-                        request['cql'] = \
-                        self._cql_update_queryables_mappings(ctype[0].text,
-                        self.repository.queryables['_all'])
-                    else:
-                        return 'ogc:Filter or csw:CqlText is required'
-                except Exception, err:
-                    return 'ogc:Filter or csw:CqlText is required %s' % str(err)
+                request['constraint'] = self._parse_constraint(ctype[0])
+                if isinstance(request['constraint'], str):  # parse error
+                    return 'Invalid Constraint: %s' % request['constraint']
+
             else: 
                 self.log.debug('No csw:Constraint (ogc:Filter or csw:CqlText) \
                 specified.')
@@ -1616,19 +1605,20 @@ class Csw(object):
     def _parse_constraint(self, element):
         ''' Parse csw:Constraint '''
 
+        query = {}
+
         if element.tag == util.nspath_eval('ogc:Filter'):
             self.log.debug('Filter constraint specified.')
             try:
-                query = filterencoding.Filter(element,
+                query['filter'] = fes.parse(element,
                 self.repository.queryables['_all'])
             except Exception, err:
                 return 'Invalid Filter request: %s' % err
         elif element.tag == util.nspath_eval('csw:CqlText'):
             self.log.debug('CQL specified: %s.' % element.text)
-            query = self._cql_update_queryables_mappings(element.text,
+            query['cql'] = self._cql_update_queryables_mappings(element.text,
             self.repository.queryables['_all'])
-        else:
-            return 'ogc:Filter or csw:CqlText is required'
+        return query
 
     def _test_manager(self):
         ''' Verify that transactions are allowed '''

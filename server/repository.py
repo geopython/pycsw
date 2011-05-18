@@ -91,21 +91,22 @@ class Repository(object):
         self.dataset.source == source)
         return query.all() 
 
-    def query(self, flt=None, cql=None, sortby=None,
+    def query(self, constraint, sortby=None,
     typenames=['csw:Record', 'gmd:MD_Metadata']):
         ''' Query records from underlying repository '''
 
-        if flt is not None:  # it's a GetRecords with filter
+        if constraint.has_key('filter'):  # it's a GetRecords with filter
             query = self.session.query(self.dataset).filter(
-            self.dataset.typename.in_(typenames)).filter(flt.where)
+            self.dataset.typename.in_(typenames)).filter(constraint['filter'])
 
-        elif flt is None and cql is None: # it's a GetRecords sans filter
+        elif constraint.has_key('filter') is False and \
+        constraint.has_key('cql') is False: # it's a GetRecords sans filter
             query = self.session.query(self.dataset).filter(
             self.dataset.typename.in_(typenames))
 
-        elif cql is not None:  # it's a CQL query
+        elif constraint.has_key('cql'):  # it's a CQL query
             query = self.session.query(self.dataset).filter(
-            self.dataset.typename.in_(typenames)).filter(cql)
+            self.dataset.typename.in_(typenames)).filter(constraint['cql'])
 
         if sortby is not None:
             if sortby['order'] == 'DESC':
