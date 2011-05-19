@@ -304,8 +304,25 @@ class Csw(object):
                     return self.exceptionreport(result['code'],
                     result['locator'], result['text'])
 
+        # @updateSequence get mtime of repository
+        
+        dbfile = self.config['repository']['database'].replace('sqlite:///','')
+
+        updatesequence = int(os.stat(dbfile).st_mtime)
+
         node = etree.Element(util.nspath_eval('csw:Capabilities'),
-        nsmap=config.NAMESPACES, version='2.0.2')
+        nsmap=config.NAMESPACES, version='2.0.2',
+        updateSequence=str(updatesequence))
+
+        if self.kvp.has_key('updatesequence'):
+            if int(self.kvp['updatesequence']) == updatesequence:
+                return node
+            elif int(self.kvp['updatesequence']) > updatesequence:
+                return self.exceptionreport('InvalidUpdateSequence',
+                'updatesequence', 
+                'outputsequence specified (%s) is higher than server\'s \
+                updatesequence (%s)' % (self.kvp['updatesequence'], 
+                updatesequence))
 
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
@@ -1262,6 +1279,10 @@ class Csw(object):
         if tmp is not None:
             request['version'] = tmp.text
     
+        tmp = doc.find('.').attrib.get('updateSequence')
+        if tmp is not None:
+            request['updatesequence'] = tmp
+
         # DescribeRecord
         if request['request'] == 'DescribeRecord':
             request['typename'] = []
