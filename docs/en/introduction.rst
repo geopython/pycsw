@@ -8,9 +8,10 @@ pycsw is an OGC CSW server implementation written in Python.
 Features
 ========
 
-- fully passes the `OGC CITE CSW`_ test suite (103 tests)
+- fully passes the `OGC CITE CSW`_ test suite (103/103)
 - implements `INSPIRE Discovery Services 3.0`_
 - implements `ISO Metadata Application Profile 1.0.0`_
+- simple configuration
 - transactional capabilities (CSW-T)
 - flexible repository configuration
 - federated catalogue distributed searching

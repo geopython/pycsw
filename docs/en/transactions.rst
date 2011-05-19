@@ -27,7 +27,7 @@ Transactions
 pycsw support 3 modes of the ``Transaction`` operation (``Insert``, ``Update``, ``Delete``):
 
 - **Insert**: full XML documents can be inserted as per CSW-T
-- **Update**: TODO
-- **Delete**: TODO
+- **Update**: updates can be made as full record updates or record properties against a csw:Constraint
+- **Delete**: deletes can be made against a csw:Constraint
 
-For reference, the :ref:`tester` contains CSW-T request examples.
+The :ref:`tester` contains CSW-T request examples.

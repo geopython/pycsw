@@ -5,17 +5,13 @@ Configuration
 
 pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a sample file ``default-sample.cfg``.  Copy the file to ``default.cfg`` and edit the following: 
 
-.. note::
-
-  Option keywords (like ``maxrecords``) are **case-sensitive**.
-
 **[server]**
 
 - **home**: the full filesystem path to pycsw
 - **url**: the URL of the resulting service
 - **mimetype**: the MIME type when returning HTTP responses
-- **language**: the ISO 639-2 language and country code of the service (e.g. en-CA)
-- **encoding**: the content type encoding (e.g. ISO-8859-1)
+- **language**: the ISO 639-2 language and country code of the service (e.g. ``en-CA``)
+- **encoding**: the content type encoding (e.g. ``ISO-8859-1``)
 - **maxrecords**: the maximum number of records to return by default
 - **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels for more details)
 - **logfile**: the full file path to the logfile
@@ -26,6 +22,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **profiles**: comma separated list of profiles to load at runtime (default is none).  See :ref:`profiles` for more details
 
 **[manager]**
+
 - **transactions**: whether to enable transactions (``true`` or ``false``).  Default is ``false``.  See :ref:`transactions` for more details
 - **allowed_ips**: comma delimited list of IP addresses which can perform transactions.  See :ref:`transactions` for more details
 
@@ -33,7 +30,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
 - **identification_title**: the title of the service
 - **identification_abstract**: some descriptive text about the service
-- **identification_keywords**: a comma-seperated keyword list of keywords about the service
+- **identification_keywords**: a comma-separated keyword list of keywords about the service
 - **identification_fees**: fees associated with the service
 - **identification_accessconstraints**: access constraints associated with the service
 - **provider_name**: the name of the service provider
