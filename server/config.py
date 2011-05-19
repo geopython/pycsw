@@ -208,5 +208,6 @@ def get_config(configfile):
         sect = i.lower()
         config[sect] = {}
         for j in scp.options(i):
-            config[sect][j] = unicode(scp.get(i, j).decode('latin-1')).strip()
+            config[sect][j.lower()] = \
+            unicode(scp.get(i, j).decode('latin-1')).strip()
     return config

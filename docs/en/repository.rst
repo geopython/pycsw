@@ -34,6 +34,10 @@ Importing Metadata
 
 This will import all ``*.xml`` records from ``/path/to/records`` into ``records.db`` and configure the repository to expose queryables as per Table 53 of OGC:CSW.
 
+.. note::
+
+  Records can also be imported using CSW-T (see :ref:`transactions`).
+
 Publishing the Repository
 --------------------------
 
