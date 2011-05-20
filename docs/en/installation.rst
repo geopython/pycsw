@@ -3,14 +3,14 @@
 Installation
 ============
 
-Requirements
-------------
+System Requirements
+-------------------
 
 pycsw requires the following supporting libraries:
 
 - `lxml`_ (version >= 2.2.3) for XML support
 - `SQLAlchemy`_ (version >= 0.0.5) for database bindings
-- `Shapely`_ (version >= 1.2.8) for geometry support
+- `Shapely`_ (version >= 1.2.8) for spatial query / geometry support
 
 Installing from Source
 ----------------------
@@ -47,7 +47,7 @@ In order to install the OBS package in openSUSE 11.4, one can run the following 
   # zypper refresh
   # zypper install pycsw
 
-For earlier openSUSE versions change "11.4" with "11.2" or "11.3". For future openSUSE version use "Factory".
+For earlier openSUSE versions change ``11.4`` with ``11.2`` or ``11.3``. For future openSUSE version use ``Factory``.
 
 An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A11.4&lang=en&include_home=true&exclude_debug=true>`_.
 
