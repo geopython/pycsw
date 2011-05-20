@@ -152,13 +152,15 @@ class Repository(object):
         else:  # update based on record properties
             try:
                 self.session.begin()
-                self.session.query(self.dataset).filter(
+                rows=self.session.query(self.dataset).filter(
                 constraint['where']).update(
                 {self.dataset.xml: func.update_xpath(
-                self.dataset.xml, recprops)}, synchronize_session='fetch')
+                self.dataset.xml, str(recprops))}, synchronize_session='fetch')
+                self.session.commit()
             except Exception, err:
                 self.session.rollback()
                 raise RuntimeError, 'ERROR: %s' % str(err)
+            return rows
 
     def delete(self, constraint):
         ''' Delete a record from the repository '''

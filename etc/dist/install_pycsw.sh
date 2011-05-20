@@ -77,65 +77,7 @@ EOF
 echo -n "Generating configuration files ..."
 # Add pycsw configuration files
 
-cat << EOF > $PYCSW_HOME/default.cfg
-
-[server]
-home=/var/www/pycsw
-url=http://localhost/pycsw/csw.py
-mimetype=application/xml; charset=iso-8859-1
-encoding=iso-8859-1
-language=en-CA
-maxrecords=10
-#loglevel=DEBUG
-#logfile=/tmp/pycsw.log
-#ogc_schemas_base=http://foo
-#federatedcatalogues=http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw
-xml_pretty_print=true
-#gzip_compresslevel=8
-#profiles=apiso
-
-[manager]
-transactions=true
-allowed_ips=127.0.0.1
-
-[metadata:main]
-identification_title=pycsw Geospatial Catalogue
-identification_abstract=pycsw is an OGC CSW server implementation written in Python
-identification_keywords=catalogue,discovery
-identification_fees=None
-identification_accessconstraints=None
-provider_name=pycsw
-provider_url=http://pycsw.org/
-contact_name=Kralidis, Tom
-contact_position=Senior Systems Scientist
-contact_address=TBA
-contact_city=Toronto
-contact_stateorprovince=Ontario
-contact_postalcode=M9C 3Z9
-contact_country=Canada
-contact_phone=+01-416-xxx-xxxx
-contact_fax=+01-416-xxx-xxxx
-contact_email=tomkralidis@hotmail.com
-contact_url=http://kralidis.ca/
-contact_hours=0800h - 1600h EST
-contact_instructions=During hours of service.  Off on weekends.
-contact_role=pointOfContact
-
-[repository]
-database=sqlite:////var/www/pycsw/data/cite/records.db
-
-[metadata:inspire]
-enabled=true
-languages_supported=eng,gre
-default_language=eng
-date=2011-03-29
-gemet_keywords=Utility and governmental services
-conformity_service=notEvaluated
-contact_name=National Technical University of Athens
-contact_email=tzotsos@gmail.com
-temp_extent=2011-02-01/2011-03-30
-
-EOF
+cp $PYCSW_HOME/default-sample.cfg $PYCSW_HOME/default.cfg
 
 echo -n "Done\n"
 

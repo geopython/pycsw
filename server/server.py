@@ -1086,8 +1086,16 @@ class Csw(object):
                             'update',
                             'Transaction (update) failed: %s.' % str(err))
                 else:  # update by record property and constraint
+
+                    # get / set XPath for property names
+                    for rp in ttype['recordproperty']:
+                        rp['xpath'] = \
+                        self.repository.queryables['_all'][rp['name']]
+
+                    self.log.debug('Record Properties: %s.' %
+                    ttype['recordproperty']) 
                     try:
-                        self.repository.update(record=None,
+                        updated=self.repository.update(record=None,
                         recprops=ttype['recordproperty'],
                         constraint=ttype['constraint'])
                     except Exception, err:
@@ -1242,11 +1250,11 @@ class Csw(object):
             # csw:Insert|csw:Update (with single child) XML document.
             # Only validate non csw:Transaction XML
 
-            if doc.find('.//%s' % util.nspath_eval('csw:Insert')) is None:
+            #if doc.find('.//%s' % util.nspath_eval('csw:Insert')) is None:
 
-            #if doc.find('.//%s' % util.nspath_eval('csw:Insert')) is None and \
-            #len(doc.xpath('//csw:Update/child::*',
-            #namespaces=config.NAMESPACES)) > 1 is None:
+            if doc.find('.//%s' % util.nspath_eval('csw:Insert')) is None and \
+            len(doc.xpath('//csw:Update/child::*',
+            namespaces=config.NAMESPACES)) > 1 is None:
 
                 self.log.debug('Validating %s.' % postdata)
                 schema = etree.XMLSchema(etree.parse(schema))

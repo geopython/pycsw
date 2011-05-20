@@ -169,20 +169,17 @@ def query_xpath(xml, xpath):
 def update_xpath(xml, recprops):
     ''' Update XML document XPath values '''
 
-    edits = 0
-
     if isinstance(xml, unicode):  # not lxml serialized yet
         xml = etree.fromstring(xml)
 
-    for recprop in recprops:  # a list of name/value dicts
+    for recprop in eval(recprops):  # a list of name/value dicts
         try:
-            nodes = xml.xpath(recprop['name'], namespaces=config.NAMESPACES)
+            nodes = xml.xpath(recprop['xpath'], namespaces=config.NAMESPACES)
             if len(nodes) > 0:  # matches
-                for node in nodes:
-                    if node.text != recprop['value']:  # values differ, update
-                        node.text = recprop['value']
-                        edits += 1
+                for node1 in nodes:
+                    if node1.text != recprop['value']:  # values differ, update
+                        node1.text = recprop['value']
         except Exception, err:
             raise RuntimeError, ('ERROR: %s' % str(err))
-    return {'edits': edits, 'xml': etree.tostring(xml)}
+    return etree.tostring(xml)
 
