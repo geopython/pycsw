@@ -1,0 +1,5 @@
+# run cronjob daily at 0400h
+#
+# info on setting up cron at http://www.unixgeeks.org/security/newbie/unix/cron-1.html
+
+00 04 * * * /path/to/pycsw/sbin/harvest-all.py

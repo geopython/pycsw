@@ -19,7 +19,11 @@ For CSW-T deployments, it is strongly advised that this directory reside in an a
 Harvesting
 ----------
 
-pycsw supports the CSW-T ``Harvest`` operation.  Records which are harvested require to setup a cronjob to refresh records in the local repository.  A sample cronjob is available in ``etc/harvest-records.sh``.  Harverst operation Results can be sent by email if the Harvest request specifies a ``ResponseHandler`` with an email address (via the ``mailto:`` protocol).
+.. note::
+
+   Your server must be able to make outgoing HTTP requests for this functionality.
+
+pycsw supports the CSW-T ``Harvest`` operation.  Records which are harvested require to setup a cronjob to periodically refresh records in the local repository.  A sample cronjob is available in ``etc/harvest-all.cron`` which points to ``sbin/harvest-all.py``.  Harverst operation results can be sent by email if the Harvest request specifies a ``ResponseHandler`` with an email address (via the ``mailto:`` protocol).
 
 Transactions
 ------------
