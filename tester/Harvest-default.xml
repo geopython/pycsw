@@ -3,5 +3,4 @@
   <Source>http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/examples-ISO19139/dataset2_minimalst.xml</Source>
   <ResourceType>http://www.isotc211.org/schemas/2005/gmd/</ResourceType>
   <ResourceFormat>application/xml</ResourceFormat>
-  <HarvestInterval>P7D</HarvestInterval>
 </Harvest>
