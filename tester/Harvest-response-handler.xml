@@ -3,6 +3,5 @@
   <Source>http://kralidis.ca/pycsw/trunk/tester/test_iso.xml</Source>
   <ResourceType>http://www.isotc211.org/schemas/2005/gmd/</ResourceType>
   <ResourceFormat>application/xml</ResourceFormat>
-  <HarvestInterval>P7D</HarvestInterval>
   <ResponseHandler>mailto:tkralidi</ResponseHandler>
 </Harvest>

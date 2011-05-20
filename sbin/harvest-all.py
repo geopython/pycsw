@@ -31,34 +31,29 @@
 #
 # =================================================================
 
-# generate an XML sitemap from all records in repository
+# harvest all non-local records in repository
 
 from lxml import etree
 from server import config, repository, util
+from owslib.csw import CatalogueServiceWeb
 
 # get configuration and init repo connection
 CFG = config.get_config('default.cfg')
 REPOS = repository.Repository(CFG['repository'], 'records',
 config.MODEL['typenames'])
 
-# write out sitemap document
-URLSET = etree.Element(util.nspath_eval('sitemap:urlset'),
-nsmap=config.NAMESPACES)
+# get all harvested records
+RECORDS = REPOS.query(constraint={'where': 'source != "local"'})
 
-URLSET.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-'%s http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' % \
-config.NAMESPACES['sitemap']
-
-# get all records
-RECORDS = REPOS.query(constraint={})
+CSW = CatalogueServiceWeb(CFG['server']['url'])
 
 for rec in RECORDS:
-    url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
-    uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
-    (CFG['server']['url'],
-    rec.identifier)
-    etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
+    print 'Harvesting %s (identifier = %s) ...' % (rec.source, rec.identifier)
+    # TODO: find a smarter way of catching this
+    schema = rec.schema
+    if schema == 'http://www.isotc211.org/2005/gmd':
+        schema = 'http://www.isotc211.org/schemas/2005/gmd/'
+    CSW.harvest(rec.source, schema)
+    print CSW.response
 
-# to stdout
-print etree.tostring(URLSET, pretty_print = 1, \
-encoding = CFG['server']['encoding'], xml_declaration=1)
+print 'Done'

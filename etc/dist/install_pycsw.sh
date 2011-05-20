@@ -96,7 +96,7 @@ xml_pretty_print=true
 
 [manager]
 transactions=true
-allowed_ips=127.0.0.1,199.212.19.130
+allowed_ips=127.0.0.1
 
 [metadata:main]
 identification_title=pycsw Geospatial Catalogue
@@ -116,7 +116,7 @@ contact_country=Canada
 contact_phone=+01-416-xxx-xxxx
 contact_fax=+01-416-xxx-xxxx
 contact_email=tomkralidis@hotmail.com
-contact_url=http://www.kralidis.ca/
+contact_url=http://kralidis.ca/
 contact_hours=0800h - 1600h EST
 contact_instructions=During hours of service.  Off on weekends.
 contact_role=pointOfContact

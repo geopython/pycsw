@@ -19,7 +19,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributedsearching` for more details)
 - **xml_pretty_print**: whether to pretty print the output XML (``true`` or ``false``).  Default is ``false``
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
-- **profiles**: comma separated list of profiles to load at runtime (default is none).  See :ref:`profiles` for more details
+- **profiles**: comma delimited list of profiles to load at runtime (default is none).  See :ref:`profiles` for more details
 
 **[manager]**
 
@@ -30,7 +30,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
 - **identification_title**: the title of the service
 - **identification_abstract**: some descriptive text about the service
-- **identification_keywords**: a comma-separated keyword list of keywords about the service
+- **identification_keywords**: comma delimited list of keywords about the service
 - **identification_fees**: fees associated with the service
 - **identification_accessconstraints**: access constraints associated with the service
 - **provider_name**: the name of the service provider
