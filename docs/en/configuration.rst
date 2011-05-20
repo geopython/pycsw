@@ -3,7 +3,7 @@
 Configuration
 =============
 
-pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a sample file ``default-sample.cfg``.  Copy the file to ``default.cfg`` and edit the following: 
+pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a sample configuration (``default-sample.cfg``).  Copy the file to ``default.cfg`` and edit the following: 
 
 **[server]**
 
