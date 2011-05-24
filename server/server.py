@@ -150,8 +150,8 @@ class Csw(object):
                 text = self.kvp
     
         else:  # it's a GET request
-            self.type = 'GET'
-            self.requesttype = 'http://%s%s' % \
+            self.requesttype = 'GET'
+            self.request = 'http://%s%s' % \
             (os.environ['HTTP_HOST'], os.environ['REQUEST_URI'])
             self.log.debug('Request type: GET.  Request:\n%s\n', self.request)
             for key in cgifs.keys():
@@ -747,12 +747,12 @@ class Csw(object):
             self.kvp['elementsetname'])
 
         if (self.kvp.has_key('elementname') and
-            isinstance(self.kvp['elementname'], str)):  # passed via GET
+            self.requesttype == 'GET'):  # passed via GET
             self.kvp['elementname'] = self.kvp['elementname'].split(',')
             self.kvp['elementsetname'] = 'summary'
         
         if (self.kvp.has_key('typenames') and
-            isinstance(self.kvp['typenames'], str)):  # passed via GET
+            self.requesttype == 'GET'):  # passed via GET
             self.kvp['typenames'] = self.kvp['typenames'].split(',')
 
         if self.kvp.has_key('typenames'):
@@ -920,11 +920,10 @@ class Csw(object):
                     res, self.repository.queryables['_all']))
                 elif (self.kvp['outputschema'] == 
                       'http://www.opengis.net/cat/csw/2.0.2' and
-                      'csw:Record' not in self.kvp['typenames'][0]):
+                      'csw:Record' not in self.kvp['typenames']):
                     # use profile serializer to output csw:Record
                     searchresults.append(
-                    self.profiles['loaded']\
-                    [config.NAMESPACES[self.kvp['typenames'][0].split(':')[0]]].
+                    self.profiles['loaded'][self.kvp['outputschema']].\
                     write_record(res, self.kvp['elementsetname'],
                     self.kvp['outputschema'],
                     self.repository.queryables['_all']))
@@ -1250,11 +1249,9 @@ class Csw(object):
             # csw:Insert|csw:Update (with single child) XML document.
             # Only validate non csw:Transaction XML
 
-            #if doc.find('.//%s' % util.nspath_eval('csw:Insert')) is None:
-
             if doc.find('.//%s' % util.nspath_eval('csw:Insert')) is None and \
             len(doc.xpath('//csw:Update/child::*',
-            namespaces=config.NAMESPACES)) > 1 is None:
+            namespaces=config.NAMESPACES)) == 0:
 
                 self.log.debug('Validating %s.' % postdata)
                 schema = etree.XMLSchema(etree.parse(schema))
