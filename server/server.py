@@ -120,7 +120,7 @@ class Csw(object):
             self.log.debug('Profiles loaded: %s.' %
             self.profiles['loaded'].keys())
 
-        # setup repository
+        # init repository
         self.repository = \
         repository.Repository(self.config['repository'], 'records',
         config.MODEL['typenames'])
@@ -162,10 +162,8 @@ class Csw(object):
 
         if (os.environ.has_key('HTTP_ACCEPT_ENCODING') and
            os.environ['HTTP_ACCEPT_ENCODING'].find('gzip') != -1):
-        # set for gzip compressed response 
+           # set for gzip compressed response 
             self.gzip = True
-        else:
-            self.gzip = False
 
         self.log.debug('Parsed request parameters: %s' % self.kvp)
 
@@ -333,6 +331,7 @@ class Csw(object):
 
             serviceidentification = etree.SubElement(node, \
             util.nspath_eval('ows:ServiceIdentification'))
+
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Title')).text = \
             self.config['metadata:main']['identification_title']
@@ -348,6 +347,7 @@ class Csw(object):
             self.config['metadata:main']['identification_keywords'].split(','):
                 etree.SubElement(
                 keywords, util.nspath_eval('ows:Keyword')).text = k
+
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:ServiceType'), codeSpace='OGC').text = 'CSW'
 
@@ -523,6 +523,7 @@ class Csw(object):
         self.log.debug('Writing section Filter_Capabilities.')
         fltcaps = etree.SubElement(node,
         util.nspath_eval('ogc:Filter_Capabilities'))
+
         spatialcaps = etree.SubElement(fltcaps,
         util.nspath_eval('ogc:Spatial_Capabilities'))
 
@@ -577,7 +578,7 @@ class Csw(object):
                     self.kvp['typename'].append(
                     self.profiles['loaded'][prof].typename)
 
-        if isinstance(self.kvp['typename'], str):
+        if self.requesttype == 'GET':  # pass via GET
             self.kvp['typename'] = self.kvp['typename'].split(',')
 
         if (self.kvp.has_key('outputformat') and
@@ -691,7 +692,6 @@ class Csw(object):
                         if result[0] is not None:  # drop null values
                             etree.SubElement(listofvalues,
                             util.nspath_eval('csw:Value')).text = result[0]
-                    #domainvalue.attrib['type'] = 'csw:Record'
                 except Exception, err:
                     self.log.debug('No results for propertyname %s: %s.' %
                     (pname2, str(err)))
@@ -863,7 +863,7 @@ class Csw(object):
             self.kvp['distributedsearch'] == 'TRUE' and
             self.kvp['hopcount'] > 0):  # do distributed search
 
-            self.log.debug('DistributedSearch specified (hopCount=%s.' %
+            self.log.debug('DistributedSearch specified (hopCount: %s).' %
             self.kvp['hopcount'])
 
             from owslib.csw import CatalogueServiceWeb
@@ -897,8 +897,8 @@ class Csw(object):
 
         searchresults = etree.SubElement(node,
         util.nspath_eval('csw:SearchResults'),
-        numberOfRecordsMatched = matched, numberOfRecordsReturned = returned,
-        nextRecord = nextrecord, recordSchema = self.kvp['outputschema'])
+        numberOfRecordsMatched=matched, numberOfRecordsReturned=returned,
+        nextRecord=nextrecord, recordSchema=self.kvp['outputschema'])
 
         if self.kvp['constraint'].has_key('where') is False \
         and self.kvp['resulttype'] is None:
@@ -918,29 +918,17 @@ class Csw(object):
                     # serialize csw:Record inline
                     searchresults.append(self._write_record(
                     res, self.repository.queryables['_all']))
-                elif (self.kvp['outputschema'] == 
-                      'http://www.opengis.net/cat/csw/2.0.2' and
-                      'csw:Record' not in self.kvp['typenames']):
-                    # use profile serializer to output csw:Record
-                    searchresults.append(
-                    self.profiles['loaded'][self.kvp['outputschema']].\
-                    write_record(res, self.kvp['elementsetname'],
-                    self.kvp['outputschema'],
-                    self.repository.queryables['_all']))
-                else:  # use profile serializer to output native output format
+                else:  # use profile serializer
                     searchresults.append(
                     self.profiles['loaded'][self.kvp['outputschema']].\
                     write_record(res, self.kvp['elementsetname'],
                     self.kvp['outputschema'],
                     self.repository.queryables['_all']))
 
-        if (self.kvp.has_key('distributedsearch') and
-            self.kvp['distributedsearch'] == 'TRUE' and
-            self.kvp['hopcount'] > 0):
+        if len(dsresults) > 0:  # return DistributedSearch results
             for resultset in dsresults:
                 for rec in resultset:
                     searchresults.append(etree.fromstring(resultset[rec].xml))
-
         return node
 
     def getrecordbyid(self, raw=False):
@@ -1085,7 +1073,6 @@ class Csw(object):
                             'update',
                             'Transaction (update) failed: %s.' % str(err))
                 else:  # update by record property and constraint
-
                     # get / set XPath for property names
                     for rp in ttype['recordproperty']:
                         rp['xpath'] = \
@@ -1094,7 +1081,7 @@ class Csw(object):
                     self.log.debug('Record Properties: %s.' %
                     ttype['recordproperty']) 
                     try:
-                        updated=self.repository.update(record=None,
+                        updated += self.repository.update(record=None,
                         recprops=ttype['recordproperty'],
                         constraint=ttype['constraint'])
                     except Exception, err:
@@ -1150,7 +1137,6 @@ class Csw(object):
             errortext)
 
         # insert resource into repository
-
         record = parse_record(content)
         record['source'] = self.kvp['source']
         record['insert_date'] = util.get_today_and_now()
