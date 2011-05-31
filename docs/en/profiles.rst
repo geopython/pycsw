@@ -41,12 +41,12 @@ Your profile plugin class (``FooProfile``) must implement all methods as per ``p
 Enabling Profiles
 -----------------
 
-All profiles are disabled by default.  To specify profiles at runtime, set the ``server.profiles`` value in the :ref:`configuration` to the name of the package (in the ``server/profiles`` directory).  To enable multiple profiles, specify as a comma separated value.  See :ref:`configuration` for more information.
+All profiles are disabled by default.  To specify profiles at runtime, set the ``server.profiles`` value in the :ref:`configuration` to the name of the package (in the ``server/profiles`` directory).  To enable multiple profiles, specify as a comma separated value (see :ref:`configuration`).
 
 Testing
 -------
 
-Profiles must provide a ``tester`` interface (similar to ``tester/index.html``), which must provide example requests specific to the profile.  See :ref:`tester` for more information.
+Profiles must provide a ``tester`` interface (similar to ``tester/index.html``), which must provide example requests specific to the profile (see :ref:`tester`).
 
 Supported Profiles
 ==================

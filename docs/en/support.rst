@@ -10,6 +10,8 @@ Bugs, enhancements and related issues can be filed on the pycsw `trac`_.  To sub
 
 The pycsw source code is available at https://pycsw.svn.sourceforge.net/svnroot/pycsw.  You can browse the source code at at http://sourceforge.net/apps/trac/pycsw/browser.
 
+.. _mailing-lists:
+
 Mailing Lists
 -------------
 
