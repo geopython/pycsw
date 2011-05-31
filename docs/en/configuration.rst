@@ -13,18 +13,18 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **language**: the ISO 639-2 language and country code of the service (e.g. ``en-CA``)
 - **encoding**: the content type encoding (e.g. ``ISO-8859-1``)
 - **maxrecords**: the maximum number of records to return by default
-- **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels for more details)
+- **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels)
 - **logfile**: the full file path to the logfile
 - **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net)
-- **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributedsearching` for more details)
+- **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributedsearching`)
 - **xml_pretty_print**: whether to pretty print the output XML (``true`` or ``false``).  Default is ``false``
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
-- **profiles**: comma delimited list of profiles to load at runtime (default is none).  See :ref:`profiles` for more details
+- **profiles**: comma delimited list of profiles to load at runtime (default is none).  See :ref:`profiles`
 
 **[manager]**
 
-- **transactions**: whether to enable transactions (``true`` or ``false``).  Default is ``false``.  See :ref:`transactions` for more details
-- **allowed_ips**: comma delimited list of IP addresses which can perform transactions.  See :ref:`transactions` for more details
+- **transactions**: whether to enable transactions (``true`` or ``false``).  Default is ``false`` (see :ref:`transactions`)
+- **allowed_ips**: comma delimited list of IP addresses which can perform transactions (see :ref:`transactions`)
 
 **[metadata:main]**
 
@@ -52,7 +52,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
 **[repository]**
 
-- **database**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls for more details)
+- **database**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls)
 
 .. note::
 

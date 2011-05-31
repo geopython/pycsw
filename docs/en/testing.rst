@@ -3,6 +3,8 @@
 Testing
 =======
 
+.. _ogc-cite:
+
 OGC CITE
 --------
 
