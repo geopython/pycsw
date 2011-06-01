@@ -12,7 +12,7 @@ Configuration
 
 To expose your geospatial metadata via the APISO, via pycsw, perform the following actions:
 
-- setup the database
+- setup the database (if starting from scratch)
 - import metadata
 - publish the repository
 
@@ -28,14 +28,16 @@ Setting up the Database
 
   $ cd /path/to/pycsw
   $ export PYTHONPATH=`pwd` 
-  $ python ./sbin/setup_db.py /path/to/pycsw/etc/schemas/sql/records.ddl
+  $ python ./sbin/setup_db.py sqlite:////path/to/records.db
+
+This will create the necessary tables and values for the repository.
 
 Importing Metadata
 ^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
-  $ python ./sbin/load_records.py /path/to/records records.db
+  $ python ./sbin/load_records.py /path/to/records sqlite:////path/to/records.db
 
 This will import all ``*.xml`` records from ``/path/to/records`` into ``records.db`` and configure the repository to expose queryables as per subclase 7.2.3 of the profile.
 
