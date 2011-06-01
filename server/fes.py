@@ -58,7 +58,7 @@ MODEL =  {
     }
 }
 
-def parse(element, queryables):
+def parse(element, queryables, dbtype):
     ''' OGC Filter object support '''
 
     boq = None
@@ -76,21 +76,21 @@ def parse(element, queryables):
         com_op = ''
 
         if child.tag == util.nspath_eval('ogc:Not'):
-            queries.append('%s = "false"' %
+            queries.append("%s = 'false'" %
             _get_spatial_operator(child.xpath('child::*')[0]))
 
         elif child.tag in \
         [util.nspath_eval('ogc:%s' % n) for n in \
         MODEL['SpatialOperators']['values']]:
             if boq is not None and boq == ' not ':
-                queries.append('%s = "false"' %
+                queries.append("%s = 'false'" %
                 _get_spatial_operator(child))
             else:
-                queries.append('%s = "true"' % 
+                queries.append("%s = 'true'" % 
                 _get_spatial_operator(child))
 
         elif child.tag == util.nspath_eval('ogc:FeatureId'):
-            queries.append('identifier = \'%s\'' % child.attrib.get('fid'))
+            queries.append("identifier = '%s'" % child.attrib.get('fid'))
 
         else:
             matchcase = child.attrib.get('matchCase')
@@ -104,7 +104,7 @@ def parse(element, queryables):
                 singlechar = '_'
 
             try:
-                pname = 'query_xpath(xml, "%s")' % \
+                pname = "query_xpath(xml, '%s')" % \
                 queryables[child.find(
                 util.nspath_eval('ogc:PropertyName')).text]
             except Exception, err:
@@ -119,9 +119,12 @@ def parse(element, queryables):
             com_op = _get_comparison_operator(child)
 
             # if this is a case insensitive search
-            # then set the LIKE comparison operator
+            # then set the DB-specific LIKE comparison operator
             if matchcase is not None and matchcase == 'false':
-                com_op = 'like'
+                if dbtype == 'postgresql':
+                    com_op = 'ilike'
+                else:
+                    com_op = 'like'
 
             if child.tag == util.nspath_eval('ogc:PropertyIsBetween'):
                 com_op = 'between'
@@ -129,7 +132,7 @@ def parse(element, queryables):
                 util.nspath_eval('ogc:LowerBoundary/ogc:Literal')).text
                 upper_boundary = child.find(
                 util.nspath_eval('ogc:UpperBoundary/ogc:Literal')).text
-                queries.append('%s %s "%s" and "%s"' %
+                queries.append("%s %s '%s' and '%s'" %
                 (pname, com_op, lower_boundary, upper_boundary))
 
             elif (child.find(
@@ -137,14 +140,14 @@ def parse(element, queryables):
             'ogc:PropertyName')).text.lower().find('anytext') != -1):
                 # *:AnyText is a freetext search.  Strip modifiers
                 pvalue = pvalue.replace('%','')
-                queries.append('query_anytext(xml, "%s") = "true"' % pvalue)
+                queries.append("query_anytext(xml, '%s') = 'true'" % pvalue)
 
             else:
                 if boq == ' not ':
-                    queries.append('%s is null or not %s %s "%s"' %
+                    queries.append("%s is null or not %s %s '%s'" %
                     (pname, pname, com_op, pvalue))
                 else:
-                    queries.append('%s %s "%s"' % (pname, com_op, pvalue))
+                    queries.append("%s %s '%s'" % (pname, com_op, pvalue))
 
     if boq is not None and boq != ' not ':
         where = boq.join(queries)

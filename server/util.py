@@ -30,16 +30,21 @@
 #
 # =================================================================
 
+import time
 from lxml import etree
 import config
 
 def get_today_and_now():
     ''' Get the date, right now, in ISO8601 '''
-    import time
     return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
 
+def get_time_iso2unix(isotime):
+    ''' Convert ISO8601 to UNIX timestamp '''
+    return int(time.mktime(time.strptime(
+    isotime, '%Y-%m-%dT%H:%M:%SZ'))) - time.timezone
+
 def get_version_integer(version):
-    ''' Get an integer of the OGC version valud x.y.z '''
+    ''' Get an integer of the OGC version value x.y.z '''
     if version is not None:  # split and make integer
         xyz = version.split('.')
         if len(xyz) != 3:
@@ -145,7 +150,8 @@ def query_anytext(xml, searchterm):
 def query_xpath(xml, xpath):
     ''' return value(s) from XPath query '''
 
-    if isinstance(xml, unicode):  # not lxml serialized yet
+    if isinstance(xml, unicode) or \
+    isinstance(xml, str):  # not lxml serialized yet
         xml = etree.fromstring(xml)
 
     try:
