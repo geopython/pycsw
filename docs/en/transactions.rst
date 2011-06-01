@@ -5,7 +5,9 @@ Transactions
 
 pycsw has the ability to process CSW Harvest and Transaction requests (CSW-T).  Transactions are disabled by default; to enable, ``manager.transactions`` must be set to ``true``.  Access to transactional functionality is limited to IP addresses which must be set in ``manager.allowed_ips``.
 
-For transactions to be functional, the SQLite database file (**and it's parent directory**) must be fully writable.  For example:
+.. note::
+
+   For transactions to be functional when using SQLite3, the SQLite3 database file (**and it's parent directory**) must be fully writable.  For example:
 
 .. code-block:: bash
 

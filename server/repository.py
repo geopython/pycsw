@@ -49,12 +49,16 @@ class Repository(object):
         self.dataset = type('dataset', (base,),
         dict(__tablename__=table,__table_args__={'autoload': True}))
 
+        self.dbtype = engine.name
+
         self.session = create_session(engine)
-        self.connection = engine.raw_connection()
-        self.connection.create_function('query_spatial', 4, util.query_spatial)
-        self.connection.create_function('query_anytext', 2, util.query_anytext)
-        self.connection.create_function('query_xpath', 2, util.query_xpath)
-        self.connection.create_function('update_xpath', 2, util.update_xpath)
+
+        if self.dbtype == 'sqlite':  # load SQLite query bindings
+            self.connection = engine.raw_connection()
+            self.connection.create_function('query_spatial', 4, util.query_spatial)
+            self.connection.create_function('query_anytext', 2, util.query_anytext)
+            self.connection.create_function('query_xpath', 2, util.query_xpath)
+            self.connection.create_function('update_xpath', 2, util.update_xpath)
 
         # generate core queryables db and obj bindings
         self.queryables = {}       
@@ -85,6 +89,11 @@ class Repository(object):
         self.dataset.xml, domain)).filter(
         self.dataset.typename.in_(typenames)).distinct()
         return query.all()
+
+    def query_latest_insert(self):
+        ''' Query to get latest update to repository '''
+        return self.session.query(
+        func.max(self.dataset.insert_date)).first()[0]
 
     def query_source(self, source):
         ''' Query by source '''

@@ -34,22 +34,19 @@
 import os
 import sys
 import glob
-import sqlite3
 
 from lxml import etree
-from server import util
+from server import repository, util
 from owslib.csw import CswRecord
 from owslib.iso import MD_Metadata
 
 if len(sys.argv) < 3:
-    print 'Usage: %s <xml directory path> <filename.sqlite3>' % sys.argv[0]
+    print 'Usage: %s <xml directory path> <db_connection_string>' % sys.argv[0]
     sys.exit(1)
 
-CONN = sqlite3.connect(sys.argv[2])
-CUR = CONN.cursor()
+REPO = repository.Repository({'database':sys.argv[2]}, 'records', {})
 
 for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
-
     # read document
     e = etree.parse(r)
 
@@ -78,22 +75,22 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
         tmp = '%s,%s,%s,%s' % (bbox.miny, bbox.minx, bbox.maxy, bbox.maxx)
         bbox = util.bbox2wktpolygon(tmp) 
 
+    RECORD = {}
+    RECORD['identifier'] = c.identifier
+    RECORD['typename'] = typename
+    RECORD['schema'] = schema
+    RECORD['bbox'] = bbox
+    RECORD['xml'] = c.xml
+    RECORD['source'] = 'local'
+    RECORD['insert_date'] = util.get_today_and_now()
+
     print 'Inserting %s %s into database %s, table records....' % \
     (typename, c.identifier, sys.argv[2])
 
-    values = (
-    c.identifier,
-    typename,
-    schema,
-    bbox,
-    c.xml,
-    'local',
-    util.get_today_and_now()
-    )
+    try:
+        REPO.insert(RECORD)
+        print 'Inserted'
+    except Exception, err:
+        print 'ERROR: not inserted'
 
-    CUR.execute('insert into records values(null, ?, ?, ?, ?, ?, ?, ?)', values)
-
-    CONN.commit()
-
-    print 'Done'
-CUR.close()
+print 'Done'

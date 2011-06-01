@@ -302,11 +302,10 @@ class Csw(object):
                     return self.exceptionreport(result['code'],
                     result['locator'], result['text'])
 
-        # @updateSequence get mtime of repository
-        
-        dbfile = self.config['repository']['database'].replace('sqlite:///','')
+        # @updateSequence: get latest update to repository
 
-        updatesequence = int(os.stat(dbfile).st_mtime)
+        updatesequence = \
+        util.get_time_iso2unix(self.repository.query_latest_insert())
 
         node = etree.Element(util.nspath_eval('csw:Capabilities'),
         nsmap=config.NAMESPACES, version='2.0.2',
@@ -813,7 +812,8 @@ class Csw(object):
                     self.kvp['constraint']['type'] = 'filter'
                     self.kvp['constraint']['where'] = \
                     fes.parse(doc,
-                    self.repository.queryables['_all'].keys())
+                    self.repository.queryables['_all'].keys(),
+                    self.repository.dbtype)
                 except Exception, err:
                     errortext = \
                     'Exception: document not valid.\nError: %s.' % str(err)
@@ -1639,7 +1639,7 @@ class Csw(object):
             try:
                 query['type'] = 'filter'
                 query['where'] = fes.parse(tmp,
-                self.repository.queryables['_all'])
+                self.repository.queryables['_all'], self.repository.dbtype)
             except Exception, err:
                 return 'Invalid Filter request: %s' % err
         tmp = element.find(util.nspath_eval('csw:CqlText'))
@@ -1669,7 +1669,7 @@ class Csw(object):
         self.log.debug('Raw CQL text = %s.' % cql)
         if cql is not None:
             for key in mappings.keys():
-                cql = cql.replace(key, 'query_xpath(xml, "%s")' % mappings[key])
+                cql = cql.replace(key, "query_xpath(xml, '%s')" % mappings[key])
             self.log.debug('Interpolated CQL text = %s.' % cql)
             return cql
 
