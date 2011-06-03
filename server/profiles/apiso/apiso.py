@@ -126,12 +126,9 @@ REPOSITORY = {
 }
 
 def _gen_mappings(queryables):
-    f=open('/tmp/f.txt','w')
-
     for qbl in queryables.keys():
         if qbl in REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'].keys():  # map to new XPath
             queryables[qbl] = REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'][qbl]
-    f.write('%s'%queryables)
 
 class APISO(profile.Profile):
     def __init__(self):
