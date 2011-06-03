@@ -777,50 +777,53 @@ class Csw(object):
         if self.kvp.has_key('maxrecords') is False:
             self.kvp['maxrecords'] = self.config['server']['maxrecords']
 
-        if self.kvp.has_key('constraint') and self.requesttype == 'GET':
-            # GET request
-            self.log.debug('csw:Constraint passed over HTTP GET.')
-            if self.kvp.has_key('constraintlanguage') is False:
-                return self.exceptionreport('MissingParameterValue',
-                'constraintlanguage',
-                'constraintlanguage required when constraint specified')
-            if (self.kvp['constraintlanguage'] not in
-            config.MODEL['operations']['GetRecords']['parameters']
-            ['CONSTRAINTLANGUAGE']['values']):
-                return self.exceptionreport('InvalidParameterValue',
-                'constraintlanguage', 'Invalid constraintlanguage: %s'
-                % self.kvp['constraintlanguage'])
-            if self.kvp['constraintlanguage'] == 'CQL_TEXT':
-                tmp = self.kvp['constraint']
-                self.kvp['constraint'] = {}
-                self.kvp['constraint']['type'] = 'cql'
-                self.kvp['constraint']['where'] = \
-                self._cql_update_queryables_mappings(tmp,
-                self.repository.queryables['_all'])
-            elif self.kvp['constraintlanguage'] == 'FILTER':
-                # validate filter XML
-                try:
-                    schema = os.path.join(self.config['server']['home'],
-                    'etc', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
-                    self.log.debug('Validating Filter %s.' %
-                    self.kvp['constraint'])
-                    schema = etree.XMLSchema(etree.parse(schema))
-                    parser = etree.XMLParser(schema=schema)
-                    doc = etree.fromstring(self.kvp['constraint'], parser)
-                    self.log.debug('Filter is valid XML.')
-                    self.kvp['constraint'] = {}
-                    self.kvp['constraint']['type'] = 'filter'
-                    self.kvp['constraint']['where'] = \
-                    fes.parse(doc,
-                    self.repository.queryables['_all'].keys(),
-                    self.repository.dbtype)
-                except Exception, err:
-                    errortext = \
-                    'Exception: document not valid.\nError: %s.' % str(err)
-
-                    self.log.debug(errortext)
+        if self.requesttype == 'GET':
+            if self.kvp.has_key('constraint'):
+                # GET request
+                self.log.debug('csw:Constraint passed over HTTP GET.')
+                if self.kvp.has_key('constraintlanguage') is False:
+                    return self.exceptionreport('MissingParameterValue',
+                    'constraintlanguage',
+                    'constraintlanguage required when constraint specified')
+                if (self.kvp['constraintlanguage'] not in
+                config.MODEL['operations']['GetRecords']['parameters']
+                ['CONSTRAINTLANGUAGE']['values']):
                     return self.exceptionreport('InvalidParameterValue',
-                    'constraint', 'Invalid Filter query: %s' % errortext)
+                    'constraintlanguage', 'Invalid constraintlanguage: %s'
+                    % self.kvp['constraintlanguage'])
+                if self.kvp['constraintlanguage'] == 'CQL_TEXT':
+                    tmp = self.kvp['constraint']
+                    self.kvp['constraint'] = {}
+                    self.kvp['constraint']['type'] = 'cql'
+                    self.kvp['constraint']['where'] = \
+                    self._cql_update_queryables_mappings(tmp,
+                    self.repository.queryables['_all'])
+                elif self.kvp['constraintlanguage'] == 'FILTER':
+                    # validate filter XML
+                    try:
+                        schema = os.path.join(self.config['server']['home'],
+                        'etc', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
+                        self.log.debug('Validating Filter %s.' %
+                        self.kvp['constraint'])
+                        schema = etree.XMLSchema(etree.parse(schema))
+                        parser = etree.XMLParser(schema=schema)
+                        doc = etree.fromstring(self.kvp['constraint'], parser)
+                        self.log.debug('Filter is valid XML.')
+                        self.kvp['constraint'] = {}
+                        self.kvp['constraint']['type'] = 'filter'
+                        self.kvp['constraint']['where'] = \
+                        fes.parse(doc,
+                        self.repository.queryables['_all'].keys(),
+                        self.repository.dbtype)
+                    except Exception, err:
+                        errortext = \
+                        'Exception: document not valid.\nError: %s.' % str(err)
+    
+                        self.log.debug(errortext)
+                        return self.exceptionreport('InvalidParameterValue',
+                        'constraint', 'Invalid Filter query: %s' % errortext)
+            else:
+                self.kvp['constraint'] = {}
 
         if self.kvp.has_key('sortby') is False:
             self.kvp['sortby'] = None
@@ -860,6 +863,7 @@ class Csw(object):
         dsresults = []
 
         if (self.config['server'].has_key('federatedcatalogues') and
+            self.kvp.has_key('distributedsearch') and
             self.kvp['distributedsearch'] == 'TRUE' and
             self.kvp['hopcount'] > 0):  # do distributed search
 
