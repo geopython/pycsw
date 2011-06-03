@@ -118,7 +118,7 @@ REPOSITORY = {
                 'apiso:Type': 'dc:type',
                 'apiso:Format': 'dc:format',
                 'apiso:Language': 'dc:language',
-                'apiso:Type': 'dc:relation',
+                #'apiso:Type': 'dc:relation',  # TODO find correct mapping
                 'apiso:AccessConstraints': 'dc:rights',
             }
         }
@@ -384,14 +384,14 @@ class APISO(profile.Profile):
                 val = result.identifier
 
                 identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
-                tmp = etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
+                etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
 
                 if esn == 'summary':
                     # language
                     val = util.query_xpath(xml, queryables['apiso:Language'])
 
                     lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
-                    tmp = etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
+                    etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
 
                 # hierarchyLevel
                 val = util.query_xpath(xml, queryables['apiso:Type'])
@@ -408,7 +408,7 @@ class APISO(profile.Profile):
                     contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
                     CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
                     org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
-                    tmp = etree.SubElement(org_name, util.nspath_eval('gco:ChracterString')).text = val
+                    etree.SubElement(org_name, util.nspath_eval('gco:ChracterString')).text = val
     
                     # date
                     val = util.query_xpath(xml, queryables['apiso:Modified'])
@@ -417,11 +417,11 @@ class APISO(profile.Profile):
     
                     # metadata standard name
                     standard = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
-                    tmp = etree.SubElement(standard, util.nspath_eval('gco:ChracterString')).text = 'ISO19115'
+                    etree.SubElement(standard, util.nspath_eval('gco:ChracterString')).text = 'ISO19115'
     
                     # metadata standard version
                     standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
-                    tmp = etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
+                    etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
 
                 # title
                 val = util.query_xpath(xml, queryables['apiso:Title'])
@@ -435,8 +435,8 @@ class APISO(profile.Profile):
                 if esn == 'summary':
                     # abstract
                     val = util.query_xpath(xml, queryables['apiso:Abstract'])
-                    tmp2 = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
-                    tmp = etree.SubElement(tmp2, util.nspath_eval('gco:ChracterString')).text = val
+                    tmp = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
+                    etree.SubElement(tmp, util.nspath_eval('gco:ChracterString')).text = val
     
                     # spatial resolution
                     val = util.query_xpath(xml, queryables['apiso:Denominator'])
@@ -446,7 +446,7 @@ class APISO(profile.Profile):
                     tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:equivalentScale'))
                     tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:MD_RepresentativeFraction'))
                     tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
-                    tmp7 = etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = val
+                    etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = val
     
                     # resource language
                     val = util.query_xpath(xml, queryables['apiso:ResourceLanguage'])
