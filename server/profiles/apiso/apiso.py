@@ -103,9 +103,35 @@ REPOSITORY = {
                 'apiso:SpecificationDate': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date',
                 'apiso:SpecificationDateType': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode'
             }
+        },
+        'mappings': {
+            'csw:Record': {
+                # map APISO queryables to DC queryables
+                'apiso:Title': 'dc:title',
+                'apiso:OrganisationName': 'dc:creator',
+                'apiso:Subject': 'dc:subject',
+                'apiso:Abstract': 'dct:abstract',
+                'apiso:OrganisationName': 'dc:publisher',
+                'apiso:OrganisationName': 'dc:contributor',
+                'apiso:Modified': 'dct:modified',
+                'apiso:Date': 'dc:date',
+                'apiso:Type': 'dc:type',
+                'apiso:Format': 'dc:format',
+                'apiso:Language': 'dc:language',
+                'apiso:Type': 'dc:relation',
+                'apiso:AccessConstraints': 'dc:rights',
+            }
         }
     }
 }
+
+def _gen_mappings(queryables):
+    f=open('/tmp/f.txt','w')
+
+    for qbl in queryables.keys():
+        if qbl in REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'].keys():  # map to new XPath
+            queryables[qbl] = REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'][qbl]
+    f.write('%s'%queryables)
 
 class APISO(profile.Profile):
     def __init__(self):
@@ -114,7 +140,6 @@ class APISO(profile.Profile):
     def extend_core(self, model, namespaces, config):
         ''' Extend core configuration '''
 
-        # model
         model['operations']['DescribeRecord']['parameters']['typeName']['values'].append(self.typename)
         model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.outputschema)
         model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
@@ -350,6 +375,10 @@ class APISO(profile.Profile):
             if esn == 'full':  # dump the full record
                 node = xml
             else:  # it's a brief or summary record
+
+                if result.typename == 'csw:Record':
+                    _gen_mappings(queryables)
+
                 node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
                 '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
@@ -363,16 +392,18 @@ class APISO(profile.Profile):
                 if esn == 'summary':
                     # language
                     val = util.query_xpath(xml, queryables['apiso:Language'])
+
                     lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
                     tmp = etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
 
                 # hierarchyLevel
                 val = util.query_xpath(xml, queryables['apiso:Type'])
 
-                hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
-                codeList = '%s#MD_ScopeCode' % CODELIST,
-                codeListValue = val,
-                codeSpace = CODESPACE).text = val
+                if val is not None: 
+                    hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
+                    codeList = '%s#MD_ScopeCode' % CODELIST,
+                    codeListValue = val,
+                    codeSpace = CODESPACE).text = val
 
                 if esn == 'summary':
                     # contact
