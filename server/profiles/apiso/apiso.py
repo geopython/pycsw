@@ -101,36 +101,36 @@ REPOSITORY = {
                 'apiso:ResponsiblePartyRole': 'gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode',
                 'apiso:SpecificationTitle': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString',
                 'apiso:SpecificationDate': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date',
-                'apiso:SpecificationDateType': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode'
+                'apiso:SpecificationDateType': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode',
+                'apiso:Creator': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="originator"]/gco:CharacterString',
+                'apiso:Publisher': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="publisher"]/gco:CharacterString',
+                'apiso:Contributor': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="contributor"]/gco:CharacterString',
+                'apiso:Relation': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo'
             }
         },
         'mappings': {
             'csw:Record': {
                 # map APISO queryables to DC queryables
                 'apiso:Title': 'dc:title',
-                'apiso:OrganisationName': 'dc:creator',
+                'apiso:Creator': 'dc:creator',
                 'apiso:Subject': 'dc:subject',
                 'apiso:Abstract': 'dct:abstract',
-                'apiso:OrganisationName': 'dc:publisher',
-                'apiso:OrganisationName': 'dc:contributor',
+                'apiso:Publisher': 'dc:publisher',
+                'apiso:Contributor': 'dc:contributor',
                 'apiso:Modified': 'dct:modified',
-                'apiso:Date': 'dc:date',
+                #'apiso:Date': 'dc:date',
                 'apiso:Type': 'dc:type',
                 'apiso:Format': 'dc:format',
                 'apiso:Language': 'dc:language',
-                #'apiso:Type': 'dc:relation',  # TODO find correct mapping
+                'apiso:Relation': 'dc:relation',
                 'apiso:AccessConstraints': 'dc:rights',
             }
         }
     }
 }
 
-def _gen_mappings(queryables):
-    for qbl in queryables.keys():
-        if qbl in REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'].keys():  # map to new XPath
-            queryables[qbl] = REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'][qbl]
-
 class APISO(profile.Profile):
+    ''' APISO class '''
     def __init__(self):
         profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES['gmd'], 'gmd:MD_Metadata', NAMESPACES['gmd'])
 
@@ -373,8 +373,8 @@ class APISO(profile.Profile):
                 node = xml
             else:  # it's a brief or summary record
 
-                if result.typename == 'csw:Record':
-                    _gen_mappings(queryables)
+                if result.typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
+                    dc2iso(queryables)
 
                 node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
@@ -489,61 +489,16 @@ class APISO(profile.Profile):
                             tmp = etree.SubElement(oper, util.nspath_eval('srv:SV_OperationMetadata'))
                             tmp2 = etree.SubElement(tmp, util.nspath_eval('srv:operationName'))
                             etree.SubElement(tmp2, util.nspath_eval('gco:CharacterString')).text = i
-
-        else:  # write out Dublin Core
-            if esn == 'brief':
-                esn2 = 0
-                elname = 'BriefRecord'
-            elif esn == 'summary':
-                esn2 = 1
-                elname = 'SummaryRecord'
-            elif esn == 'full':
-                esn2 = 2
-                elname = 'Record'
-
-            node = etree.Element(util.nspath_eval('csw:%s' % elname))
-            val = util.query_xpath(xml, queryables['apiso:Identifier'])
-            etree.SubElement(node, util.nspath_eval('dc:identifier')).text = val
-            val = util.query_xpath(xml, queryables['apiso:Title'])
-            etree.SubElement(node, util.nspath_eval('dc:title')).text = val
-            val = util.query_xpath(xml, queryables['apiso:Type'])
-            etree.SubElement(node, util.nspath_eval('dc:type')).text = val
-            if esn2 > 0:  # summary
-                val = util.query_xpath(xml, queryables['apiso:Subject'])
-                if val:
-                    for s in val.split(','):
-                        etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
-                val = util.query_xpath(xml, queryables['apiso:TopicCategory'])
-
-                if val:
-                    for s in val.split(','):
-                        etree.SubElement(node, util.nspath_eval('dc:subject')).text = val
-                val = util.query_xpath(xml, queryables['apiso:Format'])
-                etree.SubElement(node, util.nspath_eval('dc:format')).text = val
-                val = util.query_xpath(xml, queryables['apiso:Modified'])
-                etree.SubElement(node, util.nspath_eval('dct:modified')).text = val
-                val = util.query_xpath(xml, queryables['apiso:Abstract'])
-                etree.SubElement(node, util.nspath_eval('dct:abstract')).text = val
-
-            if esn2 > 1:  # full
-                val = util.query_xpath(xml, queryables['apiso:OrganisationName'])
-                etree.SubElement(node, util.nspath_eval('dc:creator')).text = val
-                etree.SubElement(node, util.nspath_eval('dc:publisher')).text = val
-                val = util.query_xpath(xml, queryables['apiso:ParentIdentifier'])
-                etree.SubElement(node, util.nspath_eval('dc:relation')).text = val
-                val = util.query_xpath(xml, queryables['apiso:BoundingBox'])
-                if val:
-                    s = val.split(',')
-                    if len(s) == 4:
-                        tmp=etree.SubElement(node, util.nspath_eval('ows:BoundingBox'))
-                        etree.SubElement(tmp,
-                        util.nspath_eval('ows:LowerCorner')).text = \
-                        '%s %s' % (s[1], s[0])
-                        etree.SubElement(tmp,
-                        util.nspath_eval('ows:UpperCorner')).text = \
-                        '%s %s' % (s[3], s[2])
-
         return node
+
+    def transform2dcmappings(self, queryables):
+        ''' Transform ISO mappings into csw:Record mappings '''
+
+        for qbl in queryables:
+            if qbl in REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'].values():
+                tmp = [k for k, v in REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'].iteritems() if v == qbl][0]
+                val = queryables[tmp]
+                queryables[qbl] = val
 
 def write_extent(bbox):
 
@@ -569,3 +524,9 @@ def write_extent(bbox):
         return extent
 
     return None
+
+def dc2iso(queryables):
+    ''' Transform csw:Record mappings into APISO mappings '''
+    for qbl in queryables.keys():
+        if qbl in REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'].keys():  # map to new XPath
+            queryables[qbl] = REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'][qbl]
