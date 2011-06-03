@@ -922,6 +922,18 @@ class Csw(object):
                     # serialize csw:Record inline
                     searchresults.append(self._write_record(
                     res, self.repository.queryables['_all']))
+                elif (self.kvp['outputschema'] ==
+                    'http://www.opengis.net/cat/csw/2.0.2' and
+                    'csw:Record' not in self.kvp['typenames']):
+                    # serialize into csw:Record model
+
+                    # transform mappings to csw:Record TODO: find smarter way
+                    self.profiles['loaded']\
+                    ['http://www.isotc211.org/2005/gmd'].transform2dcmappings(\
+                    self.repository.queryables['_all'])
+
+                    searchresults.append(self._write_record(
+                    res, self.repository.queryables['_all']))
                 else:  # use profile serializer
                     searchresults.append(
                     self.profiles['loaded'][self.kvp['outputschema']].\
@@ -1528,7 +1540,7 @@ class Csw(object):
 
                 for i in ['dc:title', 'dc:type']:
                     etree.SubElement(record, util.nspath_eval(i)).text = \
-                    util.query_xpath(xml, i)
+                    util.query_xpath(xml, queryables[i])
                 if self.kvp['elementsetname'] == 'summary':
                     subjects = util.query_xpath(xml,
                     queryables['dc:subject'])
