@@ -47,7 +47,7 @@ class Profile(object):
         self.outputschema = outputschema
         self.corequeryables = None
 
-    def extend_core(self, model, namespaces):
+    def extend_core(self, model, namespaces, config):
         ''' Extend config.MODEL and config.NAMESPACES '''
         raise NotImplementedError
 
@@ -68,8 +68,12 @@ class Profile(object):
         '''Perform extra profile specific checks in the GetDomain request'''
         raise NotImplementedError
 
-    def write_record(self):
+    def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
+        raise NotImplementedError
+
+    def transform2dcmappings(self, queryables):
+        ''' Transform information model mappings into csw:Record mappings ''' 
         raise NotImplementedError
 
 def load_profiles(path, cls, profiles):
