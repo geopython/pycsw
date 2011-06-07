@@ -6,7 +6,8 @@ Metadata Repository Setup
 pycsw supports the following databases:
 
 - SQLite3
-- PostgreSQL (additional databases will be supported in a future release).
+- PostgreSQL
+- MySQL (partial)
 
 To expose your geospatial metadata via pycsw, perform the following actions:
 
@@ -54,4 +55,4 @@ Database Specific Notes
 PostgreSQL
 ^^^^^^^^^^
 
-- To enable PostgreSQL support, the database user must be able to create functions within the database.
+- pycsw makes uses of PL/Python functions.  To enable PostgreSQL support, the database user must be able to create functions within the database.

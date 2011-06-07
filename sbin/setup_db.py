@@ -35,7 +35,7 @@
 
 import sys
 from server import config
-from sqlalchemy import Column, create_engine, Integer, String, MetaData, Table, text
+from sqlalchemy import Column, create_engine, Integer, String, MetaData, Table, Text
 
 if len(sys.argv) < 2:
     print 'Usage: %s <db_connection_string>' % sys.argv[0]
@@ -49,41 +49,42 @@ SRS = Table('spatial_ref_sys', METADATA,
     Column('srid', Integer, nullable=False, primary_key=True),
     Column('auth_name', String(256)),
     Column('auth_srid', Integer),
-    Column('srtext', String(2048)),
+    Column('srtext', String(2048))
 )
 SRS.create()
 
+i = SRS.insert()
+i.execute(srid=4326, auth_name='EPSG', auth_srid=4326, srtext='GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
+
 GEOM = Table('geometry_columns', METADATA,
+    Column('f_table_catalog', String(256), nullable=False),
+    Column('f_table_schema', String(256), nullable=False),
     Column('f_table_name', String(256), nullable=False),
     Column('f_geometry_column', String(256), nullable=False),
-    Column('geometry_type', String(30), nullable=False),
-    Column('coord_dimension', Integer, nullable=False),
-    Column('srid', Integer, nullable=False),
-    Column('geometry_format', String),
+    Column('geometry_type', Integer),
+    Column('coord_dimension', Integer),
+    Column('srid', Integer, nullable=False)
 )
 GEOM.create()
+
+i = GEOM.insert()
+i.execute(f_table_catalog='public', f_table_schema='public',
+f_table_name='records', f_geometry_column='bbox', 
+geometry_type=3, coord_dimension=2, srid=4326)
 
 RECORDS = Table('records', METADATA,
     Column('identifier', String(256), nullable=False, primary_key=True),
     Column('typename', String(32), default='csw:Record', nullable=False),
     Column('schema', String(256),
     default='http://www.opengis.net/cat/csw/2.0.2', nullable=False),
-    Column('bbox', String),
-    Column('xml', String, nullable=False),
-    Column('source', String, default='local', nullable=False),
-    Column('insert_date', String, nullable=False),
+    Column('bbox', Text),
+    Column('xml', Text, nullable=False),
+    Column('source', String(256), default='local', nullable=False),
+    Column('insert_date', String(20), nullable=False),
 )
 RECORDS.create()
 
-i = SRS.insert()
-i.execute(srid=4326, auth_name='EPSG', auth_srid=4326, srtext='GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
-
-i = GEOM.insert()
-i.execute(f_table_name='records', f_geometry_column='bbox', 
-geometry_type='POLYGON', coord_dimension=2, srid=4326, geometry_format='WKT')
-
 if DB.name == 'postgresql':  # create plpythonu functions within db
-
     CFG = config.get_config('default.cfg')
     CONN = DB.connect()
     FUNCTION_QUERY_XPATH = '''

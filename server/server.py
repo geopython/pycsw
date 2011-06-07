@@ -121,11 +121,16 @@ class Csw(object):
             self.profiles['loaded'].keys())
 
         # init repository
-        self.repository = \
-        repository.Repository(self.config['repository'], 'records',
-        config.MODEL['typenames'])
+        try:
+            self.repository = \
+            repository.Repository(self.config['repository'], 'records',
+            config.MODEL['typenames'])
 
-        self.log.debug('Repository loaded: %s.' % self.repository)
+            self.log.debug('Repository loaded: %s.' % self.repository)
+        except Exception, err:
+            self.response = self.exceptionreport(
+            'NoApplicableCode', 'service',
+            'Could not load repository: %s' % str(err))
 
     def dispatch(self):
         ''' Handle incoming HTTP request '''
@@ -1528,7 +1533,7 @@ class Csw(object):
                     value = util.query_xpath(xml, queryables[elemname])
                     if value:
                         etree.SubElement(record,
-                        util.nspath_eval(elemname)).text=value
+                        util.nspath_eval(elemname)).text=value.decode('utf8')
         elif self.kvp.has_key('elementsetname'):
             if self.kvp['elementsetname'] == 'full':  # dump the full record
                 record = etree.fromstring(recobj.xml)
