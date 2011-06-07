@@ -425,18 +425,22 @@ class APISO(profile.Profile):
 
                 # title
                 val = util.query_xpath(xml, queryables['apiso:Title'])
+                if not val:
+                    val = ''
                 identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
                 tmp = etree.SubElement(identification, util.nspath_eval('gmd:MD_IdentificationInfo'))
                 tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:citation'))
                 tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
                 tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
-                etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
+                etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val.decode('utf8')
 
                 if esn == 'summary':
                     # abstract
                     val = util.query_xpath(xml, queryables['apiso:Abstract'])
+                    if not val:
+                        val = ''
                     tmp = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
-                    etree.SubElement(tmp, util.nspath_eval('gco:ChracterString')).text = val
+                    etree.SubElement(tmp, util.nspath_eval('gco:ChracterString')).text = val.decode('utf8')
     
                     # spatial resolution
                     val = util.query_xpath(xml, queryables['apiso:Denominator'])
