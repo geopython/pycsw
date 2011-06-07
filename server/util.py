@@ -163,7 +163,7 @@ def query_xpath(xml, xpath):
         return None
     elif len(result) == 1:  # single result
         try:
-            return result[0].text
+            return result[0].text.encode('utf8')
         except:  # attribute
             return result[0]
     else:  # list of results

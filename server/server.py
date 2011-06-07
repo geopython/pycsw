@@ -1539,8 +1539,11 @@ class Csw(object):
                 util.nspath_eval('dc:identifier')).text = recobj.identifier
 
                 for i in ['dc:title', 'dc:type']:
+                    val = util.query_xpath(xml, queryables[i])
+                    if not val:
+                        val = ''
                     etree.SubElement(record, util.nspath_eval(i)).text = \
-                    util.query_xpath(xml, queryables[i])
+                    val.decode('utf8')
                 if self.kvp['elementsetname'] == 'summary':
                     subjects = util.query_xpath(xml,
                     queryables['dc:subject'])
@@ -1553,9 +1556,9 @@ class Csw(object):
                     for i in ['dc:format', 'dc:relation', \
                     'dct:modified', 'dct:abstract']:
                         val = util.query_xpath(xml, queryables[i])
-                        if val is not None:
+                        if val:
                             etree.SubElement(record,
-                            util.nspath_eval(i)).text = val
+                            util.nspath_eval(i)).text = val.decode('utf8')
                 bboxel = write_boundingbox(recobj.bbox)
                 if bboxel is not None:
                     record.append(bboxel)
