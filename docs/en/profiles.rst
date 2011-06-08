@@ -46,7 +46,7 @@ All profiles are disabled by default.  To specify profiles at runtime, set the `
 Testing
 -------
 
-Profiles must provide a ``tester`` interface (similar to ``tester/index.html``), which must provide example requests specific to the profile (see :ref:`tester`).
+Profiles must add examples to the :ref:`tester` interface, which must provide example requests specific to the profile.
 
 Supported Profiles
 ==================
