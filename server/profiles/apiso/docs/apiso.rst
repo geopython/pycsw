@@ -10,46 +10,17 @@ The ISO Metadata Application Profile (APISO) is a profile of CSW 2.0.2 which ena
 Configuration
 ^^^^^^^^^^^^^
 
-To expose your geospatial metadata via the APISO, via pycsw, perform the following actions:
-
-- setup the database (if starting from scratch)
-- import metadata
-- publish the repository
+No extra configuration is required.
 
 Enabling APISO Support
 ^^^^^^^^^^^^^^^^^^^^^^
 
-APISO support is enabled By default.
-
-Setting up the Database
-^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: bash
-
-  $ cd /path/to/pycsw
-  $ export PYTHONPATH=`pwd` 
-  $ python ./sbin/setup_db.py sqlite:////path/to/records.db
-
-This will create the necessary tables and values for the repository.
-
-Importing Metadata
-^^^^^^^^^^^^^^^^^^
-
-.. code-block:: bash
-
-  $ python ./sbin/load_records.py /path/to/records sqlite:////path/to/records.db
-
-This will import all ``*.xml`` records from ``/path/to/records`` into ``records.db`` and configure the repository to expose queryables as per subclase 7.2.3 of the profile.
-
-Publishing the Repository
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-APISO runtime configuration is defined by setting ``server.profiles`` to ``apiso``.  To expose the repository, setup a ``repository`` section as specified in :ref:`configuration`.
+To enable APISO support, add ``apiso`` to ``server.profiles`` as specified in :ref:`configuration`.
 
 Testing
 ^^^^^^^
 
-A testing interface is available in ``server/profiles/apiso/tester/index.html`` which contains tests specific to APISO to demonstrate functionality.  See :ref:`tester` for more information.
+A testing interface is available in ``tester/index.html`` which contains tests specific to APISO to demonstrate functionality.  See :ref:`tester` for more information.
 
 INSPIRE Extension
 -----------------

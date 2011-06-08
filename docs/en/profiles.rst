@@ -27,14 +27,26 @@ Requirements
 Abstract Base Class Definition
 ------------------------------
 
-All profile code must be instantiated as a subclass of ``profile.Profile``.  For example:
+All profile code must be instantiated as a subclass of ``profile.Profile``.  Below is an example to add a ``Foo`` profile:
 
 .. code-block:: python
 
    from server import profile
 
    class FooProfile(profile.Profile):
-       profile.Profile.__init__(self, 'foo', '1.0.0', 'My Profile', 'http://example.org/', 'http://example.org/foons', 'foo:TypeName', 'http://example.org/foons')
+       profile.Profile.__init__(self,
+           name='foo',
+           version='1.0.3',
+           title='My Foo Profile',
+           url='http://example.org/fooprofile/docs',
+           namespace='http://example.org/foons',
+           typename='foo:RootElement',
+           outputschema=http://example.org/foons',
+           prefixes=['foo'],
+           model=model,
+           core_namespaces=namespaces,
+           added_namespaces={'foo': 'http://example.org/foons'}
+           repository=REPOSITORY['foo:RootElement'])
 
 Your profile plugin class (``FooProfile``) must implement all methods as per ``profile.Profile``.  Profile methods must always return ``lxml.etree.Element`` types, or ``None``.
 
@@ -52,3 +64,5 @@ Supported Profiles
 ==================
 
 .. include:: ../../server/profiles/apiso/docs/apiso.rst
+.. include:: ../../server/profiles/dif/docs/dif.rst
+.. include:: ../../server/profiles/fgdc/docs/fgdc.rst

@@ -101,8 +101,7 @@ class Repository(object):
         self.dataset.source == source)
         return query.all() 
 
-    def query(self, constraint, sortby=None,
-    typenames=['csw:Record', 'gmd:MD_Metadata']):
+    def query(self, constraint, sortby=None, typenames=[]):
         ''' Query records from underlying repository '''
 
         if constraint.has_key('where'):  # it's a GetRecords with constraint
