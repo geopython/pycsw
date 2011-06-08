@@ -11,6 +11,8 @@ Features
 - fully passes the `OGC CITE CSW`_ test suite (103/103)
 - implements `INSPIRE Discovery Services 3.0`_
 - implements `ISO Metadata Application Profile 1.0.0`_
+- implements `FGDC CSDGM Application Profile for CSW 2.0`_
+- supports ISO, Dublin Core, DIF, FGDC metadata models
 - simple configuration
 - transactional capabilities (CSW-T)
 - flexible repository configuration
@@ -41,6 +43,10 @@ Standards Support
 | `ISO 19139`_      | 2007       |
 +-------------------+------------+
 | `ISO 19119`_      | 2005       |
++-------------------+------------+
+| `NASA DIF`_       | 9.7        | 
++-------------------+------------+
+| `FGDC CSDGM`_     | 1998       | 
 +-------------------+------------+
 
 Supported Operations
@@ -109,3 +115,6 @@ Logical Operators
 .. _`ISO 19115`: http://www.iso.org/iso/catalogue_detail.htm?csnumber=26020
 .. _`ISO 19139`: http://www.iso.org/iso/catalogue_detail.htm?csnumber=32557
 .. _`ISO 19119`: http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39890
+.. _`NASA DIF`: http://gcmd.nasa.gov/User/difguide/whatisadif.html
+.. _`FGDC CSDGM`: http://www.fgdc.gov/metadata/csdgm
+.. _`FGDC CSDGM Application Profile for CSW 2.0`: http://portal.opengeospatial.org/files/?artifact_id=16936

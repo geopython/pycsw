@@ -36,7 +36,9 @@ import os
 class Profile(object):
     ''' base Profile class '''
     def __init__(self, name, version, title, url,
-    namespace, typename, outputschema):
+    namespace, typename, outputschema, prefixes, model, core_namespaces,
+    added_namespaces,repository):
+
         ''' Initialize profile '''
         self.name = name
         self.version = version
@@ -45,7 +47,30 @@ class Profile(object):
         self.namespace = namespace
         self.typename = typename
         self.outputschema = outputschema
-        self.corequeryables = None
+        self.prefixes = prefixes
+        self.repository = repository
+
+        model['operations']['DescribeRecord']['parameters']\
+        ['typeName']['values'].append(self.typename)
+
+        model['operations']['GetRecords']['parameters']['outputSchema']\
+        ['values'].append(self.outputschema)
+
+        model['operations']['GetRecords']['parameters']['typeNames']\
+        ['values'].append(self.typename)
+
+        model['operations']['GetRecordById']['parameters']['outputSchema']\
+        ['values'].append(self.outputschema)
+
+        if model['operations'].has_key('Harvest'):
+            model['operations']['Harvest']['parameters']['ResourceType']\
+            ['values'].append(self.outputschema)
+
+        # namespaces
+        core_namespaces.update(added_namespaces)
+
+        # repository
+        model['typenames'][self.typename] = self.repository
 
     def extend_core(self, model, namespaces, config):
         ''' Extend config.MODEL and config.NAMESPACES '''
