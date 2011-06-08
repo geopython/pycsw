@@ -111,7 +111,7 @@ class Csw(object):
             self.config['server']['profiles'])
     
             for prof in self.profiles['plugins'].keys():
-                tmp = self.profiles['plugins'][prof]()
+                tmp = self.profiles['plugins'][prof](config.MODEL, config.NAMESPACES)
                 key = tmp.outputschema  # to ref by outputschema
                 self.profiles['loaded'][key] = tmp
                 self.profiles['loaded'][key].extend_core(
@@ -120,13 +120,15 @@ class Csw(object):
             self.log.debug('Profiles loaded: %s.' %
             self.profiles['loaded'].keys())
 
+        self.log.debug('NAMESPACES: %s' % config.NAMESPACES)
+
         # init repository
         try:
             self.repository = \
             repository.Repository(self.config['repository'], 'records',
             config.MODEL['typenames'])
 
-            self.log.debug('Repository loaded: %s.' % self.repository)
+            self.log.debug('Repository loaded: %s.' % self.repository.dbtype)
         except Exception, err:
             self.response = self.exceptionreport(
             'NoApplicableCode', 'service',
@@ -675,11 +677,16 @@ class Csw(object):
                 else:  # it's a core queryable, map to internal typename model
                     pname2 = self.repository.queryables['_all'][pname]
 
-                # TODO: smarter way of handling domain value type
-                if pname2.find('apiso:') != -1 or pname2.find('gmd:') != -1:
-                    dvtype = 'gmd:MD_Metadata'
-                else:
+                # decipher typename
+                dvtype = None
+                for prof in self.profiles['loaded'].keys():
+                    for prefix in self.profiles['loaded'][prof].prefixes:
+                        if pname2.find(prefix) != -1:
+                            dvtype = self.profiles['loaded'][prof].typename
+                            break
+                if not dvtype:
                     dvtype = 'csw:Record'
+
                 domainvalue = etree.SubElement(node,
                 util.nspath_eval('csw:DomainValues'), type = dvtype)
                 etree.SubElement(domainvalue,
@@ -934,7 +941,7 @@ class Csw(object):
 
                     # transform mappings to csw:Record TODO: find smarter way
                     self.profiles['loaded']\
-                    ['http://www.isotc211.org/2005/gmd'].transform2dcmappings(\
+                    [self.kvp['outputschema']].transform2dcmappings(\
                     self.repository.queryables['_all'])
 
                     searchresults.append(self._write_record(
@@ -1525,7 +1532,8 @@ class Csw(object):
             len(self.kvp['elementname']) > 0):
             xml = etree.fromstring(recobj.xml)
             for elemname in self.kvp['elementname']:
-                if elemname.find('BoundingBox') != -1:
+                if (elemname.find('BoundingBox') != -1 or
+                    elemname.find('Envelope') != -1):
                     bboxel = write_boundingbox(recobj.bbox)
                     if bboxel is not None:
                         record.append(bboxel)

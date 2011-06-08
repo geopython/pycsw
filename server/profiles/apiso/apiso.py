@@ -131,27 +131,23 @@ REPOSITORY = {
 
 class APISO(profile.Profile):
     ''' APISO class '''
-    def __init__(self):
-        profile.Profile.__init__(self, 'apiso', '1.0.0', 'ISO Metadata Application Profile', 'http://portal.opengeospatial.org/files/?artifact_id=21460', NAMESPACES['gmd'], 'gmd:MD_Metadata', NAMESPACES['gmd'])
+    def __init__(self, model, namespaces):
+        profile.Profile.__init__(self,
+            name='apiso',
+            version='1.0.0',
+            title='ISO Metadata Application Profile',
+            url='http://portal.opengeospatial.org/files/?artifact_id=21460',
+            namespace=NAMESPACES['gmd'],
+            typename='gmd:MD_Metadata',
+            outputschema=NAMESPACES['gmd'],
+            prefixes=['apiso', 'gmd'],
+            model=model,
+            core_namespaces=namespaces,
+            added_namespaces=NAMESPACES,
+            repository=REPOSITORY['gmd:MD_Metadata'])
 
     def extend_core(self, model, namespaces, config):
         ''' Extend core configuration '''
-
-        model['operations']['DescribeRecord']['parameters']['typeName']['values'].append(self.typename)
-        model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(self.outputschema)
-        model['operations']['GetRecords']['parameters']['typeNames']['values'].append(self.typename)
-        model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(self.outputschema)
-        model['constraints']['IsoProfiles'] = { 'values': [self.namespace] }
-
-        if model['operations'].has_key('Harvest'):
-            model['operations']['Harvest']['parameters']['ResourceType']\
-            ['values'].append('http://www.isotc211.org/schemas/2005/gmd/')
-
-        # namespaces
-        namespaces.update(NAMESPACES)
-
-        # repository
-        model['typenames']['gmd:MD_Metadata'] = REPOSITORY['gmd:MD_Metadata']
 
         # update INSPIRE vars
         namespaces.update(INSPIRE_NAMESPACES)
@@ -367,6 +363,7 @@ class APISO(profile.Profile):
         return None
 
     def write_record(self, result, esn, outputschema, queryables):
+        ''' Return csw:SearchResults child as lxml.etree.Element '''
         xml = etree.fromstring(result.xml)
         if outputschema == self.namespace:
             if esn == 'full':  # dump the full record
@@ -505,6 +502,7 @@ class APISO(profile.Profile):
                 queryables[qbl] = val
 
 def write_extent(bbox):
+    ''' Generate BBOX extent '''
 
     from shapely.wkt import loads
 
@@ -524,9 +522,7 @@ def write_extent(bbox):
         etree.SubElement(south, util.nspath_eval('gco:Decimal')).text = str(bbox2[1])
         etree.SubElement(east, util.nspath_eval('gco:Decimal')).text = str(bbox2[2])
         etree.SubElement(north, util.nspath_eval('gco:Decimal')).text = str(bbox2[3])
-
         return extent
-
     return None
 
 def dc2iso(queryables):
