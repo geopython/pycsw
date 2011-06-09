@@ -145,8 +145,8 @@ class FGDC(profile.Profile):
                 else:
                   elname = 'fgdc:SummaryRecord'
 
-                if result.typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
-                    dc2fgdc(queryables)
+                if result.typename == 'csw:Record':  # transform csw:Record -> fgdc:metadata model mappings
+                    util.transform_mappings(queryables, REPOSITORY['fgdc:metadata']['mappings']['csw:Record'])
 
                 node = etree.Element(util.nspath_eval(elname))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
@@ -165,15 +165,6 @@ class FGDC(profile.Profile):
                     return node
         return node
 
-    def transform2dcmappings(self, queryables):
-        ''' Transform FGDC mappings into csw:Record mappings '''
-
-        for qbl in queryables:
-            if qbl in REPOSITORY['fgdc:metadata']['mappings']['csw:Record'].values():
-                tmp = [k for k, v in REPOSITORY['fgdc:metadata']['mappings']['csw:Record'].iteritems() if v == qbl][0]
-                val = queryables[tmp]
-                queryables[qbl] = val
-
 def write_extent(bbox):
     ''' Generate BBOX extent '''
 
@@ -188,9 +179,3 @@ def write_extent(bbox):
         etree.SubElement(extent, util.nspath_eval('fgdc:southbc')).text = str(bbox2[1])
         return extent
     return None
-
-def dc2fgdc(queryables):
-    ''' Transform csw:Record mappings into APISO mappings '''
-    for qbl in queryables.keys():
-        if qbl in REPOSITORY['fgdc:metadata']['mappings']['csw:Record'].keys():  # map to new XPath
-            queryables[qbl] = REPOSITORY['fgdc:metadata']['mappings']['csw:Record'][qbl]
