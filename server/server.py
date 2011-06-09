@@ -939,10 +939,15 @@ class Csw(object):
                     'csw:Record' not in self.kvp['typenames']):
                     # serialize into csw:Record model
 
-                    # transform mappings to csw:Record TODO: find smarter way
-                    self.profiles['loaded']\
-                    [self.kvp['outputschema']].transform2dcmappings(\
-                    self.repository.queryables['_all'])
+                    for prof in self.profiles['loaded']:  # find source typename
+                        if self.profiles['loaded'][prof].typename in \
+                        self.kvp['typenames']:
+                            typename = self.profiles['loaded'][prof].typename
+                            break
+
+                    util.transform_mappings(self.repository.queryables['_all'],
+                    config.MODEL['typenames'][typename]\
+                    ['mappings']['csw:Record'], reverse=True)
 
                     searchresults.append(self._write_record(
                     res, self.repository.queryables['_all']))
