@@ -168,7 +168,7 @@ def _get_spatial_operator(element):
     if property_name is None:
         raise RuntimeError, \
         ('Missing ogc:PropertyName in spatial filter')
-    if (property_name.text.find('BoundingBox') == -1 or 
+    if (property_name.text.find('BoundingBox') == -1 and
         property_name.text.find('Envelope') == -1):
         raise RuntimeError, \
         ('Invalid ogc:PropertyName in spatial filter: %s' %
