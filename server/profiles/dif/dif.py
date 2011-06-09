@@ -133,8 +133,8 @@ class DIF(profile.Profile):
                 node = xml
             else:  # it's a brief or summary record
 
-                if result.typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
-                    dc2dif(queryables)
+                if result.typename == 'csw:Record':  # transform csw:Record -> dif:DIF model mappings
+                    util.transform_mappings(queryables, REPOSITORY['dif:DIF']['mappings']['csw:Record'])
 
                 node = etree.Element(util.nspath_eval('dif:DIF'))
                 node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
@@ -214,15 +214,6 @@ class DIF(profile.Profile):
 
         return node
 
-    def transform2dcmappings(self, queryables):
-        ''' Transform DIF mappings into csw:Record mappings '''
-
-        for qbl in queryables:
-            if qbl in REPOSITORY['dif:DIF']['mappings']['csw:Record'].values():
-                tmp = [k for k, v in REPOSITORY['dif:DIF']['mappings']['csw:Record'].iteritems() if v == qbl][0]
-                val = queryables[tmp]
-                queryables[qbl] = val
-
 def write_extent(bbox):
     ''' Generate BBOX extent '''
 
@@ -237,9 +228,3 @@ def write_extent(bbox):
         etree.SubElement(extent, util.nspath_eval('dif:Easternmost_Longitude')).text = str(bbox2[2])
         return extent
     return None
-
-def dc2dif(queryables):
-    ''' Transform csw:Record mappings into APISO mappings '''
-    for qbl in queryables.keys():
-        if qbl in REPOSITORY['dif:DIF']['mappings']['csw:Record'].keys():  # map to new XPath
-            queryables[qbl] = REPOSITORY['dif:DIF']['mappings']['csw:Record'][qbl]

@@ -189,3 +189,15 @@ def update_xpath(xml, recprops):
             raise RuntimeError, ('ERROR: %s' % str(err))
     return etree.tostring(xml)
 
+def transform_mappings(queryables, typename, reverse=False):
+    ''' transform metadata model mappings '''
+    if reverse:  # from csw:Record
+        for qbl in queryables.keys():
+            if qbl in typename.values():
+                tmp = [k for k, v in typename.iteritems() if v == qbl][0]
+                val = queryables[tmp]
+                queryables[qbl] = val
+    else:  # to csw:Record
+        for qbl in queryables.keys():
+            if qbl in typename.keys():
+                queryables[qbl] = typename[qbl]
