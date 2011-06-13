@@ -37,6 +37,7 @@ import cgi
 import urllib2
 from lxml import etree
 import config, fes, log, profile, repository, util
+from shapely.wkt import loads
 
 class Csw(object):
     ''' Base CSW server '''
@@ -88,8 +89,7 @@ class Csw(object):
         # generate distributed search model, if specified in config
         if self.config['server'].has_key('federatedcatalogues'):
             self.log.debug('Configuring distributed search.')
-            config.MODEL['constraints']['FederatedCatalogues'] = {}
-            config.MODEL['constraints']['FederatedCatalogues']['values'] = []
+            config.MODEL['constraints']['FederatedCatalogues'] = {'values': []}
             for fedcat in \
             self.config['server']['federatedcatalogues'].split(','):
                 config.MODEL\
@@ -99,9 +99,6 @@ class Csw(object):
         self.log.debug('Model: %s.' % config.MODEL)
 
         # load profiles
-
-        # turn on APISO by default
-        #self.config['server']['profiles'] = 'apiso'
 
         self.log.debug('Loading profiles.')
 
@@ -438,8 +435,8 @@ class Csw(object):
             self.config['metadata:main']['contact_url']
 
             etree.SubElement(contactinfo,
-                             util.nspath_eval('ows:HoursOfService')).text = \
-                             self.config['metadata:main']['contact_hours']
+            util.nspath_eval('ows:HoursOfService')).text = \
+            self.config['metadata:main']['contact_hours']
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows:ContactInstructions')).text = \
@@ -576,8 +573,7 @@ class Csw(object):
         if self.kvp.has_key('typename') is False or \
         len(self.kvp['typename']) == 0:  # missing typename
         # set to return all typenames
-            self.kvp['typename'] = []
-            self.kvp['typename'].append('csw:Record')
+            self.kvp['typename'] = ['csw:Record']
 
             if self.profiles is not None:
                 for prof in self.profiles['loaded'].keys():
@@ -630,8 +626,7 @@ class Csw(object):
                         scnodes = \
                         self.profiles['loaded'][prof].get_schemacomponents()
                         if scnodes is not None:
-                            for scn in scnodes:
-                                node.append(scn)
+                            map(node.append, scnodes)
         return node
     
     def getdomain(self):
@@ -863,7 +858,7 @@ class Csw(object):
         else:
             matched = str(len(results))
             if int(matched) < int(self.kvp['maxrecords']):
-                returned = str(int(matched))
+                returned = matched
                 nextrecord = '0'
             else:
                 returned = str(self.kvp['maxrecords'])
@@ -976,7 +971,8 @@ class Csw(object):
         if self.kvp.has_key('outputschema') is False:
             self.kvp['outputschema'] = config.NAMESPACES['csw']
 
-        ids = self.kvp['id'].split(',')
+        if self.requesttype == 'GET':
+            self.kvp['id'] = self.kvp['id'].split(',')
 
         if (self.kvp.has_key('outputformat') and
             self.kvp['outputformat'] not in
@@ -1010,8 +1006,8 @@ class Csw(object):
         (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
 
         # query repository
-        self.log.debug('Querying repository with ids: %s.' % ids)
-        results = self.repository.query_ids(ids)
+        self.log.debug('Querying repository with ids: %s.' % self.kvp['id'][0])
+        results = self.repository.query_ids(self.kvp['id'])
 
         if raw:  # GetRepositoryItem request
             self.log.debug('GetRepositoryItem request.')
@@ -1309,9 +1305,8 @@ class Csw(object):
 
         # DescribeRecord
         if request['request'] == 'DescribeRecord':
-            request['typename'] = []
-            for typename in doc.findall(util.nspath_eval('csw:TypeName')):
-                request['typename'].append(typename.text)
+            request['typename'] = [typename.text for typename in \
+            doc.findall(util.nspath_eval('csw:TypeName'))]
     
             tmp = doc.find('.').attrib.get('schemaLanguage')
             if tmp is not None:
@@ -1334,34 +1329,22 @@ class Csw(object):
         # GetRecords
         if request['request'] == 'GetRecords':
             tmp = doc.find('.').attrib.get('outputSchema')
-            if tmp is not None:
-                request['outputschema'] = tmp
-            else:
-                request['outputschema'] = config.NAMESPACES['csw']
+            request['outputschema'] = tmp if tmp is not None \
+            else config.NAMESPACES['csw']
 
             tmp = doc.find('.').attrib.get('resultType')
-            if tmp is not None:
-                request['resulttype'] = tmp
-            else:
-                request['resulttype'] = None
+            request['resulttype'] = tmp if tmp is not None else None
 
             tmp = doc.find('.').attrib.get('outputFormat')
-            if tmp is not None:
-                request['outputformat'] = tmp
-            else:
-                request['outputformat'] = 'application/xml'
+            request['outputformat'] = tmp if tmp is not None \
+            else 'application/xml'
 
             tmp = doc.find('.').attrib.get('startPosition')
-            if tmp is not None:
-                request['startposition'] = tmp
-            else:
-                request['startposition'] = 1
+            request['startposition'] = tmp if tmp is not None else 1
 
             tmp = doc.find('.').attrib.get('maxRecords')
-            if tmp is not None:
-                request['maxrecords'] = tmp
-            else:
-                request['maxrecords'] = self.config['server']['maxrecords']
+            request['maxrecords'] = tmp if tmp is not None else \
+            self.config['server']['maxrecords']
 
             client_mr = int(request['maxrecords'])
             server_mr = int(self.config['server']['maxrecords'])
@@ -1373,30 +1356,21 @@ class Csw(object):
             if tmp is not None:
                 request['distributedsearch'] = 'TRUE'
                 hopcount = tmp.attrib.get('hopCount')
-                if hopcount is not None:
-                    request['hopcount'] = int(hopcount)-1
-                else:
-                    request['hopcount'] = 1
+                request['hopcount'] = int(hopcount)-1 if hopcount is not None \
+                else 1
             else:
                 request['distributedsearch'] = 'FALSE'
 
             tmp = doc.find(util.nspath_eval('csw:Query/csw:ElementSetName'))
-            if tmp is not None:
-                request['elementsetname'] = tmp.text
-            else:
-                request['elementsetname'] = None
+            request['elementsetname'] = tmp.text if tmp is not None else None
 
             tmp = doc.find(util.nspath_eval(
             'csw:Query')).attrib.get('typeNames')
-            if tmp is not None:
-                request['typenames'] = tmp.split(',')
-            else:
-                request['typenames'] = ['csw:Record']  # default
+            request['typenames'] = tmp.split(',') if tmp is not None \
+            else 'csw:Record'
 
-            request['elementname'] = []
-            for elname in \
-            doc.findall(util.nspath_eval('csw:Query/csw:ElementName')):
-                request['elementname'].append(elname.text)
+            request['elementname'] = [elname.text for elname in \
+            doc.findall(util.nspath_eval('csw:Query/csw:ElementName'))]
 
             request['constraint'] = {}
             tmp = doc.find(util.nspath_eval('csw:Query/csw:Constraint'))
@@ -1405,7 +1379,6 @@ class Csw(object):
                 request['constraint'] = self._parse_constraint(tmp)
                 if isinstance(request['constraint'], str):  # parse error
                     return 'Invalid Constraint: %s' % request['constraint']
-
             else: 
                 self.log.debug('No csw:Constraint (ogc:Filter or csw:CqlText) \
                 specified.')
@@ -1423,32 +1396,23 @@ class Csw(object):
 
                 tmp2 =  tmp.find(util.nspath_eval(
                 'ogc:SortProperty/ogc:SortOrder'))
-                if tmp2 is not None:                   
-                    request['sortby']['order'] = tmp2.text
-                else:
-                    request['sortby']['order'] = 'asc'
+                request['sortby']['order'] = tmp2.text if tmp2 is not None \
+                else 'asc'
             else:
                 request['sortby'] = None
 
         # GetRecordById
         if request['request'] == 'GetRecordById':
-            ids = []
-            for id1 in doc.findall(util.nspath_eval('csw:Id')):
-                ids.append(id1.text)
-
-            request['id'] = ','.join(ids)
+            request['id'] = [id1.text for id1 in \
+            doc.findall(util.nspath_eval('csw:Id'))]
 
             tmp = doc.find(util.nspath_eval('csw:ElementSetName'))
-            if tmp is not None:
-                request['elementsetname'] = tmp.text
-            else:
-                request['elementsetname'] = 'summary'
+            request['elementsetname'] = tmp.text if tmp is not None \
+            else 'summary'
 
             tmp = doc.find('.').attrib.get('outputSchema')
-            if tmp is not None:
-                request['outputschema'] = tmp
-            else:
-                request['outputschema'] = config.NAMESPACES['csw']
+            request['outputschema'] = tmp if tmp is not None \
+            else config.NAMESPACES['csw']
 
         # Transaction
         if request['request'] == 'Transaction':
@@ -1507,10 +1471,7 @@ class Csw(object):
             doc.find(util.nspath_eval('csw:ResourceType')).text
 
             tmp = doc.find(util.nspath_eval('csw:ResourceFormat'))
-            if tmp is not None:
-                request['resourceformat'] = tmp.text
-            else:
-                request['resourceformat'] = 'application/xml'
+            request['resourceformat'] = tmp.text if tmp else 'application/xml'
 
             tmp = doc.find(util.nspath_eval('csw:HarvestInterval'))
             if tmp is not None:
@@ -1519,7 +1480,6 @@ class Csw(object):
             tmp = doc.find(util.nspath_eval('csw:ResponseHandler'))
             if tmp is not None:
                 request['responsehandler'] = tmp.text
-
         return request
 
     def _write_record(self, recobj, queryables):
@@ -1787,8 +1747,6 @@ def parse_record(record):
 
 def write_boundingbox(bbox):
     ''' Generate ows:BoundingBox '''
-
-    from shapely.wkt import loads
 
     if bbox is not None:
         tmp = loads(bbox)

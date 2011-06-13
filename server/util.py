@@ -33,6 +33,7 @@
 import time
 from lxml import etree
 import config
+from shapely.wkt import loads
 
 def get_today_and_now():
     ''' Get the date, right now, in ISO8601 '''
@@ -90,8 +91,6 @@ def bbox2wktpolygon(bbox):
 
 def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     ''' perform spatial query '''
-
-    from shapely.wkt import loads
 
     if bbox_data_wkt is None or bbox_input_wkt is None:
         return 'false'

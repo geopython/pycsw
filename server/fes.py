@@ -121,10 +121,7 @@ def parse(element, queryables, dbtype):
             # if this is a case insensitive search
             # then set the DB-specific LIKE comparison operator
             if matchcase is not None and matchcase == 'false':
-                if dbtype == 'postgresql':
-                    com_op = 'ilike'
-                else:
-                    com_op = 'like'
+                com_op = 'ilike' if dbtype == 'postgresql' else 'like'
 
             if child.tag == util.nspath_eval('ogc:PropertyIsBetween'):
                 com_op = 'between'
@@ -149,10 +146,9 @@ def parse(element, queryables, dbtype):
                 else:
                     queries.append("%s %s '%s'" % (pname, com_op, pvalue))
 
-    if boq is not None and boq != ' not ':
-        where = boq.join(queries)
-    else:
-        where = queries[0]
+    where = boq.join(queries) if (boq is not None and boq != ' not ') \
+    else queries[0]
+
     return where
 
 def _get_spatial_operator(element):
@@ -160,10 +156,7 @@ def _get_spatial_operator(element):
     property_name = element.find(util.nspath_eval('ogc:PropertyName'))
     distance = element.find(util.nspath_eval('ogc:Distance'))
 
-    if distance is None:
-        distance = 'false'
-    else:
-        distance = distance.text
+    distance = 'false' if distance is None else distance.text
 
     if property_name is None:
         raise RuntimeError, \
