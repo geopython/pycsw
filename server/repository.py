@@ -37,10 +37,8 @@ import util
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, repo, table, config):
+    def __init__(self, database, table, config):
         ''' Initialize repository '''
-
-        database = repo['database']
 
         engine = create_engine('%s' % database, echo=False)
 

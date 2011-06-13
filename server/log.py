@@ -54,15 +54,15 @@ def initlog(config=None):
     logfile = None
     loglevel = 'NOTSET'
 
-    if config['server'].has_key('loglevel'):
-        loglevel = config['server']['loglevel']
+    if config.has_option('server', 'loglevel'):
+        loglevel = config.get('server', 'loglevel')
 
         if loglevel not in LOGLEVELS.keys():
             raise RuntimeError, \
             ('Invalid server configuration (server.loglevel).')
 
-    if config['server'].has_key('logfile'):
-        logfile = config['server']['logfile']
+    if config.has_option('server', 'logfile'):
+        logfile = config.get('server', 'logfile')
 
     if loglevel != 'NOTSET' and logfile is None:
         raise RuntimeError, \

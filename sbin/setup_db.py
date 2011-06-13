@@ -96,7 +96,7 @@ AS $$
     from server import util
     return util.query_xpath(xml, xpath)
     $$ LANGUAGE plpythonu;
-''' % CFG['server']['home']
+''' % CFG.get('server', 'home')
 
     FUNCTION_QUERY_SPATIAL = '''
 CREATE OR REPLACE FUNCTION query_spatial(bbox_data_wkt text, bbox_input_wkt text, predicate text, distance text)
@@ -107,7 +107,7 @@ AS $$
     from server import util
     return util.query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance)
     $$ LANGUAGE plpythonu;
-''' % CFG['server']['home']
+''' % CFG.get('server', 'home')
 
     FUNCTION_QUERY_ANYTEXT = '''
 CREATE OR REPLACE FUNCTION query_anytext(xml text, searchterm text)
@@ -118,7 +118,7 @@ AS $$
     from server import util
     return util.query_anytext(xml, searchterm)
     $$ LANGUAGE plpythonu;
-''' % CFG['server']['home']
+''' % CFG.get('server', 'home')
 
     FUNCTION_UPDATE_XPATH = '''
 CREATE OR REPLACE FUNCTION update_xpath(xml text, recprops text)
@@ -129,7 +129,7 @@ AS $$
     from server import util
     return util.update_xpath(xml, recprops)
     $$ LANGUAGE plpythonu;
-''' % CFG['server']['home']
+''' % CFG.get('server', 'home')
 
     CONN.execute(FUNCTION_QUERY_XPATH)
     CONN.execute(FUNCTION_QUERY_SPATIAL)
