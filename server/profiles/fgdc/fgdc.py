@@ -163,6 +163,12 @@ class FGDC(profile.Profile):
 
                 if esn == 'brief':
                     return node
+
+                # bbox extent
+                val = result.bbox
+                bboxel = write_extent(val)
+                if bboxel is not None:
+                    node.append(bboxel)
         return node
 
 def write_extent(bbox):

@@ -183,12 +183,8 @@ MODEL =  {
 def gen_domains():
     ''' Generate parameter domain model '''
     domain = {}
-    domain['methods'] = {}
-    domain['methods']['get'] = True
-    domain['methods']['post'] = True
-    domain['parameters'] = {}
-    domain['parameters']['ParameterName'] = {}
-    domain['parameters']['ParameterName']['values'] = []
+    domain['methods'] = {'get': True, 'post': True}
+    domain['parameters'] = {'ParameterName': {'values': [] }}
     for operation in MODEL['operations'].keys():
         for parameter in MODEL['operations'][operation]['parameters']:
             domain['parameters']['ParameterName']['values'].append('%s.%s' %
