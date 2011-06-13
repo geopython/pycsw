@@ -35,6 +35,7 @@ import os
 import sys
 import cgi
 import urllib2
+import ConfigParser
 from lxml import etree
 import config, fes, log, profile, repository, util
 from shapely.wkt import loads
@@ -44,7 +45,8 @@ class Csw(object):
     def __init__(self, configfile=None):
         ''' Initialize CSW '''
         # load user configuration
-        self.config = config.get_config(configfile)
+        self.config = ConfigParser.SafeConfigParser()
+        self.config.readfp(open(configfile))
 
         # configure transaction support, if specified in config
         self._gen_manager()
@@ -69,29 +71,29 @@ class Csw(object):
         config.MODEL['operations']['GetDomain'] = config.gen_domains()
 
         # set OGC schemas location
-        if self.config['server'].has_key('ogc_schemas_base') is False:
-            self.config['server']['ogc_schemas_base'] = config.OGC_SCHEMAS_BASE
+        if not self.config.has_option('server', 'ogc_schemas_base'):
+            self.config.set('server', 'ogc_schemas_base', config.OGC_SCHEMAS_BASE)
 
         # set XML pretty print
-        if (self.config['server'].has_key('xml_pretty_print') and
-        self.config['server']['xml_pretty_print'] == 'true'):
+        if (self.config.has_option('server', 'xml_pretty_print') and
+        self.config.get('server', 'xml_pretty_print') == 'true'):
             self.xml_pretty_print = 1
         else:
             self.xml_pretty_print = 0
 
         # set compression level
-        if self.config['server'].has_key('gzip_compresslevel'):
+        if self.config.has_option('server', 'gzip_compresslevel'):
             self.gzip_compresslevel = \
-            int(self.config['server']['gzip_compresslevel'])
+            int(self.config.get('server', 'gzip_compresslevel'))
         else:
             self.gzip_compresslevel = 9
 
         # generate distributed search model, if specified in config
-        if self.config['server'].has_key('federatedcatalogues'):
+        if self.config.has_option('server', 'federatedcatalogues'):
             self.log.debug('Configuring distributed search.')
             config.MODEL['constraints']['FederatedCatalogues'] = {'values': []}
             for fedcat in \
-            self.config['server']['federatedcatalogues'].split(','):
+            self.config.get('server', 'federatedcatalogues').split(','):
                 config.MODEL\
                 ['constraints']['FederatedCatalogues']['values'].append(fedcat)
 
@@ -102,18 +104,18 @@ class Csw(object):
 
         self.log.debug('Loading profiles.')
 
-        if self.config['server'].has_key('profiles'):
+        if self.config.has_option('server', 'profiles'):
             self.profiles = profile.load_profiles(
             os.path.join('server', 'profiles'), profile.Profile,
-            self.config['server']['profiles'])
-    
+            self.config.get('server', 'profiles'))
+
             for prof in self.profiles['plugins'].keys():
                 tmp = self.profiles['plugins'][prof](config.MODEL, config.NAMESPACES)
                 key = tmp.outputschema  # to ref by outputschema
                 self.profiles['loaded'][key] = tmp
                 self.profiles['loaded'][key].extend_core(
                 config.MODEL, config.NAMESPACES, self.config)
-    
+
             self.log.debug('Profiles loaded: %s.' %
             self.profiles['loaded'].keys())
 
@@ -122,8 +124,8 @@ class Csw(object):
         # init repository
         try:
             self.repository = \
-            repository.Repository(self.config['repository'], 'records',
-            config.MODEL['typenames'])
+            repository.Repository(self.config.get('repository', 'database'),
+            'records', config.MODEL['typenames'])
 
             self.log.debug('Repository loaded: %s.' % self.repository.dbtype)
         except Exception, err:
@@ -266,11 +268,11 @@ class Csw(object):
 
         node = etree.Element(util.nspath_eval('ows:ExceptionReport'),
         nsmap=config.NAMESPACES, version='1.0.2',
-        language=self.config['server']['language'])
+        language=self.config.get('server', 'language'))
 
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/ows/1.0.0/owsExceptionReport.xsd' % \
-        (config.NAMESPACES['ows'], self.config['server']['ogc_schemas_base'])
+        (config.NAMESPACES['ows'], self.config.get('server', 'ogc_schemas_base'))
 
         exception = etree.SubElement(node, util.nspath_eval('ows:Exception'),
         exceptionCode=code, locator=locator)
@@ -327,7 +329,7 @@ class Csw(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
-        (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
+        (config.NAMESPACES['csw'], self.config.get('server', 'ogc_schemas_base'))
 
         if serviceidentification:
             self.log.debug('Writing section ServiceIdentification.')
@@ -337,17 +339,18 @@ class Csw(object):
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Title')).text = \
-            self.config['metadata:main']['identification_title']
+            self.config.get('metadata:main', 'identification_title')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Abstract')).text = \
-            self.config['metadata:main']['identification_abstract']
+            self.config.get('metadata:main', 'identification_abstract')
 
             keywords = etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Keywords'))
 
             for k in \
-            self.config['metadata:main']['identification_keywords'].split(','):
+            self.config.get('metadata:main', 
+            'identification_keywords').split(','):
                 etree.SubElement(
                 keywords, util.nspath_eval('ows:Keyword')).text = k
 
@@ -359,11 +362,11 @@ class Csw(object):
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Fees')).text = \
-            self.config['metadata:main']['identification_fees']
+            self.config.get('metadata:main', 'identification_fees')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:AccessConstraints')).text = \
-            self.config['metadata:main']['identification_accessconstraints']
+            self.config.get('metadata:main', 'identification_accessconstraints')
 
         if serviceprovider:
             self.log.debug('Writing section ServiceProvider.')
@@ -372,79 +375,79 @@ class Csw(object):
 
             etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ProviderName')).text = \
-            self.config['metadata:main']['provider_name']
+            self.config.get('metadata:main', 'provider_name')
 
             providersite = etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ProviderSite'))
 
             providersite.attrib[util.nspath_eval('xlink:type')] = 'simple'
             providersite.attrib[util.nspath_eval('xlink:href')] = \
-            self.config['metadata:main']['provider_url']
+            self.config.get('metadata:main', 'provider_url')
 
             servicecontact = etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ServiceContact'))
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:IndividualName')).text = \
-            self.config['metadata:main']['contact_name']
+            self.config.get('metadata:main', 'contact_name')
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:PositionName')).text = \
-            self.config['metadata:main']['contact_position']
+            self.config.get('metadata:main', 'contact_position')
 
             contactinfo = etree.SubElement(servicecontact,
             util.nspath_eval('ows:ContactInfo'))
 
             phone = etree.SubElement(contactinfo, util.nspath_eval('ows:Phone'))
             etree.SubElement(phone, util.nspath_eval('ows:Voice')).text = \
-            self.config['metadata:main']['contact_phone']
+            self.config.get('metadata:main', 'contact_phone')
 
             etree.SubElement(phone, util.nspath_eval('ows:Facsimile')).text = \
-            self.config['metadata:main']['contact_fax']
+            self.config.get('metadata:main', 'contact_fax')
 
             address = etree.SubElement(contactinfo,
             util.nspath_eval('ows:Address'))
 
             etree.SubElement(address,
             util.nspath_eval('ows:DeliveryPoint')).text = \
-            self.config['metadata:main']['contact_address']
+            self.config.get('metadata:main', 'contact_address')
 
             etree.SubElement(address, util.nspath_eval('ows:City')).text = \
-            self.config['metadata:main']['contact_city']
+            self.config.get('metadata:main', 'contact_city')
 
             etree.SubElement(address,
             util.nspath_eval('ows:AdministrativeArea')).text = \
-            self.config['metadata:main']['contact_stateorprovince']
+            self.config.get('metadata:main', 'contact_stateorprovince')
 
             etree.SubElement(address,
             util.nspath_eval('ows:PostalCode')).text = \
-            self.config['metadata:main']['contact_postalcode']
+            self.config.get('metadata:main', 'contact_postalcode')
 
             etree.SubElement(address, util.nspath_eval('ows:Country')).text = \
-            self.config['metadata:main']['contact_country']
+            self.config.get('metadata:main', 'contact_country')
 
             etree.SubElement(address,
             util.nspath_eval('ows:ElectronicMailAddress')).text = \
-            self.config['metadata:main']['contact_email']
+            self.config.get('metadata:main', 'contact_email')
 
             url = etree.SubElement(contactinfo,
             util.nspath_eval('ows:OnlineResource'))
 
             url.attrib[util.nspath_eval('xlink:type')] = 'simple'
             url.attrib[util.nspath_eval('xlink:href')] = \
-            self.config['metadata:main']['contact_url']
+            self.config.get('metadata:main', 'contact_url')
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows:HoursOfService')).text = \
-            self.config['metadata:main']['contact_hours']
+            self.config.get('metadata:main', 'contact_hours')
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows:ContactInstructions')).text = \
-            self.config['metadata:main']['contact_instructions']
+            self.config.get('metadata:main', 'contact_instructions')
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:Role')).text = \
-            self.config['metadata:main']['contact_role']
+            self.config.get('metadata:main', 'contact_role')
 
         if operationsmetadata:
             self.log.debug('Writing section OperationsMetadata.')
@@ -462,13 +465,13 @@ class Csw(object):
                     get = etree.SubElement(http, util.nspath_eval('ows:Get'))
                     get.attrib[util.nspath_eval('xlink:type')] = 'simple'
                     get.attrib[util.nspath_eval('xlink:href')] = \
-                    self.config['server']['url']
+                    self.config.get('server', 'url')
 
                 if config.MODEL['operations'][operation]['methods']['post']:
                     post = etree.SubElement(http, util.nspath_eval('ows:Post'))
                     post.attrib[util.nspath_eval('xlink:type')] = 'simple'
                     post.attrib[util.nspath_eval('xlink:href')] = \
-                    self.config['server']['url']
+                    self.config.get('server', 'url')
 
                 for parameter in \
                 config.MODEL['operations'][operation]['parameters']:
@@ -604,7 +607,8 @@ class Csw(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
-        (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
+        (config.NAMESPACES['csw'],
+        self.config.get('server', 'ogc_schemas_base'))
 
         for typename in self.kvp['typename']:
             if typename == 'csw:Record':   # load core schema    
@@ -614,7 +618,7 @@ class Csw(object):
                 schemaLanguage='XMLSCHEMA',
                 targetNamespace = config.NAMESPACES['csw'])
                 dublincore = etree.parse(os.path.join(
-                self.config['server']['home'],
+                self.config.get('server', 'home'),
                 'etc', 'schemas', 'ogc', 'csw',
                 '2.0.2', 'record.xsd')).getroot()
 
@@ -642,7 +646,8 @@ class Csw(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
-        (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
+        (config.NAMESPACES['csw'],
+        self.config.get('server', 'ogc_schemas_base'))
 
         if self.kvp.has_key('parametername'):
             for pname in self.kvp['parametername'].split(','):
@@ -782,7 +787,7 @@ class Csw(object):
             return self._write_acknowledgement()
 
         if self.kvp.has_key('maxrecords') is False:
-            self.kvp['maxrecords'] = self.config['server']['maxrecords']
+            self.kvp['maxrecords'] = self.config.get('server', 'maxrecords')
 
         if self.requesttype == 'GET':
             if self.kvp.has_key('constraint'):
@@ -808,7 +813,7 @@ class Csw(object):
                 elif self.kvp['constraintlanguage'] == 'FILTER':
                     # validate filter XML
                     try:
-                        schema = os.path.join(self.config['server']['home'],
+                        schema = os.path.join(self.config.get('server', 'home'),
                         'etc', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
                         self.log.debug('Validating Filter %s.' %
                         self.kvp['constraint'])
@@ -869,7 +874,7 @@ class Csw(object):
 
         dsresults = []
 
-        if (self.config['server'].has_key('federatedcatalogues') and
+        if (self.config.has_option('server', 'federatedcatalogues') and
             self.kvp.has_key('distributedsearch') and
             self.kvp['distributedsearch'] == 'TRUE' and
             self.kvp['hopcount'] > 0):  # do distributed search
@@ -879,7 +884,7 @@ class Csw(object):
 
             from owslib.csw import CatalogueServiceWeb
             for fedcat in \
-            self.config['server']['federatedcatalogues'].split(','):
+            self.config.get('server', 'federatedcatalogues').split(','):
                 self.log.debug('Performing distributed search on federated \
                 catalogue: %s.' % fedcat)
                 remotecsw = CatalogueServiceWeb(fedcat)
@@ -897,7 +902,7 @@ class Csw(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
-        (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
+        (config.NAMESPACES['csw'], self.config.get('server', 'ogc_schemas_base'))
 
         etree.SubElement(node, util.nspath_eval('csw:SearchStatus'),
         timestamp=timestamp)
@@ -1003,7 +1008,7 @@ class Csw(object):
         nsmap = config.NAMESPACES)
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
-        (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
+        (config.NAMESPACES['csw'], self.config.get('server', 'ogc_schemas_base'))
 
         # query repository
         self.log.debug('Querying repository with ids: %s.' % self.kvp['id'][0])
@@ -1126,7 +1131,7 @@ class Csw(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/csw/2.0.2/CSW-publication.xsd' % \
-        (config.NAMESPACES['csw'], self.config['server']['ogc_schemas_base'])
+        (config.NAMESPACES['csw'], self.config.get('server', 'ogc_schemas_base'))
 
         node.append(
         self._write_transactionsummary(
@@ -1201,7 +1206,7 @@ class Csw(object):
         nsmap = config.NAMESPACES)
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.NAMESPACES['csw'],
-        self.config['server']['ogc_schemas_base'])
+        self.config.get('server', 'ogc_schemas_base'))
 
         if self.kvp.has_key('responsehandler'):
             # send acknowledgement response right away
@@ -1216,7 +1221,7 @@ class Csw(object):
                 etree.tostring(node, pretty_print=self.xml_pretty_print)
 
                 msg = smtplib.SMTP('localhost')
-                msg.sendmail(self.config['metadata:main']['contact_email'],
+                msg.sendmail(self.config.get('metadata:main', 'contact_email'),
                 self.kvp['responsehandler'].split(':')[-1], body)
                 msg.quit()
 
@@ -1253,10 +1258,10 @@ class Csw(object):
 
         if (doc.tag in [util.nspath_eval('csw:Transaction'),
             util.nspath_eval('csw:Harvest')]):
-            schema = os.path.join(self.config['server']['home'], 'etc',
+            schema = os.path.join(self.config.get('server', 'home'), 'etc',
             'schemas', 'ogc', 'csw', '2.0.2', 'CSW-publication.xsd')
         else:
-            schema = os.path.join(self.config['server']['home'], 'etc',
+            schema = os.path.join(self.config.get('server', 'home'), 'etc',
             'schemas', 'ogc', 'csw', '2.0.2', 'CSW-discovery.xsd')
 
         try:
@@ -1344,10 +1349,10 @@ class Csw(object):
 
             tmp = doc.find('.').attrib.get('maxRecords')
             request['maxrecords'] = tmp if tmp is not None else \
-            self.config['server']['maxrecords']
+            self.config.get('server', 'maxrecords')
 
             client_mr = int(request['maxrecords'])
-            server_mr = int(self.config['server']['maxrecords'])
+            server_mr = int(self.config.get('server', 'maxrecords'))
 
             if client_mr < server_mr:
                 request['maxrecords'] = client_mr
@@ -1546,9 +1551,9 @@ class Csw(object):
         ''' Generate response '''
         # set HTTP response headers and XML declaration
         self.log.debug('Writing response.')
-        http_header = 'Content-type:%s\r\n' % self.config['server']['mimetype']
+        http_header = 'Content-type:%s\r\n' % self.config.get('server', 'mimetype')
         xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % \
-        self.config['server']['encoding']
+        self.config.get('server', 'encoding')
         appinfo = '<!-- pycsw %s -->\n' % config.VERSION
 
         if hasattr(self, 'soap') and self.soap:
@@ -1607,16 +1612,14 @@ class Csw(object):
 
     def _gen_manager(self):
         ''' Update config.MODEL with CSW-T advertising '''
-        if (self.config['manager'].has_key('transactions') and
-            self.config['manager']['transactions'] == 'true'):
-            config.MODEL['operations']['Transaction'] = {}
-            config.MODEL['operations']['Transaction']['methods'] = {}
+        if (self.config.has_option('manager', 'transactions') and
+            self.config.get('manager', 'transactions') == 'true'):
+            config.MODEL['operations']['Transaction'] = {'methods': {}}
             config.MODEL['operations']['Transaction']['methods']['get'] = False
             config.MODEL['operations']['Transaction']['methods']['post'] = True
             config.MODEL['operations']['Transaction']['parameters'] = {}
 
-            config.MODEL['operations']['Harvest'] = {}
-            config.MODEL['operations']['Harvest']['methods'] = {}
+            config.MODEL['operations']['Harvest'] = {'methods': {}}
             config.MODEL['operations']['Harvest']['methods']['get'] = False
             config.MODEL['operations']['Harvest']['methods']['post'] = True
             config.MODEL['operations']['Harvest']['parameters'] = {}
@@ -1650,14 +1653,14 @@ class Csw(object):
     def _test_manager(self):
         ''' Verify that transactions are allowed '''
 
-        if self.config['manager']['transactions'] != 'true':
+        if self.config.get('manager', 'transactions') != 'true':
             raise RuntimeError, 'CSW-T interface is disabled'
 
         ipaddress = os.environ['REMOTE_ADDR']
 
-        if self.config['manager'].has_key('allowed_ips') is False or \
-        (self.config['manager'].has_key('allowed_ips') and ipaddress not in
-        self.config['manager']['allowed_ips'].split(',')):
+        if self.config.has_option('manager', 'allowed_ips') is False or \
+        (self.config.has_option('manager', 'allowed_ips') and ipaddress not in
+        self.config.get('manager', 'allowed_ips').split(',')):
             raise RuntimeError, \
             'CSW-T operations not allowed for this IP address: %s' % ipaddress
 
@@ -1691,7 +1694,7 @@ class Csw(object):
         if root:
             node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
             '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.NAMESPACES['csw'], \
-            self.config['server']['ogc_schemas_base'])
+            self.config.get('server', 'ogc_schemas_base'))
     
         node1 = etree.SubElement(node,
         util.nspath_eval('csw:EchoedRequest'))

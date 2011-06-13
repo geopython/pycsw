@@ -38,7 +38,7 @@ from server import config, repository, util
 
 # get configuration and init repo connection
 CFG = config.get_config('default.cfg')
-REPOS = repository.Repository(CFG['repository'], 'records',
+REPOS = repository.Repository(CFG.get('repository', 'database'), 'records',
 config.MODEL['typenames'])
 
 # write out sitemap document
@@ -55,10 +55,10 @@ RECORDS = REPOS.query(constraint={})
 for rec in RECORDS:
     url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
     uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
-    (CFG['server']['url'],
+    (CFG.get('server', 'url'),
     rec.identifier)
     etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
 
 # to stdout
 print etree.tostring(URLSET, pretty_print = 1, \
-encoding = CFG['server']['encoding'], xml_declaration=1)
+encoding = CFG.get('server', 'encoding'), xml_declaration=1)

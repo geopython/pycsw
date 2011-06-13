@@ -39,13 +39,13 @@ from owslib.csw import CatalogueServiceWeb
 
 # get configuration and init repo connection
 CFG = config.get_config('default.cfg')
-REPOS = repository.Repository(CFG['repository'], 'records',
+REPOS = repository.Repository(CFG.get('repository', 'database'), 'records',
 config.MODEL['typenames'])
 
 # get all harvested records
 RECORDS = REPOS.query(constraint={'where': 'source != "local"'})
 
-CSW = CatalogueServiceWeb(CFG['server']['url'])
+CSW = CatalogueServiceWeb(CFG.get('server', 'url'))
 
 for rec in RECORDS:
     print 'Harvesting %s (identifier = %s) ...' % (rec.source, rec.identifier)
