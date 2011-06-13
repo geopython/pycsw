@@ -44,7 +44,7 @@ if len(sys.argv) < 3:
     print 'Usage: %s <xml directory path> <db_connection_string>' % sys.argv[0]
     sys.exit(1)
 
-REPO = repository.Repository({'database':sys.argv[2]}, 'records', {})
+REPO = repository.Repository(sys.argv[2], 'records', {})
 
 for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
     # read document

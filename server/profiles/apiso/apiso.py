@@ -153,14 +153,14 @@ class APISO(profile.Profile):
         namespaces.update(INSPIRE_NAMESPACES)
 
         # set INSPIRE config
-        if config.has_key('metadata:inspire') and config['metadata:inspire'].has_key('enabled') and config['metadata:inspire']['enabled'] == 'true':
+        if config.has_section('metadata:inspire') and config.has_option('metadata:inspire', 'enabled') and config.get('metadata:inspire', 'enabled') == 'true':
             self.inspire_config = config['metadata:inspire']
             self.url = config['server']['url']
             self.current_language = self.inspire_config['default_language']
         else:
             self.inspire_config = None
 
-        self.ogc_schemas_base = config['server']['ogc_schemas_base']
+        self.ogc_schemas_base = config.get('server', 'ogc_schemas_base')
 
     def check_parameters(self, kvp):
         '''Check for Language parameter in GetCapabilities request'''

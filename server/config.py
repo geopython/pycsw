@@ -190,20 +190,3 @@ def gen_domains():
             domain['parameters']['ParameterName']['values'].append('%s.%s' %
             (operation, parameter))
     return domain
-
-def get_config(configfile):
-    ''' Build main configuration '''
-    import ConfigParser
-    if configfile is not None:
-        scp = ConfigParser.SafeConfigParser()
-        scp.optionxform = str
-        scp.readfp(open(configfile))
-
-    config = {}
-    for i in scp.sections():
-        sect = i.lower()
-        config[sect] = {}
-        for j in scp.options(i):
-            config[sect][j.lower()] = \
-            unicode(scp.get(i, j).decode('latin-1')).strip()
-    return config
