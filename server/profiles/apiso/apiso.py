@@ -154,9 +154,16 @@ class APISO(profile.Profile):
 
         # set INSPIRE config
         if config.has_section('metadata:inspire') and config.has_option('metadata:inspire', 'enabled') and config.get('metadata:inspire', 'enabled') == 'true':
-            self.inspire_config = config['metadata:inspire']
-            self.url = config['server']['url']
-            self.current_language = self.inspire_config['default_language']
+            self.inspire_config = {}
+            self.inspire_config['languages_supported'] = config.get('metadata:inspire', 'languages_supported')
+            self.inspire_config['default_language'] = config.get('metadata:inspire', 'default_language')
+            self.inspire_config['url'] = config.get('server', 'url')
+            self.inspire_config['date'] = config.get('metadata:inspire', 'date')
+            self.inspire_config['gemet_keywords'] = config.get('metadata:inspire', 'gemet_keywords')
+            self.inspire_config['conformity_service'] = config.get('metadata:inspire', 'conformity_service')
+            self.inspire_config['contact_name'] = config.get('metadata:inspire', 'contact_name')
+            self.inspire_config['contact_email'] = config.get('metadata:inspire', 'contact_email')
+            self.inspire_config['temp_extent'] = config.get('metadata:inspire', 'temp_extent')
         else:
             self.inspire_config = None
 
@@ -167,14 +174,14 @@ class APISO(profile.Profile):
 
         if self.inspire_config is not None:
             result = None
-            if kvp.has_key('language') == False:
-                self.current_language = self.inspire_config['default_language']
+            if not kvp.has_key('language'):
+                self.inspire_config['current_language'] = self.inspire_config['default_language']
             else:
                 if kvp['language'] not in self.inspire_config['languages_supported'].split(','):
                     text = 'Requested Language not supported, Supported languages: %s' % self.inspire_config['languages_supported']
                     return {'error': 'true', 'locator': 'language', 'code': 'InvalidParameterValue', 'text': text}
                 else:
-                    self.current_language=kvp['language']
+                    self.inspire_config['current_language'] = kvp['language']
                     return None
             return None
         return None
@@ -325,7 +332,7 @@ class APISO(profile.Profile):
             clang = etree.SubElement(ex_caps,
             util.nspath_eval('inspire_common:ResponseLanguage'))
             etree.SubElement(clang,
-            util.nspath_eval('inspire_common:Language')).text = self.current_language
+            util.nspath_eval('inspire_common:Language')).text = self.inspire_config['current_language']
 
             return ex_caps
 
