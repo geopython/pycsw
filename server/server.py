@@ -267,7 +267,7 @@ class Csw(object):
         self.exception = True
 
         node = etree.Element(util.nspath_eval('ows:ExceptionReport'),
-        nsmap=config.NAMESPACES, version='1.0.2',
+        nsmap=config.NAMESPACES, version='1.2.0',
         language=self.config.get('server', 'language'))
 
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
