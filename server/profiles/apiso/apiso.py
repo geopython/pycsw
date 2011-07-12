@@ -203,7 +203,7 @@ class APISO(profile.Profile):
             util.nspath_eval('inspire_common:ResourceLocator'))
 
             etree.SubElement(res_loc,
-            util.nspath_eval('inspire_common:URL')).text = '%s?service=CSW&version=2.0.2&request=GetCapabilities' % self.url
+            util.nspath_eval('inspire_common:URL')).text = '%s?service=CSW&version=2.0.2&request=GetCapabilities' % self.inspire_config['url']
 
             etree.SubElement(res_loc,
             util.nspath_eval('inspire_common:MediaType')).text = 'application/xml'
