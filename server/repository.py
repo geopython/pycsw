@@ -103,12 +103,20 @@ class Repository(object):
         ''' Query records from underlying repository '''
 
         if constraint.has_key('where'):  # it's a GetRecords with constraint
-            query = self.session.query(self.dataset).filter(
-            self.dataset.typename.in_(typenames)).filter(constraint['where'])
+            if not typenames:  # any typename
+                query = self.session.query(self.dataset).filter(
+                constraint['where'])
+            else:
+                query = self.session.query(self.dataset).filter(
+                self.dataset.typename.in_(typenames)).filter(
+                constraint['where'])
 
         elif constraint.has_key('where') is False: # it's a GetRecords sans constraint
-            query = self.session.query(self.dataset).filter(
-            self.dataset.typename.in_(typenames))
+            if not typenames:  # any typename
+                query = self.session.query(self.dataset)
+            else:
+                query = self.session.query(self.dataset).filter(
+                self.dataset.typename.in_(typenames))
 
         if sortby is not None:
             if sortby['order'] == 'DESC':

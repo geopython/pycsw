@@ -33,12 +33,14 @@
 
 # harvest all non-local records in repository
 
+import ConfigParser
 from lxml import etree
 from server import config, repository, util
 from owslib.csw import CatalogueServiceWeb
 
 # get configuration and init repo connection
-CFG = config.get_config('default.cfg')
+CFG = ConfigParser.SafeConfigParser()
+CFG.readfp(open('default.cfg'))
 REPOS = repository.Repository(CFG.get('repository', 'database'), 'records',
 config.MODEL['typenames'])
 
