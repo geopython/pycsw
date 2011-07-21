@@ -85,7 +85,11 @@ RECORDS = Table('records', METADATA,
 RECORDS.create()
 
 if DB.name == 'postgresql':  # create plpythonu functions within db
-    CFG = config.get_config('default.cfg')
+    import ConfigParser 
+    CFG = ConfigParser.SafeConfigParser() 
+    CFG.readfp(open('default.cfg')) 
+    PYCSW_HOME = CFG.get('server', 'home') 
+
     CONN = DB.connect()
     FUNCTION_QUERY_XPATH = '''
 CREATE OR REPLACE FUNCTION query_xpath(xml text, xpath text)
@@ -96,7 +100,7 @@ AS $$
     from server import util
     return util.query_xpath(xml, xpath)
     $$ LANGUAGE plpythonu;
-''' % CFG.get('server', 'home')
+''' % PYCSW_HOME
 
     FUNCTION_QUERY_SPATIAL = '''
 CREATE OR REPLACE FUNCTION query_spatial(bbox_data_wkt text, bbox_input_wkt text, predicate text, distance text)
@@ -107,7 +111,7 @@ AS $$
     from server import util
     return util.query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance)
     $$ LANGUAGE plpythonu;
-''' % CFG.get('server', 'home')
+''' % PYCSW_HOME
 
     FUNCTION_QUERY_ANYTEXT = '''
 CREATE OR REPLACE FUNCTION query_anytext(xml text, searchterm text)
@@ -118,7 +122,7 @@ AS $$
     from server import util
     return util.query_anytext(xml, searchterm)
     $$ LANGUAGE plpythonu;
-''' % CFG.get('server', 'home')
+''' % PYCSW_HOME
 
     FUNCTION_UPDATE_XPATH = '''
 CREATE OR REPLACE FUNCTION update_xpath(xml text, recprops text)
@@ -129,7 +133,7 @@ AS $$
     from server import util
     return util.update_xpath(xml, recprops)
     $$ LANGUAGE plpythonu;
-''' % CFG.get('server', 'home')
+''' % PYCSW_HOME
 
     CONN.execute(FUNCTION_QUERY_XPATH)
     CONN.execute(FUNCTION_QUERY_SPATIAL)

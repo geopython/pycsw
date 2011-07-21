@@ -33,11 +33,13 @@
 
 # generate an XML sitemap from all records in repository
 
+import ConfigParser
 from lxml import etree
 from server import config, repository, util
 
 # get configuration and init repo connection
-CFG = config.get_config('default.cfg')
+CFG = ConfigParser.SafeConfigParser()
+CFG.readfp(open('default.cfg'))
 REPOS = repository.Repository(CFG.get('repository', 'database'), 'records',
 config.MODEL['typenames'])
 
