@@ -14,12 +14,14 @@
 
 # About:
 # =====
-# This script will install pycsw
-
+# This script will install pycsw, an OGC CSW server implementatiopn
+# written in Python.
+#   http://pycsw.org
+#
 # Running:
 # =======
 # sudo ./install_pycsw.sh
-
+#
 # Requires: Apache2, python-lxml, python-shapely and python-sqlalchemy
 #
 # Uninstall:
@@ -53,14 +55,14 @@ echo -n 'Downloading package ...'
 
 # Download pycsw LiveDVD tarball.
 wget -N --progress=dot:mega "https://sourceforge.net/projects/pycsw/files/$VERSION/pycsw-$VERSION.tar.gz/download" \
-     "$PYCSW_TMP/pycsw-$VERSION.tar.gz"
+     -O "$PYCSW_TMP/pycsw-$VERSION.tar.gz"
 
 echo -n 'Extracting package ...'
 
 # Uncompress pycsw LiveDVD tarball.
 tar -zxvf "$PYCSW_TMP/pycsw-$VERSION.tar.gz" -C "$PYCSW_TMP"
 mv "$PYCSW_TMP/pycsw-$VERSION" "$PYCSW_TMP/pycsw"
-mv "$PYCSW_TMP/pycsw" $WEB
+mv "$PYCSW_TMP/pycsw" "$WEB"
 
 echo -n "Updating Apache configuration ..."
 # Add pycsw apache configuration
