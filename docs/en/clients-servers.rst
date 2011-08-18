@@ -16,7 +16,7 @@ Servers
 - `eXcat`_
 - `GeoNetwork opensource`_
 
-.. _`OWSLib`: http://trac.gispython.org/lab/wiki/OwsLib
+.. _`OWSLib`: https://sourceforge.net/apps/trac/owslib
 .. _`qgcsw`: http://sourceforge.net/apps/trac/qgiscommunitypl/wiki/qgcsw
 .. _`QGIS`: http://qgis.org/
 .. _`deegree`: http://www.deegree.org/
