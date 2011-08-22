@@ -63,6 +63,6 @@ Profiles must add examples to the :ref:`tester` interface, which must provide ex
 Supported Profiles
 ==================
 
-.. include:: ../../server/profiles/apiso/docs/apiso.rst
-.. include:: ../../server/profiles/dif/docs/dif.rst
-.. include:: ../../server/profiles/fgdc/docs/fgdc.rst
+.. include:: ../../../server/profiles/apiso/docs/apiso.rst
+.. include:: ../../../server/profiles/dif/docs/dif.rst
+.. include:: ../../../server/profiles/fgdc/docs/fgdc.rst

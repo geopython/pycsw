@@ -67,6 +67,11 @@ Supported Operations
 Supported Filters
 -----------------
 
+Full Text
+^^^^^^^^^
+
+- csw:AnyText
+
 Geometry Operands
 ^^^^^^^^^^^^^^^^^
 
