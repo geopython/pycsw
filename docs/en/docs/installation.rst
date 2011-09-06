@@ -31,7 +31,8 @@ Ensure that CGI is enabled for your install directory.  For example, on Apache, 
    AddHandler cgi-script .py
   </Location>
 
-If you install pycsw in ``cgi-bin``, this should work as expected.  Note that the :ref:`tester <tester>` application must be moved to a normal location to serve static HTML documents.
+.. note::
+  If you install pycsw in ``cgi-bin``, this should work as expected.  The :ref:`tester <tester>` application must be moved to a normal location to serve static HTML documents.
 
 .. _opensuse:
 
@@ -72,7 +73,8 @@ For Windows installs, change the first line of ``csw.py`` to:
 
   #!/Python27/python -u
 
-Note that the use of ``-u`` is required to properly output gzip-compressed responses.
+.. note::
+  The use of ``-u`` is required to properly output gzip-compressed responses.
 
 Security
 --------

@@ -14,7 +14,7 @@
 
 # About:
 # =====
-# This script will install pycsw, an OGC CSW server implementatiopn
+# This script will install pycsw, an OGC CSW server implementation
 # written in Python.
 #   http://pycsw.org
 #
