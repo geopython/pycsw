@@ -11,7 +11,7 @@ The `Directory Interchange Format`_ (DIF) is a metadata format supported by the 
 Configuration
 ^^^^^^^^^^^^^
 
-No extra configuration is required.
+No additional configuration is required.
 
 Enabling DIF Support
 ^^^^^^^^^^^^^^^^^^^^^^
