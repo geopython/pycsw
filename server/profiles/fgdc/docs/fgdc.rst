@@ -11,9 +11,9 @@ The `FGDC CSDGM Application Profile`_  is a profile of CSW 2.0.2 which enables d
 Configuration
 ^^^^^^^^^^^^^
 
-No extra configuration is required.
+No additional extra configuration is required.
 
-Enabling DIF Support
+Enabling FGDC Support
 ^^^^^^^^^^^^^^^^^^^^^^
 
 To enable fgdc support, add ``fgdc`` to ``server.profiles``.
