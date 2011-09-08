@@ -129,8 +129,7 @@ def load_profiles(path, cls, profiles):
         for name in files:
             if name.endswith('.py') and not name.startswith('__') and \
                 root.find('sbin') == -1 and name.split('.')[0] in profiles:
-                path = os.path.join(root, name)
-                modulename = path.rsplit('.', 1)[0].replace('/', '.')
+                path = os.path.join(root, name[:-3])
+                modulename = path.replace(os.sep, '.')
                 look_for_subclass(modulename)
- 
     return aps
