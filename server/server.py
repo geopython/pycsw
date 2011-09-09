@@ -1395,9 +1395,17 @@ class Csw(object):
                 request['sortby']['propertyname'] = \
                 tmp.find(util.nspath_eval(
                 'ogc:SortProperty/ogc:PropertyName')).text
-                request['sortby']['cq_mapping'] = \
-                self.repository.queryables['_all'][tmp.find(util.nspath_eval(
-                'ogc:SortProperty/ogc:PropertyName')).text.lower()]
+
+                try:
+                    request['sortby']['cq_mapping'] = \
+                    self.repository.queryables['_all']\
+                   [tmp.find(util.nspath_eval(
+                    'ogc:SortProperty/ogc:PropertyName')).text.lower()]
+                except Exception, err:
+                    errortext = \
+                    'Invalid ogc:SortProperty/ogc:PropertyName: %s' % str(err)
+                    self.log.debug(errortext)
+                    return errortext       
 
                 tmp2 =  tmp.find(util.nspath_eval(
                 'ogc:SortProperty/ogc:SortOrder'))
