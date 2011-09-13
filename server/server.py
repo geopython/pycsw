@@ -135,6 +135,13 @@ class Csw(object):
 
     def dispatch(self):
         ''' Handle incoming HTTP request '''
+
+        # alternate configurations can be passed via
+        # HTTP HEADER 'PYCSW_CONFIG'
+        # if passed, re-initialize config
+        if os.environ.has_key('HTTP_PYCSW_CONFIG'):
+            self.__init__(os.environ['HTTP_PYCSW_CONFIG'])
+
         error = 0
 
         if hasattr(self,'response'):
@@ -679,11 +686,12 @@ class Csw(object):
 
                 # decipher typename
                 dvtype = None
-                for prof in self.profiles['loaded'].keys():
-                    for prefix in self.profiles['loaded'][prof].prefixes:
-                        if pname2.find(prefix) != -1:
-                            dvtype = self.profiles['loaded'][prof].typename
-                            break
+                if self.profiles is not None:
+                    for prof in self.profiles['loaded'].keys():
+                        for prefix in self.profiles['loaded'][prof].prefixes:
+                            if pname2.find(prefix) != -1:
+                                dvtype = self.profiles['loaded'][prof].typename
+                                break
                 if not dvtype:
                     dvtype = 'csw:Record'
 
@@ -1484,7 +1492,10 @@ class Csw(object):
             doc.find(util.nspath_eval('csw:ResourceType')).text
 
             tmp = doc.find(util.nspath_eval('csw:ResourceFormat'))
-            request['resourceformat'] = tmp.text if tmp else 'application/xml'
+            if tmp is not None:
+                request['resourceformat'] = tmp.text
+            else:
+                request['resourceformat'] = 'application/xml'
 
             tmp = doc.find(util.nspath_eval('csw:HarvestInterval'))
             if tmp is not None:

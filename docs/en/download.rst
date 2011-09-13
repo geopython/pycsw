@@ -12,6 +12,8 @@ Source Code
 
 * `SVN repository <https://pycsw.svn.sourceforge.net/svnroot/pycsw/trunk>`_
 
+* `Git mirror <https://github.com/tomkralidis/pycsw>`_
+
 Packages
 --------
 
