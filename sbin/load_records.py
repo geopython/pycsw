@@ -47,8 +47,14 @@ if len(sys.argv) < 3:
 REPO = repository.Repository(sys.argv[2], 'records', {})
 
 for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
+    print 'Processing file %s' % r
     # read document
-    e = etree.parse(r)
+
+    try:
+        e = etree.parse(r)
+    except Exception, err:
+        print 'XML document is not well-formed: %s' % str(err)
+        continue
 
     value = e.getroot().tag
 
@@ -91,6 +97,6 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
         REPO.insert(RECORD)
         print 'Inserted'
     except Exception, err:
-        print 'ERROR: not inserted'
+        print 'ERROR: not inserted' % str(err)
 
 print 'Done'
