@@ -63,24 +63,25 @@ GEOM = Table('geometry_columns', METADATA,
     Column('f_geometry_column', String(256), nullable=False),
     Column('geometry_type', Integer),
     Column('coord_dimension', Integer),
-    Column('srid', Integer, nullable=False)
+    Column('srid', Integer, nullable=False),
+    Column('geometry_format', String(5), nullable=False),
 )
 GEOM.create()
 
 i = GEOM.insert()
 i.execute(f_table_catalog='public', f_table_schema='public',
 f_table_name='records', f_geometry_column='bbox', 
-geometry_type=3, coord_dimension=2, srid=4326)
+geometry_type=3, coord_dimension=2, srid=4326, geometry_format='WKT')
 
 RECORDS = Table('records', METADATA,
     Column('identifier', String(256), nullable=False, primary_key=True),
-    Column('typename', String(32), default='csw:Record', nullable=False),
+    Column('typename', String(32), default='csw:Record', nullable=False, index=True),
     Column('schema', String(256),
-    default='http://www.opengis.net/cat/csw/2.0.2', nullable=False),
-    Column('bbox', Text),
-    Column('xml', Text, nullable=False),
-    Column('source', String(256), default='local', nullable=False),
-    Column('insert_date', String(20), nullable=False),
+    default='http://www.opengis.net/cat/csw/2.0.2', nullable=False, index=True),
+    Column('bbox', Text, index=True),
+    Column('xml', Text, nullable=False, index=True),
+    Column('source', String(256), default='local', nullable=False, index=True),
+    Column('insert_date', String(20), nullable=False, index=True),
 )
 RECORDS.create()
 
