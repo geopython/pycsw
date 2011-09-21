@@ -124,12 +124,8 @@ def load_profiles(path, cls, profiles):
     aps = {}
     aps['plugins'] = {}
     aps['loaded'] = {}
- 
-    for root, dirs, files in os.walk(path):
-        for name in files:
-            if name.endswith('.py') and not name.startswith('__') and \
-                root.find('sbin') == -1 and name.split('.')[0] in profiles:
-                path = os.path.join(root, name[:-3])
-                modulename = path.replace(os.sep, '.')
-                look_for_subclass(modulename)
+
+    for prof in profiles.split(','):
+        modulename='%s.%s.%s' % (path.replace(os.sep, '.'), prof, prof)
+        look_for_subclass(modulename)
     return aps
