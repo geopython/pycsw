@@ -38,6 +38,7 @@ NAMESPACES = {
     'csw': 'http://www.opengis.net/cat/csw/2.0.2',
     'dc' : 'http://purl.org/dc/elements/1.1/',
     'dct': 'http://purl.org/dc/terms/',
+    'gmd': 'http://www.isotc211.org/2005/gmd',
     'gml': 'http://www.opengis.net/gml',
     'ogc': 'http://www.opengis.net/ogc',
     'ows': 'http://www.opengis.net/ows',
@@ -155,25 +156,25 @@ MODEL =  {
             'outputschema': 'http://www.opengis.net/cat/csw/2.0.2',
             'queryables': {
                 'SupportedDublinCoreQueryables': {
-                    # map OGC queryables to XPath expressions
-                    'dc:title': 'dc:title',
-                    'dc:creator': 'dc:creator',
-                    'dc:subject': 'dc:subject',
-                    'dct:abstract': 'dct:abstract',
-                    'dc:publisher': 'dc:publisher',
-                    'dc:contributor': 'dc:contributor',
-                    'dct:modified': 'dct:modified',
-                    'dc:date': 'dc:date',
-                    'dc:type': 'dc:type',
-                    'dc:format': 'dc:format',
-                    'dc:identifier': 'dc:identifier',
-                    'dc:source': 'dc:source',
-                    'dc:language': 'dc:language',
-                    'dc:relation': 'dc:relation',
-                    'dc:rights': 'dc:rights',
+                    # map OGC queryables to core metadata model
+                    'dc:title': {'xpath': 'dc:title', 'dbcol': 'title'},
+                    'dc:creator': {'xpath': 'dc:creator', 'dbcol': 'creator'},
+                    'dc:subject': {'xpath': 'dc:subject', 'dbcol': 'keywords'},
+                    'dct:abstract': {'xpath': 'dct:abstract', 'dbcol': 'abstract'},
+                    'dc:publisher': {'xpath': 'dc:publisher', 'dbcol': 'publisher'},
+                    'dc:contributor': {'xpath': 'dc:contributor', 'dbcol': 'contributor'},
+                    'dct:modified': {'xpath': 'dct:modified', 'dbcol': 'date_modified'},
+                    'dc:date': {'xpath': 'dc:date', 'dbcol': 'date'},
+                    'dc:type': {'xpath': 'dc:type', 'dbcol': 'type'},
+                    'dc:format': {'xpath': 'dc:format', 'dbcol': 'format'},
+                    'dc:identifier': {'xpath': 'dc:identifier', 'dbcol': 'identifier'},
+                    'dc:source': {'xpath': 'dc:source', 'dbcol': 'source'},
+                    'dc:language': {'xpath': 'dc:language', 'dbcol': 'language'},
+                    'dc:relation': {'xpath': 'dc:relation', 'dbcol': 'relation'},
+                    'dc:rights': {'xpath': 'dc:rights', 'dbcol': 'accessconstraints'},
                     # bbox and full text map to internal fixed columns
-                    'ows:BoundingBox': 'bbox',
-                    'csw:AnyText': 'xml'
+                    'ows:BoundingBox': {'xpath': 'ows:BoundingBox', 'dbcol': 'geometry'},
+                    'csw:AnyText': {'xpath': 'csw:AnyText', 'dbcol':'anytext'}
                 }
             }
         }
