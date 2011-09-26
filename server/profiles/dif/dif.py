@@ -43,18 +43,20 @@ REPOSITORY = {
         'outputschema': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
         'queryables': {
             'SupportedDIFQueryables': {
-                'dif:Entry_Title': 'dif:Entry_Title',
-                'dif:Dataset_Creator': 'dif:Data_Set_Citation/dif:Dataset_Creator',
-                'dif:Keyword': 'dif:Keyword',
-                'dif:Summary': 'dif:Summary',
-                'dif:Dataset_Publisher': 'dif:Data_Set_Citation/dif:Dataset_Publisher',
-                'dif:Originating_Center': 'dif:Originating_Center',
-                'dif:DIF_Creation_Date': 'dif:DIF_Creation_Date',
-                'dif:Dataset_Release_Date': 'dif:Data_Set_Citation/dif:Dataset_Release_Date',
-                'dif:Data_Presentation_Form': 'dif:Data_Set_Citation/dif:Data_Presentation_Form',
-                'dif:Data_Set_Language': 'dif:Data_Set_Language',
-                'dif:Related_URL': 'dif:Related_URL/dif:URL',
-                'dif:Access_Constraints': 'dif:Access_Constraints'
+                'dif:Entry_Title': {'xpath': 'dif:Entry_Title', 'dbcol': 'title'},
+                'dif:Dataset_Creator': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Creator', 'dbcol': 'creator'},
+                'dif:Keyword': {'xpath': 'dif:Keyword', 'dbcol': 'keywords'},
+                'dif:Summary': {'xpath': 'dif:Summary', 'dbcol': 'abstract'},
+                'dif:Dataset_Publisher': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Publisher', 'dbcol': 'publisher'},
+                'dif:Originating_Center': {'xpath': 'dif:Originating_Center', 'dbcol': 'organization'},
+                'dif:DIF_Creation_Date': {'xpath': 'dif:DIF_Creation_Date', 'dbcol': 'date_creation'},
+                'dif:Dataset_Release_Date': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Release_Date', 'dbcol': 'date_publication'},
+                'dif:Data_Presentation_Form': {'xpath': 'dif:Data_Set_Citation/dif:Data_Presentation_Form', 'dbcol': 'format'},
+                'dif:Data_Set_Language': {'xpath': 'dif:Data_Set_Language', 'dbcol': 'resourcelanguage'},
+                'dif:Related_URL': {'xpath': 'dif:Related_URL/dif:URL', 'dbcol': 'relation'},
+                'dif:Access_Constraints': {'xpath': 'dif:Access_Constraints', 'dbcol': 'accessconstraints'},
+                'dif:AnyText': {'xpath': '//', 'dbcol': 'anytext'},
+                'dif:Spatial_Coverage': {'xpath': 'dif:Spatial_Coverage', 'dbcol': 'geometry'}
             }
         },
         'mappings': {
@@ -72,7 +74,9 @@ REPOSITORY = {
                 'dif:Data_Presentation_Form': 'dc:format',
                 'dif:Data_Set_Language': 'dc:language',
                 'dif:Access_Constraints': 'dc:rights',
-                'dif:Related_URL': 'dc:source'
+                'dif:Related_URL': 'dc:source',
+                'dif:AnyText': 'csw:AnyText',
+                'dif:Spatial_Coverage': 'ows:BoundingBox'
             }
         }
     }
@@ -144,68 +148,67 @@ class DIF(profile.Profile):
                 etree.SubElement(node, util.nspath_eval('dif:Entry_ID')).text = result.identifier
 
                 # title
-                val = util.query_xpath(xml, queryables['dif:Entry_Title'])
+                val = getattr(result, queryables['dif:Entry_Title']['dbcol'])
                 if not val:
                     val = ''
-                etree.SubElement(node, util.nspath_eval('dif:Entry_Title')).text = val.decode('utf8')
+                etree.SubElement(node, util.nspath_eval('dif:Entry_Title')).text = val
 
                 # citation
                 citation = etree.SubElement(node, util.nspath_eval('dif:Data_Set_Citation'))
 
                 # creator
-                val = util.query_xpath(xml, queryables['dif:Dataset_Creator'])
+                val = getattr(result, queryables['dif:Dataset_Creator']['dbcol'])
                 etree.SubElement(citation, util.nspath_eval('dif:Dataset_Creator')).text = val
 
                 # date
-                val = util.query_xpath(xml, queryables['dif:Dataset_Release_Date'])
+                val = getattr(result, queryables['dif:Dataset_Release_Date']['dbcol'])
                 etree.SubElement(citation, util.nspath_eval('dif:Dataset_Release_Date')).text = val
 
                 # publisher
-                val = util.query_xpath(xml, queryables['dif:Dataset_Publisher'])
+                val = getattr(result, queryables['dif:Dataset_Publisher']['dbcol'])
                 etree.SubElement(citation, util.nspath_eval('dif:Dataset_Publisher')).text = val
 
                 # format
-                val = util.query_xpath(xml, queryables['dif:Data_Presentation_Form'])
+                val = getattr(result, queryables['dif:Data_Presentation_Form']['dbcol'])
                 etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form')).text = val
 
                 # keywords
-                val = util.query_xpath(xml, queryables['dif:Keyword'])
+                val = getattr(result, queryables['dif:Keyword']['dbcol'])
 
                 if val:
-                    #etree.SubElement(node, util.nspath_eval('dif:Keyword')).text = val
                     for kw in val.split(','):
                         etree.SubElement(node, util.nspath_eval('dif:Keyword')).text = kw
 
                 # bbox extent
-                val = result.bbox
+                val = getattr(result, queryables['dif:Spatial_Coverage']['dbcol'])
                 bboxel = write_extent(val)
                 if bboxel is not None:
                     node.append(bboxel)
 
                 # access constraints
-                val = util.query_xpath(xml, queryables['dif:Access_Constraints'])
+                val = getattr(result, queryables['dif:Access_Constraints']['dbcol'])
                 etree.SubElement(node, util.nspath_eval('dif:Access_Constraints')).text = val
 
                 # language
-                val = util.query_xpath(xml, queryables['dif:Data_Set_Language'])
+                val = getattr(result, queryables['dif:Data_Set_Language']['dbcol'])
                 etree.SubElement(node, util.nspath_eval('dif:Data_Set_Language')).text = val
 
                 # contributor
-                val = util.query_xpath(xml, queryables['dif:Originating_Center'])
+                val = getattr(result, queryables['dif:Originating_Center']['dbcol'])
                 etree.SubElement(node, util.nspath_eval('dif:Originating_Center')).text = val
 
                 # abstract
-                val = util.query_xpath(xml, queryables['dif:Summary'])
+                val = getattr(result, queryables['dif:Summary']['dbcol'])
                 if not val:
                     val = ''
                 etree.SubElement(node, util.nspath_eval('dif:Summary')).text = val.decode('utf8')
 
                 # date 
-                val = util.query_xpath(xml, queryables['dif:DIF_Creation_Date'])
+                val = getattr(result, queryables['dif:DIF_Creation_Date']['dbcol'])
                 etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date')).text = val
 
                 # URL
-                val = util.query_xpath(xml, queryables['dif:Related_URL'])
+                val = getattr(result, queryables['dif:Related_URL']['dbcol'])
                 url = etree.SubElement(node, util.nspath_eval('dif:Related_URL'))
                 etree.SubElement(url, util.nspath_eval('dif:URL')).text = val
 
@@ -221,7 +224,7 @@ def write_extent(bbox):
 
     if bbox is not None:
         bbox2 = loads(bbox).exterior.bounds
-        extent = etree.Element(util.nspath_eval('gmd:Spatial_Coverage'))
+        extent = etree.Element(util.nspath_eval('dif:Spatial_Coverage'))
         etree.SubElement(extent, util.nspath_eval('dif:Southernmost_Latitude')).text = str(bbox2[1])
         etree.SubElement(extent, util.nspath_eval('dif:Northernmost_Latitude')).text = str(bbox2[3])
         etree.SubElement(extent, util.nspath_eval('dif:Westernmost_Longitude')).text = str(bbox2[0])

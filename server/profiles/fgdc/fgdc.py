@@ -43,27 +43,27 @@ REPOSITORY = {
         'outputschema': 'http://www.opengis.net/cat/csw/csdgm',
         'queryables': {
             'SupportedFGDCQueryables': {
-                'fgdc:Title': 'idinfo/citation/citinfo/title',
-                'fgdc:Originator': 'idinfo/citation/citeinfo/origin',
-                'fgdc:Publisher': 'idinfo/citation/citeinfo/publinfo/publish',
-                'fgdc:Abstract': 'idinfo/descript/abstract',
-                'fgdc:Purpose': 'idinfo/descript/purpose',
-                'fgdc:GeospatialPresentationForm': 'idinfo/citation/citeinfo/geoform',
-                'fgdc:PublicationDate': 'idinfo/citation/citeinfo/pubdate',
-                'fgdc:ThemeKeywords': 'idinfo/keywords/theme/themekey',
-                'fgdc:Progress': 'idinfo/status/progress',
-                'fgdc:BeginDate': 'idinfo/timeperd/timeinfo/rngdates/begdate',
-                'fgdc:EndDate': 'idinfo/timeperd/timeinfo/rngdates/enddate',
-                'fgdc:Origin': 'idinfo/citation/citeinfo/origin',
-                'fgdc:Contributor': 'idinfo/datacred',
-                'fgdc:AccessConstraints': 'idinfo/accconst',
-                'fgdc:Modified': 'metainfo/metd',
-                'fgdc:Type': 'idinfo/spdoinfo/direct',
-                'fgdc:Format': 'distinfo/stdorder/digform/digtinfo/formname',
-                'fgdc:Source': 'lineage/srcinfo/srccite/citeinfo/title',
-                'fgdc:Relation': 'idinfo/citation/citeinfo/onlink',
-                'fgdc:Envelope': 'bbox',
-                'fgdc:AnyText': 'xml'
+                'fgdc:Title': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': 'title'},
+                'fgdc:Originator': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': 'creator'},
+                'fgdc:Publisher': {'xpath': 'idinfo/citation/citeinfo/publinfo/publish', 'dbcol': 'publisher'},
+                'fgdc:Abstract': {'xpath': 'idinfo/descript/abstract', 'dbcol': 'abstract'},
+                'fgdc:Purpose': {'xpath': 'idinfo/descript/purpose', 'dbcol': 'abstract'},
+                'fgdc:GeospatialPresentationForm': {'xpath': 'idinfo/citation/citeinfo/geoform', 'dbcol': 'format'},
+                'fgdc:PublicationDate': {'xpath': 'idinfo/citation/citeinfo/pubdate', 'dbcol': 'date_publication'},
+                'fgdc:ThemeKeywords': {'xpath': 'idinfo/keywords/theme/themekey', 'dbcol': 'keywords'},
+                'fgdc:Progress': {'xpath': 'idinfo/status/progress', 'dbcol': 'FOO'},
+                'fgdc:BeginDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/begdate', 'dbcol': 'time_begin'},
+                'fgdc:EndDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/enddate', 'dbcol': 'time_end'},
+                'fgdc:Origin': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': 'FOO'},
+                'fgdc:Contributor': {'xpath': 'idinfo/datacred', 'dbcol': 'contributor'},
+                'fgdc:AccessConstraints': {'xpath': 'idinfo/accconst', 'dbcol': 'accessconstraints'},
+                'fgdc:Modified': {'xpath': 'metainfo/metd', 'dbcol': 'date_modified'},
+                'fgdc:Type': {'xpath': 'idinfo/spdoinfo/direct', 'dbcol': 'type'},
+                'fgdc:Format': {'xpath': 'distinfo/stdorder/digform/digtinfo/formname', 'dbcol': 'format'},
+                'fgdc:Source': {'xpath': 'lineage/srcinfo/srccite/citeinfo/title', 'dbcol': 'source'},
+                'fgdc:Relation': {'xpath': 'idinfo/citation/citeinfo/onlink', 'dbcol': 'relation'},
+                'fgdc:Envelope': {'xpath': 'bbox', 'dbcol': 'geometry'},
+                'fgdc:AnyText': {'xpath': 'xml', 'dbcol': 'anytext'}
             }
         },
         'mappings': {
@@ -79,7 +79,8 @@ REPOSITORY = {
                 'fgdc:Type': 'dct:abstract',
                 'fgdc:Format': 'dc:format',
                 'fgdc:Source': 'dc:source',
-                'fgdc:Relation': 'dc:relation'
+                'fgdc:Relation': 'dc:relation',
+                'fgdc:Envelope': 'ows:BoundingBox'
             }
         }
     }
@@ -153,10 +154,10 @@ class FGDC(profile.Profile):
                 '%s http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd' % self.namespace
 
                 # title
-                val = util.query_xpath(xml, queryables['fgdc:Title'])
+                val = getattr(result, queryables['fgdc:Title']['dbcol'])
                 if not val:
                     val = ''
-                etree.SubElement(node, util.nspath_eval('fgdc:title')).text = val.decode('utf8')
+                etree.SubElement(node, util.nspath_eval('fgdc:title')).text = val
 
                 # identifier
                 etree.SubElement(node, util.nspath_eval('fgdc:recordID')).text = result.identifier
@@ -165,7 +166,7 @@ class FGDC(profile.Profile):
                     return node
 
                 # bbox extent
-                val = result.bbox
+                val = getattr(result, queryables['fgdc:Envelope']['dbcol'])
                 bboxel = write_extent(val)
                 if bboxel is not None:
                     node.append(bboxel)
