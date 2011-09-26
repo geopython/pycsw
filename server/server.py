@@ -774,6 +774,10 @@ class Csw(object):
             self.kvp['elementname'] = self.kvp['elementname'].split(',')
             self.kvp['elementsetname'] = 'summary'
 
+        if self.kvp.has_key('typenames') is False:
+            return self.exceptionreport('MissingParameterValue',
+            'typenames', 'Missing typenames parameter')
+
         if (self.kvp.has_key('typenames') and
             self.requesttype == 'GET'):  # passed via GET
             self.kvp['typenames'] = self.kvp['typenames'].split(',')
