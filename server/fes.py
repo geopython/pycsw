@@ -104,9 +104,8 @@ def parse(element, queryables, dbtype):
                 singlechar = '_'
 
             try:
-                pname = "query_xpath(xml, '%s')" % \
-                queryables[child.find(
-                util.nspath_eval('ogc:PropertyName')).text]
+                pname = queryables[child.find(
+                util.nspath_eval('ogc:PropertyName')).text]['dbcol']
             except Exception, err:
                 raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
                 (child.find(util.nspath_eval('ogc:PropertyName')).text,
@@ -131,14 +130,6 @@ def parse(element, queryables, dbtype):
                 util.nspath_eval('ogc:UpperBoundary/ogc:Literal')).text
                 queries.append("%s %s '%s' and '%s'" %
                 (pname, com_op, lower_boundary, upper_boundary))
-
-            elif (child.find(
-            util.nspath_eval(
-            'ogc:PropertyName')).text.lower().find('anytext') != -1):
-                # *:AnyText is a freetext search.  Strip modifiers
-                pvalue = pvalue.replace('%','')
-                queries.append("query_anytext(xml, '%s') = 'true'" % pvalue)
-
             else:
                 if boq == ' not ':
                     queries.append("%s is null or not %s %s '%s'" %
@@ -167,7 +158,7 @@ def _get_spatial_operator(element):
         ('Invalid ogc:PropertyName in spatial filter: %s' %
         property_name.text)
 
-    spatial_query = "query_spatial(bbox,'%s','%s','%s')" % \
+    spatial_query = "query_spatial(geometry,'%s','%s','%s')" % \
     (gml.get_geometry(element, MODEL['GeometryOperands']['values']),
     util.xmltag_split(element.tag).lower(), distance)
 

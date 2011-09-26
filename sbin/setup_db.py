@@ -70,18 +70,84 @@ GEOM.create()
 
 i = GEOM.insert()
 i.execute(f_table_catalog='public', f_table_schema='public',
-f_table_name='records', f_geometry_column='bbox', 
+f_table_name='records', f_geometry_column='geometry', 
 geometry_type=3, coord_dimension=2, srid=4326, geometry_format='WKT')
 
+# abstract metadata information model
+
 RECORDS = Table('records', METADATA,
-    Column('identifier', String(256), nullable=False, primary_key=True),
+    # core; nothing happens without these
+    Column('identifier', String(256), primary_key=True),
     Column('typename', String(32), default='csw:Record', nullable=False, index=True),
     Column('schema', String(256),
     default='http://www.opengis.net/cat/csw/2.0.2', nullable=False, index=True),
-    Column('bbox', Text, index=True),
-    Column('xml', Text, nullable=False, index=True),
-    Column('source', String(256), default='local', nullable=False, index=True),
+    Column('mdsource', String(256), default='local', nullable=False, index=True),
     Column('insert_date', String(20), nullable=False, index=True),
+    Column('xml', Text, nullable=False),
+    Column('anytext', Text, nullable=False, index=True),
+    Column('language', String(32), index=True),
+
+    # indentification
+    Column('type', String(128), index=True),
+    Column('title', String(2048), index=True),
+    Column('title_alternate', String(2048), index=True),
+    Column('abstract', String(2048), index=True),
+    Column('keywords', String(2048), index=True),
+    Column('keywordstype', String(256), index=True),
+    Column('parentidentifier', String(32), index=True),
+    Column('relation', String(256), index=True),
+    Column('time_begin', String(20), index=True),
+    Column('time_end', String(20), index=True),
+    Column('topicategory', String(32), index=True),
+    Column('resourcelanguage', String(32), index=True),
+
+    # attribution
+    Column('creator', String(256), index=True),
+    Column('publisher', String(256), index=True),
+    Column('contributor', String(256), index=True),
+    Column('organization', String(256), index=True),
+
+    # security
+    Column('securityconstraints', String(256), index=True),
+    Column('accessconstraints', String(256), index=True),
+    Column('otherconstraints', String(256), index=True),
+
+    # date
+    Column('date', String(20), index=True),
+    Column('date_revision', String(20), index=True),
+    Column('date_creation', String(20), index=True),
+    Column('date_publication', String(20), index=True),
+    Column('date_modified', String(20), index=True),
+
+    Column('format', String(128), index=True),
+    Column('source', String(1024), index=True),
+
+    # geography
+    Column('crs', String(256), index=True),
+    Column('geodescode', String(256), index=True),
+    Column('denominator', Integer, index=True),
+    Column('distancevalue', Integer, index=True),
+    Column('distanceuom', String(8), index=True),
+    Column('geometry', Text, index=True),
+
+    # service
+    Column('servicetype', String(32), index=True),
+    Column('servicetypeversion', String(32), index=True),
+    Column('operation', String(32), index=True),
+    Column('couplingtype', String(8), index=True),
+    Column('operateson', String(32), index=True),
+    Column('operatesonidentifier', String(32), index=True),
+    Column('operatesoname', String(32), index=True),
+
+    # additional
+    Column('degree', String(8), index=True),
+    Column('classification', String(32), index=True),
+    Column('conditionapplyingtoaccessanduse', String(256), index=True),
+    Column('lineage', String(32), index=True),
+    Column('responsiblepartyrole', String(32), index=True),
+    Column('specificationtitle', String(32), index=True),
+    Column('specificationdate', String(20), index=True),
+    Column('specificationdatetype', String(20), index=True)
 )
 RECORDS.create()
 
@@ -90,19 +156,7 @@ if DB.name == 'postgresql':  # create plpythonu functions within db
     CFG = ConfigParser.SafeConfigParser()
     CFG.readfp(open('default.cfg'))
     PYCSW_HOME = CFG.get('server', 'home')
-
     CONN = DB.connect()
-    FUNCTION_QUERY_XPATH = '''
-CREATE OR REPLACE FUNCTION query_xpath(xml text, xpath text)
-RETURNS text
-AS $$
-    import sys
-    sys.path.append('%s')
-    from server import util
-    return util.query_xpath(xml, xpath)
-    $$ LANGUAGE plpythonu;
-''' % PYCSW_HOME
-
     FUNCTION_QUERY_SPATIAL = '''
 CREATE OR REPLACE FUNCTION query_spatial(bbox_data_wkt text, bbox_input_wkt text, predicate text, distance text)
 RETURNS text
@@ -113,18 +167,6 @@ AS $$
     return util.query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance)
     $$ LANGUAGE plpythonu;
 ''' % PYCSW_HOME
-
-    FUNCTION_QUERY_ANYTEXT = '''
-CREATE OR REPLACE FUNCTION query_anytext(xml text, searchterm text)
-RETURNS text
-AS $$
-    import sys
-    sys.path.append('%s')
-    from server import util
-    return util.query_anytext(xml, searchterm)
-    $$ LANGUAGE plpythonu;
-''' % PYCSW_HOME
-
     FUNCTION_UPDATE_XPATH = '''
 CREATE OR REPLACE FUNCTION update_xpath(xml text, recprops text)
 RETURNS text
@@ -135,9 +177,5 @@ AS $$
     return util.update_xpath(xml, recprops)
     $$ LANGUAGE plpythonu;
 ''' % PYCSW_HOME
-
-    CONN.execute(FUNCTION_QUERY_XPATH)
     CONN.execute(FUNCTION_QUERY_SPATIAL)
-    CONN.execute(FUNCTION_QUERY_ANYTEXT)
     CONN.execute(FUNCTION_UPDATE_XPATH)
-

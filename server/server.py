@@ -123,6 +123,8 @@ class Csw(object):
 
         # init repository
         try:
+            #self.repository = \
+            #repository.Repository(self.config.get('repository', 'database'),
             self.repository = \
             repository.Repository(self.config.get('repository', 'database'),
             'records', config.MODEL['typenames'])
@@ -682,7 +684,7 @@ class Csw(object):
                 if pname.find('/') == 0:  # it's an XPath
                     pname2 = pname
                 else:  # it's a core queryable, map to internal typename model
-                    pname2 = self.repository.queryables['_all'][pname]
+                    pname2 = self.repository.queryables['_all'][pname]['dbcol']
 
                 # decipher typename
                 dvtype = None
@@ -708,7 +710,9 @@ class Csw(object):
                     listofvalues = etree.SubElement(domainvalue,
                     util.nspath_eval('csw:ListOfValues'))
                     for result in results:
-                        if result[0] is not None:  # drop null values
+                        self.log.debug(str(result))
+                        if (result is not None and
+                            result[0] is not None):  # drop null values
                             etree.SubElement(listofvalues,
                             util.nspath_eval('csw:Value')).text = result[0]
                 except Exception, err:
@@ -769,7 +773,7 @@ class Csw(object):
             self.requesttype == 'GET'):  # passed via GET
             self.kvp['elementname'] = self.kvp['elementname'].split(',')
             self.kvp['elementsetname'] = 'summary'
-        
+
         if (self.kvp.has_key('typenames') and
             self.requesttype == 'GET'):  # passed via GET
             self.kvp['typenames'] = self.kvp['typenames'].split(',')
@@ -852,24 +856,26 @@ class Csw(object):
             self.kvp['startposition'] = 1
 
         # query repository
-        self.log.debug('Querying repository with constraint : %s,\
-        sortby: %s, typenames: %s.' %
-        (self.kvp['constraint'], self.kvp['sortby'], self.kvp['typenames']))
+        self.log.debug('Querying repository with constraint: %s,\
+        sortby: %s, typenames: %s, maxrecords: %s, startposition: %s.' %
+        (self.kvp['constraint'], self.kvp['sortby'], self.kvp['typenames'],
+        self.kvp['maxrecords'], self.kvp['startposition']))
 
         try:
-            results = self.repository.query(constraint=self.kvp['constraint'],
-            sortby=self.kvp['sortby'], typenames=self.kvp['typenames'])
+            matched, results = self.repository.query(
+            constraint=self.kvp['constraint'],
+            sortby=self.kvp['sortby'], typenames=self.kvp['typenames'],
+            maxrecords=self.kvp['maxrecords'],
+            startposition=int(self.kvp['startposition'])-1)
         except Exception, err:
             return self.exceptionreport('InvalidParameterValue', 'constraint',
             'Invalid query: %s' % err)
 
         if len(results) == 0:
-            matched = '0'
             returned = '0'
-            nextrecord = '0'
+            nextrecord = str(int(returned)+1)
 
         else:
-            matched = str(len(results))
             if int(matched) < int(self.kvp['maxrecords']):
                 returned = matched
                 nextrecord = '0'
@@ -935,7 +941,7 @@ class Csw(object):
             self.log.debug('Presenting records %s - %s.' %
             (self.kvp['startposition'], max1))
 
-            for res in results[int(self.kvp['startposition'])-1:int(max1)-1]:
+            for res in results:
                 if (self.kvp['outputschema'] == 
                     'http://www.opengis.net/cat/csw/2.0.2' and
                     'csw:Record' in self.kvp['typenames']):
@@ -1028,7 +1034,7 @@ class Csw(object):
                 return etree.fromstring(getattr(results[0], 'xml'))
 
         for result in results:
-            if getattr(result, 'typename') == 'csw:Record':
+            if result.typename == 'csw:Record':
                 node.append(self._write_record(
                 result, self.repository.queryables['_all']))
             else:  # it's a profile output
@@ -1078,12 +1084,9 @@ class Csw(object):
                     return self.exceptionreport('NoApplicableCode',
                     'insert', 'Record requires an identifier')
 
-                record['source'] = 'local'
-                record['insert_date'] = util.get_today_and_now()
-
                 # insert new record
                 try:
-                    self.repository.insert(record)
+                    self.repository.insert(record, 'local', util.get_today_and_now())
                     inserted += 1
                 except Exception, err:
                     return self.exceptionreport('NoApplicableCode',
@@ -1400,15 +1403,12 @@ class Csw(object):
             if tmp is not None:
                 self.log.debug('Sorted query specified.')
                 request['sortby'] = {}
-                request['sortby']['propertyname'] = \
-                tmp.find(util.nspath_eval(
-                'ogc:SortProperty/ogc:PropertyName')).text
 
                 try:
-                    request['sortby']['cq_mapping'] = \
+                    request['sortby']['propertyname'] = \
                     self.repository.queryables['_all']\
-                   [tmp.find(util.nspath_eval(
-                    'ogc:SortProperty/ogc:PropertyName')).text.lower()]
+                    [tmp.find(util.nspath_eval(
+                    'ogc:SortProperty/ogc:PropertyName')).text]['dbcol']
                 except Exception, err:
                     errortext = \
                     'Invalid ogc:SortProperty/ogc:PropertyName: %s' % str(err)
@@ -1523,45 +1523,43 @@ class Csw(object):
             for elemname in self.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
                     elemname.find('Envelope') != -1):
-                    bboxel = write_boundingbox(recobj.bbox)
+                    bboxel = write_boundingbox(recobj.geometry)
                     if bboxel is not None:
                         record.append(bboxel)
                 else:
-                    value = util.query_xpath(xml, queryables[elemname])
+                    value = getattr(recobj, queryables[elemname]['dbcol'])
                     if value:
                         etree.SubElement(record,
-                        util.nspath_eval(elemname)).text=value.decode('utf8')
+                        util.nspath_eval(elemname)).text=value
+                        #util.nspath_eval(elemname)).text=value.decode('utf8')
         elif self.kvp.has_key('elementsetname'):
             if self.kvp['elementsetname'] == 'full':  # dump the full record
+                #record = etree.fromstring(recobj['xml'])
                 record = etree.fromstring(recobj.xml)
             else:  # dump BriefRecord (always required), summary if requested
-                xml = etree.fromstring(recobj.xml)
-
                 etree.SubElement(record,
+                #util.nspath_eval('dc:identifier')).text = recobj['identifier']
                 util.nspath_eval('dc:identifier')).text = recobj.identifier
 
                 for i in ['dc:title', 'dc:type']:
-                    val = util.query_xpath(xml, queryables[i])
+                    val = getattr(recobj, queryables[i]['dbcol'])
                     if not val:
                         val = ''
-                    etree.SubElement(record, util.nspath_eval(i)).text = \
-                    val.decode('utf8')
+                    etree.SubElement(record, util.nspath_eval(i)).text = val
+                    #val.decode('utf8')
                 if self.kvp['elementsetname'] == 'summary':
-                    subjects = util.query_xpath(xml,
-                    queryables['dc:subject'])
-
-                    if subjects is not None:
-                        for subject in subjects.split(','):
+                    if recobj.keywords is not None:
+                        for keyword in recobj.keywords.split(','):
                             etree.SubElement(record, 
-                            util.nspath_eval('dc:subject')).text=subject
+                            util.nspath_eval('dc:subject')).text=keyword
 
                     for i in ['dc:format', 'dc:relation', \
                     'dct:modified', 'dct:abstract']:
-                        val = util.query_xpath(xml, queryables[i])
+                        val = getattr(recobj, queryables[i]['dbcol'])
                         if val:
                             etree.SubElement(record,
-                            util.nspath_eval(i)).text = val.decode('utf8')
-                bboxel = write_boundingbox(recobj.bbox)
+                            util.nspath_eval(i)).text = val#.decode('utf8')
+                bboxel = write_boundingbox(recobj.geometry)
                 if bboxel is not None:
                     record.append(bboxel)
         return record
@@ -1686,9 +1684,10 @@ class Csw(object):
     def _cql_update_queryables_mappings(self, cql, mappings):
         ''' Transform CQL query's properties to underlying DB columns '''
         self.log.debug('Raw CQL text = %s.' % cql)
+        self.log.debug(str(mappings.keys()))
         if cql is not None:
             for key in mappings.keys():
-                cql = cql.replace(key, "query_xpath(xml, '%s')" % mappings[key])
+                cql = cql.replace(key, mappings[key]['dbcol'])
             self.log.debug('Interpolated CQL text = %s.' % cql)
             return cql
 
@@ -1730,7 +1729,10 @@ def parse_record(record):
     if isinstance(record, str):
         exml = etree.fromstring(record)
     else:  # already serialized to lxml
-        exml = record
+        if hasattr(record, 'getroot'):  # standalone document
+            exml = record.getroot()
+        else:  # part of a larger document
+            exml = record
 
     root = exml.tag
 
@@ -1760,10 +1762,14 @@ def parse_record(record):
 
     recobj['identifier'] = md.identifier
     recobj['xml'] = md.xml
+    recobj['anytext'] = util.get_anytext(exml)
+    recobj['properties'] = md
 
     if bbox is not None:
         tmp = '%s,%s,%s,%s' % (bbox.miny, bbox.minx, bbox.maxy, bbox.maxx)
-        recobj['bbox'] = util.bbox2wktpolygon(tmp)
+        recobj['geometry'] = util.bbox2wktpolygon(tmp)
+    else:
+        recobj['geometry'] = None
 
     return recobj
 

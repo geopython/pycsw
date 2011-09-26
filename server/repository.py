@@ -54,8 +54,6 @@ class Repository(object):
         if self.dbtype == 'sqlite':  # load SQLite query bindings
             self.connection = engine.raw_connection()
             self.connection.create_function('query_spatial', 4, util.query_spatial)
-            self.connection.create_function('query_anytext', 2, util.query_anytext)
-            self.connection.create_function('query_xpath', 2, util.query_xpath)
             self.connection.create_function('update_xpath', 2, util.update_xpath)
 
         # generate core queryables db and obj bindings
@@ -83,9 +81,7 @@ class Repository(object):
 
     def query_domain(self, domain, typenames):
         ''' Query by property domain values '''
-        query = self.session.query(func.query_xpath(
-        self.dataset.xml, domain)).filter(
-        self.dataset.typename.in_(typenames)).distinct()
+        query = self.session.query(getattr(self.dataset, domain)).distinct()
         return query.all()
 
     def query_latest_insert(self):
@@ -99,10 +95,12 @@ class Repository(object):
         self.dataset.source == source)
         return query.all() 
 
-    def query(self, constraint, sortby=None, typenames=[]):
+    def query(self, constraint, sortby=None, typenames=[],
+        maxrecords=10, startposition=0):
         ''' Query records from underlying repository '''
 
-        if constraint.has_key('where'):  # it's a GetRecords with constraint
+        # run the raw query and get total
+        if constraint.has_key('where'):  # GetRecords with constraint
             if not typenames:  # any typename
                 query = self.session.query(self.dataset).filter(
                 constraint['where'])
@@ -111,35 +109,52 @@ class Repository(object):
                 self.dataset.typename.in_(typenames)).filter(
                 constraint['where'])
 
-        elif constraint.has_key('where') is False: # it's a GetRecords sans constraint
+            total = query.count()
+
+        elif constraint.has_key('where') is False: # GetRecords sans constraint
             if not typenames:  # any typename
                 query = self.session.query(self.dataset)
             else:
                 query = self.session.query(self.dataset).filter(
                 self.dataset.typename.in_(typenames))
 
+            total = query.count()
+
+        # apply sorting, limit and offset
         if sortby is not None:
             if sortby['order'] == 'DESC':
-                return query.order_by(
-                desc(func.query_xpath(
-                self.dataset.xml, sortby['propertyname']))).all()
+                return [str(total), query.order_by(desc(sortby['propertyname'])).limit(maxrecords).offset(startposition).all()]
             else: 
-                return query.order_by(func.query_xpath(
-                self.dataset.xml, sortby['propertyname'])).all()
+                return [str(total), query.order_by(sortby['propertyname']).limit(maxrecords).offset(startposition).all()]
+        else:  # no sort
+            return [str(total), query.limit(maxrecords).offset(startposition).all()]
 
-        return query.all()
-
-    def insert(self, record):
+    def insert(self, record, source, insert_date):
         ''' Insert a record into the repository '''
 
         record1 = self.dataset(
-        identifier=record['identifier'],
-        typename=record['typename'],
-        schema=record['schema'],
-        bbox=record['bbox'],
-        xml=record['xml'],
-        source=record['source'],
-        insert_date=record['insert_date'])
+        typename = record['typename'],
+        schema = record['schema'],
+        anytext = record['anytext'],
+        identifier = record['identifier'],
+        title = record['properties'].title,
+        creator = record['properties'].creator,
+        keywords = ','.join(record['properties'].subjects),
+        abstract = record['properties'].abstract,
+        publisher = record['properties'].publisher,
+        contributor = record['properties'].contributor,
+        date_modified = record['properties'].modified,
+        date = record['properties'].date,
+        type = record['properties'].type,
+        format = record['properties'].format,
+        source = record['properties'].source,
+        language = record['properties'].language,
+        relation = record['properties'].relation,
+        accessconstraints = ','.join(record['properties'].rights),
+        geometry = record['geometry'],
+        xml = record['xml'],
+        mdsource = source,
+        insert_date = insert_date)
 
         try:
             self.session.begin()
@@ -156,9 +171,30 @@ class Repository(object):
             try:
                 self.session.begin()
                 self.session.query(self.dataset).filter_by(
-                identifier=record['identifier']).update(
-                {self.dataset.xml: record['xml'],
-                self.dataset.insert_date: record['insert_date']})
+                identifier=record['identifier']).update({
+                self.dataset.typename: record['typename'],
+                self.dataset.schema: record['schema'],
+                self.dataset.anytext: record['anytext'],
+                self.dataset.identifier: record['identifier'],
+                self.dataset.title: record['properties'].title,
+                self.dataset.creator: record['properties'].creator,
+                self.dataset.keywords: ','.join(record['properties'].subjects),
+                self.dataset.abstract: record['properties'].abstract,
+                self.dataset.publisher: record['properties'].publisher,
+                self.dataset.contributor: record['properties'].contributor,
+                self.dataset.date_modified: record['properties'].modified,
+                self.dataset.date: record['properties'].date,
+                self.dataset.type: record['properties'].type,
+                self.dataset.format: record['properties'].format,
+                self.dataset.source: record['properties'].source,
+                self.dataset.language: record['properties'].language,
+                self.dataset.relation: record['properties'].relation,
+                self.dataset.accessconstraints: ','.join(record['properties'].rights),
+                self.dataset.geometry: record['geometry'],
+                self.dataset.xml: record['xml'],
+                self.dataset.mdsource: record['source'],
+                self.dataset.insert_date: record['insert_date']
+                })
                 self.session.commit()
             except Exception, err:
                 self.session.rollback()
@@ -166,10 +202,11 @@ class Repository(object):
         else:  # update based on record properties
             try:
                 self.session.begin()
-                rows=self.session.query(self.dataset).filter(
-                constraint['where']).update(
-                {self.dataset.xml: func.update_xpath(
-                self.dataset.xml, str(recprops))}, synchronize_session='fetch')
+#                rows=self.session.query(self.dataset).filter(
+#                constraint['where']).update({
+#                    self.dataset.xml: func.update_xpath(self.dataset.xml, str(recprops))
+#                    getattr(self.dataset, .xml: func.update_xpath(self.dataset.xml, str(recprops))
+#                }, synchronize_session='fetch')
                 self.session.commit()
             except Exception, err:
                 self.session.rollback()

@@ -56,56 +56,56 @@ REPOSITORY = {
         'outputschema': 'http://www.isotc211.org/2005/gmd',
         'queryables': {
             'SupportedISOQueryables': {
-                'apiso:Subject': 'gmd:identificationInfo/gmd:MD_Identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode',
-                'apiso:Title': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString',
-                'apiso:Abstract': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString',
-                'apiso:Format': 'gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString',
-                'apiso:Identifier': 'gmd:fileIdentifier/gco:CharacterString',
-                'apiso:Modified': 'gmd:dateStamp/gco:Date',
-                'apiso:Type': 'gmd:hierarchyLevel/gmd:MD_ScopeCode',
-                'apiso:BoundingBox': 'bbox',
-                'apiso:CRS': 'concat("urn:ogc:def:crs:","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:version/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString")',
-                'apiso:AlternateTitle': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString',
-                'apiso:RevisionDate': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date/gco:Date',
-                'apiso:CreationDate': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="creation"]/gmd:date/gco:Date',
-                'apiso:PublicationDate': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="publication"]/gmd:date/gco:Date',
-                'apiso:OrganisationName': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString',
-                'apiso:HasSecurityConstraints': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_SecurityConstraints',
-                'apiso:Language': 'gmd:language/gmd:LanguageCode|gmd:language/gco:CharacterString',
-                'apiso:ParentIdentifier': 'gmd:parentIdentifier/gco:CharacterString',
-                'apiso:KeywordType': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode',
-                'apiso:TopicCategory': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode',
-                'apiso:ResourceLanguage': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:code/gmd:MD_LanguageTypeCode',
-                'apiso:GeographicDescriptionCode': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString',
-                'apiso:Denominator': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer',
-                'apiso:DistanceValue': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance',
-                'apiso:DistanceUOM': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom',
-                'apiso:TempExtent_begin': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition',
-                'apiso:TempExtent_end': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition',
-                'apiso:AnyText': 'xml',
-                'apiso:ServiceType': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName',
-                'apiso:ServiceTypeVersion': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString',
-                'apiso:Operation': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString',
-                'apiso:CouplingType': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType',
-                'apiso:OperatesOn': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString',
-                'apiso:OperatesOnIdentifier': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString',
-                'apiso:OperatesOnName': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:operationName/gco:CharacterString'
+                'apiso:Subject': {'xpath': 'gmd:identificationInfo/gmd:MD_Identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'dbcol': 'keywords'},
+                'apiso:Title': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', 'dbcol': 'title'},
+                'apiso:Abstract': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString', 'dbcol': 'abstract'},
+                'apiso:Format': {'xpath': 'gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString', 'dbcol': 'format'},
+                'apiso:Identifier': {'xpath': 'gmd:fileIdentifier/gco:CharacterString', 'dbcol': 'identifier'},
+                'apiso:Modified': {'xpath': 'gmd:dateStamp/gco:Date', 'dbcol': 'date_modified'},
+                'apiso:Type': {'xpath': 'gmd:hierarchyLevel/gmd:MD_ScopeCode', 'dbcol': 'type'},
+                'apiso:BoundingBox': {'xpath': 'apiso:BoundingBox', 'dbcol': 'geometry'},
+                'apiso:CRS': {'xpath': 'concat("urn:ogc:def:crs:","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:version/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString")', 'dbcol': 'crs'},
+                'apiso:AlternateTitle': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', 'dbcol': 'title_alternate'},
+                'apiso:RevisionDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date/gco:Date', 'dbcol': 'date_revision'},
+                'apiso:CreationDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="creation"]/gmd:date/gco:Date', 'dbcol': 'date_creation'},
+                'apiso:PublicationDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="publication"]/gmd:date/gco:Date', 'dbcol': 'date_publication'},
+                'apiso:OrganisationName': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString', 'dbcol': 'organization'},
+                'apiso:HasSecurityConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_SecurityConstraints', 'dbcol': 'securityconstraints'},
+                'apiso:Language': {'xpath': 'gmd:language/gmd:LanguageCode|gmd:language/gco:CharacterString', 'dbcol': 'language'},
+                'apiso:ParentIdentifier': {'xpath': 'gmd:parentIdentifier/gco:CharacterString', 'dbcol': 'parentidentifier'},
+                'apiso:KeywordType': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode', 'dbcol': 'keywordstype'},
+                'apiso:TopicCategory': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'dbcol': 'topicategory'},
+                'apiso:ResourceLanguage': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:code/gmd:MD_LanguageTypeCode', 'dbcol': 'resourcelanguage'},
+                'apiso:GeographicDescriptionCode': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', 'dbcol': 'geodescode'},
+                'apiso:Denominator': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer', 'dbcol': 'denominator'},
+                'apiso:DistanceValue': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance', 'dbcol': 'distancevalue'},
+                'apiso:DistanceUOM': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom', 'dbcol': 'distanceuom'},
+                'apiso:TempExtent_begin': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition', 'dbcol': 'time_begin'},
+                'apiso:TempExtent_end': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition', 'dbcol': 'time_end'},
+                'apiso:AnyText': {'xpath': '//', 'dbcol': 'anytext'},
+                'apiso:ServiceType': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName', 'dbcol': 'servicetype'},
+                'apiso:ServiceTypeVersion': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString', 'dbcol': 'servicetypeversion'},
+                'apiso:Operation': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString', 'dbcol': 'operation'},
+                'apiso:CouplingType': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType', 'dbcol': 'couplingtype'},
+                'apiso:OperatesOn': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString', 'dbcol': 'operateson'},
+                'apiso:OperatesOnIdentifier': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', 'dbcol': 'operatesonidentifier'},
+                'apiso:OperatesOnName': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:operationName/gco:CharacterString', 'dbcol': 'operatesoname'},
             },
             'AdditionalQueryables': {
-                'apiso:Degree': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean',
-                'apiso:AccessConstraints': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_RestrictionCode',
-                'apiso:OtherConstraints': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString',
-                'apiso:Classification': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_ClassificationCode',
-                'apiso:ConditionApplyingToAccessAndUse': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:useLimitation/gco:CharacterString',
-                'apiso:Lineage': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString',
-                'apiso:ResponsiblePartyRole': 'gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode',
-                'apiso:SpecificationTitle': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString',
-                'apiso:SpecificationDate': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date',
-                'apiso:SpecificationDateType': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode',
-                'apiso:Creator': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="originator"]/gco:CharacterString',
-                'apiso:Publisher': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="publisher"]/gco:CharacterString',
-                'apiso:Contributor': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="contributor"]/gco:CharacterString',
-                'apiso:Relation': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo'
+                'apiso:Degree': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean', 'dbcol': 'degree'},
+                'apiso:AccessConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_RestrictionCode', 'dbcol': 'accessconstraints'},
+                'apiso:OtherConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString', 'dbcol': 'otherconstraints'},
+                'apiso:Classification': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_ClassificationCode', 'dbcol': 'conditionapplyingtoaccessanduse'},
+                'apiso:ConditionApplyingToAccessAndUse': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:useLimitation/gco:CharacterString', 'dbcol': ''},
+                'apiso:Lineage': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString', 'dbcol': 'lineage'},
+                'apiso:ResponsiblePartyRole': {'xpath': 'gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode', 'dbcol': 'responsiblepartyrole'},
+                'apiso:SpecificationTitle': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString', 'dbcol': 'specificationtitle'},
+                'apiso:SpecificationDate': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date', 'dbcol': 'specificationdate'},
+                'apiso:SpecificationDateType': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode', 'dbcol': 'specificationdatetype'},
+                'apiso:Creator': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="originator"]/gco:CharacterString', 'dbcol': 'creator'},
+                'apiso:Publisher': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="publisher"]/gco:CharacterString', 'dbcol': 'publisher'},
+                'apiso:Contributor': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="contributor"]/gco:CharacterString', 'dbcol': 'contributor'},
+                'apiso:Relation': {'xpath': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo', 'dbcol': 'relation'}
             }
         },
         'mappings': {
@@ -392,13 +392,13 @@ class APISO(profile.Profile):
 
                 if esn == 'summary':
                     # language
-                    val = util.query_xpath(xml, queryables['apiso:Language'])
+                    val = getattr(result, queryables['apiso:Language']['dbcol'])
 
                     lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
                     etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
 
                 # hierarchyLevel
-                val = util.query_xpath(xml, queryables['apiso:Type'])
+                val = getattr(result, queryables['apiso:Type']['dbcol'])
 
                 if val is not None: 
                     hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
@@ -408,14 +408,14 @@ class APISO(profile.Profile):
 
                 if esn == 'summary':
                     # contact
-                    val = util.query_xpath(xml, queryables['apiso:OrganisationName'])
+                    val = getattr(result, queryables['apiso:OrganisationName']['dbcol'])
                     contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
                     CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
                     org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
                     etree.SubElement(org_name, util.nspath_eval('gco:ChracterString')).text = val
     
                     # date
-                    val = util.query_xpath(xml, queryables['apiso:Modified'])
+                    val = getattr(result, queryables['apiso:Modified']['dbcol'])
                     date = etree.SubElement(node, util.nspath_eval('gmd:dateStamp'))
                     etree.SubElement(date, util.nspath_eval('gco:Date')).text = val
     
@@ -428,7 +428,7 @@ class APISO(profile.Profile):
                     etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
 
                 # title
-                val = util.query_xpath(xml, queryables['apiso:Title'])
+                val = getattr(result, queryables['apiso:Title']['dbcol'])
                 if not val:
                     val = ''
                 identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
@@ -436,18 +436,18 @@ class APISO(profile.Profile):
                 tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:citation'))
                 tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
                 tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
-                etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val.decode('utf8')
+                etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
 
                 if esn == 'summary':
                     # abstract
-                    val = util.query_xpath(xml, queryables['apiso:Abstract'])
+                    val = getattr(result, queryables['apiso:Abstract']['dbcol'])
                     if not val:
                         val = ''
                     tmp = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
-                    etree.SubElement(tmp, util.nspath_eval('gco:ChracterString')).text = val.decode('utf8')
+                    etree.SubElement(tmp, util.nspath_eval('gco:ChracterString')).text = val
     
                     # spatial resolution
-                    val = util.query_xpath(xml, queryables['apiso:Denominator'])
+                    val = getattr(result, queryables['apiso:Denominator']['dbcol'])
                     tmp = etree.SubElement(identification, util.nspath_eval('gmd:spatialResolution'))
                     tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:spatialResolution'))
                     tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:MD_Resolution'))
@@ -457,19 +457,19 @@ class APISO(profile.Profile):
                     etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = val
     
                     # resource language
-                    val = util.query_xpath(xml, queryables['apiso:ResourceLanguage'])
+                    val = getattr(result, queryables['apiso:ResourceLanguage']['dbcol'])
                     tmp = etree.SubElement(identification, util.nspath_eval('gmd:language'))
                     etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
     
                     # topic category
-                    val = util.query_xpath(xml, queryables['apiso:TopicCategory'])
+                    val = getattr(result, queryables['apiso:TopicCategory']['dbcol'])
                     if val:
                         for v in val.split(','):
                             tmp = etree.SubElement(identification, util.nspath_eval('gmd:topicCategory'))
                             etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
 
                 # bbox extent
-                val = result.bbox
+                val = getattr(result, queryables['apiso:BoundingBox']['dbcol'])
                 bboxel = write_extent(val)
                 if bboxel is not None:
                     identification.append(bboxel)
@@ -478,8 +478,8 @@ class APISO(profile.Profile):
 
                 # service type
                 # service type version
-                val = util.query_xpath(xml, queryables['apiso:ServiceType'])
-                val2 = util.query_xpath(xml, queryables['apiso:ServiceTypeVersion'])
+                val = getattr(result, queryables['apiso:ServiceType']['dbcol'])
+                val2 = getattr(result, queryables['apiso:ServiceTypeVersion']['dbcol'])
                 if (val is not None):
                     srv_identification = etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
                     tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))
@@ -489,7 +489,7 @@ class APISO(profile.Profile):
 
                 if esn == 'summary':
                     # service operations
-                    val = util.query_xpath(xml, queryables['apiso:Operation'])
+                    val = getattr(result, queryables['apiso:Operation']['dbcol'])
                     if val:
                         temp_oper=val.split(',')
                         oper = etree.SubElement(srv_identification, util.nspath_eval('srv:containsOperations'))
