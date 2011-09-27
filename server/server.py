@@ -37,7 +37,7 @@ import cgi
 import urllib2
 import ConfigParser
 from lxml import etree
-import config, fes, log, profile, repository, util
+import config, fes, log, plugins.profiles.profile, repository, util
 from shapely.wkt import loads
 
 class Csw(object):
@@ -105,8 +105,9 @@ class Csw(object):
         self.log.debug('Loading profiles.')
 
         if self.config.has_option('server', 'profiles'):
-            self.profiles = profile.load_profiles(
-            os.path.join('server', 'profiles'), profile.Profile,
+            self.profiles = plugins.profiles.profile.load_profiles(
+            os.path.join('server', 'plugins', 'profiles'),
+            plugins.profiles.profile.Profile,
             self.config.get('server', 'profiles'))
 
             for prof in self.profiles['plugins'].keys():
@@ -933,6 +934,9 @@ class Csw(object):
         util.nspath_eval('csw:SearchResults'),
         numberOfRecordsMatched=matched, numberOfRecordsReturned=returned,
         nextRecord=nextrecord, recordSchema=self.kvp['outputschema'])
+
+        if self.kvp['elementsetname'] is not None:
+            searchresults.attrib['elementSet'] = self.kvp['elementsetname']
 
         if self.kvp['constraint'].has_key('where') is False \
         and self.kvp['resulttype'] is None:
