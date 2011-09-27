@@ -32,7 +32,8 @@
 
 import os
 from lxml import etree
-from server import profile, config, util
+from server import config, util
+from server.plugins.profiles import profile
 
 NAMESPACES = {
     'fgdc': 'http://www.opengis.net/cat/csw/csdgm'
