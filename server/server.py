@@ -1576,7 +1576,7 @@ class Csw(object):
                         val = getattr(recobj, queryables[i]['dbcol'])
                         if val:
                             etree.SubElement(record,
-                            util.nspath_eval(i)).text = val#.decode('utf8')
+                            util.nspath_eval(i)).text = val
                 bboxel = write_boundingbox(recobj.geometry)
                 if bboxel is not None:
                     record.append(bboxel)
