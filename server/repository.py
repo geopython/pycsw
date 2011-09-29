@@ -132,33 +132,9 @@ class Repository(object):
     def insert(self, record, source, insert_date):
         ''' Insert a record into the repository '''
 
-        record1 = self.dataset(
-        typename = record['typename'],
-        schema = record['schema'],
-        anytext = record['anytext'],
-        identifier = record['identifier'],
-        title = record['properties'].title,
-        creator = record['properties'].creator,
-        keywords = ','.join(record['properties'].subjects),
-        abstract = record['properties'].abstract,
-        publisher = record['properties'].publisher,
-        contributor = record['properties'].contributor,
-        date_modified = record['properties'].modified,
-        date = record['properties'].date,
-        type = record['properties'].type,
-        format = record['properties'].format,
-        source = record['properties'].source,
-        language = record['properties'].language,
-        relation = record['properties'].relation,
-        accessconstraints = ','.join(record['properties'].rights),
-        geometry = record['geometry'],
-        xml = record['xml'],
-        mdsource = source,
-        insert_date = insert_date)
-
         try:
             self.session.begin()
-            self.session.add(record1)
+            self.session.add(record)
             self.session.commit()
         except Exception, err:
             self.session.rollback()
@@ -171,29 +147,62 @@ class Repository(object):
             try:
                 self.session.begin()
                 self.session.query(self.dataset).filter_by(
-                identifier=record['identifier']).update({
-                self.dataset.typename: record['typename'],
-                self.dataset.schema: record['schema'],
-                self.dataset.anytext: record['anytext'],
-                self.dataset.identifier: record['identifier'],
-                self.dataset.title: record['properties'].title,
-                self.dataset.creator: record['properties'].creator,
-                self.dataset.keywords: ','.join(record['properties'].subjects),
-                self.dataset.abstract: record['properties'].abstract,
-                self.dataset.publisher: record['properties'].publisher,
-                self.dataset.contributor: record['properties'].contributor,
-                self.dataset.date_modified: record['properties'].modified,
-                self.dataset.date: record['properties'].date,
-                self.dataset.type: record['properties'].type,
-                self.dataset.format: record['properties'].format,
-                self.dataset.source: record['properties'].source,
-                self.dataset.language: record['properties'].language,
-                self.dataset.relation: record['properties'].relation,
-                self.dataset.accessconstraints: ','.join(record['properties'].rights),
-                self.dataset.geometry: record['geometry'],
-                self.dataset.xml: record['xml'],
-                self.dataset.mdsource: record['source'],
-                self.dataset.insert_date: record['insert_date']
+                identifier=record.identifier).update({
+                self.dataset.identifier: record.identifier,
+                self.dataset.typename: record.typename,
+                self.dataset.schema: record.schema,
+                self.dataset.mdsource: record.mdsource,
+                self.dataset.insert_date: record.insert_date,
+                self.dataset.xml: record.xml,
+                self.dataset.anytext: record.anytext,
+                self.dataset.language: record.language,
+                self.dataset.type: record.type,
+                self.dataset.title: record.title,
+                self.dataset.title_alternate: record.title_alternate,
+                self.dataset.abstract: record.abstract,
+                self.dataset.keywords: record.keywords,
+                self.dataset.keywordstype: record.keywordstype,
+                self.dataset.parentidentifier: record.parentidentifier,
+                self.dataset.relation: record.relation,
+                self.dataset.time_begin: record.time_begin,
+                self.dataset.time_end: record.time_end,
+                self.dataset.topicategory: record.topicategory,
+                self.dataset.resourcelanguage: record.resourcelanguage,
+                self.dataset.creator: record.creator,
+                self.dataset.publisher: record.publisher,
+                self.dataset.contributor: record.contributor,
+                self.dataset.organization: record.organization,
+                self.dataset.securityconstraints: record.securityconstraints,
+                self.dataset.accessconstraints: record.accessconstraints,
+                self.dataset.otherconstraints: record.otherconstraints,
+                self.dataset.date: record.date,
+                self.dataset.date_revision: record.date_revision,
+                self.dataset.date_creation: record.date_creation,
+                self.dataset.date_publication: record.date_publication,
+                self.dataset.date_modified: record.date_modified,
+                self.dataset.format: record.format,
+                self.dataset.source: record.source,
+                self.dataset.crs: record.crs,
+                self.dataset.geodescode: record.geodescode,
+                self.dataset.denominator: record.denominator,
+                self.dataset.distancevalue: record.distancevalue,
+                self.dataset.distanceuom: record.distanceuom,
+                self.dataset.geometry: record.geometry,
+                self.dataset.servicetype: record.servicetype,
+                self.dataset.servicetypeversion: record.servicetypeversion,
+                self.dataset.operation: record.operation,
+                self.dataset.couplingtype: record.couplingtype,
+                self.dataset.operateson: record.operateson,
+                self.dataset.operatesonidentifier: record.operatesonidentifier,
+                self.dataset.operatesoname: record.operatesoname,
+                self.dataset.degree: record.degree,
+                self.dataset.classification: record.classification,
+                self.dataset.conditionapplyingtoaccessanduse: record.conditionapplyingtoaccessanduse,
+                self.dataset.lineage: record.lineage,
+                self.dataset.responsiblepartyrole: record.responsiblepartyrole,
+                self.dataset.specificationtitle: record.specificationtitle,
+                self.dataset.specificationdate: record.specificationdate,
+                self.dataset.specificationdatetype: record.specificationdatetype
                 })
                 self.session.commit()
             except Exception, err:
