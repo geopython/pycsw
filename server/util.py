@@ -135,21 +135,21 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     else:
         return 'false'
 
-def update_xpath(xml, recprops):
+def update_xpath(xml, recprop):
     ''' Update XML document XPath values '''
 
     if isinstance(xml, unicode):  # not lxml serialized yet
         xml = etree.fromstring(xml)
 
-    for recprop in eval(recprops):  # a list of name/value dicts
-        try:
-            nodes = xml.xpath(recprop['xpath'], namespaces=config.NAMESPACES)
-            if len(nodes) > 0:  # matches
-                for node1 in nodes:
-                    if node1.text != recprop['value']:  # values differ, update
-                        node1.text = recprop['value']
-        except Exception, err:
-            raise RuntimeError, ('ERROR: %s' % str(err))
+    recprop = eval(recprop)
+    try:
+        nodes = xml.xpath(recprop['rp']['xpath'], namespaces=config.NAMESPACES)
+        if len(nodes) > 0:  # matches
+            for node1 in nodes:
+                if node1.text != recprop['value']:  # values differ, update
+                    node1.text = recprop['value']
+    except Exception, err:
+        raise RuntimeError, ('ERROR: %s' % str(err))
     return etree.tostring(xml)
 
 def transform_mappings(queryables, typename, reverse=False):
@@ -159,7 +159,6 @@ def transform_mappings(queryables, typename, reverse=False):
             if qbl in typename.values():
                 tmp = [k for k, v in typename.iteritems() if v == qbl][0]
                 val = queryables[tmp]
-                #queryables[qbl] = val
                 queryables[qbl] = {}
                 queryables[qbl]['xpath'] = val['xpath']
                 queryables[qbl]['dbcol'] = val['dbcol']
@@ -167,12 +166,6 @@ def transform_mappings(queryables, typename, reverse=False):
         for qbl in queryables.keys():
             if qbl in typename.keys():
                 queryables[qbl] = queryables[qbl]
-                #queryables[qbl] = {}
-                #queryables[qbl]['xpath'] = qbl['xpath']
-                #queryables[qbl]['dbcol'] = qbl['dbcol']
-
-    f=open('/tmp/f.txt','w')
-    f.write(str(queryables))
 
 def get_anytext(xml):
     ''' get all element and attribute data from an XML document '''

@@ -1046,6 +1046,22 @@ class Csw(object):
             if result.typename == 'csw:Record':
                 node.append(self._write_record(
                 result, self.repository.queryables['_all']))
+            elif (self.kvp['outputschema'] ==
+                'http://www.opengis.net/cat/csw/2.0.2'):
+                # serialize into csw:Record model
+
+                for prof in self.profiles['loaded']:  # find source typename
+                    if self.profiles['loaded'][prof].typename in \
+                    [result.typename]:
+                        typename = self.profiles['loaded'][prof].typename
+                        break
+
+                util.transform_mappings(self.repository.queryables['_all'],
+                config.MODEL['typenames'][typename]\
+                ['mappings']['csw:Record'], reverse=True)
+
+                node.append(self._write_record(
+                result, self.repository.queryables['_all']))
             else:  # it's a profile output
                 node.append(
                 self.profiles['loaded'][getattr(result, 'schema')].write_record(
@@ -1126,7 +1142,7 @@ class Csw(object):
                 else:  # update by record property and constraint
                     # get / set XPath for property names
                     for rp in ttype['recordproperty']:
-                        rp['xpath'] = \
+                        rp['rp']= \
                         self.repository.queryables['_all'][rp['name']]
 
                     self.log.debug('Record Properties: %s.' %
@@ -1388,7 +1404,7 @@ class Csw(object):
 
             tmp = doc.find(util.nspath_eval(
             'csw:Query')).attrib.get('typeNames')
-            request['typenames'] = tmp.split(',') if tmp is not None \
+            request['typenames'] = tmp.split() if tmp is not None \
             else 'csw:Record'
 
             request['elementname'] = [elname.text for elname in \
@@ -1537,14 +1553,11 @@ class Csw(object):
                     if value:
                         etree.SubElement(record,
                         util.nspath_eval(elemname)).text=value
-                        #util.nspath_eval(elemname)).text=value.decode('utf8')
         elif self.kvp.has_key('elementsetname'):
             if self.kvp['elementsetname'] == 'full':  # dump the full record
-                #record = etree.fromstring(recobj['xml'])
                 record = etree.fromstring(recobj.xml)
             else:  # dump BriefRecord (always required), summary if requested
                 etree.SubElement(record,
-                #util.nspath_eval('dc:identifier')).text = recobj['identifier']
                 util.nspath_eval('dc:identifier')).text = recobj.identifier
 
                 for i in ['dc:title', 'dc:type']:
@@ -1552,7 +1565,6 @@ class Csw(object):
                     if not val:
                         val = ''
                     etree.SubElement(record, util.nspath_eval(i)).text = val
-                    #val.decode('utf8')
                 if self.kvp['elementsetname'] == 'summary':
                     if recobj.keywords is not None:
                         for keyword in recobj.keywords.split(','):
@@ -1622,7 +1634,7 @@ class Csw(object):
             node3 = etree.SubElement(node2, util.nspath_eval('soapenv:Fault'))
             node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Code'))
             etree.SubElement(node4, util.nspath_eval('soapenv:Value')).text = \
-           'soap:Server'
+            'soap:Server'
             node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Reason'))
             etree.SubElement(node4, util.nspath_eval('soapenv:Text')).text = \
             'A server exception was encountered.'
@@ -1744,15 +1756,9 @@ def parse_record(record, repos=None):
 
     recobj = repos.dataset()
 
-#    if repos is None:
-#        recobj = repoself.repository.dataset()
-#    else:
-#        recobj = repos.dataset()
-
     if root == '{%s}MD_Metadata' % config.NAMESPACES['gmd']:  # ISO
 
         md = MD_Metadata(exml)
-
 
         recobj.identifier = md.identifier
         recobj.typename = 'gmd:MD_Metadata'
