@@ -55,6 +55,7 @@ class Repository(object):
             self.connection = engine.raw_connection()
             self.connection.create_function('query_spatial', 4, util.query_spatial)
             self.connection.create_function('update_xpath', 2, util.update_xpath)
+            self.connection.create_function('get_anytext', 1, util.get_anytext)
 
         # generate core queryables db and obj bindings
         self.queryables = {}       
@@ -210,17 +211,20 @@ class Repository(object):
                 raise RuntimeError, 'ERROR: %s' % str(err)
         else:  # update based on record properties
             try:
+                rows = 0
                 self.session.begin()
-#                rows=self.session.query(self.dataset).filter(
-#                constraint['where']).update({
-#                    self.dataset.xml: func.update_xpath(self.dataset.xml, str(recprops))
-#                    getattr(self.dataset, .xml: func.update_xpath(self.dataset.xml, str(recprops))
-#                }, synchronize_session='fetch')
+                for rpu in recprops:
+                    rows += self.session.query(self.dataset).filter(
+                        constraint['where']).update({
+                            getattr(self.dataset, rpu['rp']['dbcol']): rpu['value'],
+                            self.dataset.xml: func.update_xpath(self.dataset.xml, str(rpu)),
+                            self.dataset.anytext: func.get_anytext(self.dataset.xml)
+                        }, synchronize_session='fetch')
                 self.session.commit()
+                return rows
             except Exception, err:
                 self.session.rollback()
                 raise RuntimeError, 'ERROR: %s' % str(err)
-            return rows
 
     def delete(self, constraint):
         ''' Delete a record from the repository '''
