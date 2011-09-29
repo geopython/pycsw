@@ -54,10 +54,10 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
         print 'XML document is not well-formed: %s' % str(err)
         continue
 
-    record = server.parse_record(e)
+    record = server.parse_record(e, REPO)
 
     print 'Inserting %s %s into database %s, table records....' % \
-    (record['typename'], record['identifier'], sys.argv[2])
+    (record.typename, record.identifier, sys.argv[2])
 
     try:
         REPO.insert(record, 'local', util.get_today_and_now())
