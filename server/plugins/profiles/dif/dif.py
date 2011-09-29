@@ -202,7 +202,7 @@ class DIF(profile.Profile):
                 val = getattr(result, queryables['dif:Summary']['dbcol'])
                 if not val:
                     val = ''
-                etree.SubElement(node, util.nspath_eval('dif:Summary')).text = val.decode('utf8')
+                etree.SubElement(node, util.nspath_eval('dif:Summary')).text = val
 
                 # date 
                 val = getattr(result, queryables['dif:DIF_Creation_Date']['dbcol'])

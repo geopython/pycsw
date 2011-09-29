@@ -372,7 +372,9 @@ class APISO(profile.Profile):
 
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
+
         xml = etree.fromstring(result.xml)
+
         if outputschema == self.namespace:
             if esn == 'full':  # dump the full record
                 node = xml
