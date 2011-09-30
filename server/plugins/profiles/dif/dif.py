@@ -120,7 +120,7 @@ class DIF(profile.Profile):
         schemaLanguage = 'XMLSCHEMA', targetNamespace = self.namespace)
 
         schema = etree.parse(os.path.join(
-                'server', 'profiles', 'dif',
+                'server', 'plugins', 'profiles', 'dif',
                 'etc', 'schemas', 'dif', 'dif.xsd')).getroot()
         node.append(schema)
 

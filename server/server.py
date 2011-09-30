@@ -1064,7 +1064,7 @@ class Csw(object):
                 result, self.repository.queryables['_all']))
             else:  # it's a profile output
                 node.append(
-                self.profiles['loaded'][getattr(result, 'schema')].write_record(
+                self.profiles['loaded'][self.kvp['outputschema']].write_record(
                 result, self.kvp['elementsetname'],
                 self.kvp['outputschema'], self.repository.queryables['_all']))
 
