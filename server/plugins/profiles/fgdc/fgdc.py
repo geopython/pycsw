@@ -124,7 +124,7 @@ class FGDC(profile.Profile):
         schemaLanguage = 'XMLSCHEMA', targetNamespace = self.namespace)
 
         schema = etree.parse(os.path.join(
-                'server', 'profiles', 'fgdc',
+                'server', 'plugins', 'profiles', 'fgdc',
                 'etc', 'schemas', 'fgdc', 'fgdc-std-001-1998.xsd')).getroot()
         node.append(schema)
 

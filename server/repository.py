@@ -145,80 +145,37 @@ class Repository(object):
         ''' Update a record in the repository based on identifier '''
 
         if recprops is None and constraint is None:  # full update
+
+            update_dict = dict([(getattr(self.dataset, key),
+            getattr(record, key)) \
+            for key in record.__dict__.keys() if key != '_sa_instance_state'])
+
             try:
                 self.session.begin()
                 self.session.query(self.dataset).filter_by(
-                identifier=record.identifier).update({
-                self.dataset.identifier: record.identifier,
-                self.dataset.typename: record.typename,
-                self.dataset.schema: record.schema,
-                self.dataset.mdsource: record.mdsource,
-                self.dataset.insert_date: record.insert_date,
-                self.dataset.xml: record.xml,
-                self.dataset.anytext: record.anytext,
-                self.dataset.language: record.language,
-                self.dataset.type: record.type,
-                self.dataset.title: record.title,
-                self.dataset.title_alternate: record.title_alternate,
-                self.dataset.abstract: record.abstract,
-                self.dataset.keywords: record.keywords,
-                self.dataset.keywordstype: record.keywordstype,
-                self.dataset.parentidentifier: record.parentidentifier,
-                self.dataset.relation: record.relation,
-                self.dataset.time_begin: record.time_begin,
-                self.dataset.time_end: record.time_end,
-                self.dataset.topicategory: record.topicategory,
-                self.dataset.resourcelanguage: record.resourcelanguage,
-                self.dataset.creator: record.creator,
-                self.dataset.publisher: record.publisher,
-                self.dataset.contributor: record.contributor,
-                self.dataset.organization: record.organization,
-                self.dataset.securityconstraints: record.securityconstraints,
-                self.dataset.accessconstraints: record.accessconstraints,
-                self.dataset.otherconstraints: record.otherconstraints,
-                self.dataset.date: record.date,
-                self.dataset.date_revision: record.date_revision,
-                self.dataset.date_creation: record.date_creation,
-                self.dataset.date_publication: record.date_publication,
-                self.dataset.date_modified: record.date_modified,
-                self.dataset.format: record.format,
-                self.dataset.source: record.source,
-                self.dataset.crs: record.crs,
-                self.dataset.geodescode: record.geodescode,
-                self.dataset.denominator: record.denominator,
-                self.dataset.distancevalue: record.distancevalue,
-                self.dataset.distanceuom: record.distanceuom,
-                self.dataset.geometry: record.geometry,
-                self.dataset.servicetype: record.servicetype,
-                self.dataset.servicetypeversion: record.servicetypeversion,
-                self.dataset.operation: record.operation,
-                self.dataset.couplingtype: record.couplingtype,
-                self.dataset.operateson: record.operateson,
-                self.dataset.operatesonidentifier: record.operatesonidentifier,
-                self.dataset.operatesoname: record.operatesoname,
-                self.dataset.degree: record.degree,
-                self.dataset.classification: record.classification,
-                self.dataset.conditionapplyingtoaccessanduse: record.conditionapplyingtoaccessanduse,
-                self.dataset.lineage: record.lineage,
-                self.dataset.responsiblepartyrole: record.responsiblepartyrole,
-                self.dataset.specificationtitle: record.specificationtitle,
-                self.dataset.specificationdate: record.specificationdate,
-                self.dataset.specificationdatetype: record.specificationdatetype
-                })
+                identifier=record.identifier).update(update_dict)
                 self.session.commit()
             except Exception, err:
                 self.session.rollback()
                 raise RuntimeError, 'ERROR: %s' % str(err)
         else:  # update based on record properties
             try:
-                rows = 0
+                rows = rows2 = 0
                 self.session.begin()
                 for rpu in recprops:
+                    # update queryable column and XML document via XPath
                     rows += self.session.query(self.dataset).filter(
                         constraint['where']).update({
-                            getattr(self.dataset, rpu['rp']['dbcol']): rpu['value'],
-                            self.dataset.xml: func.update_xpath(self.dataset.xml, str(rpu)),
-                            self.dataset.anytext: func.get_anytext(self.dataset.xml)
+                            getattr(self.dataset,
+                            rpu['rp']['dbcol']): rpu['value'],
+                            self.dataset.xml: func.update_xpath(
+                            self.dataset.xml, str(rpu)),
+                        }, synchronize_session='fetch')
+                    # then update anytext tokens
+                    rows2 += self.session.query(self.dataset).filter(
+                        constraint['where']).update({
+                            self.dataset.anytext: func.get_anytext(
+                            self.dataset.xml)
                         }, synchronize_session='fetch')
                 self.session.commit()
                 return rows
