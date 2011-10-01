@@ -119,7 +119,8 @@ def parse(element, queryables, dbtype):
 
             # if this is a case insensitive search
             # then set the DB-specific LIKE comparison operator
-            if matchcase is not None and matchcase == 'false':
+            if ((matchcase is not None and matchcase == 'false') or
+            pname == 'anytext'):
                 com_op = 'ilike' if dbtype == 'postgresql' else 'like'
 
             if child.tag == util.nspath_eval('ogc:PropertyIsBetween'):
