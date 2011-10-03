@@ -1,35 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd"><csw:SearchStatus timestamp="PYCSW_TIMESTAMP"><csw:Record>
-    <dc:identifier>urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
-    <dc:title>Lorem ipsum dolor sit amet</dc:title>
-    <dc:format>image/jpeg</dc:format>
-    <dct:spatial>IT-FI</dct:spatial>
-</csw:Record><csw:Record>
-    <dc:identifier>urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
-    <dct:abstract>Proin sit amet justo. In justo. Aenean adipiscing nulla id tellus.</dct:abstract>
-    <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
-      <ows:LowerCorner>60.042 13.754</ows:LowerCorner>
-      <ows:UpperCorner>68.410 17.920</ows:UpperCorner>
-    </ows:BoundingBox>
-</csw:Record><csw:Record>
-    <dc:identifier>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</dc:identifier>
-    <dc:title>Maecenas enim</dc:title>
-    <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
-    <dc:format>application/xhtml+xml</dc:format>
-    <dc:subject>Marine sediments</dc:subject>
-    <dct:abstract>Pellentesque tempus magna non sapien fringilla blandit.</dct:abstract>
-</csw:Record><csw:Record>
-    <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
-    <dc:title>Aliquam fermentum purus quis arcu</dc:title>
-    <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
-    <dc:subject>Hydrography--Dictionaries</dc:subject>
-    <dc:format>application/pdf</dc:format>
-    <dc:date>2006-05-12Z</dc:date>
-    <dct:abstract>Vestibulum quis ipsum sit amet metus imperdiet vehicula. Nulla scelerisque cursus mi.</dct:abstract>
-</csw:Record><csw:Record>
+<csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
+  <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="5012" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+    <csw:Record>
     <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
     <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
     <dc:title>&#209;un&#231; elementum</dc:title>
@@ -39,7 +13,57 @@
       <ows:LowerCorner>44.792 -6.171</ows:LowerCorner>
       <ows:UpperCorner>51.126 -2.228</ows:UpperCorner>
     </ows:BoundingBox>
-</csw:Record><csw:Record><dc:identifier>14C1AA7C-9054-9C4A-C403-5F49A33DD1D4</dc:identifier><dc:title>Precipitation (Monthly)</dc:title><dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type><dc:subject>Locations: International &gt; Outside North America</dc:subject><dc:subject>Locations: Canada</dc:subject><dc:subject>Locations: International &gt; North America</dc:subject><dc:subject>Topic Category: Biology and Ecology</dc:subject><dc:subject>Topic Category: Oceans and Coasts</dc:subject><dc:subject>Topic Category: Transportation Networks</dc:subject><dc:subject>Topic Category: Cultural, Society and Demographic</dc:subject><dc:subject>Topic Category: Atmosphere and Climate</dc:subject><dc:subject>Topic Category: Business and Economic</dc:subject><dc:subject>Topic Category: Locations and Geodetic Networks</dc:subject><dc:subject>Topic Category: Environment and Conservation</dc:subject><dc:format>text/xml</dc:format><dct:modified>2009-09-04</dct:modified><dct:abstract>A cascading Web Map Server can use other web map servers as data sources, seamlessly translating and overlaying the results into a unique map image for the user. To our knowledge CubeSERV&#174; is the only Web Map Server capable of this feat.
+</csw:Record>
+    <csw:Record>
+    <dc:identifier>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
+    <dc:title>Ut facilisis justo ut lacus</dc:title>
+    <dc:subject scheme="http://www.digest.org/2.1">Vegetation</dc:subject>
+    <dc:relation>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:relation>
+</csw:Record>
+    <csw:Record>
+    <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:title>Lorem ipsum</dc:title>
+    <dct:spatial>GR-22</dct:spatial>
+    <dc:subject>Tourism--Greece</dc:subject>
+    <dct:abstract>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</dct:abstract>
+</csw:Record>
+    <csw:Record>
+    <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
+    <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
+    <dc:date>2003-05-09Z</dc:date>
+    <dc:subject>Land titles</dc:subject>
+    <dc:format>text/rtf</dc:format>
+    <dct:abstract>Morbi ultri&#231;es, dui suscipit vestibulum pr&#232;tium, velit ante pretium tortor, eg&#235;t tincidunt pede odio ac nulla.</dct:abstract>
+</csw:Record>
+    <csw:Record>
+    <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+    <dc:subject scheme="http://www.digest.org/2.1">Physiography-Landforms</dc:subject>
+    <dct:spatial>FI-ES</dct:spatial>
+    <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
+</csw:Record>
+    <csw:Record>
+      <dc:identifier>14C1AA7C-9054-9C4A-C403-5F49A33DD1D4</dc:identifier>
+      <dc:title>Precipitation (Monthly)</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Locations: International &gt; Outside North America</dc:subject>
+      <dc:subject>Locations: Canada</dc:subject>
+      <dc:subject>Locations: International &gt; North America</dc:subject>
+      <dc:subject>Topic Category: Biology and Ecology</dc:subject>
+      <dc:subject>Topic Category: Oceans and Coasts</dc:subject>
+      <dc:subject>Topic Category: Transportation Networks</dc:subject>
+      <dc:subject>Topic Category: Cultural, Society and Demographic</dc:subject>
+      <dc:subject>Topic Category: Atmosphere and Climate</dc:subject>
+      <dc:subject>Topic Category: Business and Economic</dc:subject>
+      <dc:subject>Topic Category: Locations and Geodetic Networks</dc:subject>
+      <dc:subject>Topic Category: Environment and Conservation</dc:subject>
+      <dc:format>text/xml</dc:format>
+      <dct:modified>2009-09-04</dct:modified>
+      <dct:abstract>A cascading Web Map Server can use other web map servers as data sources, seamlessly translating and overlaying the results into a unique map image for the user. To our knowledge CubeSERV&#174; is the only Web Map Server capable of this feat.
 
 What this means is that your developers will be presented with a single, uniform interface to the WMS, no matter what downstream servers are being cascaded, greatly simplfying their job. In addition, CubeSERV&#174; will automatically supplement the capabilities of any downstream server, providing missing spatial reference systems, image formats, etc.
 
@@ -51,7 +75,83 @@ The Framework Web Feature Services are offered by the United States Geological S
 * NASA JPL Global Data Server
 A collection of global data layers collected by various NASA satellites and projects.
       
-...</dct:abstract><dc:contributor>Mike Galluchon</dc:contributor><dc:creator>CubeWerx Inc.</dc:creator><dct:created>2009-09-04</dct:created><dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=347ADAEC-078E-6DF4-78F7-0196CDB0DBCF</dc:source><dc:language>eng; CAN</dc:language><ows:BoundingBox crs="EPSG:4326"><ows:LowerCorner>-90 -180</ows:LowerCorner><ows:UpperCorner>90 180</ows:UpperCorner></ows:BoundingBox></csw:Record><csw:Record><dc:identifier>2E736448-C3C3-040C-36B0-CFA18D06F74D</dc:identifier><dc:title>Aqueducts/Canals/Flumes/Penstocks</dc:title><dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type><dc:subject>Locations: Canada &gt; Manitoba</dc:subject><dc:subject>Locations: Oceans &gt; Atlantic Ocean</dc:subject><dc:subject>Locations: International &gt; Circumpolar Arctic</dc:subject><dc:subject>Locations: International &gt; Outside North America</dc:subject><dc:subject>Locations: Canada &gt; Ontario</dc:subject><dc:subject>Locations: Canada Regional &gt; Western Canada</dc:subject><dc:subject>Locations: Canada &gt; Nunavut</dc:subject><dc:subject>Locations: Canada Regional &gt; Territorial North</dc:subject><dc:subject>Locations: Canada &gt; Quebec</dc:subject><dc:subject>Locations: Oceans &gt; Pacific Ocean</dc:subject><dc:subject>Locations: Canada &gt; Nova Scotia</dc:subject><dc:subject>Locations: Canada &gt; Newfoundland and Labrador</dc:subject><dc:subject>Locations: Canada &gt; Northwest Territories</dc:subject><dc:subject>Locations: Canada &gt; British Columbia</dc:subject><dc:subject>Locations: Canada &gt; Yukon</dc:subject><dc:subject>Locations: Canada Regional &gt; Central Canada</dc:subject><dc:subject>Locations: Canada &gt; Prince Edward Island</dc:subject><dc:subject>Locations: Canada &gt; Alberta</dc:subject><dc:subject>Locations: Canada &gt; New Brunswick</dc:subject><dc:subject>Locations: International &gt; North America</dc:subject><dc:subject>Locations: Oceans &gt; Arctic Ocean</dc:subject><dc:subject>Locations: Canada &gt; Saskatchewan</dc:subject><dc:subject>Locations: Canada Regional &gt; Atlantic Canada</dc:subject><dc:subject>Topic Category: Transportation Networks</dc:subject><dc:subject>Topic Category: Imagery and Basemaps</dc:subject><dc:subject>Topic Category: Administrative and Political</dc:subject><dc:subject>Topic Category: Agriculture and Farming</dc:subject><dc:subject>Topic Category: Locations and Geodetic Networks</dc:subject><dc:subject>Topic Category: Inland Water Resources</dc:subject><dc:subject>Topic Category: Utilities and Communication</dc:subject><dc:format>text/xml</dc:format><dct:modified>2009-09-10</dct:modified><dct:abstract>The Canada Centre for Remote Sensing (CCRS) Web Map Service (WMS) provides an OpenGIS Consortium (OGC) compliant Web Map Service interface as an online web mapping service of various projects, such as GeoGratis, GeoBase, and other CCRS information holdings.  The CCRS WMS also allows for custom cartographic styling through the OGC Styled Layer Descriptor (SLD) Specification.</dct:abstract><dc:contributor>Pat King</dc:contributor><dc:creator>NRCAN.RNCAN</dc:creator><dct:created>2009-09-10</dct:created><dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=17E93F6E-9474-F71B-47EA-EE6BFD2A136F</dc:source><dc:language>eng; CAN</dc:language><ows:BoundingBox crs="EPSG:4326"><ows:LowerCorner>-90 -180</ows:LowerCorner><ows:UpperCorner>90 180</ows:UpperCorner></ows:BoundingBox></csw:Record><csw:Record><dc:identifier>2851BCAE-F265-AEF3-B3D8-6A493D292A94</dc:identifier><dc:title>Predicted Lynx Habitat with population cycling only in the Gaspe</dc:title><dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type><dc:subject>Locations: Canada &gt; Ontario</dc:subject><dc:subject>Locations: Canada &gt; Quebec</dc:subject><dc:subject>Locations: Canada &gt; Nova Scotia</dc:subject><dc:subject>Locations: Canada &gt; Newfoundland and Labrador</dc:subject><dc:subject>Locations: Canada Regional &gt; Central Canada</dc:subject><dc:subject>Locations: Canada &gt; Prince Edward Island</dc:subject><dc:subject>Locations: Canada &gt; New Brunswick</dc:subject><dc:subject>Locations: Canada Regional &gt; Atlantic Canada</dc:subject><dc:subject>Topic Category: Cultural, Society and Demographic</dc:subject><dc:subject>Topic Category: Administrative and Political</dc:subject><dc:subject>Topic Category: Environment and Conservation</dc:subject><dc:subject>Topic Category: Inland Water Resources</dc:subject><dc:format>text/xml</dc:format><dct:modified>2009-09-04</dct:modified><dct:abstract>The Northern Appalachian Ecoregion Conservation Planning Atlas contains map layers that describe ecological variation , ecological importance, accumulated human impacts (Human Footprint) and modelled future impacts (Future Human Impact) under multiple scenarios.
+...</dct:abstract>
+      <dc:contributor>Mike Galluchon</dc:contributor>
+      <dc:creator>CubeWerx Inc.</dc:creator>
+      <dct:created>2009-09-04</dct:created>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=347ADAEC-078E-6DF4-78F7-0196CDB0DBCF</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>2E736448-C3C3-040C-36B0-CFA18D06F74D</dc:identifier>
+      <dc:title>Aqueducts/Canals/Flumes/Penstocks</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Locations: Canada &gt; Manitoba</dc:subject>
+      <dc:subject>Locations: Oceans &gt; Atlantic Ocean</dc:subject>
+      <dc:subject>Locations: International &gt; Circumpolar Arctic</dc:subject>
+      <dc:subject>Locations: International &gt; Outside North America</dc:subject>
+      <dc:subject>Locations: Canada &gt; Ontario</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Western Canada</dc:subject>
+      <dc:subject>Locations: Canada &gt; Nunavut</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Territorial North</dc:subject>
+      <dc:subject>Locations: Canada &gt; Quebec</dc:subject>
+      <dc:subject>Locations: Oceans &gt; Pacific Ocean</dc:subject>
+      <dc:subject>Locations: Canada &gt; Nova Scotia</dc:subject>
+      <dc:subject>Locations: Canada &gt; Newfoundland and Labrador</dc:subject>
+      <dc:subject>Locations: Canada &gt; Northwest Territories</dc:subject>
+      <dc:subject>Locations: Canada &gt; British Columbia</dc:subject>
+      <dc:subject>Locations: Canada &gt; Yukon</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Central Canada</dc:subject>
+      <dc:subject>Locations: Canada &gt; Prince Edward Island</dc:subject>
+      <dc:subject>Locations: Canada &gt; Alberta</dc:subject>
+      <dc:subject>Locations: Canada &gt; New Brunswick</dc:subject>
+      <dc:subject>Locations: International &gt; North America</dc:subject>
+      <dc:subject>Locations: Oceans &gt; Arctic Ocean</dc:subject>
+      <dc:subject>Locations: Canada &gt; Saskatchewan</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Atlantic Canada</dc:subject>
+      <dc:subject>Topic Category: Transportation Networks</dc:subject>
+      <dc:subject>Topic Category: Imagery and Basemaps</dc:subject>
+      <dc:subject>Topic Category: Administrative and Political</dc:subject>
+      <dc:subject>Topic Category: Agriculture and Farming</dc:subject>
+      <dc:subject>Topic Category: Locations and Geodetic Networks</dc:subject>
+      <dc:subject>Topic Category: Inland Water Resources</dc:subject>
+      <dc:subject>Topic Category: Utilities and Communication</dc:subject>
+      <dc:format>text/xml</dc:format>
+      <dct:modified>2009-09-10</dct:modified>
+      <dct:abstract>The Canada Centre for Remote Sensing (CCRS) Web Map Service (WMS) provides an OpenGIS Consortium (OGC) compliant Web Map Service interface as an online web mapping service of various projects, such as GeoGratis, GeoBase, and other CCRS information holdings.  The CCRS WMS also allows for custom cartographic styling through the OGC Styled Layer Descriptor (SLD) Specification.</dct:abstract>
+      <dc:contributor>Pat King</dc:contributor>
+      <dc:creator>NRCAN.RNCAN</dc:creator>
+      <dct:created>2009-09-10</dct:created>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=17E93F6E-9474-F71B-47EA-EE6BFD2A136F</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>2851BCAE-F265-AEF3-B3D8-6A493D292A94</dc:identifier>
+      <dc:title>Predicted Lynx Habitat with population cycling only in the Gaspe</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Locations: Canada &gt; Ontario</dc:subject>
+      <dc:subject>Locations: Canada &gt; Quebec</dc:subject>
+      <dc:subject>Locations: Canada &gt; Nova Scotia</dc:subject>
+      <dc:subject>Locations: Canada &gt; Newfoundland and Labrador</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Central Canada</dc:subject>
+      <dc:subject>Locations: Canada &gt; Prince Edward Island</dc:subject>
+      <dc:subject>Locations: Canada &gt; New Brunswick</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Atlantic Canada</dc:subject>
+      <dc:subject>Topic Category: Cultural, Society and Demographic</dc:subject>
+      <dc:subject>Topic Category: Administrative and Political</dc:subject>
+      <dc:subject>Topic Category: Environment and Conservation</dc:subject>
+      <dc:subject>Topic Category: Inland Water Resources</dc:subject>
+      <dc:format>text/xml</dc:format>
+      <dct:modified>2009-09-04</dct:modified>
+      <dct:abstract>The Northern Appalachian Ecoregion Conservation Planning Atlas contains map layers that describe ecological variation , ecological importance, accumulated human impacts (Human Footprint) and modelled future impacts (Future Human Impact) under multiple scenarios.
 
 This is an initiative of the conservation consortium Two Countries, One Forest (www.2c1forest.org)
 
@@ -59,7 +159,36 @@ Data contributed by:
 Wildlife Conservation Society of Canada (WCS Canada) - Human footprint
 Two Countries One Forest (2c1Forest) - Future Human Footprint
 The Nature Conservancy (TNC), Nature Conservancy Canada - Ecoregional Assessment
-The Wildlands Project (TWP) - Wildlands Network Design. </dct:abstract><dc:contributor>Gillian Woolmer</dc:contributor><dc:creator>Wildlife Conservation Society Canada</dc:creator><dct:created>2009-09-04</dct:created><dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=10F7438B-5C44-38B0-96CD-13C4228404E1</dc:source><dc:language>eng; CAN</dc:language><ows:BoundingBox crs="EPSG:4326"><ows:LowerCorner>-90 -180</ows:LowerCorner><ows:UpperCorner>90 180</ows:UpperCorner></ows:BoundingBox></csw:Record><csw:Record><dc:identifier>2F04DEBB-0592-D928-FA4E-3FB0D16F7C7B</dc:identifier><dc:title>Wild by Ecological Subregion</dc:title><dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type><dc:subject>Locations: Canada &gt; Ontario</dc:subject><dc:subject>Locations: Canada &gt; Quebec</dc:subject><dc:subject>Locations: Canada &gt; Nova Scotia</dc:subject><dc:subject>Locations: Canada &gt; Newfoundland and Labrador</dc:subject><dc:subject>Locations: Canada Regional &gt; Central Canada</dc:subject><dc:subject>Locations: Canada &gt; Prince Edward Island</dc:subject><dc:subject>Locations: Canada &gt; New Brunswick</dc:subject><dc:subject>Locations: Canada Regional &gt; Atlantic Canada</dc:subject><dc:subject>Topic Category: Cultural, Society and Demographic</dc:subject><dc:subject>Topic Category: Administrative and Political</dc:subject><dc:subject>Topic Category: Environment and Conservation</dc:subject><dc:subject>Topic Category: Inland Water Resources</dc:subject><dc:format>text/xml</dc:format><dct:modified>2009-09-04</dct:modified><dct:abstract>The Northern Appalachian Ecoregion Conservation Planning Atlas contains map layers that describe ecological variation , ecological importance, accumulated human impacts (Human Footprint) and modelled future impacts (Future Human Impact) under multiple scenarios.
+The Wildlands Project (TWP) - Wildlands Network Design. </dct:abstract>
+      <dc:contributor>Gillian Woolmer</dc:contributor>
+      <dc:creator>Wildlife Conservation Society Canada</dc:creator>
+      <dct:created>2009-09-04</dct:created>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=10F7438B-5C44-38B0-96CD-13C4228404E1</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>2F04DEBB-0592-D928-FA4E-3FB0D16F7C7B</dc:identifier>
+      <dc:title>Wild by Ecological Subregion</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Locations: Canada &gt; Ontario</dc:subject>
+      <dc:subject>Locations: Canada &gt; Quebec</dc:subject>
+      <dc:subject>Locations: Canada &gt; Nova Scotia</dc:subject>
+      <dc:subject>Locations: Canada &gt; Newfoundland and Labrador</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Central Canada</dc:subject>
+      <dc:subject>Locations: Canada &gt; Prince Edward Island</dc:subject>
+      <dc:subject>Locations: Canada &gt; New Brunswick</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Atlantic Canada</dc:subject>
+      <dc:subject>Topic Category: Cultural, Society and Demographic</dc:subject>
+      <dc:subject>Topic Category: Administrative and Political</dc:subject>
+      <dc:subject>Topic Category: Environment and Conservation</dc:subject>
+      <dc:subject>Topic Category: Inland Water Resources</dc:subject>
+      <dc:format>text/xml</dc:format>
+      <dct:modified>2009-09-04</dct:modified>
+      <dct:abstract>The Northern Appalachian Ecoregion Conservation Planning Atlas contains map layers that describe ecological variation , ecological importance, accumulated human impacts (Human Footprint) and modelled future impacts (Future Human Impact) under multiple scenarios.
 
 This is an initiative of the conservation consortium Two Countries, One Forest (www.2c1forest.org)
 
@@ -67,4 +196,32 @@ Data contributed by:
 Wildlife Conservation Society of Canada (WCS Canada) - Human footprint
 Two Countries One Forest (2c1Forest) - Future Human Footprint
 The Nature Conservancy (TNC), Nature Conservancy Canada - Ecoregional Assessment
-The Wildlands Project (TWP) - Wildlands Network Design. </dct:abstract><dc:contributor>Gillian Woolmer</dc:contributor><dc:creator>Wildlife Conservation Society Canada</dc:creator><dct:created>2009-09-04</dct:created><dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=10F7438B-5C44-38B0-96CD-13C4228404E1</dc:source><dc:language>eng; CAN</dc:language><ows:BoundingBox crs="EPSG:4326"><ows:LowerCorner>-90 -180</ows:LowerCorner><ows:UpperCorner>90 180</ows:UpperCorner></ows:BoundingBox></csw:Record><csw:Record><dc:identifier>1B2E52C3-E6B5-46A6-852E-7FE935B8B540</dc:identifier><dc:title>CDED 1:250,000 level 4 overview</dc:title><dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type><dc:format>text/xml</dc:format><dct:abstract>CDED 1:250,000 level 4 overview used for display between 1:750,000 and 1:300,000 scales.</dct:abstract><dc:creator>GeoBase Secretariat</dc:creator><dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=50E9EF7A-7F71-4F26-36D3-7400FDDD8533</dc:source><dc:language>eng; CAN</dc:language><dct:references scheme="accessLink">http://ows.geobase.ca/wms/geobase_en?</dct:references><dct:references scheme="none">http://geodiscover.cgdi.ca/wes/CSWSearchClient/OWSResults/DisplayFullMetadata.jsp?id=E2058B0E-F95D-2228-5945-75657AD5BD97</dct:references><ows:BoundingBox crs="EPSG:4326"><ows:LowerCorner>-90 -180</ows:LowerCorner><ows:UpperCorner>90 180</ows:UpperCorner></ows:BoundingBox></csw:Record></csw:SearchResults></csw:GetRecordsResponse>
+The Wildlands Project (TWP) - Wildlands Network Design. </dct:abstract>
+      <dc:contributor>Gillian Woolmer</dc:contributor>
+      <dc:creator>Wildlife Conservation Society Canada</dc:creator>
+      <dct:created>2009-09-04</dct:created>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=10F7438B-5C44-38B0-96CD-13C4228404E1</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>1B2E52C3-E6B5-46A6-852E-7FE935B8B540</dc:identifier>
+      <dc:title>CDED 1:250,000 level 4 overview</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:format>text/xml</dc:format>
+      <dct:abstract>CDED 1:250,000 level 4 overview used for display between 1:750,000 and 1:300,000 scales.</dct:abstract>
+      <dc:creator>GeoBase Secretariat</dc:creator>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=50E9EF7A-7F71-4F26-36D3-7400FDDD8533</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <dct:references scheme="accessLink">http://ows.geobase.ca/wms/geobase_en?</dct:references>
+      <dct:references scheme="none">http://geodiscover.cgdi.ca/wes/CSWSearchClient/OWSResults/DisplayFullMetadata.jsp?id=E2058B0E-F95D-2228-5945-75657AD5BD97</dct:references>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>
