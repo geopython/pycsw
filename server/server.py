@@ -37,7 +37,7 @@ import cgi
 import urllib2
 import ConfigParser
 from lxml import etree
-import config, fes, log, plugins.profiles.profile, repository, util
+import config, fes, log, metadata, plugins.profiles.profile, repository, util
 from shapely.wkt import loads
 
 class Csw(object):
@@ -1112,7 +1112,7 @@ class Csw(object):
 
         for ttype in self.kvp['transactions']:
             if ttype['type'] == 'insert':
-                record = parse_record(ttype['xml'], self.repository)
+                record = metadata.parse_record(ttype['xml'], self.repository)
 
                 self.log.debug('Transaction operation: %s' % record)
 
@@ -1131,7 +1131,7 @@ class Csw(object):
             elif ttype['type'] == 'update':
                 if ttype.has_key('constraint') is False:
                     # update full existing resource in repository
-                    record = parse_record(ttype['xml'], self.repository)
+                    record = metadata.parse_record(ttype['xml'], self.repository)
             
                     # query repository to see if record already exists
                     self.log.debug('checking if record exists (%s)' % \
@@ -1201,21 +1201,26 @@ class Csw(object):
             ','.join(config.MODEL['operations']['Harvest']['parameters']
             ['ResourceType']['values'])))
 
-        # fetch resource
-        self.log.debug('Fetching resource %s' % self.kvp['source'])
-        try:
-            req = urllib2.Request(self.kvp['source'])
-            req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
-            content = urllib2.urlopen(req).read() 
-        except Exception, err:
-            errortext = 'Error fetching resource %s.\nError: %s.' % \
-            (self.kvp['source'], str(err))
-            self.log.debug(errortext)
-            return self.exceptionreport('InvalidParameterValue', 'source',
-            errortext)
+        if self.kvp['resourcetype'] != 'http://www.opengis.net/wms':
+            # fetch resource
+            self.log.debug('Fetching resource %s' % self.kvp['source'])
+            try:
+                req = urllib2.Request(self.kvp['source'])
+                req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
+                content = urllib2.urlopen(req).read() 
+            except Exception, err:
+                errortext = 'Error fetching resource %s.\nError: %s.' % \
+                (self.kvp['source'], str(err))
+                self.log.debug(errortext)
+                return self.exceptionreport('InvalidParameterValue', 'source',
+                errortext)
+        else:
+            content = self.kvp['source']
 
         # insert resource into repository
-        record = parse_record(content, self.repository)
+        record = metadata.parse_record(content, self.repository,
+        self.kvp['resourcetype'])
+
         record.source = self.kvp['source']
         record.insert_date = util.get_today_and_now()
 
@@ -1672,7 +1677,7 @@ class Csw(object):
             config.MODEL['operations']['Harvest']['parameters']\
             ['ResourceType'] = {}
             config.MODEL['operations']['Harvest']['parameters']['ResourceType']\
-            ['values'] = ['http://www.opengis.net/cat/csw/2.0.2']
+            ['values'] = ['http://www.opengis.net/cat/csw/2.0.2', 'http://www.opengis.net/wms']
 
     def _parse_constraint(self, element):
         ''' Parse csw:Constraint '''
@@ -1748,187 +1753,6 @@ class Csw(object):
         node1.append(etree.fromstring(self.request))
 
         return node
-
-def parse_record(record, repos=None):
-    ''' parse metadata '''
-
-    from owslib.csw import CswRecord
-    from owslib.iso import MD_Metadata
-
-    if isinstance(record, str):
-        exml = etree.fromstring(record)
-    else:  # already serialized to lxml
-        if hasattr(record, 'getroot'):  # standalone document
-            exml = record.getroot()
-        else:  # part of a larger document
-            exml = record
-
-    root = exml.tag
-
-    recobj = repos.dataset()
-
-    if root == '{%s}MD_Metadata' % config.NAMESPACES['gmd']:  # ISO
-
-        md = MD_Metadata(exml)
-
-        recobj.identifier = md.identifier
-        recobj.typename = 'gmd:MD_Metadata'
-        recobj.schema = config.NAMESPACES['gmd']
-        recobj.mdsource = 'local'
-        recobj.insert_date = util.get_today_and_now()
-        recobj.xml = md.xml
-        recobj.anytext = util.get_anytext(exml)
-        recobj.language = md.language
-        recobj.type = md.hierarchy
-        recobj.parentidentifier = md.parentidentifier
-        recobj.date = md.datestamp
-        recobj.source = md.dataseturi
-        recobj.crs = md.referencesystem
-
-        if hasattr(md, 'identification'):
-            recobj.title = md.identification.title
-            recobj.title_alternate = md.identification.alternatetitle
-            recobj.abstract = md.identification.abstract
-            recobj.relation = md.identification.aggregationinfo
-            recobj.time_begin = md.identification.temporalextent_start
-            recobj.time_end = md.identification.temporalextent_end
-
-            if len(md.identification.topiccategory) > 0:
-                recobj.topicategory = md.identification.topiccategory[0]
-
-            if len(md.identification.resourcelanguage) > 0:
-                recobj.resourcelanguage = md.identification.resourcelanguage[0]
- 
-            if hasattr(md.identification, 'bbox'):
-                bbox = md.identification.bbox
-            else:
-                bbox = None
-
-            if (hasattr(md.identification, 'keywords') and
-            len(md.identification.keywords) > 0):
-                recobj.keywords = ','.join(
-                md.identification.keywords[0]['keywords'])
-                recobj.keywordstype = md.identification.keywords[0]['type']
-
-            if hasattr(md.identification, 'creator'):
-                recobj.creator = md.identification.creator
-            if hasattr(md.identification, 'publisher'):
-                recobj.publisher = md.identification.publisher
-            if hasattr(md.identification, 'contributor'):
-                recobj.contributor = md.identification.contributor
-
-            if (hasattr(md.identification, 'contact') and 
-            hasattr(md.identification.contact, 'organization')):
-                recobj.organization = md.identification.contact.organization
-
-            if len(md.identification.securityconstraints) > 0:
-                recobj.securityconstraints = \
-                md.identification.securityconstraints[0]
-            if len(md.identification.accessconstraints) > 0:
-                recobj.accessconstraints = \
-                md.identification.accessconstraints[0]
-            if len(md.identification.otherconstraints) > 0:
-                recobj.otherconstraints = md.identification.otherconstraints[0]
-
-            if hasattr(md.identification, 'date'):
-                for datenode in md.identification.date:
-                    if datenode.type == 'revision':
-                        recobj.date_revision = datenode.date
-                    elif datenode.type == 'creation':
-                        recobj.date_creation = datenode.date
-                    elif datenode.type == 'publication':
-                        recobj.date_publication = datenode.date
-
-            recobj.geodescode = md.identification.bbox.description_code
-
-            if len(md.identification.denominators) > 0:
-                recobj.denominator = md.identification.denominators[0]
-            if len(md.identification.distance) > 0:
-                recobj.distancevalue = md.identification.distance[0]
-            if len(md.identification.uom) > 0:
-                recobj.distanceuom = md.identification.uom[0]
-
-            if len(md.identification.classification) > 0:
-                recobj.classification = md.identification.classification[0]
-            if len(md.identification.uselimitation) > 0:
-                recobj.conditionapplyingtoaccessanduse = \
-                md.identification.uselimitation[0]
-
-        if hasattr(md.identification, 'format'):
-            recobj.format = md.distribution.format
-
-        if md.serviceidentification is not None:
-            recobj.servicetype = md.serviceidentification.type
-            recobj.servicetypeversion = md.serviceidentification.version
-
-            recobj.couplingtype = md.serviceidentification.couplingtype
-       
-            #if len(md.serviceidentification.operateson) > 0: 
-            #    recobj.operateson = VARCHAR(32), 
-            #recobj.operation VARCHAR(32), 
-            #recobj.operatesonidentifier VARCHAR(32), 
-            #recobj.operatesoname VARCHAR(32), 
-
-
-        if hasattr(md.identification, 'dataquality'):     
-            recobj.degree = md.dataquality.conformancedegree
-            recobj.lineage = md.dataquality.lineage
-            recobj.specificationtitle = md.dataquality.specificationtitle
-            if hasattr(md.dataquality, 'specificationdate'):
-                recobj.specificationdate = \
-                md.dataquality.specificationdate[0].date
-                recobj.specificationdatetype = \
-                md.dataquality.specificationdate[0].datetype
-
-        if hasattr(md, 'contact') and len(md.contact) > 0:
-            recobj.responsiblepartyrole = md.contact[0].role
-
-    else:  # default
-        md = CswRecord(exml)
-
-        if md.bbox is None:
-            bbox = None
-        else:
-            bbox = md.bbox
-
-	recobj.identifier = md.identifier
-	recobj.typename = 'csw:Record'
-	recobj.schema = config.NAMESPACES['csw']
-	recobj.mdsource = 'local'
-	recobj.insert_date = util.get_today_and_now()
-	recobj.xml = md.xml
-	recobj.anytext = util.get_anytext(exml)
-	recobj.language = md.language
-	recobj.type = md.type
-	recobj.title = md.title
-	recobj.title_alternate = md.alternative
-	recobj.abstract = md.abstract
-	recobj.keywords = ','.join(md.subjects)
-	recobj.parentidentifier = md.ispartof
-	recobj.relation = md.relation
-	recobj.time_begin = md.temporal
-	recobj.time_end = md.temporal
-	recobj.resourcelanguage = md.language
-	recobj.creator = md.creator
-	recobj.publisher = md.publisher
-	recobj.contributor = md.contributor
-	recobj.organization = md.rightsholder
-	recobj.accessconstraints = md.accessrights
-	recobj.otherconstraints = md.license
-	recobj.date = md.date
-	recobj.date_creation = md.created
-	recobj.date_publication = md.issued
-	recobj.date_modified = md.modified
-	recobj.format = md.format
-	recobj.source = md.source
-
-    if bbox is not None:
-        tmp = '%s,%s,%s,%s' % (bbox.miny, bbox.minx, bbox.maxy, bbox.maxx)
-        recobj.geometry = util.bbox2wktpolygon(tmp)
-    else:
-        recobj.geometry = None
-
-    return recobj
 
 def write_boundingbox(bbox):
     ''' Generate ows:BoundingBox '''
