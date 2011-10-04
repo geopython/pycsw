@@ -170,7 +170,7 @@ def transform_mappings(queryables, typename, reverse=False):
 def get_anytext(xml):
     ''' get all element and attribute data from an XML document '''
 
-    if isinstance(xml, unicode):  # not lxml serialized yet
+    if isinstance(xml, unicode) or isinstance(xml, str):  # not serialized yet
         xml = etree.fromstring(xml)
     return '%s %s' % (' '.join([value for value in xml.xpath('//text()')]),
     ' '.join([value for value in xml.xpath('//attribute::*')]))
