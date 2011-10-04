@@ -1216,23 +1216,23 @@ class Csw(object):
 
         # insert resource into repository
         record = parse_record(content, self.repository)
-        record['source'] = self.kvp['source']
-        record['insert_date'] = util.get_today_and_now()
+        record.source = self.kvp['source']
+        record.insert_date = util.get_today_and_now()
 
         # query repository to see if record already exists
-        self.log.debug('checking if record exists (%s)' % record['identifier'])
-        results = self.repository.query_ids(ids=[record['identifier']])
+        self.log.debug('checking if record exists (%s)' % record.identifier)
+        results = self.repository.query_ids(ids=[record.identifier])
 
         if len(results) == 0:  # new record, it's a new insert
             inserted = 1
             updated = 0
             try:
-                self.repository.insert(record)
+                self.repository.insert(record, record.source, record.insert_date)
             except Exception, err:
                 return self.exceptionreport('NoApplicableCode',
                 'source', 'Harvest (insert) failed: %s.' % str(err))
         else:  # existing record, it's an update
-            if record['source'] != results[0].source:
+            if record.source != results[0].source:
                 # same identifier, but different source
                 return self.exceptionreport('NoApplicableCode',
                 'source', 'Insert failed: identifier %s in repository\
