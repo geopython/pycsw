@@ -52,7 +52,7 @@ URLSET.attrib[util.nspath_eval('xsi:schemaLocation')] = \
 config.NAMESPACES['sitemap']
 
 # get all records
-RECORDS = REPOS.query(constraint={})
+COUNT, RECORDS = REPOS.query(constraint={}, maxrecords=99999999)
 
 for rec in RECORDS:
     url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))

@@ -45,7 +45,7 @@ REPOS = repository.Repository(CFG.get('repository', 'database'), 'records',
 config.MODEL['typenames'])
 
 # get all harvested records
-RECORDS = REPOS.query(constraint={'where': 'source != "local"'})
+COUNT, RECORDS = REPOS.query(constraint={'where': 'source != "local"'})
 
 CSW = CatalogueServiceWeb(CFG.get('server', 'url'))
 
