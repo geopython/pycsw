@@ -42,7 +42,7 @@ from shapely.wkt import loads
 
 class Csw(object):
     ''' Base CSW server '''
-    def __init__(self, configfile=None, mode='csw'):
+    def __init__(self, configfile=None):
         ''' Initialize CSW '''
         # load user configuration
         self.config = ConfigParser.SafeConfigParser()
@@ -54,7 +54,7 @@ class Csw(object):
         # init kvp
         self.kvp = {}
 
-        self.mode = mode
+        self.mode = 'csw'
         self.gzip = False
         self.soap = False
         self.request = None
@@ -184,6 +184,13 @@ class Csw(object):
 
         self.log.debug('Parsed request parameters: %s' % self.kvp)
 
+        if (isinstance(self.kvp, str) is False and
+        self.kvp.has_key('mode') and self.kvp['mode'] == 'sru'):
+            import sru
+            self.mode = 'sru'
+            self.log.debug('SRU mode detected; processing request.')
+            self.kvp = sru.request_sru2csw(self.kvp)
+
         if error == 0:
             # test for the basic keyword values (service, version, request)
             for k in ['service', 'version', 'request']:
@@ -270,6 +277,10 @@ class Csw(object):
                 self.response = self.exceptionreport('InvalidParameterValue',
                 'request', 'Invalid request parameter: %s' %
                 self.kvp['request'])
+
+        if self.mode == 'sru':
+            self.log.debug('SRU mode detected; processing response.')
+            self.response = sru.response_csw2sru(self.response)
 
         self._write_response()
 

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<zs:searchRetrieveResponse xmlns:zd="http://www.loc.gov/zing/srw/diagnostic/" xmlns:zs="http://www.loc.gov/zing/srw/" xmlns:srw_dc="info:srw/schema/1/dc-schema" xmlns:zr="http://explain.z3950.org/dtd/2.1/" xmlns:sru="http://www.loc.gov/zing/srw/">
+  <zs:version>1.1</zs:version>
+  <zs:numberOfRecords>5</zs:numberOfRecords>
+</zs:searchRetrieveResponse>
