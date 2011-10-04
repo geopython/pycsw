@@ -48,6 +48,8 @@ Standards Support
 +-------------------+------------+
 | `FGDC CSDGM`_     | 1998       | 
 +-------------------+------------+
+| `SRU`_            | 1.1        | 
++-------------------+------------+
 
 Supported Operations
 --------------------
@@ -123,3 +125,4 @@ Logical Operators
 .. _`NASA DIF`: http://gcmd.nasa.gov/User/difguide/whatisadif.html
 .. _`FGDC CSDGM`: http://www.fgdc.gov/metadata/csdgm
 .. _`FGDC CSDGM Application Profile for CSW 2.0`: http://portal.opengeospatial.org/files/?artifact_id=16936
+.. _`SRU`: http://www.loc.gov/standards/sru/

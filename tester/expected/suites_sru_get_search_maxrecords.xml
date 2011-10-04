@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<zs:searchRetrieveResponse xmlns:zd="http://www.loc.gov/zing/srw/diagnostic/" xmlns:zs="http://www.loc.gov/zing/srw/" xmlns:srw_dc="info:srw/schema/1/dc-schema" xmlns:zr="http://explain.z3950.org/dtd/2.1/" xmlns:sru="http://www.loc.gov/zing/srw/">
+  <zs:version>1.1</zs:version>
+  <zs:numberOfRecords>5</zs:numberOfRecords>
+  <zs:record>
+    <zs:recordData>
+      <srw_dc:srw_dc xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
+        <dc:title>Lorem ipsum</dc:title>
+        <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
+      </srw_dc:srw_dc>
+    </zs:recordData>
+    <zs:recordPosition>1</zs:recordPosition>
+  </zs:record>
+  <zs:recordSchema>info:srw/schema/1/dc-v1.1</zs:recordSchema>
+  <zs:recordPacking>xml</zs:recordPacking>
+  <zs:record>
+    <zs:recordData>
+      <srw_dc:srw_dc xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
+        <dc:title></dc:title>
+        <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      </srw_dc:srw_dc>
+    </zs:recordData>
+    <zs:recordPosition>2</zs:recordPosition>
+  </zs:record>
+  <zs:recordSchema>info:srw/schema/1/dc-v1.1</zs:recordSchema>
+  <zs:recordPacking>xml</zs:recordPacking>
+</zs:searchRetrieveResponse>
