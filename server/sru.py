@@ -76,7 +76,7 @@ MAPPINGS = {
 
 config.NAMESPACES.update(NAMESPACES)
 
-def request_sru2csw(kvpin):
+def request_sru2csw(kvpin, typenames):
     ''' transform an SRU request into a CSW request '''
 
     kvpout = {'service': 'CSW', 'version': '2.0.2', 'mode': 'sru'}
@@ -94,7 +94,7 @@ def request_sru2csw(kvpin):
                 kvpout['maxrecords'] = 0
 
             # TODO: make smarter typename fetching
-            kvpout['typenames'] = 'csw:Record,gmd:MD_Metadata'
+            kvpout['typenames'] = ','.join(typenames)
             kvpout['elementsetname'] = 'brief'
             kvpout['constraintlanguage'] = 'CQL_TEXT'
 
