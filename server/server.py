@@ -189,7 +189,9 @@ class Csw(object):
             import sru
             self.mode = 'sru'
             self.log.debug('SRU mode detected; processing request.')
-            self.kvp = sru.request_sru2csw(self.kvp)
+            self.kvp = sru.request_sru2csw(self.kvp,
+            config.MODEL['operations']['GetRecords']['parameters']\
+            ['typeNames']['values'])
 
         if error == 0:
             # test for the basic keyword values (service, version, request)
@@ -1112,7 +1114,13 @@ class Csw(object):
 
         for ttype in self.kvp['transactions']:
             if ttype['type'] == 'insert':
-                record = metadata.parse_record(ttype['xml'], self.repository)
+                try:
+                    record = metadata.parse_record(ttype['xml'],
+                    self.repository)
+                except Exception, err:
+                    return self.exceptionreport('NoApplicableCode', 'insert',
+                    'Transaction (insert) failed: record parsing failed: %s' \
+                    % str(err))
 
                 self.log.debug('Transaction operation: %s' % record)
 
@@ -1131,7 +1139,12 @@ class Csw(object):
             elif ttype['type'] == 'update':
                 if ttype.has_key('constraint') is False:
                     # update full existing resource in repository
-                    record = metadata.parse_record(ttype['xml'], self.repository)
+                    try:
+                        record = metadata.parse_record(ttype['xml'], self.repository)
+                    except Exception, err:
+                        return self.exceptionreport('NoApplicableCode', 'insert',
+                        'Transaction (update) failed: record parsing failed: %s' \
+                        % str(err))
             
                     # query repository to see if record already exists
                     self.log.debug('checking if record exists (%s)' % \
@@ -1218,8 +1231,13 @@ class Csw(object):
             content = self.kvp['source']
 
         # insert resource into repository
-        record = metadata.parse_record(content, self.repository,
-        self.kvp['resourcetype'])
+
+        try:
+            record = metadata.parse_record(content, self.repository,
+            self.kvp['resourcetype'])
+        except Exception, err:
+            return self.exceptionreport('NoApplicableCode', 'source',
+            'Harvest failed: record parsing failed: %s' % str(err))
 
         record.source = self.kvp['source']
         record.insert_date = util.get_today_and_now()
