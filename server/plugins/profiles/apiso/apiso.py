@@ -500,6 +500,12 @@ class APISO(profile.Profile):
                             tmp = etree.SubElement(oper, util.nspath_eval('srv:SV_OperationMetadata'))
                             tmp2 = etree.SubElement(tmp, util.nspath_eval('srv:operationName'))
                             etree.SubElement(tmp2, util.nspath_eval('gco:CharacterString')).text = i
+                    # operates on resource(s)
+                    val = getattr(result, queryables['apiso:OperatesOn']['dbcol'])
+                    if val:
+                        temp_oper=val.split(',')
+                        for i in temp_oper:
+                            etree.SubElement(srv_identification, util.nspath_eval('srv:operatesOn'), uuidref=i)
         return node
 
 def write_extent(bbox):
