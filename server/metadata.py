@@ -151,7 +151,7 @@ def parse_record(record, repos=None,
         recobj.parentidentifier = md.parentidentifier
         recobj.date = md.datestamp
         recobj.source = md.dataseturi
-        recobj.crs = md.referencesystem
+        recobj.crs = 'urn:ogc:def:crs:EPSG::%s' % md.referencesystem
 
         if hasattr(md, 'identification'):
             recobj.title = md.identification.title
