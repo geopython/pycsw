@@ -34,7 +34,7 @@ Setting up the Database
 
 This will create the necessary tables and values for the repository.
 
-The database created is a SFSQL compliant database, and can be used with any implementing software.  For example, to use with `OGR`_:
+The database created is an `OGC SFSQL`_ compliant database, and can be used with any implementing software.  For example, to use with `OGR`_:
 
 .. code-block:: bash
 
@@ -72,3 +72,4 @@ PostgreSQL
 - pycsw makes uses of PL/Python functions.  To enable PostgreSQL support, the database user must be able to create functions within the database.
 
 .. _`OGR`: http://www.gdal.org/ogr
+.. _`OGC SFSQL`: http://www.opengeospatial.org/standards/sfs
