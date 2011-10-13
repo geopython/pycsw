@@ -34,6 +34,17 @@ Setting up the Database
 
 This will create the necessary tables and values for the repository.
 
+The database created is a SFSQL compliant database, and can be used with any implementing software.  For example, to use with `OGR`_:
+
+.. code-block:: bash
+
+  $ ogrinfo /path/to/records.db
+  INFO: Open of 'records.db'
+  using driver 'SQLite' successful.
+  1: records (Polygon)
+  $ ogrinfo -al /path/to/records.db
+  # lots of output
+
 Importing Metadata
 ------------------
 
@@ -59,3 +70,5 @@ PostgreSQL
 ^^^^^^^^^^
 
 - pycsw makes uses of PL/Python functions.  To enable PostgreSQL support, the database user must be able to create functions within the database.
+
+.. _`OGR`: http://www.gdal.org/ogr

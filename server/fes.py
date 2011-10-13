@@ -159,7 +159,7 @@ def _get_spatial_operator(element):
         ('Invalid ogc:PropertyName in spatial filter: %s' %
         property_name.text)
 
-    spatial_query = "query_spatial(geometry,'%s','%s','%s')" % \
+    spatial_query = "query_spatial(wkt_geometry,'%s','%s','%s')" % \
     (gml.get_geometry(element, MODEL['GeometryOperands']['values']),
     util.xmltag_split(element.tag).lower(), distance)
 

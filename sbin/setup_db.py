@@ -70,7 +70,7 @@ GEOM.create()
 
 i = GEOM.insert()
 i.execute(f_table_catalog='public', f_table_schema='public',
-f_table_name='records', f_geometry_column='geometry', 
+f_table_name='records', f_geometry_column='wkt_geometry', 
 geometry_type=3, coord_dimension=2, srid=4326, geometry_format='WKT')
 
 # abstract metadata information model
@@ -128,7 +128,7 @@ RECORDS = Table('records', METADATA,
     Column('denominator', Integer, index=True),
     Column('distancevalue', Integer, index=True),
     Column('distanceuom', String(8), index=True),
-    Column('geometry', Text, index=True),
+    Column('wkt_geometry', Text, index=True),
 
     # service
     Column('servicetype', String(32), index=True),

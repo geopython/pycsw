@@ -35,6 +35,8 @@ Standards Support
 +-------------------+------------+
 | `OGC GML`_        | 3.1.1      |
 +-------------------+------------+
+| `OGC SFSQL`_      | 1.2.1      |
++-------------------+------------+
 | `Dublin Core`_    | 1.1        |
 +-------------------+------------+
 | `SOAP`_           | 1.2        |
@@ -116,6 +118,7 @@ Logical Operators
 .. _`OGC Filter`: http://www.opengeospatial.org/standards/filter
 .. _`OGC OWS Common`: http://www.opengeospatial.org/standards/common
 .. _`OGC GML`: http://www.opengeospatial.org/standards/gml
+.. _`OGC SFSQL`: http://www.opengeospatial.org/standards/sfs
 .. _`Dublin Core`: http://www.dublincore.org/
 .. _`OGC CITE CSW`: http://cite.opengeospatial.org/test_engine/csw/2.0.2
 .. _`SOAP`: http://www.w3.org/TR/soap/

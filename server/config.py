@@ -173,7 +173,7 @@ MODEL =  {
                     'dc:relation': {'xpath': 'dc:relation', 'dbcol': 'relation'},
                     'dc:rights': {'xpath': 'dc:rights', 'dbcol': 'accessconstraints'},
                     # bbox and full text map to internal fixed columns
-                    'ows:BoundingBox': {'xpath': 'ows:BoundingBox', 'dbcol': 'geometry'},
+                    'ows:BoundingBox': {'xpath': 'ows:BoundingBox', 'dbcol': 'wkt_geometry'},
                     'csw:AnyText': {'xpath': 'csw:AnyText', 'dbcol':'anytext'}
                 }
             }
