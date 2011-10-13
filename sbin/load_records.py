@@ -36,7 +36,7 @@ import sys
 import glob
 
 from lxml import etree
-from server import server, repository, util
+from server import metadata, repository, util
 
 if len(sys.argv) < 3:
     print 'Usage: %s <xml directory path> <db_connection_string>' % sys.argv[0]
@@ -54,7 +54,7 @@ for r in glob.glob(os.path.join(sys.argv[1], '*.xml')):
         print 'XML document is not well-formed: %s' % str(err)
         continue
 
-    record = server.parse_record(e, REPO)
+    record = metadata.parse_record(e, REPO)
 
     print 'Inserting %s %s into database %s, table records....' % \
     (record.typename, record.identifier, sys.argv[2])

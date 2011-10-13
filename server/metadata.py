@@ -78,7 +78,7 @@ def parse_record(record, repos=None,
             if md.contents[c].parent is None:
                 bbox = md.contents[c].boundingBoxWGS84
                 tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
-                serviceobj.geometry = util.bbox2wktpolygon(tmp)
+                serviceobj.wkt_geometry = util.bbox2wktpolygon(tmp)
                 break
         serviceobj.crs = 'urn:ogc:def:crs:EPSG:6.3:4326'
         serviceobj.denominator = 'degrees'
@@ -109,14 +109,14 @@ def parse_record(record, repos=None,
             bbox = md.contents[layer].boundingBoxWGS84
             if bbox is not None:
                 tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
-                recobj.geometry = util.bbox2wktpolygon(tmp)
+                recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
                 recobj.crs = 'urn:ogc:def:crs:EPSG:6.3:4326'
                 recobj.denominator = 'degrees'
             else:
                 bbox = md.contents[layer].boundingBox
                 if bbox:
                     tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
-                    recobj.geometry = util.bbox2wktpolygon(tmp)
+                    recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
                     recobj.crs = 'urn:ogc:def:crs:EPSG:6.3:%s' % \
                     bbox[-1].split(':')[1]
 
@@ -292,8 +292,8 @@ def parse_record(record, repos=None,
 
     if bbox is not None:
         tmp = '%s,%s,%s,%s' % (bbox.miny, bbox.minx, bbox.maxy, bbox.maxx)
-        recobj.geometry = util.bbox2wktpolygon(tmp)
+        recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
     else:
-        recobj.geometry = None
+        recobj.wkt_geometry = None
 
     return recobj

@@ -1579,7 +1579,7 @@ class Csw(object):
             for elemname in self.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
                     elemname.find('Envelope') != -1):
-                    bboxel = write_boundingbox(recobj.geometry)
+                    bboxel = write_boundingbox(recobj.wkt_geometry)
                     if bboxel is not None:
                         record.append(bboxel)
                 else:
@@ -1611,7 +1611,7 @@ class Csw(object):
                         if val:
                             etree.SubElement(record,
                             util.nspath_eval(i)).text = val
-                bboxel = write_boundingbox(recobj.geometry)
+                bboxel = write_boundingbox(recobj.wkt_geometry)
                 if bboxel is not None:
                     record.append(bboxel)
         return record
