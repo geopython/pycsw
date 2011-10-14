@@ -57,7 +57,7 @@ REPOSITORY = {
                 'dif:Related_URL': {'xpath': 'dif:Related_URL/dif:URL', 'dbcol': 'relation'},
                 'dif:Access_Constraints': {'xpath': 'dif:Access_Constraints', 'dbcol': 'accessconstraints'},
                 'dif:AnyText': {'xpath': '//', 'dbcol': 'anytext'},
-                'dif:Spatial_Coverage': {'xpath': 'dif:Spatial_Coverage', 'dbcol': 'geometry'}
+                'dif:Spatial_Coverage': {'xpath': 'dif:Spatial_Coverage', 'dbcol': 'wkt_geometry'}
             }
         },
         'mappings': {

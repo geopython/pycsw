@@ -64,7 +64,7 @@ REPOSITORY = {
                 'apiso:Identifier': {'xpath': 'gmd:fileIdentifier/gco:CharacterString', 'dbcol': 'identifier'},
                 'apiso:Modified': {'xpath': 'gmd:dateStamp/gco:Date', 'dbcol': 'date_modified'},
                 'apiso:Type': {'xpath': 'gmd:hierarchyLevel/gmd:MD_ScopeCode', 'dbcol': 'type'},
-                'apiso:BoundingBox': {'xpath': 'apiso:BoundingBox', 'dbcol': 'geometry'},
+                'apiso:BoundingBox': {'xpath': 'apiso:BoundingBox', 'dbcol': 'wkt_geometry'},
                 'apiso:CRS': {'xpath': 'concat("urn:ogc:def:crs:","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:version/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString")', 'dbcol': 'crs'},
                 'apiso:AlternateTitle': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', 'dbcol': 'title_alternate'},
                 'apiso:RevisionDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date/gco:Date', 'dbcol': 'date_revision'},
@@ -152,6 +152,10 @@ class APISO(profile.Profile):
 
         # update INSPIRE vars
         namespaces.update(INSPIRE_NAMESPACES)
+
+        # update harvest resource types with WMS, since WMS is not a typename,
+        if model['operations'].has_key('Harvest'):
+            model['operations']['Harvest']['parameters']['ResourceType']['values'].append('http://www.opengis.net/wms')
 
         # set INSPIRE config
         if config.has_section('metadata:inspire') and config.has_option('metadata:inspire', 'enabled') and config.get('metadata:inspire', 'enabled') == 'true':
