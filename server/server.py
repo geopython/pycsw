@@ -1683,19 +1683,13 @@ class Csw(object):
         ''' Update config.MODEL with CSW-T advertising '''
         if (self.config.has_option('manager', 'transactions') and
             self.config.get('manager', 'transactions') == 'true'):
-            config.MODEL['operations']['Transaction'] = {'methods': {}}
-            config.MODEL['operations']['Transaction']['methods']['get'] = False
-            config.MODEL['operations']['Transaction']['methods']['post'] = True
-            config.MODEL['operations']['Transaction']['parameters'] = {}
+            config.MODEL['operations']['Transaction'] = \
+            {'methods': {'get': False, 'post': True}, 'parameters': {}}
 
-            config.MODEL['operations']['Harvest'] = {'methods': {}}
-            config.MODEL['operations']['Harvest']['methods']['get'] = False
-            config.MODEL['operations']['Harvest']['methods']['post'] = True
-            config.MODEL['operations']['Harvest']['parameters'] = {}
-            config.MODEL['operations']['Harvest']['parameters']\
-            ['ResourceType'] = {}
-            config.MODEL['operations']['Harvest']['parameters']['ResourceType']\
-            ['values'] = ['http://www.opengis.net/cat/csw/2.0.2', 'http://www.opengis.net/wms']
+            config.MODEL['operations']['Harvest'] = \
+            {'methods': {'get': False, 'post': True}, 'parameters': \
+            {'ResourceType': {'values': \
+            ['http://www.opengis.net/cat/csw/2.0.2']}}}
 
     def _parse_constraint(self, element):
         ''' Parse csw:Constraint '''

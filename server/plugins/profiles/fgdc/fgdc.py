@@ -63,7 +63,7 @@ REPOSITORY = {
                 'fgdc:Format': {'xpath': 'distinfo/stdorder/digform/digtinfo/formname', 'dbcol': 'format'},
                 'fgdc:Source': {'xpath': 'lineage/srcinfo/srccite/citeinfo/title', 'dbcol': 'source'},
                 'fgdc:Relation': {'xpath': 'idinfo/citation/citeinfo/onlink', 'dbcol': 'relation'},
-                'fgdc:Envelope': {'xpath': 'bbox', 'dbcol': 'geometry'},
+                'fgdc:Envelope': {'xpath': 'bbox', 'dbcol': 'wkt_geometry'},
                 'fgdc:AnyText': {'xpath': 'xml', 'dbcol': 'anytext'}
             }
         },
