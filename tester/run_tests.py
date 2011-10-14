@@ -86,13 +86,17 @@ def get_validity(expected, result, outfile):
     return status
 
 def normalize(result):
-    ''' Replace time and version specific values with generic values '''
+    ''' Replace time, updateSequence and version specific values with generic
+    values '''
     version = re.search('<!-- (.*) -->', result)
+    updatesequence = re.search('updateSequence="(\d+)"', result)
     timestamp = re.search('timestamp="(.*)"', result)
     timestamp2 = re.search('timeStamp="(.*)"', result)
 
     if version:
         result = result.replace(version.group(0),'<!-- PYCSW_VERSION -->')
+    if updatesequence:
+        result = result.replace(updatesequence.group(0),'updateSequence="PYCSW_UPDATESEQUENCE"')
     if timestamp:
         result = result.replace(timestamp.group(0),
         'timestamp="PYCSW_TIMESTAMP"')
