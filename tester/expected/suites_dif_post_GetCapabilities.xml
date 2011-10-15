@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:Capabilities xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" updateSequence="1317046076" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+<csw:Capabilities xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:ogc="http://www.opengis.net/ogc" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" updateSequence="PYCSW_UPDATESEQUENCE" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <ows:ServiceIdentification>
     <ows:Title>pycsw Geospatial Catalogue</ows:Title>
     <ows:Abstract>pycsw is an OGC CSW server implementation written in Python</ows:Abstract>
@@ -43,8 +43,8 @@
     <ows:Operation name="GetCapabilities">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="sections">
@@ -54,25 +54,18 @@
         <ows:Value>Filter_Capabilities</ows:Value>
       </ows:Parameter>
     </ows:Operation>
-    <ows:Operation name="Transaction">
-      <ows:DCP>
-        <ows:HTTP>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
-        </ows:HTTP>
-      </ows:DCP>
-    </ows:Operation>
     <ows:Operation name="GetRepositoryItem">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>
     <ows:Operation name="DescribeRecord">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="schemaLanguage">
@@ -85,41 +78,36 @@
       <ows:Parameter name="typeName">
         <ows:Value>csw:Record</ows:Value>
         <ows:Value>dif:DIF</ows:Value>
-        <ows:Value>gmd:MD_Metadata</ows:Value>
-        <ows:Value>fgdc:metadata</ows:Value>
-        <ows:Value>dif:DIF</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetDomain">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ParameterName">
-        <ows:Value>GetCapabilities.sections</ows:Value>
-        <ows:Value>DescribeRecord.schemaLanguage</ows:Value>
-        <ows:Value>DescribeRecord.outputFormat</ows:Value>
-        <ows:Value>DescribeRecord.typeName</ows:Value>
-        <ows:Value>GetDomain.ParameterName</ows:Value>
-        <ows:Value>GetRecordById.outputFormat</ows:Value>
-        <ows:Value>GetRecordById.outputSchema</ows:Value>
-        <ows:Value>GetRecordById.ElementSetName</ows:Value>
         <ows:Value>GetRecords.outputFormat</ows:Value>
         <ows:Value>GetRecords.outputSchema</ows:Value>
         <ows:Value>GetRecords.CONSTRAINTLANGUAGE</ows:Value>
         <ows:Value>GetRecords.resultType</ows:Value>
         <ows:Value>GetRecords.typeNames</ows:Value>
         <ows:Value>GetRecords.ElementSetName</ows:Value>
-        <ows:Value>Harvest.ResourceType</ows:Value>
+        <ows:Value>GetCapabilities.sections</ows:Value>
+        <ows:Value>GetRecordById.outputFormat</ows:Value>
+        <ows:Value>GetRecordById.outputSchema</ows:Value>
+        <ows:Value>GetRecordById.ElementSetName</ows:Value>
+        <ows:Value>DescribeRecord.schemaLanguage</ows:Value>
+        <ows:Value>DescribeRecord.outputFormat</ows:Value>
+        <ows:Value>DescribeRecord.typeName</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetRecordById">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
@@ -127,9 +115,6 @@
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
-        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
-        <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
-        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
         <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="ElementSetName">
@@ -141,8 +126,8 @@
     <ows:Operation name="GetRecords">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/dif/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
@@ -150,9 +135,6 @@
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
-        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
-        <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
-        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
         <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="CONSTRAINTLANGUAGE">
@@ -167,67 +149,12 @@
       <ows:Parameter name="typeNames">
         <ows:Value>csw:Record</ows:Value>
         <ows:Value>dif:DIF</ows:Value>
-        <ows:Value>gmd:MD_Metadata</ows:Value>
-        <ows:Value>fgdc:metadata</ows:Value>
-        <ows:Value>dif:DIF</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="ElementSetName">
         <ows:Value>brief</ows:Value>
         <ows:Value>summary</ows:Value>
         <ows:Value>full</ows:Value>
       </ows:Parameter>
-      <ows:Constraint name="SupportedISOQueryables">
-        <ows:Value>apiso:DistanceValue</ows:Value>
-        <ows:Value>apiso:Abstract</ows:Value>
-        <ows:Value>apiso:RevisionDate</ows:Value>
-        <ows:Value>apiso:Subject</ows:Value>
-        <ows:Value>apiso:KeywordType</ows:Value>
-        <ows:Value>apiso:Title</ows:Value>
-        <ows:Value>apiso:CRS</ows:Value>
-        <ows:Value>apiso:PublicationDate</ows:Value>
-        <ows:Value>apiso:Type</ows:Value>
-        <ows:Value>apiso:AlternateTitle</ows:Value>
-        <ows:Value>apiso:BoundingBox</ows:Value>
-        <ows:Value>apiso:AnyText</ows:Value>
-        <ows:Value>apiso:ParentIdentifier</ows:Value>
-        <ows:Value>apiso:Modified</ows:Value>
-        <ows:Value>apiso:Operation</ows:Value>
-        <ows:Value>apiso:Format</ows:Value>
-        <ows:Value>apiso:TempExtent_end</ows:Value>
-        <ows:Value>apiso:DistanceUOM</ows:Value>
-        <ows:Value>apiso:OrganisationName</ows:Value>
-        <ows:Value>apiso:ServiceType</ows:Value>
-        <ows:Value>apiso:TempExtent_begin</ows:Value>
-        <ows:Value>apiso:ResourceLanguage</ows:Value>
-        <ows:Value>apiso:ServiceTypeVersion</ows:Value>
-        <ows:Value>apiso:OperatesOn</ows:Value>
-        <ows:Value>apiso:Denominator</ows:Value>
-        <ows:Value>apiso:HasSecurityConstraints</ows:Value>
-        <ows:Value>apiso:OperatesOnIdentifier</ows:Value>
-        <ows:Value>apiso:GeographicDescriptionCode</ows:Value>
-        <ows:Value>apiso:Language</ows:Value>
-        <ows:Value>apiso:Identifier</ows:Value>
-        <ows:Value>apiso:OperatesOnName</ows:Value>
-        <ows:Value>apiso:TopicCategory</ows:Value>
-        <ows:Value>apiso:CreationDate</ows:Value>
-        <ows:Value>apiso:CouplingType</ows:Value>
-      </ows:Constraint>
-      <ows:Constraint name="AdditionalQueryables">
-        <ows:Value>apiso:Lineage</ows:Value>
-        <ows:Value>apiso:Classification</ows:Value>
-        <ows:Value>apiso:Creator</ows:Value>
-        <ows:Value>apiso:Relation</ows:Value>
-        <ows:Value>apiso:OtherConstraints</ows:Value>
-        <ows:Value>apiso:SpecificationTitle</ows:Value>
-        <ows:Value>apiso:ResponsiblePartyRole</ows:Value>
-        <ows:Value>apiso:SpecificationDateType</ows:Value>
-        <ows:Value>apiso:Degree</ows:Value>
-        <ows:Value>apiso:Contributor</ows:Value>
-        <ows:Value>apiso:ConditionApplyingToAccessAndUse</ows:Value>
-        <ows:Value>apiso:SpecificationDate</ows:Value>
-        <ows:Value>apiso:AccessConstraints</ows:Value>
-        <ows:Value>apiso:Publisher</ows:Value>
-      </ows:Constraint>
       <ows:Constraint name="SupportedDIFQueryables">
         <ows:Value>dif:Keyword</ows:Value>
         <ows:Value>dif:Data_Presentation_Form</ows:Value>
@@ -263,43 +190,6 @@
         <ows:Value>csw:AnyText</ows:Value>
         <ows:Value>dc:rights</ows:Value>
       </ows:Constraint>
-      <ows:Constraint name="SupportedFGDCQueryables">
-        <ows:Value>fgdc:Source</ows:Value>
-        <ows:Value>fgdc:Originator</ows:Value>
-        <ows:Value>fgdc:Purpose</ows:Value>
-        <ows:Value>fgdc:Abstract</ows:Value>
-        <ows:Value>fgdc:Origin</ows:Value>
-        <ows:Value>fgdc:GeospatialPresentationForm</ows:Value>
-        <ows:Value>fgdc:Publisher</ows:Value>
-        <ows:Value>fgdc:Contributor</ows:Value>
-        <ows:Value>fgdc:Modified</ows:Value>
-        <ows:Value>fgdc:Type</ows:Value>
-        <ows:Value>fgdc:AccessConstraints</ows:Value>
-        <ows:Value>fgdc:AnyText</ows:Value>
-        <ows:Value>fgdc:Envelope</ows:Value>
-        <ows:Value>fgdc:Format</ows:Value>
-        <ows:Value>fgdc:ThemeKeywords</ows:Value>
-        <ows:Value>fgdc:Progress</ows:Value>
-        <ows:Value>fgdc:BeginDate</ows:Value>
-        <ows:Value>fgdc:PublicationDate</ows:Value>
-        <ows:Value>fgdc:EndDate</ows:Value>
-        <ows:Value>fgdc:Title</ows:Value>
-        <ows:Value>fgdc:Relation</ows:Value>
-      </ows:Constraint>
-    </ows:Operation>
-    <ows:Operation name="Harvest">
-      <ows:DCP>
-        <ows:HTTP>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py"/>
-        </ows:HTTP>
-      </ows:DCP>
-      <ows:Parameter name="ResourceType">
-        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
-        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
-        <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
-        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
-        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
-      </ows:Parameter>
     </ows:Operation>
     <ows:Parameter name="version">
       <ows:Value>2.0.2</ows:Value>

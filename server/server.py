@@ -44,12 +44,6 @@ class Csw(object):
     ''' Base CSW server '''
     def __init__(self, configfile=None):
         ''' Initialize CSW '''
-        # load user configuration
-        self.config = ConfigParser.SafeConfigParser()
-        self.config.readfp(open(configfile))
-
-        # configure transaction support, if specified in config
-        self._gen_manager()
 
         # init kvp
         self.kvp = {}
@@ -60,6 +54,22 @@ class Csw(object):
         self.request = None
         self.exception = False
         self.profiles = None
+        self.mimetype = 'application/xml; charset=UTF-8'
+        self.encoding = 'UTF-8'
+        self.xml_pretty_print = 0
+
+        # load user configuration
+        try:
+            self.config = ConfigParser.SafeConfigParser()
+            self.config.readfp(open(configfile))
+        except Exception, err:
+            self.response = self.exceptionreport(
+            'NoApplicableCode', 'service',
+            'Error opening configuration %s' % configfile)
+            return
+
+        # configure transaction support, if specified in config
+        self._gen_manager()
 
         # configure logging
         try:
@@ -68,6 +78,9 @@ class Csw(object):
             self.response = self.exceptionreport(
             'NoApplicableCode', 'service', str(err))
 
+        self.log.debug('running configuration %s' % configfile)
+        self.log.debug(str(os.environ['QUERY_STRING']))
+
         # generate domain model
         config.MODEL['operations']['GetDomain'] = config.gen_domains()
 
@@ -75,12 +88,18 @@ class Csw(object):
         if not self.config.has_option('server', 'ogc_schemas_base'):
             self.config.set('server', 'ogc_schemas_base', config.OGC_SCHEMAS_BASE)
 
+        # set mimetype
+            if self.config.has_option('server', 'mimetype'):
+                self.mimetype = self.config.get('server', 'mimetype')
+
+        # set encoding
+            if self.config.has_option('server', 'encoding'):
+                self.encoding = self.config.get('server', 'encoding')
+
         # set XML pretty print
         if (self.config.has_option('server', 'xml_pretty_print') and
         self.config.get('server', 'xml_pretty_print') == 'true'):
             self.xml_pretty_print = 1
-        else:
-            self.xml_pretty_print = 0
 
         # set compression level
         if self.config.has_option('server', 'gzip_compresslevel'):
@@ -139,12 +158,6 @@ class Csw(object):
 
     def dispatch(self):
         ''' Handle incoming HTTP request '''
-
-        # alternate configurations can be passed via
-        # HTTP HEADER 'PYCSW_CONFIG'
-        # if passed, re-initialize config
-        if os.environ.has_key('HTTP_PYCSW_CONFIG'):
-            self.__init__(os.environ['HTTP_PYCSW_CONFIG'])
 
         error = 0
 
@@ -290,13 +303,20 @@ class Csw(object):
         ''' Generate ExceptionReport '''
         self.exception = True
 
+        try:
+            language = self.config.get('server', 'language')
+            ogc_schemas_base = self.config.get('server', 'ogc_schemas_base')
+        except:
+            language = 'en-US'
+            ogc_schemas_base = config.OGC_SCHEMAS_BASE
+
         node = etree.Element(util.nspath_eval('ows:ExceptionReport'),
         nsmap=config.NAMESPACES, version='1.2.0',
-        language=self.config.get('server', 'language'))
+        language=language)
 
         node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
         '%s %s/ows/1.0.0/owsExceptionReport.xsd' % \
-        (config.NAMESPACES['ows'], self.config.get('server', 'ogc_schemas_base'))
+        (config.NAMESPACES['ows'], ogc_schemas_base)
 
         exception = etree.SubElement(node, util.nspath_eval('ows:Exception'),
         exceptionCode=code, locator=locator)
@@ -718,9 +738,11 @@ class Csw(object):
                 util.nspath_eval('csw:PropertyName')).text = pname
 
                 try:
-                    self.log.debug('Querying repository property %s.' % pname2)
+                    self.log.debug(
+                    'Querying repository property %s, typename %s.' % \
+                    (pname2, dvtype))
         
-                    results = self.repository.query_domain(pname2,[dvtype])
+                    results = self.repository.query_domain(pname2,dvtype)
                     self.log.debug('Results: %s' % str(len(results)))
                     listofvalues = etree.SubElement(domainvalue,
                     util.nspath_eval('csw:ListOfValues'))
@@ -1619,10 +1641,11 @@ class Csw(object):
     def _write_response(self):
         ''' Generate response '''
         # set HTTP response headers and XML declaration
-        self.log.debug('Writing response.')
-        http_header = 'Content-type:%s\r\n' % self.config.get('server', 'mimetype')
+        if hasattr(self, 'log'):
+            self.log.debug('Writing response.')
+        http_header = 'Content-type:%s\r\n' % self.mimetype
         xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % \
-        self.config.get('server', 'encoding')
+        self.encoding
         appinfo = '<!-- pycsw %s -->\n' % config.VERSION
 
         if hasattr(self, 'soap') and self.soap:
@@ -1631,7 +1654,8 @@ class Csw(object):
         response = etree.tostring(self.response,
         pretty_print = self.xml_pretty_print)
 
-        self.log.debug('Response:\n%s' % response)
+        if hasattr(self, 'log'):
+            self.log.debug('Response:\n%s' % response)
 
         if self.gzip:
             import gzip

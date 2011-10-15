@@ -41,19 +41,18 @@ def plural(num):
     else:
         return ''
 
-def http_req(method, url, request, config=None):
+def http_req(method, url, request):
     ''' Perform HTTP request '''
     if method == 'POST':
         '''Send an XML document as a HTTP POST request'''
         u = urlparse.urlsplit(url)
+
         h = httplib.HTTP(u.netloc)
-        h.putrequest('POST', u.path)
+        h.putrequest('POST', '%s?%s' % (u.path, u.query))
         h.putheader('Content-type', 'text/xml')
         h.putheader('Content-length', '%d' % len(request))
         h.putheader('Accepts', 'text/xml')
         h.putheader('Host', u.netloc)
-        if config is not None:
-            h.putheader('PYCSW_CONFIG', config)
         h.putheader('User-Agent', 'pycsw unit tester')
         h.endheaders()
         h.send(request)
@@ -61,8 +60,6 @@ def http_req(method, url, request, config=None):
         return h.getfile().read()
     else:  # GET
         req = urllib2.Request(url)
-        if config is not None:
-            req.add_header('PYCSW_CONFIG', config)
         return urllib2.urlopen(req).read()
 
 def get_validity(expected, result, outfile):
@@ -147,8 +144,7 @@ for testsuite in glob.glob('suites/*'):
                             expected = 'expected%s%s' % (os.sep, outfile)
                             print '\n test %s:%s' % (testfile, row[0])
 
-                            result = http_req('GET', request, request,
-                            'tester%s%s' % (os.sep, cfg))
+                            result = http_req('GET', request, request)
 
                             status = get_validity(expected, result, outfile)
 
@@ -175,10 +171,12 @@ for testsuite in glob.glob('suites/*'):
                         f = open(testfile)
                         request = f.read()
                         f.close()
-        
+
+                        configkvp = 'config=tester%s%s' % (os.sep, cfg)
+                        url2 = '%s?%s' % (url, configkvp)
+
                         # invoke request
-                        result = http_req('POST', url, request,
-                        'tester%s%s' % (os.sep, cfg))
+                        result = http_req('POST', url2, request)
 
                         status = get_validity(expected, result, outfile)
 
