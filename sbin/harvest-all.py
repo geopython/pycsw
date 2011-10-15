@@ -34,8 +34,7 @@
 # harvest all non-local records in repository
 
 import ConfigParser
-from lxml import etree
-from server import config, repository, util
+from server import config, repository
 from owslib.csw import CatalogueServiceWeb
 
 # get configuration and init repo connection
