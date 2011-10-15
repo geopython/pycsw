@@ -32,7 +32,6 @@
 # =================================================================
 
 import sys
-import os
 import sqlalchemy
 from lxml import etree
 import shapely.geos

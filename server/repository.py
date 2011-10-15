@@ -53,8 +53,10 @@ class Repository(object):
 
         if self.dbtype == 'sqlite':  # load SQLite query bindings
             self.connection = engine.raw_connection()
-            self.connection.create_function('query_spatial', 4, util.query_spatial)
-            self.connection.create_function('update_xpath', 2, util.update_xpath)
+            self.connection.create_function(
+            'query_spatial', 4, util.query_spatial)
+            self.connection.create_function(
+            'update_xpath', 2, util.update_xpath)
             self.connection.create_function('get_anytext', 1, util.get_anytext)
 
         # generate core queryables db and obj bindings
@@ -96,7 +98,7 @@ class Repository(object):
         self.dataset.source == source)
         return query.all() 
 
-    def query(self, constraint, sortby=None, typenames=[],
+    def query(self, constraint, sortby=None, typenames=None,
         maxrecords=10, startposition=0):
         ''' Query records from underlying repository '''
 
