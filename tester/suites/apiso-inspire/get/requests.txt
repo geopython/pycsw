@@ -1,2 +1,2 @@
-GetCapabilities,PYCSW_SERVER?service=CSW&version=2.0.2&request=GetCapabilities
-GetCapabilities-lang,PYCSW_SERVER?service=CSW&version=2.0.2&request=GetCapabilities&lang=gr
+GetCapabilities,PYCSW_SERVER?config=tester/suites/apiso-inspire/default.cfg&service=CSW&version=2.0.2&request=GetCapabilities
+GetCapabilities-lang,PYCSW_SERVER?config=tester/suites/apiso-inspire/default.cfg&service=CSW&version=2.0.2&request=GetCapabilities&lang=gre
