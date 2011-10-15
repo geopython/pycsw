@@ -34,15 +34,15 @@
 import os
 from server import server
 
-config = 'default.cfg'
+CONFIG = 'default.cfg'
 
 if os.environ['QUERY_STRING'].lower().find('config') != -1:
     for kvp in os.environ['QUERY_STRING'].split('&'):
         if kvp.lower().find('config') != -1:
-            config = kvp.split('=')[1]
+            CONFIG = kvp.split('=')[1]
 
 # get runtime configuration
-CSW = server.Csw(config)
+CSW = server.Csw(CONFIG)
 
 # go!
 CSW.dispatch()
