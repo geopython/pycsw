@@ -160,20 +160,29 @@ MODEL =  {
                     'dc:title': {'xpath': 'dc:title', 'dbcol': 'title'},
                     'dc:creator': {'xpath': 'dc:creator', 'dbcol': 'creator'},
                     'dc:subject': {'xpath': 'dc:subject', 'dbcol': 'keywords'},
-                    'dct:abstract': {'xpath': 'dct:abstract', 'dbcol': 'abstract'},
-                    'dc:publisher': {'xpath': 'dc:publisher', 'dbcol': 'publisher'},
-                    'dc:contributor': {'xpath': 'dc:contributor', 'dbcol': 'contributor'},
-                    'dct:modified': {'xpath': 'dct:modified', 'dbcol': 'date_modified'},
+                    'dct:abstract': \
+                    {'xpath': 'dct:abstract', 'dbcol': 'abstract'},
+                    'dc:publisher': \
+                    {'xpath': 'dc:publisher', 'dbcol': 'publisher'},
+                    'dc:contributor': \
+                    {'xpath': 'dc:contributor', 'dbcol': 'contributor'},
+                    'dct:modified': \
+                    {'xpath': 'dct:modified', 'dbcol': 'date_modified'},
                     'dc:date': {'xpath': 'dc:date', 'dbcol': 'date'},
                     'dc:type': {'xpath': 'dc:type', 'dbcol': 'type'},
                     'dc:format': {'xpath': 'dc:format', 'dbcol': 'format'},
-                    'dc:identifier': {'xpath': 'dc:identifier', 'dbcol': 'identifier'},
+                    'dc:identifier': \
+                    {'xpath': 'dc:identifier', 'dbcol': 'identifier'},
                     'dc:source': {'xpath': 'dc:source', 'dbcol': 'source'},
-                    'dc:language': {'xpath': 'dc:language', 'dbcol': 'language'},
-                    'dc:relation': {'xpath': 'dc:relation', 'dbcol': 'relation'},
-                    'dc:rights': {'xpath': 'dc:rights', 'dbcol': 'accessconstraints'},
+                    'dc:language': \
+                    {'xpath': 'dc:language', 'dbcol': 'language'},
+                    'dc:relation': \
+                    {'xpath': 'dc:relation', 'dbcol': 'relation'},
+                    'dc:rights': \
+                    {'xpath': 'dc:rights', 'dbcol': 'accessconstraints'},
                     # bbox and full text map to internal fixed columns
-                    'ows:BoundingBox': {'xpath': 'ows:BoundingBox', 'dbcol': 'wkt_geometry'},
+                    'ows:BoundingBox': \
+                    {'xpath': 'ows:BoundingBox', 'dbcol': 'wkt_geometry'},
                     'csw:AnyText': {'xpath': 'csw:AnyText', 'dbcol':'anytext'}
                 }
             }

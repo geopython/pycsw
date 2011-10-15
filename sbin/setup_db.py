@@ -34,8 +34,8 @@
 # generate internal database
 
 import sys
-from server import config
-from sqlalchemy import Column, create_engine, Integer, String, MetaData, Table, Text
+from sqlalchemy import Column, create_engine, Integer, String, MetaData, \
+Table, Text
 
 if len(sys.argv) < 2:
     print 'Usage: %s <db_connection_string>' % sys.argv[0]
@@ -78,10 +78,13 @@ geometry_type=3, coord_dimension=2, srid=4326, geometry_format='WKT')
 RECORDS = Table('records', METADATA,
     # core; nothing happens without these
     Column('identifier', String(256), primary_key=True),
-    Column('typename', String(32), default='csw:Record', nullable=False, index=True),
+    Column('typename', String(32),
+    default='csw:Record', nullable=False, index=True),
     Column('schema', String(256),
-    default='http://www.opengis.net/cat/csw/2.0.2', nullable=False, index=True),
-    Column('mdsource', String(256), default='local', nullable=False, index=True),
+    default='http://www.opengis.net/cat/csw/2.0.2', nullable=False,
+    index=True),
+    Column('mdsource', String(256), default='local', nullable=False,
+    index=True),
     Column('insert_date', String(20), nullable=False, index=True),
     Column('xml', Text, nullable=False),
     Column('anytext', Text, nullable=False, index=True),
