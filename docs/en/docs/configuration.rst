@@ -19,6 +19,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributedsearching`)
 - **xml_pretty_print**: whether to pretty print the output XML (``true`` or ``false``).  Default is ``false``
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
+- **domainquery**: for GetDomain queries, how to output domain values.  Accepted values are ``list`` and ``range`` (min/max). Default is ``list``
 - **profiles**: comma delimited list of profiles to load at runtime (default is none).  See :ref:`profiles`
 
 **[manager]**
