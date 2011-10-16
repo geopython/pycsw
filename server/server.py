@@ -57,6 +57,7 @@ class Csw(object):
         self.mimetype = 'application/xml; charset=UTF-8'
         self.encoding = 'UTF-8'
         self.xml_pretty_print = 0
+        self.domainquery = 'list'
 
         # load user configuration
         try:
@@ -95,6 +96,10 @@ class Csw(object):
         # set encoding
             if self.config.has_option('server', 'encoding'):
                 self.encoding = self.config.get('server', 'encoding')
+
+        # set domainquery
+            if self.config.has_option('server', 'domainquery'):
+                self.domainquery = self.config.get('server', 'domainquery')
 
         # set XML pretty print
         if (self.config.has_option('server', 'xml_pretty_print') and
@@ -737,21 +742,35 @@ class Csw(object):
                 etree.SubElement(domainvalue,
                 util.nspath_eval('csw:PropertyName')).text = pname
 
+   
                 try:
                     self.log.debug(
-                    'Querying repository property %s, typename %s.' % \
-                    (pname2, dvtype))
-        
-                    results = self.repository.query_domain(pname2,dvtype)
+                    'Querying repository property %s, typename %s, \
+                    domainquery %s.' % (pname2, dvtype, self.domainquery))
+
+                    results = self.repository.query_domain(
+                    pname2, dvtype, self.domainquery)
+
                     self.log.debug('Results: %s' % str(len(results)))
-                    listofvalues = etree.SubElement(domainvalue,
-                    util.nspath_eval('csw:ListOfValues'))
-                    for result in results:
-                        self.log.debug(str(result))
-                        if (result is not None and
-                            result[0] is not None):  # drop null values
-                            etree.SubElement(listofvalues,
-                            util.nspath_eval('csw:Value')).text = result[0]
+
+                    if self.domainquery == 'range':
+                        rangeofvalues = etree.SubElement(domainvalue,
+                        util.nspath_eval('csw:RangeOfValues'))
+
+                        etree.SubElement(rangeofvalues,
+                        util.nspath_eval('csw:MinValue')).text = results[0][0]
+
+                        etree.SubElement(rangeofvalues,
+                        util.nspath_eval('csw:MaxValue')).text = results[0][1]
+                    else:
+                        listofvalues = etree.SubElement(domainvalue,
+                        util.nspath_eval('csw:ListOfValues'))
+                        for result in results:
+                            self.log.debug(str(result))
+                            if (result is not None and
+                                result[0] is not None):  # drop null values
+                                etree.SubElement(listofvalues,
+                                util.nspath_eval('csw:Value')).text = result[0]
                 except Exception, err:
                     self.log.debug('No results for propertyname %s: %s.' %
                     (pname2, str(err)))
