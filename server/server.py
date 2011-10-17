@@ -99,7 +99,7 @@ class Csw(object):
 
         # set domainquerytype
             if self.config.has_option('server', 'domainquerytype'):
-                self.domainquery = self.config.get('server', 'domainquerytype')
+                self.domainquerytype = self.config.get('server', 'domainquerytype')
 
         # set XML pretty print
         if (self.config.has_option('server', 'xml_pretty_print') and
