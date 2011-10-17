@@ -223,6 +223,18 @@
         <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>
       </ogc:ComparisonOperators>
+      <ogc:ArithmeticOperators>
+        <ogc:Functions>
+          <ogc:FunctionNames>
+            <ogc:FunctionName nArgs="1">length</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">lower</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">ltrim</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">rtrim</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">trim</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">upper</ogc:FunctionName>
+          </ogc:FunctionNames>
+        </ogc:Functions>
+      </ogc:ArithmeticOperators>
     </ogc:Scalar_Capabilities>
     <ogc:Id_Capabilities>
       <ogc:EID/>
