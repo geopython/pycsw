@@ -57,7 +57,7 @@ class Csw(object):
         self.mimetype = 'application/xml; charset=UTF-8'
         self.encoding = 'UTF-8'
         self.xml_pretty_print = 0
-        self.domainquery = 'list'
+        self.domainquerytype = 'list'
 
         # load user configuration
         try:
@@ -97,9 +97,9 @@ class Csw(object):
             if self.config.has_option('server', 'encoding'):
                 self.encoding = self.config.get('server', 'encoding')
 
-        # set domainquery
-            if self.config.has_option('server', 'domainquery'):
-                self.domainquery = self.config.get('server', 'domainquery')
+        # set domainquerytype
+            if self.config.has_option('server', 'domainquerytype'):
+                self.domainquery = self.config.get('server', 'domainquerytype')
 
         # set XML pretty print
         if (self.config.has_option('server', 'xml_pretty_print') and
@@ -746,14 +746,15 @@ class Csw(object):
                 try:
                     self.log.debug(
                     'Querying repository property %s, typename %s, \
-                    domainquery %s.' % (pname2, dvtype, self.domainquery))
+                    domainquerytype %s.' % \
+                    (pname2, dvtype, self.domainquerytype))
 
                     results = self.repository.query_domain(
-                    pname2, dvtype, self.domainquery)
+                    pname2, dvtype, self.domainquerytype)
 
                     self.log.debug('Results: %s' % str(len(results)))
 
-                    if self.domainquery == 'range':
+                    if self.domainquerytype == 'range':
                         rangeofvalues = etree.SubElement(domainvalue,
                         util.nspath_eval('csw:RangeOfValues'))
 
