@@ -113,6 +113,15 @@ Logical Operators
 - NotEqualTo
 - NullCheck
 
+Functions
+^^^^^^^^^
+- length
+- lower
+- ltrim
+- rtrim
+- trim
+- upper
+
 .. _`OGC CSW`: http://www.opengeospatial.org/standards/cat
 .. _`ISO Metadata Application Profile 1.0.0`: http://portal.opengeospatial.org/files/?artifact_id=21460
 .. _`OGC Filter`: http://www.opengeospatial.org/standards/filter

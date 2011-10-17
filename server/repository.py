@@ -132,11 +132,16 @@ class Repository(object):
         # apply sorting, limit and offset
         if sortby is not None:
             if sortby['order'] == 'DESC':
-                return [str(total), query.order_by(desc(sortby['propertyname'])).limit(maxrecords).offset(startposition).all()]
+                return [str(total), query.order_by(desc(
+                sortby['propertyname'])).limit(
+                maxrecords).offset(startposition).all()]
             else: 
-                return [str(total), query.order_by(sortby['propertyname']).limit(maxrecords).offset(startposition).all()]
+                return [str(total), query.order_by(
+                sortby['propertyname']).limit(
+                maxrecords).offset(startposition).all()]
         else:  # no sort
-            return [str(total), query.limit(maxrecords).offset(startposition).all()]
+            return [str(total), query.limit(
+            maxrecords).offset(startposition).all()]
 
     def insert(self, record, source, insert_date):
         ''' Insert a record into the repository '''
