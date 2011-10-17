@@ -82,10 +82,10 @@ class Repository(object):
         self.dataset).filter(self.dataset.identifier.in_(ids))
         return query.all()
 
-    def query_domain(self, domain, typenames, domainquery='list'):
+    def query_domain(self, domain, typenames, domainquerytype='list'):
         ''' Query by property domain values '''
 
-        if domainquery == 'range':
+        if domainquerytype == 'range':
             query = self.session.query(
             func.min(getattr(self.dataset, domain)),
             func.max(getattr(self.dataset, domain)))
