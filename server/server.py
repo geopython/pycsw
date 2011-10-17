@@ -610,7 +610,21 @@ class Csw(object):
             etree.SubElement(cmpops,
             util.nspath_eval('ogc:ComparisonOperator')).text = \
             fes.MODEL['ComparisonOperators'][cmpop]['opname']
-    
+
+        arithops = etree.SubElement(scalarcaps,
+        util.nspath_eval('ogc:ArithmeticOperators'))
+
+        functions = etree.SubElement(arithops,
+        util.nspath_eval('ogc:Functions'))
+
+        functionames = etree.SubElement(functions,
+        util.nspath_eval('ogc:FunctionNames'))
+
+        for fnop in sorted(fes.MODEL['Functions'].keys()):
+            etree.SubElement(functionames,
+            util.nspath_eval('ogc:FunctionName'),
+            nArgs=fes.MODEL['Functions'][fnop]['args']).text = fnop
+
         idcaps = etree.SubElement(fltcaps,
         util.nspath_eval('ogc:Id_Capabilities'))
 

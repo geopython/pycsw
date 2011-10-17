@@ -53,6 +53,14 @@ MODEL =  {
         'ogc:PropertyIsNotEqualTo': { 'opname': 'NotEqualTo', 'opvalue': '!='},
         'ogc:PropertyIsNull': { 'opname': 'NullCheck', 'opvalue': 'is null'},
     },
+    'Functions': {
+        'length': { 'args': '1'},
+        'lower': { 'args': '1'},
+        'ltrim': { 'args': '1'},
+        'rtrim': { 'args': '1'},
+        'trim': { 'args': '1'},
+        'upper': { 'args': '1'},
+    },
     'Ids': {
         'values': ['EID', 'FID']
     }
@@ -93,6 +101,7 @@ def parse(element, queryables, dbtype):
             queries.append("identifier = '%s'" % child.attrib.get('fid'))
 
         else:
+            fname = None
             matchcase = child.attrib.get('matchCase')
             wildcard = child.attrib.get('wildCard')
             singlechar = child.attrib.get('singleChar')
@@ -103,13 +112,29 @@ def parse(element, queryables, dbtype):
             if singlechar is None:
                 singlechar = '_'
 
-            try:
-                pname = queryables[child.find(
-                util.nspath_eval('ogc:PropertyName')).text]['dbcol']
-            except Exception, err:
-                raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
-                (child.find(util.nspath_eval('ogc:PropertyName')).text,
-                str(err)))
+            if child.xpath('child::*')[0].tag == util.nspath_eval('ogc:Function'):
+                if (child.xpath('child::*')[0].attrib['name'] not in
+                MODEL['Functions'].keys()):
+                    raise RuntimeError, ('Invalid ogc:Function: %s' %
+                    (child.xpath('child::*')[0].attrib['name']))
+                fname = child.xpath('child::*')[0].attrib['name']
+
+                try:
+                    pname = queryables[child.find(
+                    util.nspath_eval('ogc:Function/ogc:PropertyName')).text]['dbcol']
+                except Exception, err:
+                    raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
+                    (child.find(util.nspath_eval('ogc:Function/ogc:PropertyName')).text,
+                    str(err)))
+
+            else:
+                try:
+                    pname = queryables[child.find(
+                    util.nspath_eval('ogc:PropertyName')).text]['dbcol']
+                except Exception, err:
+                    raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
+                    (child.find(util.nspath_eval('ogc:PropertyName')).text,
+                    str(err)))
 
             if child.tag != util.nspath_eval('ogc:PropertyIsBetween'):
                 pval = child.find(util.nspath_eval('ogc:Literal')).text
@@ -133,10 +158,18 @@ def parse(element, queryables, dbtype):
                 (pname, com_op, lower_boundary, upper_boundary))
             else:
                 if boq == ' not ':
-                    queries.append("%s is null or not %s %s '%s'" %
-                    (pname, pname, com_op, pvalue))
+                    if fname is not None:
+                        queries.append("%s is null or not %s(%s) %s '%s'" %
+                        (pname, fname, pname, com_op, pvalue))
+                    else:
+                        queries.append("%s is null or not %s %s '%s'" %
+                        (pname, pname, com_op, pvalue))
                 else:
-                    queries.append("%s %s '%s'" % (pname, com_op, pvalue))
+                    if fname is not None:
+                        queries.append("%s(%s) %s '%s'" % \
+                        (fname, pname, com_op, pvalue))
+                    else:
+                        queries.append("%s %s '%s'" % (pname, com_op, pvalue))
 
     where = boq.join(queries) if (boq is not None and boq != ' not ') \
     else queries[0]
