@@ -33,92 +33,121 @@
 
 import util
 
-def get_geometry(geom, geomtypes):
-    ''' return OGC WKT for GML geometry '''
+TYPES = ['gml:Point', 'gml:LineString', 'gml:Polygon', 'gml:Envelope']
 
-    operand = geom.xpath(
-    '|'.join(geomtypes), namespaces={'gml':'http://www.opengis.net/gml'})
+DEFAULT_SRS = 'urn:x-ogc:def:crs:EPSG:6.11:4326'
 
-    if util.xmltag_split(operand[0].tag) == 'Point':
-        return _get_point(geom)
-    elif util.xmltag_split(operand[0].tag) == 'LineString':
-        return _get_linestring(geom)
-    elif util.xmltag_split(operand[0].tag) == 'Polygon':
-        return _get_polygon(geom)
-    elif util.xmltag_split(operand[0].tag) == 'Envelope':
-        return _get_envelope(geom)
+class Geometry(object):
+    ''' base geometry class '''
 
-def _get_point(geom):
-    ''' Parse gml:Point '''
+    def __init__(self, element):
+        ''' initialize geometry parser  '''
 
-    tmp = geom.find(util.nspath_eval('gml:Point/gml:pos'))
+        self.type = None 
+        self.crs = DEFAULT_SRS  # default CRS code
+        self.wkt = None
+        self._exml = element
 
-    if tmp is None:
-        raise RuntimeError, ('Invalid gml:Point geometry.  Missing gml:pos')
-    else:
-        xypoint = tmp.text.split(' ')
-        return 'POINT(%s %s)' % (xypoint[0], xypoint[1])
+        ''' return OGC WKT for GML geometry '''
+    
+        operand = element.xpath(
+        '|'.join(TYPES), namespaces={'gml':'http://www.opengis.net/gml'})[0]
 
-def _get_linestring(geom):
-    ''' Parse gml:LineString'''
+        if operand.attrib.has_key('srsName'):
+            self.crs = operand.attrib['srsName']
 
-    tmp = geom.find(util.nspath_eval('gml:LineString/gml:posList'))
+        self.type = util.xmltag_split(operand.tag)
 
-    if tmp is None:
-        raise RuntimeError, \
-        ('Invalid gml:LineString geometry.  Missing gml:posList')
-    else:
-        return 'LINESTRING(%s)' % _poslist2wkt(tmp.text)
+        if util.xmltag_split(operand.tag) == 'Point':
+            self._get_point()
+        elif util.xmltag_split(operand.tag) == 'LineString':
+            self._get_linestring()
+        elif util.xmltag_split(operand.tag) == 'Polygon':
+            self._get_polygon()
+        elif util.xmltag_split(operand.tag) == 'Envelope':
+            self._get_envelope()
+    
+    def _get_point(self):
+        ''' Parse gml:Point '''
+    
+        tmp = self._exml.find(util.nspath_eval('gml:Point/gml:pos'))
+    
+        if tmp is None:
+            raise RuntimeError, ('Invalid gml:Point geometry.  Missing gml:pos')
+        else:
+            xypoint = tmp.text.split(' ')
+            self.wkt = 'POINT(%s %s)' % (xypoint[0], xypoint[1])
+    
+    def _get_linestring(self):
+        ''' Parse gml:LineString'''
+    
+        tmp = self._exml.find(util.nspath_eval('gml:LineString/gml:posList'))
+    
+        if tmp is None:
+            raise RuntimeError, \
+            ('Invalid gml:LineString geometry.  Missing gml:posList')
+        else:
+            self.wkt = 'LINESTRING(%s)' % _poslist2wkt(tmp.text)
+    
+    def _get_polygon(self):
+        ''' Parse gml:Polygon'''
+    
+        tmp = self._exml.find('.//%s' % util.nspath_eval('gml:posList'))
+    
+        if tmp is None:
+            raise RuntimeError, \
+            ('Invalid gml:LineString geometry.  Missing gml:posList')
+        else:
+            self.wkt = 'POLYGON((%s))' % _poslist2wkt(tmp.text)
+    
+    def _get_envelope(self):
+        ''' Parse gml:Envelope '''
+    
+        tmp = self._exml.find(util.nspath_eval('gml:Envelope/gml:lowerCorner'))
+        if tmp is None:
+            raise RuntimeError, \
+            ('Invalid gml:Envelope geometry.  Missing gml:lowerCorner')
+        else:
+            lower_left = tmp.text
+    
+        tmp = self._exml.find(util.nspath_eval('gml:Envelope/gml:upperCorner'))
+        if tmp is None:
+            raise RuntimeError, \
+            ('Invalid gml:Envelope geometry.  Missing gml:upperCorner')
+        else:
+            upper_right = tmp.text
+    
+        xymin = lower_left.split()
+        xymax = upper_right.split()
+    
+        if len(xymin) != 2 or len(xymax) != 2:
+            raise RuntimeError, \
+           ('Invalid gml:Envelope geometry. \
+           gml:lowerCorner and gml:upperCorner must hold both lat and long.')
+    
+        self.wkt = util.bbox2wktpolygon('%s,%s,%s,%s' %
+        (xymin[1], xymin[0], xymax[1], xymax[0]))
+    
+    def _poslist2wkt(poslist):
+        ''' Repurpose gml:posList into WKT aware list '''
+    
+        tmp = poslist.split(' ')
+        poslist2 = []
+    
+        xlist = tmp[1::2]
+        ylist = tmp[::2]
+    
+        for i, j in zip(xlist, ylist):
+            poslist2.append('%s %s' % (i, j))
 
-def _get_polygon(geom):
-    ''' Parse gml:Polygon'''
-
-    tmp = geom.find('.//%s' % util.nspath_eval('gml:posList'))
-
-    if tmp is None:
-        raise RuntimeError, \
-        ('Invalid gml:LineString geometry.  Missing gml:posList')
-    else:
-        return 'POLYGON((%s))' % _poslist2wkt(tmp.text)
-
-def _get_envelope(geom):
-    ''' Parse gml:Envelope '''
-
-    tmp = geom.find(util.nspath_eval('gml:Envelope/gml:lowerCorner'))
-    if tmp is None:
-        raise RuntimeError, \
-        ('Invalid gml:Envelope geometry.  Missing gml:lowerCorner')
-    else:
-        lower_left = tmp.text
-
-    tmp = geom.find(util.nspath_eval('gml:Envelope/gml:upperCorner'))
-    if tmp is None:
-        raise RuntimeError, \
-        ('Invalid gml:Envelope geometry.  Missing gml:upperCorner')
-    else:
-        upper_right = tmp.text
-
-    xymin = lower_left.split()
-    xymax = upper_right.split()
-
-    if len(xymin) != 2 or len(xymax) != 2:
-        raise RuntimeError, \
-       ('Invalid gml:Envelope geometry. \
-       gml:lowerCorner and gml:upperCorner must hold both lat and long.')
-
-    return util.bbox2wktpolygon('%s,%s,%s,%s' %
-    (xymin[1], xymin[0], xymax[1], xymax[0]))
-
-def _poslist2wkt(poslist):
-    ''' Repurpose gml:posList into WKT aware list '''
-
-    tmp = poslist.split(' ')
-    poslist2 = []
-
-    xlist = tmp[1::2]
-    ylist = tmp[::2]
-
-    for i, j in zip(xlist, ylist):
-        poslist2.append('%s %s' % (i, j))
-
-    return ', '.join(poslist2)
+        return ', '.join(poslist2)
+    
+    def _geom_transform(src, dst, x, y):
+        ''' transform coordinates from one CRS to another '''
+    
+        import pyproj
+    
+        p1 = pyproj.Proj(init='epsg:%s' % src)
+        p2 = pyproj.Proj(init='epsg:%s' % dst)
+    
+        return pyproj.transform(p1, p2, x, y)

@@ -34,7 +34,7 @@ import config, gml, util
 
 MODEL =  {
     'GeometryOperands': {
-        'values': ['gml:Point', 'gml:LineString', 'gml:Polygon', 'gml:Envelope']
+        'values': gml.TYPES
     },
     'SpatialOperators': {
         'values': ['BBOX', 'Beyond', 'Contains', 'Crosses', 'Disjoint',
@@ -192,9 +192,10 @@ def _get_spatial_operator(element):
         ('Invalid ogc:PropertyName in spatial filter: %s' %
         property_name.text)
 
+    geometry = gml.Geometry(element)
+
     spatial_query = "query_spatial(wkt_geometry,'%s','%s','%s')" % \
-    (gml.get_geometry(element, MODEL['GeometryOperands']['values']),
-    util.xmltag_split(element.tag).lower(), distance)
+    (geometry.wkt, util.xmltag_split(element.tag).lower(), distance)
 
     return spatial_query
 
