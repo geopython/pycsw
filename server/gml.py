@@ -75,7 +75,7 @@ class Geometry(object):
         if tmp is None:
             raise RuntimeError, ('Invalid gml:Point geometry.  Missing gml:pos')
         else:
-            xypoint = tmp.text.split(' ')
+            xypoint = tmp.text.split()
             self.wkt = 'POINT(%s %s)' % (xypoint[0], xypoint[1])
     
     def _get_linestring(self):
@@ -131,7 +131,7 @@ class Geometry(object):
     def _poslist2wkt(poslist):
         ''' Repurpose gml:posList into WKT aware list '''
     
-        tmp = poslist.split(' ')
+        tmp = poslist.split()
         poslist2 = []
     
         xlist = tmp[1::2]
