@@ -7,7 +7,7 @@ pycsw supports the following databases:
 
 - SQLite3
 - PostgreSQL
-- MySQL (partial)
+- MySQL
 
 .. note::
   Unless your installation environment requires PostgreSQL or MySQL, the easiest and fastest way to deploy pycsw is using SQLite3 as the backend.
