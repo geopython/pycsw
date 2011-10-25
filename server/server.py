@@ -646,7 +646,7 @@ class Csw(object):
                     self.kvp['typename'].append(
                     self.profiles['loaded'][prof].typename)
 
-        if self.requesttype == 'GET':  # pass via GET
+        elif self.requesttype == 'GET':  # pass via GET
             self.kvp['typename'] = self.kvp['typename'].split(',')
 
         if (self.kvp.has_key('outputformat') and
