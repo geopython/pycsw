@@ -87,7 +87,7 @@ RECORDS = Table('records', METADATA,
     index=True),
     Column('insert_date', String(20), nullable=False, index=True),
     Column('xml', Text, nullable=False),
-    Column('anytext', Text, nullable=False, index=True),
+    Column('anytext', Text, nullable=False),
     Column('language', String(32), index=True),
 
     # indentification
@@ -131,7 +131,7 @@ RECORDS = Table('records', METADATA,
     Column('denominator', Integer, index=True),
     Column('distancevalue', Integer, index=True),
     Column('distanceuom', String(8), index=True),
-    Column('wkt_geometry', Text, index=True),
+    Column('wkt_geometry', Text),
 
     # service
     Column('servicetype', String(32), index=True),
