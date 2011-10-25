@@ -82,20 +82,27 @@ def parse(element, queryables, dbtype):
 
     for child in tmp.xpath('child::*'):
         com_op = ''
+        boolean_true = '\'true\''
+        boolean_false = '\'false\''
+
+        if dbtype == 'mysql':
+            boolean_true = 'true'
+            boolean_false = 'false'
 
         if child.tag == util.nspath_eval('ogc:Not'):
-            queries.append("%s = 'false'" %
-            _get_spatial_operator(child.xpath('child::*')[0]))
+            queries.append("%s = %s" %
+            (_get_spatial_operator(
+            child.xpath('child::*')[0], dbtype), boolean_false))
 
         elif child.tag in \
         [util.nspath_eval('ogc:%s' % n) for n in \
         MODEL['SpatialOperators']['values']]:
             if boq is not None and boq == ' not ':
-                queries.append("%s = 'false'" %
-                _get_spatial_operator(child))
+                queries.append("%s = %s" %
+                (_get_spatial_operator(child, dbtype), boolean_false))
             else:
-                queries.append("%s = 'true'" % 
-                _get_spatial_operator(child))
+                queries.append("%s = %s" % 
+                (_get_spatial_operator(child, dbtype), boolean_true))
 
         elif child.tag == util.nspath_eval('ogc:FeatureId'):
             queries.append("identifier = '%s'" % child.attrib.get('fid'))
@@ -176,7 +183,7 @@ def parse(element, queryables, dbtype):
 
     return where
 
-def _get_spatial_operator(element):
+def _get_spatial_operator(element, dbtype):
     ''' return the spatial predicate function '''
     property_name = element.find(util.nspath_eval('ogc:PropertyName'))
     distance = element.find(util.nspath_eval('ogc:Distance'))
@@ -194,8 +201,26 @@ def _get_spatial_operator(element):
 
     geometry = gml.Geometry(element)
 
-    spatial_query = "query_spatial(wkt_geometry,'%s','%s','%s')" % \
-    (geometry.wkt, util.xmltag_split(element.tag).lower(), distance)
+    spatial_predicate = util.xmltag_split(element.tag).lower()
+
+    if dbtype == 'mysql':  # adjust spatial query for MySQL
+        if spatial_predicate == 'bbox':
+            spatial_predicate = 'intersects'
+
+        if spatial_predicate == 'beyond':
+            spatial_query = "ifnull(distance(geomfromtext(wkt_geometry), \
+            geomfromtext('%s')) > convert(%s, signed),false)" % \
+            (geometry.wkt, distance)
+        elif spatial_predicate == 'dwithin':
+            spatial_query = "ifnull(distance(geomfromtext(wkt_geometry), \
+            geomfromtext('%s')) <= convert(%s, signed),false)" % \
+            (geometry.wkt, distance)
+        else:
+            spatial_query = "ifnull(%s(geomfromtext(wkt_geometry), \
+            geomfromtext('%s')),false)" % (spatial_predicate, geometry.wkt)
+    else:
+        spatial_query = "query_spatial(wkt_geometry,'%s','%s','%s')" % \
+        (geometry.wkt, spatial_predicate, distance)
 
     return spatial_query
 
