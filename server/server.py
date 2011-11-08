@@ -90,16 +90,16 @@ class Csw(object):
             self.config.set('server', 'ogc_schemas_base', config.OGC_SCHEMAS_BASE)
 
         # set mimetype
-            if self.config.has_option('server', 'mimetype'):
-                self.mimetype = self.config.get('server', 'mimetype')
+        if self.config.has_option('server', 'mimetype'):
+            self.mimetype = self.config.get('server', 'mimetype')
 
         # set encoding
-            if self.config.has_option('server', 'encoding'):
-                self.encoding = self.config.get('server', 'encoding')
+        if self.config.has_option('server', 'encoding'):
+            self.encoding = self.config.get('server', 'encoding')
 
         # set domainquerytype
-            if self.config.has_option('server', 'domainquerytype'):
-                self.domainquerytype = self.config.get('server', 'domainquerytype')
+        if self.config.has_option('server', 'domainquerytype'):
+            self.domainquerytype = self.config.get('server', 'domainquerytype')
 
         # set XML pretty print
         if (self.config.has_option('server', 'xml_pretty_print') and
