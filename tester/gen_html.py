@@ -110,7 +110,7 @@ for root, dirs, files in os.walk('suites'):
     if files:
         for file in files:
             if os.path.splitext(file)[1] in ['.xml']:  # it's a POST request
-                query = '%s%s%s' % (root, os.sep, file)
+                query = '%s%s%s' % (root.replace(os.sep, '/'), '/', file)
                 print '                            <option value="%s">%s</option>' % (query, query)
 print '''
                         </select>
@@ -138,7 +138,7 @@ for root, dirs, files in os.walk('suites'):
     if files:
         for file in files:
             if file == 'requests.txt':  # it's a list of GET requests
-                gets = csv.reader(open('%s%s%s' % (root, os.sep, file)))
+                gets = csv.reader(open('%s%s%s' % (root.replace(os.sep, '/'), '/', file)))
                 for row in gets:
                     query = row[1].replace('PYCSW_SERVER', '../csw.py')
                     print '<li><a href="%s">%s</a></li>' % (query, row[0])
