@@ -72,11 +72,11 @@ def get_validity(expected, result, outfile):
     else:  # compare result with expected
         if os.path.exists('results') is False:
             os.mkdir('results')
-        resultfile = open('results/%s' % outfile, 'w')
+        resultfile = open('results%s%s' % (os.sep, outfile), 'w')
         resultfile.write(normalize(result))
         resultfile.close()
-        if filecmp.cmp(expected, 'results/%s' % outfile):  # pass
-            os.remove('results/%s' % outfile)
+        if filecmp.cmp(expected, 'results%s%s' % (os.sep, outfile)):  # pass
+            os.remove('results%s%s' % (os.sep, outfile))
             status = 1
         else:  # fail
             status = -1
@@ -123,9 +123,9 @@ if len(sys.argv) == 3:  # write detailed output to CSV
     logwriter = csv.writer(open(sys.argv[2], 'wb'))
     logwriter.writerow(['url','configuration','testname','result'])
 
-for testsuite in glob.glob('suites/*'):
+for testsuite in glob.glob('suites%s*' % os.sep):
     # get configuration
-    for cfg in glob.glob('%s/*.cfg' % testsuite):
+    for cfg in glob.glob('%s%s*.cfg' % (testsuite, os.sep)):
         print '\nTesting configuration %s' % cfg
 
         for root, dirs, files in os.walk(testsuite):
