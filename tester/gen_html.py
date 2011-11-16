@@ -60,12 +60,14 @@ print '''
             $(document).ready(function() {
                 $('.xml').change(function() {
                     if ($(this).val() != 'none') {
+                        var arr = $(this).val().split(',');
                         $.ajax({
                             type: 'GET',
-                            url: $(this).val(),
+                            url: arr[1],
                             dataType: 'text',
                             success: function(data) {
                                 $('.request').val(data);
+                                $('.server').val('../csw.py?config=' + arr[0]);
                             }
                         });
                     }
@@ -111,7 +113,7 @@ for root, dirs, files in os.walk('suites'):
         for file in files:
             if os.path.splitext(file)[1] in ['.xml']:  # it's a POST request
                 query = '%s%s%s' % (root.replace(os.sep, '/'), '/', file)
-                print '                            <option value="%s">%s</option>' % (query, query)
+                print '                            <option value="tester/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[1], query, query)
 print '''
                         </select>
                         <input type="button" class="send" value="Send"/>
