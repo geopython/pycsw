@@ -192,7 +192,7 @@ def get_anytext(xml):
     return '%s %s' % (' '.join([value for value in xml.xpath('//text()')]),
     ' '.join([value for value in xml.xpath('//attribute::*')]))
 
-def exml2json(element, namespaces):
+def exml2dict(element, namespaces):
     ''' Convert an lxml object to JSON
         From:
         https://bitbucket.org/smulloni/pesterfish/src/1578db946d74/pesterfish.py
@@ -209,5 +209,5 @@ def exml2json(element, namespaces):
         for k,v in element.attrib.items())
     children=element.getchildren()
     if children:
-        d['children']=map(lambda x: exml2json(x, namespaces), children)
+        d['children']=map(lambda x: exml2dict(x, namespaces), children)
     return d
