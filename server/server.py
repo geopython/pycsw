@@ -1547,6 +1547,10 @@ class Csw(object):
             request['outputschema'] = tmp if tmp is not None \
             else config.NAMESPACES['csw']
 
+            tmp = doc.find('.').attrib.get('outputFormat')
+            if tmp is not None:
+                request['outputformat'] = tmp
+
         # Transaction
         if request['request'] == 'Transaction':
             request['transactions'] = []
@@ -1675,18 +1679,26 @@ class Csw(object):
     def _write_response(self):
         ''' Generate response '''
         # set HTTP response headers and XML declaration
+
+        xmldecl=''
+        appinfo=''
+
         if hasattr(self, 'log'):
             self.log.debug('Writing response.')
-        http_header = 'Content-type:%s\r\n' % self.mimetype
-        xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % \
-        self.encoding
-        appinfo = '<!-- pycsw %s -->\n' % config.VERSION
 
         if hasattr(self, 'soap') and self.soap:
             self._gen_soap_wrapper() 
 
-        response = etree.tostring(self.response,
-        pretty_print = self.xml_pretty_print)
+        if (isinstance(self.kvp, dict) and self.kvp.has_key('outputformat') and
+            self.kvp['outputformat'] == 'application/json'):
+            http_header = 'Content-type:%s\r\n' % self.kvp['outputformat']
+            response = str(util.exml2json(self.response, config.NAMESPACES))
+        else:  # it's XML
+            http_header = 'Content-type:%s\r\n' % self.mimetype
+            response = etree.tostring(self.response,
+            pretty_print=self.xml_pretty_print)
+            xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.encoding
+            appinfo = '<!-- pycsw %s -->\n' % config.VERSION
 
         if hasattr(self, 'log'):
             self.log.debug('Response:\n%s' % response)

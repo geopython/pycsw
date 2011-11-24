@@ -74,6 +74,7 @@
       </ows:Parameter>
       <ows:Parameter name="outputFormat">
         <ows:Value>application/xml</ows:Value>
+        <ows:Value>application/json</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="typeName">
         <ows:Value>csw:Record</ows:Value>
@@ -112,6 +113,7 @@
       </ows:DCP>
       <ows:Parameter name="outputFormat">
         <ows:Value>application/xml</ows:Value>
+        <ows:Value>application/json</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
@@ -132,6 +134,7 @@
       </ows:DCP>
       <ows:Parameter name="outputFormat">
         <ows:Value>application/xml</ows:Value>
+        <ows:Value>application/json</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>

@@ -77,7 +77,7 @@ MODEL =  {
                     'values': ['csw:Record']
                 },
                 'outputFormat': {
-                    'values': ['application/xml']
+                    'values': ['application/xml', 'application/json']
                 }
             }
         },
@@ -97,7 +97,7 @@ MODEL =  {
                     'values': ['http://www.opengis.net/cat/csw/2.0.2']
                 },
                 'outputFormat': {
-                    'values': ['application/xml']
+                    'values': ['application/xml', 'application/json']
                 },
                 'CONSTRAINTLANGUAGE': {
                     'values': ['FILTER', 'CQL_TEXT']
@@ -119,7 +119,7 @@ MODEL =  {
                     'values': ['http://www.opengis.net/cat/csw/2.0.2']
                 },
                 'outputFormat': {
-                    'values': ['application/xml']
+                    'values': ['application/xml', 'application/json']
                 },
                 'ElementSetName': {
                     'values': ['brief','summary','full']

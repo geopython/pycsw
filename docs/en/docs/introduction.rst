@@ -69,6 +69,12 @@ Supported Operations
   Harvest,optional,yes,GET (KVP) / POST (XML) / SOAP
   Transaction,optional,yes,POST (XML) / SOAP
 
+Supported Output Formats
+------------------------
+
+- XML (default)
+- JSON
+
 Supported Filters
 -----------------
 
