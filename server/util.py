@@ -91,7 +91,8 @@ def xmltag_split2(tag, namespaces, colon=False):
         value = nsprefix[0]
         if colon:
             return '%s:' % nsprefix[0]
-        return nsprefix[0]
+        else:
+            return nsprefix[0]
     except:
         return ''
 
@@ -197,7 +198,7 @@ def exml2json(element, namespaces):
         https://bitbucket.org/smulloni/pesterfish/src/1578db946d74/pesterfish.py
     '''
    
-    d=dict(tag='%s:%s' % \
+    d=dict(tag='%s%s' % \
     (xmltag_split2(element.tag, namespaces, True), xmltag_split(element.tag)))
     if element.text:
         if element.text.find('\n') == -1:
@@ -209,5 +210,4 @@ def exml2json(element, namespaces):
     children=element.getchildren()
     if children:
         d['children']=map(lambda x: exml2json(x, namespaces), children)
-
     return d
