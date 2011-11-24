@@ -77,7 +77,23 @@ def nspath_eval(xpath):
 
 def xmltag_split(tag):
     ''' Return XML element bare tag name (without prefix) '''
-    return tag.split('}')[1]
+    try:
+        return tag.split('}')[1]
+    except:
+        return tag
+
+def xmltag_split2(tag, namespaces, colon=False):
+    ''' Return XML namespace prefix of element '''
+    try:
+        nsuri = tag.split('}')[0].split('{')[1]
+        nsprefix = [key for key, value in namespaces.iteritems() \
+        if value == nsuri]
+        value = nsprefix[0]
+        if colon:
+            return '%s:' % nsprefix[0]
+        return nsprefix[0]
+    except:
+        return ''
 
 def bbox2wktpolygon(bbox):
     ''' Return OGC WKT Polygon of a simple bbox string '''
@@ -175,3 +191,23 @@ def get_anytext(xml):
     return '%s %s' % (' '.join([value for value in xml.xpath('//text()')]),
     ' '.join([value for value in xml.xpath('//attribute::*')]))
 
+def exml2json(element, namespaces):
+    ''' Convert an lxml object to JSON
+        From:
+        https://bitbucket.org/smulloni/pesterfish/src/1578db946d74/pesterfish.py
+    '''
+   
+    d=dict(tag='%s:%s' % \
+    (xmltag_split2(element.tag, namespaces, True), xmltag_split(element.tag)))
+    if element.text:
+        if element.text.find('\n') == -1:
+            d['text']=element.text
+    if element.attrib:
+        d['attributes']=dict(('%s%s' %(xmltag_split2(k, namespaces, True), \
+        xmltag_split(k)),f(v) if hasattr(v,'keys') else v) \
+        for k,v in element.attrib.items())
+    children=element.getchildren()
+    if children:
+        d['children']=map(lambda x: exml2json(x, namespaces), children)
+
+    return d
