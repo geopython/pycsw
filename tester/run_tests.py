@@ -85,6 +85,7 @@ def get_validity(expected, result, outfile):
 def normalize(result):
     ''' Replace time, updateSequence and version specific values with generic
     values '''
+    # XML responses
     version = re.search('<!-- (.*) -->', result)
     updatesequence = re.search('updateSequence="(\d+)"', result)
     timestamp = re.search('timestamp="(.*)"', result)
@@ -101,6 +102,12 @@ def normalize(result):
         result = result.replace(timestamp2.group(0),
         'timeStamp="PYCSW_TIMESTAMP"')
 
+    # JSON responses
+    timestamp = re.search('{\'timestamp\': \'(.*?)\'}', result)
+
+    if timestamp:
+        result = result.replace(timestamp.group(0),
+        '{\'timestamp\': \'PYCSW_TIMESTAMP\'}')
     return result
 
 # main
