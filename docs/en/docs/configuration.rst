@@ -17,7 +17,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **logfile**: the full file path to the logfile
 - **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net)
 - **federatedcatalogues**: comma delimited list of CSW endpoints to be used for distributed searching, if requested by the client (see :ref:`distributedsearching`)
-- **xml_pretty_print**: whether to pretty print the output XML (``true`` or ``false``).  Default is ``false``
+- **pretty_print**: whether to pretty print the output (``true`` or ``false``).  Default is ``false``
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
 - **domainquerytype**: for GetDomain operations, how to output domain values.  Accepted values are ``list`` and ``range`` (min/max). Default is ``list``
 - **profiles**: comma delimited list of profiles to load at runtime (default is none).  See :ref:`profiles`

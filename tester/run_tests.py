@@ -103,11 +103,11 @@ def normalize(result):
         'timeStamp="PYCSW_TIMESTAMP"')
 
     # JSON responses
-    timestamp = re.search('{"timestamp": "(.*?)"}', result)
+    timestamp = re.search('"timestamp": "(.*?)"', result)
 
     if timestamp:
         result = result.replace(timestamp.group(0),
-        '{"timestamp": "PYCSW_TIMESTAMP"}')
+        '"timestamp": "PYCSW_TIMESTAMP"')
     return result
 
 # main

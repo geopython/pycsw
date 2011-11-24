@@ -56,7 +56,7 @@ class Csw(object):
         self.profiles = None
         self.mimetype = 'application/xml; charset=UTF-8'
         self.encoding = 'UTF-8'
-        self.xml_pretty_print = 0
+        self.pretty_print = 0
         self.domainquerytype = 'list'
 
         # load user configuration
@@ -102,9 +102,9 @@ class Csw(object):
             self.domainquerytype = self.config.get('server', 'domainquerytype')
 
         # set XML pretty print
-        if (self.config.has_option('server', 'xml_pretty_print') and
-        self.config.get('server', 'xml_pretty_print') == 'true'):
-            self.xml_pretty_print = 1
+        if (self.config.has_option('server', 'pretty_print') and
+        self.config.get('server', 'pretty_print') == 'true'):
+            self.pretty_print = 1
 
         # set compression level
         if self.config.has_option('server', 'gzip_compresslevel'):
@@ -1341,7 +1341,7 @@ class Csw(object):
                 import smtplib
 
                 body = 'Subject: pycsw Harvest result(s)\n\n%s' % \
-                etree.tostring(node, pretty_print=self.xml_pretty_print)
+                etree.tostring(node, pretty_print=self.pretty_print)
 
                 msg = smtplib.SMTP('localhost')
                 msg.sendmail(self.config.get('metadata:main', 'contact_email'),
@@ -1693,11 +1693,14 @@ class Csw(object):
             self.kvp['outputformat'] == 'application/json'):
             http_header = 'Content-type:%s\r\n' % self.kvp['outputformat']
             import json
-            response = json.dumps(util.exml2dict(self.response, config.NAMESPACES))
+            if self.pretty_print:
+                response = json.dumps(util.exml2dict(self.response, config.NAMESPACES), indent=4)
+            else:
+                response = json.dumps(util.exml2dict(self.response, config.NAMESPACES))
         else:  # it's XML
             http_header = 'Content-type:%s\r\n' % self.mimetype
             response = etree.tostring(self.response,
-            pretty_print=self.xml_pretty_print)
+            pretty_print=self.pretty_print)
             xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' % self.encoding
             appinfo = '<!-- pycsw %s -->\n' % config.VERSION
 
