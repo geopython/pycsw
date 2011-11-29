@@ -1595,7 +1595,7 @@ class Csw(object):
                 ttype.find(util.nspath_eval('csw:Constraint')))
 
                 if isinstance(constraint, str):  # parse error
-                    return 'Invalid Constraint: %s' % request['constraint']
+                    return 'Invalid Constraint: %s' % constraint
 
                 request['transactions'].append(
                 {'type': 'delete', 'typename': tname, 'constraint': constraint})
