@@ -291,7 +291,7 @@ def parse_record(record, repos=None,
 	recobj.source = md.source
 
     if bbox is not None:
-        tmp = '%s,%s,%s,%s' % (bbox.miny, bbox.minx, bbox.maxy, bbox.maxx)
+        tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
         recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
     else:
         recobj.wkt_geometry = None
