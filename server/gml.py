@@ -56,6 +56,8 @@ class Geometry(object):
 
         if operand.attrib.has_key('srsName'):
             self.crs = crs.Crs(operand.attrib['srsName'])
+        else:
+            self.crs = DEFAULT_SRS
 
         self.type = util.xmltag_split(operand.tag)
 
@@ -69,10 +71,8 @@ class Geometry(object):
             self._get_envelope()
 
         # reproject data if needed    
-        if self.crs and self.crs.code != 4326:
+        if self.crs is not None and self.crs.code != 4326:
             self.wkt = self.transform(self.crs.code, DEFAULT_SRS.code)
-        else:  # no reprojection
-            self.crs = DEFAULT_SRS
 
     def _get_point(self):
         ''' Parse gml:Point '''
@@ -83,7 +83,10 @@ class Geometry(object):
             raise RuntimeError, ('Invalid gml:Point geometry.  Missing gml:pos')
         else:
             xypoint = tmp.text.split()
-            self.wkt = 'POINT(%s %s)' % (xypoint[0], xypoint[1])
+            if self.crs.axisorder == 'yx':
+                self.wkt = 'POINT(%s %s)' % (xypoint[1], xypoint[0])
+            else:
+                self.wkt = 'POINT(%s %s)' % (xypoint[0], xypoint[1])
     
     def _get_linestring(self):
         ''' Parse gml:LineString'''
@@ -94,7 +97,7 @@ class Geometry(object):
             raise RuntimeError, \
             ('Invalid gml:LineString geometry.  Missing gml:posList')
         else:
-            self.wkt = 'LINESTRING(%s)' % _poslist2wkt(tmp.text)
+            self.wkt = 'LINESTRING(%s)' % _poslist2wkt(tmp.text, axisorder)
     
     def _get_polygon(self):
         ''' Parse gml:Polygon'''
@@ -105,7 +108,7 @@ class Geometry(object):
             raise RuntimeError, \
             ('Invalid gml:LineString geometry.  Missing gml:posList')
         else:
-            self.wkt = 'POLYGON((%s))' % _poslist2wkt(tmp.text)
+            self.wkt = 'POLYGON((%s))' % _poslist2wkt(tmp.text, axisorder)
     
     def _get_envelope(self):
         ''' Parse gml:Envelope '''
@@ -123,48 +126,55 @@ class Geometry(object):
             ('Invalid gml:Envelope geometry.  Missing gml:upperCorner')
         else:
             upper_right = tmp.text
-    
-        xymin = lower_left.split()
-        xymax = upper_right.split()
-    
-        if len(xymin) != 2 or len(xymax) != 2:
-            raise RuntimeError, \
-           ('Invalid gml:Envelope geometry. \
-           gml:lowerCorner and gml:upperCorner must hold both lat and long.')
-    
-        self.wkt = util.bbox2wktpolygon('%s,%s,%s,%s' %
-        (xymin[1], xymin[0], xymax[1], xymax[0]))
-    
-    def _poslist2wkt(poslist):
+
+        llmin = lower_left.split()
+        urmax = upper_right.split()
+
+        if len(llmin) < 2 or len(urmax) < 2:
+            raise RuntimeError, ('Invalid gml:Envelope geometry. \
+            gml:lowerCorner and gml:upperCorner must hold at least x and y')
+
+        if self.crs.axisorder == 'yx':
+            self.wkt = util.bbox2wktpolygon('%s,%s,%s,%s' %
+            (llmin[1], llmin[0], urmax[1], urmax[0]))
+        else:
+            self.wkt = util.bbox2wktpolygon('%s,%s,%s,%s' %
+            (llmin[0], llmin[1], urmax[0], urmax[1]))
+
+    def _poslist2wkt(poslist, axisorder):
         ''' Repurpose gml:posList into WKT aware list '''
-    
+
         tmp = poslist.split()
         poslist2 = []
-    
+
         xlist = tmp[1::2]
         ylist = tmp[::2]
-    
-        for i, j in zip(xlist, ylist):
-            poslist2.append('%s %s' % (i, j))
+
+        if axisorder == 'yx':
+            for i, j in zip(ylist, xlist):
+                poslist2.append('%s %s' % (i, j))
+        else:
+            for i, j in zip(xlist, ylist):
+                poslist2.append('%s %s' % (i, j))
 
         return ', '.join(poslist2)
-    
+
     def transform(self, src, dest):
         ''' transform coordinates from one CRS to another '''
-    
+
         import pyproj
         from shapely.geometry import Point, LineString, Polygon
         from shapely.wkt import loads
-    
+
         proj_src = pyproj.Proj(init='epsg:%s' % src)
         proj_dst = pyproj.Proj(init='epsg:%s' % dest)
-    
+
         geom = loads(self.wkt)
-    
+
         if geom.type == 'Point':
             newgeom = Point(pyproj.transform(proj_src, proj_dst, geom.x, geom.y))
             wkt2 = newgeom.wkt
-    
+
         elif geom.type == 'LineString':
             vertices = []
             for vertice in list(geom.coords):
