@@ -36,7 +36,7 @@ from owslib import crs
 
 TYPES = ['gml:Point', 'gml:LineString', 'gml:Polygon', 'gml:Envelope']
 
-DEFAULT_SRS = 'urn:x-ogc:def:crs:EPSG:6.11:4326'
+DEFAULT_SRS = crs.Crs('urn:x-ogc:def:crs:EPSG:6.11:4326')
 
 class Geometry(object):
     ''' base geometry class '''
@@ -45,8 +45,8 @@ class Geometry(object):
         ''' initialize geometry parser  '''
 
         self.type = None 
-        self.crs = DEFAULT_SRS  # default CRS code
         self.wkt = None
+        self.crs = None
         self._exml = element
 
         ''' return OGC WKT for GML geometry '''
@@ -69,8 +69,10 @@ class Geometry(object):
             self._get_envelope()
 
         # reproject data if needed    
-        if self.crs.code != 4326:
-            self.wkt = self.transform(self.crs.code, DEFAULT_SRS.split(':')[-1])
+        if self.crs and self.crs.code != 4326:
+            self.wkt = self.transform(self.crs.code, DEFAULT_SRS.code)
+        else:  # no reprojection
+            self.crs = DEFAULT_SRS
 
     def _get_point(self):
         ''' Parse gml:Point '''
