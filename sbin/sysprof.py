@@ -35,6 +35,7 @@ import sys
 import sqlalchemy
 from lxml import etree
 import shapely.geos
+import pyproj
 
 print '''pycsw system profile
 --------------------
@@ -42,5 +43,6 @@ python version=%s
 os=%s
 sqlalchemy=%s
 shapely=%s
-lxml=%s ''' % (sys.version_info, sys.platform, sqlalchemy.__version__,
-shapely.geos.geos_capi_version, etree.__version__)
+lxml=%s
+pyproj=%s ''' % (sys.version_info, sys.platform, sqlalchemy.__version__,
+shapely.geos.geos_capi_version, etree.__version__, pyproj.__version__)
