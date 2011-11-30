@@ -11,6 +11,7 @@ pycsw requires the following supporting libraries:
 - `lxml`_ (version >= 2.2.3) for XML support
 - `SQLAlchemy`_ (version >= 0.0.5) for database bindings
 - `Shapely`_ (version >= 1.2.8) for spatial query / geometry support
+- `pyproj`_ (version >= 1.8.9) for coordinate transformations
 
 Installing from Source
 ----------------------
@@ -94,3 +95,4 @@ By default, ``default.cfg`` is at the root of the pycsw install.  If you have se
 .. _`lxml`: http://lxml.de/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`Shapely`: http://trac.gispython.org/lab/wiki/Shapely
+.. _`pyproj`: http://code.google.com/p/pyproj/
