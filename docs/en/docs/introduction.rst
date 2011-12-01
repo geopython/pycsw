@@ -91,6 +91,10 @@ Geometry Operands
 - gml:Polygon
 - gml:Envelope
 
+.. note::
+
+  Coordinate transformations are supported
+
 Spatial Operators
 ^^^^^^^^^^^^^^^^^
 
