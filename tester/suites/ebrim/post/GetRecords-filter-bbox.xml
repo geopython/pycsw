@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<csw:GetRecords xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:ogc="http://www.opengis.net/ogc" service="CSW" version="2.0.2" resultType="results" startPosition="1" maxRecords="5" outputFormat="application/xml" outputSchema="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd" xmlns:gml="http://www.opengis.net/gml">
+    <csw:Query typeNames="csw:Record">
+        <csw:ElementSetName>brief</csw:ElementSetName>
+        <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+				<ogc:BBOX>
+					<ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+					<gml:Envelope>
+						<gml:lowerCorner>47 -5</gml:lowerCorner>
+						<gml:upperCorner>55 20</gml:upperCorner>
+					</gml:Envelope>
+				</ogc:BBOX>
+            </ogc:Filter>
+        </csw:Constraint>
+    </csw:Query>
+</csw:GetRecords>
