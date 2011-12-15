@@ -69,6 +69,10 @@ Supported Operations
   Harvest,optional,yes,GET (KVP) / POST (XML) / SOAP
   Transaction,optional,yes,POST (XML) / SOAP
 
+.. note::
+
+  Asynchronous processing supported for GetRecords and Harvest requests (via ``csw:ResponseHandler``)
+
 Supported Output Formats
 ------------------------
 

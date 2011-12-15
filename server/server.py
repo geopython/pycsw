@@ -35,6 +35,8 @@ import os
 import sys
 import cgi
 import urllib2
+import urlparse
+from cStringIO import StringIO
 import ConfigParser
 from lxml import etree
 import config, fes, log, metadata, plugins.profiles.profile, repository, util
@@ -165,6 +167,7 @@ class Csw(object):
         ''' Handle incoming HTTP request '''
 
         error = 0
+        async = False
 
         if hasattr(self,'response'):
             self._write_response()
@@ -277,6 +280,12 @@ class Csw(object):
             self.response = self.exceptionreport(code, locator, text)
     
         else:  # process per the request value
+
+            if self.kvp.has_key('responsehandler'):
+                # set flag to process asynchronously
+                import threading
+                async = True
+
             if self.kvp['request'] == 'GetCapabilities':
                 self.response = self.getcapabilities()
             elif self.kvp['request'] == 'DescribeRecord':
@@ -284,7 +293,11 @@ class Csw(object):
             elif self.kvp['request'] == 'GetDomain':
                 self.response = self.getdomain()
             elif self.kvp['request'] == 'GetRecords':
-                self.response = self.getrecords()
+                if async:  # process asynchronously
+                    threading.Thread(target=self.getrecords).start()
+                    self.response = self._write_acknowledgement()
+                else:
+                    self.response = self.getrecords()
             elif self.kvp['request'] == 'GetRecordById':
                 self.response = self.getrecordbyid()
             elif self.kvp['request'] == 'GetRepositoryItem':
@@ -292,7 +305,11 @@ class Csw(object):
             elif self.kvp['request'] == 'Transaction':
                 self.response = self.transaction()
             elif self.kvp['request'] == 'Harvest':
-                self.response = self.harvest()
+                if async:  # process asynchronously
+                    threading.Thread(target=self.harvest).start()
+                    self.response = self._write_acknowledgement()
+                else:
+                    self.response = self.harvest()
             else:
                 self.response = self.exceptionreport('InvalidParameterValue',
                 'request', 'Invalid request parameter: %s' %
@@ -1054,7 +1071,12 @@ class Csw(object):
             for resultset in dsresults:
                 for rec in resultset:
                     searchresults.append(etree.fromstring(resultset[rec].xml))
-        return node
+
+        if self.kvp.has_key('responsehandler'):  # process the handler
+            self._process_responsehandler(etree.tostring(node,
+            pretty_print=self.pretty_print))
+        else:
+            return node
 
     def getrecordbyid(self, raw=False):
         ''' Handle GetRecordById request '''
@@ -1331,32 +1353,17 @@ class Csw(object):
         '%s %s/csw/2.0.2/CSW-publication.xsd' % (config.NAMESPACES['csw'],
         self.config.get('server', 'ogc_schemas_base'))
 
-        if self.kvp.has_key('responsehandler'):
-            # send acknowledgement response right away
-            # and process the handler
-
-            node.append(self._write_acknowledgement(root=False))
-
-            if self.kvp['responsehandler'].find('mailto:') != -1:  # email
-                import smtplib
-
-                body = 'Subject: pycsw Harvest result(s)\n\n%s' % \
-                etree.tostring(node, pretty_print=self.pretty_print)
-
-                msg = smtplib.SMTP('localhost')
-                msg.sendmail(self.config.get('metadata:main', 'contact_email'),
-                self.kvp['responsehandler'].split(':')[-1], body)
-                msg.quit()
-
-            return node
-
         node2 = etree.SubElement(node,
         util.nspath_eval('csw:TransactionResponse'), version='2.0.2')
 
         node2.append(
         self._write_transactionsummary(inserted=inserted, updated=updated))
 
-        return node
+        if self.kvp.has_key('responsehandler'):  # process the handler
+            self._process_responsehandler(etree.tostring(node,
+            pretty_print=self.pretty_print))
+        else:
+            return node
 
     def parse_postdata(self, postdata):
         ''' Parse POST XML '''
@@ -1488,6 +1495,10 @@ class Csw(object):
                 else 1
             else:
                 request['distributedsearch'] = 'FALSE'
+
+            tmp = doc.find(util.nspath_eval('csw:ResponseHandler'))
+            if tmp is not None:
+                request['responsehandler'] = tmp.text
 
             tmp = doc.find(util.nspath_eval('csw:Query/csw:ElementSetName'))
             request['elementsetname'] = tmp.text if tmp is not None else None
@@ -1709,7 +1720,6 @@ class Csw(object):
 
         if self.gzip:
             import gzip
-            from cStringIO import StringIO
 
             buf = StringIO()
             gzipfile = gzip.GzipFile(mode='wb', fileobj = buf,
@@ -1839,6 +1849,54 @@ class Csw(object):
         node1.append(etree.fromstring(self.request))
 
         return node
+
+    def _process_responsehandler(self, xml):
+        ''' Process response handler '''
+
+        if self.kvp['responsehandler'] is not None:
+            self.log.debug('Processing responsehandler %s.' %
+            self.kvp['responsehandler'])
+
+            uprh = urlparse.urlparse(self.kvp['responsehandler'])
+
+            if uprh.scheme == 'mailto':  # email
+                import smtplib
+
+                self.log.debug('Email detected.')
+
+                smtp_host = 'localhost'
+                if self.config.has_option('server', 'smtp_host'):
+                    smtp_host = self.config.get('server', 'smtp_host')
+
+                body = 'Subject: pycsw %s results\n\n%s' % \
+                (self.kvp['request'], xml)
+
+                try:
+                    self.log.debug('Sending email.')
+                    msg = smtplib.SMTP(smtp_host)
+                    msg.sendmail(
+                    self.config.get('metadata:main', 'contact_email'),
+                    uprh.path, body)
+                    msg.quit()
+                    self.log.debug('Email sent successfully.')
+                except Exception, err:
+                    self.log.debug('Error processing email: %s.' % str(err))
+
+            elif uprh.scheme == 'ftp':
+                import ftplib
+
+                self.log.debug('FTP detected.')
+
+                try:
+                    self.log.debug('Sending to FTP server.')
+                    ftp = ftplib.FTP(uprh.hostname)
+                    if uprh.username is not None:
+                        ftp.login(uprh.username, uprh.password)
+                    ftp.storbinary('STOR %s' % uprh.path[1:], StringIO(xml))
+                    ftp.quit()
+                    self.log.debug('FTP sent successfully.')
+                except Exception, err:
+                    self.log.debug('Error processing FTP: %s.' % str(err))
 
 def write_boundingbox(bbox):
     ''' Generate ows:BoundingBox '''
