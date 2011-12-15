@@ -21,6 +21,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is ``9``
 - **domainquerytype**: for GetDomain operations, how to output domain values.  Accepted values are ``list`` and ``range`` (min/max). Default is ``list``
 - **profiles**: comma delimited list of profiles to load at runtime (default is none).  See :ref:`profiles`
+- **smtp_host**: SMTP host for processing csw:ResponseHandler parameter via outgoing email requests (default is ``localhost``)
 
 **[manager]**
 
