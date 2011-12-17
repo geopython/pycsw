@@ -11,8 +11,8 @@ Code Overview
 Subversion
 ----------
 
-- pycsw source code and documentation are managed using Subversion.  lxml, Shapely and sqlalchemy are required for pycsw to be functional
-- documentation is managed in ``docs/``, in reStructuredText format.  Sphinx is used to generate the docs
+- pycsw source code and documentation are managed using Subversion.  lxml, Shapely, pyproj and sqlalchemy are required for pycsw to be functional
+- documentation is managed in ``docs/``, in reStructuredText format.  `Sphinx`_ is used to generate the docs
 
 Submitting Patches
 ------------------
@@ -22,9 +22,9 @@ Submitting Patches
 Subversion Commit Access
 ------------------------
 
-- proposals to provide developers with SVN commit access should be emailed to the pycsw-devel mailing list (see :ref:`mailing-lists`).  Proposals shall be approved by the pycsw development team.  Committers shall be added by the pycsw admin
+- proposals to provide developers with SVN commit access should be emailed to the pycsw-devel mailing list (see :ref:`mailing-lists`).  Proposals shall be approved by the pycsw development team.  Committers shall be added by the project admin
 - removal of commit access shall be handled in the same manner
-- each committer shall be listed in https://pycsw.svn.sourceforge.net/svnroot/pycsw/trunk/COMMITTERS.txt by the pycsw admin
+- each committer shall be listed in https://pycsw.svn.sourceforge.net/svnroot/pycsw/trunk/COMMITTERS.txt by the project admin
  
 Subversion Commit Guidelines
 ----------------------------
@@ -47,3 +47,4 @@ Coding Guidelines
 
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 .. _`pylint`: http://www.logilab.org/857
+.. _`Sphinx`: http://sphinx.pocoo.org/

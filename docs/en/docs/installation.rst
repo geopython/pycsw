@@ -33,7 +33,7 @@ Ensure that CGI is enabled for your install directory.  For example, on Apache, 
   </Location>
 
 .. note::
-  If you install pycsw in ``cgi-bin``, this should work as expected.  The :ref:`tester <tester>` application must be moved to a normal location to serve static HTML documents.
+  If you install pycsw in ``cgi-bin``, this should work as expected.  In this case, the :ref:`tester <tester>` application must be moved to a normal location to serve static HTML documents.
 
 .. _opensuse:
 
