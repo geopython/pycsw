@@ -24,6 +24,7 @@ Requires:	python
 Requires:	python-sqlalchemy
 Requires:	python-Shapely
 Requires:	python-lxml
+Requires:	python-pyproj
 Requires:	apache2
 BuildRequires:  fdupes python 
 
