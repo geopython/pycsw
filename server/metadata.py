@@ -38,13 +38,13 @@ from owslib.wms import WebMapService
 from owslib.iso import MD_Metadata
 
 def parse_record(record, repos=None,
-    type='http://www.opengis.net/cat/csw/2.0.2', identifier=None):
+    mtype='http://www.opengis.net/cat/csw/2.0.2', identifier=None):
     ''' parse metadata '''
 
     recobj = repos.dataset()
 
     # parse web services
-    if type == 'http://www.opengis.net/wms':
+    if mtype == 'http://www.opengis.net/wms':
 
         recobjs = []
         serviceobj = repos.dataset()
