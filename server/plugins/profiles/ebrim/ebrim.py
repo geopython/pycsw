@@ -134,7 +134,7 @@ class EBRIM(profile.Profile):
 
                 node.attrib['id'] = result.identifier
                 node.attrib['lid'] = result.identifier
-                node.attrib['objectType'] = result.type
+                node.attrib['objectType'] = str(result.type)
                 node.attrib['status'] = 'urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted'
 
                 etree.SubElement(node, util.nspath_eval('rim:VersionInfo'), versionName='')
