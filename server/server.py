@@ -376,8 +376,11 @@ class Csw(object):
 
         # @updateSequence: get latest update to repository
 
-        updatesequence = \
-        util.get_time_iso2unix(self.repository.query_latest_insert())
+        try:
+            updatesequence = \
+            util.get_time_iso2unix(self.repository.query_latest_insert())
+        except:
+            updatesequence = None
 
         node = etree.Element(util.nspath_eval('csw:Capabilities'),
         nsmap=config.NAMESPACES, version='2.0.2',
