@@ -435,9 +435,7 @@ class APISO(profile.Profile):
                     etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
 
                 # title
-                val = getattr(result, queryables['apiso:Title']['dbcol'])
-                if not val:
-                    val = ''
+                val = getattr(result, queryables['apiso:Title']['dbcol']) or ''
                 identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
                 tmp = etree.SubElement(identification, util.nspath_eval('gmd:MD_IdentificationInfo'))
                 tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:citation'))
@@ -447,9 +445,7 @@ class APISO(profile.Profile):
 
                 if esn == 'summary':
                     # abstract
-                    val = getattr(result, queryables['apiso:Abstract']['dbcol'])
-                    if not val:
-                        val = ''
+                    val = getattr(result, queryables['apiso:Abstract']['dbcol']) or ''
                     tmp = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
                     etree.SubElement(tmp, util.nspath_eval('gco:ChracterString')).text = val
     
@@ -461,7 +457,7 @@ class APISO(profile.Profile):
                     tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:equivalentScale'))
                     tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:MD_RepresentativeFraction'))
                     tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
-                    etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = val
+                    etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = str(val)
     
                     # resource language
                     val = getattr(result, queryables['apiso:ResourceLanguage']['dbcol'])
