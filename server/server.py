@@ -1033,6 +1033,9 @@ class Csw(object):
             self.log.debug('Empty result set returned.')
             return node
 
+        if self.kvp['resulttype'] == 'hits':
+            return node
+
         max1 = int(self.kvp['startposition']) + int(self.kvp['maxrecords'])
  
         if results is not None:
@@ -1847,9 +1850,13 @@ class Csw(object):
             '%s %s/csw/2.0.2/CSW-discovery.xsd' % (config.NAMESPACES['csw'], \
             self.config.get('server', 'ogc_schemas_base'))
     
-        node1 = etree.SubElement(node,
-        util.nspath_eval('csw:EchoedRequest'))
-        node1.append(etree.fromstring(self.request))
+        node1 = etree.SubElement(node, util.nspath_eval('csw:EchoedRequest'))
+        if self.requesttype == 'POST':
+            node1.append(etree.fromstring(self.request))
+        else:  # GET
+            node2 = etree.SubElement(node1, util.nspath_eval('ows:Get'))
+
+            node2.text = self.request
 
         return node
 

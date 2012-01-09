@@ -4,12 +4,16 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults numberOfRecordsReturned="2" nextRecord="0" numberOfRecordsMatched="2" recordSchema="http://www.opengis.net/cat/csw/csdgm" elementSet="brief">
     <fgdc:BriefRecord xsi:schemaLocation="http://www.opengis.net/cat/csw/csdgm http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd">
-      <fgdc:title>&#209;un&#231; elementum</fgdc:title>
       <fgdc:recordID>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</fgdc:recordID>
+      <fgdc:title>&#209;un&#231; elementum</fgdc:title>
+      <fgdc:metd></fgdc:metd>
+      <fgdc:publish></fgdc:publish>
     </fgdc:BriefRecord>
     <fgdc:BriefRecord xsi:schemaLocation="http://www.opengis.net/cat/csw/csdgm http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd">
-      <fgdc:title>Mauris sed neque</fgdc:title>
       <fgdc:recordID>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</fgdc:recordID>
+      <fgdc:title>Mauris sed neque</fgdc:title>
+      <fgdc:metd></fgdc:metd>
+      <fgdc:publish></fgdc:publish>
     </fgdc:BriefRecord>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
