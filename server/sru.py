@@ -97,6 +97,7 @@ def request_sru2csw(kvpin, typenames):
             kvpout['typenames'] = ','.join(typenames)
             kvpout['elementsetname'] = 'brief'
             kvpout['constraintlanguage'] = 'CQL_TEXT'
+            kvpout['resulttype'] = 'results'
 
             if kvpin.has_key('query'):
                 pname_in_query = False
