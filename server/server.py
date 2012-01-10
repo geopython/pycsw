@@ -1913,7 +1913,7 @@ def write_boundingbox(bbox):
 
     if bbox is not None:
         tmp = loads(bbox)
-        bbox2 = tmp.exterior.bounds
+        bbox2 = tmp.envelope.bounds
         if len(bbox2) == 4:
             boundingbox = etree.Element(util.nspath_eval('ows:BoundingBox'),
             crs = 'urn:x-ogc:def:crs:EPSG:6.11:4326')
