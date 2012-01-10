@@ -228,7 +228,7 @@ def write_extent(bbox):
     from shapely.wkt import loads
 
     if bbox is not None:
-        bbox2 = loads(bbox).exterior.bounds
+        bbox2 = loads(bbox).envelope.bounds
         extent = etree.Element(util.nspath_eval('fgdc:bounding'))
         etree.SubElement(extent, util.nspath_eval('fgdc:westbc')).text = str(bbox2[0])
         etree.SubElement(extent, util.nspath_eval('fgdc:eastbc')).text = str(bbox2[2])

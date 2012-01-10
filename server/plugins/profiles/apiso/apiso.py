@@ -523,7 +523,7 @@ def write_extent(bbox):
         north = etree.SubElement(gbb, util.nspath_eval('gmd:northBoundLatitude'))
         south = etree.SubElement(gbb, util.nspath_eval('gmd:southBoundLatitude'))
 
-        bbox2 = loads(bbox).exterior.bounds
+        bbox2 = loads(bbox).envelope.bounds
 
         etree.SubElement(west, util.nspath_eval('gco:Decimal')).text = str(bbox2[0])
         etree.SubElement(south, util.nspath_eval('gco:Decimal')).text = str(bbox2[1])
