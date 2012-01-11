@@ -59,7 +59,7 @@ REPOSITORY = {
                 'fgdc:Contributor': {'xpath': 'idinfo/datacred', 'dbcol': 'contributor'},
                 'fgdc:AccessConstraints': {'xpath': 'idinfo/accconst', 'dbcol': 'accessconstraints'},
                 'fgdc:Modified': {'xpath': 'metainfo/metd', 'dbcol': 'date_modified'},
-                'fgdc:Type': {'xpath': 'idinfo/spdoinfo/direct', 'dbcol': 'type'},
+                'fgdc:Type': {'xpath': 'spdoinfo/direct', 'dbcol': 'type'},
                 'fgdc:Format': {'xpath': 'distinfo/stdorder/digform/digtinfo/formname', 'dbcol': 'format'},
                 'fgdc:Source': {'xpath': 'lineage/srcinfo/srccite/citeinfo/title', 'dbcol': 'source'},
                 'fgdc:Relation': {'xpath': 'idinfo/citation/citeinfo/onlink', 'dbcol': 'relation'},
@@ -140,86 +140,90 @@ class FGDC(profile.Profile):
         xml = etree.fromstring(result.xml)
         if outputschema == self.namespace:
 
-            if esn == 'brief':
-              elname = 'fgdc:BriefRecord'
-            elif esn == 'summary':
-              elname = 'fgdc:SummaryRecord'
-            else:
-              elname = 'fgdc:FullRecord'
-
             if result.typename == 'csw:Record':  # transform csw:Record -> fgdc:metadata model mappings
                 util.transform_mappings(queryables, REPOSITORY['fgdc:metadata']['mappings']['csw:Record'])
 
-            node = etree.Element(util.nspath_eval(elname))
-            node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-            '%s http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd' % self.namespace
-
-            # identifier
-            etree.SubElement(node, util.nspath_eval('fgdc:recordID')).text = result.identifier
-
             if esn == 'full':  # dump the record, as is, and exit
-                fgdcrecord = etree.SubElement(node, util.nspath_eval('fgdc:FGDCRecord'))
-                fgdcrecord.append(xml)
-                return node
+                return xml
 
-            # esn is brief or summary at this point
+            node = etree.Element('metadata')
+            node.attrib[util.nspath_eval('xsi:noNamespaceSchemaLocation')] = \
+            'http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd'
+
+            idinfo = etree.SubElement(node, 'idinfo')
+            # identifier
+            etree.SubElement(idinfo, 'datasetid').text = result.identifier
+
+            citation = etree.SubElement(idinfo, 'citation')
+            citeinfo = etree.SubElement(citation, 'citeinfo')
+
             # title
             val = getattr(result, queryables['fgdc:Title']['dbcol'])
-            etree.SubElement(node, util.nspath_eval('fgdc:title')).text = val
-
-            # metd
-            val = getattr(result, queryables['fgdc:Modified']['dbcol']) or ''
-            etree.SubElement(node, util.nspath_eval('fgdc:metd')).text = val
+            etree.SubElement(citeinfo, 'title').text = val
 
             # publisher
+            publinfo = etree.SubElement(citeinfo, 'publinfo')
             val = getattr(result, queryables['fgdc:Publisher']['dbcol']) or ''
-            etree.SubElement(node, util.nspath_eval('fgdc:publish')).text = val
-
-            if esn == 'brief':
-                return node
-
-            # esn is summary
+            etree.SubElement(publinfo, 'publish').text = val
 
             # origin
             val = getattr(result, queryables['fgdc:Origin']['dbcol']) or ''
-            etree.SubElement(node, util.nspath_eval('fgdc:origin')).text = val
+            etree.SubElement(citeinfo, 'origin').text = val
 
             # keywords
             val = getattr(result, queryables['fgdc:ThemeKeywords']['dbcol'])
             if val:
-                keywords = etree.SubElement(node, util.nspath_eval('fgdc:keywords'))
+                keywords = etree.SubElement(idinfo, 'keywords')
+                theme = etree.SubElement(keywords, 'theme')
                 for v in val.split(','):
-                    etree.SubElement(keywords, util.nspath_eval('fgdc:themekey')).text = v
+                    etree.SubElement(theme, 'themekey').text = v
 
             # abstract
+            descript = etree.SubElement(idinfo, 'descript')
             val = getattr(result, queryables['fgdc:Abstract']['dbcol']) or ''
-            etree.SubElement(node, util.nspath_eval('fgdc:abstract')).text = val
+            etree.SubElement(descript, 'abstract').text = val
 
             # contributor
             val = getattr(result, queryables['fgdc:Contributor']['dbcol']) or ''
-            etree.SubElement(node, util.nspath_eval('fgdc:contributor')).text = val
+            etree.SubElement(idinfo, 'datacred').text = val
 
             # direct
+            spdoinfo = etree.SubElement(idinfo, 'spdoinfo')
             val = getattr(result, queryables['fgdc:Type']['dbcol']) or ''
-            etree.SubElement(node, util.nspath_eval('fgdc:direct')).text = val
+            etree.SubElement(spdoinfo, 'direct').text = val
 
             # formname
+            distinfo = etree.SubElement(node, 'distinfo')
+            stdorder = etree.SubElement(distinfo, 'stdorder')
+            digform = etree.SubElement(stdorder, 'digform')
+            digtinfo = etree.SubElement(digform, 'digtinfo')
             val = getattr(result, queryables['fgdc:Format']['dbcol']) or ''
-            etree.SubElement(node, util.nspath_eval('fgdc:formname')).text = val
+            etree.SubElement(digtinfo, 'formname').text = val
+            etree.SubElement(citeinfo, 'geoform').text = val
 
             # source
+            lineage = etree.SubElement(node, 'lineage')
+            srcinfo = etree.SubElement(lineage, 'srcinfo')
+            srccite = etree.SubElement(srcinfo, 'srccite')
+            sciteinfo = etree.SubElement(srccite, 'citeinfo')
             val = getattr(result, queryables['fgdc:Source']['dbcol']) or ''
-            etree.SubElement(node, util.nspath_eval('fgdc:source')).text = val
+            etree.SubElement(sciteinfo, 'title').text = val
 
             # onlink
             val = getattr(result, queryables['fgdc:Relation']['dbcol']) or ''
-            etree.SubElement(node, util.nspath_eval('fgdc:onlink')).text = val
+            etree.SubElement(citeinfo, 'onlink').text = val
 
             # bbox extent
             val = getattr(result, queryables['fgdc:Envelope']['dbcol'])
             bboxel = write_extent(val)
             if bboxel is not None:
                 node.append(bboxel)
+
+            # metd
+            metainfo = etree.SubElement(node, 'metainfo')
+            val = getattr(result, queryables['fgdc:Modified']['dbcol']) or ''
+            etree.SubElement(metainfo, 'metd').text = val
+
         return node
 
 def write_extent(bbox):
@@ -229,10 +233,11 @@ def write_extent(bbox):
 
     if bbox is not None:
         bbox2 = loads(bbox).envelope.bounds
-        extent = etree.Element(util.nspath_eval('fgdc:bounding'))
-        etree.SubElement(extent, util.nspath_eval('fgdc:westbc')).text = str(bbox2[0])
-        etree.SubElement(extent, util.nspath_eval('fgdc:eastbc')).text = str(bbox2[2])
-        etree.SubElement(extent, util.nspath_eval('fgdc:northbc')).text = str(bbox2[3])
-        etree.SubElement(extent, util.nspath_eval('fgdc:southbc')).text = str(bbox2[1])
-        return extent
+        spdom = etree.Element('spdom')
+        bounding = etree.SubElement(spdom, 'bounding')
+        etree.SubElement(bounding, 'westbc').text = str(bbox2[0])
+        etree.SubElement(bounding, 'eastbc').text = str(bbox2[2])
+        etree.SubElement(bounding, 'northbc').text = str(bbox2[3])
+        etree.SubElement(bounding, 'southbc').text = str(bbox2[1])
+        return spdom
     return None
