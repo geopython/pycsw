@@ -2,7 +2,7 @@
 <!-- PYCSW_VERSION -->
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:ogc="http://www.opengis.net/ogc" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="5012" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+  <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="5576" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
     <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
     <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
@@ -46,7 +46,7 @@
     <dct:spatial>FI-ES</dct:spatial>
     <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
 </csw:Record>
-    <csw:Record>
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
       <dc:identifier>14C1AA7C-9054-9C4A-C403-5F49A33DD1D4</dc:identifier>
       <dc:title>Precipitation (Monthly)</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
@@ -63,19 +63,18 @@
       <dc:subject>Topic Category: Environment and Conservation</dc:subject>
       <dc:format>text/xml</dc:format>
       <dct:modified>2009-09-04</dct:modified>
-      <dct:abstract>A cascading Web Map Server can use other web map servers as data sources, seamlessly translating and overlaying the results into a unique map image for the user. To our knowledge CubeSERV&#174; is the only Web Map Server capable of this feat.
-
-What this means is that your developers will be presented with a single, uniform interface to the WMS, no matter what downstream servers are being cascaded, greatly simplfying their job. In addition, CubeSERV&#174; will automatically supplement the capabilities of any downstream server, providing missing spatial reference systems, image formats, etc.
-
-With this Cascading WMS Service CubeWerx is cascading the servers below.  
-
-* USGS Framework Data Web Map Service
-The Framework Web Feature Services are offered by the United States Geological Survey (USGS) in support of the development of the National Spatial Data Infrastructure NSDI).
-      
-* NASA JPL Global Data Server
-A collection of global data layers collected by various NASA satellites and projects.
-      
-...</dct:abstract>
+      <dct:abstract>A cascading Web Map Server can use other web map servers as data sources, seamlessly translating and overlaying the results into a unique map image for the user. To our knowledge CubeSERV&#174; is the only Web Map Server capable of this feat.&#13;
+&#13;
+What this means is that your developers will be presented with a single, uniform interface to the WMS, no matter what downstream servers are being cascaded, greatly simplfying their job. In addition, CubeSERV&#174; will automatically supplement the capabilities of any downstream server, providing missing spatial reference systems, image formats, etc.&#13;
+&#13;
+With this Cascading WMS Service CubeWerx is cascading the servers below.  &#13;
+&#13;
+* USGS Framework Data Web Map Service&#13;
+The Framework Web Feature Services are offered by the United States Geological Survey (USGS) in support of the development of the National Spatial Data Infrastructure NSDI).&#13;
+      &#13;
+* NASA JPL Global Data Server&#13;
+A collection of global data layers collected by various NASA satellites and projects.&#13;
+      &#13;...</dct:abstract>
       <dc:contributor>Mike Galluchon</dc:contributor>
       <dc:creator>CubeWerx Inc.</dc:creator>
       <dct:created>2009-09-04</dct:created>
@@ -86,7 +85,7 @@ A collection of global data layers collected by various NASA satellites and proj
         <ows:UpperCorner>90 180</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
-    <csw:Record>
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
       <dc:identifier>2E736448-C3C3-040C-36B0-CFA18D06F74D</dc:identifier>
       <dc:title>Aqueducts/Canals/Flumes/Penstocks</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
@@ -133,7 +132,7 @@ A collection of global data layers collected by various NASA satellites and proj
         <ows:UpperCorner>90 180</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
-    <csw:Record>
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
       <dc:identifier>2851BCAE-F265-AEF3-B3D8-6A493D292A94</dc:identifier>
       <dc:title>Predicted Lynx Habitat with population cycling only in the Gaspe</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
@@ -151,14 +150,14 @@ A collection of global data layers collected by various NASA satellites and proj
       <dc:subject>Topic Category: Inland Water Resources</dc:subject>
       <dc:format>text/xml</dc:format>
       <dct:modified>2009-09-04</dct:modified>
-      <dct:abstract>The Northern Appalachian Ecoregion Conservation Planning Atlas contains map layers that describe ecological variation , ecological importance, accumulated human impacts (Human Footprint) and modelled future impacts (Future Human Impact) under multiple scenarios.
-
-This is an initiative of the conservation consortium Two Countries, One Forest (www.2c1forest.org)
-
-Data contributed by:
-Wildlife Conservation Society of Canada (WCS Canada) - Human footprint
-Two Countries One Forest (2c1Forest) - Future Human Footprint
-The Nature Conservancy (TNC), Nature Conservancy Canada - Ecoregional Assessment
+      <dct:abstract>The Northern Appalachian Ecoregion Conservation Planning Atlas contains map layers that describe ecological variation , ecological importance, accumulated human impacts (Human Footprint) and modelled future impacts (Future Human Impact) under multiple scenarios.&#13;
+&#13;
+This is an initiative of the conservation consortium Two Countries, One Forest (www.2c1forest.org)&#13;
+&#13;
+Data contributed by:&#13;
+Wildlife Conservation Society of Canada (WCS Canada) - Human footprint&#13;
+Two Countries One Forest (2c1Forest) - Future Human Footprint&#13;
+The Nature Conservancy (TNC), Nature Conservancy Canada - Ecoregional Assessment&#13;
 The Wildlands Project (TWP) - Wildlands Network Design. </dct:abstract>
       <dc:contributor>Gillian Woolmer</dc:contributor>
       <dc:creator>Wildlife Conservation Society Canada</dc:creator>
@@ -170,7 +169,7 @@ The Wildlands Project (TWP) - Wildlands Network Design. </dct:abstract>
         <ows:UpperCorner>90 180</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
-    <csw:Record>
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
       <dc:identifier>2F04DEBB-0592-D928-FA4E-3FB0D16F7C7B</dc:identifier>
       <dc:title>Wild by Ecological Subregion</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
@@ -188,14 +187,14 @@ The Wildlands Project (TWP) - Wildlands Network Design. </dct:abstract>
       <dc:subject>Topic Category: Inland Water Resources</dc:subject>
       <dc:format>text/xml</dc:format>
       <dct:modified>2009-09-04</dct:modified>
-      <dct:abstract>The Northern Appalachian Ecoregion Conservation Planning Atlas contains map layers that describe ecological variation , ecological importance, accumulated human impacts (Human Footprint) and modelled future impacts (Future Human Impact) under multiple scenarios.
-
-This is an initiative of the conservation consortium Two Countries, One Forest (www.2c1forest.org)
-
-Data contributed by:
-Wildlife Conservation Society of Canada (WCS Canada) - Human footprint
-Two Countries One Forest (2c1Forest) - Future Human Footprint
-The Nature Conservancy (TNC), Nature Conservancy Canada - Ecoregional Assessment
+      <dct:abstract>The Northern Appalachian Ecoregion Conservation Planning Atlas contains map layers that describe ecological variation , ecological importance, accumulated human impacts (Human Footprint) and modelled future impacts (Future Human Impact) under multiple scenarios.&#13;
+&#13;
+This is an initiative of the conservation consortium Two Countries, One Forest (www.2c1forest.org)&#13;
+&#13;
+Data contributed by:&#13;
+Wildlife Conservation Society of Canada (WCS Canada) - Human footprint&#13;
+Two Countries One Forest (2c1Forest) - Future Human Footprint&#13;
+The Nature Conservancy (TNC), Nature Conservancy Canada - Ecoregional Assessment&#13;
 The Wildlands Project (TWP) - Wildlands Network Design. </dct:abstract>
       <dc:contributor>Gillian Woolmer</dc:contributor>
       <dc:creator>Wildlife Conservation Society Canada</dc:creator>
@@ -207,7 +206,7 @@ The Wildlands Project (TWP) - Wildlands Network Design. </dct:abstract>
         <ows:UpperCorner>90 180</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
-    <csw:Record>
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
       <dc:identifier>1B2E52C3-E6B5-46A6-852E-7FE935B8B540</dc:identifier>
       <dc:title>CDED 1:250,000 level 4 overview</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>

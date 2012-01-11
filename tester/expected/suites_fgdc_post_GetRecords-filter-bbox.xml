@@ -3,17 +3,119 @@
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults numberOfRecordsReturned="2" nextRecord="0" numberOfRecordsMatched="2" recordSchema="http://www.opengis.net/cat/csw/csdgm" elementSet="brief">
-    <fgdc:BriefRecord xsi:schemaLocation="http://www.opengis.net/cat/csw/csdgm http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd">
-      <fgdc:recordID>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</fgdc:recordID>
-      <fgdc:title>&#209;un&#231; elementum</fgdc:title>
-      <fgdc:metd></fgdc:metd>
-      <fgdc:publish></fgdc:publish>
-    </fgdc:BriefRecord>
-    <fgdc:BriefRecord xsi:schemaLocation="http://www.opengis.net/cat/csw/csdgm http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd">
-      <fgdc:recordID>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</fgdc:recordID>
-      <fgdc:title>Mauris sed neque</fgdc:title>
-      <fgdc:metd></fgdc:metd>
-      <fgdc:publish></fgdc:publish>
-    </fgdc:BriefRecord>
+    <metadata xsi:noNamespaceSchemaLocation="http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd">
+      <idinfo>
+        <datasetid>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</datasetid>
+        <citation>
+          <citeinfo>
+            <title>&#209;un&#231; elementum</title>
+            <publinfo>
+              <publish></publish>
+            </publinfo>
+            <origin></origin>
+            <geoform></geoform>
+            <onlink></onlink>
+          </citeinfo>
+        </citation>
+        <keywords>
+          <theme>
+            <themekey>Hydrography-Oceanographic</themekey>
+          </theme>
+        </keywords>
+        <descript>
+          <abstract></abstract>
+        </descript>
+        <datacred></datacred>
+        <spdoinfo>
+          <direct>http://purl.org/dc/dcmitype/Dataset</direct>
+        </spdoinfo>
+      </idinfo>
+      <distinfo>
+        <stdorder>
+          <digform>
+            <digtinfo>
+              <formname></formname>
+            </digtinfo>
+          </digform>
+        </stdorder>
+      </distinfo>
+      <lineage>
+        <srcinfo>
+          <srccite>
+            <citeinfo>
+              <title></title>
+            </citeinfo>
+          </srccite>
+        </srcinfo>
+      </lineage>
+      <spdom>
+        <bounding>
+          <westbc>-6.17</westbc>
+          <eastbc>-2.23</eastbc>
+          <northbc>51.13</northbc>
+          <southbc>44.79</southbc>
+        </bounding>
+      </spdom>
+      <metainfo>
+        <metd></metd>
+      </metainfo>
+    </metadata>
+    <metadata xsi:noNamespaceSchemaLocation="http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd">
+      <idinfo>
+        <datasetid>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</datasetid>
+        <citation>
+          <citeinfo>
+            <title>Mauris sed neque</title>
+            <publinfo>
+              <publish></publish>
+            </publinfo>
+            <origin></origin>
+            <geoform></geoform>
+            <onlink></onlink>
+          </citeinfo>
+        </citation>
+        <keywords>
+          <theme>
+            <themekey>Vegetation-Cropland</themekey>
+          </theme>
+        </keywords>
+        <descript>
+          <abstract>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</abstract>
+        </descript>
+        <datacred></datacred>
+        <spdoinfo>
+          <direct>http://purl.org/dc/dcmitype/Dataset</direct>
+        </spdoinfo>
+      </idinfo>
+      <distinfo>
+        <stdorder>
+          <digform>
+            <digtinfo>
+              <formname></formname>
+            </digtinfo>
+          </digform>
+        </stdorder>
+      </distinfo>
+      <lineage>
+        <srcinfo>
+          <srccite>
+            <citeinfo>
+              <title></title>
+            </citeinfo>
+          </srccite>
+        </srcinfo>
+      </lineage>
+      <spdom>
+        <bounding>
+          <westbc>-4.1</westbc>
+          <eastbc>0.89</eastbc>
+          <northbc>51.22</northbc>
+          <southbc>47.59</southbc>
+        </bounding>
+      </spdom>
+      <metainfo>
+        <metd></metd>
+      </metainfo>
+    </metadata>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
