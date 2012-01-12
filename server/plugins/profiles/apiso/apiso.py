@@ -376,136 +376,132 @@ class APISO(profile.Profile):
 
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
+        if esn == 'full' and result.typename == 'gmd:MD_Metadata':
+            # dump record as is from result.xml and exit
+            return etree.fromstring(result.xml)
 
-        xml = etree.fromstring(result.xml)
+        if result.typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
+            util.transform_mappings(queryables, REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'])
 
-        if outputschema == self.namespace:
-            if esn == 'full':  # dump the full record
-                node = xml
-            else:  # it's a brief or summary record
+        node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+        '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
 
-                if result.typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
-                    util.transform_mappings(queryables, REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'])
+        # identifier
+        val = result.identifier
 
-                node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
-                node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-                '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
+        identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
+        etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
 
-                # identifier
-                val = result.identifier
+        if esn == 'summary':
+            # language
+            val = getattr(result, queryables['apiso:Language']['dbcol'])
 
-                identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
-                etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
+            lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
+            etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
 
-                if esn == 'summary':
-                    # language
-                    val = getattr(result, queryables['apiso:Language']['dbcol'])
+        # hierarchyLevel
+        val = getattr(result, queryables['apiso:Type']['dbcol'])
 
-                    lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
-                    etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
+        if val is not None: 
+            hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
+            codeList = '%s#MD_ScopeCode' % CODELIST,
+            codeListValue = val,
+            codeSpace = CODESPACE).text = val
 
-                # hierarchyLevel
-                val = getattr(result, queryables['apiso:Type']['dbcol'])
+        if esn == 'summary':
+            # contact
+            val = getattr(result, queryables['apiso:OrganisationName']['dbcol'])
+            contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
+            CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
+            org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
+            etree.SubElement(org_name, util.nspath_eval('gco:ChracterString')).text = val
 
-                if val is not None: 
-                    hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
-                    codeList = '%s#MD_ScopeCode' % CODELIST,
-                    codeListValue = val,
-                    codeSpace = CODESPACE).text = val
+            # date
+            val = getattr(result, queryables['apiso:Modified']['dbcol'])
+            date = etree.SubElement(node, util.nspath_eval('gmd:dateStamp'))
+            etree.SubElement(date, util.nspath_eval('gco:Date')).text = val
 
-                if esn == 'summary':
-                    # contact
-                    val = getattr(result, queryables['apiso:OrganisationName']['dbcol'])
-                    contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
-                    CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
-                    org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
-                    etree.SubElement(org_name, util.nspath_eval('gco:ChracterString')).text = val
-    
-                    # date
-                    val = getattr(result, queryables['apiso:Modified']['dbcol'])
-                    date = etree.SubElement(node, util.nspath_eval('gmd:dateStamp'))
-                    etree.SubElement(date, util.nspath_eval('gco:Date')).text = val
-    
-                    # metadata standard name
-                    standard = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
-                    etree.SubElement(standard, util.nspath_eval('gco:ChracterString')).text = 'ISO19115'
-    
-                    # metadata standard version
-                    standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
-                    etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
+            # metadata standard name
+            standard = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
+            etree.SubElement(standard, util.nspath_eval('gco:ChracterString')).text = 'ISO19115'
 
-                # title
-                val = getattr(result, queryables['apiso:Title']['dbcol']) or ''
-                identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
-                tmp = etree.SubElement(identification, util.nspath_eval('gmd:MD_IdentificationInfo'))
-                tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:citation'))
-                tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
-                tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
-                etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
+            # metadata standard version
+            standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
+            etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
 
-                if esn == 'summary':
-                    # abstract
-                    val = getattr(result, queryables['apiso:Abstract']['dbcol']) or ''
-                    tmp = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
-                    etree.SubElement(tmp, util.nspath_eval('gco:ChracterString')).text = val
-    
-                    # spatial resolution
-                    val = getattr(result, queryables['apiso:Denominator']['dbcol'])
-                    tmp = etree.SubElement(identification, util.nspath_eval('gmd:spatialResolution'))
-                    tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:spatialResolution'))
-                    tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:MD_Resolution'))
-                    tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:equivalentScale'))
-                    tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:MD_RepresentativeFraction'))
-                    tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
-                    etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = str(val)
-    
-                    # resource language
-                    val = getattr(result, queryables['apiso:ResourceLanguage']['dbcol'])
-                    tmp = etree.SubElement(identification, util.nspath_eval('gmd:language'))
-                    etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
-    
-                    # topic category
-                    val = getattr(result, queryables['apiso:TopicCategory']['dbcol'])
-                    if val:
-                        for v in val.split(','):
-                            tmp = etree.SubElement(identification, util.nspath_eval('gmd:topicCategory'))
-                            etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
+        # title
+        val = getattr(result, queryables['apiso:Title']['dbcol']) or ''
+        identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
+        tmp = etree.SubElement(identification, util.nspath_eval('gmd:MD_IdentificationInfo'))
+        tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:citation'))
+        tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
+        tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
+        etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
 
-                # bbox extent
-                val = getattr(result, queryables['apiso:BoundingBox']['dbcol'])
-                bboxel = write_extent(val)
-                if bboxel is not None:
-                    identification.append(bboxel)
+        if esn == 'summary':
+            # abstract
+            val = getattr(result, queryables['apiso:Abstract']['dbcol']) or ''
+            tmp = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
+            etree.SubElement(tmp, util.nspath_eval('gco:ChracterString')).text = val
 
-                # service identification
+            # spatial resolution
+            val = getattr(result, queryables['apiso:Denominator']['dbcol'])
+            tmp = etree.SubElement(identification, util.nspath_eval('gmd:spatialResolution'))
+            tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:spatialResolution'))
+            tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:MD_Resolution'))
+            tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:equivalentScale'))
+            tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:MD_RepresentativeFraction'))
+            tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
+            etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = str(val)
 
-                # service type
-                # service type version
-                val = getattr(result, queryables['apiso:ServiceType']['dbcol'])
-                val2 = getattr(result, queryables['apiso:ServiceTypeVersion']['dbcol'])
-                if (val is not None):
-                    srv_identification = etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
-                    tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))
-                    etree.SubElement(tmp, util.nspath_eval('gco:LocalName')).text = val
-                    tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceTypeVersion'))
-                    etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val2
+            # resource language
+            val = getattr(result, queryables['apiso:ResourceLanguage']['dbcol'])
+            tmp = etree.SubElement(identification, util.nspath_eval('gmd:language'))
+            etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
 
-                if esn == 'summary':
-                    # service operations
-                    val = getattr(result, queryables['apiso:Operation']['dbcol'])
-                    if val:
-                        temp_oper=val.split(',')
-                        oper = etree.SubElement(srv_identification, util.nspath_eval('srv:containsOperations'))
-                        for i in temp_oper:
-                            tmp = etree.SubElement(oper, util.nspath_eval('srv:SV_OperationMetadata'))
-                            tmp2 = etree.SubElement(tmp, util.nspath_eval('srv:operationName'))
-                            etree.SubElement(tmp2, util.nspath_eval('gco:CharacterString')).text = i
-                    # operates on resource(s)
-                    val = getattr(result, queryables['apiso:OperatesOn']['dbcol'])
-                    if val:
-                        temp_oper=val.split(',')
-                        for i in temp_oper:
-                            etree.SubElement(srv_identification, util.nspath_eval('srv:operatesOn'), uuidref=i)
+            # topic category
+            val = getattr(result, queryables['apiso:TopicCategory']['dbcol'])
+            if val:
+                for v in val.split(','):
+                    tmp = etree.SubElement(identification, util.nspath_eval('gmd:topicCategory'))
+                    etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
+
+        # bbox extent
+        val = getattr(result, queryables['apiso:BoundingBox']['dbcol'])
+        bboxel = write_extent(val)
+        if bboxel is not None:
+            identification.append(bboxel)
+
+        # service identification
+
+        # service type
+        # service type version
+        val = getattr(result, queryables['apiso:ServiceType']['dbcol'])
+        val2 = getattr(result, queryables['apiso:ServiceTypeVersion']['dbcol'])
+        if (val is not None):
+            srv_identification = etree.SubElement(identification, util.nspath_eval('srv:SV_ServiceIdentification'))
+            tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceType'))
+            etree.SubElement(tmp, util.nspath_eval('gco:LocalName')).text = val
+            tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceTypeVersion'))
+            etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val2
+
+        if esn == 'summary':
+            # service operations
+            val = getattr(result, queryables['apiso:Operation']['dbcol'])
+            if val:
+                temp_oper=val.split(',')
+                oper = etree.SubElement(srv_identification, util.nspath_eval('srv:containsOperations'))
+                for i in temp_oper:
+                    tmp = etree.SubElement(oper, util.nspath_eval('srv:SV_OperationMetadata'))
+                    tmp2 = etree.SubElement(tmp, util.nspath_eval('srv:operationName'))
+                    etree.SubElement(tmp2, util.nspath_eval('gco:CharacterString')).text = i
+            # operates on resource(s)
+            val = getattr(result, queryables['apiso:OperatesOn']['dbcol'])
+            if val:
+                temp_oper=val.split(',')
+                for i in temp_oper:
+                    etree.SubElement(srv_identification, util.nspath_eval('srv:operatesOn'), uuidref=i)
         return node
 
 def write_extent(bbox):
