@@ -36,6 +36,7 @@ import config, util
 from owslib.csw import CswRecord
 from owslib.wms import WebMapService
 from owslib.iso import MD_Metadata
+from owslib.fgdc import Metadata
 
 def parse_record(record, repos=None,
     mtype='http://www.opengis.net/cat/csw/2.0.2', identifier=None):
@@ -250,6 +251,57 @@ def parse_record(record, repos=None,
 
         if hasattr(md, 'contact') and len(md.contact) > 0:
             recobj.responsiblepartyrole = md.contact[0].role
+
+        if hasattr(md, 'distribution') and hasattr(md.distribution, 'online'):
+            linksarr = []
+            for link in md.distribution.online:
+                linkstr = '%s,%s,%s,%s' % \
+                (link.name, link.description, link.protocol, link.url)
+                linksarr.append(linkstr)
+            recobj.links = '^'.join(linksarr)
+
+    elif root == 'metadata':  # FGDC
+        pass
+
+        md = Metadata(exml)
+
+        if md.idinfo.datasetid is not None:  # we need an indentifier
+            recobj.identifier = md.idinfo.datasetid
+        else:  # generate one ourselves
+            recobj.identifier = uuid.uuid1().get_urn()
+
+        recobj.typename = 'fgdc:metadata'
+        recobj.schema = config.NAMESPACES['fgdc']
+        recobj.mdsource = 'local'
+        recobj.insert_date = util.get_today_and_now()
+        recobj.xml = md.xml
+        recobj.anytext = util.get_anytext(exml)
+        recobj.language = 'en-US'
+        recobj.type = md.idinfo.citation.citeinfo['geoform']
+        recobj.title = md.idinfo.citation.citeinfo['title']
+        recobj.abstract = md.idinfo.descript.abstract
+        recobj.keywords = ','.join(md.idinfo.keywords.theme[0]['themekey'])
+
+        if hasattr(md.idinfo.timeperd, 'timeinfo'):
+            recobj.time_begin = md.idinfo.timeperd.timeinfo.rngdates.begdate
+            recobj.time_end = md.idinfo.timeperd.timeinfo.rngdates.enddate
+
+        if hasattr(md.idinfo, 'origin'):
+            recobj.creator = md.idinfo.origin
+            recobj.publisher = md.idinfo.origin
+            recobj.contributor = md.idinfo.origin
+
+        recobj.organization = md.idinfo.ptcontac.cntorg
+        recobj.accessconstraints = md.idinfo.accconst
+        recobj.otherconstraints = md.idinfo.useconst
+        recobj.date = md.metainfo.metd
+        recobj.date_publication = md.idinfo.citation.citeinfo['pubdate']
+        recobj.format = md.idinfo.citation.citeinfo['geoform']
+
+        if md.idinfo.spdom.bbox is None:
+            bbox = None
+        else:
+            bbox = md.idinfo.spdom.bbox
 
     else:  # default
         md = CswRecord(exml)
