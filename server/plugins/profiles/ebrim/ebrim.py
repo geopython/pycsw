@@ -117,54 +117,50 @@ class EBRIM(profile.Profile):
 
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
+        if esn == 'full' and result.typename == 'rim:RegistryObject':
+            # dump record as is from result.xml and exit
+            return etree.fromstring(result.xml)
 
-        xml = etree.fromstring(result.xml)
+        if result.typename == 'csw:Record':  # transform csw:Record -> rim:RegistryObject model mappings
+            util.transform_mappings(queryables, REPOSITORY['rim:RegistryObject']['mappings']['csw:Record'])
 
-        if outputschema == self.namespace:
-            if esn == 'full':  # dump the full record
-                node = xml
-            else:  # it's a brief or summary record
+        node = etree.Element(util.nspath_eval('rim:ExtrinsicObject'))
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+        '%s %s/csw/2.0.2/profiles/ebrim/1.0/csw-ebrim.xsd' % (NAMESPACES['wrs'], self.ogc_schemas_base)
 
-                if result.typename == 'csw:Record':  # transform csw:Record -> rim:RegistryObject model mappings
-                    util.transform_mappings(queryables, REPOSITORY['rim:RegistryObject']['mappings']['csw:Record'])
+        node.attrib['id'] = result.identifier
+        node.attrib['lid'] = result.identifier
+        node.attrib['objectType'] = str(result.type)
+        node.attrib['status'] = 'urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted'
 
-                node = etree.Element(util.nspath_eval('rim:ExtrinsicObject'))
-                node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-                '%s %s/csw/2.0.2/profiles/ebrim/1.0/csw-ebrim.xsd' % (NAMESPACES['wrs'], self.ogc_schemas_base)
+        etree.SubElement(node, util.nspath_eval('rim:VersionInfo'), versionName='')
 
-                node.attrib['id'] = result.identifier
-                node.attrib['lid'] = result.identifier
-                node.attrib['objectType'] = str(result.type)
-                node.attrib['status'] = 'urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted'
+        if esn == 'summary':
+            etree.SubElement(node, util.nspath_eval('rim:ExternalIdentifier'), value=result.identifier, identificationScheme='foo', registryObject=str(result.relation), id=result.identifier)
 
-                etree.SubElement(node, util.nspath_eval('rim:VersionInfo'), versionName='')
+            name = etree.SubElement(node, util.nspath_eval('rim:Name'))
+            etree.SubElement(name, util.nspath_eval('rim:LocalizedString'), value=unicode(result.title))
 
-                if esn == 'summary':
-                    etree.SubElement(node, util.nspath_eval('rim:ExternalIdentifier'), value=result.identifier, identificationScheme='foo', registryObject=str(result.relation), id=result.identifier)
+            description = etree.SubElement(node, util.nspath_eval('rim:Description'))
+            etree.SubElement(description, util.nspath_eval('rim:LocalizedString'), value=unicode(result.abstract))
 
-                    name = etree.SubElement(node, util.nspath_eval('rim:Name'))
-                    etree.SubElement(name, util.nspath_eval('rim:LocalizedString'), value=unicode(result.title))
+            val = result.wkt_geometry
+            bboxel = server.write_boundingbox(val)
 
-                    description = etree.SubElement(node, util.nspath_eval('rim:Description'))
-                    etree.SubElement(description, util.nspath_eval('rim:LocalizedString'), value=unicode(result.abstract))
+            if bboxel is not None:
+                bboxslot = etree.SubElement(node, util.nspath_eval('rim:Slot'),
+                slotType='urn:ogc:def:dataType:ISO-19107:2003:GM_Envelope')
 
-                    val = result.wkt_geometry
-                    bboxel = server.write_boundingbox(val)
+                valuelist = etree.SubElement(bboxslot, util.nspath_eval('rim:ValueList'))
+                value = etree.SubElement(valuelist, util.nspath_eval('rim:Value'))
+                value.append(bboxel)
 
-                    if bboxel is not None:
-                        bboxslot = etree.SubElement(node, util.nspath_eval('rim:Slot'),
-                        slotType='urn:ogc:def:dataType:ISO-19107:2003:GM_Envelope')
-
-                        valuelist = etree.SubElement(bboxslot, util.nspath_eval('rim:ValueList'))
-                        value = etree.SubElement(valuelist, util.nspath_eval('rim:Value'))
-                        value.append(bboxel)
-
-                    if result.keywords is not None:
-                        subjectslot = etree.SubElement(node, util.nspath_eval('rim:Slot'),
-                        name='http://purl.org/dc/elements/1.1/subject')
-                        valuelist = etree.SubElement(subjectslot, util.nspath_eval('rim:ValueList'))
-                        for keyword in result.keywords.split(','):
-                            etree.SubElement(valuelist,
-                            util.nspath_eval('rim:Value')).text=keyword
+            if result.keywords is not None:
+                subjectslot = etree.SubElement(node, util.nspath_eval('rim:Slot'),
+                name='http://purl.org/dc/elements/1.1/subject')
+                valuelist = etree.SubElement(subjectslot, util.nspath_eval('rim:ValueList'))
+                for keyword in result.keywords.split(','):
+                    etree.SubElement(valuelist,
+                    util.nspath_eval('rim:Value')).text=keyword
 
         return node

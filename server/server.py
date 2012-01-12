@@ -1665,32 +1665,47 @@ class Csw(object):
                         etree.SubElement(record,
                         util.nspath_eval(elemname)).text=value
         elif self.kvp.has_key('elementsetname'):
-            if self.kvp['elementsetname'] == 'full':  # dump the full record
-                record = etree.fromstring(recobj.xml)
-            else:  # dump BriefRecord (always required), summary if requested
-                etree.SubElement(record,
-                util.nspath_eval('dc:identifier')).text = recobj.identifier
+            if (self.kvp['elementsetname'] == 'full' and
+            recobj.typename == 'csw:Record'):
+                # dump record as is from recobj.xml and exit
+                return etree.fromstring(recobj.xml)
 
-                for i in ['dc:title', 'dc:type']:
+            etree.SubElement(record,
+            util.nspath_eval('dc:identifier')).text = recobj.identifier
+
+            for i in ['dc:title', 'dc:type']:
+                val = getattr(recobj, queryables[i]['dbcol'])
+                if not val:
+                    val = ''
+                etree.SubElement(record, util.nspath_eval(i)).text = val
+
+            if self.kvp['elementsetname'] in ['summary', 'full']:
+                # add summary elements
+                if recobj.keywords is not None:
+                    for keyword in recobj.keywords.split(','):
+                        etree.SubElement(record, 
+                        util.nspath_eval('dc:subject')).text=keyword
+
+                for i in ['dc:format', 'dc:relation', \
+                'dct:modified', 'dct:abstract']:
                     val = getattr(recobj, queryables[i]['dbcol'])
-                    if not val:
-                        val = ''
-                    etree.SubElement(record, util.nspath_eval(i)).text = val
-                if self.kvp['elementsetname'] == 'summary':
-                    if recobj.keywords is not None:
-                        for keyword in recobj.keywords.split(','):
-                            etree.SubElement(record, 
-                            util.nspath_eval('dc:subject')).text=keyword
+                    if val:
+                        etree.SubElement(record,
+                        util.nspath_eval(i)).text = val
 
-                    for i in ['dc:format', 'dc:relation', \
-                    'dct:modified', 'dct:abstract']:
-                        val = getattr(recobj, queryables[i]['dbcol'])
-                        if val:
-                            etree.SubElement(record,
-                            util.nspath_eval(i)).text = val
-                bboxel = write_boundingbox(recobj.wkt_geometry)
-                if bboxel is not None:
-                    record.append(bboxel)
+            if self.kvp['elementsetname'] == 'full':  # add full elements
+                for i in ['dc:date', 'dc:format', 'dc:creator', \
+                'dc:publisher', 'dc:contributor', 'dc:source', \
+                'dc:language', 'dc:rights']:
+                    val = getattr(recobj, queryables[i]['dbcol'])
+                    if val:
+                        etree.SubElement(record,
+                        util.nspath_eval(i)).text = val
+
+            # always write out ows:BoundingBox 
+            bboxel = write_boundingbox(recobj.wkt_geometry)
+            if bboxel is not None:
+                record.append(bboxel)
         return record
 
     def _write_response(self):

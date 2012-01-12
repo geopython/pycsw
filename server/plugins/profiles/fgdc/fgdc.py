@@ -135,94 +135,94 @@ class FGDC(profile.Profile):
         '''Perform extra profile specific checks in the GetDomain request'''
         return None
 
-    def write_record(self, result, esn, outputschema, queryables):
+    def write_record(self, recobj, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
-        xml = etree.fromstring(result.xml)
-        if outputschema == self.namespace:
+        if esn == 'full' and recobj.typename == 'fgdc:metadata':
+            # dump record as is from recobj.xml and exit
+            return etree.fromstring(recobj.xml)
 
-            if result.typename == 'csw:Record':  # transform csw:Record -> fgdc:metadata model mappings
-                util.transform_mappings(queryables, REPOSITORY['fgdc:metadata']['mappings']['csw:Record'])
+        if recobj.typename == 'csw:Record':
+            # transform csw:Record -> fgdc:metadata model mappings
+            util.transform_mappings(queryables,
+            REPOSITORY['fgdc:metadata']['mappings']['csw:Record'])
 
-            if esn == 'full':  # dump the record, as is, and exit
-                return xml
+        node = etree.Element('metadata')
+        node.attrib[util.nspath_eval('xsi:noNamespaceSchemaLocation')] = \
+        'http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd'
 
-            node = etree.Element('metadata')
-            node.attrib[util.nspath_eval('xsi:noNamespaceSchemaLocation')] = \
-            'http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd'
+        idinfo = etree.SubElement(node, 'idinfo')
+        # identifier
+        etree.SubElement(idinfo, 'datasetid').text = recobj.identifier
 
-            idinfo = etree.SubElement(node, 'idinfo')
-            # identifier
-            etree.SubElement(idinfo, 'datasetid').text = result.identifier
+        citation = etree.SubElement(idinfo, 'citation')
+        citeinfo = etree.SubElement(citation, 'citeinfo')
 
-            citation = etree.SubElement(idinfo, 'citation')
-            citeinfo = etree.SubElement(citation, 'citeinfo')
+        # title
+        val = getattr(recobj, queryables['fgdc:Title']['dbcol'])
+        etree.SubElement(citeinfo, 'title').text = val
 
-            # title
-            val = getattr(result, queryables['fgdc:Title']['dbcol'])
-            etree.SubElement(citeinfo, 'title').text = val
+        # publisher
+        publinfo = etree.SubElement(citeinfo, 'publinfo')
+        val = getattr(recobj, queryables['fgdc:Publisher']['dbcol']) or ''
+        etree.SubElement(publinfo, 'publish').text = val
 
-            # publisher
-            publinfo = etree.SubElement(citeinfo, 'publinfo')
-            val = getattr(result, queryables['fgdc:Publisher']['dbcol']) or ''
-            etree.SubElement(publinfo, 'publish').text = val
+        # origin
+        val = getattr(recobj, queryables['fgdc:Origin']['dbcol']) or ''
+        etree.SubElement(citeinfo, 'origin').text = val
 
-            # origin
-            val = getattr(result, queryables['fgdc:Origin']['dbcol']) or ''
-            etree.SubElement(citeinfo, 'origin').text = val
+        # keywords
+        val = getattr(recobj, queryables['fgdc:ThemeKeywords']['dbcol'])
+        if val:
+            keywords = etree.SubElement(idinfo, 'keywords')
+            theme = etree.SubElement(keywords, 'theme')
+            for v in val.split(','):
+                etree.SubElement(theme, 'themekey').text = v
 
-            # keywords
-            val = getattr(result, queryables['fgdc:ThemeKeywords']['dbcol'])
-            if val:
-                keywords = etree.SubElement(idinfo, 'keywords')
-                theme = etree.SubElement(keywords, 'theme')
-                for v in val.split(','):
-                    etree.SubElement(theme, 'themekey').text = v
+        # abstract
+        descript = etree.SubElement(idinfo, 'descript')
+        val = getattr(recobj, queryables['fgdc:Abstract']['dbcol']) or ''
+        etree.SubElement(descript, 'abstract').text = val
 
-            # abstract
-            descript = etree.SubElement(idinfo, 'descript')
-            val = getattr(result, queryables['fgdc:Abstract']['dbcol']) or ''
-            etree.SubElement(descript, 'abstract').text = val
+        # contributor
+        val = getattr(recobj, queryables['fgdc:Contributor']['dbcol']) or ''
+        etree.SubElement(idinfo, 'datacred').text = val
 
-            # contributor
-            val = getattr(result, queryables['fgdc:Contributor']['dbcol']) or ''
-            etree.SubElement(idinfo, 'datacred').text = val
+        # direct
+        spdoinfo = etree.SubElement(idinfo, 'spdoinfo')
+        val = getattr(recobj, queryables['fgdc:Type']['dbcol']) or ''
+        etree.SubElement(spdoinfo, 'direct').text = val
 
-            # direct
-            spdoinfo = etree.SubElement(idinfo, 'spdoinfo')
-            val = getattr(result, queryables['fgdc:Type']['dbcol']) or ''
-            etree.SubElement(spdoinfo, 'direct').text = val
+        # formname
+        distinfo = etree.SubElement(node, 'distinfo')
+        stdorder = etree.SubElement(distinfo, 'stdorder')
+        digform = etree.SubElement(stdorder, 'digform')
+        digtinfo = etree.SubElement(digform, 'digtinfo')
+        val = getattr(recobj, queryables['fgdc:Format']['dbcol']) or ''
+        etree.SubElement(digtinfo, 'formname').text = val
+        etree.SubElement(citeinfo, 'geoform').text = val
 
-            # formname
-            distinfo = etree.SubElement(node, 'distinfo')
-            stdorder = etree.SubElement(distinfo, 'stdorder')
-            digform = etree.SubElement(stdorder, 'digform')
-            digtinfo = etree.SubElement(digform, 'digtinfo')
-            val = getattr(result, queryables['fgdc:Format']['dbcol']) or ''
-            etree.SubElement(digtinfo, 'formname').text = val
-            etree.SubElement(citeinfo, 'geoform').text = val
+        # source
+        lineage = etree.SubElement(node, 'lineage')
+        srcinfo = etree.SubElement(lineage, 'srcinfo')
+        srccite = etree.SubElement(srcinfo, 'srccite')
+        sciteinfo = etree.SubElement(srccite, 'citeinfo')
+        val = getattr(recobj, queryables['fgdc:Source']['dbcol']) or ''
+        etree.SubElement(sciteinfo, 'title').text = val
 
-            # source
-            lineage = etree.SubElement(node, 'lineage')
-            srcinfo = etree.SubElement(lineage, 'srcinfo')
-            srccite = etree.SubElement(srcinfo, 'srccite')
-            sciteinfo = etree.SubElement(srccite, 'citeinfo')
-            val = getattr(result, queryables['fgdc:Source']['dbcol']) or ''
-            etree.SubElement(sciteinfo, 'title').text = val
+        # onlink
+        val = getattr(recobj, queryables['fgdc:Relation']['dbcol']) or ''
+        etree.SubElement(citeinfo, 'onlink').text = val
 
-            # onlink
-            val = getattr(result, queryables['fgdc:Relation']['dbcol']) or ''
-            etree.SubElement(citeinfo, 'onlink').text = val
+        # bbox extent
+        val = getattr(recobj, queryables['fgdc:Envelope']['dbcol'])
+        bboxel = write_extent(val)
+        if bboxel is not None:
+            node.append(bboxel)
 
-            # bbox extent
-            val = getattr(result, queryables['fgdc:Envelope']['dbcol'])
-            bboxel = write_extent(val)
-            if bboxel is not None:
-                node.append(bboxel)
-
-            # metd
-            metainfo = etree.SubElement(node, 'metainfo')
-            val = getattr(result, queryables['fgdc:Modified']['dbcol']) or ''
-            etree.SubElement(metainfo, 'metd').text = val
+        # metd
+        metainfo = etree.SubElement(node, 'metainfo')
+        val = getattr(recobj, queryables['fgdc:Modified']['dbcol']) or ''
+        etree.SubElement(metainfo, 'metd').text = val
 
         return node
 

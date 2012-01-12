@@ -132,89 +132,87 @@ class DIF(profile.Profile):
 
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
-        xml = etree.fromstring(result.xml)
-        if outputschema == self.namespace:
-            if esn == 'full':  # dump the full record
-                node = xml
-            else:  # it's a brief or summary record
+        if esn == 'full' and result.typename == 'dif:DIF':
+            # dump record as is from result.xml and exit
+            return etree.fromstring(result.xml)
 
-                if result.typename == 'csw:Record':  # transform csw:Record -> dif:DIF model mappings
-                    util.transform_mappings(queryables, REPOSITORY['dif:DIF']['mappings']['csw:Record'])
+        if result.typename == 'csw:Record':  # transform csw:Record -> dif:DIF model mappings
+            util.transform_mappings(queryables, REPOSITORY['dif:DIF']['mappings']['csw:Record'])
 
-                node = etree.Element(util.nspath_eval('dif:DIF'))
-                node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-                '%s http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd' % self.namespace
+        node = etree.Element(util.nspath_eval('dif:DIF'))
+        node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+        '%s http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd' % self.namespace
 
-                # identifier
-                etree.SubElement(node, util.nspath_eval('dif:Entry_ID')).text = result.identifier
+        # identifier
+        etree.SubElement(node, util.nspath_eval('dif:Entry_ID')).text = result.identifier
 
-                # title
-                val = getattr(result, queryables['dif:Entry_Title']['dbcol'])
-                if not val:
-                    val = ''
-                etree.SubElement(node, util.nspath_eval('dif:Entry_Title')).text = val
+        # title
+        val = getattr(result, queryables['dif:Entry_Title']['dbcol'])
+        if not val:
+            val = ''
+        etree.SubElement(node, util.nspath_eval('dif:Entry_Title')).text = val
 
-                # citation
-                citation = etree.SubElement(node, util.nspath_eval('dif:Data_Set_Citation'))
+        # citation
+        citation = etree.SubElement(node, util.nspath_eval('dif:Data_Set_Citation'))
 
-                # creator
-                val = getattr(result, queryables['dif:Dataset_Creator']['dbcol'])
-                etree.SubElement(citation, util.nspath_eval('dif:Dataset_Creator')).text = val
+        # creator
+        val = getattr(result, queryables['dif:Dataset_Creator']['dbcol'])
+        etree.SubElement(citation, util.nspath_eval('dif:Dataset_Creator')).text = val
 
-                # date
-                val = getattr(result, queryables['dif:Dataset_Release_Date']['dbcol'])
-                etree.SubElement(citation, util.nspath_eval('dif:Dataset_Release_Date')).text = val
+        # date
+        val = getattr(result, queryables['dif:Dataset_Release_Date']['dbcol'])
+        etree.SubElement(citation, util.nspath_eval('dif:Dataset_Release_Date')).text = val
 
-                # publisher
-                val = getattr(result, queryables['dif:Dataset_Publisher']['dbcol'])
-                etree.SubElement(citation, util.nspath_eval('dif:Dataset_Publisher')).text = val
+        # publisher
+        val = getattr(result, queryables['dif:Dataset_Publisher']['dbcol'])
+        etree.SubElement(citation, util.nspath_eval('dif:Dataset_Publisher')).text = val
 
-                # format
-                val = getattr(result, queryables['dif:Data_Presentation_Form']['dbcol'])
-                etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form')).text = val
+        # format
+        val = getattr(result, queryables['dif:Data_Presentation_Form']['dbcol'])
+        etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form')).text = val
 
-                # keywords
-                val = getattr(result, queryables['dif:Keyword']['dbcol'])
+        # keywords
+        val = getattr(result, queryables['dif:Keyword']['dbcol'])
 
-                if val:
-                    for kw in val.split(','):
-                        etree.SubElement(node, util.nspath_eval('dif:Keyword')).text = kw
+        if val:
+            for kw in val.split(','):
+                etree.SubElement(node, util.nspath_eval('dif:Keyword')).text = kw
 
-                # bbox extent
-                val = getattr(result, queryables['dif:Spatial_Coverage']['dbcol'])
-                bboxel = write_extent(val)
-                if bboxel is not None:
-                    node.append(bboxel)
+        # bbox extent
+        val = getattr(result, queryables['dif:Spatial_Coverage']['dbcol'])
+        bboxel = write_extent(val)
+        if bboxel is not None:
+            node.append(bboxel)
 
-                # access constraints
-                val = getattr(result, queryables['dif:Access_Constraints']['dbcol'])
-                etree.SubElement(node, util.nspath_eval('dif:Access_Constraints')).text = val
+        # access constraints
+        val = getattr(result, queryables['dif:Access_Constraints']['dbcol'])
+        etree.SubElement(node, util.nspath_eval('dif:Access_Constraints')).text = val
 
-                # language
-                val = getattr(result, queryables['dif:Data_Set_Language']['dbcol'])
-                etree.SubElement(node, util.nspath_eval('dif:Data_Set_Language')).text = val
+        # language
+        val = getattr(result, queryables['dif:Data_Set_Language']['dbcol'])
+        etree.SubElement(node, util.nspath_eval('dif:Data_Set_Language')).text = val
 
-                # contributor
-                val = getattr(result, queryables['dif:Originating_Center']['dbcol'])
-                etree.SubElement(node, util.nspath_eval('dif:Originating_Center')).text = val
+        # contributor
+        val = getattr(result, queryables['dif:Originating_Center']['dbcol'])
+        etree.SubElement(node, util.nspath_eval('dif:Originating_Center')).text = val
 
-                # abstract
-                val = getattr(result, queryables['dif:Summary']['dbcol'])
-                if not val:
-                    val = ''
-                etree.SubElement(node, util.nspath_eval('dif:Summary')).text = val
+        # abstract
+        val = getattr(result, queryables['dif:Summary']['dbcol'])
+        if not val:
+            val = ''
+        etree.SubElement(node, util.nspath_eval('dif:Summary')).text = val
 
-                # date 
-                val = getattr(result, queryables['dif:DIF_Creation_Date']['dbcol'])
-                etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date')).text = val
+        # date 
+        val = getattr(result, queryables['dif:DIF_Creation_Date']['dbcol'])
+        etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date')).text = val
 
-                # URL
-                val = getattr(result, queryables['dif:Related_URL']['dbcol'])
-                url = etree.SubElement(node, util.nspath_eval('dif:Related_URL'))
-                etree.SubElement(url, util.nspath_eval('dif:URL')).text = val
+        # URL
+        val = getattr(result, queryables['dif:Related_URL']['dbcol'])
+        url = etree.SubElement(node, util.nspath_eval('dif:Related_URL'))
+        etree.SubElement(url, util.nspath_eval('dif:URL')).text = val
 
-                etree.SubElement(url, util.nspath_eval('dif:Metadata_Name')).text = 'CEOS IDN DIF'
-                etree.SubElement(url, util.nspath_eval('dif:Metadata_Version')).text = '9.7'
+        etree.SubElement(url, util.nspath_eval('dif:Metadata_Name')).text = 'CEOS IDN DIF'
+        etree.SubElement(url, util.nspath_eval('dif:Metadata_Version')).text = '9.7'
 
         return node
 
