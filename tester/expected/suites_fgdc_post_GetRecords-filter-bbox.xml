@@ -25,6 +25,14 @@
         <descript>
           <abstract></abstract>
         </descript>
+        <spdom>
+          <bounding>
+            <westbc>-6.17</westbc>
+            <eastbc>-2.23</eastbc>
+            <northbc>51.13</northbc>
+            <southbc>44.79</southbc>
+          </bounding>
+        </spdom>
         <datacred></datacred>
         <spdoinfo>
           <direct>http://purl.org/dc/dcmitype/Dataset</direct>
@@ -48,14 +56,6 @@
           </srccite>
         </srcinfo>
       </lineage>
-      <spdom>
-        <bounding>
-          <westbc>-6.17</westbc>
-          <eastbc>-2.23</eastbc>
-          <northbc>51.13</northbc>
-          <southbc>44.79</southbc>
-        </bounding>
-      </spdom>
       <metainfo>
         <metd></metd>
       </metainfo>
@@ -82,6 +82,14 @@
         <descript>
           <abstract>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</abstract>
         </descript>
+        <spdom>
+          <bounding>
+            <westbc>-4.1</westbc>
+            <eastbc>0.89</eastbc>
+            <northbc>51.22</northbc>
+            <southbc>47.59</southbc>
+          </bounding>
+        </spdom>
         <datacred></datacred>
         <spdoinfo>
           <direct>http://purl.org/dc/dcmitype/Dataset</direct>
@@ -105,14 +113,6 @@
           </srccite>
         </srcinfo>
       </lineage>
-      <spdom>
-        <bounding>
-          <westbc>-4.1</westbc>
-          <eastbc>0.89</eastbc>
-          <northbc>51.22</northbc>
-          <southbc>47.59</southbc>
-        </bounding>
-      </spdom>
       <metainfo>
         <metd></metd>
       </metainfo>
