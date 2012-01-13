@@ -46,6 +46,7 @@ REPOSITORY = {
             'SupportedDIFQueryables': {
                 'dif:Entry_Title': {'xpath': 'dif:Entry_Title', 'dbcol': 'title'},
                 'dif:Dataset_Creator': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Creator', 'dbcol': 'creator'},
+                'dif:ISO_Topic_Category': {'xpath': 'dif:ISO_Topic_Category', 'dbcol': 'topicategory'},
                 'dif:Keyword': {'xpath': 'dif:Keyword', 'dbcol': 'keywords'},
                 'dif:Summary': {'xpath': 'dif:Summary', 'dbcol': 'abstract'},
                 'dif:Dataset_Publisher': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Publisher', 'dbcol': 'publisher'},
@@ -56,6 +57,8 @@ REPOSITORY = {
                 'dif:Data_Set_Language': {'xpath': 'dif:Data_Set_Language', 'dbcol': 'resourcelanguage'},
                 'dif:Related_URL': {'xpath': 'dif:Related_URL/dif:URL', 'dbcol': 'relation'},
                 'dif:Access_Constraints': {'xpath': 'dif:Access_Constraints', 'dbcol': 'accessconstraints'},
+                'dif:Start_Date': {'xpath': 'dif:Temporal_Coverage/dif:Start_Date', 'dbcol': 'time_begin'},
+                'dif:Stop_Date': {'xpath': 'dif:Temporal_Coverage/dif:Stop_Date', 'dbcol': 'time_end'},
                 'dif:AnyText': {'xpath': '//', 'dbcol': 'anytext'},
                 'dif:Spatial_Coverage': {'xpath': 'dif:Spatial_Coverage', 'dbcol': 'wkt_geometry'}
             }
@@ -171,12 +174,23 @@ class DIF(profile.Profile):
         val = getattr(result, queryables['dif:Data_Presentation_Form']['dbcol'])
         etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form')).text = val
 
+        # iso topic category
+        val = getattr(result, queryables['dif:ISO_Topic_Category']['dbcol'])
+        etree.SubElement(node, util.nspath_eval('dif:ISO_Topic_Category')).text = val
+
         # keywords
         val = getattr(result, queryables['dif:Keyword']['dbcol'])
 
         if val:
             for kw in val.split(','):
                 etree.SubElement(node, util.nspath_eval('dif:Keyword')).text = kw
+
+        # temporal
+        temporal = etree.SubElement(node, util.nspath_eval('dif:Temporal_Coverage'))
+        val = getattr(result, queryables['dif:Start_Date']['dbcol'])
+        val2 = getattr(result, queryables['dif:Stop_Date']['dbcol'])
+        etree.SubElement(temporal, util.nspath_eval('dif:Start_Date')).text = val 
+        etree.SubElement(temporal, util.nspath_eval('dif:End_Date')).text = val2
 
         # bbox extent
         val = getattr(result, queryables['dif:Spatial_Coverage']['dbcol'])
@@ -223,8 +237,8 @@ class DIF(profile.Profile):
                 etree.SubElement(url2, util.nspath_eval('dif:URL')).text = linkset[-1]
                 etree.SubElement(url2, util.nspath_eval('dif:Description')).text = linkset[1]
 
-        etree.SubElement(url, util.nspath_eval('dif:Metadata_Name')).text = 'CEOS IDN DIF'
-        etree.SubElement(url, util.nspath_eval('dif:Metadata_Version')).text = '9.7'
+        etree.SubElement(node, util.nspath_eval('dif:Metadata_Name')).text = 'CEOS IDN DIF'
+        etree.SubElement(node, util.nspath_eval('dif:Metadata_Version')).text = '9.7'
 
         return node
 
