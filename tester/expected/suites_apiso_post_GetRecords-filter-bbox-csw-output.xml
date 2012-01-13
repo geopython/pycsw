@@ -2,14 +2,55 @@
 <!-- PYCSW_VERSION -->
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults numberOfRecordsReturned="1" nextRecord="0" numberOfRecordsMatched="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
+  <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="16" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
+    <csw:BriefRecord>
+      <dc:identifier>ae200a05-2800-40b8-b85d-8f8d007b9e30</dc:identifier>
+      <dc:title>Ortho</dc:title>
+      <dc:type>dataset</dc:type>
+      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
+        <ows:LowerCorner>39.76 21.53</ows:LowerCorner>
+        <ows:UpperCorner>39.79 21.57</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
+      <dc:identifier>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</dc:identifier>
+      <dc:title>DTM</dc:title>
+      <dc:type>dataset</dc:type>
+      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
+        <ows:LowerCorner>34.0 19.0</ows:LowerCorner>
+        <ows:UpperCorner>42.0 30.0</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
     <csw:BriefRecord>
       <dc:identifier>437ae0a2-06e2-4015-b296-a66e7f407bf2</dc:identifier>
       <dc:title>Aerial Photos</dc:title>
       <dc:type>dataset</dc:type>
+      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
-        <ows:LowerCorner>20.0 24.0</ows:LowerCorner>
-        <ows:UpperCorner>38.0 40.0</ows:UpperCorner>
+        <ows:LowerCorner>24.0 20.0</ows:LowerCorner>
+        <ows:UpperCorner>40.0 38.0</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
+      <dc:identifier>a2744b0c-becd-426a-95a8-46e9850ccc6d</dc:identifier>
+      <dc:title>DTM</dc:title>
+      <dc:type>dataset</dc:type>
+      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
+        <ows:LowerCorner>34.0 19.0</ows:LowerCorner>
+        <ows:UpperCorner>42.0 30.0</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
+      <dc:identifier>5f37e0f8-4fb1-4637-b959-b415058bdb68</dc:identifier>
+      <dc:title>Ortho</dc:title>
+      <dc:type>dataset</dc:type>
+      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
+        <ows:LowerCorner>39.71 21.53</ows:LowerCorner>
+        <ows:UpperCorner>39.74 21.58</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:BriefRecord>
   </csw:SearchResults>

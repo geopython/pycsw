@@ -23,16 +23,16 @@
             <gmd:geographicElement>
               <gmd:EX_GeographicBoundingBox>
                 <gmd:westBoundLongitude>
-                  <gco:Decimal>34.0</gco:Decimal>
+                  <gco:Decimal>19.0</gco:Decimal>
                 </gmd:westBoundLongitude>
                 <gmd:eastBoundLongitude>
-                  <gco:Decimal>42.0</gco:Decimal>
+                  <gco:Decimal>30.0</gco:Decimal>
                 </gmd:eastBoundLongitude>
                 <gmd:northBoundLatitude>
-                  <gco:Decimal>30.0</gco:Decimal>
+                  <gco:Decimal>42.0</gco:Decimal>
                 </gmd:northBoundLatitude>
                 <gmd:southBoundLatitude>
-                  <gco:Decimal>19.0</gco:Decimal>
+                  <gco:Decimal>34.0</gco:Decimal>
                 </gmd:southBoundLatitude>
               </gmd:EX_GeographicBoundingBox>
             </gmd:geographicElement>
@@ -60,16 +60,16 @@
             <gmd:geographicElement>
               <gmd:EX_GeographicBoundingBox>
                 <gmd:westBoundLongitude>
-                  <gco:Decimal>34.0</gco:Decimal>
+                  <gco:Decimal>19.0</gco:Decimal>
                 </gmd:westBoundLongitude>
                 <gmd:eastBoundLongitude>
-                  <gco:Decimal>42.0</gco:Decimal>
+                  <gco:Decimal>30.0</gco:Decimal>
                 </gmd:eastBoundLongitude>
                 <gmd:northBoundLatitude>
-                  <gco:Decimal>30.0</gco:Decimal>
+                  <gco:Decimal>42.0</gco:Decimal>
                 </gmd:northBoundLatitude>
                 <gmd:southBoundLatitude>
-                  <gco:Decimal>19.0</gco:Decimal>
+                  <gco:Decimal>34.0</gco:Decimal>
                 </gmd:southBoundLatitude>
               </gmd:EX_GeographicBoundingBox>
             </gmd:geographicElement>
@@ -97,16 +97,16 @@
             <gmd:geographicElement>
               <gmd:EX_GeographicBoundingBox>
                 <gmd:westBoundLongitude>
-                  <gco:Decimal>34.0</gco:Decimal>
+                  <gco:Decimal>19.0</gco:Decimal>
                 </gmd:westBoundLongitude>
                 <gmd:eastBoundLongitude>
-                  <gco:Decimal>42.0</gco:Decimal>
+                  <gco:Decimal>30.0</gco:Decimal>
                 </gmd:eastBoundLongitude>
                 <gmd:northBoundLatitude>
-                  <gco:Decimal>30.0</gco:Decimal>
+                  <gco:Decimal>42.0</gco:Decimal>
                 </gmd:northBoundLatitude>
                 <gmd:southBoundLatitude>
-                  <gco:Decimal>19.0</gco:Decimal>
+                  <gco:Decimal>34.0</gco:Decimal>
                 </gmd:southBoundLatitude>
               </gmd:EX_GeographicBoundingBox>
             </gmd:geographicElement>
@@ -134,16 +134,16 @@
             <gmd:geographicElement>
               <gmd:EX_GeographicBoundingBox>
                 <gmd:westBoundLongitude>
-                  <gco:Decimal>34.0</gco:Decimal>
+                  <gco:Decimal>19.0</gco:Decimal>
                 </gmd:westBoundLongitude>
                 <gmd:eastBoundLongitude>
-                  <gco:Decimal>42.0</gco:Decimal>
+                  <gco:Decimal>30.0</gco:Decimal>
                 </gmd:eastBoundLongitude>
                 <gmd:northBoundLatitude>
-                  <gco:Decimal>30.0</gco:Decimal>
+                  <gco:Decimal>42.0</gco:Decimal>
                 </gmd:northBoundLatitude>
                 <gmd:southBoundLatitude>
-                  <gco:Decimal>19.0</gco:Decimal>
+                  <gco:Decimal>34.0</gco:Decimal>
                 </gmd:southBoundLatitude>
               </gmd:EX_GeographicBoundingBox>
             </gmd:geographicElement>
@@ -171,16 +171,16 @@
             <gmd:geographicElement>
               <gmd:EX_GeographicBoundingBox>
                 <gmd:westBoundLongitude>
-                  <gco:Decimal>34.0</gco:Decimal>
+                  <gco:Decimal>19.0</gco:Decimal>
                 </gmd:westBoundLongitude>
                 <gmd:eastBoundLongitude>
-                  <gco:Decimal>42.0</gco:Decimal>
+                  <gco:Decimal>30.0</gco:Decimal>
                 </gmd:eastBoundLongitude>
                 <gmd:northBoundLatitude>
-                  <gco:Decimal>30.0</gco:Decimal>
+                  <gco:Decimal>42.0</gco:Decimal>
                 </gmd:northBoundLatitude>
                 <gmd:southBoundLatitude>
-                  <gco:Decimal>19.0</gco:Decimal>
+                  <gco:Decimal>34.0</gco:Decimal>
                 </gmd:southBoundLatitude>
               </gmd:EX_GeographicBoundingBox>
             </gmd:geographicElement>
