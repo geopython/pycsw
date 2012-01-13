@@ -211,6 +211,18 @@ class DIF(profile.Profile):
         url = etree.SubElement(node, util.nspath_eval('dif:Related_URL'))
         etree.SubElement(url, util.nspath_eval('dif:URL')).text = val
 
+        if result.links:
+            for link in result.links.split('^'):
+                linkset = link.split(',')
+           
+                url2 = etree.SubElement(node, util.nspath_eval('dif:Related_URL'))
+
+                urltype = etree.SubElement(url2, util.nspath_eval('dif:URL_Content_Type'))
+                etree.SubElement(urltype, util.nspath_eval('dif:Type')).text = linkset[2]
+
+                etree.SubElement(url2, util.nspath_eval('dif:URL')).text = linkset[-1]
+                etree.SubElement(url2, util.nspath_eval('dif:Description')).text = linkset[1]
+
         etree.SubElement(url, util.nspath_eval('dif:Metadata_Name')).text = 'CEOS IDN DIF'
         etree.SubElement(url, util.nspath_eval('dif:Metadata_Version')).text = '9.7'
 
