@@ -161,18 +161,21 @@
       <ows:Constraint name="SupportedDIFQueryables">
         <ows:Value>dif:Keyword</ows:Value>
         <ows:Value>dif:Data_Presentation_Form</ows:Value>
-        <ows:Value>dif:Spatial_Coverage</ows:Value>
+        <ows:Value>dif:Summary</ows:Value>
+        <ows:Value>dif:Stop_Date</ows:Value>
+        <ows:Value>dif:ISO_Topic_Category</ows:Value>
         <ows:Value>dif:Originating_Center</ows:Value>
         <ows:Value>dif:DIF_Creation_Date</ows:Value>
         <ows:Value>dif:Dataset_Publisher</ows:Value>
-        <ows:Value>dif:Summary</ows:Value>
         <ows:Value>dif:Dataset_Release_Date</ows:Value>
-        <ows:Value>dif:Access_Constraints</ows:Value>
         <ows:Value>dif:Related_URL</ows:Value>
         <ows:Value>dif:AnyText</ows:Value>
         <ows:Value>dif:Data_Set_Language</ows:Value>
-        <ows:Value>dif:Dataset_Creator</ows:Value>
+        <ows:Value>dif:Access_Constraints</ows:Value>
+        <ows:Value>dif:Spatial_Coverage</ows:Value>
         <ows:Value>dif:Entry_Title</ows:Value>
+        <ows:Value>dif:Start_Date</ows:Value>
+        <ows:Value>dif:Dataset_Creator</ows:Value>
       </ows:Constraint>
       <ows:Constraint name="SupportedDublinCoreQueryables">
         <ows:Value>dc:contributor</ows:Value>
