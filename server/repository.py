@@ -120,7 +120,7 @@ class Repository(object):
 
             total = query.count()
 
-        elif constraint.has_key('where') is False: # GetRecords sans constraint
+        else:  # GetRecords sans constraint
             if not typenames:  # any typename
                 query = self.session.query(self.dataset)
             else:
