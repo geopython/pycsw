@@ -2,7 +2,81 @@
 <!-- PYCSW_VERSION -->
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults numberOfRecordsReturned="1" nextRecord="0" numberOfRecordsMatched="1" recordSchema="http://www.isotc211.org/2005/gmd" elementSet="brief">
+  <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="16" recordSchema="http://www.isotc211.org/2005/gmd" elementSet="brief">
+    <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+      <gmd:fileIdentifier>
+        <gco:ChracterString>ae200a05-2800-40b8-b85d-8f8d007b9e30</gco:ChracterString>
+      </gmd:fileIdentifier>
+      <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:hierarchyLevel>
+      <gmd:identificationInfo>
+        <gmd:MD_IdentificationInfo>
+          <gmd:citation>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>Ortho</gco:CharacterString>
+              </gmd:title>
+            </gmd:CI_Citation>
+          </gmd:citation>
+        </gmd:MD_IdentificationInfo>
+        <gmd:extent>
+          <gmd:EX_Extent>
+            <gmd:geographicElement>
+              <gmd:EX_GeographicBoundingBox>
+                <gmd:westBoundLongitude>
+                  <gco:Decimal>21.53</gco:Decimal>
+                </gmd:westBoundLongitude>
+                <gmd:eastBoundLongitude>
+                  <gco:Decimal>21.57</gco:Decimal>
+                </gmd:eastBoundLongitude>
+                <gmd:northBoundLatitude>
+                  <gco:Decimal>39.79</gco:Decimal>
+                </gmd:northBoundLatitude>
+                <gmd:southBoundLatitude>
+                  <gco:Decimal>39.76</gco:Decimal>
+                </gmd:southBoundLatitude>
+              </gmd:EX_GeographicBoundingBox>
+            </gmd:geographicElement>
+          </gmd:EX_Extent>
+        </gmd:extent>
+      </gmd:identificationInfo>
+    </gmd:MD_Metadata>
+    <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+      <gmd:fileIdentifier>
+        <gco:ChracterString>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</gco:ChracterString>
+      </gmd:fileIdentifier>
+      <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:hierarchyLevel>
+      <gmd:identificationInfo>
+        <gmd:MD_IdentificationInfo>
+          <gmd:citation>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>DTM</gco:CharacterString>
+              </gmd:title>
+            </gmd:CI_Citation>
+          </gmd:citation>
+        </gmd:MD_IdentificationInfo>
+        <gmd:extent>
+          <gmd:EX_Extent>
+            <gmd:geographicElement>
+              <gmd:EX_GeographicBoundingBox>
+                <gmd:westBoundLongitude>
+                  <gco:Decimal>19.0</gco:Decimal>
+                </gmd:westBoundLongitude>
+                <gmd:eastBoundLongitude>
+                  <gco:Decimal>30.0</gco:Decimal>
+                </gmd:eastBoundLongitude>
+                <gmd:northBoundLatitude>
+                  <gco:Decimal>42.0</gco:Decimal>
+                </gmd:northBoundLatitude>
+                <gmd:southBoundLatitude>
+                  <gco:Decimal>34.0</gco:Decimal>
+                </gmd:southBoundLatitude>
+              </gmd:EX_GeographicBoundingBox>
+            </gmd:geographicElement>
+          </gmd:EX_Extent>
+        </gmd:extent>
+      </gmd:identificationInfo>
+    </gmd:MD_Metadata>
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
         <gco:ChracterString>437ae0a2-06e2-4015-b296-a66e7f407bf2</gco:ChracterString>
@@ -23,16 +97,90 @@
             <gmd:geographicElement>
               <gmd:EX_GeographicBoundingBox>
                 <gmd:westBoundLongitude>
-                  <gco:Decimal>24.0</gco:Decimal>
+                  <gco:Decimal>20.0</gco:Decimal>
                 </gmd:westBoundLongitude>
                 <gmd:eastBoundLongitude>
-                  <gco:Decimal>40.0</gco:Decimal>
+                  <gco:Decimal>38.0</gco:Decimal>
                 </gmd:eastBoundLongitude>
                 <gmd:northBoundLatitude>
-                  <gco:Decimal>38.0</gco:Decimal>
+                  <gco:Decimal>40.0</gco:Decimal>
                 </gmd:northBoundLatitude>
                 <gmd:southBoundLatitude>
-                  <gco:Decimal>20.0</gco:Decimal>
+                  <gco:Decimal>24.0</gco:Decimal>
+                </gmd:southBoundLatitude>
+              </gmd:EX_GeographicBoundingBox>
+            </gmd:geographicElement>
+          </gmd:EX_Extent>
+        </gmd:extent>
+      </gmd:identificationInfo>
+    </gmd:MD_Metadata>
+    <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+      <gmd:fileIdentifier>
+        <gco:ChracterString>a2744b0c-becd-426a-95a8-46e9850ccc6d</gco:ChracterString>
+      </gmd:fileIdentifier>
+      <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:hierarchyLevel>
+      <gmd:identificationInfo>
+        <gmd:MD_IdentificationInfo>
+          <gmd:citation>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>DTM</gco:CharacterString>
+              </gmd:title>
+            </gmd:CI_Citation>
+          </gmd:citation>
+        </gmd:MD_IdentificationInfo>
+        <gmd:extent>
+          <gmd:EX_Extent>
+            <gmd:geographicElement>
+              <gmd:EX_GeographicBoundingBox>
+                <gmd:westBoundLongitude>
+                  <gco:Decimal>19.0</gco:Decimal>
+                </gmd:westBoundLongitude>
+                <gmd:eastBoundLongitude>
+                  <gco:Decimal>30.0</gco:Decimal>
+                </gmd:eastBoundLongitude>
+                <gmd:northBoundLatitude>
+                  <gco:Decimal>42.0</gco:Decimal>
+                </gmd:northBoundLatitude>
+                <gmd:southBoundLatitude>
+                  <gco:Decimal>34.0</gco:Decimal>
+                </gmd:southBoundLatitude>
+              </gmd:EX_GeographicBoundingBox>
+            </gmd:geographicElement>
+          </gmd:EX_Extent>
+        </gmd:extent>
+      </gmd:identificationInfo>
+    </gmd:MD_Metadata>
+    <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+      <gmd:fileIdentifier>
+        <gco:ChracterString>5f37e0f8-4fb1-4637-b959-b415058bdb68</gco:ChracterString>
+      </gmd:fileIdentifier>
+      <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:hierarchyLevel>
+      <gmd:identificationInfo>
+        <gmd:MD_IdentificationInfo>
+          <gmd:citation>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>Ortho</gco:CharacterString>
+              </gmd:title>
+            </gmd:CI_Citation>
+          </gmd:citation>
+        </gmd:MD_IdentificationInfo>
+        <gmd:extent>
+          <gmd:EX_Extent>
+            <gmd:geographicElement>
+              <gmd:EX_GeographicBoundingBox>
+                <gmd:westBoundLongitude>
+                  <gco:Decimal>21.53</gco:Decimal>
+                </gmd:westBoundLongitude>
+                <gmd:eastBoundLongitude>
+                  <gco:Decimal>21.58</gco:Decimal>
+                </gmd:eastBoundLongitude>
+                <gmd:northBoundLatitude>
+                  <gco:Decimal>39.74</gco:Decimal>
+                </gmd:northBoundLatitude>
+                <gmd:southBoundLatitude>
+                  <gco:Decimal>39.71</gco:Decimal>
                 </gmd:southBoundLatitude>
               </gmd:EX_GeographicBoundingBox>
             </gmd:geographicElement>
