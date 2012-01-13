@@ -1140,7 +1140,10 @@ class Csw(object):
                 return etree.fromstring(getattr(results[0], 'xml'))
 
         for result in results:
-            if result.typename == 'csw:Record':
+            if (result.typename == 'csw:Record' and
+            self.kvp['outputschema'] ==
+            'http://www.opengis.net/cat/csw/2.0.2'):
+                # serialize record inline
                 node.append(self._write_record(
                 result, self.repository.queryables['_all']))
             elif (self.kvp['outputschema'] ==
@@ -1701,6 +1704,15 @@ class Csw(object):
                     if val:
                         etree.SubElement(record,
                         util.nspath_eval(i)).text = val
+
+            # links
+            if recobj.links:
+                links = recobj.links.split('^')
+                for link in links:
+                    linkset = link.split(',')
+                    etree.SubElement(record,
+                    util.nspath_eval('dct:references'),
+                    scheme=linkset[2]).text = linkset[-1]
 
             # always write out ows:BoundingBox 
             bboxel = write_boundingbox(recobj.wkt_geometry)
