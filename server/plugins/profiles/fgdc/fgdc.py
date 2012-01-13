@@ -178,10 +178,30 @@ class FGDC(profile.Profile):
             for v in val.split(','):
                 etree.SubElement(theme, 'themekey').text = v
 
+        # accessconstraints
+        val = getattr(recobj, queryables['fgdc:AccessConstraints']['dbcol']) or ''
+        etree.SubElement(idinfo, 'accconst').text = val
+
         # abstract
         descript = etree.SubElement(idinfo, 'descript')
         val = getattr(recobj, queryables['fgdc:Abstract']['dbcol']) or ''
         etree.SubElement(descript, 'abstract').text = val
+
+        # time
+        datebegin = getattr(recobj, queryables['fgdc:BeginDate']['dbcol'])
+        dateend = getattr(recobj, queryables['fgdc:EndDate']['dbcol'])
+        if all([datebegin, dateend]):
+            timeperd = etree.SubElement(idinfo, 'timeperd')
+            timeinfo = etree.SubElement(timeperd, 'timeinfo')
+            rngdates = etree.SubElement(timeinfo, 'timeinfo')
+            begdate = etree.SubElement(rngdates, 'begdate').text = datebegin
+            enddate = etree.SubElement(rngdates, 'enddate').text = dateend
+
+        # bbox extent
+        val = getattr(recobj, queryables['fgdc:Envelope']['dbcol'])
+        bboxel = write_extent(val)
+        if bboxel is not None:
+            idinfo.append(bboxel)
 
         # contributor
         val = getattr(recobj, queryables['fgdc:Contributor']['dbcol']) or ''
@@ -209,15 +229,14 @@ class FGDC(profile.Profile):
         val = getattr(recobj, queryables['fgdc:Source']['dbcol']) or ''
         etree.SubElement(sciteinfo, 'title').text = val
 
-        # onlink
         val = getattr(recobj, queryables['fgdc:Relation']['dbcol']) or ''
         etree.SubElement(citeinfo, 'onlink').text = val
 
-        # bbox extent
-        val = getattr(recobj, queryables['fgdc:Envelope']['dbcol'])
-        bboxel = write_extent(val)
-        if bboxel is not None:
-            node.append(bboxel)
+        # links
+        if recobj.links:
+            for link in recobj.links.split('^'):
+                linkset = link.split(',')
+                etree.SubElement(citeinfo, 'onlink', type=linkset[2]).text = linkset[-1]
 
         # metd
         metainfo = etree.SubElement(node, 'metainfo')

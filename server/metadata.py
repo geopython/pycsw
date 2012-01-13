@@ -43,6 +43,7 @@ def parse_record(record, repos=None,
     ''' parse metadata '''
 
     recobj = repos.dataset()
+    links = []
 
     # parse web services
     if mtype == 'http://www.opengis.net/wms':
@@ -253,12 +254,10 @@ def parse_record(record, repos=None,
             recobj.responsiblepartyrole = md.contact[0].role
 
         if hasattr(md, 'distribution') and hasattr(md.distribution, 'online'):
-            linksarr = []
             for link in md.distribution.online:
                 linkstr = '%s,%s,%s,%s' % \
                 (link.name, link.description, link.protocol, link.url)
-                linksarr.append(linkstr)
-            recobj.links = '^'.join(linksarr)
+                links.append(linkstr)
 
     elif root == 'metadata':  # FGDC
         pass
@@ -303,6 +302,12 @@ def parse_record(record, repos=None,
         else:
             bbox = md.idinfo.spdom.bbox
 
+        if md.citation.citeinfo['onlink']:
+            for link in md.citation.citeinfo['onlink']:
+                tmp = '%s,%s,%s,%s' % \
+                (uri['name'], uri['description'], uri['protocol'], uri['url'])
+                links.append(tmp)
+
     else:  # default
         md = CswRecord(exml)
 
@@ -341,6 +346,17 @@ def parse_record(record, repos=None,
 	recobj.date_modified = md.modified
 	recobj.format = md.format
 	recobj.source = md.source
+
+        for ref in md.references:
+            tmp = ',,%s,%s' % (ref['scheme'], ref['url'])
+            links.append(tmp)
+        for uri in md.uris:
+            tmp = '%s,%s,%s,%s' % \
+            (uri['name'], uri['description'], uri['protocol'], uri['url'])
+            links.append(tmp)
+
+    if len(links) > 0:
+        recobj.links = '^'.join(links)
 
     if bbox is not None:
         tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)

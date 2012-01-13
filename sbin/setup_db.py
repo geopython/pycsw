@@ -90,7 +90,7 @@ RECORDS = Table('records', METADATA,
     Column('anytext', Text, nullable=False),
     Column('language', String(32), index=True),
 
-    # indentification
+    # identification
     Column('type', String(128), index=True),
     Column('title', String(2048), index=True),
     Column('title_alternate', String(2048), index=True),
@@ -150,7 +150,11 @@ RECORDS = Table('records', METADATA,
     Column('responsiblepartyrole', String(32), index=True),
     Column('specificationtitle', String(32), index=True),
     Column('specificationdate', String(20), index=True),
-    Column('specificationdatetype', String(20), index=True)
+    Column('specificationdatetype', String(20), index=True),
+
+    # distribution
+    # links: format "name,description,protocol,url^[,,,^[,,,]]"
+    Column('links', Text, index=True),
 )
 RECORDS.create()
 

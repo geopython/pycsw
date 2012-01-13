@@ -393,7 +393,7 @@ class APISO(profile.Profile):
         identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
         etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
 
-        if esn == 'summary':
+        if esn in ['summary', 'full']:
             # language
             val = getattr(result, queryables['apiso:Language']['dbcol'])
 
@@ -409,7 +409,7 @@ class APISO(profile.Profile):
             codeListValue = val,
             codeSpace = CODESPACE).text = val
 
-        if esn == 'summary':
+        if esn in ['summary', 'full']:
             # contact
             val = getattr(result, queryables['apiso:OrganisationName']['dbcol'])
             contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
@@ -439,7 +439,7 @@ class APISO(profile.Profile):
         tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
         etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
 
-        if esn == 'summary':
+        if esn in ['summary', 'full']:
             # abstract
             val = getattr(result, queryables['apiso:Abstract']['dbcol']) or ''
             tmp = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
@@ -486,7 +486,7 @@ class APISO(profile.Profile):
             tmp = etree.SubElement(srv_identification, util.nspath_eval('srv:serviceTypeVersion'))
             etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val2
 
-        if esn == 'summary':
+        if esn in ['summary', 'full']:
             # service operations
             val = getattr(result, queryables['apiso:Operation']['dbcol'])
             if val:
@@ -502,6 +502,30 @@ class APISO(profile.Profile):
                 temp_oper=val.split(',')
                 for i in temp_oper:
                     etree.SubElement(srv_identification, util.nspath_eval('srv:operatesOn'), uuidref=i)
+
+            if result.links:
+                distinfo = etree.SubElement(node, util.nspath_eval('gmd:distributionInfo'))
+                distinfo2 = etree.SubElement(distinfo, util.nspath_eval('gmd:MD_Distribution'))
+                transopts = etree.SubElement(distinfo2, util.nspath_eval('gmd:transferOptions'))
+                dtransopts = etree.SubElement(transopts, util.nspath_eval('gmd:MD_DigitalTransferOptions'))
+
+                for link in result.links.split('^'):
+                    linkset = link.split(',')
+                    online = etree.SubElement(dtransopts, util.nspath_eval('gmd:onLine'))
+                    online2 = etree.SubElement(online, util.nspath_eval('gmd:CI_OnlineResource'))
+
+                    linkage = etree.SubElement(online2, util.nspath_eval('gmd:linkage'))
+                    etree.SubElement(linkage, util.nspath_eval('gmd:URL')).text = linkset[-1]
+
+                    protocol = etree.SubElement(online2, util.nspath_eval('gmd:protocol'))
+                    etree.SubElement(protocol, util.nspath_eval('gmd:CharacterString')).text = linkset[2]
+
+                    name = etree.SubElement(online2, util.nspath_eval('gmd:name'))
+                    etree.SubElement(name, util.nspath_eval('gmd:CharacterString')).text = linkset[0]
+
+                    desc = etree.SubElement(online2, util.nspath_eval('gmd:description'))
+                    etree.SubElement(desc, util.nspath_eval('gmd:CharacterString')).text = linkset[1]
+
         return node
 
 def write_extent(bbox):
