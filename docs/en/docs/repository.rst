@@ -63,6 +63,15 @@ Publishing the Repository
 
 To expose the repository, setup a ``repository`` section as specified in :ref:`configuration`.
 
+Exporting the Repository
+------------------------
+
+.. code-block:: bash
+
+  $ python ./sbin/dump_db.py output_dir sqlite:////path/to/reords.db
+
+This will write each record in ``records.db`` to an XML document on disk, in directory ``output_dir``.
+
 Database Specific Notes
 -----------------------
 
