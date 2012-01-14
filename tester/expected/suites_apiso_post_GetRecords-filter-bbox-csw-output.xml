@@ -7,7 +7,6 @@
       <dc:identifier>ae200a05-2800-40b8-b85d-8f8d007b9e30</dc:identifier>
       <dc:title>Ortho</dc:title>
       <dc:type>dataset</dc:type>
-      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
         <ows:LowerCorner>39.76 21.53</ows:LowerCorner>
         <ows:UpperCorner>39.79 21.57</ows:UpperCorner>
@@ -17,7 +16,6 @@
       <dc:identifier>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</dc:identifier>
       <dc:title>DTM</dc:title>
       <dc:type>dataset</dc:type>
-      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
         <ows:LowerCorner>34.0 19.0</ows:LowerCorner>
         <ows:UpperCorner>42.0 30.0</ows:UpperCorner>
@@ -27,7 +25,6 @@
       <dc:identifier>437ae0a2-06e2-4015-b296-a66e7f407bf2</dc:identifier>
       <dc:title>Aerial Photos</dc:title>
       <dc:type>dataset</dc:type>
-      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
         <ows:LowerCorner>24.0 20.0</ows:LowerCorner>
         <ows:UpperCorner>40.0 38.0</ows:UpperCorner>
@@ -37,7 +34,6 @@
       <dc:identifier>a2744b0c-becd-426a-95a8-46e9850ccc6d</dc:identifier>
       <dc:title>DTM</dc:title>
       <dc:type>dataset</dc:type>
-      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
         <ows:LowerCorner>34.0 19.0</ows:LowerCorner>
         <ows:UpperCorner>42.0 30.0</ows:UpperCorner>
@@ -47,7 +43,6 @@
       <dc:identifier>5f37e0f8-4fb1-4637-b959-b415058bdb68</dc:identifier>
       <dc:title>Ortho</dc:title>
       <dc:type>dataset</dc:type>
-      <dct:references scheme="None">http://www.ypaat.gr</dct:references>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
         <ows:LowerCorner>39.71 21.53</ows:LowerCorner>
         <ows:UpperCorner>39.74 21.58</ows:UpperCorner>
