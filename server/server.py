@@ -1689,30 +1689,34 @@ class Csw(object):
                         etree.SubElement(record, 
                         util.nspath_eval('dc:subject')).text=keyword
 
-                for i in ['dc:format', 'dc:relation', \
-                'dct:modified', 'dct:abstract']:
+                val = getattr(recobj, queryables['dc:format']['dbcol'])
+                if val:
+                    etree.SubElement(record,
+                    util.nspath_eval('dc:format')).text = val
+
+                # links
+                if recobj.links:
+                    links = recobj.links.split('^')
+                    for link in links:
+                        linkset = link.split(',')
+                        etree.SubElement(record,
+                        util.nspath_eval('dct:references'),
+                        scheme=linkset[2]).text = linkset[-1]
+
+                for i in ['dc:relation', 'dct:modified', 'dct:abstract']:
                     val = getattr(recobj, queryables[i]['dbcol'])
                     if val:
                         etree.SubElement(record,
                         util.nspath_eval(i)).text = val
 
             if self.kvp['elementsetname'] == 'full':  # add full elements
-                for i in ['dc:date', 'dc:format', 'dc:creator', \
+                for i in ['dc:date', 'dc:creator', \
                 'dc:publisher', 'dc:contributor', 'dc:source', \
                 'dc:language', 'dc:rights']:
                     val = getattr(recobj, queryables[i]['dbcol'])
                     if val:
                         etree.SubElement(record,
                         util.nspath_eval(i)).text = val
-
-            # links
-            if recobj.links:
-                links = recobj.links.split('^')
-                for link in links:
-                    linkset = link.split(',')
-                    etree.SubElement(record,
-                    util.nspath_eval('dct:references'),
-                    scheme=linkset[2]).text = linkset[-1]
 
             # always write out ows:BoundingBox 
             bboxel = write_boundingbox(recobj.wkt_geometry)
