@@ -68,7 +68,7 @@ Exporting the Repository
 
 .. code-block:: bash
 
-  $ python ./sbin/dump_db.py output_dir sqlite:////path/to/reords.db
+  $ python ./sbin/dump_db.py output_dir sqlite:////path/to/records.db
 
 This will write each record in ``records.db`` to an XML document on disk, in directory ``output_dir``.
 
