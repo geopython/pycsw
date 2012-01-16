@@ -5,7 +5,7 @@
   <csw:SearchResults numberOfRecordsReturned="1" nextRecord="0" numberOfRecordsMatched="1" recordSchema="http://www.isotc211.org/2005/gmd" elementSet="brief">
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:ChracterString>3e9a8c05</gco:ChracterString>
+        <gco:CharacterString>3e9a8c05</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="service">service</gmd:hierarchyLevel>
       <gmd:identificationInfo>
