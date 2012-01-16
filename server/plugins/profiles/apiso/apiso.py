@@ -391,14 +391,14 @@ class APISO(profile.Profile):
         val = result.identifier
 
         identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
-        etree.SubElement(identifier, util.nspath_eval('gco:ChracterString')).text = val
+        etree.SubElement(identifier, util.nspath_eval('gco:CharacterString')).text = val
 
         if esn in ['summary', 'full']:
             # language
             val = getattr(result, queryables['apiso:Language']['dbcol'])
 
             lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
-            etree.SubElement(lang, util.nspath_eval('gco:ChracterString')).text = val
+            etree.SubElement(lang, util.nspath_eval('gco:CharacterString')).text = val
 
         # hierarchyLevel
         val = getattr(result, queryables['apiso:Type']['dbcol'])
@@ -415,7 +415,7 @@ class APISO(profile.Profile):
             contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
             CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
             org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
-            etree.SubElement(org_name, util.nspath_eval('gco:ChracterString')).text = val
+            etree.SubElement(org_name, util.nspath_eval('gco:CharacterString')).text = val
 
             # date
             val = getattr(result, queryables['apiso:Modified']['dbcol'])
@@ -424,11 +424,11 @@ class APISO(profile.Profile):
 
             # metadata standard name
             standard = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
-            etree.SubElement(standard, util.nspath_eval('gco:ChracterString')).text = 'ISO19115'
+            etree.SubElement(standard, util.nspath_eval('gco:CharacterString')).text = 'ISO19115'
 
             # metadata standard version
             standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
-            etree.SubElement(standardver, util.nspath_eval('gco:ChracterString')).text = '2003/Cor.1:2006'
+            etree.SubElement(standardver, util.nspath_eval('gco:CharacterString')).text = '2003/Cor.1:2006'
 
         # title
         val = getattr(result, queryables['apiso:Title']['dbcol']) or ''
@@ -443,7 +443,7 @@ class APISO(profile.Profile):
             # abstract
             val = getattr(result, queryables['apiso:Abstract']['dbcol']) or ''
             tmp = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
-            etree.SubElement(tmp, util.nspath_eval('gco:ChracterString')).text = val
+            etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
 
             # spatial resolution
             val = getattr(result, queryables['apiso:Denominator']['dbcol'])
@@ -453,7 +453,7 @@ class APISO(profile.Profile):
             tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:equivalentScale'))
             tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:MD_RepresentativeFraction'))
             tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
-            etree.SubElement(tmp6, util.nspath_eval('gco:ChracterString')).text = str(val)
+            etree.SubElement(tmp6, util.nspath_eval('gco:CharacterString')).text = str(val)
 
             # resource language
             val = getattr(result, queryables['apiso:ResourceLanguage']['dbcol'])
