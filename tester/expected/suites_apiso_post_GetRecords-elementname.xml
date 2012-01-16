@@ -5,7 +5,7 @@
   <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="16" recordSchema="http://www.isotc211.org/2005/gmd">
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:ChracterString>ae200a05-2800-40b8-b85d-8f8d007b9e30</gco:ChracterString>
+        <gco:CharacterString>ae200a05-2800-40b8-b85d-8f8d007b9e30</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:hierarchyLevel>
       <gmd:identificationInfo>
@@ -42,7 +42,7 @@
     </gmd:MD_Metadata>
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:ChracterString>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</gco:ChracterString>
+        <gco:CharacterString>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:hierarchyLevel>
       <gmd:identificationInfo>
@@ -79,7 +79,7 @@
     </gmd:MD_Metadata>
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:ChracterString>437ae0a2-06e2-4015-b296-a66e7f407bf2</gco:ChracterString>
+        <gco:CharacterString>437ae0a2-06e2-4015-b296-a66e7f407bf2</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:hierarchyLevel>
       <gmd:identificationInfo>
@@ -116,7 +116,7 @@
     </gmd:MD_Metadata>
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:ChracterString>a2744b0c-becd-426a-95a8-46e9850ccc6d</gco:ChracterString>
+        <gco:CharacterString>a2744b0c-becd-426a-95a8-46e9850ccc6d</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:hierarchyLevel>
       <gmd:identificationInfo>
@@ -153,7 +153,7 @@
     </gmd:MD_Metadata>
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:ChracterString>5f37e0f8-4fb1-4637-b959-b415058bdb68</gco:ChracterString>
+        <gco:CharacterString>5f37e0f8-4fb1-4637-b959-b415058bdb68</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:hierarchyLevel>
       <gmd:identificationInfo>
