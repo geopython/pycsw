@@ -61,10 +61,9 @@ for record in RECORDS.all():
     FILENAME = os.path.join(sys.argv[1], '%s.xml' % identifier)
     try:
         print ' Writing to file %s' % FILENAME
-        XML = open(FILENAME, 'w')
-        XML.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        XML.write(record.xml)
-        XML.close()
+        with open(FILENAME, 'w') as XML:
+            XML.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+            XML.write(record.xml)
     except Exception, err:
         raise RuntimeError("Error writing to %s" % FILENAME, err)
 
