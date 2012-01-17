@@ -404,7 +404,8 @@ class APISO(profile.Profile):
         val = getattr(result, queryables['apiso:Type']['dbcol'])
 
         if val is not None: 
-            hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'),
+            hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'))
+            etree.SubElement(hierarchy, util.nspath_eval('gmd:MD_ScopeCode'),
             codeList = '%s#MD_ScopeCode' % CODELIST,
             codeListValue = val,
             codeSpace = CODESPACE).text = val
@@ -413,65 +414,83 @@ class APISO(profile.Profile):
             # contact
             val = getattr(result, queryables['apiso:OrganisationName']['dbcol'])
             contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
-            CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
-            org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
-            etree.SubElement(org_name, util.nspath_eval('gco:CharacterString')).text = val
+            if val:
+                CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
+                org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName'))
+                etree.SubElement(org_name, util.nspath_eval('gco:CharacterString')).text = val
 
             # date
             val = getattr(result, queryables['apiso:Modified']['dbcol'])
             date = etree.SubElement(node, util.nspath_eval('gmd:dateStamp'))
-            etree.SubElement(date, util.nspath_eval('gco:Date')).text = val
+            if val and val.find('T') != -1:
+                dateel = 'gco:DateTime'
+            else:
+                dateel = 'gco:Date'
+            etree.SubElement(date, util.nspath_eval(dateel)).text = val
 
             # metadata standard name
             standard = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
             etree.SubElement(standard, util.nspath_eval('gco:CharacterString')).text = 'ISO19115'
 
             # metadata standard version
-            standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardName'))
+            standardver = etree.SubElement(node, util.nspath_eval('gmd:metadataStandardVersion'))
             etree.SubElement(standardver, util.nspath_eval('gco:CharacterString')).text = '2003/Cor.1:2006'
 
         # title
         val = getattr(result, queryables['apiso:Title']['dbcol']) or ''
         identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
-        tmp = etree.SubElement(identification, util.nspath_eval('gmd:MD_IdentificationInfo'))
-        tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:citation'))
+        dataident = etree.SubElement(identification, util.nspath_eval('gmd:MD_DataIdentification'))
+        tmp2 = etree.SubElement(dataident, util.nspath_eval('gmd:citation'))
         tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
         tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
         etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
 
+        # creation date
+        val = getattr(result, queryables['apiso:CreationDate']['dbcol'])
+        if val is not None:
+            tmp3.append(_write_date(val, 'creation'))
+        # publication date
+        val = getattr(result, queryables['apiso:PublicationDate']['dbcol'])
+        if val is not None:
+            tmp3.append(_write_date(val, 'publication'))
+        # revision date
+        val = getattr(result, queryables['apiso:RevisionDate']['dbcol']) or getattr(result, queryables['apiso:Modified']['dbcol'])
+        if val is not None:
+            tmp3.append(_write_date(val, 'revision'))
+
         if esn in ['summary', 'full']:
             # abstract
             val = getattr(result, queryables['apiso:Abstract']['dbcol']) or ''
-            tmp = etree.SubElement(identification, util.nspath_eval('gmd:abstract'))
+            tmp = etree.SubElement(dataident, util.nspath_eval('gmd:abstract'))
             etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
 
             # spatial resolution
             val = getattr(result, queryables['apiso:Denominator']['dbcol'])
-            tmp = etree.SubElement(identification, util.nspath_eval('gmd:spatialResolution'))
-            tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:spatialResolution'))
-            tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:MD_Resolution'))
-            tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:equivalentScale'))
-            tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:MD_RepresentativeFraction'))
-            tmp6 = etree.SubElement(tmp5, util.nspath_eval('gmd:denominator'))
-            etree.SubElement(tmp6, util.nspath_eval('gco:CharacterString')).text = str(val)
+            if val:
+                tmp = etree.SubElement(dataident, util.nspath_eval('gmd:spatialResolution'))
+                tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:MD_Resolution'))
+                tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:equivalentScale'))
+                tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:MD_RepresentativeFraction'))
+                tmp5 = etree.SubElement(tmp4, util.nspath_eval('gmd:denominator'))
+                etree.SubElement(tmp5, util.nspath_eval('gco:Integer')).text = str(val)
 
             # resource language
             val = getattr(result, queryables['apiso:ResourceLanguage']['dbcol'])
-            tmp = etree.SubElement(identification, util.nspath_eval('gmd:language'))
+            tmp = etree.SubElement(dataident, util.nspath_eval('gmd:language'))
             etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
 
             # topic category
             val = getattr(result, queryables['apiso:TopicCategory']['dbcol'])
             if val:
                 for v in val.split(','):
-                    tmp = etree.SubElement(identification, util.nspath_eval('gmd:topicCategory'))
+                    tmp = etree.SubElement(dataident, util.nspath_eval('gmd:topicCategory'))
                     etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
 
         # bbox extent
         val = getattr(result, queryables['apiso:BoundingBox']['dbcol'])
         bboxel = write_extent(val)
         if bboxel is not None:
-            identification.append(bboxel)
+            dataident.append(bboxel)
 
         # service identification
 
@@ -518,13 +537,13 @@ class APISO(profile.Profile):
                     etree.SubElement(linkage, util.nspath_eval('gmd:URL')).text = linkset[-1]
 
                     protocol = etree.SubElement(online2, util.nspath_eval('gmd:protocol'))
-                    etree.SubElement(protocol, util.nspath_eval('gmd:CharacterString')).text = linkset[2]
+                    etree.SubElement(protocol, util.nspath_eval('gco:CharacterString')).text = linkset[2]
 
                     name = etree.SubElement(online2, util.nspath_eval('gmd:name'))
-                    etree.SubElement(name, util.nspath_eval('gmd:CharacterString')).text = linkset[0]
+                    etree.SubElement(name, util.nspath_eval('gco:CharacterString')).text = linkset[0]
 
                     desc = etree.SubElement(online2, util.nspath_eval('gmd:description'))
-                    etree.SubElement(desc, util.nspath_eval('gmd:CharacterString')).text = linkset[1]
+                    etree.SubElement(desc, util.nspath_eval('gco:CharacterString')).text = linkset[1]
 
         return node
 
@@ -540,8 +559,8 @@ def write_extent(bbox):
         gbb = etree.SubElement(ge, util.nspath_eval('gmd:EX_GeographicBoundingBox'))
         west = etree.SubElement(gbb, util.nspath_eval('gmd:westBoundLongitude'))
         east = etree.SubElement(gbb, util.nspath_eval('gmd:eastBoundLongitude'))
-        north = etree.SubElement(gbb, util.nspath_eval('gmd:northBoundLatitude'))
         south = etree.SubElement(gbb, util.nspath_eval('gmd:southBoundLatitude'))
+        north = etree.SubElement(gbb, util.nspath_eval('gmd:northBoundLatitude'))
 
         bbox2 = loads(bbox).envelope.bounds
 
@@ -551,3 +570,19 @@ def write_extent(bbox):
         etree.SubElement(north, util.nspath_eval('gco:Decimal')).text = str(bbox2[3])
         return extent
     return None
+
+def _write_date(dateval, datetypeval):
+    date1 = etree.Element(util.nspath_eval('gmd:date'))
+    date2 = etree.SubElement(date1, util.nspath_eval('gmd:CI_Date'))
+    date3 = etree.SubElement(date2, util.nspath_eval('gmd:date'))
+    if dateval.find('T') != -1:
+        dateel = 'gco:DateTime'
+    else:
+        dateel = 'gco:Date'
+    etree.SubElement(date3, util.nspath_eval(dateel)).text = dateval
+    datetype = etree.SubElement(date2, util.nspath_eval('gmd:dateType'))
+    etree.SubElement(datetype, util.nspath_eval('gmd:CI_DateTypeCode'),
+    codeList='%s#CI_DateTypeCode' % CODELIST,
+    codeListValue=datetypeval,
+    codeSpace=CODESPACE).text = datetypeval
+    return date1
