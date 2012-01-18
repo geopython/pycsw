@@ -176,9 +176,10 @@ def parse_record(record, repos=None,
 
             if (hasattr(md.identification, 'keywords') and
             len(md.identification.keywords) > 0):
-                recobj.keywords = ','.join(
-                md.identification.keywords[0]['keywords'])
-                recobj.keywordstype = md.identification.keywords[0]['type']
+                if None not in md.identification.keywords[0]['keywords']:
+                    recobj.keywords = ','.join(
+                    md.identification.keywords[0]['keywords'])
+                    recobj.keywordstype = md.identification.keywords[0]['type']
 
             if hasattr(md.identification, 'creator'):
                 recobj.creator = md.identification.creator
@@ -260,8 +261,6 @@ def parse_record(record, repos=None,
                 links.append(linkstr)
 
     elif root == 'metadata':  # FGDC
-        pass
-
         md = Metadata(exml)
 
         if md.idinfo.datasetid is not None:  # we need an indentifier
@@ -282,15 +281,17 @@ def parse_record(record, repos=None,
         recobj.keywords = ','.join(md.idinfo.keywords.theme[0]['themekey'])
 
         if hasattr(md.idinfo.timeperd, 'timeinfo'):
-            recobj.time_begin = md.idinfo.timeperd.timeinfo.rngdates.begdate
-            recobj.time_end = md.idinfo.timeperd.timeinfo.rngdates.enddate
+            if hasattr(md.idinfo.timeperd.timeinfo, 'rngdates'):
+                recobj.time_begin = md.idinfo.timeperd.timeinfo.rngdates.begdate
+                recobj.time_end = md.idinfo.timeperd.timeinfo.rngdates.enddate
 
         if hasattr(md.idinfo, 'origin'):
             recobj.creator = md.idinfo.origin
             recobj.publisher = md.idinfo.origin
             recobj.contributor = md.idinfo.origin
 
-        recobj.organization = md.idinfo.ptcontac.cntorg
+        if hasattr(md.idinfo, 'ptcontac'):
+            recobj.organization = md.idinfo.ptcontac.cntorg
         recobj.accessconstraints = md.idinfo.accconst
         recobj.otherconstraints = md.idinfo.useconst
         recobj.date = md.metainfo.metd
@@ -302,11 +303,12 @@ def parse_record(record, repos=None,
         else:
             bbox = md.idinfo.spdom.bbox
 
-        if md.citation.citeinfo['onlink']:
-            for link in md.citation.citeinfo['onlink']:
-                tmp = '%s,%s,%s,%s' % \
-                (uri['name'], uri['description'], uri['protocol'], uri['url'])
-                links.append(tmp)
+        if hasattr(md, 'citation'):
+            if md.citation.citeinfo['onlink']:
+                for link in md.citation.citeinfo['onlink']:
+                    tmp = '%s,%s,%s,%s' % \
+                    (uri['name'], uri['description'], uri['protocol'], uri['url'])
+                    links.append(tmp)
 
     else:  # default
         md = CswRecord(exml)
