@@ -1425,7 +1425,7 @@ class Csw(object):
                 doc = etree.fromstring(postdata)
         except Exception, err:
             errortext = \
-            'Exception: the document is not valid.\nError: %s.' % str(err)
+            'Exception: the document is not valid.\nError: %s' % str(err)
             self.log.debug(errortext)
             return errortext
 
