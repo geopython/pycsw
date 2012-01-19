@@ -97,7 +97,7 @@ REPOSITORY = {
                 'apiso:AccessConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_RestrictionCode', 'dbcol': 'accessconstraints'},
                 'apiso:OtherConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString', 'dbcol': 'otherconstraints'},
                 'apiso:Classification': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_ClassificationCode', 'dbcol': 'conditionapplyingtoaccessanduse'},
-                'apiso:ConditionApplyingToAccessAndUse': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:useLimitation/gco:CharacterString', 'dbcol': ''},
+                'apiso:ConditionApplyingToAccessAndUse': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:useLimitation/gco:CharacterString', 'dbcol': 'conditionapplyingtoaccessanduse'},
                 'apiso:Lineage': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString', 'dbcol': 'lineage'},
                 'apiso:ResponsiblePartyRole': {'xpath': 'gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode', 'dbcol': 'responsiblepartyrole'},
                 'apiso:SpecificationTitle': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString', 'dbcol': 'specificationtitle'},
@@ -439,7 +439,7 @@ class APISO(profile.Profile):
         # title
         val = getattr(result, queryables['apiso:Title']['dbcol']) or ''
         identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
-        dataident = etree.SubElement(identification, util.nspath_eval('gmd:MD_DataIdentification'))
+        dataident = etree.SubElement(identification, util.nspath_eval('gmd:MD_DataIdentification'), id=result.identifier)
         tmp2 = etree.SubElement(dataident, util.nspath_eval('gmd:citation'))
         tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
         tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))

@@ -11,7 +11,7 @@
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification>
+        <gmd:MD_DataIdentification id="ae200a05-2800-40b8-b85d-8f8d007b9e30">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
@@ -60,7 +60,7 @@
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification>
+        <gmd:MD_DataIdentification id="c3bf29d4-d60a-4959-a415-2c03fb0d4aef">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
@@ -109,7 +109,7 @@
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification>
+        <gmd:MD_DataIdentification id="437ae0a2-06e2-4015-b296-a66e7f407bf2">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
@@ -158,7 +158,7 @@
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification>
+        <gmd:MD_DataIdentification id="a2744b0c-becd-426a-95a8-46e9850ccc6d">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
@@ -207,7 +207,7 @@
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification>
+        <gmd:MD_DataIdentification id="5f37e0f8-4fb1-4637-b959-b415058bdb68">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
