@@ -739,7 +739,10 @@ class Csw(object):
                 util.nspath_eval('csw:DomainValues'), type = 'csw:Record')
                 etree.SubElement(domainvalue,
                 util.nspath_eval('csw:ParameterName')).text = pname
-                operation, parameter = pname.split('.')
+                try:
+                    operation, parameter = pname.split('.')
+                except:
+                    return node
                 if (operation in config.MODEL['operations'].keys() and
                     parameter in
                     config.MODEL['operations'][operation]['parameters'].keys()):
@@ -758,7 +761,10 @@ class Csw(object):
                 if pname.find('/') == 0:  # it's an XPath
                     pname2 = pname
                 else:  # it's a core queryable, map to internal typename model
-                    pname2 = self.repository.queryables['_all'][pname]['dbcol']
+                    try:
+                        pname2 = self.repository.queryables['_all'][pname]['dbcol']
+                    except:
+                        pname2 = pname
 
                 # decipher typename
                 dvtype = None
@@ -776,7 +782,6 @@ class Csw(object):
                 etree.SubElement(domainvalue,
                 util.nspath_eval('csw:PropertyName')).text = pname
 
-   
                 try:
                     self.log.debug(
                     'Querying repository property %s, typename %s, \
