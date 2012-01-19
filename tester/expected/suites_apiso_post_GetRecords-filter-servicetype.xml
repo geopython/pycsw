@@ -11,7 +11,7 @@
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="service">service</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification>
+        <gmd:MD_DataIdentification id="3e9a8c05">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
