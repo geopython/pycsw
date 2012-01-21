@@ -69,10 +69,18 @@ class Geometry(object):
             self._get_polygon()
         elif util.xmltag_split(operand.tag) == 'Envelope':
             self._get_envelope()
+        else:
+            raise RuntimeError, \
+            ('Unsupported geometry type (Must be one of %s)' % ','.join(TYPES))
 
         # reproject data if needed    
         if self.crs is not None and self.crs.code != 4326:
-            self.wkt = self.transform(self.crs.code, DEFAULT_SRS.code)
+            try:
+                self.wkt = self.transform(self.crs.code, DEFAULT_SRS.code)
+            except Exception, err:
+                raise RuntimeError, \
+                ('Reprojection error: Invalid srsName "%s": %s' %
+                (self.crs.id, str(err)))
 
     def _get_point(self):
         ''' Parse gml:Point '''
@@ -166,8 +174,15 @@ class Geometry(object):
         from shapely.geometry import Point, LineString, Polygon
         from shapely.wkt import loads
 
-        proj_src = pyproj.Proj(init='epsg:%s' % src)
-        proj_dst = pyproj.Proj(init='epsg:%s' % dest)
+        try:
+            proj_src = pyproj.Proj(init='epsg:%s' % src)
+        except:
+            raise RuntimeError, ('Invalid source projection')
+
+        try:
+            proj_dst = pyproj.Proj(init='epsg:%s' % dest)
+        except:
+            raise RuntimeError, ('Invalid destination projection')
 
         geom = loads(self.wkt)
 
