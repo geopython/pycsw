@@ -263,7 +263,7 @@ def parse_record(record, repos=None,
     elif root == 'metadata':  # FGDC
         md = Metadata(exml)
 
-        if md.idinfo.datasetid is not None:  # we need an indentifier
+        if md.idinfo.datasetid is not None:  # we need an identifier
             recobj.identifier = md.idinfo.datasetid
         else:  # generate one ourselves
             recobj.identifier = uuid.uuid1().get_urn()
