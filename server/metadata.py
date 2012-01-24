@@ -278,7 +278,9 @@ def parse_record(record, repos=None,
         recobj.type = md.idinfo.citation.citeinfo['geoform']
         recobj.title = md.idinfo.citation.citeinfo['title']
         recobj.abstract = md.idinfo.descript.abstract
-        recobj.keywords = ','.join(md.idinfo.keywords.theme[0]['themekey'])
+
+        if md.idinfo.keywords.theme:
+            recobj.keywords = ','.join(md.idinfo.keywords.theme[0]['themekey'])
 
         if hasattr(md.idinfo.timeperd, 'timeinfo'):
             if hasattr(md.idinfo.timeperd.timeinfo, 'rngdates'):
@@ -298,10 +300,10 @@ def parse_record(record, repos=None,
         recobj.date_publication = md.idinfo.citation.citeinfo['pubdate']
         recobj.format = md.idinfo.citation.citeinfo['geoform']
 
-        if md.idinfo.spdom.bbox is None:
-            bbox = None
-        else:
+        if hasattr(md.idinfo.spdom, 'bbox'):
             bbox = md.idinfo.spdom.bbox
+        else:
+            bbox = None
 
         if hasattr(md, 'citation'):
             if md.citation.citeinfo['onlink']:
@@ -361,8 +363,11 @@ def parse_record(record, repos=None,
         recobj.links = '^'.join(links)
 
     if bbox is not None:
-        tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
-        recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
+        try:
+            tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
+            recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
+        except:  # coordinates are corrupted, do not include
+            recobj.wkt_geometry = None
     else:
         recobj.wkt_geometry = None
 
