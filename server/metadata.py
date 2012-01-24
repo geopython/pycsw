@@ -277,10 +277,14 @@ def parse_record(record, repos=None,
         recobj.language = 'en-US'
         recobj.type = md.idinfo.citation.citeinfo['geoform']
         recobj.title = md.idinfo.citation.citeinfo['title']
-        recobj.abstract = md.idinfo.descript.abstract
 
-        if md.idinfo.keywords.theme:
-            recobj.keywords = ','.join(md.idinfo.keywords.theme[0]['themekey'])
+        if hasattr(md.idinfo, 'descript'):
+            recobj.abstract = md.idinfo.descript.abstract
+
+        if hasattr(md.idinfo, 'keywords'):
+            if md.idinfo.keywords.theme:
+                recobj.keywords = \
+                ','.join(md.idinfo.keywords.theme[0]['themekey'])
 
         if hasattr(md.idinfo.timeperd, 'timeinfo'):
             if hasattr(md.idinfo.timeperd.timeinfo, 'rngdates'):
@@ -300,7 +304,7 @@ def parse_record(record, repos=None,
         recobj.date_publication = md.idinfo.citation.citeinfo['pubdate']
         recobj.format = md.idinfo.citation.citeinfo['geoform']
 
-        if hasattr(md.idinfo.spdom, 'bbox'):
+        if hasattr(md.idinfo, 'spdom') and hasattr(md.idinfo.spdom, 'bbox'):
             bbox = md.idinfo.spdom.bbox
         else:
             bbox = None
@@ -309,7 +313,8 @@ def parse_record(record, repos=None,
             if md.citation.citeinfo['onlink']:
                 for link in md.citation.citeinfo['onlink']:
                     tmp = '%s,%s,%s,%s' % \
-                    (uri['name'], uri['description'], uri['protocol'], uri['url'])
+                    (uri['name'], uri['description'],
+                     uri['protocol'], uri['url'])
                     links.append(tmp)
 
     else:  # default
