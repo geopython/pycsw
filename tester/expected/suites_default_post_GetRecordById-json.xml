@@ -29,7 +29,8 @@
                 }, 
                 {
                     "attributes": {
-                        "crs": "urn:x-ogc:def:crs:EPSG:6.11:4326"
+                        "crs": "urn:x-ogc:def:crs:EPSG:6.11:4326", 
+                        "dimensions": "2"
                     }, 
                     "tag": "ows:BoundingBox", 
                     "children": [
