@@ -207,8 +207,13 @@ class APISO(profile.Profile):
             res_loc = etree.SubElement(ex_caps,
             util.nspath_eval('inspire_common:ResourceLocator'))
 
+            # if the endpoint has a query string, append KVP separator
+            bindparam = '?'
+            if self.inspire_config['url'].find('?') != -1:
+                bindparam = '&'
+     
             etree.SubElement(res_loc,
-            util.nspath_eval('inspire_common:URL')).text = '%s?service=CSW&version=2.0.2&request=GetCapabilities' % self.inspire_config['url']
+            util.nspath_eval('inspire_common:URL')).text = '%s%sservice=CSW&version=2.0.2&request=GetCapabilities' % (self.inspire_config['url'], bindparam)
 
             etree.SubElement(res_loc,
             util.nspath_eval('inspire_common:MediaType')).text = 'application/xml'
