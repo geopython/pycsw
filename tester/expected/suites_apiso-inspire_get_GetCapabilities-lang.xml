@@ -248,7 +248,7 @@
     </ows:Constraint>
     <inspire_ds:ExtendedCapabilities xsi:schemaLocation="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0 http://inspire.ec.europa.eu/schemas/inspire_ds/1.0/inspire_ds.xsd">
       <inspire_common:ResourceLocator>
-        <inspire_common:URL>http://localhost/pycsw/csw.py?config=tester/suites/apiso-inspire/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetCapabilities</inspire_common:URL>
+        <inspire_common:URL>http://localhost/pycsw/csw.py?config=tester/suites/apiso-inspire/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetCapabilities</inspire_common:URL>
         <inspire_common:MediaType>application/xml</inspire_common:MediaType>
       </inspire_common:ResourceLocator>
       <inspire_common:ResourceType>service</inspire_common:ResourceType>
