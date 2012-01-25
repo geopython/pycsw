@@ -1952,13 +1952,16 @@ def write_boundingbox(bbox):
         bbox2 = tmp.envelope.bounds
         if len(bbox2) == 4:
             boundingbox = etree.Element(util.nspath_eval('ows:BoundingBox'),
-            crs = 'urn:x-ogc:def:crs:EPSG:6.11:4326')
+            crs='urn:x-ogc:def:crs:EPSG:6.11:4326', dimensions='2')
+
             etree.SubElement(boundingbox,
             util.nspath_eval('ows:LowerCorner')).text = \
             '%s %s' % (bbox2[1], bbox2[0])
+
             etree.SubElement(boundingbox,
             util.nspath_eval('ows:UpperCorner')).text = \
             '%s %s' % (bbox2[3], bbox2[2])
+
             return boundingbox
         else:
             return None
