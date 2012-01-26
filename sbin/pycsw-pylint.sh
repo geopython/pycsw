@@ -1,7 +1,7 @@
 #!/bin/sh
 # =================================================================
 #
-# $Id: gen_sitemap.py 54 2011-03-07 01:35:57Z tomkralidis $
+# $Id$
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
 #
