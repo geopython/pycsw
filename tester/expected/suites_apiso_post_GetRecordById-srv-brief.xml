@@ -9,7 +9,7 @@
       <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="service">service</gmd:MD_ScopeCode>
     </gmd:hierarchyLevel>
     <gmd:identificationInfo>
-      <gmd:MD_DataIdentification id="3e9a8c05">
+      <srv:SV_ServiceIdentification id="3e9a8c05">
         <gmd:citation>
           <gmd:CI_Citation>
             <gmd:title>
@@ -27,7 +27,13 @@
             </gmd:date>
           </gmd:CI_Citation>
         </gmd:citation>
-        <gmd:extent>
+        <srv:serviceType>
+          <gco:LocalName>view</gco:LocalName>
+        </srv:serviceType>
+        <srv:serviceTypeVersion>
+          <gco:CharacterString/>
+        </srv:serviceTypeVersion>
+        <srv:extent>
           <gmd:EX_Extent>
             <gmd:geographicElement>
               <gmd:EX_GeographicBoundingBox>
@@ -46,16 +52,32 @@
               </gmd:EX_GeographicBoundingBox>
             </gmd:geographicElement>
           </gmd:EX_Extent>
-        </gmd:extent>
-      </gmd:MD_DataIdentification>
-      <srv:SV_ServiceIdentification>
-        <srv:serviceType>
-          <gco:LocalName>view</gco:LocalName>
-        </srv:serviceType>
-        <srv:serviceTypeVersion>
-          <gco:CharacterString/>
-        </srv:serviceTypeVersion>
+        </srv:extent>
       </srv:SV_ServiceIdentification>
     </gmd:identificationInfo>
+    <gmd:distributionInfo>
+      <gmd:MD_Distribution>
+        <gmd:transferOptions>
+          <gmd:MD_DigitalTransferOptions>
+            <gmd:onLine>
+              <gmd:CI_OnlineResource>
+                <gmd:linkage>
+                  <gmd:URL>http://aiolos.survey.ntua.gr/geoserver/wms</gmd:URL>
+                </gmd:linkage>
+                <gmd:protocol>
+                  <gco:CharacterString>None</gco:CharacterString>
+                </gmd:protocol>
+                <gmd:name>
+                  <gco:CharacterString>None</gco:CharacterString>
+                </gmd:name>
+                <gmd:description>
+                  <gco:CharacterString>None</gco:CharacterString>
+                </gmd:description>
+              </gmd:CI_OnlineResource>
+            </gmd:onLine>
+          </gmd:MD_DigitalTransferOptions>
+        </gmd:transferOptions>
+      </gmd:MD_Distribution>
+    </gmd:distributionInfo>
   </gmd:MD_Metadata>
 </csw:GetRecordByIdResponse>

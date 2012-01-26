@@ -82,21 +82,21 @@ def parse_record(record, repos=None,
                 tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
                 serviceobj.wkt_geometry = util.bbox2wktpolygon(tmp)
                 break
-        serviceobj.crs = 'urn:ogc:def:crs:EPSG:6.3:4326'
-        serviceobj.denominator = 'degrees'
+        serviceobj.crs = 'urn:ogc:def:crs:EPSG:6.11:4326'
+        serviceobj.distanceuom = 'degrees'
         serviceobj.servicetype = md.identification.type
         serviceobj.servicetypeversion = md.identification.version
         serviceobj.operation = ','.join([d.name for d in md.operations])
         serviceobj.operateson = ','.join(list(md.contents))
         serviceobj.couplingtype = 'tight'
 
-        return serviceobj
         recobjs.append(serviceobj) 
          
         # generate record foreach layer
         for layer in md.contents:
             recobj = repos.dataset()
             recobj.identifier = md.contents[layer].name
+            recobj.typename = 'gmd:MD_Metadata'
             recobj.schema = 'http://www.opengis.net/wms'
             recobj.mdsource = record
             recobj.insert_date = util.get_today_and_now()
@@ -112,14 +112,14 @@ def parse_record(record, repos=None,
             if bbox is not None:
                 tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
                 recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
-                recobj.crs = 'urn:ogc:def:crs:EPSG:6.3:4326'
+                recobj.crs = 'urn:ogc:def:crs:EPSG:6.11:4326'
                 recobj.denominator = 'degrees'
             else:
                 bbox = md.contents[layer].boundingBox
                 if bbox:
                     tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
                     recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
-                    recobj.crs = 'urn:ogc:def:crs:EPSG:6.3:%s' % \
+                    recobj.crs = 'urn:ogc:def:crs:EPSG:6.11:%s' % \
                     bbox[-1].split(':')[1]
 
             recobjs.append(recobj)
@@ -153,7 +153,9 @@ def parse_record(record, repos=None,
         recobj.parentidentifier = md.parentidentifier
         recobj.date = md.datestamp
         recobj.source = md.dataseturi
-        recobj.crs = 'urn:ogc:def:crs:EPSG::%s' % md.referencesystem
+        if md.referencesystem is not None:
+            recobj.crs = 'urn:ogc:def:crs:EPSG:6.11:%s' % \
+            md.referencesystem.code
 
         if hasattr(md, 'identification'):
             recobj.title = md.identification.title
@@ -376,4 +378,4 @@ def parse_record(record, repos=None,
     else:
         recobj.wkt_geometry = None
 
-    return recobj
+    return [recobj]
