@@ -1306,8 +1306,8 @@ class Csw(object):
             ','.join(config.MODEL['operations']['Harvest']['parameters']
             ['ResourceType']['values'])))
 
-        if self.kvp['resourcetype'] != 'http://www.opengis.net/wms':
-            # fetch resource
+        if self.kvp['resourcetype'].find('opengis.net') == -1:
+            # fetch content-based resource
             self.log.debug('Fetching resource %s' % self.kvp['source'])
             try:
                 req = urllib2.Request(self.kvp['source'])
@@ -1319,47 +1319,55 @@ class Csw(object):
                 self.log.debug(errortext)
                 return self.exceptionreport('InvalidParameterValue', 'source',
                 errortext)
-        else:
+        else:  # it's a service URL
             content = self.kvp['source']
+            # query repository to see if service already exists
+            self.log.debug('checking if service exists (%s)' % content)
+            results = self.repository.query_source(content)
 
-        # insert resource into repository
+            if len(results) > 0:  # exists, don't insert
+                return self.exceptionreport('NoApplicableCode',
+                'source', 'Insert failed: service %s in repository' % content)
 
+        # parse resource into record
         try:
-            record = metadata.parse_record(content, self.repository,
+            records_parsed = metadata.parse_record(content, self.repository,
             self.kvp['resourcetype'])
         except Exception, err:
             return self.exceptionreport('NoApplicableCode', 'source',
             'Harvest failed: record parsing failed: %s' % str(err))
 
-        record.source = self.kvp['source']
-        record.insert_date = util.get_today_and_now()
+        inserted = 0
+        updated = 0
 
-        # query repository to see if record already exists
-        self.log.debug('checking if record exists (%s)' % record.identifier)
-        results = self.repository.query_ids(ids=[record.identifier])
+        for record in records_parsed:
+            record.source = self.kvp['source']
+            record.insert_date = util.get_today_and_now()
 
-        if len(results) == 0:  # new record, it's a new insert
-            inserted = 1
-            updated = 0
-            try:
-                self.repository.insert(record, record.source, record.insert_date)
-            except Exception, err:
-                return self.exceptionreport('NoApplicableCode',
-                'source', 'Harvest (insert) failed: %s.' % str(err))
-        else:  # existing record, it's an update
-            if record.source != results[0].source:
-                # same identifier, but different source
-                return self.exceptionreport('NoApplicableCode',
-                'source', 'Insert failed: identifier %s in repository\
-                has source %s.' % str(err))
+            # query repository to see if record already exists
+            self.log.debug('checking if record exists (%s)' % record.identifier)
+            results = self.repository.query_ids(ids=[record.identifier])
 
-            try:
-                self.repository.update(record)
-            except Exception, err:
-                return self.exceptionreport('NoApplicableCode',
-                'source', 'Harvest (update) failed: %s.' % str(err))
-            inserted = 0
-            updated = 1
+            if len(results) == 0:  # new record, it's a new insert
+                inserted += 1
+                try:
+                    self.repository.insert(record, record.source, record.insert_date)
+                except Exception, err:
+                    return self.exceptionreport('NoApplicableCode',
+                    'source', 'Harvest (insert) failed: %s.' % str(err))
+            else:  # existing record, it's an update
+                if record.source != results[0].source:
+                    # same identifier, but different source
+                    return self.exceptionreport('NoApplicableCode',
+                    'source', 'Insert failed: identifier %s in repository\
+                    has source %s.' % str(err))
+
+                try:
+                    self.repository.update(record)
+                except Exception, err:
+                    return self.exceptionreport('NoApplicableCode',
+                    'source', 'Harvest (update) failed: %s.' % str(err))
+                updated += 1
 
         node = etree.Element(util.nspath_eval('csw:HarvestResponse'),
         nsmap = config.NAMESPACES)
