@@ -15,7 +15,7 @@ pycsw |release| Documentation
    introduction
    installation
    configuration
-   repository
+   administration
    distributedsearching
    sru
    soap
