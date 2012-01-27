@@ -58,7 +58,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
 .. note::
 
-  See :ref:`repository` for connecting your metadata repository and supported information models.
+  See :ref:`administration` for connecting your metadata repository and supported information models.
 
 
 Additional Configurations
