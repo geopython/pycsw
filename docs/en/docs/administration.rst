@@ -1,7 +1,15 @@
-.. _repository:
+.. _administration:
+
+Administration
+==============
+
+pycsw administration is handled by ``sbin/pycsw-admin.py``.
+
+.. note::
+  Run ``sbin/pycsw-admin.py -h`` to see all administration operations and parameters
 
 Metadata Repository Setup
-=========================
+-------------------------
 
 pycsw supports the following databases:
 
@@ -10,7 +18,7 @@ pycsw supports the following databases:
 - MySQL
 
 .. note::
-  Unless your installation environment requires PostgreSQL or MySQL, the easiest and fastest way to deploy pycsw is using SQLite3 as the backend.
+  The easiest and fastest way to deploy pycsw is to use SQLite3 as the backend.
 
 To expose your geospatial metadata via pycsw, perform the following actions:
 
@@ -23,6 +31,9 @@ Supported Information Models
 
 By default, pycsw supports the ``csw:Record`` information model.
 
+.. note::
+  See :ref:`profiles` for informaiton on enabling profiles
+
 Setting up the Database
 -----------------------
 
@@ -30,7 +41,7 @@ Setting up the Database
 
   $ cd /path/to/pycsw
   $ export PYTHONPATH=`pwd` 
-  $ python ./sbin/setup_db.py sqlite:////path/to/records.db
+  $ python ./sbin/pycsw-admin.py -c setup_db -f default.cfg
 
 This will create the necessary tables and values for the repository.
 
@@ -45,32 +56,33 @@ The database created is an `OGC SFSQL`_ compliant database, and can be used with
   $ ogrinfo -al /path/to/records.db
   # lots of output
 
-Importing Metadata
-------------------
+Loading Records
+----------------
 
 .. code-block:: bash
 
-  $ python ./sbin/load_records.py /path/to/records sqlite:////path/to/records.db
+  $ python ./sbin/pycsw-admin.py -c load_records -f default.cfg -p /path/to/records
 
-This will import all ``*.xml`` records from ``/path/to/records`` into ``records.db`` and configure the repository to expose queryables as per Table 53 of OGC:CSW.
+This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.cfg`` (``repository.database``).
 
 .. note::
-
   Records can also be imported using CSW-T (see :ref:`transactions`).
-
-Publishing the Repository
---------------------------
-
-To expose the repository, setup a ``repository`` section as specified in :ref:`configuration`.
 
 Exporting the Repository
 ------------------------
 
 .. code-block:: bash
 
-  $ python ./sbin/dump_db.py output_dir sqlite:////path/to/records.db
+  $ python ./sbin/pycsw-admin.py -c export_records -f default.cfg -p /path/to/output_dir
 
-This will write each record in ``records.db`` to an XML document on disk, in directory ``output_dir``.
+This will write each record in the database specified in ``default.cfg`` (``repository.database``) to an XML document on disk, in directory ``/path/to/output_dir``.
+
+Optimizing the Database
+-----------------------
+
+.. code-block:: bash
+
+  $ python ./sbin/pycsw-admin.py -c optimize_db -f default.cfg
 
 Database Specific Notes
 -----------------------
