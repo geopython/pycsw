@@ -971,21 +971,6 @@ class Csw(object):
             return self.exceptionreport('InvalidParameterValue', 'constraint',
             'Invalid query: %s' % err)
 
-        if len(results) == 0:
-            returned = '0'
-            nextrecord = str(int(returned)+1)
-
-        else:
-            if int(matched) < int(self.kvp['maxrecords']):
-                returned = matched
-                nextrecord = '0'
-            else:
-                returned = str(self.kvp['maxrecords'])
-                nextrecord = str(int(self.kvp['startposition']) + \
-                int(self.kvp['maxrecords']))
-            if int(self.kvp['maxrecords']) == 0:
-                nextrecord = '1'
-
         dsresults = []
 
         if (self.config.has_option('server', 'federatedcatalogues') and
@@ -1001,12 +986,38 @@ class Csw(object):
             self.config.get('server', 'federatedcatalogues').split(','):
                 self.log.debug('Performing distributed search on federated \
                 catalogue: %s.' % fedcat)
-                remotecsw = CatalogueServiceWeb(fedcat)
-                remotecsw.getrecords(xml=self.request)
-                self.log.debug('Distributed search results from catalogue \
-                %s: %s.' % (fedcat, remotecsw.results))
-                matched = str(int(matched) + int(remotecsw.results['matches']))
-                dsresults.append(remotecsw.records)
+                remotecsw = CatalogueServiceWeb(fedcat, skip_caps=True)
+                try:
+                    remotecsw.getrecords(xml=self.request)
+                    if hasattr(remotecsw, 'results'):
+                        self.log.debug(
+                        'Distributed search results from catalogue \
+                        %s: %s.' % (fedcat, remotecsw.results))
+
+                        if int(remotecsw.results['matches']) > 0:
+                            matched = str(int(matched) + \
+                            int(remotecsw.results['matches']))
+                            dsresults.append(etree.Comment(
+                            '%s results from %s' %
+                            (remotecsw.results['matches'], fedcat)))
+
+                            dsresults.append(remotecsw.records)
+
+                except Exception, err:
+                    self.log.debug(str(err))
+
+        if len(results) == 0 and len(dsresults) == 0:
+            returned = nextrecord = '0'
+        else:
+            if int(matched) < int(self.kvp['maxrecords']):
+                returned = matched
+                nextrecord = '0'
+            else:
+                returned = str(self.kvp['maxrecords'])
+                nextrecord = str(int(self.kvp['startposition']) + \
+                int(self.kvp['maxrecords']))
+        if int(self.kvp['maxrecords']) == 0:
+            nextrecord = '1'
 
         self.log.debug('Results: matched: %s, returned: %s, next: %s.' % \
         (matched, returned, nextrecord))
@@ -1080,6 +1091,8 @@ class Csw(object):
 
         if len(dsresults) > 0:  # return DistributedSearch results
             for resultset in dsresults:
+                if isinstance(resultset, etree._Comment):
+                    searchresults.append(resultset)
                 for rec in resultset:
                     searchresults.append(etree.fromstring(resultset[rec].xml))
 
