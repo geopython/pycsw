@@ -32,7 +32,7 @@ Supported Information Models
 By default, pycsw supports the ``csw:Record`` information model.
 
 .. note::
-  See :ref:`profiles` for informaiton on enabling profiles
+  See :ref:`profiles` for information on enabling profiles
 
 Setting up the Database
 -----------------------
