@@ -46,6 +46,7 @@
     <dct:spatial>FI-ES</dct:spatial>
     <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
 </csw:Record>
+    <!--5564 results from http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw-->
     <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
       <dc:identifier>14C1AA7C-9054-9C4A-C403-5F49A33DD1D4</dc:identifier>
       <dc:title>Precipitation (Monthly)</dc:title>
