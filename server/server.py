@@ -1006,7 +1006,7 @@ class Csw(object):
                 except Exception, err:
                     self.log.debug(str(err))
 
-        if len(results) == 0 and len(dsresults) == 0:
+        if int(matched) == 0:
             returned = nextrecord = '0'
         else:
             if int(matched) < int(self.kvp['maxrecords']):
@@ -1016,8 +1016,6 @@ class Csw(object):
                 returned = str(self.kvp['maxrecords'])
                 nextrecord = str(int(self.kvp['startposition']) + \
                 int(self.kvp['maxrecords']))
-        if int(self.kvp['maxrecords']) == 0:
-            nextrecord = '1'
 
         self.log.debug('Results: matched: %s, returned: %s, next: %s.' % \
         (matched, returned, nextrecord))
