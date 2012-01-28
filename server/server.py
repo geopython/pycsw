@@ -1219,7 +1219,7 @@ class Csw(object):
             if ttype['type'] == 'insert':
                 try:
                     record = metadata.parse_record(ttype['xml'],
-                    self.repository)
+                    self.repository)[0]
                 except Exception, err:
                     return self.exceptionreport('NoApplicableCode', 'insert',
                     'Transaction (insert) failed: record parsing failed: %s' \
@@ -1243,7 +1243,7 @@ class Csw(object):
                 if ttype.has_key('constraint') is False:
                     # update full existing resource in repository
                     try:
-                        record = metadata.parse_record(ttype['xml'], self.repository)
+                        record = metadata.parse_record(ttype['xml'], self.repository)[0]
                     except Exception, err:
                         return self.exceptionreport('NoApplicableCode', 'insert',
                         'Transaction (update) failed: record parsing failed: %s' \
