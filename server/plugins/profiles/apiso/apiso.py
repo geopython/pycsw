@@ -454,7 +454,7 @@ class APISO(profile.Profile):
 
         if result.type == 'service':
            restagname = 'srv:SV_ServiceIdentification'
-        elif result.type == 'dataset':
+        else:
            restagname = 'gmd:MD_DataIdentification'
           
         resident = etree.SubElement(identification, util.nspath_eval(restagname), id=result.identifier)
