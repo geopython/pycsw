@@ -1213,6 +1213,8 @@ class Csw(object):
         updated = 0
         deleted = 0
 
+        insertresults = []
+
         self.log.debug('Transaction list: %s' % self.kvp['transactions'])
 
         for ttype in self.kvp['transactions']:
@@ -1235,6 +1237,8 @@ class Csw(object):
                 try:
                     self.repository.insert(record, 'local', util.get_today_and_now())
                     inserted += 1
+                    insertresults.append(
+                    {'identifier': record.identifier, 'title': record.title})
                 except Exception, err:
                     return self.exceptionreport('NoApplicableCode',
                     'insert', 'Transaction (insert) failed: %s.' % str(err))
@@ -1296,6 +1300,19 @@ class Csw(object):
         node.append(
         self._write_transactionsummary(
         inserted=inserted, updated=updated, deleted=deleted))
+
+        if len(insertresults) > 0:  # show insert result identifiers
+            insertresult = etree.Element(util.nspath_eval('csw:InsertResult'))
+            for ir in insertresults:
+                briefrec = etree.SubElement(insertresult,
+                           util.nspath_eval('csw:BriefRecord'))
+                etree.SubElement(briefrec,
+                util.nspath_eval('dc:identifier')).text = ir['identifier']
+
+                etree.SubElement(briefrec,
+                util.nspath_eval('dc:title')).text = ir['title']
+
+            node.append(insertresult)
 
         return node
 
