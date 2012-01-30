@@ -293,9 +293,13 @@ SYNOPSIS
 
     Available options:
 
-    -c    Command to be performed (one of setup_db, load_records
-          export_records, rebuild_db_indexes, optimize_db,
-          refresh_harvested_records)
+    -c    Command to be performed:
+              - setup_db
+              - load_records
+              - export_records
+              - rebuild_db_indexes
+              - optimize_db
+              - refresh_harvested_records
 
     -f    Filepath to pycsw configuration
 
