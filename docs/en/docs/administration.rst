@@ -63,7 +63,7 @@ Loading Records
 
   $ python ./sbin/pycsw-admin.py -c load_records -f default.cfg -p /path/to/records
 
-This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.cfg`` (``repository.database``).
+This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.cfg`` (``repository.database``).  Passing ``-r`` to the script will process ``/path/to/records`` recursively.
 
 .. note::
   Records can also be imported using CSW-T (see :ref:`transactions`).
