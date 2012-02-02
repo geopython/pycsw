@@ -212,7 +212,7 @@ def load_records(database, xml_dirpath, recursive=False):
 
     for r in file_list:
         counter += 1
-        print 'Processing file %s (%d of %d)' % (counter, total, r)
+        print 'Processing file %s (%d of %d)' % (r, counter, total)
         # read document
         try:
             e = etree.parse(r)
