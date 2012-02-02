@@ -1301,7 +1301,8 @@ class Csw(object):
         self._write_transactionsummary(
         inserted=inserted, updated=updated, deleted=deleted))
 
-        if len(insertresults) > 0:  # show insert result identifiers
+        if (len(insertresults) > 0 and self.kvp['verboseresponse']):
+            # show insert result identifiers
             insertresult = etree.Element(util.nspath_eval('csw:InsertResult'))
             for ir in insertresults:
                 briefrec = etree.SubElement(insertresult,
@@ -1614,6 +1615,12 @@ class Csw(object):
 
         # Transaction
         if request['request'] == 'Transaction':
+            request['verboseresponse'] = True
+            tmp = doc.find('.').attrib.get('verboseResponse')
+            if tmp is not None:
+                if tmp in ['false', '0']:
+                    request['verboseresponse'] = False
+
             request['transactions'] = []
 
             for ttype in \
