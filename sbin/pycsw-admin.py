@@ -192,12 +192,27 @@ def setup_db(database, home):
         CONN.execute(FUNCTION_QUERY_SPATIAL)
         CONN.execute(FUNCTION_UPDATE_XPATH)
 
-def load_records(database, xml_dirpath):
+def load_records(database, xml_dirpath, recursive=False):
     ''' Load metadata records from directory of files to database ''' 
     REPO = repository.Repository(database, 'records', {})
 
-    for r in glob(os.path.join(xml_dirpath, '*.xml')):
-        print 'Processing file %s' % r
+    file_list = []
+
+    if recursive:
+        for root, dirs, files in os.walk(xml_dirpath):
+            for file in files:
+                if file.endswith('.xml'):
+                    file_list.append(os.path.join(root, file)) 
+    else:
+        for r in glob(os.path.join(xml_dirpath, '*.xml')):
+            file_list.append(r)
+
+    total = len(file_list)
+    counter = 0
+
+    for r in file_list:
+        counter += 1
+        print 'Processing file %s (%d of %d)' % (counter, total, r)
         # read document
         try:
             e = etree.parse(r)
@@ -289,7 +304,7 @@ NAME
     pycsw-admin.py - pycsw admin utility
 
 SYNOPSIS
-    pycsw-admin.py -c <command> -f <cfg> [-h] [-p /path/to/records]
+    pycsw-admin.py -c <command> -f <cfg> [-h] [-p /path/to/records] [-r]
 
     Available options:
 
@@ -307,6 +322,8 @@ SYNOPSIS
 
     -p    path to input/output directory to read/write metadata records
 
+    -r    load records from directory recursively
+
 EXAMPLES
 
     1.) setup_db: Creates repository tables and indexes
@@ -316,6 +333,10 @@ EXAMPLES
     2.) load_records: Loads metadata records from directory into repository
 
         pycsw-admin.py -c load_records -p /path/to/records -f default.cfg
+
+        Load records from directory recursively
+
+        pycsw-admin.py -c load_records -p /path/to/records -f default.cfg -r
 
     3.) export_records: Dump metadata records from repository into directory
 
@@ -338,13 +359,14 @@ EXAMPLES
 COMMAND = None
 XML_DIRPATH = None
 CFG = None
+RECURSIVE = False
 
 if len(sys.argv) == 1:
     print usage()
     sys.exit(1)
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:hp:')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:hp:r')
 except getopt.GetoptError, err:
     print '\nERROR: %s' % err
     print usage()
@@ -357,6 +379,8 @@ for o, a in OPTS:
         XML_DIRPATH = a
     if o == '-f':
         CFG = a
+    if o == '-r':
+        RECURSIVE = True
     if o == '-h':  # dump help and exit
         print usage()
         sys.exit(3)
@@ -388,7 +412,7 @@ HOME = SCP.get('server', 'home')
 if COMMAND == 'setup_db': 
     setup_db(DATABASE, HOME)
 elif COMMAND == 'load_records':
-    load_records(DATABASE, XML_DIRPATH)
+    load_records(DATABASE, XML_DIRPATH, RECURSIVE)
 elif COMMAND == 'export_records':
     export_records(DATABASE, XML_DIRPATH)
 elif COMMAND == 'rebuild_db_indexes':
