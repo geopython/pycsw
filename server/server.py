@@ -975,8 +975,8 @@ class Csw(object):
 
         if (self.config.has_option('server', 'federatedcatalogues') and
             self.kvp.has_key('distributedsearch') and
-            self.kvp['distributedsearch'] == 'TRUE' and
-            self.kvp['hopcount'] > 0):  # do distributed search
+            self.kvp['distributedsearch'] and self.kvp['hopcount'] > 0):
+            # do distributed search
 
             self.log.debug('DistributedSearch specified (hopCount: %s).' %
             self.kvp['hopcount'])
@@ -1540,12 +1540,12 @@ class Csw(object):
 
             tmp = doc.find(util.nspath_eval('csw:DistributedSearch'))
             if tmp is not None:
-                request['distributedsearch'] = 'TRUE'
+                request['distributedsearch'] = True
                 hopcount = tmp.attrib.get('hopCount')
                 request['hopcount'] = int(hopcount)-1 if hopcount is not None \
                 else 1
             else:
-                request['distributedsearch'] = 'FALSE'
+                request['distributedsearch'] = False
 
             tmp = doc.find(util.nspath_eval('csw:ResponseHandler'))
             if tmp is not None:
