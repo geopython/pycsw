@@ -40,18 +40,18 @@ Ensure that CGI is enabled for your install directory.  For example, on Apache, 
 Installing from OpenSUSE Build Service
 --------------------------------------
 
-In order to install the OBS package in openSUSE 11.4, one can run the following commands as user ``root``:
+In order to install the OBS package in openSUSE 12.1, one can run the following commands as user ``root``:
 
 .. code-block:: bash
 
-  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_11.4/ GEO
-  # zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_11.4/ python
+  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_12.1/ GEO
+  # zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_12.1/ python
   # zypper refresh
   # zypper install pycsw
 
-For earlier openSUSE versions change ``11.4`` with ``11.2`` or ``11.3``. For future openSUSE version use ``Factory``.
+For earlier openSUSE versions change ``12.1`` with ``11.4``. For future openSUSE version use ``Factory``.
 
-An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A11.4&lang=en&include_home=true&exclude_debug=true>`_.
+An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true>`_.
 
 Installing on Ubuntu/Xubuntu/Kubuntu
 ------------------------------------
