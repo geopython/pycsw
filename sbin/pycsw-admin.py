@@ -283,8 +283,11 @@ def refresh_harvested_records(database, url):
             schema = rec.schema
             if schema == 'http://www.isotc211.org/2005/gmd':
                 schema = 'http://www.isotc211.org/schemas/2005/gmd/'
-            CSW.harvest(rec.source, schema)
-            print CSW.response
+            try:
+                CSW.harvest(rec.source, schema)
+                print CSW.response
+            except Exception, err:
+                print err
     print 'No harvested records to refresh'
 
 def rebuild_db_indexes(database):
