@@ -80,6 +80,7 @@ class Csw(object):
         except Exception, err:
             self.response = self.exceptionreport(
             'NoApplicableCode', 'service', str(err))
+            return
 
         self.log.debug('running configuration %s' % configfile)
         self.log.debug(str(os.environ['QUERY_STRING']))
