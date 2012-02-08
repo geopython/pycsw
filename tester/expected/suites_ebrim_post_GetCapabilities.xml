@@ -7,6 +7,7 @@
     <ows:Keywords>
       <ows:Keyword>catalogue</ows:Keyword>
       <ows:Keyword>discovery</ows:Keyword>
+      <ows:Type codeSpace="ISOTC211/19115">theme</ows:Type>
     </ows:Keywords>
     <ows:ServiceType codeSpace="OGC">CSW</ows:ServiceType>
     <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
