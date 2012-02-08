@@ -61,7 +61,17 @@ def initlog(config=None):
             raise RuntimeError, \
             ('Invalid server configuration (server.loglevel).')
 
+        if not config.has_option('server', 'logfile'): 
+            raise RuntimeError\
+            ('Invalid server configuration (server.loglevel set,\
+              but server.logfile missing).')
+
     if config.has_option('server', 'logfile'):
+        if not config.has_option('server', 'loglevel'):
+            raise RuntimeError, \
+            ('Invalid server configuration (server.logfile set,\
+              but server.loglevel missing).')
+
         logfile = config.get('server', 'logfile')
 
     if loglevel != 'NOTSET' and logfile is None:
