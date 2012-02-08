@@ -423,6 +423,10 @@ class Csw(object):
                 etree.SubElement(
                 keywords, util.nspath_eval('ows:Keyword')).text = k
 
+            etree.SubElement(keywords,
+            util.nspath_eval('ows:Type'), codeSpace='ISOTC211/19115').text = \
+            self.config.get('metadata:main', 'identification_keywords_type')
+
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:ServiceType'), codeSpace='OGC').text = 'CSW'
 
