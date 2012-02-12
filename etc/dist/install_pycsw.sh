@@ -54,7 +54,7 @@ mkdir -p "$PYCSW_TMP"
 echo -n 'Downloading package ...'
 
 # Download pycsw LiveDVD tarball.
-wget -N --progress=dot:mega "https://sourceforge.net/projects/pycsw/files/$VERSION/pycsw-$VERSION.tar.gz/download" \
+wget -N --progress=dot:mega --no-check-certificate "https://sourceforge.net/projects/pycsw/files/$VERSION/pycsw-$VERSION.tar.gz/download" \
      -O "$PYCSW_TMP/pycsw-$VERSION.tar.gz"
 
 echo -n 'Extracting package ...'
