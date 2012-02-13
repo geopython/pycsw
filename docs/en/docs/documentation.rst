@@ -24,7 +24,7 @@ pycsw |release| Documentation
    profiles
    testing
    ../demos
-   clients-servers
+   tools
    development
    support
    license
