@@ -318,8 +318,7 @@ def parse_record(record, repos=None,
                     (uri['name'], uri['description'],
                      uri['protocol'], uri['url'])
                     links.append(tmp)
-
-    else:  # default
+    elif root == '{%s}Record' % config.NAMESPACES['csw']:  # Dublin Core
         md = CswRecord(exml)
 
         if md.bbox is None:
@@ -365,6 +364,9 @@ def parse_record(record, repos=None,
             tmp = '%s,%s,%s,%s' % \
             (uri['name'], uri['description'], uri['protocol'], uri['url'])
             links.append(tmp)
+
+    else:
+        raise RuntimeError('Unsupported metadata format')
 
     if len(links) > 0:
         recobj.links = '^'.join(links)
