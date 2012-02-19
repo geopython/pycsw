@@ -62,7 +62,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
   See :ref:`administration` for connecting your metadata repository and supported information models.
 
 
-Additional Configurations
--------------------------
+Alternate Configurations
+------------------------
 
 By default, pycsw loads ``default.cfg`` at runtime.  To load an alternate configuration, modify ``csw.py`` to point to the desired configuration.  Alternatively, pycsw supports explicitly specifiying a configuration by appending ``config=/path/to/default.cfg`` to the base URL of the service (e.g. ``http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetCapabilities``).  When the ``config`` parameter is passed by a CSW client, pycsw will override the default configuration location and subsequent settings with those of the specified configuration.
