@@ -152,8 +152,6 @@ class Csw(object):
 
         # init repository
         try:
-            #self.repository = \
-            #repository.Repository(self.config.get('repository', 'database'),
             self.repository = \
             repository.Repository(self.config.get('repository', 'database'),
             'records', config.MODEL['typenames'])
@@ -376,7 +374,6 @@ class Csw(object):
                     result['locator'], result['text'])
 
         # @updateSequence: get latest update to repository
-
         try:
             updatesequence = \
             util.get_time_iso2unix(self.repository.query_latest_insert())
@@ -401,6 +398,8 @@ class Csw(object):
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
         (config.NAMESPACES['csw'], self.config.get('server', 'ogc_schemas_base'))
 
+        metadata_main = dict(self.config.items('metadata:main'))
+
         if serviceidentification:
             self.log.debug('Writing section ServiceIdentification.')
 
@@ -409,24 +408,23 @@ class Csw(object):
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Title')).text = \
-            self.config.get('metadata:main', 'identification_title')
+            metadata_main.get('identification_title', 'missing')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Abstract')).text = \
-            self.config.get('metadata:main', 'identification_abstract')
+            metadata_main.get('identification_abstract', 'missing')
 
             keywords = etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Keywords'))
 
             for k in \
-            self.config.get('metadata:main', 
-            'identification_keywords').split(','):
+            metadata_main.get('identification_keywords').split(','):
                 etree.SubElement(
                 keywords, util.nspath_eval('ows:Keyword')).text = k
 
             etree.SubElement(keywords,
             util.nspath_eval('ows:Type'), codeSpace='ISOTC211/19115').text = \
-            self.config.get('metadata:main', 'identification_keywords_type')
+            metadata_main.get('identification_keywords_type', 'missing')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:ServiceType'), codeSpace='OGC').text = 'CSW'
@@ -436,11 +434,11 @@ class Csw(object):
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Fees')).text = \
-            self.config.get('metadata:main', 'identification_fees')
+            metadata_main.get('identification_fees', 'missing')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:AccessConstraints')).text = \
-            self.config.get('metadata:main', 'identification_accessconstraints')
+            metadata_main.get('identification_accessconstraints', 'missing')
 
         if serviceprovider:
             self.log.debug('Writing section ServiceProvider.')
@@ -449,79 +447,79 @@ class Csw(object):
 
             etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ProviderName')).text = \
-            self.config.get('metadata:main', 'provider_name')
+            metadata_main.get('provider_name', 'missing')
 
             providersite = etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ProviderSite'))
 
             providersite.attrib[util.nspath_eval('xlink:type')] = 'simple'
             providersite.attrib[util.nspath_eval('xlink:href')] = \
-            self.config.get('metadata:main', 'provider_url')
+            metadata_main.get('provider_url', 'missing')
 
             servicecontact = etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ServiceContact'))
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:IndividualName')).text = \
-            self.config.get('metadata:main', 'contact_name')
+            metadata_main.get('contact_name', 'missing')
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:PositionName')).text = \
-            self.config.get('metadata:main', 'contact_position')
+            metadata_main.get('contact_position', 'missing')
 
             contactinfo = etree.SubElement(servicecontact,
             util.nspath_eval('ows:ContactInfo'))
 
             phone = etree.SubElement(contactinfo, util.nspath_eval('ows:Phone'))
             etree.SubElement(phone, util.nspath_eval('ows:Voice')).text = \
-            self.config.get('metadata:main', 'contact_phone')
+            metadata_main.get('contact_phone', 'missing')
 
             etree.SubElement(phone, util.nspath_eval('ows:Facsimile')).text = \
-            self.config.get('metadata:main', 'contact_fax')
+            metadata_main.get('contact_fax', 'missing')
 
             address = etree.SubElement(contactinfo,
             util.nspath_eval('ows:Address'))
 
             etree.SubElement(address,
             util.nspath_eval('ows:DeliveryPoint')).text = \
-            self.config.get('metadata:main', 'contact_address')
+            metadata_main.get('contact_address', 'missing')
 
             etree.SubElement(address, util.nspath_eval('ows:City')).text = \
-            self.config.get('metadata:main', 'contact_city')
+            metadata_main.get('contact_city', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows:AdministrativeArea')).text = \
-            self.config.get('metadata:main', 'contact_stateorprovince')
+            metadata_main.get('contact_stateorprovince', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows:PostalCode')).text = \
-            self.config.get('metadata:main', 'contact_postalcode')
+            metadata_main.get('contact_postalcode', 'missing')
 
             etree.SubElement(address, util.nspath_eval('ows:Country')).text = \
-            self.config.get('metadata:main', 'contact_country')
+            metadata_main.get('contact_country', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows:ElectronicMailAddress')).text = \
-            self.config.get('metadata:main', 'contact_email')
+            metadata_main.get('contact_email', 'missing')
 
             url = etree.SubElement(contactinfo,
             util.nspath_eval('ows:OnlineResource'))
 
             url.attrib[util.nspath_eval('xlink:type')] = 'simple'
             url.attrib[util.nspath_eval('xlink:href')] = \
-            self.config.get('metadata:main', 'contact_url')
+            metadata_main.get('contact_url', 'missing')
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows:HoursOfService')).text = \
-            self.config.get('metadata:main', 'contact_hours')
+            metadata_main.get('contact_hours', 'missing')
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows:ContactInstructions')).text = \
-            self.config.get('metadata:main', 'contact_instructions')
+            metadata_main.get('contact_instructions', 'missing')
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:Role')).text = \
-            self.config.get('metadata:main', 'contact_role')
+            metadata_main.get('contact_role', 'missing')
 
         if operationsmetadata:
             self.log.debug('Writing section OperationsMetadata.')
