@@ -94,5 +94,5 @@ By default, ``default.cfg`` is at the root of the pycsw install.  If you have se
 
 .. _`lxml`: http://lxml.de/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
-.. _`Shapely`: http://trac.gispython.org/lab/wiki/Shapely
+.. _`Shapely`: http://toblerity.github.com/shapely/
 .. _`pyproj`: http://code.google.com/p/pyproj/
