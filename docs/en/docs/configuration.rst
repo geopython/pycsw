@@ -62,6 +62,8 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
   See :ref:`administration` for connecting your metadata repository and supported information models.
 
 
+.. _alternate-configurations:
+
 Alternate Configurations
 ------------------------
 
@@ -102,5 +104,3 @@ Another option is to write a simple wrapper (e.g. ``csw-foo.sh``), which provide
   export PYCSW_CONFIG=/var/www/pycsw/csw-foo.cfg
 
   /var/www/pycsw/csw.py
-
-
