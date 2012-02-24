@@ -431,7 +431,7 @@ class APISO(profile.Profile):
             etree.SubElement(date, util.nspath_eval(dateel)).text = val
 
             metadatastandardname = 'ISO19115'
-            metadatastandardversion = '2033/Cor.1:2006'
+            metadatastandardversion = '2003/Cor.1:2006'
 
             if result.type == 'service':
                 metadatastandardname = 'ISO19119'
