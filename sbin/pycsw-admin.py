@@ -38,7 +38,7 @@ import sys
 from glob import glob
 
 from lxml import etree
-from server import metadata, repository, util
+from server import config, metadata, repository, util
 
 def setup_db(database, home):
     ''' Setup database tables and indexes '''
@@ -300,6 +300,34 @@ def optimize_db(database):
     REPOS = repository.Repository(database, 'records', {})
     REPOS.connection.execute('VACUUM ANALYZE')
 
+def gen_sitemap(DATABASE, URL, OUTPUT_FILE):
+    ''' generate an XML sitemap from all records in repository '''
+
+    # get configuration and init repo connection
+    REPOS = repository.Repository(DATABASE, 'records', config.MODEL['typenames'])
+
+    # write out sitemap document
+    URLSET = etree.Element(util.nspath_eval('sitemap:urlset'),
+    nsmap=config.NAMESPACES)
+
+    URLSET.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+    '%s http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' % \
+    config.NAMESPACES['sitemap']
+
+    # get all records
+    COUNT, RECORDS = REPOS.query(constraint={}, maxrecords=99999999)
+
+    for rec in RECORDS:
+        url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
+        uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
+        (URL, rec.identifier)
+        etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
+
+    # write to file
+    with open(OUTPUT_FILE, 'w') as of:
+        of.write(etree.tostring(URLSET, pretty_print=1,
+        encoding='utf8', xml_declaration=1))
+
 def usage():
     ''' Provide usage instructions '''
     return '''
@@ -318,10 +346,13 @@ SYNOPSIS
               - rebuild_db_indexes
               - optimize_db
               - refresh_harvested_records
+              - gen_sitemap
 
     -f    Filepath to pycsw configuration
 
     -h    Usage message
+
+    -o    path to output file
 
     -p    path to input/output directory to read/write metadata records
 
@@ -357,19 +388,24 @@ EXAMPLES
         which have been harvested
 
         pycsw-admin.py -c refresh_harvested_records -f default.cfg
+
+    7.) gen_sitemap: Generate XML Sitemap
+
+        pycsw-admin.py -c gen_sitemap -f default.cfg -o /path/to/sitemap.xml
 '''
 
 COMMAND = None
 XML_DIRPATH = None
 CFG = None
 RECURSIVE = False
+OUTPUT_FILE = None
 
 if len(sys.argv) == 1:
     print usage()
     sys.exit(1)
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:hp:r')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:r')
 except getopt.GetoptError, err:
     print '\nERROR: %s' % err
     print usage()
@@ -378,10 +414,12 @@ except getopt.GetoptError, err:
 for o, a in OPTS:
     if o == '-c':
         COMMAND = a
-    if o == '-p':
-        XML_DIRPATH = a
     if o == '-f':
         CFG = a
+    if o == '-o':
+        OUTPUT_FILE = a
+    if o == '-p':
+        XML_DIRPATH = a
     if o == '-r':
         RECURSIVE = True
     if o == '-h':  # dump help and exit
@@ -393,7 +431,8 @@ if COMMAND is None:
     sys.exit(4)
 
 if COMMAND not in ['setup_db', 'load_records', 'export_records', \
-    'rebuild_db_indexes', 'optimize_db', 'refresh_harvested_records']:
+    'rebuild_db_indexes', 'optimize_db', 'refresh_harvested_records', \
+    'gen_sitemap']:
     print 'ERROR: invalid command name: %s' % operation
     sys.exit(5)
 
@@ -404,6 +443,10 @@ if CFG is None:
 if COMMAND in ['load_records', 'export_records'] and XML_DIRPATH is None:
     print 'ERROR: -p </path/to/records> is a required argument'
     sys.exit(7)
+
+if COMMAND == 'gen_sitemap' and OUTPUT_FILE is None:
+    print 'ERROR: -o </path/to/sitemap.xml> is a required argument'
+    sys.exit(8)
 
 SCP = SafeConfigParser()
 SCP.readfp(open(CFG))
@@ -424,5 +467,7 @@ elif COMMAND == 'optimize_db':
     optimize_db(DATABASE)
 elif COMMAND == 'refresh_harvested_records':
     refresh_harvested_records(DATABASE, URL)
+elif COMMAND == 'gen_sitemap':
+    gen_sitemap(DATABASE, URL, OUTPUT_FILE)
 
 print 'Done'
