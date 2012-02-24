@@ -36,6 +36,8 @@ from server import server
 
 CONFIG = 'default.cfg'
 
+if os.environ.has_key('PYCSW_CONFIG'):
+    CONFIG = os.environ['PYCSW_CONFIG']
 if os.environ['QUERY_STRING'].lower().find('config') != -1:
     for kvp in os.environ['QUERY_STRING'].split('&'):
         if kvp.lower().find('config') != -1:
