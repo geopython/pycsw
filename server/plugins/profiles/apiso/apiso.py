@@ -410,10 +410,7 @@ class APISO(profile.Profile):
 
         if val is not None: 
             hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'))
-            etree.SubElement(hierarchy, util.nspath_eval('gmd:MD_ScopeCode'),
-            codeList = '%s#MD_ScopeCode' % CODELIST,
-            codeListValue = val,
-            codeSpace = CODESPACE).text = val
+            hierarchy.append(_write_codelist_element('gmd:MD_ScopeCode', val))
 
         if esn in ['summary', 'full']:
             # contact
@@ -502,6 +499,7 @@ class APISO(profile.Profile):
             if val:
                 for v in val.split(','):
                     tmp = etree.SubElement(resident, util.nspath_eval('gmd:topicCategory'))
+                    tmp.append(_write_codelist_element('gmd:CI_DateTypeCode', datetypeval))
                     etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
 
         # bbox extent
@@ -630,10 +628,7 @@ def _write_date(dateval, datetypeval):
         dateel = 'gco:Date'
     etree.SubElement(date3, util.nspath_eval(dateel)).text = dateval
     datetype = etree.SubElement(date2, util.nspath_eval('gmd:dateType'))
-    etree.SubElement(datetype, util.nspath_eval('gmd:CI_DateTypeCode'),
-    codeList='%s#CI_DateTypeCode' % CODELIST,
-    codeListValue=datetypeval,
-    codeSpace=CODESPACE).text = datetypeval
+    datetype.append(_write_codelist_element('gmd:CI_DateTypeCode', datetypeval))
     return date1
 
 def _get_resource_opname(operations):
@@ -645,3 +640,14 @@ def _get_resource_opname(operations):
         elif op == 'GetCoverage':
             return op
     return None
+
+def _write_codelist_element(codelist_element, codelist_value):
+    namespace, codelist = codelist_element.split(':')    
+
+    element = etree.Element(util.nspath_eval(codelist_element),
+    codeSpace=CODESPACE, codeList='%s#%s' % (CODELIST, codelist),
+    codeListValue=codelist_value)
+
+    element.text = codelist_value
+
+    return element
