@@ -66,3 +66,41 @@ Alternate Configurations
 ------------------------
 
 By default, pycsw loads ``default.cfg`` at runtime.  To load an alternate configuration, modify ``csw.py`` to point to the desired configuration.  Alternatively, pycsw supports explicitly specifiying a configuration by appending ``config=/path/to/default.cfg`` to the base URL of the service (e.g. ``http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetCapabilities``).  When the ``config`` parameter is passed by a CSW client, pycsw will override the default configuration location and subsequent settings with those of the specified configuration.
+
+This also provides the functionality to deploy numerous CSW servers with a single pycsw installation.
+
+Hiding the Location
+^^^^^^^^^^^^^^^^^^^
+
+Some deployments with alternate configurations prefer not to advertise the base URL with the ``config=`` approach.  In this case, there are many options to advertise the base URL.
+
+Environment Variables
+~~~~~~~~~~~~~~~~~~~~~
+
+One option is using Apache's ``Alias`` and ``SetEnvIf`` directives.  For example, given the base URL ``http://localhost/pycsw/csw.py?config=foo.cfg``, set the following in Apache's ``httpd.conf``:
+
+.. code-block:: none
+
+  Alias /pycsw/csw-foo.py /var/www/pycsw/csw.py
+  SetEnvIf Request_URI "/pycsw/csw-foo.py" PYCSW_CONFIG=/var/www/pycsw/csw-foo.cfg
+
+.. note::
+
+  Apache must be restarted after changes to ``httpd.conf``
+
+pycsw will use the configuration as set in the ``PYCSW_CONFIG`` environment variable in the same manner as if it was specified in the base URL.  Note that the configuration value ``server.url`` value must match the ``Request_URI`` value so as to advertise correctly in pycsw's Capabilities XML.
+
+Wrapper Script
+~~~~~~~~~~~~~~
+
+Another option is to write a simple wrapper (e.g. ``csw-foo.sh``), which provides the same functionality and can be deployed without restarting Apache:
+
+.. code-block:: bash
+
+  #!/bin/sh
+
+  export PYCSW_CONFIG=/var/www/pycsw/csw-foo.cfg
+
+  /var/www/pycsw/csw.py
+
+
