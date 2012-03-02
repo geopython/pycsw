@@ -164,6 +164,7 @@
         <ows:Value>dif:Data_Presentation_Form</ows:Value>
         <ows:Value>dif:Summary</ows:Value>
         <ows:Value>dif:Stop_Date</ows:Value>
+        <ows:Value>dif:Identifier</ows:Value>
         <ows:Value>dif:ISO_Topic_Category</ows:Value>
         <ows:Value>dif:Originating_Center</ows:Value>
         <ows:Value>dif:DIF_Creation_Date</ows:Value>

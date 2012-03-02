@@ -57,56 +57,56 @@ REPOSITORY = {
         'outputschema': 'http://www.isotc211.org/2005/gmd',
         'queryables': {
             'SupportedISOQueryables': {
-                'apiso:Subject': {'xpath': 'gmd:identificationInfo/gmd:MD_Identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'dbcol': 'keywords'},
-                'apiso:Title': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', 'dbcol': 'title'},
-                'apiso:Abstract': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString', 'dbcol': 'abstract'},
-                'apiso:Format': {'xpath': 'gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString', 'dbcol': 'format'},
-                'apiso:Identifier': {'xpath': 'gmd:fileIdentifier/gco:CharacterString', 'dbcol': 'identifier'},
-                'apiso:Modified': {'xpath': 'gmd:dateStamp/gco:Date', 'dbcol': 'date_modified'},
-                'apiso:Type': {'xpath': 'gmd:hierarchyLevel/gmd:MD_ScopeCode', 'dbcol': 'type'},
-                'apiso:BoundingBox': {'xpath': 'apiso:BoundingBox', 'dbcol': 'wkt_geometry'},
-                'apiso:CRS': {'xpath': 'concat("urn:ogc:def:crs:","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:version/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString")', 'dbcol': 'crs'},
-                'apiso:AlternateTitle': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', 'dbcol': 'title_alternate'},
-                'apiso:RevisionDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date/gco:Date', 'dbcol': 'date_revision'},
-                'apiso:CreationDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="creation"]/gmd:date/gco:Date', 'dbcol': 'date_creation'},
-                'apiso:PublicationDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="publication"]/gmd:date/gco:Date', 'dbcol': 'date_publication'},
-                'apiso:OrganisationName': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString', 'dbcol': 'organization'},
-                'apiso:HasSecurityConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_SecurityConstraints', 'dbcol': 'securityconstraints'},
-                'apiso:Language': {'xpath': 'gmd:language/gmd:LanguageCode|gmd:language/gco:CharacterString', 'dbcol': 'language'},
-                'apiso:ParentIdentifier': {'xpath': 'gmd:parentIdentifier/gco:CharacterString', 'dbcol': 'parentidentifier'},
-                'apiso:KeywordType': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode', 'dbcol': 'keywordstype'},
-                'apiso:TopicCategory': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'dbcol': 'topicategory'},
-                'apiso:ResourceLanguage': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:code/gmd:MD_LanguageTypeCode', 'dbcol': 'resourcelanguage'},
-                'apiso:GeographicDescriptionCode': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', 'dbcol': 'geodescode'},
-                'apiso:Denominator': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer', 'dbcol': 'denominator'},
-                'apiso:DistanceValue': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance', 'dbcol': 'distancevalue'},
-                'apiso:DistanceUOM': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom', 'dbcol': 'distanceuom'},
-                'apiso:TempExtent_begin': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition', 'dbcol': 'time_begin'},
-                'apiso:TempExtent_end': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition', 'dbcol': 'time_end'},
-                'apiso:AnyText': {'xpath': '//', 'dbcol': 'anytext'},
-                'apiso:ServiceType': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName', 'dbcol': 'servicetype'},
-                'apiso:ServiceTypeVersion': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString', 'dbcol': 'servicetypeversion'},
-                'apiso:Operation': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString', 'dbcol': 'operation'},
-                'apiso:CouplingType': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType', 'dbcol': 'couplingtype'},
-                'apiso:OperatesOn': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString', 'dbcol': 'operateson'},
-                'apiso:OperatesOnIdentifier': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', 'dbcol': 'operatesonidentifier'},
-                'apiso:OperatesOnName': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:operationName/gco:CharacterString', 'dbcol': 'operatesoname'},
+                'apiso:Subject': {'xpath': 'gmd:identificationInfo/gmd:MD_Identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
+                'apiso:Title': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Title']},
+                'apiso:Abstract': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
+                'apiso:Format': {'xpath': 'gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Format']},
+                'apiso:Identifier': {'xpath': 'gmd:fileIdentifier/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
+                'apiso:Modified': {'xpath': 'gmd:dateStamp/gco:Date', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Modified']},
+                'apiso:Type': {'xpath': 'gmd:hierarchyLevel/gmd:MD_ScopeCode', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Type']},
+                'apiso:BoundingBox': {'xpath': 'apiso:BoundingBox', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']},
+                'apiso:CRS': {'xpath': 'concat("urn:ogc:def:crs:","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:version/gco:CharacterString",":","gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString")', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:CRS']},
+                'apiso:AlternateTitle': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:AlternateTitle']},
+                'apiso:RevisionDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date/gco:Date', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:RevisionDate']},
+                'apiso:CreationDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="creation"]/gmd:date/gco:Date', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:CreationDate']},
+                'apiso:PublicationDate': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="publication"]/gmd:date/gco:Date', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:PublicationDate']},
+                'apiso:OrganisationName': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:OrganizationName']},
+                'apiso:HasSecurityConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_SecurityConstraints', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:SecurityConstraints']},
+                'apiso:Language': {'xpath': 'gmd:language/gmd:LanguageCode|gmd:language/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Language']},
+                'apiso:ParentIdentifier': {'xpath': 'gmd:parentIdentifier/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:ParentIdentifier']},
+                'apiso:KeywordType': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:KeywordType']},
+                'apiso:TopicCategory': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TopicCategory']},
+                'apiso:ResourceLanguage': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:code/gmd:MD_LanguageTypeCode', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:ResourceLanguage']},
+                'apiso:GeographicDescriptionCode': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:GeographicDescriptionCode']},
+                'apiso:Denominator': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Denominator']},
+                'apiso:DistanceValue': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:DistanceValue']},
+                'apiso:DistanceUOM': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:DistanceUOM']},
+                'apiso:TempExtent_begin': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TempExtent_begin']},
+                'apiso:TempExtent_end': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TempExtent_end']},
+                'apiso:AnyText': {'xpath': '//', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:AnyText']},
+                'apiso:ServiceType': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:ServiceType']},
+                'apiso:ServiceTypeVersion': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:ServiceTypeVersion']},
+                'apiso:Operation': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Operation']},
+                'apiso:CouplingType': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType/srv:SV_CouplingType', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:CouplingType']},
+                'apiso:OperatesOn': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:OperatesOn']},
+                'apiso:OperatesOnIdentifier': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:OperatesOnIdentifier']},
+                'apiso:OperatesOnName': {'xpath': 'gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:operationName/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:OperatesOnName']},
             },
             'AdditionalQueryables': {
-                'apiso:Degree': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean', 'dbcol': 'degree'},
-                'apiso:AccessConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_RestrictionCode', 'dbcol': 'accessconstraints'},
-                'apiso:OtherConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString', 'dbcol': 'otherconstraints'},
-                'apiso:Classification': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_ClassificationCode', 'dbcol': 'conditionapplyingtoaccessanduse'},
-                'apiso:ConditionApplyingToAccessAndUse': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:useLimitation/gco:CharacterString', 'dbcol': 'conditionapplyingtoaccessanduse'},
-                'apiso:Lineage': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString', 'dbcol': 'lineage'},
-                'apiso:ResponsiblePartyRole': {'xpath': 'gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode', 'dbcol': 'responsiblepartyrole'},
-                'apiso:SpecificationTitle': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString', 'dbcol': 'specificationtitle'},
-                'apiso:SpecificationDate': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date', 'dbcol': 'specificationdate'},
-                'apiso:SpecificationDateType': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode', 'dbcol': 'specificationdatetype'},
-                'apiso:Creator': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="originator"]/gco:CharacterString', 'dbcol': 'creator'},
-                'apiso:Publisher': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="publisher"]/gco:CharacterString', 'dbcol': 'publisher'},
-                'apiso:Contributor': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="contributor"]/gco:CharacterString', 'dbcol': 'contributor'},
-                'apiso:Relation': {'xpath': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo', 'dbcol': 'relation'}
+                'apiso:Degree': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Degree']},
+                'apiso:AccessConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_RestrictionCode', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
+                'apiso:OtherConstraints': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:OtherConstraints']},
+                'apiso:Classification': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_ClassificationCode', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Classification']},
+                'apiso:ConditionApplyingToAccessAndUse': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:useLimitation/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:ConditionApplyingToAccessAndUse']},
+                'apiso:Lineage': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Lineage']},
+                'apiso:ResponsiblePartyRole': {'xpath': 'gmd:contact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:ResponsiblePartyRole']},
+                'apiso:SpecificationTitle': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:SpecificationTitle']},
+                'apiso:SpecificationDate': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:SpecificationDate']},
+                'apiso:SpecificationDateType': {'xpath': 'gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:SpecificationDateType']},
+                'apiso:Creator': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="originator"]/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                'apiso:Publisher': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="publisher"]/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Publisher']},
+                'apiso:Contributor': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="contributor"]/gco:CharacterString', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Contributor']},
+                'apiso:Relation': {'xpath': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Relation']}
             }
         },
         'mappings': {
@@ -381,11 +381,12 @@ class APISO(profile.Profile):
 
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
-        if esn == 'full' and result.typename == 'gmd:MD_Metadata':
-            # dump record as is from result.xml and exit
-            return etree.fromstring(result.xml)
+        typename = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+        if (esn == 'full' and typename == 'gmd:MD_Metadata'):
+            # dump record as is and exit
+            return etree.fromstring(getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
-        if result.typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
+        if typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
             util.transform_mappings(queryables, REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'])
 
         node = etree.Element(util.nspath_eval('gmd:MD_Metadata'))
@@ -393,10 +394,10 @@ class APISO(profile.Profile):
         '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
 
         # identifier
-        val = result.identifier
+        idval = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
 
         identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
-        etree.SubElement(identifier, util.nspath_eval('gco:CharacterString')).text = val
+        etree.SubElement(identifier, util.nspath_eval('gco:CharacterString')).text = idval
 
         if esn in ['summary', 'full']:
             # language
@@ -454,7 +455,7 @@ class APISO(profile.Profile):
         else:
            restagname = 'gmd:MD_DataIdentification'
           
-        resident = etree.SubElement(identification, util.nspath_eval(restagname), id=result.identifier)
+        resident = etree.SubElement(identification, util.nspath_eval(restagname), id=idval)
         tmp2 = etree.SubElement(resident, util.nspath_eval('gmd:citation'))
         tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation'))
         tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title'))
@@ -562,20 +563,21 @@ class APISO(profile.Profile):
                         connectpoint = etree.SubElement(tmp, util.nspath_eval('srv:connectPoint'))
                         onlineres = etree.SubElement(connectpoint, util.nspath_eval('gmd:CI_OnlineResource'))
                         linkage = etree.SubElement(onlineres, util.nspath_eval('gmd:linkage'))
-                        etree.SubElement(linkage, util.nspath_eval('gmd:URL')).text = result.source
+                        etree.SubElement(linkage, util.nspath_eval('gmd:URL')).text = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Source'])
 
                 # operates on resource(s)
                 if coupledresources:
                     for i in coupledresources.split(','):
                         etree.SubElement(resident, util.nspath_eval('srv:operatesOn'), uuidref=i)
 
-        if result.links:
+        rlinks = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+        if rlinks:
             distinfo = etree.SubElement(node, util.nspath_eval('gmd:distributionInfo'))
             distinfo2 = etree.SubElement(distinfo, util.nspath_eval('gmd:MD_Distribution'))
             transopts = etree.SubElement(distinfo2, util.nspath_eval('gmd:transferOptions'))
             dtransopts = etree.SubElement(transopts, util.nspath_eval('gmd:MD_DigitalTransferOptions'))
 
-            for link in result.links.split('^'):
+            for link in rlinks.split('^'):
                 linkset = link.split(',')
                 online = etree.SubElement(dtransopts, util.nspath_eval('gmd:onLine'))
                 online2 = etree.SubElement(online, util.nspath_eval('gmd:CI_OnlineResource'))

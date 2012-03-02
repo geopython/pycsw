@@ -44,27 +44,28 @@ REPOSITORY = {
         'outputschema': 'http://www.opengis.net/cat/csw/csdgm',
         'queryables': {
             'SupportedFGDCQueryables': {
-                'fgdc:Title': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': 'title'},
-                'fgdc:Originator': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': 'creator'},
-                'fgdc:Publisher': {'xpath': 'idinfo/citation/citeinfo/publinfo/publish', 'dbcol': 'publisher'},
-                'fgdc:Abstract': {'xpath': 'idinfo/descript/abstract', 'dbcol': 'abstract'},
-                'fgdc:Purpose': {'xpath': 'idinfo/descript/purpose', 'dbcol': 'abstract'},
-                'fgdc:GeospatialPresentationForm': {'xpath': 'idinfo/citation/citeinfo/geoform', 'dbcol': 'format'},
-                'fgdc:PublicationDate': {'xpath': 'idinfo/citation/citeinfo/pubdate', 'dbcol': 'date_publication'},
-                'fgdc:ThemeKeywords': {'xpath': 'idinfo/keywords/theme/themekey', 'dbcol': 'keywords'},
-                'fgdc:Progress': {'xpath': 'idinfo/status/progress', 'dbcol': 'relation'},
-                'fgdc:BeginDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/begdate', 'dbcol': 'time_begin'},
-                'fgdc:EndDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/enddate', 'dbcol': 'time_end'},
-                'fgdc:Origin': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': 'creator'},
-                'fgdc:Contributor': {'xpath': 'idinfo/datacred', 'dbcol': 'contributor'},
-                'fgdc:AccessConstraints': {'xpath': 'idinfo/accconst', 'dbcol': 'accessconstraints'},
-                'fgdc:Modified': {'xpath': 'metainfo/metd', 'dbcol': 'date_modified'},
-                'fgdc:Type': {'xpath': 'spdoinfo/direct', 'dbcol': 'type'},
-                'fgdc:Format': {'xpath': 'distinfo/stdorder/digform/digtinfo/formname', 'dbcol': 'format'},
-                'fgdc:Source': {'xpath': 'lineage/srcinfo/srccite/citeinfo/title', 'dbcol': 'source'},
-                'fgdc:Relation': {'xpath': 'idinfo/citation/citeinfo/onlink', 'dbcol': 'relation'},
-                'fgdc:Envelope': {'xpath': 'bbox', 'dbcol': 'wkt_geometry'},
-                'fgdc:AnyText': {'xpath': 'xml', 'dbcol': 'anytext'}
+                'fgdc:Identifier': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
+                'fgdc:Title': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Title']},
+                'fgdc:Originator': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                'fgdc:Publisher': {'xpath': 'idinfo/citation/citeinfo/publinfo/publish', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Publisher']},
+                'fgdc:Abstract': {'xpath': 'idinfo/descript/abstract', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
+                'fgdc:Purpose': {'xpath': 'idinfo/descript/purpose', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
+                'fgdc:GeospatialPresentationForm': {'xpath': 'idinfo/citation/citeinfo/geoform', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Format']},
+                'fgdc:PublicationDate': {'xpath': 'idinfo/citation/citeinfo/pubdate', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:PublicationDate']},
+                'fgdc:ThemeKeywords': {'xpath': 'idinfo/keywords/theme/themekey', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
+                'fgdc:Progress': {'xpath': 'idinfo/status/progress', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Relation']},
+                'fgdc:BeginDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/begdate', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TempExtent_begin']},
+                'fgdc:EndDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/enddate', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TempExtent_end']},
+                'fgdc:Origin': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                'fgdc:Contributor': {'xpath': 'idinfo/datacred', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Contributor']},
+                'fgdc:AccessConstraints': {'xpath': 'idinfo/accconst', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
+                'fgdc:Modified': {'xpath': 'metainfo/metd', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Modified']},
+                'fgdc:Type': {'xpath': 'spdoinfo/direct', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Type']},
+                'fgdc:Format': {'xpath': 'distinfo/stdorder/digform/digtinfo/formname', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Format']},
+                'fgdc:Source': {'xpath': 'lineage/srcinfo/srccite/citeinfo/title', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Source']},
+                'fgdc:Relation': {'xpath': 'idinfo/citation/citeinfo/onlink', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Relation']},
+                'fgdc:Envelope': {'xpath': 'bbox', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']},
+                'fgdc:AnyText': {'xpath': 'xml', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:XML']}
             }
         },
         'mappings': {
@@ -137,11 +138,12 @@ class FGDC(profile.Profile):
 
     def write_record(self, recobj, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
-        if esn == 'full' and recobj.typename == 'fgdc:metadata':
-            # dump record as is from recobj.xml and exit
-            return etree.fromstring(recobj.xml)
+        typename = getattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+        if esn == 'full' and typename == 'fgdc:metadata':
+            # dump record as is and exit
+            return etree.fromstring(getattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
-        if recobj.typename == 'csw:Record':
+        if typename == 'csw:Record':
             # transform csw:Record -> fgdc:metadata model mappings
             util.transform_mappings(queryables,
             REPOSITORY['fgdc:metadata']['mappings']['csw:Record'])
@@ -152,7 +154,7 @@ class FGDC(profile.Profile):
 
         idinfo = etree.SubElement(node, 'idinfo')
         # identifier
-        etree.SubElement(idinfo, 'datasetid').text = recobj.identifier
+        etree.SubElement(idinfo, 'datasetid').text = getattr(recobj, queryables['fgdc:Identifier']['dbcol'])
 
         citation = etree.SubElement(idinfo, 'citation')
         citeinfo = etree.SubElement(citation, 'citeinfo')
@@ -233,8 +235,9 @@ class FGDC(profile.Profile):
         etree.SubElement(citeinfo, 'onlink').text = val
 
         # links
-        if recobj.links:
-            for link in recobj.links.split('^'):
+        rlinks = getattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+        if rlinks:
+            for link in rlinks.split('^'):
                 linkset = link.split(',')
                 etree.SubElement(citeinfo, 'onlink', type=linkset[2]).text = linkset[-1]
 

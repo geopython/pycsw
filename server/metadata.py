@@ -57,70 +57,70 @@ def parse_record(record, repos=None,
             identifier = uuid.uuid1().get_urn()
 
         # generate record of service instance
-        serviceobj.identifier = identifier
-        serviceobj.typename = 'gmd:MD_Metadata'
-        serviceobj.schema = 'http://www.opengis.net/wms'
-        serviceobj.mdsource = record
-        serviceobj.insert_date = util.get_today_and_now()
-        serviceobj.xml = md.getServiceXML()
-        serviceobj.anytext = util.get_anytext(md.getServiceXML())
-        #serviceobj.anytext = util.get_anytext(md._capabilities)
-        serviceobj.type = 'service'
-        serviceobj.title = md.identification.title
-        serviceobj.abstract = md.identification.abstract
-        serviceobj.keywords = ','.join(md.identification.keywords)
-        serviceobj.creator = serviceobj.publisher = serviceobj.contributor = \
-        md.provider.contact.name
-        serviceobj.organization = md.provider.contact.name
-        serviceobj.accessconstraints = md.identification.accessconstraints
-        serviceobj.otherconstraints = md.identification.fees
-        serviceobj.mdsource = record
-        serviceobj.format = md.identification.type
+        _set(serviceobj, 'pycsw:Identifier', identifier)
+        _set(serviceobj, 'pycsw:Typename', 'gmd:MD_Metadata')
+        _set(serviceobj, 'pycsw:Schema', 'http://www.opengis.net/wms')
+        _set(serviceobj, 'pycsw:MdSource', record)
+        _set(serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
+        _set(serviceobj, 'pycsw:XML', md.getServiceXML())
+        _set(serviceobj, 'pycsw:AnyText', util.get_anytext(md.getServiceXML()))
+        _set(serviceobj, 'pycsw:Type', 'service')
+        _set(serviceobj, 'pycsw:Title', md.identification.title)
+        _set(serviceobj, 'pycsw:Abstract', md.identification.abstract)
+        _set(serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
+        _set(serviceobj, 'pycsw:Creator', md.provider.contact.name)
+        _set(serviceobj, 'pycsw:Publisher', md.provider.contact.name)
+        _set(serviceobj, 'pycsw:Contributor', md.provider.contact.name)
+        _set(serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
+        _set(serviceobj, 'pycsw:AccessConstraints', md.identification.accessconstraints)
+        _set(serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
+        _set(serviceobj,  'pycsw:Source', record)
+        _set(serviceobj, 'pycsw:Format', md.identification.type)
         for c in md.contents:
             if md.contents[c].parent is None:
                 bbox = md.contents[c].boundingBoxWGS84
                 tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
-                serviceobj.wkt_geometry = util.bbox2wktpolygon(tmp)
+                _set(serviceobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
                 break
-        serviceobj.crs = 'urn:ogc:def:crs:EPSG:6.11:4326'
-        serviceobj.distanceuom = 'degrees'
-        serviceobj.servicetype = md.identification.type
-        serviceobj.servicetypeversion = md.identification.version
-        serviceobj.operation = ','.join([d.name for d in md.operations])
-        serviceobj.operateson = ','.join(list(md.contents))
-        serviceobj.couplingtype = 'tight'
+        _set(serviceobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:4326')
+        _set(serviceobj, 'pycsw:DistanceUOM', 'degrees')
+        _set(serviceobj, 'pycsw:ServiceType', md.identification.type)
+        _set(serviceobj, 'pycsw:ServiceTypeVersion', md.identification.version)
+        _set(serviceobj, 'pycsw:Operation', ','.join([d.name for d in md.operations]))
+        _set(serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
+        _set(serviceobj, 'pycsw:CouplingType', 'tight')
 
         recobjs.append(serviceobj) 
          
         # generate record foreach layer
         for layer in md.contents:
             recobj = repos.dataset()
-            recobj.identifier = md.contents[layer].name
-            recobj.typename = 'gmd:MD_Metadata'
-            recobj.schema = 'http://www.opengis.net/wms'
-            recobj.mdsource = record
-            recobj.insert_date = util.get_today_and_now()
-            recobj.xml = md.getServiceXML()
-            recobj.anytext = util.get_anytext(md._capabilities)
-            recobj.type = 'dataset'
-            recobj.parentidentifier = identifier
-            recobj.title = md.contents[layer].title
-            recobj.abstract = md.contents[layer].abstract
-            recobj.keywords = ','.join(md.contents[layer].keywords)
+            _set(recobj, 'pycsw:Identifier', md.contents[layer].name)
+            _set(recobj, 'pycsw:Typename', 'gmd:MD_Metadata')
+            _set(recobj, 'pycsw:Schema', 'http://www.opengis.net/wms')
+            _set(recobj, 'pycsw:MdSource', record)
+            _set(recobj, 'pycsw:InsertDate', util.get_today_and_now())
+            _set(recobj, 'pycsw:XML', md.getServiceXML())
+            _set(recobj, 'pycsw:AnyText', util.get_anytext(md._capabilities))
+            _set(recobj, 'pycsw:Type', 'dataset')
+            _set(recobj, 'pycsw:ParentIdentifier', identifier)
+            _set(recobj, 'pycsw:Title', md.contents[layer].title)
+            _set(recobj, 'pycsw:Abstract', md.contents[layer].abstract)
+            _set(recobj, 'pycsw:Keywords', ','.join(md.contents[layer].keywords))
 
             bbox = md.contents[layer].boundingBoxWGS84
             if bbox is not None:
                 tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
-                recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
-                recobj.crs = 'urn:ogc:def:crs:EPSG:6.11:4326'
-                recobj.denominator = 'degrees'
+                _set(recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
+                _set(recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:4326')
+                _set(recobj, 'pycsw:Denominator', 'degrees')
             else:
                 bbox = md.contents[layer].boundingBox
                 if bbox:
                     tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
-                    recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
-                    recobj.crs = 'urn:ogc:def:crs:EPSG:6.11:%s' % \
-                    bbox[-1].split(':')[1]
+                    _set(recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
+                    _set(recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:%s' % \
+                    bbox[-1].split(':')[1])
 
             recobjs.append(recobj)
 
@@ -141,35 +141,35 @@ def parse_record(record, repos=None,
 
         md = MD_Metadata(exml)
 
-        recobj.identifier = md.identifier
-        recobj.typename = 'gmd:MD_Metadata'
-        recobj.schema = config.NAMESPACES['gmd']
-        recobj.mdsource = 'local'
-        recobj.insert_date = util.get_today_and_now()
-        recobj.xml = md.xml
-        recobj.anytext = util.get_anytext(exml)
-        recobj.language = md.language
-        recobj.type = md.hierarchy
-        recobj.parentidentifier = md.parentidentifier
-        recobj.date = md.datestamp
-        recobj.source = md.dataseturi
+        _set(recobj, 'pycsw:Identifier', md.identifier)
+        _set(recobj, 'pycsw:Typename', 'gmd:MD_Metadata')
+        _set(recobj, 'pycsw:Schema', config.NAMESPACES['gmd'])
+        _set(recobj, 'pycsw:MdSource', 'local')
+        _set(recobj, 'pycsw:InsertDate', util.get_today_and_now())
+        _set(recobj, 'pycsw:XML', md.xml)
+        _set(recobj, 'pycsw:AnyText', util.get_anytext(exml))
+        _set(recobj, 'pycsw:Language', md.language)
+        _set(recobj, 'pycsw:Type', md.hierarchy)
+        _set(recobj, 'pycsw:ParentIdentifier', md.parentidentifier)
+        _set(recobj, 'pycsw:Date', md.datestamp)
+        _set(recobj, 'pycsw:Source', md.dataseturi)
         if md.referencesystem is not None:
-            recobj.crs = 'urn:ogc:def:crs:EPSG:6.11:%s' % \
-            md.referencesystem.code
+            _set(recobj, 'pycsw:CRS','urn:ogc:def:crs:EPSG:6.11:%s' %
+            md.referencesystem.code)
 
         if hasattr(md, 'identification'):
-            recobj.title = md.identification.title
-            recobj.title_alternate = md.identification.alternatetitle
-            recobj.abstract = md.identification.abstract
-            recobj.relation = md.identification.aggregationinfo
-            recobj.time_begin = md.identification.temporalextent_start
-            recobj.time_end = md.identification.temporalextent_end
+            _set(recobj, 'pycsw:Title', md.identification.title)
+            _set(recobj, 'pycsw:AlternateTitle', md.identification.alternatetitle)
+            _set(recobj, 'pycsw:Abstract', md.identification.abstract)
+            _set(recobj, 'pycsw:Relation', md.identification.aggregationinfo)
+            _set(recobj, 'pycsw:TempExtent_begin', md.identification.temporalextent_start)
+            _set(recobj, 'pycsw:TempExtent_end', md.identification.temporalextent_end)
 
             if len(md.identification.topiccategory) > 0:
-                recobj.topicategory = md.identification.topiccategory[0]
+                _set(recobj, 'pycsw:TopiCategory', md.identification.topiccategory[0])
 
             if len(md.identification.resourcelanguage) > 0:
-                recobj.resourcelanguage = md.identification.resourcelanguage[0]
+                _set(recobj, 'pycsw:ResourceLanguage', md.identification.resourcelanguage[0])
  
             if hasattr(md.identification, 'bbox'):
                 bbox = md.identification.bbox
@@ -179,82 +179,82 @@ def parse_record(record, repos=None,
             if (hasattr(md.identification, 'keywords') and
             len(md.identification.keywords) > 0):
                 if None not in md.identification.keywords[0]['keywords']:
-                    recobj.keywords = ','.join(
-                    md.identification.keywords[0]['keywords'])
-                    recobj.keywordstype = md.identification.keywords[0]['type']
+                    _set(recobj, 'pycsw:Keywords', ','.join(
+                    md.identification.keywords[0]['keywords']))
+                    _set(recobj, 'pycsw:KeywordType', md.identification.keywords[0]['type'])
 
             if hasattr(md.identification, 'creator'):
-                recobj.creator = md.identification.creator
+                _set(recobj, 'pycsw:Creator', md.identification.creator)
             if hasattr(md.identification, 'publisher'):
-                recobj.publisher = md.identification.publisher
+                _set(recobj, 'pycsw:Publisher', md.identification.publisher)
             if hasattr(md.identification, 'contributor'):
-                recobj.contributor = md.identification.contributor
+                _set(recobj, 'pycsw:Contributor', md.identification.contributor)
 
             if (hasattr(md.identification, 'contact') and 
             hasattr(md.identification.contact, 'organization')):
-                recobj.organization = md.identification.contact.organization
+                _set(recobj, 'pycsw:OrganizationName', md.identification.contact.organization)
 
             if len(md.identification.securityconstraints) > 0:
-                recobj.securityconstraints = \
-                md.identification.securityconstraints[0]
+                _set(recobj, 'pycsw:SecurityConstraints', 
+                md.identification.securityconstraints[0])
             if len(md.identification.accessconstraints) > 0:
-                recobj.accessconstraints = \
-                md.identification.accessconstraints[0]
+                _set(recobj, 'pycsw:AccessConstraints', 
+                md.identification.accessconstraints[0])
             if len(md.identification.otherconstraints) > 0:
-                recobj.otherconstraints = md.identification.otherconstraints[0]
+                _set(recobj, 'pycsw:OtherConstraints', md.identification.otherconstraints[0])
 
             if hasattr(md.identification, 'date'):
                 for datenode in md.identification.date:
                     if datenode.type == 'revision':
-                        recobj.date_revision = datenode.date
+                        _set(recobj, 'pycsw:RevisionDate', datenode.date)
                     elif datenode.type == 'creation':
-                        recobj.date_creation = datenode.date
+                        _set(recobj, 'pycsw:CreationDate', datenode.date)
                     elif datenode.type == 'publication':
-                        recobj.date_publication = datenode.date
+                        _set(recobj, 'pycsw:PublicationDate', datenode.date)
 
-            recobj.geodescode = md.identification.bbox.description_code
+            _set(recobj, 'pycsw:GeographicDescriptionCode', md.identification.bbox.description_code)
 
             if len(md.identification.denominators) > 0:
-                recobj.denominator = md.identification.denominators[0]
+                _set(recobj, 'pycsw:Denominator', md.identification.denominators[0])
             if len(md.identification.distance) > 0:
-                recobj.distancevalue = md.identification.distance[0]
+                _set(recobj, 'pycsw:DistanceValue', md.identification.distance[0])
             if len(md.identification.uom) > 0:
-                recobj.distanceuom = md.identification.uom[0]
+                _set(recobj, 'pycsw:DistanceUOM', md.identification.uom[0])
 
             if len(md.identification.classification) > 0:
-                recobj.classification = md.identification.classification[0]
+                _set(recobj, 'pycsw:Classification', md.identification.classification[0])
             if len(md.identification.uselimitation) > 0:
-                recobj.conditionapplyingtoaccessanduse = \
-                md.identification.uselimitation[0]
+                _set(recobj, 'pycsw:ConditionApplyingToAccessAndUse',
+                md.identification.uselimitation[0])
 
         if hasattr(md.identification, 'format'):
-            recobj.format = md.distribution.format
+            _set(recobj, 'pycsw:Format', md.distribution.format)
 
         if md.serviceidentification is not None:
-            recobj.servicetype = md.serviceidentification.type
-            recobj.servicetypeversion = md.serviceidentification.version
+            _set(recobj, 'pycsw:ServiceType', md.serviceidentification.type)
+            _set(recobj, 'pycsw:ServiceTypeVersion', md.serviceidentification.version)
 
-            recobj.couplingtype = md.serviceidentification.couplingtype
+            _set(recobj, 'pycsw:CouplingType', md.serviceidentification.couplingtype)
        
             #if len(md.serviceidentification.operateson) > 0: 
-            #    recobj.operateson = VARCHAR(32), 
-            #recobj.operation VARCHAR(32), 
-            #recobj.operatesonidentifier VARCHAR(32), 
-            #recobj.operatesoname VARCHAR(32), 
+            #    _set(recobj, 'pycsw:operateson = VARCHAR(32), 
+            #_set(recobj, 'pycsw:operation VARCHAR(32), 
+            #_set(recobj, 'pycsw:operatesonidentifier VARCHAR(32), 
+            #_set(recobj, 'pycsw:operatesoname VARCHAR(32), 
 
 
         if hasattr(md.identification, 'dataquality'):     
-            recobj.degree = md.dataquality.conformancedegree
-            recobj.lineage = md.dataquality.lineage
-            recobj.specificationtitle = md.dataquality.specificationtitle
+            _set(recobj, 'pycsw:Degree', md.dataquality.conformancedegree)
+            _set(recobj, 'pycsw:Lineage', md.dataquality.lineage)
+            _set(recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
             if hasattr(md.dataquality, 'specificationdate'):
-                recobj.specificationdate = \
-                md.dataquality.specificationdate[0].date
-                recobj.specificationdatetype = \
-                md.dataquality.specificationdate[0].datetype
+                _set(recobj, 'pycsw:specificationDate',
+                md.dataquality.specificationdate[0].date)
+                _set(recobj, 'pycsw:SpecificationDateType',
+                md.dataquality.specificationdate[0].datetype)
 
         if hasattr(md, 'contact') and len(md.contact) > 0:
-            recobj.responsiblepartyrole = md.contact[0].role
+            _set(recobj, 'pycsw:ResponsiblePartyRole', md.contact[0].role)
 
         if hasattr(md, 'distribution') and hasattr(md.distribution, 'online'):
             for link in md.distribution.online:
@@ -266,45 +266,48 @@ def parse_record(record, repos=None,
         md = Metadata(exml)
 
         if md.idinfo.datasetid is not None:  # we need an identifier
-            recobj.identifier = md.idinfo.datasetid
+            _set(recobj, 'pycsw:Identifier', md.idinfo.datasetid)
         else:  # generate one ourselves
-            recobj.identifier = uuid.uuid1().get_urn()
+            _set(recobj, 'pycsw:Identifier', uuid.uuid1().get_urn())
 
-        recobj.typename = 'fgdc:metadata'
-        recobj.schema = config.NAMESPACES['fgdc']
-        recobj.mdsource = 'local'
-        recobj.insert_date = util.get_today_and_now()
-        recobj.xml = md.xml
-        recobj.anytext = util.get_anytext(exml)
-        recobj.language = 'en-US'
-        recobj.type = md.idinfo.citation.citeinfo['geoform']
-        recobj.title = md.idinfo.citation.citeinfo['title']
+        _set(recobj, 'pycsw:Typename', 'fgdc:metadata')
+        _set(recobj, 'pycsw:Schema', config.NAMESPACES['fgdc'])
+        _set(recobj, 'pycsw:MdSource', 'local')
+        _set(recobj, 'pycsw:InsertDate', util.get_today_and_now())
+        _set(recobj, 'pycsw:XML', md.xml)
+        _set(recobj, 'pycsw:AnyText', util.get_anytext(exml))
+        _set(recobj, 'pycsw:Language', 'en-US')
+        _set(recobj, 'pycsw:Type',  md.idinfo.citation.citeinfo['geoform'])
+        _set(recobj, 'pycsw:Title', md.idinfo.citation.citeinfo['title'])
 
         if hasattr(md.idinfo, 'descript'):
-            recobj.abstract = md.idinfo.descript.abstract
+            _set(recobj, 'pycsw:Abstract', md.idinfo.descript.abstract)
 
         if hasattr(md.idinfo, 'keywords'):
             if md.idinfo.keywords.theme:
-                recobj.keywords = \
-                ','.join(md.idinfo.keywords.theme[0]['themekey'])
+                _set(recobj, 'pycsw:Keywords', \
+                ','.join(md.idinfo.keywords.theme[0]['themekey']))
 
         if hasattr(md.idinfo.timeperd, 'timeinfo'):
             if hasattr(md.idinfo.timeperd.timeinfo, 'rngdates'):
-                recobj.time_begin = md.idinfo.timeperd.timeinfo.rngdates.begdate
-                recobj.time_end = md.idinfo.timeperd.timeinfo.rngdates.enddate
+                _set(recobj, 'pycsw:TempExtent_begin',
+                     md.idinfo.timeperd.timeinfo.rngdates.begdate)
+                _set(recobj, 'pycsw:TempExtent_end',
+                     md.idinfo.timeperd.timeinfo.rngdates.enddate)
 
         if hasattr(md.idinfo, 'origin'):
-            recobj.creator = md.idinfo.origin
-            recobj.publisher = md.idinfo.origin
-            recobj.contributor = md.idinfo.origin
+            _set(recobj, 'pycsw:Creator', md.idinfo.origin)
+            _set(recobj, 'pycsw:Publisher',  md.idinfo.origin)
+            _set(recobj, 'pycsw:Contributor', md.idinfo.origin)
 
         if hasattr(md.idinfo, 'ptcontac'):
-            recobj.organization = md.idinfo.ptcontac.cntorg
-        recobj.accessconstraints = md.idinfo.accconst
-        recobj.otherconstraints = md.idinfo.useconst
-        recobj.date = md.metainfo.metd
-        recobj.date_publication = md.idinfo.citation.citeinfo['pubdate']
-        recobj.format = md.idinfo.citation.citeinfo['geoform']
+            _set(recobj, 'pycsw:OrganizationName', md.idinfo.ptcontac.cntorg)
+        _set(recobj, 'pycsw:AccessConstraints', md.idinfo.accconst)
+        _set(recobj, 'pycsw:OtherConstraints', md.idinfo.useconst)
+        _set(recobj, 'pycsw:Date', md.metainfo.metd)
+        _set(recobj, 
+        'pycsw:PublicationDate', md.idinfo.citation.citeinfo['pubdate'])
+        _set(recobj, 'pycsw:Format', md.idinfo.citation.citeinfo['geoform'])
 
         if hasattr(md.idinfo, 'spdom') and hasattr(md.idinfo.spdom, 'bbox'):
             bbox = md.idinfo.spdom.bbox
@@ -318,6 +321,7 @@ def parse_record(record, repos=None,
                     (uri['name'], uri['description'],
                      uri['protocol'], uri['url'])
                     links.append(tmp)
+
     elif root == '{%s}Record' % config.NAMESPACES['csw']:  # Dublin Core
         md = CswRecord(exml)
 
@@ -326,36 +330,36 @@ def parse_record(record, repos=None,
         else:
             bbox = md.bbox
 
-	recobj.identifier = md.identifier
-	recobj.typename = 'csw:Record'
-	recobj.schema = config.NAMESPACES['csw']
-	recobj.mdsource = 'local'
-	recobj.insert_date = util.get_today_and_now()
-	recobj.xml = md.xml
-	recobj.anytext = util.get_anytext(exml)
-	recobj.language = md.language
-	recobj.type = md.type
-	recobj.title = md.title
-	recobj.title_alternate = md.alternative
-	recobj.abstract = md.abstract
-	recobj.keywords = ','.join(md.subjects)
-	recobj.parentidentifier = md.ispartof
-	recobj.relation = md.relation
-	recobj.time_begin = md.temporal
-	recobj.time_end = md.temporal
-	recobj.resourcelanguage = md.language
-	recobj.creator = md.creator
-	recobj.publisher = md.publisher
-	recobj.contributor = md.contributor
-	recobj.organization = md.rightsholder
-	recobj.accessconstraints = md.accessrights
-	recobj.otherconstraints = md.license
-	recobj.date = md.date
-	recobj.date_creation = md.created
-	recobj.date_publication = md.issued
-	recobj.date_modified = md.modified
-	recobj.format = md.format
-	recobj.source = md.source
+	_set(recobj, 'pycsw:Identifier', md.identifier)
+	_set(recobj, 'pycsw:Typename', 'csw:Record')
+	_set(recobj, 'pycsw:Schema', config.NAMESPACES['csw'])
+	_set(recobj, 'pycsw:MdSource', 'local')
+	_set(recobj, 'pycsw:InsertDate', util.get_today_and_now())
+	_set(recobj, 'pycsw:XML', md.xml)
+	_set(recobj, 'pycsw:AnyText', util.get_anytext(exml))
+	_set(recobj, 'pycsw:Language', md.language)
+	_set(recobj, 'pycsw:Type', md.type)
+	_set(recobj, 'pycsw:Title', md.title)
+	_set(recobj, 'pycsw:AlternateTitle', md.alternative)
+	_set(recobj, 'pycsw:Abstract', md.abstract)
+	_set(recobj, 'pycsw:Keywords', ','.join(md.subjects))
+	_set(recobj, 'pycsw:ParentIdentifier', md.ispartof)
+	_set(recobj, 'pycsw:Relation', md.relation)
+	_set(recobj, 'pycsw:TempExtent_begin', md.temporal)
+	_set(recobj, 'pycsw:TempExtent_end', md.temporal)
+	_set(recobj, 'pycsw:ResourceLanguage', md.language)
+	_set(recobj, 'pycsw:Creator', md.creator)
+	_set(recobj, 'pycsw:Publisher', md.publisher)
+	_set(recobj, 'pycsw:Contributor', md.contributor)
+	_set(recobj, 'pycsw:OrganizationName', md.rightsholder)
+	_set(recobj, 'pycsw:AccessConstraints', md.accessrights)
+	_set(recobj, 'pycsw:OtherConstraints', md.license)
+	_set(recobj, 'pycsw:Date', md.date)
+	_set(recobj, 'pycsw:CreationDate', md.created)
+	_set(recobj, 'pycsw:PublicationDate', md.issued)
+	_set(recobj, 'pycsw:Modified', md.modified)
+	_set(recobj, 'pycsw:Format', md.format)
+	_set(recobj, 'pycsw:Source', md.source)
 
         for ref in md.references:
             tmp = ',,%s,%s' % (ref['scheme'], ref['url'])
@@ -369,15 +373,19 @@ def parse_record(record, repos=None,
         raise RuntimeError('Unsupported metadata format')
 
     if len(links) > 0:
-        recobj.links = '^'.join(links)
+        _set(recobj, 'pycsw:Links', '^'.join(links))
 
     if bbox is not None:
         try:
             tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
-            recobj.wkt_geometry = util.bbox2wktpolygon(tmp)
+            _set(recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
         except:  # coordinates are corrupted, do not include
-            recobj.wkt_geometry = None
+            _set(recobj, 'pycsw:BoundingBox', None)
     else:
-        recobj.wkt_geometry = None
+        _set(recobj, 'pycsw:BoundingBox', None)
 
     return [recobj]
+
+def _set(obj, name, value):
+   ''' convenice method to set values'''
+   setattr(obj, config.MD_CORE_MODEL['mappings'][name], value)
