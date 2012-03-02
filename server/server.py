@@ -150,6 +150,15 @@ class Csw(object):
 
         self.log.debug('NAMESPACES: %s' % config.NAMESPACES)
 
+        # load user-defined mappings if they exist
+        if self.config.has_option('repository', 'mappings'):
+            # override default repository mappings
+            module = self.config.get('repository','mappings')
+            modulename='%s' % module.replace('.py','').replace(os.sep, '.')
+            self.log.debug('Loading custom repository mappings from %s.' % module)
+            mappings = __import__(modulename)
+            config.MD_CORE_MODEL = mappings.MD_CORE_MODEL
+
         # init repository
         try:
             self.repository = \

@@ -56,6 +56,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 **[repository]**
 
 - **database**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls)
+- **mappings**: custom repository mappings (see :ref:`custom_repository`)
 
 .. note::
 
