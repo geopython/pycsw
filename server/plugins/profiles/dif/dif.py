@@ -44,23 +44,24 @@ REPOSITORY = {
         'outputschema': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
         'queryables': {
             'SupportedDIFQueryables': {
-                'dif:Entry_Title': {'xpath': 'dif:Entry_Title', 'dbcol': 'title'},
-                'dif:Dataset_Creator': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Creator', 'dbcol': 'creator'},
-                'dif:ISO_Topic_Category': {'xpath': 'dif:ISO_Topic_Category', 'dbcol': 'topicategory'},
-                'dif:Keyword': {'xpath': 'dif:Keyword', 'dbcol': 'keywords'},
-                'dif:Summary': {'xpath': 'dif:Summary', 'dbcol': 'abstract'},
-                'dif:Dataset_Publisher': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Publisher', 'dbcol': 'publisher'},
-                'dif:Originating_Center': {'xpath': 'dif:Originating_Center', 'dbcol': 'organization'},
-                'dif:DIF_Creation_Date': {'xpath': 'dif:DIF_Creation_Date', 'dbcol': 'date_creation'},
-                'dif:Dataset_Release_Date': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Release_Date', 'dbcol': 'date_publication'},
-                'dif:Data_Presentation_Form': {'xpath': 'dif:Data_Set_Citation/dif:Data_Presentation_Form', 'dbcol': 'format'},
-                'dif:Data_Set_Language': {'xpath': 'dif:Data_Set_Language', 'dbcol': 'resourcelanguage'},
-                'dif:Related_URL': {'xpath': 'dif:Related_URL/dif:URL', 'dbcol': 'relation'},
-                'dif:Access_Constraints': {'xpath': 'dif:Access_Constraints', 'dbcol': 'accessconstraints'},
-                'dif:Start_Date': {'xpath': 'dif:Temporal_Coverage/dif:Start_Date', 'dbcol': 'time_begin'},
-                'dif:Stop_Date': {'xpath': 'dif:Temporal_Coverage/dif:Stop_Date', 'dbcol': 'time_end'},
-                'dif:AnyText': {'xpath': '//', 'dbcol': 'anytext'},
-                'dif:Spatial_Coverage': {'xpath': 'dif:Spatial_Coverage', 'dbcol': 'wkt_geometry'}
+                'dif:Identifier': {'xpath': 'dif:Entry_Title', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
+                'dif:Entry_Title': {'xpath': 'dif:Entry_Title', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Title']},
+                'dif:Dataset_Creator': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Creator', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                'dif:ISO_Topic_Category': {'xpath': 'dif:ISO_Topic_Category', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TopicCategory']},
+                'dif:Keyword': {'xpath': 'dif:Keyword', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
+                'dif:Summary': {'xpath': 'dif:Summary', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
+                'dif:Dataset_Publisher': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Publisher', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Publisher']},
+                'dif:Originating_Center': {'xpath': 'dif:Originating_Center', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:OrganizationName']},
+                'dif:DIF_Creation_Date': {'xpath': 'dif:DIF_Creation_Date', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:CreationDate']},
+                'dif:Dataset_Release_Date': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Release_Date', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:PublicationDate']},
+                'dif:Data_Presentation_Form': {'xpath': 'dif:Data_Set_Citation/dif:Data_Presentation_Form', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Format']},
+                'dif:Data_Set_Language': {'xpath': 'dif:Data_Set_Language', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:ResourceLanguage']},
+                'dif:Related_URL': {'xpath': 'dif:Related_URL/dif:URL', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Relation']},
+                'dif:Access_Constraints': {'xpath': 'dif:Access_Constraints', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
+                'dif:Start_Date': {'xpath': 'dif:Temporal_Coverage/dif:Start_Date', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TempExtent_begin']},
+                'dif:Stop_Date': {'xpath': 'dif:Temporal_Coverage/dif:Stop_Date', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TempExtent_end']},
+                'dif:AnyText': {'xpath': '//', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:AnyText']},
+                'dif:Spatial_Coverage': {'xpath': 'dif:Spatial_Coverage', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']}
             }
         },
         'mappings': {
@@ -135,11 +136,14 @@ class DIF(profile.Profile):
 
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
-        if esn == 'full' and result.typename == 'dif:DIF':
-            # dump record as is from result.xml and exit
-            return etree.fromstring(result.xml)
 
-        if result.typename == 'csw:Record':  # transform csw:Record -> dif:DIF model mappings
+        typename = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+
+        if esn == 'full' and typename == 'dif:DIF':
+            # dump record as is and exit
+            return etree.fromstring(getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
+
+        if typename == 'csw:Record':  # transform csw:Record -> dif:DIF model mappings
             util.transform_mappings(queryables, REPOSITORY['dif:DIF']['mappings']['csw:Record'])
 
         node = etree.Element(util.nspath_eval('dif:DIF'))
@@ -147,7 +151,7 @@ class DIF(profile.Profile):
         '%s http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd' % self.namespace
 
         # identifier
-        etree.SubElement(node, util.nspath_eval('dif:Entry_ID')).text = result.identifier
+        etree.SubElement(node, util.nspath_eval('dif:Entry_ID')).text = getattr(result, queryables['dif:Identifier']['dbcol'])
 
         # title
         val = getattr(result, queryables['dif:Entry_Title']['dbcol'])
@@ -225,8 +229,9 @@ class DIF(profile.Profile):
         url = etree.SubElement(node, util.nspath_eval('dif:Related_URL'))
         etree.SubElement(url, util.nspath_eval('dif:URL')).text = val
 
-        if result.links:
-            for link in result.links.split('^'):
+        rlinks = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+        if rlinks:
+            for link in rlinks.split('^'):
                 linkset = link.split(',')
            
                 url2 = etree.SubElement(node, util.nspath_eval('dif:Related_URL'))

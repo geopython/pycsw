@@ -244,14 +244,15 @@ def export_records(database, xml_dirpath):
 
     print 'Exporting records\n'
     for record in RECORDS.all():
-        print 'Processing %s' % record.identifier
-        if record.identifier.find(':') != -1:  # it's a URN
+        identifier = getattr(record, 
+        config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+
+        print 'Processing %s' % identifier
+        if identifier.find(':') != -1:  # it's a URN
             # sanitize identifier
             print ' Sanitizing identifier'
-            identifier = record.identifier.split(':')[-1]
-        else:
-            identifier = record.identifier
-    
+            identifier = identifier.split(':')[-1]
+
         # write to XML document
         FILENAME = os.path.join(xml_dirpath, '%s.xml' % identifier)
         try:
@@ -277,14 +278,20 @@ def refresh_harvested_records(database, url):
         CSW = CatalogueServiceWeb(url)
 
         for rec in RECORDS:
+            source = getattr(rec, 
+            config.MD_CORE_MODEL['mappings']['pycsw:Source'])
+            schema = getattr(rec, 
+            config.MD_CORE_MODEL['mappings']['pycsw:Schema'])
+            identifier = getattr(rec, 
+            config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+
             print 'Harvesting %s (identifier = %s) ...' % \
-            (rec.source, rec.identifier)
+            (source, identifier)
             # TODO: find a smarter way of catching this
-            schema = rec.schema
             if schema == 'http://www.isotc211.org/2005/gmd':
                 schema = 'http://www.isotc211.org/schemas/2005/gmd/'
             try:
-                CSW.harvest(rec.source, schema)
+                CSW.harvest(source, schema)
                 print CSW.response
             except Exception, err:
                 print err
@@ -320,7 +327,8 @@ def gen_sitemap(DATABASE, URL, OUTPUT_FILE):
     for rec in RECORDS:
         url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
         uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
-        (URL, rec.identifier)
+        (URL, \
+        getattr(rec, config.MD_CORE_MODEL['mappings']['pycsw:Identifier']))
         etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
 
     # write to file
