@@ -166,7 +166,7 @@ def parse_record(record, repos=None,
             _set(recobj, 'pycsw:TempExtent_end', md.identification.temporalextent_end)
 
             if len(md.identification.topiccategory) > 0:
-                _set(recobj, 'pycsw:TopiCategory', md.identification.topiccategory[0])
+                _set(recobj, 'pycsw:TopicCategory', md.identification.topiccategory[0])
 
             if len(md.identification.resourcelanguage) > 0:
                 _set(recobj, 'pycsw:ResourceLanguage', md.identification.resourcelanguage[0])
