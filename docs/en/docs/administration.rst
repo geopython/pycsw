@@ -92,5 +92,28 @@ PostgreSQL
 
 - pycsw makes uses of PL/Python functions.  To enable PostgreSQL support, the database user must be able to create functions within the database.
 
+.. _custom_repository:
+
+Using an Existing Repository
+----------------------------
+
+pycsw supports publishing metadata from an existing repository.  To enable this functionality, the default database mappings must be modified to represent the existing database columns mapping to the abstract core model (the default mappings are in ``server/config.py:MD_CORE_MODEL``).
+
+To override the default settings:
+
+- define a custom database mapping based on ``etc/mappings.py``
+- in ``default.cfg``, set ``repository.mappings`` to the location of the mappings.py file:
+
+.. code-block:: none
+
+  [repository]
+  ...
+  mappings=path/to/mappings.py
+
+Existing Repository Requirements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+pycsw requires certain columns and semantics to exist in any repository to operate.  Documentation is provided in ``server/config.py:MD_CORE_MODEL``
+
 .. _`OGR`: http://www.gdal.org/ogr
 .. _`OGC SFSQL`: http://www.opengeospatial.org/standards/sfs
