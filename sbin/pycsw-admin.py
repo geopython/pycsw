@@ -161,7 +161,7 @@ def setup_db(database, home):
         Column('specificationdatetype', String(20), index=True),
     
         # distribution
-        # links: format "name,description,protocol,url^[,,,^[,,,]]"
+        # links: format "name,description,protocol,url[^,,,[^,,,]]"
         Column('links', Text, index=True),
     )
     RECORDS.create()
