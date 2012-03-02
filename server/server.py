@@ -1232,16 +1232,22 @@ class Csw(object):
 
                 self.log.debug('Transaction operation: %s' % record)
 
-                if hasattr(record, 'identifier') is False:
+                if hasattr(record,
+                config.MD_CORE_MODEL['mappings']['pycsw:Identifier']) is False:
                     return self.exceptionreport('NoApplicableCode',
                     'insert', 'Record requires an identifier')
 
                 # insert new record
                 try:
-                    self.repository.insert(record, 'local', util.get_today_and_now())
+                    self.repository.insert(record, 'local',
+                    util.get_today_and_now())
+
                     inserted += 1
                     insertresults.append(
-                    {'identifier': record.identifier, 'title': record.title})
+                    {'identifier': getattr(record, 
+                    config.MD_CORE_MODEL['mappings']['pycsw:Identifier']),
+                    'title': getattr(record,
+                    config.MD_CORE_MODEL['mappings']['pycsw:Title'])})
                 except Exception, err:
                     return self.exceptionreport('NoApplicableCode',
                     'insert', 'Transaction (insert) failed: %s.' % str(err))
@@ -1250,7 +1256,10 @@ class Csw(object):
                 if ttype.has_key('constraint') is False:
                     # update full existing resource in repository
                     try:
-                        record = metadata.parse_record(ttype['xml'], self.repository)[0]
+                        record = metadata.parse_record(ttype['xml'],
+                        self.repository)[0]
+                        identifier = getattr(record,
+                        config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
                     except Exception, err:
                         return self.exceptionreport('NoApplicableCode', 'insert',
                         'Transaction (update) failed: record parsing failed: %s' \
@@ -1258,13 +1267,13 @@ class Csw(object):
             
                     # query repository to see if record already exists
                     self.log.debug('checking if record exists (%s)' % \
-                    record.identifier)
+                    identifier)
 
-                    results = self.repository.query_ids(ids=[record.identifier])
+                    results = self.repository.query_ids(ids=[identifier])
             
                     if len(results) == 0:
                         self.log.debug('id %s does not exist in repository' % \
-                        record.identifier)
+                        identifier)
                     else:  # existing record, it's an update
                         try:
                             self.repository.update(record)
@@ -1373,17 +1382,27 @@ class Csw(object):
         updated = 0
 
         for record in records_parsed:
-            record.source = self.kvp['source']
-            record.insert_date = util.get_today_and_now()
+            setattr(record, config.MD_CORE_MODEL['mappings']['pycsw:Source'],
+            self.kvp['source'])
+
+            setattr(record, config.MD_CORE_MODEL['mappings']['pycsw:InsertDate'],
+            util.get_today_and_now())
+
+            identifier = getattr(record,
+            config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+            source = getattr(record,
+            config.MD_CORE_MODEL['mappings']['pycsw:Source'])
+            insert_date = getattr(record,
+            config.MD_CORE_MODEL['mappings']['pycsw:InsertDate'])
 
             # query repository to see if record already exists
-            self.log.debug('checking if record exists (%s)' % record.identifier)
-            results = self.repository.query_ids(ids=[record.identifier])
+            self.log.debug('checking if record exists (%s)' % identifier)
+            results = self.repository.query_ids(ids=[identifier])
 
             if len(results) == 0:  # new record, it's a new insert
                 inserted += 1
                 try:
-                    self.repository.insert(record, record.source, record.insert_date)
+                    self.repository.insert(record, source, insert_date)
                 except Exception, err:
                     return self.exceptionreport('NoApplicableCode',
                     'source', 'Harvest (insert) failed: %s.' % str(err))
@@ -1706,26 +1725,31 @@ class Csw(object):
 
         if (self.kvp.has_key('elementname') and
             len(self.kvp['elementname']) > 0):
-            xml = etree.fromstring(recobj.xml)
+            #xml = etree.fromstring(getattr(recobj,
+            #config.MD_CORE_MODEL['mappings']['pycsw:XML']))
             for elemname in self.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
                     elemname.find('Envelope') != -1):
-                    bboxel = write_boundingbox(recobj.wkt_geometry)
+                    bboxel = write_boundingbox(getattr(recobj, 
+                    config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']))
                     if bboxel is not None:
                         record.append(bboxel)
                 else:
                     value = getattr(recobj, queryables[elemname]['dbcol'])
                     if value:
                         etree.SubElement(record,
-                        util.nspath_eval(elemname)).text=value
+                        util.nspath_eval(elemname)).text = value
         elif self.kvp.has_key('elementsetname'):
             if (self.kvp['elementsetname'] == 'full' and
             recobj.typename == 'csw:Record'):
-                # dump record as is from recobj.xml and exit
-                return etree.fromstring(recobj.xml)
+                # dump record as is and exit
+                return etree.fromstring(getattr(recobj,
+                config.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
             etree.SubElement(record,
-            util.nspath_eval('dc:identifier')).text = recobj.identifier
+            util.nspath_eval('dc:identifier')).text = \
+            getattr(recobj,
+            config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
 
             for i in ['dc:title', 'dc:type']:
                 val = getattr(recobj, queryables[i]['dbcol'])
@@ -1735,10 +1759,11 @@ class Csw(object):
 
             if self.kvp['elementsetname'] in ['summary', 'full']:
                 # add summary elements
-                if recobj.keywords is not None:
-                    for keyword in recobj.keywords.split(','):
+                keywords = getattr(recobj, queryables['dc:subject']['dbcol'])
+                if keywords is not None:
+                    for keyword in keywords.split(','):
                         etree.SubElement(record, 
-                        util.nspath_eval('dc:subject')).text=keyword
+                        util.nspath_eval('dc:subject')).text = keyword
 
                 val = getattr(recobj, queryables['dc:format']['dbcol'])
                 if val:
@@ -1746,8 +1771,10 @@ class Csw(object):
                     util.nspath_eval('dc:format')).text = val
 
                 # links
-                if recobj.links:
-                    links = recobj.links.split('^')
+                rlinks = getattr(recobj,
+                config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+                if rlinks:
+                    links = rlinks.split('^')
                     for link in links:
                         linkset = link.split(',')
                         etree.SubElement(record,
@@ -1770,7 +1797,8 @@ class Csw(object):
                         util.nspath_eval(i)).text = val
 
             # always write out ows:BoundingBox 
-            bboxel = write_boundingbox(recobj.wkt_geometry)
+            bboxel = write_boundingbox(getattr(recobj,
+            config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']))
             if bboxel is not None:
                 record.append(bboxel)
         return record

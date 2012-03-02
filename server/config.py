@@ -51,6 +51,69 @@ NAMESPACES = {
     'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
 }
 
+MD_CORE_MODEL = {
+    'typename': 'pycsw:CoreMetadata',
+    'outputschema': 'http://pycsw.org/metadata',
+    'mappings': {
+        'pycsw:Identifier': 'identifier',
+        'pycsw:Typename': 'typename',
+        'pycsw:Schema': 'schema',
+        'pycsw:MdSource': 'mdsource',
+        'pycsw:InsertDate': 'insert_date',
+        'pycsw:XML': 'xml',
+        'pycsw:AnyText': 'anytext',
+        'pycsw:Language': 'language',
+        'pycsw:Title': 'title',
+        'pycsw:Abstract': 'abstract',
+        'pycsw:Keywords': 'keywords',
+        'pycsw:KeywordType': 'keywordstype',
+        'pycsw:Format': 'format',
+        'pycsw:Source': 'source',
+        'pycsw:Date': 'date',
+        'pycsw:Modified': 'date_modified',
+        'pycsw:Type': 'type',
+        'pycsw:BoundingBox': 'wkt_geometry',
+        'pycsw:CRS': 'crs',
+        'pycsw:AlternateTitle': 'title_alternate',
+        'pycsw:RevisionDate': 'date_revision',
+        'pycsw:CreationDate': 'date_creation',
+        'pycsw:PublicationDate': 'date_publication',
+        'pycsw:OrganizationName': 'organization',
+        'pycsw:SecurityConstraints': 'securityconstraints',
+        'pycsw:ParentIdentifier': 'parentidentifier',
+        'pycsw:TopicCategory': 'topicategory',
+        'pycsw:ResourceLanguage': 'resourcelanguage',
+        'pycsw:GeographicDescriptionCode': 'geodescode',
+        'pycsw:Denominator': 'denominator',
+        'pycsw:DistanceValue': 'distancevalue',
+        'pycsw:DistanceUOM': 'distanceuom',
+        'pycsw:TempExtent_begin': 'time_begin',
+        'pycsw:TempExtent_end': 'time_end',
+        'pycsw:ServiceType': 'servicetype',
+        'pycsw:ServiceTypeVersion': 'servicetypeversion',
+        'pycsw:Operation': 'operation',
+        'pycsw:CouplingType': 'couplingtype',
+        'pycsw:OperatesOn': 'operateson',
+        'pycsw:OperatesOnIdentifier': 'operatesonidentifier',
+        'pycsw:OperatesOnName': 'operatesoname',
+        'pycsw:Degree': 'degree',
+        'pycsw:AccessConstraints': 'accessconstraints',
+        'pycsw:OtherConstraints': 'otherconstraints',
+        'pycsw:Classification': 'classification',
+        'pycsw:ConditionApplyingToAccessAndUse': 'conditionapplyingtoaccessanduse',
+        'pycsw:Lineage': 'lineage',
+        'pycsw:ResponsiblePartyRole': 'responsiblepartyrole',
+        'pycsw:SpecificationTitle': 'specificationtitle',
+        'pycsw:SpecificationDate': 'specificationdate',
+        'pycsw:SpecificationDateType': 'specificationdatetype',
+        'pycsw:Creator': 'creator',
+        'pycsw:Publisher': 'publisher',
+        'pycsw:Contributor': 'contributor',
+        'pycsw:Relation': 'relation',
+        'pycsw:Links': 'links',
+    }
+}
+
 MODEL =  {
     'operations': {
         'GetCapabilities': {
@@ -159,33 +222,42 @@ MODEL =  {
             'queryables': {
                 'SupportedDublinCoreQueryables': {
                     # map OGC queryables to core metadata model
-                    'dc:title': {'xpath': 'dc:title', 'dbcol': 'title'},
-                    'dc:creator': {'xpath': 'dc:creator', 'dbcol': 'creator'},
-                    'dc:subject': {'xpath': 'dc:subject', 'dbcol': 'keywords'},
+                    'dc:title': \
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Title']},
+                    'dc:creator': \
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                    'dc:subject': \
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Keywords']},
                     'dct:abstract': \
-                    {'xpath': 'dct:abstract', 'dbcol': 'abstract'},
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Abstract']},
                     'dc:publisher': \
-                    {'xpath': 'dc:publisher', 'dbcol': 'publisher'},
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Publisher']},
                     'dc:contributor': \
-                    {'xpath': 'dc:contributor', 'dbcol': 'contributor'},
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Contributor']},
                     'dct:modified': \
-                    {'xpath': 'dct:modified', 'dbcol': 'date_modified'},
-                    'dc:date': {'xpath': 'dc:date', 'dbcol': 'date'},
-                    'dc:type': {'xpath': 'dc:type', 'dbcol': 'type'},
-                    'dc:format': {'xpath': 'dc:format', 'dbcol': 'format'},
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Modified']},
+                    'dc:date': \
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Date']},
+                    'dc:type': \
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Type']},
+                    'dc:format': \
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Format']},
                     'dc:identifier': \
-                    {'xpath': 'dc:identifier', 'dbcol': 'identifier'},
-                    'dc:source': {'xpath': 'dc:source', 'dbcol': 'source'},
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Identifier']},
+                    'dc:source': \
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Source']},
                     'dc:language': \
-                    {'xpath': 'dc:language', 'dbcol': 'language'},
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Language']},
                     'dc:relation': \
-                    {'xpath': 'dc:relation', 'dbcol': 'relation'},
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Relation']},
                     'dc:rights': \
-                    {'xpath': 'dc:rights', 'dbcol': 'accessconstraints'},
+                    {'dbcol': \
+                     MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
                     # bbox and full text map to internal fixed columns
                     'ows:BoundingBox': \
-                    {'xpath': 'ows:BoundingBox', 'dbcol': 'wkt_geometry'},
-                    'csw:AnyText': {'xpath': 'csw:AnyText', 'dbcol':'anytext'}
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:BoundingBox']},
+                    'csw:AnyText': \
+                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:AnyText']},
                 }
             }
         }

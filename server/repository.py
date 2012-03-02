@@ -33,7 +33,7 @@
 from sqlalchemy import create_engine, desc, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
-import util
+import config, util
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
@@ -78,8 +78,11 @@ class Repository(object):
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
+        column = getattr(self.dataset, \
+        config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+
         query = self.session.query(
-        self.dataset).filter(self.dataset.identifier.in_(ids))
+        self.dataset).filter(column.in_(ids))
         return query.all()
 
     def query_domain(self, domain, typenames, domainquerytype='list'):
@@ -95,13 +98,19 @@ class Repository(object):
 
     def query_latest_insert(self):
         ''' Query to get latest update to repository '''
+        column = getattr(self.dataset, \
+        config.MD_CORE_MODEL['mappings']['pycsw:InsertDate'])
+
         return self.session.query(
-        func.max(self.dataset.insert_date)).first()[0]
+        func.max(column)).first()[0]
 
     def query_source(self, source):
         ''' Query by source '''
+        column = getattr(self.dataset, \
+        config.MD_CORE_MODEL['mappings']['pycsw:Source'])
+
         query = self.session.query(self.dataset).filter(
-        self.dataset.source == source)
+        column == source)
         return query.all() 
 
     def query(self, constraint, sortby=None, typenames=None,
@@ -157,6 +166,13 @@ class Repository(object):
     def update(self, record=None, recprops=None, constraint=None):
         ''' Update a record in the repository based on identifier '''
 
+        identifier = getattr(record,
+        config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+        xml = getattr(self.dataset,
+        config.MD_CORE_MODEL['mappings']['pycsw:XML'])
+        anytext = getattr(self.dataset,
+        config.MD_CORE_MODEL['mappings']['pycsw:AnyText'])
+
         if recprops is None and constraint is None:  # full update
 
             update_dict = dict([(getattr(self.dataset, key),
@@ -166,7 +182,7 @@ class Repository(object):
             try:
                 self.session.begin()
                 self.session.query(self.dataset).filter_by(
-                identifier=record.identifier).update(update_dict)
+                identifier=identifier).update(update_dict)
                 self.session.commit()
             except Exception, err:
                 self.session.rollback()
@@ -181,14 +197,14 @@ class Repository(object):
                         constraint['where']).update({
                             getattr(self.dataset,
                             rpu['rp']['dbcol']): rpu['value'],
-                            self.dataset.xml: func.update_xpath(
-                            self.dataset.xml, str(rpu)),
+                            xml: func.update_xpath(
+                            xml, str(rpu)),
                         }, synchronize_session='fetch')
                     # then update anytext tokens
                     rows2 += self.session.query(self.dataset).filter(
                         constraint['where']).update({
-                            self.dataset.anytext: func.get_anytext(
-                            self.dataset.xml)
+                            anytext: func.get_anytext(
+                            xml)
                         }, synchronize_session='fetch')
                 self.session.commit()
                 return rows
