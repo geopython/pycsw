@@ -500,7 +500,6 @@ class APISO(profile.Profile):
             if val:
                 for v in val.split(','):
                     tmp = etree.SubElement(resident, util.nspath_eval('gmd:topicCategory'))
-                    tmp.append(_write_codelist_element('gmd:CI_DateTypeCode', datetypeval))
                     etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
 
         # bbox extent
