@@ -229,7 +229,7 @@ MODEL =  {
             'outputschema': 'http://www.opengis.net/cat/csw/2.0.2',
             'queryables': {
                 'SupportedDublinCoreQueryables': {
-                    # map OGC queryables to core metadata model
+                    # map Dublin Core queryables to core metadata model
                     'dc:title': \
                     {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Title']},
                     'dc:creator': \
@@ -282,3 +282,31 @@ def gen_domains():
             domain['parameters']['ParameterName']['values'].append('%s.%s' %
             (operation, parameter))
     return domain
+
+def refresh_dc(mappings):
+    ''' Refresh Dublin Core mappings '''
+
+    defaults = {
+        'dc:title': 'pycsw:Title',
+        'dc:creator': 'pycsw:Creator',
+        'dc:subject': 'pycsw:Keywords',
+        'dct:abstract': 'pycsw:Abstract',
+        'dc:publisher': 'pycsw:Publisher',
+        'dc:contributor': 'pycsw:Contributor',
+        'dct:modified': 'pycsw:Modified',
+        'dc:date': 'pycsw:Date',
+        'dc:type': 'pycsw:Type',
+        'dc:format': 'pycsw:Format',
+        'dc:identifier': 'pycsw:Identifier',
+        'dc:source': 'pycsw:Source',
+        'dc:language': 'pycsw:Language',
+        'dc:relation': 'pycsw:Relation',
+        'dc:rights': 'pycsw:AccessConstraints',
+        'ows:BoundingBox': 'pycsw:BoundingBox',
+        'csw:AnyText': 'pycsw:AnyText',
+    }
+
+    for k, v in defaults.iteritems():
+        MODEL['typenames']['csw:Record']['queryables']\
+        ['SupportedDublinCoreQueryables'][k] = \
+        {'dbcol': mappings['mappings'][v]}

@@ -128,8 +128,22 @@ class Csw(object):
         self.log.debug('Configuration: %s.' % self.config)
         self.log.debug('Model: %s.' % config.MODEL)
 
-        # load profiles
+        # load user-defined mappings if they exist
+        if self.config.has_option('repository', 'mappings'):
+            # override default repository mappings
+            try:
+                module = self.config.get('repository','mappings')
+                modulename = '%s' % os.path.splitext(module)[0].replace(os.sep, '.')
+                self.log.debug('Loading custom repository mappings from %s.' % module)
+                mappings = __import__(modulename)
+                config.MD_CORE_MODEL = mappings.MD_CORE_MODEL
+                config.refresh_dc(mappings.MD_CORE_MODEL)
+            except Exception, err:
+                self.response = self.exceptionreport(
+                'NoApplicableCode', 'service',
+                'Could not load custom repository mappings (repository.mappings): %s' % str(err))
 
+        # load profiles
         self.log.debug('Loading profiles.')
 
         if self.config.has_option('server', 'profiles'):
@@ -150,27 +164,13 @@ class Csw(object):
 
         self.log.debug('NAMESPACES: %s' % config.NAMESPACES)
 
-        # load user-defined mappings if they exist
-        if self.config.has_option('repository', 'mappings'):
-            # override default repository mappings
-            try:
-                module = self.config.get('repository','mappings')
-                modulename = '%s' % os.path.splitext(module)[0].replace(os.sep, '.')
-                self.log.debug('Loading custom repository mappings from %s.' % module)
-                mappings = __import__(modulename)
-                config.MD_CORE_MODEL = mappings.MD_CORE_MODEL
-            except Exception, err:
-                self.response = self.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Could not load custom repository mappings (repository.mappings)')
-
         # init repository
         try:
             self.repository = \
             repository.Repository(self.config.get('repository', 'database'),
             'records', config.MODEL['typenames'])
-
             self.log.debug('Repository loaded: %s.' % self.repository.dbtype)
+
         except Exception, err:
             self.response = self.exceptionreport(
             'NoApplicableCode', 'service',
@@ -1074,35 +1074,42 @@ class Csw(object):
             (self.kvp['startposition'], max1))
 
             for res in results:
-                if (self.kvp['outputschema'] == 
-                    'http://www.opengis.net/cat/csw/2.0.2' and
-                    'csw:Record' in self.kvp['typenames']):
-                    # serialize csw:Record inline
-                    searchresults.append(self._write_record(
-                    res, self.repository.queryables['_all']))
-                elif (self.kvp['outputschema'] ==
-                    'http://www.opengis.net/cat/csw/2.0.2' and
-                    'csw:Record' not in self.kvp['typenames']):
-                    # serialize into csw:Record model
-
-                    for prof in self.profiles['loaded']:  # find source typename
-                        if self.profiles['loaded'][prof].typename in \
-                        self.kvp['typenames']:
-                            typename = self.profiles['loaded'][prof].typename
-                            break
-
-                    util.transform_mappings(self.repository.queryables['_all'],
-                    config.MODEL['typenames'][typename]\
-                    ['mappings']['csw:Record'], reverse=True)
-
-                    searchresults.append(self._write_record(
-                    res, self.repository.queryables['_all']))
-                else:  # use profile serializer
-                    searchresults.append(
-                    self.profiles['loaded'][self.kvp['outputschema']].\
-                    write_record(res, self.kvp['elementsetname'],
-                    self.kvp['outputschema'],
-                    self.repository.queryables['_all']))
+                try:
+                    if (self.kvp['outputschema'] == 
+                        'http://www.opengis.net/cat/csw/2.0.2' and
+                        'csw:Record' in self.kvp['typenames']):
+                        # serialize csw:Record inline
+                        searchresults.append(self._write_record(
+                        res, self.repository.queryables['_all']))
+                    elif (self.kvp['outputschema'] ==
+                        'http://www.opengis.net/cat/csw/2.0.2' and
+                        'csw:Record' not in self.kvp['typenames']):
+                        # serialize into csw:Record model
+    
+                        for prof in self.profiles['loaded']:
+                            # find source typename
+                            if self.profiles['loaded'][prof].typename in \
+                            self.kvp['typenames']:
+                                typename = self.profiles['loaded'][prof].typename
+                                break
+    
+                        util.transform_mappings(self.repository.queryables['_all'],
+                        config.MODEL['typenames'][typename]\
+                        ['mappings']['csw:Record'], reverse=True)
+    
+                        searchresults.append(self._write_record(
+                        res, self.repository.queryables['_all']))
+                    else:  # use profile serializer
+                        searchresults.append(
+                        self.profiles['loaded'][self.kvp['outputschema']].\
+                        write_record(res, self.kvp['elementsetname'],
+                        self.kvp['outputschema'],
+                        self.repository.queryables['_all']))
+                except Exception, err:
+                    self.response = self.exceptionreport(
+                    'NoApplicableCode', 'service',
+                    'Record serialization failed: %s' % str(err))
+                    return self.response
 
         if len(dsresults) > 0:  # return DistributedSearch results
             for resultset in dsresults:
