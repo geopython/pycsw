@@ -155,7 +155,7 @@ class Csw(object):
             # override default repository mappings
             try:
                 module = self.config.get('repository','mappings')
-                modulename='%s' % module.replace('.py','').replace(os.sep, '.')
+                modulename = '%s' % os.path.splitext(module)[0].replace(os.sep, '.')
                 self.log.debug('Loading custom repository mappings from %s.' % module)
                 mappings = __import__(modulename)
                 config.MD_CORE_MODEL = mappings.MD_CORE_MODEL
