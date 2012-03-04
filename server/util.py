@@ -115,7 +115,11 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     if predicate in ['beyond', 'dwithin'] and distance == 'false':
         return 'false'
 
-    bbox1 = loads(bbox_data_wkt)
+    if bbox_data_wkt.find('SRID') != -1:  # it's EWKT; chop off 'SRID=\d+;'
+        bbox1 = loads(bbox_data_wkt.split(';')[-1])
+    else:
+        bbox1 = loads(bbox_data_wkt)
+
     bbox2 = loads(bbox_input_wkt)
 
     # map query to Shapely Binary Predicates:
