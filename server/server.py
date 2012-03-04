@@ -1746,8 +1746,6 @@ class Csw(object):
 
         if (self.kvp.has_key('elementname') and
             len(self.kvp['elementname']) > 0):
-            #xml = etree.fromstring(getattr(recobj,
-            #config.MD_CORE_MODEL['mappings']['pycsw:XML']))
             for elemname in self.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
                     elemname.find('Envelope') != -1):
@@ -1762,7 +1760,8 @@ class Csw(object):
                         util.nspath_eval(elemname)).text = value
         elif self.kvp.has_key('elementsetname'):
             if (self.kvp['elementsetname'] == 'full' and
-            recobj.typename == 'csw:Record'):
+            getattr(recobj, config.MD_CORE_MODEL['mappings']\
+            ['pycsw:Typename']) == 'csw:Record'):
                 # dump record as is and exit
                 return etree.fromstring(getattr(recobj,
                 config.MD_CORE_MODEL['mappings']['pycsw:XML']))
@@ -2043,8 +2042,12 @@ def write_boundingbox(bbox):
     ''' Generate ows:BoundingBox '''
 
     if bbox is not None:
-        tmp = loads(bbox)
+        if bbox.find('SRID') != -1:  # it's EWKT; chop off 'SRID=\d+;'
+            tmp = loads(bbox.split(';')[-1])
+        else:
+            tmp = loads(bbox)
         bbox2 = tmp.envelope.bounds
+
         if len(bbox2) == 4:
             boundingbox = etree.Element(util.nspath_eval('ows:BoundingBox'),
             crs='urn:x-ogc:def:crs:EPSG:6.11:4326', dimensions='2')
