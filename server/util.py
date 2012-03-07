@@ -31,6 +31,7 @@
 # =================================================================
 
 import time
+from datetime import datetime
 from lxml import etree
 import config
 from shapely.wkt import loads
@@ -38,6 +39,14 @@ from shapely.wkt import loads
 def get_today_and_now():
     ''' Get the date, right now, in ISO8601 '''
     return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
+
+def datetime2iso8601(value):
+    ''' Return a datetime value as ISO8601 '''
+    if value.hour == 0 and value.minute == 0 and value.second == 0:
+        # YYYY-MM-DD only
+        return value.strftime('%Y-%m-%d')
+    else:
+        return value.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 def get_time_iso2unix(isotime):
     ''' Convert ISO8601 to UNIX timestamp '''
@@ -215,3 +224,24 @@ def exml2dict(element, namespaces):
     if children:
         d['children']=map(lambda x: exml2dict(x, namespaces), children)
     return d
+
+def getqattr(obj, name):
+    ''' get value of an object, safely '''
+    try:
+        value = getattr(obj, name)
+        if hasattr(value, '__call__'):  # function generated value
+            if name.find('link') != -1:  # link tuple triplet
+                return _linkify(value())
+            return value()
+        elif isinstance(value, datetime):  # datetime object
+            return datetime2iso8601(value)
+        return value
+    except:
+        return None
+
+def _linkify(value):
+    ''' create link format '''
+    out = []
+    for link in value:
+        out.append(','.join(list(link)))
+    return '^'.join(out)
