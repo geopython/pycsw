@@ -1839,11 +1839,8 @@ class Csw(object):
         if (isinstance(self.kvp, dict) and self.kvp.has_key('outputformat') and
             self.kvp['outputformat'] == 'application/json'):
             http_header = 'Content-type:%s\r\n' % self.kvp['outputformat']
-            import json
-            if self.pretty_print:
-                response = json.dumps(util.exml2dict(self.response, config.NAMESPACES), indent=4)
-            else:
-                response = json.dumps(util.exml2dict(self.response, config.NAMESPACES))
+            from formats import fmt_json
+            response = fmt_json.exml2json(self.response, config.NAMESPACES, self.pretty_print)
         else:  # it's XML
             http_header = 'Content-type:%s\r\n' % self.mimetype
             response = etree.tostring(self.response,
