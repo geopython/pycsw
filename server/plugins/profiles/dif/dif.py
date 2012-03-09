@@ -137,11 +137,11 @@ class DIF(profile.Profile):
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
 
-        typename = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+        typename = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
 
         if esn == 'full' and typename == 'dif:DIF':
             # dump record as is and exit
-            return etree.fromstring(getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
+            return etree.fromstring(util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
         if typename == 'csw:Record':  # transform csw:Record -> dif:DIF model mappings
             util.transform_mappings(queryables, REPOSITORY['dif:DIF']['mappings']['csw:Record'])
@@ -151,10 +151,10 @@ class DIF(profile.Profile):
         '%s http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd' % self.namespace
 
         # identifier
-        etree.SubElement(node, util.nspath_eval('dif:Entry_ID')).text = getattr(result, queryables['dif:Identifier']['dbcol'])
+        etree.SubElement(node, util.nspath_eval('dif:Entry_ID')).text = util.getqattr(result, queryables['dif:Identifier']['dbcol'])
 
         # title
-        val = getattr(result, queryables['dif:Entry_Title']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Entry_Title']['dbcol'])
         if not val:
             val = ''
         etree.SubElement(node, util.nspath_eval('dif:Entry_Title')).text = val
@@ -163,27 +163,27 @@ class DIF(profile.Profile):
         citation = etree.SubElement(node, util.nspath_eval('dif:Data_Set_Citation'))
 
         # creator
-        val = getattr(result, queryables['dif:Dataset_Creator']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Dataset_Creator']['dbcol'])
         etree.SubElement(citation, util.nspath_eval('dif:Dataset_Creator')).text = val
 
         # date
-        val = getattr(result, queryables['dif:Dataset_Release_Date']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Dataset_Release_Date']['dbcol'])
         etree.SubElement(citation, util.nspath_eval('dif:Dataset_Release_Date')).text = val
 
         # publisher
-        val = getattr(result, queryables['dif:Dataset_Publisher']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Dataset_Publisher']['dbcol'])
         etree.SubElement(citation, util.nspath_eval('dif:Dataset_Publisher')).text = val
 
         # format
-        val = getattr(result, queryables['dif:Data_Presentation_Form']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Data_Presentation_Form']['dbcol'])
         etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form')).text = val
 
         # iso topic category
-        val = getattr(result, queryables['dif:ISO_Topic_Category']['dbcol'])
+        val = util.getqattr(result, queryables['dif:ISO_Topic_Category']['dbcol'])
         etree.SubElement(node, util.nspath_eval('dif:ISO_Topic_Category')).text = val
 
         # keywords
-        val = getattr(result, queryables['dif:Keyword']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Keyword']['dbcol'])
 
         if val:
             for kw in val.split(','):
@@ -191,45 +191,45 @@ class DIF(profile.Profile):
 
         # temporal
         temporal = etree.SubElement(node, util.nspath_eval('dif:Temporal_Coverage'))
-        val = getattr(result, queryables['dif:Start_Date']['dbcol'])
-        val2 = getattr(result, queryables['dif:Stop_Date']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Start_Date']['dbcol'])
+        val2 = util.getqattr(result, queryables['dif:Stop_Date']['dbcol'])
         etree.SubElement(temporal, util.nspath_eval('dif:Start_Date')).text = val 
         etree.SubElement(temporal, util.nspath_eval('dif:End_Date')).text = val2
 
         # bbox extent
-        val = getattr(result, queryables['dif:Spatial_Coverage']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Spatial_Coverage']['dbcol'])
         bboxel = write_extent(val)
         if bboxel is not None:
             node.append(bboxel)
 
         # access constraints
-        val = getattr(result, queryables['dif:Access_Constraints']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Access_Constraints']['dbcol'])
         etree.SubElement(node, util.nspath_eval('dif:Access_Constraints')).text = val
 
         # language
-        val = getattr(result, queryables['dif:Data_Set_Language']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Data_Set_Language']['dbcol'])
         etree.SubElement(node, util.nspath_eval('dif:Data_Set_Language')).text = val
 
         # contributor
-        val = getattr(result, queryables['dif:Originating_Center']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Originating_Center']['dbcol'])
         etree.SubElement(node, util.nspath_eval('dif:Originating_Center')).text = val
 
         # abstract
-        val = getattr(result, queryables['dif:Summary']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Summary']['dbcol'])
         if not val:
             val = ''
         etree.SubElement(node, util.nspath_eval('dif:Summary')).text = val
 
         # date 
-        val = getattr(result, queryables['dif:DIF_Creation_Date']['dbcol'])
+        val = util.getqattr(result, queryables['dif:DIF_Creation_Date']['dbcol'])
         etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date')).text = val
 
         # URL
-        val = getattr(result, queryables['dif:Related_URL']['dbcol'])
+        val = util.getqattr(result, queryables['dif:Related_URL']['dbcol'])
         url = etree.SubElement(node, util.nspath_eval('dif:Related_URL'))
         etree.SubElement(url, util.nspath_eval('dif:URL')).text = val
 
-        rlinks = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+        rlinks = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
         if rlinks:
             for link in rlinks.split('^'):
                 linkset = link.split(',')
