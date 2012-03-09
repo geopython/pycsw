@@ -91,7 +91,7 @@ def parse(element, queryables, dbtype):
 
         if child.tag == util.nspath_eval('ogc:Not'):
             queries.append("%s = %s" %
-            (_get_spatial_operator(
+            (_get_spatial_operator(queryables['pycsw:BoundingBox'],
             child.xpath('child::*')[0], dbtype), boolean_false))
 
         elif child.tag in \
@@ -99,13 +99,16 @@ def parse(element, queryables, dbtype):
         MODEL['SpatialOperators']['values']]:
             if boq is not None and boq == ' not ':
                 queries.append("%s = %s" %
-                (_get_spatial_operator(child, dbtype), boolean_false))
+                (_get_spatial_operator(queryables['pycsw:BoundingBox'],
+                 child, dbtype), boolean_false))
             else:
                 queries.append("%s = %s" % 
-                (_get_spatial_operator(child, dbtype), boolean_true))
+                (_get_spatial_operator(queryables['pycsw:BoundingBox'],
+                 child, dbtype), boolean_true))
 
         elif child.tag == util.nspath_eval('ogc:FeatureId'):
-            queries.append("identifier = '%s'" % child.attrib.get('fid'))
+            queries.append("%s = '%s'" % (queryables['pycsw:Identifier'],
+            child.attrib.get('fid')))
 
         else:
             fname = None
@@ -183,7 +186,7 @@ def parse(element, queryables, dbtype):
 
     return where
 
-def _get_spatial_operator(element, dbtype):
+def _get_spatial_operator(geomattr, element, dbtype):
     ''' return the spatial predicate function '''
     property_name = element.find(util.nspath_eval('ogc:PropertyName'))
     distance = element.find(util.nspath_eval('ogc:Distance'))
@@ -208,19 +211,19 @@ def _get_spatial_operator(element, dbtype):
             spatial_predicate = 'intersects'
 
         if spatial_predicate == 'beyond':
-            spatial_query = "ifnull(distance(geomfromtext(wkt_geometry), \
+            spatial_query = "ifnull(distance(geomfromtext(%s), \
             geomfromtext('%s')) > convert(%s, signed),false)" % \
-            (geometry.wkt, distance)
+            (geomattr, geometry.wkt, distance)
         elif spatial_predicate == 'dwithin':
-            spatial_query = "ifnull(distance(geomfromtext(wkt_geometry), \
+            spatial_query = "ifnull(distance(geomfromtext(%s), \
             geomfromtext('%s')) <= convert(%s, signed),false)" % \
-            (geometry.wkt, distance)
+            (geomattr, geometry.wkt, distance)
         else:
-            spatial_query = "ifnull(%s(geomfromtext(wkt_geometry), \
-            geomfromtext('%s')),false)" % (spatial_predicate, geometry.wkt)
+            spatial_query = "ifnull(%s(geomfromtext(%s), \
+            geomfromtext('%s')),false)" % (spatial_predicate, geomattr, geometry.wkt)
     else:
-        spatial_query = "query_spatial(wkt_geometry,'%s','%s','%s')" % \
-        (geometry.wkt, spatial_predicate, distance)
+        spatial_query = "query_spatial(%s,'%s','%s','%s')" % \
+        (geomattr, geometry.wkt, spatial_predicate, distance)
 
     return spatial_query
 

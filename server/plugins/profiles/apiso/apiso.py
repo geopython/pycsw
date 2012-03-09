@@ -415,7 +415,7 @@ class APISO(profile.Profile):
 
         if esn in ['summary', 'full']:
             # contact
-            val = util.getaattr(result, queryables['apiso:OrganisationName']['dbcol'])
+            val = util.getqattr(result, queryables['apiso:OrganisationName']['dbcol'])
             contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
             if val:
                 CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
