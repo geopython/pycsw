@@ -381,10 +381,10 @@ class APISO(profile.Profile):
 
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
-        typename = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+        typename = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
         if (esn == 'full' and typename == 'gmd:MD_Metadata'):
             # dump record as is and exit
-            return etree.fromstring(getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
+            return etree.fromstring(util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
         if typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
             util.transform_mappings(queryables, REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'])
@@ -394,28 +394,28 @@ class APISO(profile.Profile):
         '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
 
         # identifier
-        idval = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+        idval = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
 
         identifier = etree.SubElement(node, util.nspath_eval('gmd:fileIdentifier'))
         etree.SubElement(identifier, util.nspath_eval('gco:CharacterString')).text = idval
 
         if esn in ['summary', 'full']:
             # language
-            val = getattr(result, queryables['apiso:Language']['dbcol'])
+            val = util.getqattr(result, queryables['apiso:Language']['dbcol'])
 
             lang = etree.SubElement(node, util.nspath_eval('gmd:language'))
             etree.SubElement(lang, util.nspath_eval('gco:CharacterString')).text = val
 
         # hierarchyLevel
-        val = getattr(result, queryables['apiso:Type']['dbcol'])
+        mtype = util.getqattr(result, queryables['apiso:Type']['dbcol']) or None
 
-        if val is not None: 
+        if mtype is not None: 
             hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel'))
-            hierarchy.append(_write_codelist_element('gmd:MD_ScopeCode', val))
+            hierarchy.append(_write_codelist_element('gmd:MD_ScopeCode', mtype))
 
         if esn in ['summary', 'full']:
             # contact
-            val = getattr(result, queryables['apiso:OrganisationName']['dbcol'])
+            val = util.getaattr(result, queryables['apiso:OrganisationName']['dbcol'])
             contact = etree.SubElement(node, util.nspath_eval('gmd:contact'))
             if val:
                 CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty'))
@@ -423,7 +423,7 @@ class APISO(profile.Profile):
                 etree.SubElement(org_name, util.nspath_eval('gco:CharacterString')).text = val
 
             # date
-            val = getattr(result, queryables['apiso:Modified']['dbcol'])
+            val = util.getqattr(result, queryables['apiso:Modified']['dbcol'])
             date = etree.SubElement(node, util.nspath_eval('gmd:dateStamp'))
             if val and val.find('T') != -1:
                 dateel = 'gco:DateTime'
@@ -434,7 +434,7 @@ class APISO(profile.Profile):
             metadatastandardname = 'ISO19115'
             metadatastandardversion = '2003/Cor.1:2006'
 
-            if result.type == 'service':
+            if mtype == 'service':
                 metadatastandardname = 'ISO19119'
                 metadatastandardversion = '2005/PDAM 1'
 
@@ -447,10 +447,10 @@ class APISO(profile.Profile):
             etree.SubElement(standardver, util.nspath_eval('gco:CharacterString')).text = metadatastandardversion
 
         # title
-        val = getattr(result, queryables['apiso:Title']['dbcol']) or ''
+        val = util.getqattr(result, queryables['apiso:Title']['dbcol']) or ''
         identification = etree.SubElement(node, util.nspath_eval('gmd:identificationInfo'))
 
-        if result.type == 'service':
+        if mtype == 'service':
            restagname = 'srv:SV_ServiceIdentification'
         else:
            restagname = 'gmd:MD_DataIdentification'
@@ -462,26 +462,26 @@ class APISO(profile.Profile):
         etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString')).text = val
 
         # creation date
-        val = getattr(result, queryables['apiso:CreationDate']['dbcol'])
+        val = util.getqattr(result, queryables['apiso:CreationDate']['dbcol'])
         if val is not None:
             tmp3.append(_write_date(val, 'creation'))
         # publication date
-        val = getattr(result, queryables['apiso:PublicationDate']['dbcol'])
+        val = util.getqattr(result, queryables['apiso:PublicationDate']['dbcol'])
         if val is not None:
             tmp3.append(_write_date(val, 'publication'))
         # revision date
-        val = getattr(result, queryables['apiso:RevisionDate']['dbcol']) or getattr(result, queryables['apiso:Modified']['dbcol'])
+        val = util.getqattr(result, queryables['apiso:RevisionDate']['dbcol']) or util.getqattr(result, queryables['apiso:Modified']['dbcol'])
         if val is not None:
             tmp3.append(_write_date(val, 'revision'))
 
         if esn in ['summary', 'full']:
             # abstract
-            val = getattr(result, queryables['apiso:Abstract']['dbcol']) or ''
+            val = util.getqattr(result, queryables['apiso:Abstract']['dbcol']) or ''
             tmp = etree.SubElement(resident, util.nspath_eval('gmd:abstract'))
             etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
 
             # spatial resolution
-            val = getattr(result, queryables['apiso:Denominator']['dbcol'])
+            val = util.getqattr(result, queryables['apiso:Denominator']['dbcol'])
             if val:
                 tmp = etree.SubElement(resident, util.nspath_eval('gmd:spatialResolution'))
                 tmp2 = etree.SubElement(tmp, util.nspath_eval('gmd:MD_Resolution'))
@@ -491,30 +491,30 @@ class APISO(profile.Profile):
                 etree.SubElement(tmp5, util.nspath_eval('gco:Integer')).text = str(val)
 
             # resource language
-            val = getattr(result, queryables['apiso:ResourceLanguage']['dbcol'])
+            val = util.getqattr(result, queryables['apiso:ResourceLanguage']['dbcol'])
             tmp = etree.SubElement(resident, util.nspath_eval('gmd:language'))
             etree.SubElement(tmp, util.nspath_eval('gco:CharacterString')).text = val
 
             # topic category
-            val = getattr(result, queryables['apiso:TopicCategory']['dbcol'])
+            val = util.getqattr(result, queryables['apiso:TopicCategory']['dbcol'])
             if val:
                 for v in val.split(','):
                     tmp = etree.SubElement(resident, util.nspath_eval('gmd:topicCategory'))
                     etree.SubElement(tmp, util.nspath_eval('gmd:MD_TopicCategoryCode')).text = val
 
         # bbox extent
-        val = getattr(result, queryables['apiso:BoundingBox']['dbcol'])
+        val = util.getqattr(result, queryables['apiso:BoundingBox']['dbcol'])
         bboxel = write_extent(val)
-        if bboxel is not None and result.type != 'service':
+        if bboxel is not None and mtype != 'service':
             resident.append(bboxel)
 
         # service identification
 
-        if result.type == 'service':
+        if mtype == 'service':
             # service type
             # service type version
-            val = getattr(result, queryables['apiso:ServiceType']['dbcol'])
-            val2 = getattr(result, queryables['apiso:ServiceTypeVersion']['dbcol'])
+            val = util.getqattr(result, queryables['apiso:ServiceType']['dbcol'])
+            val2 = util.getqattr(result, queryables['apiso:ServiceTypeVersion']['dbcol'])
             if val is not None:
                 tmp = etree.SubElement(resident, util.nspath_eval('srv:serviceType'))
                 etree.SubElement(tmp, util.nspath_eval('gco:LocalName')).text = val
@@ -525,15 +525,15 @@ class APISO(profile.Profile):
                 bboxel.tag = util.nspath_eval('srv:extent')
                 resident.append(bboxel)
 
-            val = getattr(result, queryables['apiso:CouplingType']['dbcol'])
+            val = util.getqattr(result, queryables['apiso:CouplingType']['dbcol'])
             if val is not None:
                 couplingtype = etree.SubElement(resident, util.nspath_eval('srv:couplingType'))
                 etree.SubElement(couplingtype, util.nspath_eval('srv:SV_CouplingType'), codeListValue=val, codeList='%s#SV_CouplingType' % CODELIST).text = val
 
             if esn in ['summary', 'full']:
                 # all service resources as coupled resources
-                coupledresources = getattr(result, queryables['apiso:OperatesOn']['dbcol'])
-                operations = getattr(result, queryables['apiso:Operation']['dbcol'])
+                coupledresources = util.getqattr(result, queryables['apiso:OperatesOn']['dbcol'])
+                operations = util.getqattr(result, queryables['apiso:Operation']['dbcol'])
 
                 if coupledresources:
                     for val2 in coupledresources.split(','):
@@ -562,14 +562,15 @@ class APISO(profile.Profile):
                         connectpoint = etree.SubElement(tmp, util.nspath_eval('srv:connectPoint'))
                         onlineres = etree.SubElement(connectpoint, util.nspath_eval('gmd:CI_OnlineResource'))
                         linkage = etree.SubElement(onlineres, util.nspath_eval('gmd:linkage'))
-                        etree.SubElement(linkage, util.nspath_eval('gmd:URL')).text = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Source'])
+                        etree.SubElement(linkage, util.nspath_eval('gmd:URL')).text = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Source'])
 
                 # operates on resource(s)
                 if coupledresources:
                     for i in coupledresources.split(','):
                         etree.SubElement(resident, util.nspath_eval('srv:operatesOn'), uuidref=i)
 
-        rlinks = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+        rlinks = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+
         if rlinks:
             distinfo = etree.SubElement(node, util.nspath_eval('gmd:distributionInfo'))
             distinfo2 = etree.SubElement(distinfo, util.nspath_eval('gmd:MD_Distribution'))
@@ -610,7 +611,10 @@ def write_extent(bbox):
         south = etree.SubElement(gbb, util.nspath_eval('gmd:southBoundLatitude'))
         north = etree.SubElement(gbb, util.nspath_eval('gmd:northBoundLatitude'))
 
-        bbox2 = loads(bbox).envelope.bounds
+        if bbox.find('SRID') != -1:  # it's EWKT; chop off 'SRID=\d+;'
+            bbox2 = loads(bbox.split(';')[-1]).envelope.bounds
+        else:
+            bbox2 = loads(bbox).envelope.bounds
 
         etree.SubElement(west, util.nspath_eval('gco:Decimal')).text = str(bbox2[0])
         etree.SubElement(south, util.nspath_eval('gco:Decimal')).text = str(bbox2[1])
@@ -652,3 +656,4 @@ def _write_codelist_element(codelist_element, codelist_value):
     element.text = codelist_value
 
     return element
+

@@ -118,8 +118,8 @@ class EBRIM(profile.Profile):
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
 
-        identifier = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
-        typename = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+        identifier = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+        typename = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
 
         if esn == 'full' and typename == 'rim:RegistryObject':
             # dump record as is and exit
@@ -134,13 +134,13 @@ class EBRIM(profile.Profile):
 
         node.attrib['id'] = identifier
         node.attrib['lid'] = identifier
-        node.attrib['objectType'] = str(getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Type']))
+        node.attrib['objectType'] = str(util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Type']))
         node.attrib['status'] = 'urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted'
 
         etree.SubElement(node, util.nspath_eval('rim:VersionInfo'), versionName='')
 
         if esn == 'summary':
-            etree.SubElement(node, util.nspath_eval('rim:ExternalIdentifier'), value=identifier, identificationScheme='foo', registryObject=str(getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Relation']), id=identifier))
+            etree.SubElement(node, util.nspath_eval('rim:ExternalIdentifier'), value=identifier, identificationScheme='foo', registryObject=str(util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Relation']), id=identifier))
 
             name = etree.SubElement(node, util.nspath_eval('rim:Name'))
             etree.SubElement(name, util.nspath_eval('rim:LocalizedString'), value=unicode(result.title))
@@ -148,7 +148,7 @@ class EBRIM(profile.Profile):
             description = etree.SubElement(node, util.nspath_eval('rim:Description'))
             etree.SubElement(description, util.nspath_eval('rim:LocalizedString'), value=unicode(result.abstract))
 
-            val = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox'])
+            val = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox'])
             bboxel = server.write_boundingbox(val)
 
             if bboxel is not None:
@@ -159,7 +159,7 @@ class EBRIM(profile.Profile):
                 value = etree.SubElement(valuelist, util.nspath_eval('rim:Value'))
                 value.append(bboxel)
 
-            rkeywords = getattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Keywords'])
+            rkeywords = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Keywords'])
             if rkeywords is not None:
                 subjectslot = etree.SubElement(node, util.nspath_eval('rim:Slot'),
                 name='http://purl.org/dc/elements/1.1/subject')
