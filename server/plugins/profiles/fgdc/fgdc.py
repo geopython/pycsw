@@ -138,10 +138,10 @@ class FGDC(profile.Profile):
 
     def write_record(self, recobj, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
-        typename = getattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+        typename = util.getqattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
         if esn == 'full' and typename == 'fgdc:metadata':
             # dump record as is and exit
-            return etree.fromstring(getattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
+            return etree.fromstring(util.getqattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
         if typename == 'csw:Record':
             # transform csw:Record -> fgdc:metadata model mappings
@@ -154,26 +154,26 @@ class FGDC(profile.Profile):
 
         idinfo = etree.SubElement(node, 'idinfo')
         # identifier
-        etree.SubElement(idinfo, 'datasetid').text = getattr(recobj, queryables['fgdc:Identifier']['dbcol'])
+        etree.SubElement(idinfo, 'datasetid').text = util.getqattr(recobj, queryables['fgdc:Identifier']['dbcol'])
 
         citation = etree.SubElement(idinfo, 'citation')
         citeinfo = etree.SubElement(citation, 'citeinfo')
 
         # title
-        val = getattr(recobj, queryables['fgdc:Title']['dbcol'])
+        val = util.getqattr(recobj, queryables['fgdc:Title']['dbcol'])
         etree.SubElement(citeinfo, 'title').text = val
 
         # publisher
         publinfo = etree.SubElement(citeinfo, 'publinfo')
-        val = getattr(recobj, queryables['fgdc:Publisher']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:Publisher']['dbcol']) or ''
         etree.SubElement(publinfo, 'publish').text = val
 
         # origin
-        val = getattr(recobj, queryables['fgdc:Origin']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:Origin']['dbcol']) or ''
         etree.SubElement(citeinfo, 'origin').text = val
 
         # keywords
-        val = getattr(recobj, queryables['fgdc:ThemeKeywords']['dbcol'])
+        val = util.getqattr(recobj, queryables['fgdc:ThemeKeywords']['dbcol'])
         if val:
             keywords = etree.SubElement(idinfo, 'keywords')
             theme = etree.SubElement(keywords, 'theme')
@@ -181,17 +181,17 @@ class FGDC(profile.Profile):
                 etree.SubElement(theme, 'themekey').text = v
 
         # accessconstraints
-        val = getattr(recobj, queryables['fgdc:AccessConstraints']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:AccessConstraints']['dbcol']) or ''
         etree.SubElement(idinfo, 'accconst').text = val
 
         # abstract
         descript = etree.SubElement(idinfo, 'descript')
-        val = getattr(recobj, queryables['fgdc:Abstract']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:Abstract']['dbcol']) or ''
         etree.SubElement(descript, 'abstract').text = val
 
         # time
-        datebegin = getattr(recobj, queryables['fgdc:BeginDate']['dbcol'])
-        dateend = getattr(recobj, queryables['fgdc:EndDate']['dbcol'])
+        datebegin = util.getqattr(recobj, queryables['fgdc:BeginDate']['dbcol'])
+        dateend = util.getqattr(recobj, queryables['fgdc:EndDate']['dbcol'])
         if all([datebegin, dateend]):
             timeperd = etree.SubElement(idinfo, 'timeperd')
             timeinfo = etree.SubElement(timeperd, 'timeinfo')
@@ -200,18 +200,18 @@ class FGDC(profile.Profile):
             enddate = etree.SubElement(rngdates, 'enddate').text = dateend
 
         # bbox extent
-        val = getattr(recobj, queryables['fgdc:Envelope']['dbcol'])
+        val = util.getqattr(recobj, queryables['fgdc:Envelope']['dbcol'])
         bboxel = write_extent(val)
         if bboxel is not None:
             idinfo.append(bboxel)
 
         # contributor
-        val = getattr(recobj, queryables['fgdc:Contributor']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:Contributor']['dbcol']) or ''
         etree.SubElement(idinfo, 'datacred').text = val
 
         # direct
         spdoinfo = etree.SubElement(idinfo, 'spdoinfo')
-        val = getattr(recobj, queryables['fgdc:Type']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:Type']['dbcol']) or ''
         etree.SubElement(spdoinfo, 'direct').text = val
 
         # formname
@@ -219,7 +219,7 @@ class FGDC(profile.Profile):
         stdorder = etree.SubElement(distinfo, 'stdorder')
         digform = etree.SubElement(stdorder, 'digform')
         digtinfo = etree.SubElement(digform, 'digtinfo')
-        val = getattr(recobj, queryables['fgdc:Format']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:Format']['dbcol']) or ''
         etree.SubElement(digtinfo, 'formname').text = val
         etree.SubElement(citeinfo, 'geoform').text = val
 
@@ -228,14 +228,14 @@ class FGDC(profile.Profile):
         srcinfo = etree.SubElement(lineage, 'srcinfo')
         srccite = etree.SubElement(srcinfo, 'srccite')
         sciteinfo = etree.SubElement(srccite, 'citeinfo')
-        val = getattr(recobj, queryables['fgdc:Source']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:Source']['dbcol']) or ''
         etree.SubElement(sciteinfo, 'title').text = val
 
-        val = getattr(recobj, queryables['fgdc:Relation']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:Relation']['dbcol']) or ''
         etree.SubElement(citeinfo, 'onlink').text = val
 
         # links
-        rlinks = getattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+        rlinks = util.getqattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
         if rlinks:
             for link in rlinks.split('^'):
                 linkset = link.split(',')
@@ -243,7 +243,7 @@ class FGDC(profile.Profile):
 
         # metd
         metainfo = etree.SubElement(node, 'metainfo')
-        val = getattr(recobj, queryables['fgdc:Modified']['dbcol']) or ''
+        val = util.getqattr(recobj, queryables['fgdc:Modified']['dbcol']) or ''
         etree.SubElement(metainfo, 'metd').text = val
 
         return node
