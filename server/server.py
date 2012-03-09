@@ -39,8 +39,8 @@ import urlparse
 from cStringIO import StringIO
 import ConfigParser
 from lxml import etree
-import config, fes, log, metadata, plugins.profiles.profile, repository, util
 from shapely.wkt import loads
+import config, fes, log, metadata, plugins.profiles.profile, repository, util
 
 class Csw(object):
     ''' Base CSW server '''
@@ -132,16 +132,19 @@ class Csw(object):
         if self.config.has_option('repository', 'mappings'):
             # override default repository mappings
             try:
+                import imp
                 module = self.config.get('repository','mappings')
-                modulename = '%s' % os.path.splitext(module)[0].replace(os.sep, '.')
-                self.log.debug('Loading custom repository mappings from %s.' % module)
-                mappings = __import__(modulename)
+                modulename = '%s' % \
+                os.path.splitext(module)[0].replace(os.sep, '.')
+                self.log.debug(
+                'Loading custom repository mappings from %s.' % module)
+                mappings = imp.load_source(modulename, module)
                 config.MD_CORE_MODEL = mappings.MD_CORE_MODEL
                 config.refresh_dc(mappings.MD_CORE_MODEL)
             except Exception, err:
                 self.response = self.exceptionreport(
                 'NoApplicableCode', 'service',
-                'Could not load custom repository mappings (repository.mappings): %s' % str(err))
+                'Could not load repository.mappings %s' % str(err))
 
         # load profiles
         self.log.debug('Loading profiles.')
@@ -165,16 +168,32 @@ class Csw(object):
         self.log.debug('NAMESPACES: %s' % config.NAMESPACES)
 
         # init repository
-        try:
-            self.repository = \
-            repository.Repository(self.config.get('repository', 'database'),
-            'records', config.MODEL['typenames'])
-            self.log.debug('Repository loaded: %s.' % self.repository.dbtype)
+        if (self.config.has_option('repository', 'source') and
+            self.config.get('repository', 'source') == 'geonode'):
 
-        except Exception, err:
-            self.response = self.exceptionreport(
-            'NoApplicableCode', 'service',
-            'Could not load repository: %s' % str(err))
+            # load geonode repository
+            from plugins.repository.geonode import geonode_
+
+            try:
+                self.repository = \
+                geonode_.GeoNodeRepository(config.MODEL['typenames'])
+                self.log.debug('GeoNode repository loaded (geonode): %s.' % \
+                self.repository.dbtype)
+            except Exception, err:
+                self.response = self.exceptionreport(
+                'NoApplicableCode', 'service',
+                'Could not load repository (geonode): %s' % str(err))
+
+        else:  # load default repository
+            try:
+                self.repository = \
+                repository.Repository(self.config.get('repository', 'database'),
+                'records', config.MODEL['typenames'])
+                self.log.debug('Repository loaded (local): %s.' % self.repository.dbtype)
+            except Exception, err:
+                self.response = self.exceptionreport(
+                'NoApplicableCode', 'service',
+                'Could not load repository (local): %s' % str(err))
 
     def dispatch(self):
         ''' Handle incoming HTTP request '''
@@ -1067,9 +1086,12 @@ class Csw(object):
         if self.kvp['resulttype'] == 'hits':
             return node
 
-        max1 = int(self.kvp['startposition']) + int(self.kvp['maxrecords'])
  
         if results is not None:
+            if len(results) < self.kvp['maxrecords']:
+                max1 = len(results)
+            else:
+                max1 = int(self.kvp['startposition']) + (int(self.kvp['maxrecords'])-1)
             self.log.debug('Presenting records %s - %s.' %
             (self.kvp['startposition'], max1))
 
@@ -1192,7 +1214,7 @@ class Csw(object):
 
                 for prof in self.profiles['loaded']:  # find source typename
                     if self.profiles['loaded'][prof].typename in \
-                    [result.typename]:
+                    [util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])]:
                         typename = self.profiles['loaded'][prof].typename
                         break
 
@@ -1749,50 +1771,51 @@ class Csw(object):
             for elemname in self.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
                     elemname.find('Envelope') != -1):
-                    bboxel = write_boundingbox(getattr(recobj, 
+                    bboxel = write_boundingbox(util.getqattr(recobj, 
                     config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']))
                     if bboxel is not None:
                         record.append(bboxel)
                 else:
-                    value = getattr(recobj, queryables[elemname]['dbcol'])
+                    value = util.getqattr(recobj, queryables[elemname]['dbcol'])
                     if value:
                         etree.SubElement(record,
                         util.nspath_eval(elemname)).text = value
         elif self.kvp.has_key('elementsetname'):
             if (self.kvp['elementsetname'] == 'full' and
-            getattr(recobj, config.MD_CORE_MODEL['mappings']\
+            util.getqattr(recobj, config.MD_CORE_MODEL['mappings']\
             ['pycsw:Typename']) == 'csw:Record'):
                 # dump record as is and exit
-                return etree.fromstring(getattr(recobj,
+                return etree.fromstring(util.getqattr(recobj,
                 config.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
             etree.SubElement(record,
             util.nspath_eval('dc:identifier')).text = \
-            getattr(recobj,
+            util.getqattr(recobj,
             config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
 
             for i in ['dc:title', 'dc:type']:
-                val = getattr(recobj, queryables[i]['dbcol'])
+                val = util.getqattr(recobj, queryables[i]['dbcol'])
                 if not val:
                     val = ''
                 etree.SubElement(record, util.nspath_eval(i)).text = val
 
             if self.kvp['elementsetname'] in ['summary', 'full']:
                 # add summary elements
-                keywords = getattr(recobj, queryables['dc:subject']['dbcol'])
+                keywords = util.getqattr(recobj, queryables['dc:subject']['dbcol'])
                 if keywords is not None:
                     for keyword in keywords.split(','):
                         etree.SubElement(record, 
                         util.nspath_eval('dc:subject')).text = keyword
 
-                val = getattr(recobj, queryables['dc:format']['dbcol'])
+                val = util.getqattr(recobj, queryables['dc:format']['dbcol'])
                 if val:
                     etree.SubElement(record,
                     util.nspath_eval('dc:format')).text = val
 
                 # links
-                rlinks = getattr(recobj,
+                rlinks = util.getqattr(recobj,
                 config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+
                 if rlinks:
                     links = rlinks.split('^')
                     for link in links:
@@ -1802,8 +1825,8 @@ class Csw(object):
                         scheme=linkset[2]).text = linkset[-1]
 
                 for i in ['dc:relation', 'dct:modified', 'dct:abstract']:
-                    val = getattr(recobj, queryables[i]['dbcol'])
-                    if val:
+                    val = util.getqattr(recobj, queryables[i]['dbcol'])
+                    if val is not None:
                         etree.SubElement(record,
                         util.nspath_eval(i)).text = val
 
@@ -1811,7 +1834,7 @@ class Csw(object):
                 for i in ['dc:date', 'dc:creator', \
                 'dc:publisher', 'dc:contributor', 'dc:source', \
                 'dc:language', 'dc:rights']:
-                    val = getattr(recobj, queryables[i]['dbcol'])
+                    val = util.getqattr(recobj, queryables[i]['dbcol'])
                     if val:
                         etree.SubElement(record,
                         util.nspath_eval(i)).text = val
@@ -1950,7 +1973,10 @@ class Csw(object):
         self.log.debug(str(mappings.keys()))
         if cql is not None:
             for key in mappings.keys():
-                cql = cql.replace(key, mappings[key]['dbcol'])
+                try:
+                    cql = cql.replace(key, mappings[key]['dbcol'])
+                except:
+                    cql = cql.replace(key, mappings[key])
             self.log.debug('Interpolated CQL text = %s.' % cql)
             return cql
 

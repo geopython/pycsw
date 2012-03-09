@@ -254,7 +254,10 @@ def write_extent(bbox):
     from shapely.wkt import loads
 
     if bbox is not None:
-        bbox2 = loads(bbox).envelope.bounds
+        if bbox.find('SRID') != -1:  # it's EWKT; chop off 'SRID=\d+;'
+            bbox2 = loads(bbox.split(';')[-1]).envelope.bounds
+        else:
+            bbox2 = loads(bbox).envelope.bounds
         spdom = etree.Element('spdom')
         bounding = etree.SubElement(spdom, 'bounding')
         etree.SubElement(bounding, 'westbc').text = str(bbox2[0])
