@@ -37,7 +37,7 @@ import config, util
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, database, table, config):
+    def __init__(self, database, table, qconfig):
         ''' Initialize repository '''
 
         engine = create_engine('%s' % database, echo=False)
@@ -51,7 +51,7 @@ class Repository(object):
 
         self.session = create_session(engine)
 
-        if self.dbtype == 'sqlite':  # load SQLite query bindings
+        if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             self.connection = engine.raw_connection()
             self.connection.create_function(
             'query_spatial', 4, util.query_spatial)
@@ -62,12 +62,12 @@ class Repository(object):
         # generate core queryables db and obj bindings
         self.queryables = {}       
 
-        for tname in config:
-            for qname in config[tname]['queryables']:
+        for tname in qconfig:
+            for qname in qconfig[tname]['queryables']:
                 self.queryables[qname] = {}
 
                 for qkey, qvalue in \
-                config[tname]['queryables'][qname].iteritems():
+                qconfig[tname]['queryables'][qname].iteritems():
                     self.queryables[qname][qkey] = qvalue
 
         # flatten all queryables
@@ -75,6 +75,8 @@ class Repository(object):
         self.queryables['_all'] = {}
         for qbl in self.queryables:
             self.queryables['_all'].update(self.queryables[qbl])
+
+        self.queryables['_all'].update(config.MD_CORE_MODEL['mappings'])
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''

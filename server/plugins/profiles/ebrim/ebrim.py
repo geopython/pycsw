@@ -140,7 +140,7 @@ class EBRIM(profile.Profile):
         etree.SubElement(node, util.nspath_eval('rim:VersionInfo'), versionName='')
 
         if esn == 'summary':
-            etree.SubElement(node, util.nspath_eval('rim:ExternalIdentifier'), value=identifier, identificationScheme='foo', registryObject=str(util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Relation']), id=identifier))
+            etree.SubElement(node, util.nspath_eval('rim:ExternalIdentifier'), value=identifier, identificationScheme='foo', registryObject=str(util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Relation'])), id=identifier)
 
             name = etree.SubElement(node, util.nspath_eval('rim:Name'))
             etree.SubElement(name, util.nspath_eval('rim:LocalizedString'), value=unicode(result.title))
