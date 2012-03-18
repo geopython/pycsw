@@ -114,7 +114,7 @@ class Csw(object):
             self.gzip_compresslevel = \
             int(self.config.get('server', 'gzip_compresslevel'))
         else:
-            self.gzip_compresslevel = 9
+            self.gzip_compresslevel = 0
 
         # generate distributed search model, if specified in config
         if self.config.has_option('server', 'federatedcatalogues'):
@@ -246,6 +246,12 @@ class Csw(object):
             config.MODEL['operations']['GetRecords']['parameters']\
             ['typeNames']['values'])
 
+        if (isinstance(self.kvp, str) is False and
+        self.kvp.has_key('mode') and self.kvp['mode'] == 'opensearch'):
+            self.mode = 'opensearch'
+            self.log.debug('OpenSearch mode detected; processing request.')
+            self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
+
         if error == 0:
             # test for the basic keyword values (service, version, request)
             for k in ['service', 'version', 'request']:
@@ -350,6 +356,10 @@ class Csw(object):
         if self.mode == 'sru':
             self.log.debug('SRU mode detected; processing response.')
             self.response = sru.response_csw2sru(self.response)
+        elif self.mode == 'opensearch':
+            import opensearch
+            self.log.debug('OpenSearch mode detected; processing response.')
+            self.response = opensearch.response_csw2opensearch(self.response)
 
         self._write_response()
 
@@ -1874,12 +1884,12 @@ class Csw(object):
         if hasattr(self, 'log'):
             self.log.debug('Response:\n%s' % response)
 
-        if self.gzip:
+        if self.gzip and self.gzip_compresslevel > 0:
             import gzip
 
             buf = StringIO()
-            gzipfile = gzip.GzipFile(mode='wb', fileobj = buf,
-            compresslevel = self.gzip_compresslevel)
+            gzipfile = gzip.GzipFile(mode='wb', fileobj=buf,
+            compresslevel=self.gzip_compresslevel)
             gzipfile.write('%s%s%s' % (xmldecl, appinfo, response))
             gzipfile.close()
 
