@@ -359,7 +359,8 @@ class Csw(object):
         elif self.mode == 'opensearch':
             import opensearch
             self.log.debug('OpenSearch mode detected; processing response.')
-            self.response = opensearch.response_csw2opensearch(self.response)
+            self.response = opensearch.response_csw2opensearch(self.response,
+                 self.config)
 
         self._write_response()
 

@@ -1,0 +1,1 @@
+opensearch,PYCSW_SERVER?config=tester/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&resulttype=results&elementsetname=brief
