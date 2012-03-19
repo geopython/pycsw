@@ -18,6 +18,7 @@ pycsw |release| Documentation
    administration
    distributedsearching
    sru
+   opensearch
    soap
    sitemaps
    transactions

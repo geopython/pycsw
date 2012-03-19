@@ -36,6 +36,7 @@ import getopt
 import os
 import sys
 from glob import glob
+from urlparse import urlparse
 
 from lxml import etree
 from server import config, metadata, repository, util
@@ -336,6 +337,37 @@ def gen_sitemap(DATABASE, URL, OUTPUT_FILE):
         of.write(etree.tostring(URLSET, pretty_print=1,
         encoding='utf8', xml_declaration=1))
 
+def gen_opensearch_description(METADATA, URL, OUTPUT_FILE):
+    ''' generate an OpenSearch Description document '''
+
+    node0 = etree.Element('OpenSearchDescription', nsmap= {None: config.NAMESPACES['os']})
+
+    etree.SubElement(node0, 'ShortName').text = 'pycsw'
+    etree.SubElement(node0, 'LongName').text =  METADATA['identification_title']
+    etree.SubElement(node0, 'Description').text = METADATA['identification_abstract']
+    etree.SubElement(node0, 'Tags').text = \
+    ' '.join(METADATA['identification_keywords'].split(','))
+
+    node1 = etree.SubElement(node0, 'Url')
+    node1.set('type', 'text/html')
+    node1.set('method', 'get')
+    node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=brief&typenames=csw:Record,gmd:MD_Metadata,fgdc:metadata,dif:DIF&resulttype=results&constraintlanguage=CQL_TEXT&constraint_language_version=1.1.0&constraint=csw:AnyText like "%%{searchTerms}%%" ' % URL)
+
+    node1 = etree.SubElement(node0, 'Image')
+    node1.set('type', 'image/vnd.microsoft.icon')
+    node1.set('width', '16')
+    node1.set('height', '16')
+    node1.text = 'http://pycsw.org/_static/favicon.ico'
+
+    etree.SubElement(node0, 'Developer').text = METADATA['contact_name']
+    etree.SubElement(node0, 'Contact').text = METADATA['contact_email']
+    etree.SubElement(node0, 'Attribution').text = METADATA['provider_name']
+
+    # write to file
+    with open(OUTPUT_FILE, 'w') as of:
+        of.write(etree.tostring(node0, pretty_print=1,
+        encoding='UTF-8', xml_declaration=1))
+
 def usage():
     ''' Provide usage instructions '''
     return '''
@@ -355,6 +387,7 @@ SYNOPSIS
               - optimize_db
               - refresh_harvested_records
               - gen_sitemap
+              - gen_opensearch_description
 
     -f    Filepath to pycsw configuration
 
@@ -400,6 +433,10 @@ EXAMPLES
     7.) gen_sitemap: Generate XML Sitemap
 
         pycsw-admin.py -c gen_sitemap -f default.cfg -o /path/to/sitemap.xml
+
+    8.) gen_opensearch_description: Generate OpenSearch Description document
+
+        pycsw-admin.py -c gen_opensearch_description -f default.cfg -o /path/to/opensearch.xml
 '''
 
 COMMAND = None
@@ -440,7 +477,7 @@ if COMMAND is None:
 
 if COMMAND not in ['setup_db', 'load_records', 'export_records', \
     'rebuild_db_indexes', 'optimize_db', 'refresh_harvested_records', \
-    'gen_sitemap']:
+    'gen_sitemap', 'gen_opensearch_description']:
     print 'ERROR: invalid command name: %s' % operation
     sys.exit(5)
 
@@ -452,7 +489,8 @@ if COMMAND in ['load_records', 'export_records'] and XML_DIRPATH is None:
     print 'ERROR: -p </path/to/records> is a required argument'
     sys.exit(7)
 
-if COMMAND == 'gen_sitemap' and OUTPUT_FILE is None:
+if (COMMAND in ['gen_sitemap', 'gen_opensearch_description']
+    and OUTPUT_FILE is None):
     print 'ERROR: -o </path/to/sitemap.xml> is a required argument'
     sys.exit(8)
 
@@ -462,6 +500,7 @@ SCP.readfp(open(CFG))
 DATABASE = SCP.get('repository', 'database')
 URL = SCP.get('server', 'url')
 HOME = SCP.get('server', 'home')
+METADATA = dict(SCP.items('metadata:main'))
 
 if COMMAND == 'setup_db': 
     setup_db(DATABASE, HOME)
@@ -477,5 +516,7 @@ elif COMMAND == 'refresh_harvested_records':
     refresh_harvested_records(DATABASE, URL)
 elif COMMAND == 'gen_sitemap':
     gen_sitemap(DATABASE, URL, OUTPUT_FILE)
+elif COMMAND == 'gen_opensearch_description':
+    gen_opensearch_description(METADATA, URL, OUTPUT_FILE)
 
 print 'Done'
