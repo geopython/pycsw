@@ -8,12 +8,14 @@ pycsw is an OGC CSW server implementation written in Python.
 Features
 ========
 
+- fully implements OGC CSW 2.0.2
 - fully passes the `OGC CITE CSW`_ test suite (103/103)
 - implements `INSPIRE Discovery Services 3.0`_
 - implements `ISO Metadata Application Profile 1.0.0`_
 - implements `FGDC CSDGM Application Profile for CSW 2.0`_
 - implements the Search/Retrieval via URL (`SRU`_) search protocol
-- supports ISO, Dublin Core, DIF, FGDC metadata models
+- implements OpenSearch
+- supports ISO, Dublin Core, DIF, FGDC and Atom metadata models
 - simple configuration
 - transactional capabilities (CSW-T)
 - flexible repository configuration
