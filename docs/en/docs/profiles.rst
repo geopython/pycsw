@@ -70,3 +70,4 @@ Supported Profiles
 .. include:: ../../../server/plugins/profiles/dif/docs/dif.rst
 .. include:: ../../../server/plugins/profiles/fgdc/docs/fgdc.rst
 .. include:: ../../../server/plugins/profiles/ebrim/docs/ebrim.rst
+.. include:: ../../../server/plugins/profiles/atom/docs/atom.rst
