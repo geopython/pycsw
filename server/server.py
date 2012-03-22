@@ -562,7 +562,7 @@ class Csw(object):
             metadata_main.get('contact_instructions', 'missing')
 
             etree.SubElement(servicecontact,
-            util.nspath_eval('ows:Role')).text = \
+            util.nspath_eval('ows:Role'), codeSpace='ISOTC211/19115').text = \
             metadata_main.get('contact_role', 'missing')
 
         if operationsmetadata:
