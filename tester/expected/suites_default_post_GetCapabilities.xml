@@ -37,7 +37,7 @@
         <ows:HoursOfService>0800h - 1600h EST</ows:HoursOfService>
         <ows:ContactInstructions>During hours of service.  Off on weekends.</ows:ContactInstructions>
       </ows:ContactInfo>
-      <ows:Role>pointOfContact</ows:Role>
+      <ows:Role codeSpace="ISOTC211/19115">pointOfContact</ows:Role>
     </ows:ServiceContact>
   </ows:ServiceProvider>
   <ows:OperationsMetadata>

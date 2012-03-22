@@ -3,7 +3,6 @@
 <atom:feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <atom:id>http://localhost/pycsw/csw.py?config=tester/suites/atom/default.cfg</atom:id>
   <atom:title>pycsw Geospatial Catalogue</atom:title>
-  <atom:updated>2012-03-19T01:07:27Z</atom:updated>
   <opensearch:totalResults>12</opensearch:totalResults>
   <opensearch:startIndex>1</opensearch:startIndex>
   <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
