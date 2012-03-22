@@ -56,7 +56,7 @@ def response_csw2opensearch(element, cfg):
         node = etree.Element(util.nspath_eval('atom:feed'), nsmap=NAMESPACES)
         etree.SubElement(node, util.nspath_eval('atom:id')).text = cfg.get('server', 'url')
         etree.SubElement(node, util.nspath_eval('atom:title')).text = cfg.get('metadata:main', 'identification_title')
-        etree.SubElement(node, util.nspath_eval('atom:updated')).text = element.xpath('//@timestamp')[0]
+        #etree.SubElement(node, util.nspath_eval('atom:updated')).text = element.xpath('//@timestamp')[0]
         
         etree.SubElement(node, util.nspath_eval('opensearch:totalResults')).text = element.xpath('//@numberOfRecordsMatched')[0]
         etree.SubElement(node, util.nspath_eval('opensearch:startIndex')).text = str(startindex)
