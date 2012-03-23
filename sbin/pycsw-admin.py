@@ -368,6 +368,13 @@ def gen_opensearch_description(METADATA, URL, OUTPUT_FILE):
         of.write(etree.tostring(node0, pretty_print=1,
         encoding='UTF-8', xml_declaration=1))
 
+def post_xml(url, xml):
+    from owslib.util import http_post
+    try:
+        print http_post(url,open(xml).read())
+    except Exception, err:
+        print err
+
 def usage():
     ''' Provide usage instructions '''
     return '''
@@ -388,6 +395,7 @@ SYNOPSIS
               - refresh_harvested_records
               - gen_sitemap
               - gen_opensearch_description
+              - post_xml
 
     -f    Filepath to pycsw configuration
 
@@ -398,6 +406,10 @@ SYNOPSIS
     -p    path to input/output directory to read/write metadata records
 
     -r    load records from directory recursively
+
+    -u    URL of CSW
+
+    -x    XML URL of CSW
 
 EXAMPLES
 
@@ -437,6 +449,10 @@ EXAMPLES
     8.) gen_opensearch_description: Generate OpenSearch Description document
 
         pycsw-admin.py -c gen_opensearch_description -f default.cfg -o /path/to/opensearch.xml
+
+    8.) post_xml: Execute a CSW request via HTTP POST
+
+        pycsw-admin.py -c post_xml -u http://host/csw -x /path/to/request.xml
 '''
 
 COMMAND = None
@@ -444,13 +460,15 @@ XML_DIRPATH = None
 CFG = None
 RECURSIVE = False
 OUTPUT_FILE = None
+CSW_URL = None
+XML = None
 
 if len(sys.argv) == 1:
     print usage()
     sys.exit(1)
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:r')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:')
 except getopt.GetoptError, err:
     print '\nERROR: %s' % err
     print usage()
@@ -467,6 +485,10 @@ for o, a in OPTS:
         XML_DIRPATH = a
     if o == '-r':
         RECURSIVE = True
+    if o == '-u':
+        CSW_URL = a
+    if o == '-x':
+        XML = a
     if o == '-h':  # dump help and exit
         print usage()
         sys.exit(3)
@@ -477,11 +499,11 @@ if COMMAND is None:
 
 if COMMAND not in ['setup_db', 'load_records', 'export_records', \
     'rebuild_db_indexes', 'optimize_db', 'refresh_harvested_records', \
-    'gen_sitemap', 'gen_opensearch_description']:
-    print 'ERROR: invalid command name: %s' % operation
+    'gen_sitemap', 'gen_opensearch_description', 'post_xml']:
+    print 'ERROR: invalid command name: %s' % COMMAND
     sys.exit(5)
 
-if CFG is None:
+if CFG is None and COMMAND != 'post_xml':
     print 'ERROR: -f <cfg> is a required argument'
     sys.exit(6)
 
@@ -494,13 +516,21 @@ if (COMMAND in ['gen_sitemap', 'gen_opensearch_description']
     print 'ERROR: -o </path/to/sitemap.xml> is a required argument'
     sys.exit(8)
 
-SCP = SafeConfigParser()
-SCP.readfp(open(CFG))
+if COMMAND != 'post_xml':
+    SCP = SafeConfigParser()
+    SCP.readfp(open(CFG))
 
-DATABASE = SCP.get('repository', 'database')
-URL = SCP.get('server', 'url')
-HOME = SCP.get('server', 'home')
-METADATA = dict(SCP.items('metadata:main'))
+    DATABASE = SCP.get('repository', 'database')
+    URL = SCP.get('server', 'url')
+    HOME = SCP.get('server', 'home')
+    METADATA = dict(SCP.items('metadata:main'))
+else:
+    if CSW_URL is None:
+        print 'ERROR: -u <http://host/csw> is a required argument'
+        sys.exit(9)
+    if XML is None:
+        print 'ERROR: -x /path/to/request.xml is a required argument'
+        sys.exit(10)
 
 if COMMAND == 'setup_db': 
     setup_db(DATABASE, HOME)
@@ -518,5 +548,7 @@ elif COMMAND == 'gen_sitemap':
     gen_sitemap(DATABASE, URL, OUTPUT_FILE)
 elif COMMAND == 'gen_opensearch_description':
     gen_opensearch_description(METADATA, URL, OUTPUT_FILE)
+elif COMMAND == 'post_xml':
+    post_xml(CSW_URL, XML)
 
 print 'Done'
