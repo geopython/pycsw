@@ -1210,7 +1210,8 @@ class Csw(object):
         if raw:  # GetRepositoryItem request
             self.log.debug('GetRepositoryItem request.')
             if len(results) > 0:
-                return etree.fromstring(getattr(results[0], 'xml'))
+                return etree.fromstring(util.getqattr(results[0],
+                config.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
         for result in results:
             if (result.typename == 'csw:Record' and
