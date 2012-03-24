@@ -23,6 +23,7 @@ pycsw |release| Documentation
    sitemaps
    transactions
    profiles
+   geonode
    testing
    ../demos
    tools

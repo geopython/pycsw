@@ -94,8 +94,8 @@ PostgreSQL
 
 .. _custom_repository:
 
-Using an Existing Repository
-----------------------------
+Mapping to an Existing Repository
+---------------------------------
 
 pycsw supports publishing metadata from an existing repository.  To enable this functionality, the default database mappings must be modified to represent the existing database columns mapping to the abstract core model (the default mappings are in ``server/config.py:MD_CORE_MODEL``).
 
@@ -113,7 +113,31 @@ To override the default settings:
 Existing Repository Requirements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-pycsw requires certain columns and semantics to exist in any repository to operate.  Documentation is provided in ``server/config.py:MD_CORE_MODEL``
+pycsw requires certain repository attributes and semantics to exist in any repository to operate as follows:
+
+- ``pycsw:Identifier``: unique identifier
+- ``pycsw:Typename``: typename for the metadata; typically the value of the root element tag (e.g. ``csw:Record``, ``gmd:MD_Metadata``)
+- ``pycsw:Schema``: schema for the metadata; typically the target namespace (e.g. ``http://www.opengis.net/cat/csw/2.0.2``, ``http://www.isotc211.org/2005/gmd``)
+- ``pycsw:InsertDate``: date of insertion
+- ``pycsw:XML``: full XML representation
+- ``pycsw:AnyText``: bag of XML element text values, used for full text search.  Realized with the following design pattern:
+
+  - capture all XML element and attribute values
+  - store in repository
+- ``pycsw:BoundingBox``: string of WKT or EWKT geometry
+
+The following repository semantics exist if the attributes are specified:
+
+- ``pycsw:Keywords``: comma delimited list of keywords
+- ``pycsw:Links``: structure of links in the format "name,description,protocol,url[^,,,[^,,,]]"
+
+Values of mappings can be derived from the following mechanisms:
+
+- text fields
+- Python datetime objects
+- Python functions 
+
+Further information is provided in ``server/config.py:MD_CORE_MODEL``.
 
 .. _`OGR`: http://www.gdal.org/ogr
 .. _`OGC SFSQL`: http://www.opengeospatial.org/standards/sfs
