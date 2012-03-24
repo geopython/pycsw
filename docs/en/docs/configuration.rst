@@ -57,11 +57,11 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 
 - **database**: the full file path to the metadata database, in database URL format (see http://www.sqlalchemy.org/docs/core/engines.html#database-urls)
 - **mappings**: custom repository mappings (see :ref:`custom_repository`)
+- **source**: the source of this repository only if not local (e.g. :ref:`geonode`).  Supported values are ``geonode``
 
 .. note::
 
   See :ref:`administration` for connecting your metadata repository and supported information models.
-
 
 .. _alternate-configurations:
 
