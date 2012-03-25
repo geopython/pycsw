@@ -30,7 +30,7 @@
 #
 # =================================================================
 
-from sqlalchemy import create_engine, desc, func
+from sqlalchemy import create_engine, desc, func, __version__
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
 import config, util
@@ -52,15 +52,27 @@ class Repository(object):
         self.session = create_session(engine)
 
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
-            self.connection = engine.raw_connection()
-            self.connection.create_function(
-            'query_spatial', 4, util.query_spatial)
-            self.connection.create_function(
-            'update_xpath', 2, util.update_xpath)
-            self.connection.create_function('get_anytext', 1, util.get_anytext)
+            if __version__ >= '0.7':
+                from sqlalchemy import event
+                @event.listens_for(engine, "connect")
+                def connect(dbapi_connection, connection_rec):
+                    dbapi_connection.create_function(
+                    'query_spatial', 4, util.query_spatial)
+                    dbapi_connection.create_function(
+                    'update_xpath', 2, util.update_xpath)
+                    dbapi_connection.create_function('get_anytext', 1,
+                    util.get_anytext)
+            else:  # <= 0.6 behaviour
+                self.connection = engine.raw_connection()
+                self.connection.create_function(
+                'query_spatial', 4, util.query_spatial)
+                self.connection.create_function(
+                'update_xpath', 2, util.update_xpath)
+                self.connection.create_function('get_anytext', 1,
+                util.get_anytext)
 
         # generate core queryables db and obj bindings
-        self.queryables = {}       
+        self.queryables = {}
 
         for tname in qconfig:
             for qname in qconfig[tname]['queryables']:
