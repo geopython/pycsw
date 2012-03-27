@@ -72,7 +72,7 @@ def get_validity(expected, result, outfile):
     else:  # compare result with expected
         if os.path.exists('results') is False:
             os.mkdir('results')
-        resultfile = open('results%s%s' % (os.sep, outfile), 'w')
+        resultfile = open('results%s%s' % (os.sep, outfile), 'wb')
         resultfile.write(normalize(result))
         resultfile.close()
         if filecmp.cmp(expected, 'results%s%s' % (os.sep, outfile)):  # pass
