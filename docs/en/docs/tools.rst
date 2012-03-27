@@ -6,6 +6,7 @@ Cataloguing and Metadata Tools
 CSW Clients
 -----------
 
+- `Geoportal CSW Clients <https://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_
 - `OWSLib <http://owslib.sourceforge.net/>`_
 - `qgcsw <http://sourceforge.net/apps/trac/qgiscommunitypl/wiki/qgcsw>`_ (`QGIS <http://qgis.org/>`_ plugin)
 
