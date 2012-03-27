@@ -2,49 +2,218 @@
 <!-- PYCSW_VERSION -->
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="12" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
-    <csw:Record>
-    <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-    <dc:title>&#209;un&#231; elementum</dc:title>
-    <dc:subject scheme="http://www.digest.org/2.1">Hydrography-Oceanographic</dc:subject>
-    <dc:date>2005-10-24Z</dc:date>
-    <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
-      <ows:LowerCorner>44.792 -6.171</ows:LowerCorner>
-      <ows:UpperCorner>51.126 -2.228</ows:UpperCorner>
-    </ows:BoundingBox>
-</csw:Record>
-    <csw:Record>
-    <dc:identifier>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
-    <dc:title>Ut facilisis justo ut lacus</dc:title>
-    <dc:subject scheme="http://www.digest.org/2.1">Vegetation</dc:subject>
-    <dc:relation>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:relation>
-</csw:Record>
-    <csw:Record>
-    <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
-    <dc:format>image/svg+xml</dc:format>
-    <dc:title>Lorem ipsum</dc:title>
-    <dct:spatial>GR-22</dct:spatial>
-    <dc:subject>Tourism--Greece</dc:subject>
-    <dct:abstract>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</dct:abstract>
-</csw:Record>
-    <csw:Record>
-    <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
-    <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
-    <dc:date>2003-05-09Z</dc:date>
-    <dc:subject>Land titles</dc:subject>
-    <dc:format>text/rtf</dc:format>
-    <dct:abstract>Morbi ultri&#231;es, dui suscipit vestibulum pr&#232;tium, velit ante pretium tortor, eg&#235;t tincidunt pede odio ac nulla.</dct:abstract>
-</csw:Record>
-    <csw:Record>
-    <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-    <dc:subject scheme="http://www.digest.org/2.1">Physiography-Landforms</dc:subject>
-    <dct:spatial>FI-ES</dct:spatial>
-    <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
-</csw:Record>
+  <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="42" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+    <!--42 results from http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw-->
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
+      <dc:identifier>F32E2F33-852F-7023-DFF2-21477C4405BF</dc:identifier>
+      <dc:title>Ground Control Database - UTM zone 16</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Locations: International &gt; Outside North America</dc:subject>
+      <dc:subject>Locations: Canada</dc:subject>
+      <dc:subject>Locations: International &gt; North America</dc:subject>
+      <dc:subject>Topic Category: Biology and Ecology</dc:subject>
+      <dc:subject>Topic Category: Oceans and Coasts</dc:subject>
+      <dc:subject>Topic Category: Transportation Networks</dc:subject>
+      <dc:subject>Topic Category: Cultural, Society and Demographic</dc:subject>
+      <dc:subject>Topic Category: Atmosphere and Climate</dc:subject>
+      <dc:subject>Topic Category: Business and Economic</dc:subject>
+      <dc:subject>Topic Category: Locations and Geodetic Networks</dc:subject>
+      <dc:subject>Topic Category: Environment and Conservation</dc:subject>
+      <dc:format>text/xml</dc:format>
+      <dct:modified>2009-09-04</dct:modified>
+      <dct:abstract>A cascading Web Map Server can use other web map servers as data sources, seamlessly translating and overlaying the results into a unique map image for the user. To our knowledge CubeSERV&#174; is the only Web Map Server capable of this feat.&#13;
+&#13;
+What this means is that your developers will be presented with a single, uniform interface to the WMS, no matter what downstream servers are being cascaded, greatly simplfying their job. In addition, CubeSERV&#174; will automatically supplement the capabilities of any downstream server, providing missing spatial reference systems, image formats, etc.&#13;
+&#13;
+With this Cascading WMS Service CubeWerx is cascading the servers below.  &#13;
+&#13;
+* USGS Framework Data Web Map Service&#13;
+The Framework Web Feature Services are offered by the United States Geological Survey (USGS) in support of the development of the National Spatial Data Infrastructure NSDI).&#13;
+      &#13;
+* NASA JPL Global Data Server&#13;
+A collection of global data layers collected by various NASA satellites and projects.&#13;
+      &#13;...</dct:abstract>
+      <dc:contributor>Mike Galluchon</dc:contributor>
+      <dc:creator>CubeWerx Inc.</dc:creator>
+      <dct:created>2009-09-04</dct:created>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=347ADAEC-078E-6DF4-78F7-0196CDB0DBCF</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
+      <dc:identifier>4C55728D-113C-EBFC-89FC-DD1817E62642</dc:identifier>
+      <dc:title>Ground Control Database - UTM zone 15</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Locations: International &gt; Outside North America</dc:subject>
+      <dc:subject>Locations: Canada</dc:subject>
+      <dc:subject>Locations: International &gt; North America</dc:subject>
+      <dc:subject>Topic Category: Biology and Ecology</dc:subject>
+      <dc:subject>Topic Category: Oceans and Coasts</dc:subject>
+      <dc:subject>Topic Category: Transportation Networks</dc:subject>
+      <dc:subject>Topic Category: Cultural, Society and Demographic</dc:subject>
+      <dc:subject>Topic Category: Atmosphere and Climate</dc:subject>
+      <dc:subject>Topic Category: Business and Economic</dc:subject>
+      <dc:subject>Topic Category: Locations and Geodetic Networks</dc:subject>
+      <dc:subject>Topic Category: Environment and Conservation</dc:subject>
+      <dc:format>text/xml</dc:format>
+      <dct:modified>2009-09-04</dct:modified>
+      <dct:abstract>A cascading Web Map Server can use other web map servers as data sources, seamlessly translating and overlaying the results into a unique map image for the user. To our knowledge CubeSERV&#174; is the only Web Map Server capable of this feat.&#13;
+&#13;
+What this means is that your developers will be presented with a single, uniform interface to the WMS, no matter what downstream servers are being cascaded, greatly simplfying their job. In addition, CubeSERV&#174; will automatically supplement the capabilities of any downstream server, providing missing spatial reference systems, image formats, etc.&#13;
+&#13;
+With this Cascading WMS Service CubeWerx is cascading the servers below.  &#13;
+&#13;
+* USGS Framework Data Web Map Service&#13;
+The Framework Web Feature Services are offered by the United States Geological Survey (USGS) in support of the development of the National Spatial Data Infrastructure NSDI).&#13;
+      &#13;
+* NASA JPL Global Data Server&#13;
+A collection of global data layers collected by various NASA satellites and projects.&#13;
+      &#13;...</dct:abstract>
+      <dc:contributor>Mike Galluchon</dc:contributor>
+      <dc:creator>CubeWerx Inc.</dc:creator>
+      <dct:created>2009-09-04</dct:created>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=347ADAEC-078E-6DF4-78F7-0196CDB0DBCF</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
+      <dc:identifier>02784579-B9F1-9370-726C-FB398BB4E2CB</dc:identifier>
+      <dc:title>Ground Control Database - UTM zone 22</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Locations: International &gt; Outside North America</dc:subject>
+      <dc:subject>Locations: Canada</dc:subject>
+      <dc:subject>Locations: International &gt; North America</dc:subject>
+      <dc:subject>Topic Category: Biology and Ecology</dc:subject>
+      <dc:subject>Topic Category: Oceans and Coasts</dc:subject>
+      <dc:subject>Topic Category: Transportation Networks</dc:subject>
+      <dc:subject>Topic Category: Cultural, Society and Demographic</dc:subject>
+      <dc:subject>Topic Category: Atmosphere and Climate</dc:subject>
+      <dc:subject>Topic Category: Business and Economic</dc:subject>
+      <dc:subject>Topic Category: Locations and Geodetic Networks</dc:subject>
+      <dc:subject>Topic Category: Environment and Conservation</dc:subject>
+      <dc:format>text/xml</dc:format>
+      <dct:modified>2009-09-04</dct:modified>
+      <dct:abstract>A cascading Web Map Server can use other web map servers as data sources, seamlessly translating and overlaying the results into a unique map image for the user. To our knowledge CubeSERV&#174; is the only Web Map Server capable of this feat.&#13;
+&#13;
+What this means is that your developers will be presented with a single, uniform interface to the WMS, no matter what downstream servers are being cascaded, greatly simplfying their job. In addition, CubeSERV&#174; will automatically supplement the capabilities of any downstream server, providing missing spatial reference systems, image formats, etc.&#13;
+&#13;
+With this Cascading WMS Service CubeWerx is cascading the servers below.  &#13;
+&#13;
+* USGS Framework Data Web Map Service&#13;
+The Framework Web Feature Services are offered by the United States Geological Survey (USGS) in support of the development of the National Spatial Data Infrastructure NSDI).&#13;
+      &#13;
+* NASA JPL Global Data Server&#13;
+A collection of global data layers collected by various NASA satellites and projects.&#13;
+      &#13;...</dct:abstract>
+      <dc:contributor>Mike Galluchon</dc:contributor>
+      <dc:creator>CubeWerx Inc.</dc:creator>
+      <dct:created>2009-09-04</dct:created>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=347ADAEC-078E-6DF4-78F7-0196CDB0DBCF</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
+      <dc:identifier>C238D457-6DAD-A7AD-468C-0A34D9D9CC95</dc:identifier>
+      <dc:title>Ground Control Database - UTM zone 17</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Locations: Canada &gt; Manitoba</dc:subject>
+      <dc:subject>Locations: Oceans &gt; Atlantic Ocean</dc:subject>
+      <dc:subject>Locations: International &gt; Circumpolar Arctic</dc:subject>
+      <dc:subject>Locations: International &gt; Outside North America</dc:subject>
+      <dc:subject>Locations: Canada &gt; Ontario</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Western Canada</dc:subject>
+      <dc:subject>Locations: Canada &gt; Nunavut</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Territorial North</dc:subject>
+      <dc:subject>Locations: Canada &gt; Quebec</dc:subject>
+      <dc:subject>Locations: Oceans &gt; Pacific Ocean</dc:subject>
+      <dc:subject>Locations: Canada &gt; Nova Scotia</dc:subject>
+      <dc:subject>Locations: Canada &gt; Newfoundland and Labrador</dc:subject>
+      <dc:subject>Locations: Canada &gt; Northwest Territories</dc:subject>
+      <dc:subject>Locations: Canada &gt; British Columbia</dc:subject>
+      <dc:subject>Locations: Canada &gt; Yukon</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Central Canada</dc:subject>
+      <dc:subject>Locations: Canada &gt; Prince Edward Island</dc:subject>
+      <dc:subject>Locations: Canada &gt; Alberta</dc:subject>
+      <dc:subject>Locations: Canada &gt; New Brunswick</dc:subject>
+      <dc:subject>Locations: International &gt; North America</dc:subject>
+      <dc:subject>Locations: Oceans &gt; Arctic Ocean</dc:subject>
+      <dc:subject>Locations: Canada &gt; Saskatchewan</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Atlantic Canada</dc:subject>
+      <dc:subject>Topic Category: Transportation Networks</dc:subject>
+      <dc:subject>Topic Category: Imagery and Basemaps</dc:subject>
+      <dc:subject>Topic Category: Administrative and Political</dc:subject>
+      <dc:subject>Topic Category: Agriculture and Farming</dc:subject>
+      <dc:subject>Topic Category: Locations and Geodetic Networks</dc:subject>
+      <dc:subject>Topic Category: Inland Water Resources</dc:subject>
+      <dc:subject>Topic Category: Utilities and Communication</dc:subject>
+      <dc:format>text/xml</dc:format>
+      <dct:modified>2009-09-10</dct:modified>
+      <dct:abstract>The Canada Centre for Remote Sensing (CCRS) Web Map Service (WMS) provides an OpenGIS Consortium (OGC) compliant Web Map Service interface as an online web mapping service of various projects, such as GeoGratis, GeoBase, and other CCRS information holdings.  The CCRS WMS also allows for custom cartographic styling through the OGC Styled Layer Descriptor (SLD) Specification.</dct:abstract>
+      <dc:contributor>Pat King</dc:contributor>
+      <dc:creator>NRCAN.RNCAN</dc:creator>
+      <dct:created>2009-09-10</dct:created>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=17E93F6E-9474-F71B-47EA-EE6BFD2A136F</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
+      <dc:identifier>8B2F2BB9-91A3-9002-560A-29638C874EB1</dc:identifier>
+      <dc:title>Ground Control Database - UTM zone 19</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Locations: Canada &gt; Manitoba</dc:subject>
+      <dc:subject>Locations: Oceans &gt; Atlantic Ocean</dc:subject>
+      <dc:subject>Locations: International &gt; Circumpolar Arctic</dc:subject>
+      <dc:subject>Locations: International &gt; Outside North America</dc:subject>
+      <dc:subject>Locations: Canada &gt; Ontario</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Western Canada</dc:subject>
+      <dc:subject>Locations: Canada &gt; Nunavut</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Territorial North</dc:subject>
+      <dc:subject>Locations: Canada &gt; Quebec</dc:subject>
+      <dc:subject>Locations: Oceans &gt; Pacific Ocean</dc:subject>
+      <dc:subject>Locations: Canada &gt; Nova Scotia</dc:subject>
+      <dc:subject>Locations: Canada &gt; Newfoundland and Labrador</dc:subject>
+      <dc:subject>Locations: Canada &gt; Northwest Territories</dc:subject>
+      <dc:subject>Locations: Canada &gt; British Columbia</dc:subject>
+      <dc:subject>Locations: Canada &gt; Yukon</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Central Canada</dc:subject>
+      <dc:subject>Locations: Canada &gt; Prince Edward Island</dc:subject>
+      <dc:subject>Locations: Canada &gt; Alberta</dc:subject>
+      <dc:subject>Locations: Canada &gt; New Brunswick</dc:subject>
+      <dc:subject>Locations: International &gt; North America</dc:subject>
+      <dc:subject>Locations: Oceans &gt; Arctic Ocean</dc:subject>
+      <dc:subject>Locations: Canada &gt; Saskatchewan</dc:subject>
+      <dc:subject>Locations: Canada Regional &gt; Atlantic Canada</dc:subject>
+      <dc:subject>Topic Category: Transportation Networks</dc:subject>
+      <dc:subject>Topic Category: Imagery and Basemaps</dc:subject>
+      <dc:subject>Topic Category: Administrative and Political</dc:subject>
+      <dc:subject>Topic Category: Agriculture and Farming</dc:subject>
+      <dc:subject>Topic Category: Locations and Geodetic Networks</dc:subject>
+      <dc:subject>Topic Category: Inland Water Resources</dc:subject>
+      <dc:subject>Topic Category: Utilities and Communication</dc:subject>
+      <dc:format>text/xml</dc:format>
+      <dct:modified>2009-09-10</dct:modified>
+      <dct:abstract>The Canada Centre for Remote Sensing (CCRS) Web Map Service (WMS) provides an OpenGIS Consortium (OGC) compliant Web Map Service interface as an online web mapping service of various projects, such as GeoGratis, GeoBase, and other CCRS information holdings.  The CCRS WMS also allows for custom cartographic styling through the OGC Styled Layer Descriptor (SLD) Specification.</dct:abstract>
+      <dc:contributor>Pat King</dc:contributor>
+      <dc:creator>NRCAN.RNCAN</dc:creator>
+      <dct:created>2009-09-10</dct:created>
+      <dc:source>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw?service=CSW&amp;request=GetRepositoryItem&amp;id=17E93F6E-9474-F71B-47EA-EE6BFD2A136F</dc:source>
+      <dc:language>eng; CAN</dc:language>
+      <ows:BoundingBox crs="EPSG:4326">
+        <ows:LowerCorner>-90 -180</ows:LowerCorner>
+        <ows:UpperCorner>90 180</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
