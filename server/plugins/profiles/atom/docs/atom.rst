@@ -13,6 +13,13 @@ Configuration
 
 No additional configuration is required.
 
+
+Querying
+^^^^^^^^
+
+ * **typename**: atom:entry
+ * **outputschema**: http://www.w3.org/2005/Atom
+
 Enabling Atom Support
 ^^^^^^^^^^^^^^^^^^^^^^
 
