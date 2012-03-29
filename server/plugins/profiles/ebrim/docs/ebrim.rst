@@ -12,6 +12,12 @@ Configuration
 
 No extra configuration is required.
 
+Querying
+^^^^^^^^
+
+ * **typename**: rim:RegistryObject
+ * **outputschema**: urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0
+
 Enabling ebRIM Support
 ^^^^^^^^^^^^^^^^^^^^^^
 

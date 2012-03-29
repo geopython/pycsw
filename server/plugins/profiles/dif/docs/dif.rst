@@ -13,6 +13,12 @@ Configuration
 
 No additional configuration is required.
 
+Querying
+^^^^^^^^
+
+ * **typename**: dif:DIF
+ * **outputschema**: http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/
+
 Enabling DIF Support
 ^^^^^^^^^^^^^^^^^^^^^^
 
