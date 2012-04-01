@@ -54,7 +54,7 @@ MD_CORE_MODEL = {
         'pycsw:Abstract': 'abstract',
         'pycsw:Keywords': 'keywords',
         'pycsw:KeywordType': 'keywordstype',
-        'pycsw:Format': 'store',
+        'pycsw:Format': 'spatial_representation_type',
         'pycsw:Source': 'source',
         'pycsw:Date': 'date',
         'pycsw:Modified': 'last_modified',
