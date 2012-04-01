@@ -31,7 +31,7 @@
 # =================================================================
 
 import time
-from datetime import datetime
+import datetime
 from lxml import etree
 import config
 from shapely.wkt import loads
@@ -42,6 +42,8 @@ def get_today_and_now():
 
 def datetime2iso8601(value):
     ''' Return a datetime value as ISO8601 '''
+    if isinstance(value, datetime.date):
+        return value.strftime('%Y-%m-%d')
     if value.hour == 0 and value.minute == 0 and value.second == 0:
         # YYYY-MM-DD only
         return value.strftime('%Y-%m-%d')
@@ -233,7 +235,8 @@ def getqattr(obj, name):
             if name.find('link') != -1:  # link tuple triplet
                 return _linkify(value())
             return value()
-        elif isinstance(value, datetime):  # datetime object
+        elif (isinstance(value, datetime.datetime)
+        or isinstance(value, datetime.date)):  # datetime object
             return datetime2iso8601(value)
         return value
     except:
