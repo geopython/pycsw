@@ -1214,8 +1214,9 @@ class Csw(object):
                 config.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
         for result in results:
-            if (result.typename == 'csw:Record' and
-            self.kvp['outputschema'] ==
+            if (util.getqattr(result,
+            config.MD_CORE_MODEL['mappings']['pycsw:Typename']) == 'csw:Record'
+            and self.kvp['outputschema'] ==
             'http://www.opengis.net/cat/csw/2.0.2'):
                 # serialize record inline
                 node.append(self._write_record(
