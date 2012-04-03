@@ -123,7 +123,7 @@ class EBRIM(profile.Profile):
 
         if esn == 'full' and typename == 'rim:RegistryObject':
             # dump record as is and exit
-            return etree.fromstring(result.xml)
+            return etree.fromstring(util.getqattr(result, queryables['pycsw:XML']['dbcol']))
 
         if typename == 'csw:Record':  # transform csw:Record -> rim:RegistryObject model mappings
             util.transform_mappings(queryables, REPOSITORY['rim:RegistryObject']['mappings']['csw:Record'])
@@ -143,10 +143,10 @@ class EBRIM(profile.Profile):
             etree.SubElement(node, util.nspath_eval('rim:ExternalIdentifier'), value=identifier, identificationScheme='foo', registryObject=str(util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Relation'])), id=identifier)
 
             name = etree.SubElement(node, util.nspath_eval('rim:Name'))
-            etree.SubElement(name, util.nspath_eval('rim:LocalizedString'), value=unicode(result.title))
+            etree.SubElement(name, util.nspath_eval('rim:LocalizedString'), value=unicode(util.getqattr(result, queryables['pycsw:Title']['dbcol'])))
 
             description = etree.SubElement(node, util.nspath_eval('rim:Description'))
-            etree.SubElement(description, util.nspath_eval('rim:LocalizedString'), value=unicode(result.abstract))
+            etree.SubElement(description, util.nspath_eval('rim:LocalizedString'), value=unicode(util.getqattr(result, queryables['pycsw:Abstract']['dbcol'])))
 
             val = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox'])
             bboxel = server.write_boundingbox(val)
