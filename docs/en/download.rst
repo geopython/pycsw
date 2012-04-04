@@ -3,7 +3,7 @@
 Download
 ========
 
-* `Current Release <https://sourceforge.net/projects/pycsw/files/1.2.0-beta1/>`_ (1.2.0-beta1)
+* `Current Release <https://sourceforge.net/projects/pycsw/files/1.2.0-rc1/>`_ (1.2.0-rc1)
 
 * `All Releases <http://sourceforge.net/projects/pycsw/files/>`_
 
