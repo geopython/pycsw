@@ -317,10 +317,13 @@ def parse_record(record, repos=None,
         if hasattr(md, 'citation'):
             if md.citation.citeinfo['onlink']:
                 for link in md.citation.citeinfo['onlink']:
-                    tmp = '%s,%s,%s,%s' % \
-                    (uri['name'], uri['description'],
-                     uri['protocol'], uri['url'])
+                    tmp = ',,,%s' % link
                     links.append(tmp)
+
+        if hasattr(md, 'distinfo') and hasattr(md.distinfo, 'stdorder'):
+            for link in md.distinfo.stdorder['digform']:
+                tmp = ',%s,,%s' % (link['name'], link['url'])
+                links.append(tmp)
 
     elif root == '{%s}Record' % config.NAMESPACES['csw']:  # Dublin Core
         md = CswRecord(exml)
