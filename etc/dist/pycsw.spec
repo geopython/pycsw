@@ -13,7 +13,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 Name:           pycsw
-Version:        1.2.0
+Version:        1.3.0-dev
 Release:        1
 License:        MIT
 Summary:        An OGC CSW server implementation written in Python
