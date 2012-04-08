@@ -3,6 +3,6 @@
 Documentation
 =============
 
-* `Current Release (1.0.0) <./1.0.0/documentation.html>`_
+* `Current Release (1.2.0) <./1.2.0/documentation.html>`_
 * :ref:`Latest (trunk) <documentation>`
 
