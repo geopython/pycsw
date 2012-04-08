@@ -1,9 +1,9 @@
 #
-# spec file for package pycsw
+# spec file for package pycsw (1.2.0)
 #
 # Copyright (c) 2011 Angelos Tzotsos <tzotsos@opensuse.org>
 #
-# This file and all modifications and additions to the pristine
+# This file and all modifications and additions to the pycsw
 # package are under the same license as the package itself.
 
 %define _webappconfdir /etc/apache2/conf.d/
@@ -13,7 +13,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 Name:           pycsw
-Version:        1.3.0-dev
+Version:        1.2.0
 Release:        1
 License:        MIT
 Summary:        An OGC CSW server implementation written in Python
@@ -24,7 +24,6 @@ Requires:	python
 Requires:	python-sqlalchemy
 Requires:	python-Shapely
 Requires:	python-lxml
-Requires:	python-pyproj
 Requires:	apache2
 BuildRequires:  fdupes python 
 
@@ -51,7 +50,9 @@ pycsw is Open Source, released under an MIT license, and runs on all major platf
 mkdir -p %{buildroot}/srv/www/htdocs
 mkdir -p %{buildroot}%{_sysconfdir}/apache2/conf.d
 
-mv pycsw %{buildroot}/srv/www/htdocs/
+cd ..
+mv pycsw-1.2.0 %{buildroot}/srv/www/htdocs/pycsw
+mkdir pycsw-1.2.0
 
 cat > %{buildroot}%{_sysconfdir}/apache2/conf.d/pycsw.conf << EOF
 <Location /pycsw/>
@@ -59,6 +60,68 @@ cat > %{buildroot}%{_sysconfdir}/apache2/conf.d/pycsw.conf << EOF
   Allow from all
   AddHandler cgi-script .py
 </Location>
+EOF
+
+cat > %{buildroot}/srv/www/htdocs/pycsw/default.cfg << EOF
+[server]
+home=/srv/www/htdocs/pycsw
+url=http://localhost/pycsw/csw.py
+mimetype=application/xml; charset=UTF-8                                                             
+encoding=UTF-8                                                                                      
+language=en-US                                                                                      
+maxrecords=10                                                                                       
+#loglevel=DEBUG                                                                                     
+#logfile=/tmp/pycsw.log
+#ogc_schemas_base=http://foo
+#federatedcatalogues=http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw
+pretty_print=true
+#gzip_compresslevel=8
+profiles=apiso,fgdc,dif,ebrim
+
+[manager]
+transactions=false
+allowed_ips=127.0.0.1
+
+[metadata:main]
+identification_title=pycsw Geospatial Catalogue
+identification_abstract=pycsw is an OGC CSW server implementation written in Python
+identification_keywords=catalogue,discovery
+identification_keywords_type=theme
+identification_fees=None
+identification_accessconstraints=None
+provider_name=pycsw
+provider_url=http://pycsw.org/
+contact_name=Kralidis, Tom
+contact_position=Senior Systems Scientist
+contact_address=TBA
+contact_city=Toronto
+contact_stateorprovince=Ontario
+contact_postalcode=M9C 3Z9
+contact_country=Canada
+contact_phone=+01-416-xxx-xxxx
+contact_fax=+01-416-xxx-xxxx
+contact_email=tomkralidis@hotmail.com
+contact_url=http://kralidis.ca/
+contact_hours=0800h - 1600h EST
+contact_instructions=During hours of service.  Off on weekends.
+contact_role=pointOfContact
+
+[repository]
+# sqlite
+database=sqlite:////srv/www/htdocs/pycsw/data/cite/records.db
+# postgres
+#database=postgresql://username:password@localhost/pycsw
+
+[metadata:inspire]
+enabled=true
+languages_supported=eng,gre
+default_language=eng
+date=2011-03-29
+gemet_keywords=Utility and governmental services
+conformity_service=notEvaluated
+contact_name=National Technical University of Athens
+contact_email=tzotsos@gmail.com
+temp_extent=2011-02-01/2011-03-30
 EOF
 
 %fdupes -s %{buildroot}
