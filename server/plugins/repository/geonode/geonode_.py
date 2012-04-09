@@ -85,14 +85,20 @@ class GeoNodeRepository(object):
         ''' Query by list of identifiers '''
         return Layer.objects.filter(uuid__in=ids).all()
 
-    def query_domain(self, domain, typenames, domainquerytype='list'):
+    def query_domain(self, domain, typenames, domainquerytype='list',
+        count=False):
         ''' Query by property domain values '''
 
         if domainquerytype == 'range':
             return [tuple(Layer.objects.aggregate(
             Min(domain), Max(domain)).values())]
         else:
-            return Layer.objects.values_list(domain).distinct()
+            if count is True:
+                return [tuple(i.values()) for i in r.objects.values(
+                domain).annotate(Count(domain))]
+            else:
+                return Layer.objects.values_list(domain).distinct()
+
 
     def query_latest_insert(self):
         ''' Query to get latest update to repository '''
