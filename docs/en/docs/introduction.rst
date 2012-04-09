@@ -157,4 +157,4 @@ Functions
 .. _`FGDC CSDGM`: http://www.fgdc.gov/metadata/csdgm
 .. _`FGDC CSDGM Application Profile for CSW 2.0`: http://portal.opengeospatial.org/files/?artifact_id=16936
 .. _`SRU`: http://www.loc.gov/standards/sru/
-.. _`A9 OpenSearch`: http://opensearch.org/
+.. _`A9 OpenSearch`: http://www.opensearch.org/Home

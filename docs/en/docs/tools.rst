@@ -6,7 +6,7 @@ Cataloguing and Metadata Tools
 CSW Clients
 -----------
 
-- `Geoportal CSW Clients <https://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_
+- `Geoportal CSW Clients <http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_
 - `OWSLib <http://owslib.sourceforge.net/>`_
 - `qgcsw <http://sourceforge.net/apps/trac/qgiscommunitypl/wiki/qgcsw>`_ (`QGIS <http://qgis.org/>`_ plugin)
 
@@ -20,6 +20,6 @@ CSW Servers
 Metadata Editing Tools
 ----------------------
 
-- `CatMDEdit <http://catmedit.sourceforge.net/>`_
+- `CatMDEdit <http://catmdedit.sourceforge.net/>`_
 - `EUOSME <https://joinup.ec.europa.eu/software/euosme/description>`_
 - `GIMED <http://gimed.sourceforge.net/>`_

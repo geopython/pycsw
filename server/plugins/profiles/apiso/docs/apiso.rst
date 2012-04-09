@@ -15,8 +15,8 @@ No extra configuration is required.
 Querying
 ^^^^^^^^
 
- * **typename**: gmd:MD_Metadata
- * **outputschema**: http://www.isotc211.org/2005/gmd
+ * **typename**: ``gmd:MD_Metadata``
+ * **outputschema**: ``http://www.isotc211.org/2005/gmd``
 
 Enabling APISO Support
 ^^^^^^^^^^^^^^^^^^^^^^
