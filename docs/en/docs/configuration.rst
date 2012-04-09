@@ -20,6 +20,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **pretty_print**: whether to pretty print the output (``true`` or ``false``).  Default is ``false``
 - **gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is ``9``.  Default is off
 - **domainquerytype**: for GetDomain operations, how to output domain values.  Accepted values are ``list`` and ``range`` (min/max). Default is ``list``
+- **domaincounts**: for GetDomain operations, whether to provide frequency counts for values.  Accepted values are ``true`` and ``False``. Default is ``false``
 - **profiles**: comma delimited list of profiles to load at runtime (default is none).  See :ref:`profiles`
 - **smtp_host**: SMTP host for processing ``csw:ResponseHandler`` parameter via outgoing email requests (default is ``localhost``)
 

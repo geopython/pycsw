@@ -99,7 +99,8 @@ class Repository(object):
         self.dataset).filter(column.in_(ids))
         return query.all()
 
-    def query_domain(self, domain, typenames, domainquerytype='list'):
+    def query_domain(self, domain, typenames, domainquerytype='list',
+        count=False):
         ''' Query by property domain values '''
 
         if domainquerytype == 'range':
@@ -107,7 +108,13 @@ class Repository(object):
             func.min(getattr(self.dataset, domain)),
             func.max(getattr(self.dataset, domain)))
         else:
-            query = self.session.query(getattr(self.dataset, domain)).distinct()
+            if count is True:
+                query = self.session.query(getattr(self.dataset, domain),
+                func.count(getattr(self.dataset, domain))).group_by(
+                getattr(self.dataset, domain))
+            else:
+                query = self.session.query(
+                getattr(self.dataset, domain)).distinct()
         return query.all()
 
     def query_latest_insert(self):
