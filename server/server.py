@@ -835,8 +835,14 @@ class Csw(object):
                     domainquerytype %s.' % \
                     (pname2, dvtype, self.domainquerytype))
 
+                    count = False
+
+                    if (self.config.has_option('server', 'domaincounts') and
+                        self.config.get('server', 'domaincounts') == 'true'):
+                        count = True
+
                     results = self.repository.query_domain(
-                    pname2, dvtype, self.domainquerytype)
+                    pname2, dvtype, self.domainquerytype, count)
 
                     self.log.debug('Results: %s' % str(len(results)))
 
@@ -856,8 +862,12 @@ class Csw(object):
                             self.log.debug(str(result))
                             if (result is not None and
                                 result[0] is not None):  # drop null values
+                                if count is True:  # show counts
+                                    val = '%s (%s)' % (result[0], result[1])
+                                else:
+                                    val = result[0]
                                 etree.SubElement(listofvalues,
-                                util.nspath_eval('csw:Value')).text = result[0]
+                                util.nspath_eval('csw:Value')).text = val
                 except Exception, err:
                     self.log.debug('No results for propertyname %s: %s.' %
                     (pname2, str(err)))
