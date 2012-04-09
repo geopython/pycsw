@@ -27,7 +27,7 @@ IRC
 
 As well, you can visit pycsw on IRC on ``#pycsw`` at `freenode`_ for realtime discussion.
 
-.. _`trac`: https://sourceforge.net/apps/trac/pycsw
+.. _`trac`: http://sourceforge.net/apps/trac/pycsw
 .. _`bug`: https://sourceforge.net/apps/trac/pycsw/newticket
 .. _`freenode`: http://freenode.net/
 .. _`ohloh`: http://www.ohloh.net/p/pycsw
