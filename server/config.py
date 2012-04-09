@@ -30,7 +30,7 @@
 #
 # =================================================================
 
-VERSION = '1.3.0-dev'
+VERSION = '1.3-dev'
 
 OGC_SCHEMAS_BASE = 'http://schemas.opengis.net'
 
