@@ -29,7 +29,7 @@
 # sudo rm /etc/apache2/conf.d/pycsw
 # sudo rm -rf /var/www/pycsw*
 
-VERSION=1.3-dev
+VERSION=1.2.0
 
 echo -n 'Installing pycsw $VERSION'
 
