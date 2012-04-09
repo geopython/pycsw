@@ -1,5 +1,5 @@
 #
-# spec file for package pycsw (1.2.0)
+# spec file for package pycsw (1.3-dev)
 #
 # Copyright (c) 2011 Angelos Tzotsos <tzotsos@opensuse.org>
 #
@@ -13,7 +13,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 Name:           pycsw
-Version:        1.2.0
+Version:        1.3-dev
 Release:        1
 License:        MIT
 Summary:        An OGC CSW server implementation written in Python
@@ -51,8 +51,8 @@ mkdir -p %{buildroot}/srv/www/htdocs
 mkdir -p %{buildroot}%{_sysconfdir}/apache2/conf.d
 
 cd ..
-mv pycsw-1.2.0 %{buildroot}/srv/www/htdocs/pycsw
-mkdir pycsw-1.2.0
+mv pycsw-1.3-dev %{buildroot}/srv/www/htdocs/pycsw
+mkdir pycsw-1.3-dev
 
 cat > %{buildroot}%{_sysconfdir}/apache2/conf.d/pycsw.conf << EOF
 <Location /pycsw/>
