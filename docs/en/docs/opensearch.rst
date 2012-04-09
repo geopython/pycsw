@@ -24,4 +24,4 @@ OpenSearch support is enabled by default.  HTTP requests must be specified with 
 
   http://localhost/pycsw/csw.py?mode=opensearch&service=CSW&verison=2.0.2&request=GetRecords&elementsetname=brief&typenames=csw:Record&resulttype=results
 
-.. _`A9 OpenSearch`: http://opensearch.org/
+.. _`A9 OpenSearch`: http://www.opensearch.org/Home

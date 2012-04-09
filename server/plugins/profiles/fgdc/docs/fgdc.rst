@@ -16,8 +16,8 @@ No additional extra configuration is required.
 Querying
 ^^^^^^^^
 
- * **typename**: fgdc:metadata
- * **outputschema**: http://www.opengis.net/cat/csw/csdgm
+ * **typename**: ``fgdc:metadata``
+ * **outputschema**: ``http://www.opengis.net/cat/csw/csdgm``
 
 Enabling FGDC Support
 ^^^^^^^^^^^^^^^^^^^^^^
