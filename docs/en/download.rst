@@ -14,6 +14,8 @@ Source Code
 
 * `Git mirror <https://github.com/tomkralidis/pycsw>`_
 
+* `Mercurial mirror <http://aiolos.survey.ntua.gr/hg/pycsw>`_
+
 Packages
 --------
 
