@@ -1,0 +1,13 @@
+Source: pycsw
+Section: web
+Priority: optional
+Maintainer: Angelos Tzotsos <gcpp.kalxas@gmail.com>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.9.2
+Homepage: http://pycsw.org
+
+Package: pycsw
+Architecture: all
+Depends: ${misc:Depends}, debconf, python
+Recommends: apache2, python-lxml, python-sqlalchemy, python-shapely, python-pyproj
+Description: A CSW server written in Python.
