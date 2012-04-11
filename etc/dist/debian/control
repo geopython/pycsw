@@ -10,4 +10,4 @@ Package: pycsw
 Architecture: all
 Depends: ${misc:Depends}, debconf, python
 Recommends: apache2, python-lxml, python-sqlalchemy, python-shapely, python-pyproj
-Description: A CSW server written in Python.
+Description: pycsw is an OGC CSW server implementation written in Python.
