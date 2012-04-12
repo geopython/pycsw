@@ -1,3 +1,9 @@
+pycsw (1.2.0-2) oneiric; urgency=low
+
+  * fixed installer to handle apache configuration files.
+
+ -- Angelos Tzotsos <gcpp.kalxas@gmail.com>  Wed, 11 Apr 2012 23:40:22 +0300
+
 pycsw (1.2.0-1) oneiric; urgency=low
 
   * Initial build.
