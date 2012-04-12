@@ -63,6 +63,14 @@ html:
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html/<language>.";\
 
+man:
+	@for lang in $(LANGUAGES);\
+	do \
+		$(SPHINXBUILD) -b man $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/man;\
+	done
+	@echo
+	@echo "Build finished. The manual pages are in $(BUILDDIR)/man."
+
 singlehtml:
 	@for lang in $(LANGUAGES);\
 	do \

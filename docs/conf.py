@@ -202,3 +202,5 @@ latex_documents = [
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
+man_pages = [(master_doc, 'pycsw', 'an OGC CSW server implementation written in Python', 'Tom Kralidis', 1)]
