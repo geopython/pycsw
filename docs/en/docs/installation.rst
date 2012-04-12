@@ -53,10 +53,20 @@ For earlier openSUSE versions change ``12.1`` with ``11.4``. For future openSUSE
 
 An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true>`_.
 
+.. _ubuntu:
+
 Installing on Ubuntu/Xubuntu/Kubuntu
 ------------------------------------
 
-In order to install pycsw to an Ubuntu based distribution, one can use the OSGeoLive installation script located in ``pycsw/etc/dist``:
+In order to install pycsw to an Ubuntu based distribution, one can run the following commands:
+
+.. code-block:: bash
+
+  # sudo add-apt-repository ppa:gcpp-kalxas/ppa-tzotsos
+  # sudo apt-get updated
+  # sudo apt-get install pycsw
+
+An alternative method is to use the OSGeoLive installation script located in ``pycsw/etc/dist/osgeolive``:
 
 .. code-block:: bash
 
