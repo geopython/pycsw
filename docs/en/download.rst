@@ -26,3 +26,12 @@ pycsw exists as a `package <https://build.opensuse.org/package/show?package=pycs
 
 .. seealso::
   :ref:`opensuse`
+
+
+Ubuntu
+******
+
+pycsw exists as a package in `Launchpad <https://code.launchpad.net/~gcpp-kalxas/+archive/ppa-tzotsos>`_. 
+
+.. seealso::
+  :ref:`ubuntu`
