@@ -1051,16 +1051,20 @@ class Csw(object):
                         'Distributed search results from catalogue \
                         %s: %s.' % (fedcat, remotecsw.results))
 
-                        if int(remotecsw.results['matches']) > 0:
-                            matched = str(int(matched) + \
-                            int(remotecsw.results['matches']))
+                        remotecsw_matches = int(remotecsw.results['matches'])
+                        plural = 's' if remotecsw_matches != 1 else ''
+                        if remotecsw_matches > 0:
+                            matched = str(int(matched) + remotecsw_matches)
                             dsresults.append(etree.Comment(
-                            '%s results from %s' %
-                            (remotecsw.results['matches'], fedcat)))
+                            ' %d result%s from %s ' %
+                            (remotecsw_matches, plural, fedcat)))
 
                             dsresults.append(remotecsw.records)
 
                 except Exception, err:
+                    error_string = 'remote CSW %s returned error: ' % fedcat
+                    dsresults.append(etree.Comment(
+                    ' %s\n\n%s ' % (error_string, remotecsw.response)))
                     self.log.debug(str(err))
 
         if int(matched) == 0:
