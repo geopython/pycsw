@@ -5,10 +5,10 @@
 		<csw:ElementSetName>full</csw:ElementSetName>
                 <csw:Constraint version="1.1.0">
                 <ogc:Filter>
-                    <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\">
-                        <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
-                        <ogc:Literal>%Ground Control%</ogc:Literal>
-                    </ogc:PropertyIsLike>
+                    <ogc:PropertyIsEqualTo>
+                        <ogc:PropertyName>dc:title</ogc:PropertyName>
+                        <ogc:Literal>Maui West IKONOS and Quickbird Imagery - Mosaic</ogc:Literal>
+                    </ogc:PropertyIsEqualTo>
                 </ogc:Filter>
             </csw:Constraint>
 	</csw:Query>
