@@ -245,7 +245,7 @@
       <ows:Value>SOAP</ows:Value>
     </ows:Constraint>
     <ows:Constraint name="FederatedCatalogues">
-      <ows:Value>http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw</ows:Value>
+      <ows:Value>http://geo.data.gov/geoportal/csw/discovery</ows:Value>
     </ows:Constraint>
     <inspire_ds:ExtendedCapabilities xsi:schemaLocation="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0 http://inspire.ec.europa.eu/schemas/inspire_ds/1.0/inspire_ds.xsd">
       <inspire_common:ResourceLocator>
