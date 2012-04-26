@@ -2,7 +2,7 @@
 
 .. meta::
    :description: pycsw is an OGC CSW server implementation written in Python
-   :keywords: pycsw, csw, catalogue, catalog, metadata, discovery, search, ogc, iso, fgdc, dif, ebrim
+   :keywords: pycsw, csw, catalogue, catalog, metadata, discovery, search, ogc, iso, fgdc, dif, ebrim, inspire
 
 ================
 Welcome to pycsw
