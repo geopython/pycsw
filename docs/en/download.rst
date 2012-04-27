@@ -3,9 +3,9 @@
 Download
 ========
 
-* `Current Release <http://sourceforge.net/projects/pycsw/files/1.2.0/>`_ (1.2.0)
+* Current Release (1.2.0): `.tar.gz <http://download.osgeo.org/pycsw/pycsw-1.2.0.tar.gz>`_ | `.zip <http://download.osgeo.org/pycsw/pycsw-1.2.0.zip>`_
 
-* `All Releases <http://sourceforge.net/projects/pycsw/files/>`_
+* `All Releases <http://download.osgeo.org/pycsw/>`_
 
 Source Code
 ------------------
