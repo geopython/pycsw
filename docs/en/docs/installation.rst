@@ -20,9 +20,9 @@ Installing from Source
 
 .. code-block:: bash
 
-  $ svn co https://pycsw.svn.sourceforge.net/svnroot/pycsw pycsw 
+  $ svn co https://pycsw.svn.sourceforge.net/svnroot/pycsw/trunk/ pycsw 
 
-Ensure that CGI is enabled for your install directory.  For example, on Apache, if you setup pycsw in ``/srv/www/htdocs/pycsw`` (where your URL will be ``http://host/pycsw/csw.py``), add the following to ``httpd.conf``:
+Ensure that CGI is enabled for the install directory.  For example, on Apache, if pycsw is installed in ``/srv/www/htdocs/pycsw`` (where the URL will be ``http://host/pycsw/csw.py``), add the following to ``httpd.conf``:
 
 .. code-block:: none
 
@@ -33,7 +33,7 @@ Ensure that CGI is enabled for your install directory.  For example, on Apache, 
   </Location>
 
 .. note::
-  If you install pycsw in ``cgi-bin``, this should work as expected.  In this case, the :ref:`tester <tester>` application must be moved to a normal location to serve static HTML documents.
+  If pycsw is installed in ``cgi-bin``, this should work as expected.  In this case, the :ref:`tester <tester>` application must be moved to a different location to serve static HTML documents.
 
 .. _opensuse:
 
@@ -90,10 +90,10 @@ For Windows installs, change the first line of ``csw.py`` to:
 Security
 --------
 
-By default, ``default.cfg`` is at the root of the pycsw install.  If you have setup pycsw outside your HTTP server's ``cgi-bin`` area, this file could be read.  To protect the configuration, you have a couple of options:
+By default, ``default.cfg`` is at the root of the pycsw install.  If pycsw is setup outside an HTTP server's ``cgi-bin`` area, this file could be read.  The following options protect the configuration:
 
 - move ``default.cfg`` to a non HTTP accessible area, and modify ``csw.py`` to point to the updated location
-- set your web server to deny access to the configuration.  For example, in Apache, add the following to ``httpd.conf``:
+- configure web server to deny access to the configuration.  For example, in Apache, add the following to ``httpd.conf``:
 
 .. code-block:: none
 

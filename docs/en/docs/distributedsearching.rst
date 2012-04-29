@@ -24,7 +24,7 @@ CSW-3: ``http://localhost/pycsw/csw.py?config=CSW-3.cfg``
  
 ...where the ``*.cfg`` configuration files are configured for each respective metadata repository.  The above CSW endpoints can be interacted with as usual.
  
-To federate the discovery of the three (3) portals into a unified sdarch, pycsw realizes this functionality by deploying an additional configuration which acts as the superset of CSW-1, CSW-2, CSW-3:
+To federate the discovery of the three (3) portals into a unified search, pycsw realizes this functionality by deploying an additional configuration which acts as the superset of CSW-1, CSW-2, CSW-3:
 
 CSW-all: ``http://localhost/pycsw/csw.py?config=CSW-all.cfg``
 
