@@ -32,11 +32,11 @@ echo "Installing pycsw $VERSION"
 echo 'Installing dependencies ...'
 
 # install dependencies
-apt-get install --yes apache2 python-lxml python-sqlalchemy python-shapely python-proj
+apt-get install --yes apache2 python-lxml python-sqlalchemy python-shapely python-pyproj
 
 echo 'Installing pycsw ...'
 
-add-apt-repository ppa:gcpp-kalxas/ppa-tzotsos
+add-apt-repository --yes ppa:gcpp-kalxas/ppa-tzotsos
 apt-get update
 apt-get install --yes pycsw
 
