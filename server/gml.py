@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 ''' GML support'''
 # =================================================================
 #
@@ -41,8 +41,10 @@ DEFAULT_SRS = crs.Crs('urn:x-ogc:def:crs:EPSG:6.11:4326')
 class Geometry(object):
     ''' base geometry class '''
 
-    def __init__(self, element):
+    def __init__(self, element, config):
         ''' initialize geometry parser  '''
+
+        self.staticcontext = config
 
         self.type = None 
         self.wkt = None
@@ -82,10 +84,13 @@ class Geometry(object):
                 ('Reprojection error: Invalid srsName "%s": %s' %
                 (self.crs.id, str(err)))
 
+    def nspath_eval(self,astr):
+        return util.nspath_eval(astr, self.staticcontext)
+
     def _get_point(self):
         ''' Parse gml:Point '''
     
-        tmp = self._exml.find(util.nspath_eval('gml:Point/gml:pos'))
+        tmp = self._exml.find(self.nspath_eval('gml:Point/gml:pos'))
     
         if tmp is None:
             raise RuntimeError, ('Invalid gml:Point geometry.  Missing gml:pos')
@@ -99,7 +104,7 @@ class Geometry(object):
     def _get_linestring(self):
         ''' Parse gml:LineString'''
     
-        tmp = self._exml.find(util.nspath_eval('gml:LineString/gml:posList'))
+        tmp = self._exml.find(self.nspath_eval('gml:LineString/gml:posList'))
     
         if tmp is None:
             raise RuntimeError, \
@@ -110,7 +115,7 @@ class Geometry(object):
     def _get_polygon(self):
         ''' Parse gml:Polygon'''
     
-        tmp = self._exml.find('.//%s' % util.nspath_eval('gml:posList'))
+        tmp = self._exml.find('.//%s' % self.nspath_eval('gml:posList'))
     
         if tmp is None:
             raise RuntimeError, \
@@ -121,14 +126,14 @@ class Geometry(object):
     def _get_envelope(self):
         ''' Parse gml:Envelope '''
     
-        tmp = self._exml.find(util.nspath_eval('gml:Envelope/gml:lowerCorner'))
+        tmp = self._exml.find(self.nspath_eval('gml:Envelope/gml:lowerCorner'))
         if tmp is None:
             raise RuntimeError, \
             ('Invalid gml:Envelope geometry.  Missing gml:lowerCorner')
         else:
             lower_left = tmp.text
     
-        tmp = self._exml.find(util.nspath_eval('gml:Envelope/gml:upperCorner'))
+        tmp = self._exml.find(self.nspath_eval('gml:Envelope/gml:upperCorner'))
         if tmp is None:
             raise RuntimeError, \
             ('Invalid gml:Envelope geometry.  Missing gml:upperCorner')

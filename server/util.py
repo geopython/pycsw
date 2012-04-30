@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -33,7 +33,6 @@
 import time
 import datetime
 from lxml import etree
-import config
 from shapely.wkt import loads
 
 def get_today_and_now():
@@ -78,7 +77,7 @@ def find_exml(val, attrib=False):
     else:
         return None
 
-def nspath_eval(xpath):
+def nspath_eval(xpath,config):
     ''' Return an etree friendly xpath '''
     out = []
     for chunks in xpath.split('/'):
@@ -167,22 +166,28 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     else:
         return 'false'
 
-def update_xpath(xml, recprop):
-    ''' Update XML document XPath values '''
+def update_xpath(config):
+    ''' Bind config to update_xpath function '''
 
-    if isinstance(xml, unicode):  # not lxml serialized yet
-        xml = etree.fromstring(xml)
+    def update_xpath_bound(xml, recprop):
+        ''' Update XML document XPath values '''
 
-    recprop = eval(recprop)
-    try:
-        nodes = xml.xpath(recprop['rp']['xpath'], namespaces=config.NAMESPACES)
-        if len(nodes) > 0:  # matches
-            for node1 in nodes:
-                if node1.text != recprop['value']:  # values differ, update
-                    node1.text = recprop['value']
-    except Exception, err:
-        raise RuntimeError, ('ERROR: %s' % str(err))
-    return etree.tostring(xml)
+        if isinstance(xml, unicode):  # not lxml serialized yet
+            xml = etree.fromstring(xml)
+
+        recprop = eval(recprop)
+        try:
+            nodes = xml.xpath(recprop['rp']['xpath'], namespaces=config.NAMESPACES)
+            if len(nodes) > 0:  # matches
+                for node1 in nodes:
+                    if node1.text != recprop['value']:  # values differ, update
+                        node1.text = recprop['value']
+        except Exception, err:
+            raise RuntimeError, ('ERROR: %s' % str(err))
+
+        return etree.tostring(xml)
+
+    return update_xpath_bound
 
 def transform_mappings(queryables, typename, reverse=False):
     ''' transform metadata model mappings '''
