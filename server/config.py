@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -30,284 +30,287 @@
 #
 # =================================================================
 
-VERSION = '1.3-dev'
+class StaticContext(object):
 
-OGC_SCHEMAS_BASE = 'http://schemas.opengis.net'
+    def __init__(self):
+        self.VERSION = '1.3-dev'
 
-NAMESPACES = {
-    'csw': 'http://www.opengis.net/cat/csw/2.0.2',
-    'dc' : 'http://purl.org/dc/elements/1.1/',
-    'dct': 'http://purl.org/dc/terms/',
-    'dif': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
-    'fgdc': 'http://www.opengis.net/cat/csw/csdgm',
-    'gmd': 'http://www.isotc211.org/2005/gmd',
-    'gml': 'http://www.opengis.net/gml',
-    'ogc': 'http://www.opengis.net/ogc',
-    'os': 'http://a9.com/-/spec/opensearch/1.1/',
-    'ows': 'http://www.opengis.net/ows',
-    'sitemap': 'http://www.sitemaps.org/schemas/sitemap/0.9',
-    'soapenv': 'http://www.w3.org/2003/05/soap-envelope',
-    'xlink': 'http://www.w3.org/1999/xlink',
-    'xs': 'http://www.w3.org/2001/XMLSchema',
-    'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
-}
+        self.OGC_SCHEMAS_BASE = 'http://schemas.opengis.net'
 
-MD_CORE_MODEL = {
-    'typename': 'pycsw:CoreMetadata',
-    'outputschema': 'http://pycsw.org/metadata',
-    'mappings': {
-        'pycsw:Identifier': 'identifier',
-         # CSW typename (e.g. csw:Record, md:MD_Metadata)
-        'pycsw:Typename': 'typename',
-         # schema namespace, i.e. http://www.isotc211.org/2005/gmd
-        'pycsw:Schema': 'schema',
-         # origin of resource, either 'local', or URL to web service
-        'pycsw:MdSource': 'mdsource',
-         # date of insertion
-        'pycsw:InsertDate': 'insert_date',  # date of insertion
-         # raw XML metadata
-        'pycsw:XML': 'xml',
-         # bag of metadata element and attributes ONLY, no XML tages
-        'pycsw:AnyText': 'anytext',
-        'pycsw:Language': 'language',
-        'pycsw:Title': 'title',
-        'pycsw:Abstract': 'abstract',
-        'pycsw:Keywords': 'keywords',
-        'pycsw:KeywordType': 'keywordstype',
-        'pycsw:Format': 'format',
-        'pycsw:Source': 'source',
-        'pycsw:Date': 'date',
-        'pycsw:Modified': 'date_modified',
-        'pycsw:Type': 'type',
-         # geometry, specified in OGC WKT
-        'pycsw:BoundingBox': 'wkt_geometry',
-        'pycsw:CRS': 'crs',
-        'pycsw:AlternateTitle': 'title_alternate',
-        'pycsw:RevisionDate': 'date_revision',
-        'pycsw:CreationDate': 'date_creation',
-        'pycsw:PublicationDate': 'date_publication',
-        'pycsw:OrganizationName': 'organization',
-        'pycsw:SecurityConstraints': 'securityconstraints',
-        'pycsw:ParentIdentifier': 'parentidentifier',
-        'pycsw:TopicCategory': 'topicategory',
-        'pycsw:ResourceLanguage': 'resourcelanguage',
-        'pycsw:GeographicDescriptionCode': 'geodescode',
-        'pycsw:Denominator': 'denominator',
-        'pycsw:DistanceValue': 'distancevalue',
-        'pycsw:DistanceUOM': 'distanceuom',
-        'pycsw:TempExtent_begin': 'time_begin',
-        'pycsw:TempExtent_end': 'time_end',
-        'pycsw:ServiceType': 'servicetype',
-        'pycsw:ServiceTypeVersion': 'servicetypeversion',
-        'pycsw:Operation': 'operation',
-        'pycsw:CouplingType': 'couplingtype',
-        'pycsw:OperatesOn': 'operateson',
-        'pycsw:OperatesOnIdentifier': 'operatesonidentifier',
-        'pycsw:OperatesOnName': 'operatesoname',
-        'pycsw:Degree': 'degree',
-        'pycsw:AccessConstraints': 'accessconstraints',
-        'pycsw:OtherConstraints': 'otherconstraints',
-        'pycsw:Classification': 'classification',
-        'pycsw:ConditionApplyingToAccessAndUse': 'conditionapplyingtoaccessanduse',
-        'pycsw:Lineage': 'lineage',
-        'pycsw:ResponsiblePartyRole': 'responsiblepartyrole',
-        'pycsw:SpecificationTitle': 'specificationtitle',
-        'pycsw:SpecificationDate': 'specificationdate',
-        'pycsw:SpecificationDateType': 'specificationdatetype',
-        'pycsw:Creator': 'creator',
-        'pycsw:Publisher': 'publisher',
-        'pycsw:Contributor': 'contributor',
-        'pycsw:Relation': 'relation',
-         # links: format "name,description,protocol,url[^,,,[^,,,]]"
-        'pycsw:Links': 'links',
-    }
-}
+        self.NAMESPACES = {
+            'csw': 'http://www.opengis.net/cat/csw/2.0.2',
+            'dc' : 'http://purl.org/dc/elements/1.1/',
+            'dct': 'http://purl.org/dc/terms/',
+            'dif': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
+            'fgdc': 'http://www.opengis.net/cat/csw/csdgm',
+            'gmd': 'http://www.isotc211.org/2005/gmd',
+            'gml': 'http://www.opengis.net/gml',
+            'ogc': 'http://www.opengis.net/ogc',
+            'os': 'http://a9.com/-/spec/opensearch/1.1/',
+            'ows': 'http://www.opengis.net/ows',
+            'sitemap': 'http://www.sitemaps.org/schemas/sitemap/0.9',
+            'soapenv': 'http://www.w3.org/2003/05/soap-envelope',
+            'xlink': 'http://www.w3.org/1999/xlink',
+            'xs': 'http://www.w3.org/2001/XMLSchema',
+            'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
+        }
 
-MODEL =  {
-    'operations': {
-        'GetCapabilities': {
-            'methods': {
-                'get': True,
-                'post': True,
-            },
-            'parameters': {
-                'sections': {
-                    'values': ['ServiceIdentification', 'ServiceProvider',
-                    'OperationsMetadata', 'Filter_Capabilities']
-                }
+        self.MD_CORE_MODEL = {
+            'typename': 'pycsw:CoreMetadata',
+            'outputschema': 'http://pycsw.org/metadata',
+            'mappings': {
+                'pycsw:Identifier': 'identifier',
+                 # CSW typename (e.g. csw:Record, md:MD_Metadata)
+                'pycsw:Typename': 'typename',
+                 # schema namespace, i.e. http://www.isotc211.org/2005/gmd
+                'pycsw:Schema': 'schema',
+                 # origin of resource, either 'local', or URL to web service
+                'pycsw:MdSource': 'mdsource',
+                 # date of insertion
+                'pycsw:InsertDate': 'insert_date',  # date of insertion
+                 # raw XML metadata
+                'pycsw:XML': 'xml',
+                 # bag of metadata element and attributes ONLY, no XML tages
+                'pycsw:AnyText': 'anytext',
+                'pycsw:Language': 'language',
+                'pycsw:Title': 'title',
+                'pycsw:Abstract': 'abstract',
+                'pycsw:Keywords': 'keywords',
+                'pycsw:KeywordType': 'keywordstype',
+                'pycsw:Format': 'format',
+                'pycsw:Source': 'source',
+                'pycsw:Date': 'date',
+                'pycsw:Modified': 'date_modified',
+                'pycsw:Type': 'type',
+                 # geometry, specified in OGC WKT
+                'pycsw:BoundingBox': 'wkt_geometry',
+                'pycsw:CRS': 'crs',
+                'pycsw:AlternateTitle': 'title_alternate',
+                'pycsw:RevisionDate': 'date_revision',
+                'pycsw:CreationDate': 'date_creation',
+                'pycsw:PublicationDate': 'date_publication',
+                'pycsw:OrganizationName': 'organization',
+                'pycsw:SecurityConstraints': 'securityconstraints',
+                'pycsw:ParentIdentifier': 'parentidentifier',
+                'pycsw:TopicCategory': 'topicategory',
+                'pycsw:ResourceLanguage': 'resourcelanguage',
+                'pycsw:GeographicDescriptionCode': 'geodescode',
+                'pycsw:Denominator': 'denominator',
+                'pycsw:DistanceValue': 'distancevalue',
+                'pycsw:DistanceUOM': 'distanceuom',
+                'pycsw:TempExtent_begin': 'time_begin',
+                'pycsw:TempExtent_end': 'time_end',
+                'pycsw:ServiceType': 'servicetype',
+                'pycsw:ServiceTypeVersion': 'servicetypeversion',
+                'pycsw:Operation': 'operation',
+                'pycsw:CouplingType': 'couplingtype',
+                'pycsw:OperatesOn': 'operateson',
+                'pycsw:OperatesOnIdentifier': 'operatesonidentifier',
+                'pycsw:OperatesOnName': 'operatesoname',
+                'pycsw:Degree': 'degree',
+                'pycsw:AccessConstraints': 'accessconstraints',
+                'pycsw:OtherConstraints': 'otherconstraints',
+                'pycsw:Classification': 'classification',
+                'pycsw:ConditionApplyingToAccessAndUse': 'conditionapplyingtoaccessanduse',
+                'pycsw:Lineage': 'lineage',
+                'pycsw:ResponsiblePartyRole': 'responsiblepartyrole',
+                'pycsw:SpecificationTitle': 'specificationtitle',
+                'pycsw:SpecificationDate': 'specificationdate',
+                'pycsw:SpecificationDateType': 'specificationdatetype',
+                'pycsw:Creator': 'creator',
+                'pycsw:Publisher': 'publisher',
+                'pycsw:Contributor': 'contributor',
+                'pycsw:Relation': 'relation',
+                 # links: format "name,description,protocol,url[^,,,[^,,,]]"
+                'pycsw:Links': 'links',
             }
-        },
-        'DescribeRecord': {
-            'methods': {
-                'get': True,
-                'post': True,
-            },
-            'parameters': {
-                'schemaLanguage': {
-                    'values': ['http://www.w3.org/XML/Schema',
-                    'http://www.w3.org/TR/xmlschema-1/']
+        }
+
+        self.MODEL =  {
+            'operations': {
+                'GetCapabilities': {
+                    'methods': {
+                        'get': True,
+                        'post': True,
+                    },
+                    'parameters': {
+                        'sections': {
+                            'values': ['ServiceIdentification', 'ServiceProvider',
+                            'OperationsMetadata', 'Filter_Capabilities']
+                        }
+                    }
                 },
-                'typeName': {
-                    'values': ['csw:Record']
+                'DescribeRecord': {
+                    'methods': {
+                        'get': True,
+                        'post': True,
+                    },
+                    'parameters': {
+                        'schemaLanguage': {
+                            'values': ['http://www.w3.org/XML/Schema',
+                            'http://www.w3.org/TR/xmlschema-1/']
+                        },
+                        'typeName': {
+                            'values': ['csw:Record']
+                        },
+                        'outputFormat': {
+                            'values': ['application/xml', 'application/json']
+                        }
+                    }
                 },
-                'outputFormat': {
-                    'values': ['application/xml', 'application/json']
+                'GetRecords': {
+                    'methods': {
+                        'get': True,
+                        'post': True,
+                    },
+                    'parameters': {
+                        'resultType': {
+                            'values': ['hits', 'results', 'validate']
+                        },
+                        'typeNames': {
+                            'values': ['csw:Record']
+                        },
+                        'outputSchema': {
+                            'values': ['http://www.opengis.net/cat/csw/2.0.2']
+                        },
+                        'outputFormat': {
+                            'values': ['application/xml', 'application/json']
+                        },
+                        'CONSTRAINTLANGUAGE': {
+                            'values': ['FILTER', 'CQL_TEXT']
+                        },
+                        'ElementSetName': {
+                            'values': ['brief','summary','full']
+                        }
+                    },
+                    'constraints': {
+                    }
+                },
+                'GetRecordById': {
+                    'methods': {
+                        'get': True,
+                        'post': True,
+                    },
+                    'parameters': {
+                        'outputSchema': {
+                            'values': ['http://www.opengis.net/cat/csw/2.0.2']
+                        },
+                        'outputFormat': {
+                            'values': ['application/xml', 'application/json']
+                        },
+                        'ElementSetName': {
+                            'values': ['brief','summary','full']
+                        }
+                    }
+                },
+                'GetRepositoryItem': {
+                    'methods': {
+                        'get': True,
+                        'post': False,
+                    },
+                    'parameters': {
+                    }
                 }
-            }
-        },
-        'GetRecords': {
-            'methods': {
-                'get': True,
-                'post': True,
             },
             'parameters': {
-                'resultType': {
-                    'values': ['hits', 'results', 'validate']
+                'version': { 
+                    'values': ['2.0.2']
                 },
-                'typeNames': {
-                    'values': ['csw:Record']
-                },
-                'outputSchema': {
+                'service': {
                     'values': ['http://www.opengis.net/cat/csw/2.0.2']
-                },
-                'outputFormat': {
-                    'values': ['application/xml', 'application/json']
-                },
-                'CONSTRAINTLANGUAGE': {
-                    'values': ['FILTER', 'CQL_TEXT']
-                },
-                'ElementSetName': {
-                    'values': ['brief','summary','full']
                 }
             },
             'constraints': {
-            }
-        },
-        'GetRecordById': {
-            'methods': {
-                'get': True,
-                'post': True,
-            },
-            'parameters': {
-                'outputSchema': {
-                    'values': ['http://www.opengis.net/cat/csw/2.0.2']
+                'PostEncoding': {
+                    'values': ['XML', 'SOAP']
                 },
-                'outputFormat': {
-                    'values': ['application/xml', 'application/json']
-                },
-                'ElementSetName': {
-                    'values': ['brief','summary','full']
+                'XPathQueryables': {
+                    'values': ['allowed']
                 }
-            }
-        },
-        'GetRepositoryItem': {
-            'methods': {
-                'get': True,
-                'post': False,
             },
-            'parameters': {
-            }
-        }
-    },
-    'parameters': {
-        'version': { 
-            'values': ['2.0.2']
-        },
-        'service': {
-            'values': ['http://www.opengis.net/cat/csw/2.0.2']
-        }
-    },
-    'constraints': {
-        'PostEncoding': {
-            'values': ['XML', 'SOAP']
-        },
-        'XPathQueryables': {
-            'values': ['allowed']
-        }
-    },
-    'typenames': {
-        'csw:Record': {
-            'outputschema': 'http://www.opengis.net/cat/csw/2.0.2',
-            'queryables': {
-                'SupportedDublinCoreQueryables': {
-                    # map Dublin Core queryables to core metadata model
-                    'dc:title': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Title']},
-                    'dc:creator': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Creator']},
-                    'dc:subject': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Keywords']},
-                    'dct:abstract': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Abstract']},
-                    'dc:publisher': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Publisher']},
-                    'dc:contributor': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Contributor']},
-                    'dct:modified': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Modified']},
-                    'dc:date': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Date']},
-                    'dc:type': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Type']},
-                    'dc:format': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Format']},
-                    'dc:identifier': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Identifier']},
-                    'dc:source': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Source']},
-                    'dc:language': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Language']},
-                    'dc:relation': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:Relation']},
-                    'dc:rights': \
-                    {'dbcol': \
-                     MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
-                    # bbox and full text map to internal fixed columns
-                    'ows:BoundingBox': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:BoundingBox']},
-                    'csw:AnyText': \
-                    {'dbcol': MD_CORE_MODEL['mappings']['pycsw:AnyText']},
+            'typenames': {
+                'csw:Record': {
+                    'outputschema': 'http://www.opengis.net/cat/csw/2.0.2',
+                    'queryables': {
+                        'SupportedDublinCoreQueryables': {
+                            # map Dublin Core queryables to core metadata model
+                            'dc:title': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Title']},
+                            'dc:creator': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                            'dc:subject': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
+                            'dct:abstract': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
+                            'dc:publisher': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Publisher']},
+                            'dc:contributor': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Contributor']},
+                            'dct:modified': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Modified']},
+                            'dc:date': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Date']},
+                            'dc:type': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Type']},
+                            'dc:format': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Format']},
+                            'dc:identifier': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
+                            'dc:source': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Source']},
+                            'dc:language': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Language']},
+                            'dc:relation': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Relation']},
+                            'dc:rights': \
+                            {'dbcol': \
+                             self.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
+                            # bbox and full text map to internal fixed columns
+                            'ows:BoundingBox': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']},
+                            'csw:AnyText': \
+                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:AnyText']},
+                        }
+                    }
                 }
             }
         }
-    }
-}
 
-def gen_domains():
-    ''' Generate parameter domain model '''
-    domain = {}
-    domain['methods'] = {'get': True, 'post': True}
-    domain['parameters'] = {'ParameterName': {'values': [] }}
-    for operation in MODEL['operations'].keys():
-        for parameter in MODEL['operations'][operation]['parameters']:
-            domain['parameters']['ParameterName']['values'].append('%s.%s' %
-            (operation, parameter))
-    return domain
+    def gen_domains(self):
+        ''' Generate parameter domain model '''
+        domain = {}
+        domain['methods'] = {'get': True, 'post': True}
+        domain['parameters'] = {'ParameterName': {'values': [] }}
+        for operation in self.MODEL['operations'].keys():
+            for parameter in self.MODEL['operations'][operation]['parameters']:
+                domain['parameters']['ParameterName']['values'].append('%s.%s' %
+                (operation, parameter))
+        return domain
 
-def refresh_dc(mappings):
-    ''' Refresh Dublin Core mappings '''
+    def refresh_dc(self, mappings):
+        ''' Refresh Dublin Core mappings '''
 
-    defaults = {
-        'dc:title': 'pycsw:Title',
-        'dc:creator': 'pycsw:Creator',
-        'dc:subject': 'pycsw:Keywords',
-        'dct:abstract': 'pycsw:Abstract',
-        'dc:publisher': 'pycsw:Publisher',
-        'dc:contributor': 'pycsw:Contributor',
-        'dct:modified': 'pycsw:Modified',
-        'dc:date': 'pycsw:Date',
-        'dc:type': 'pycsw:Type',
-        'dc:format': 'pycsw:Format',
-        'dc:identifier': 'pycsw:Identifier',
-        'dc:source': 'pycsw:Source',
-        'dc:language': 'pycsw:Language',
-        'dc:relation': 'pycsw:Relation',
-        'dc:rights': 'pycsw:AccessConstraints',
-        'ows:BoundingBox': 'pycsw:BoundingBox',
-        'csw:AnyText': 'pycsw:AnyText',
-    }
+        defaults = {
+            'dc:title': 'pycsw:Title',
+            'dc:creator': 'pycsw:Creator',
+            'dc:subject': 'pycsw:Keywords',
+            'dct:abstract': 'pycsw:Abstract',
+            'dc:publisher': 'pycsw:Publisher',
+            'dc:contributor': 'pycsw:Contributor',
+            'dct:modified': 'pycsw:Modified',
+            'dc:date': 'pycsw:Date',
+            'dc:type': 'pycsw:Type',
+            'dc:format': 'pycsw:Format',
+            'dc:identifier': 'pycsw:Identifier',
+            'dc:source': 'pycsw:Source',
+            'dc:language': 'pycsw:Language',
+            'dc:relation': 'pycsw:Relation',
+            'dc:rights': 'pycsw:AccessConstraints',
+            'ows:BoundingBox': 'pycsw:BoundingBox',
+            'csw:AnyText': 'pycsw:AnyText',
+        }
 
-    for k, v in defaults.iteritems():
-        MODEL['typenames']['csw:Record']['queryables']\
-        ['SupportedDublinCoreQueryables'][k] = \
-        {'dbcol': mappings['mappings'][v]}
+        for k, v in defaults.iteritems():
+            self.MODEL['typenames']['csw:Record']['queryables']\
+            ['SupportedDublinCoreQueryables'][k] = \
+            {'dbcol': mappings['mappings'][v]}

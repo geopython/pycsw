@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -35,65 +35,76 @@ from lxml import etree
 from server import config, util
 from server.plugins.profiles import profile
 
-NAMESPACES = {
-    'atom': 'http://www.w3.org/2005/Atom',
-    'georss': 'http://www.georss.org/georss'
-}
+class AtomStaticContext(object):
 
-REPOSITORY = {
-    'atom:entry': {
-        'outputschema': 'http://www.w3.org/2005/Atom',
-        'queryables': {
-            'SupportedAtomQueryables': {
-                'atom:id': {'xpath': 'atom:id', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
-                'atom:title': {'xpath': 'atom:title', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Title']},
-                'atom:author': {'xpath': 'atom:author', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Creator']},
-                'atom:category': {'xpath': 'atom:category', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
-                'atom:contributor': {'xpath': 'atom:contributor', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Contributor']},
-                'atom:rights': {'xpath': 'atom:rights', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
-                'atom:source': {'xpath': 'atom:source', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Source']},
-                'atom:summary': {'xpath': 'atom:summary', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
-                'atom:updated': {'xpath': 'atom:updated', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Modified']},
-                'atom:published': {'xpath': 'atom:published', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:PublicationDate']},
-                'atom:AnyText': {'xpath': 'atom:AnyText', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:AnyText']},
-                'georss:where': {'xpath': 'georss:where', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']}
-            }
-        },
-        'mappings': {
-            'csw:Record': {
-                # map Atom queryables to DC queryables
-                'atom:id': 'dc:identifier',
-                'atom:title': 'dc:title',
-                'atom:author': 'dc:creator',
-                'atom:category': 'dc:subject',
-                'atom:contributor': 'dc:contributor',
-                'atom:rights': 'dc:rights',
-                'atom:source': 'dc:source',
-                'atom:summary': 'dct:abstract',
-                'atom:updated': 'dct:modified',
-                'atom:AnyText': 'csw:AnyText',
-                'georss:where': 'ows:BoundingBox'
+    def __init__(self, globalstaticcontext):
+        self.globalstaticcontext = globalstaticcontext
+
+        self.NAMESPACES = {
+            'atom': 'http://www.w3.org/2005/Atom',
+            'georss': 'http://www.georss.org/georss'
+        }
+
+        self.REPOSITORY = {
+            'atom:entry': {
+                'outputschema': 'http://www.w3.org/2005/Atom',
+                'queryables': {
+                    'SupportedAtomQueryables': {
+                        'atom:id': {'xpath': 'atom:id', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
+                        'atom:title': {'xpath': 'atom:title', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Title']},
+                        'atom:author': {'xpath': 'atom:author', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                        'atom:category': {'xpath': 'atom:category', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
+                        'atom:contributor': {'xpath': 'atom:contributor', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Contributor']},
+                        'atom:rights': {'xpath': 'atom:rights', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
+                        'atom:source': {'xpath': 'atom:source', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Source']},
+                        'atom:summary': {'xpath': 'atom:summary', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
+                        'atom:updated': {'xpath': 'atom:updated', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Modified']},
+                        'atom:published': {'xpath': 'atom:published', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:PublicationDate']},
+                        'atom:AnyText': {'xpath': 'atom:AnyText', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:AnyText']},
+                        'georss:where': {'xpath': 'georss:where', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']}
+                    }
+                },
+                'mappings': {
+                    'csw:Record': {
+                        # map Atom queryables to DC queryables
+                        'atom:id': 'dc:identifier',
+                        'atom:title': 'dc:title',
+                        'atom:author': 'dc:creator',
+                        'atom:category': 'dc:subject',
+                        'atom:contributor': 'dc:contributor',
+                        'atom:rights': 'dc:rights',
+                        'atom:source': 'dc:source',
+                        'atom:summary': 'dct:abstract',
+                        'atom:updated': 'dct:modified',
+                        'atom:AnyText': 'csw:AnyText',
+                        'georss:where': 'ows:BoundingBox'
+                    }
+                }
             }
         }
-    }
-}
 
 class ATOM(profile.Profile):
     ''' Atom class '''
-    def __init__(self, model, namespaces):
+    def __init__(self, model, namespaces, globalstaticcontext):
+        self.globalstaticcontext = globalstaticcontext
+        self.staticcontext = AtomStaticContext(globalstaticcontext)
+
         profile.Profile.__init__(self,
             name='atom',
             version='1.0',
             title='Atom Syndication Format',
             url='http://tools.ietf.org/html/rfc4287',
-            namespace=NAMESPACES['atom'],
+            namespace=self.staticcontext.NAMESPACES['atom'],
             typename='atom:entry',
-            outputschema=NAMESPACES['atom'],
+            outputschema=self.staticcontext.NAMESPACES['atom'],
             prefixes=['atom'],
             model=model,
             core_namespaces=namespaces,
-            added_namespaces=NAMESPACES,
-            repository=REPOSITORY['atom:entry'])
+            added_namespaces=self.staticcontext.NAMESPACES,
+            repository=self.staticcontext.REPOSITORY['atom:entry'])
+
+    def nspath_eval(self, astr):
+        return util.nspath_eval(astr, self.globalstaticcontext)
 
     def extend_core(self, model, namespaces, config):
         ''' Extend core configuration '''
@@ -111,7 +122,7 @@ class ATOM(profile.Profile):
         ''' Return schema components as lxml.etree.Element list '''
 
         node = etree.Element(
-        util.nspath_eval('csw:SchemaComponent'),
+        self.nspath_eval('csw:SchemaComponent'),
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace)
 
         schema = etree.parse(os.path.join(
@@ -128,61 +139,61 @@ class ATOM(profile.Profile):
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
 
-        typename = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+        typename = util.getqattr(result, self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Typename'])
 
         if esn == 'full' and typename == 'atom:entry':
             # dump record as is and exit
-            return etree.fromstring(util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
+            return etree.fromstring(util.getqattr(result, self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
         if typename == 'csw:Record':  # transform csw:Record -> atom:entry model mappings
-            util.transform_mappings(queryables, REPOSITORY['atom:entry']['mappings']['csw:Record'])
+            util.transform_mappings(queryables, self.staticcontext.REPOSITORY['atom:entry']['mappings']['csw:Record'])
 
-        node = etree.Element(util.nspath_eval('atom:entry'))
-        node.attrib[util.nspath_eval('xsi:schemaLocation')] = \
-        '%s %s?service=CSW&version=2.0.2&request=DescribeRecord&typename=atom:entry' % (NAMESPACES['atom'], self.url)
+        node = etree.Element(self.nspath_eval('atom:entry'))
+        node.attrib[self.nspath_eval('xsi:schemaLocation')] = \
+        '%s %s?service=CSW&version=2.0.2&request=DescribeRecord&typename=atom:entry' % (self.staticcontext.NAMESPACES['atom'], self.url)
 
         # author
         val = util.getqattr(result, queryables['atom:author']['dbcol'])
          
         if val:
-            etree.SubElement(node, util.nspath_eval('atom:author')).text = util.getqattr(result, queryables['atom:author']['dbcol'])
+            etree.SubElement(node, self.nspath_eval('atom:author')).text = util.getqattr(result, queryables['atom:author']['dbcol'])
 
         # category
         val = util.getqattr(result, queryables['atom:category']['dbcol'])
 
         if val:
             for kw in val.split(','):
-                etree.SubElement(node, util.nspath_eval('atom:category')).text = kw
+                etree.SubElement(node, self.nspath_eval('atom:category')).text = kw
 
 
         for qval in ['contributor', 'id']:
             val = util.getqattr(result, queryables['atom:%s' % qval]['dbcol'])
             if val:
-                etree.SubElement(node, util.nspath_eval('atom:%s' % qval)).text = util.getqattr(result, queryables['atom:%s' % qval]['dbcol'])
+                etree.SubElement(node, self.nspath_eval('atom:%s' % qval)).text = util.getqattr(result, queryables['atom:%s' % qval]['dbcol'])
 
-        rlinks = util.getqattr(result, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+        rlinks = util.getqattr(result, self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Links'])
         if rlinks:
             for link in rlinks.split('^'):
                 linkset = link.split(',')
            
-                url2 = etree.SubElement(node, util.nspath_eval('atom:link'), href=linkset[-1], type=linkset[2], title=linkset[1])
+                url2 = etree.SubElement(node, self.nspath_eval('atom:link'), href=linkset[-1], type=linkset[2], title=linkset[1])
 
-        etree.SubElement(node, util.nspath_eval('atom:link'), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (self.url, util.getqattr(result, queryables['atom:id']['dbcol'])))
+        etree.SubElement(node, self.nspath_eval('atom:link'), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (self.url, util.getqattr(result, queryables['atom:id']['dbcol'])))
 
         for qval in ['published', 'rights', 'source', 'summary', 'title', 'updated']:
             val = util.getqattr(result, queryables['atom:%s' % qval]['dbcol'])
             if val:
-                etree.SubElement(node, util.nspath_eval('atom:%s' % qval)).text = util.getqattr(result, queryables['atom:%s' % qval]['dbcol'])
+                etree.SubElement(node, self.nspath_eval('atom:%s' % qval)).text = util.getqattr(result, queryables['atom:%s' % qval]['dbcol'])
 
         # bbox extent
         val = util.getqattr(result, queryables['georss:where']['dbcol'])
-        bboxel = write_extent(val)
+        bboxel = write_extent(val, self.globalstaticcontext)
         if bboxel is not None:
             node.append(bboxel)
 
         return node
 
-def write_extent(bbox):
+def write_extent(bbox, config):
     ''' Generate BBOX extent '''
 
     from shapely.wkt import loads
@@ -192,11 +203,11 @@ def write_extent(bbox):
             bbox2 = loads(bbox.split(';')[-1])
         else:
             bbox2 = loads(bbox)
-        where = etree.Element(util.nspath_eval('georss:where'))
-        polygon = etree.SubElement(where, util.nspath_eval('gml:Polygon'), srsName='urn:x-ogc:def:crs:EPSG:6.11:4326')
-        exterior = etree.SubElement(polygon, util.nspath_eval('gml:exterior'))
-        lring = etree.SubElement(exterior, util.nspath_eval('gml:LinearRing'))
-        poslist = etree.SubElement(lring, util.nspath_eval('gml:posList')).text = \
+        where = etree.Element(util.nspath_eval('georss:where', config))
+        polygon = etree.SubElement(where, util.nspath_eval('gml:Polygon', config), srsName='urn:x-ogc:def:crs:EPSG:6.11:4326')
+        exterior = etree.SubElement(polygon, util.nspath_eval('gml:exterior', config))
+        lring = etree.SubElement(exterior, util.nspath_eval('gml:LinearRing', config))
+        poslist = etree.SubElement(lring, util.nspath_eval('gml:posList', config)).text = \
         ' '.join(['%s %s' % (str(i[1]), str(i[0])) for i in list(bbox2.exterior.coords)])
 
         return where
