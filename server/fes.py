@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -66,7 +66,7 @@ MODEL =  {
     }
 }
 
-def parse(element, queryables, dbtype):
+def parse(element, queryables, dbtype, config):
     ''' OGC Filter object support '''
 
     boq = None
@@ -89,24 +89,24 @@ def parse(element, queryables, dbtype):
             boolean_true = 'true'
             boolean_false = 'false'
 
-        if child.tag == util.nspath_eval('ogc:Not'):
+        if child.tag == util.nspath_eval('ogc:Not', config):
             queries.append("%s = %s" %
             (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-            child.xpath('child::*')[0], dbtype), boolean_false))
+            child.xpath('child::*')[0], dbtype, config), boolean_false))
 
         elif child.tag in \
-        [util.nspath_eval('ogc:%s' % n) for n in \
+        [util.nspath_eval('ogc:%s' % n, config) for n in \
         MODEL['SpatialOperators']['values']]:
             if boq is not None and boq == ' not ':
                 queries.append("%s = %s" %
                 (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-                 child, dbtype), boolean_false))
+                 child, dbtype, config), boolean_false))
             else:
                 queries.append("%s = %s" % 
                 (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-                 child, dbtype), boolean_true))
+                 child, dbtype, config), boolean_true))
 
-        elif child.tag == util.nspath_eval('ogc:FeatureId'):
+        elif child.tag == util.nspath_eval('ogc:FeatureId', config):
             queries.append("%s = '%s'" % (queryables['pycsw:Identifier'],
             child.attrib.get('fid')))
 
@@ -122,7 +122,7 @@ def parse(element, queryables, dbtype):
             if singlechar is None:
                 singlechar = '_'
 
-            if child.xpath('child::*')[0].tag == util.nspath_eval('ogc:Function'):
+            if child.xpath('child::*')[0].tag == util.nspath_eval('ogc:Function', config):
                 if (child.xpath('child::*')[0].attrib['name'] not in
                 MODEL['Functions'].keys()):
                     raise RuntimeError, ('Invalid ogc:Function: %s' %
@@ -131,23 +131,23 @@ def parse(element, queryables, dbtype):
 
                 try:
                     pname = queryables[child.find(
-                    util.nspath_eval('ogc:Function/ogc:PropertyName')).text]['dbcol']
+                    util.nspath_eval('ogc:Function/ogc:PropertyName', config)).text]['dbcol']
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
-                    (child.find(util.nspath_eval('ogc:Function/ogc:PropertyName')).text,
+                    (child.find(util.nspath_eval('ogc:Function/ogc:PropertyName', config)).text,
                     str(err)))
 
             else:
                 try:
                     pname = queryables[child.find(
-                    util.nspath_eval('ogc:PropertyName')).text]['dbcol']
+                    util.nspath_eval('ogc:PropertyName', config)).text]['dbcol']
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
-                    (child.find(util.nspath_eval('ogc:PropertyName')).text,
+                    (child.find(util.nspath_eval('ogc:PropertyName', config)).text,
                     str(err)))
 
-            if child.tag != util.nspath_eval('ogc:PropertyIsBetween'):
-                pval = child.find(util.nspath_eval('ogc:Literal')).text
+            if child.tag != util.nspath_eval('ogc:PropertyIsBetween', config):
+                pval = child.find(util.nspath_eval('ogc:Literal', config)).text
                 pvalue = pval.replace(wildcard,'%').replace(singlechar,'_')
 
             com_op = _get_comparison_operator(child)
@@ -158,12 +158,12 @@ def parse(element, queryables, dbtype):
             pname == 'anytext'):
                 com_op = 'ilike' if dbtype == 'postgresql' else 'like'
 
-            if child.tag == util.nspath_eval('ogc:PropertyIsBetween'):
+            if child.tag == util.nspath_eval('ogc:PropertyIsBetween', config):
                 com_op = 'between'
                 lower_boundary = child.find(
-                util.nspath_eval('ogc:LowerBoundary/ogc:Literal')).text
+                util.nspath_eval('ogc:LowerBoundary/ogc:Literal', config)).text
                 upper_boundary = child.find(
-                util.nspath_eval('ogc:UpperBoundary/ogc:Literal')).text
+                util.nspath_eval('ogc:UpperBoundary/ogc:Literal', config)).text
                 queries.append("%s %s '%s' and '%s'" %
                 (pname, com_op, lower_boundary, upper_boundary))
             else:
@@ -186,10 +186,10 @@ def parse(element, queryables, dbtype):
 
     return where
 
-def _get_spatial_operator(geomattr, element, dbtype):
+def _get_spatial_operator(geomattr, element, dbtype, config):
     ''' return the spatial predicate function '''
-    property_name = element.find(util.nspath_eval('ogc:PropertyName'))
-    distance = element.find(util.nspath_eval('ogc:Distance'))
+    property_name = element.find(util.nspath_eval('ogc:PropertyName', config))
+    distance = element.find(util.nspath_eval('ogc:Distance', config))
 
     distance = 'false' if distance is None else distance.text
 
@@ -202,7 +202,7 @@ def _get_spatial_operator(geomattr, element, dbtype):
         ('Invalid ogc:PropertyName in spatial filter: %s' %
         property_name.text)
 
-    geometry = gml.Geometry(element)
+    geometry = gml.Geometry(element, config)
 
     spatial_predicate = util.xmltag_split(element.tag).lower()
 

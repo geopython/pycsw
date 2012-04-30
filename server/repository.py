@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -30,15 +30,23 @@
 #
 # =================================================================
 
+import os
 from sqlalchemy import create_engine, desc, func, __version__
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
-import config, util
+import util
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, database, table, qconfig):
+    def __init__(self, database, table, qconfig, config, app_root=None):
         ''' Initialize repository '''
+
+        self.config = config
+
+        # Don't use relative paths, this is hack to get around
+        # most wsgi restriction...
+        if app_root and database.startswith("sqlite:///") and not database.startswith("sqlite:////"):
+            database = database.replace("sqlite:///","sqlite:///%s%s" % (app_root, os.sep))
 
         engine = create_engine('%s' % database, echo=False)
 
@@ -59,7 +67,7 @@ class Repository(object):
                     dbapi_connection.create_function(
                     'query_spatial', 4, util.query_spatial)
                     dbapi_connection.create_function(
-                    'update_xpath', 2, util.update_xpath)
+                    'update_xpath', 2, util.update_xpath(self.config))
                     dbapi_connection.create_function('get_anytext', 1,
                     util.get_anytext)
             else:  # <= 0.6 behaviour
@@ -67,7 +75,7 @@ class Repository(object):
                 self.connection.create_function(
                 'query_spatial', 4, util.query_spatial)
                 self.connection.create_function(
-                'update_xpath', 2, util.update_xpath)
+                'update_xpath', 2, util.update_xpath(self.config))
                 self.connection.create_function('get_anytext', 1,
                 util.get_anytext)
 
@@ -88,12 +96,12 @@ class Repository(object):
         for qbl in self.queryables:
             self.queryables['_all'].update(self.queryables[qbl])
 
-        self.queryables['_all'].update(config.MD_CORE_MODEL['mappings'])
+        self.queryables['_all'].update(self.config.MD_CORE_MODEL['mappings'])
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
         column = getattr(self.dataset, \
-        config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+        self.config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
 
         query = self.session.query(
         self.dataset).filter(column.in_(ids))
@@ -120,7 +128,7 @@ class Repository(object):
     def query_latest_insert(self):
         ''' Query to get latest update to repository '''
         column = getattr(self.dataset, \
-        config.MD_CORE_MODEL['mappings']['pycsw:InsertDate'])
+        self.config.MD_CORE_MODEL['mappings']['pycsw:InsertDate'])
 
         return self.session.query(
         func.max(column)).first()[0]
@@ -128,7 +136,7 @@ class Repository(object):
     def query_source(self, source):
         ''' Query by source '''
         column = getattr(self.dataset, \
-        config.MD_CORE_MODEL['mappings']['pycsw:Source'])
+        self.config.MD_CORE_MODEL['mappings']['pycsw:Source'])
 
         query = self.session.query(self.dataset).filter(
         column == source)
@@ -188,11 +196,11 @@ class Repository(object):
         ''' Update a record in the repository based on identifier '''
 
         identifier = getattr(record,
-        config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+        self.config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
         xml = getattr(self.dataset,
-        config.MD_CORE_MODEL['mappings']['pycsw:XML'])
+        self.config.MD_CORE_MODEL['mappings']['pycsw:XML'])
         anytext = getattr(self.dataset,
-        config.MD_CORE_MODEL['mappings']['pycsw:AnyText'])
+        self.config.MD_CORE_MODEL['mappings']['pycsw:AnyText'])
 
         if recprops is None and constraint is None:  # full update
 

@@ -1,5 +1,5 @@
 #!/usr/bin/python -u
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -31,7 +31,7 @@
 #
 # =================================================================
 
-import os
+import os, sys
 from server import server
 
 CONFIG = 'default.cfg'
@@ -43,8 +43,42 @@ if os.environ['QUERY_STRING'].lower().find('config') != -1:
         if kvp.lower().find('config') != -1:
             CONFIG = kvp.split('=')[1]
 
+gzip = False
+if (os.environ.has_key('HTTP_ACCEPT_ENCODING') and
+    os.environ['HTTP_ACCEPT_ENCODING'].find('gzip') != -1):
+    # set for gzip compressed response 
+    gzip = True
+
 # get runtime configuration
-CSW = server.Csw(CONFIG)
+csw = server.Csw(CONFIG)
+
+# set compression level
+if csw.config.has_option('server', 'gzip_compresslevel'):
+    gzip_compresslevel = \
+        int(csw.config.get('server', 'gzip_compresslevel'))
+else:
+    gzip_compresslevel = 0
+
 
 # go!
-CSW.dispatch()
+outp = csw.dispatch_cgi()
+
+sys.stdout.write("Content-Type:%s\r\n" % csw.contenttype)
+
+if gzip and gzip_compresslevel > 0:
+    import gzip
+    
+    buf = StringIO()
+    gzipfile = gzip.GzipFile(mode='wb', fileobj=buf,
+                                 compresslevel=self.gzip_compresslevel)
+    gzipfile.write(outp)
+    gzipfile.close()
+        
+    outp = buf.getvalue()
+
+    sys.stdout.write('Content-Encoding: gzip\r\n')
+
+sys.stdout.write('Content-Length: %d\r\n' % len(outp))
+sys.stdout.write('\r\n')
+sys.stdout.write(outp)
+

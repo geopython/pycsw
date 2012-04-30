@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -35,76 +35,87 @@ from lxml import etree
 from server import config, util
 from server.plugins.profiles import profile
 
-NAMESPACES = {
-    'fgdc': 'http://www.opengis.net/cat/csw/csdgm'
-}
+class FgdcStaticContext(object):
 
-REPOSITORY = {
-    'fgdc:metadata': {
-        'outputschema': 'http://www.opengis.net/cat/csw/csdgm',
-        'queryables': {
-            'SupportedFGDCQueryables': {
-                'fgdc:Identifier': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
-                'fgdc:Title': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Title']},
-                'fgdc:Originator': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Creator']},
-                'fgdc:Publisher': {'xpath': 'idinfo/citation/citeinfo/publinfo/publish', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Publisher']},
-                'fgdc:Abstract': {'xpath': 'idinfo/descript/abstract', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
-                'fgdc:Purpose': {'xpath': 'idinfo/descript/purpose', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
-                'fgdc:GeospatialPresentationForm': {'xpath': 'idinfo/citation/citeinfo/geoform', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Format']},
-                'fgdc:PublicationDate': {'xpath': 'idinfo/citation/citeinfo/pubdate', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:PublicationDate']},
-                'fgdc:ThemeKeywords': {'xpath': 'idinfo/keywords/theme/themekey', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
-                'fgdc:Progress': {'xpath': 'idinfo/status/progress', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Relation']},
-                'fgdc:BeginDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/begdate', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TempExtent_begin']},
-                'fgdc:EndDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/enddate', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:TempExtent_end']},
-                'fgdc:Origin': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Creator']},
-                'fgdc:Contributor': {'xpath': 'idinfo/datacred', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Contributor']},
-                'fgdc:AccessConstraints': {'xpath': 'idinfo/accconst', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
-                'fgdc:Modified': {'xpath': 'metainfo/metd', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Modified']},
-                'fgdc:Type': {'xpath': 'spdoinfo/direct', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Type']},
-                'fgdc:Format': {'xpath': 'distinfo/stdorder/digform/digtinfo/formname', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Format']},
-                'fgdc:Source': {'xpath': 'lineage/srcinfo/srccite/citeinfo/title', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Source']},
-                'fgdc:Relation': {'xpath': 'idinfo/citation/citeinfo/onlink', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:Relation']},
-                'fgdc:Envelope': {'xpath': 'bbox', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']},
-                'fgdc:AnyText': {'xpath': 'xml', 'dbcol': config.MD_CORE_MODEL['mappings']['pycsw:XML']}
-            }
-        },
-        'mappings': {
-            'csw:Record': {
-                # map FGDC queryables to DC queryables
-                'fgdc:Title': 'dc:title',
-                'fgdc:Origin': 'dc:creator',
-                'fgdc:Publisher': 'dc:publisher',
-                'fgdc:Contributor': 'dc:contributor',
-                'fgdc:AccessConstraints': 'dc:rights',
-                'fgdc:ThemeKeywords': 'dc:subject',
-                'fgdc:Abstract': 'dct:abstract',
-                'fgdc:Type': 'dc:type',
-                'fgdc:Format': 'dc:format',
-                'fgdc:Source': 'dc:source',
-                'fgdc:Relation': 'dc:relation',
-                'fgdc:Modified': 'dct:modified',
-                'fgdc:Envelope': 'ows:BoundingBox'
+    def __init__(self, globalstaticcontext):
+        self.globalstaticcontext = globalstaticcontext
+
+        self.NAMESPACES = {
+            'fgdc': 'http://www.opengis.net/cat/csw/csdgm'
+        }
+
+        self.REPOSITORY = {
+            'fgdc:metadata': {
+                'outputschema': 'http://www.opengis.net/cat/csw/csdgm',
+                'queryables': {
+                    'SupportedFGDCQueryables': {
+                        'fgdc:Identifier': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
+                        'fgdc:Title': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Title']},
+                        'fgdc:Originator': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                        'fgdc:Publisher': {'xpath': 'idinfo/citation/citeinfo/publinfo/publish', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Publisher']},
+                        'fgdc:Abstract': {'xpath': 'idinfo/descript/abstract', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
+                        'fgdc:Purpose': {'xpath': 'idinfo/descript/purpose', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
+                        'fgdc:GeospatialPresentationForm': {'xpath': 'idinfo/citation/citeinfo/geoform', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Format']},
+                        'fgdc:PublicationDate': {'xpath': 'idinfo/citation/citeinfo/pubdate', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:PublicationDate']},
+                        'fgdc:ThemeKeywords': {'xpath': 'idinfo/keywords/theme/themekey', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
+                        'fgdc:Progress': {'xpath': 'idinfo/status/progress', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Relation']},
+                        'fgdc:BeginDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/begdate', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:TempExtent_begin']},
+                        'fgdc:EndDate': {'xpath': 'idinfo/timeperd/timeinfo/rngdates/enddate', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:TempExtent_end']},
+                        'fgdc:Origin': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                        'fgdc:Contributor': {'xpath': 'idinfo/datacred', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Contributor']},
+                        'fgdc:AccessConstraints': {'xpath': 'idinfo/accconst', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
+                        'fgdc:Modified': {'xpath': 'metainfo/metd', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Modified']},
+                        'fgdc:Type': {'xpath': 'spdoinfo/direct', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Type']},
+                        'fgdc:Format': {'xpath': 'distinfo/stdorder/digform/digtinfo/formname', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Format']},
+                        'fgdc:Source': {'xpath': 'lineage/srcinfo/srccite/citeinfo/title', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Source']},
+                        'fgdc:Relation': {'xpath': 'idinfo/citation/citeinfo/onlink', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Relation']},
+                        'fgdc:Envelope': {'xpath': 'bbox', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']},
+                        'fgdc:AnyText': {'xpath': 'xml', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:XML']}
+                    }
+                },
+                'mappings': {
+                    'csw:Record': {
+                        # map FGDC queryables to DC queryables
+                        'fgdc:Title': 'dc:title',
+                        'fgdc:Origin': 'dc:creator',
+                        'fgdc:Publisher': 'dc:publisher',
+                        'fgdc:Contributor': 'dc:contributor',
+                        'fgdc:AccessConstraints': 'dc:rights',
+                        'fgdc:ThemeKeywords': 'dc:subject',
+                        'fgdc:Abstract': 'dct:abstract',
+                        'fgdc:Type': 'dc:type',
+                        'fgdc:Format': 'dc:format',
+                        'fgdc:Source': 'dc:source',
+                        'fgdc:Relation': 'dc:relation',
+                        'fgdc:Modified': 'dct:modified',
+                        'fgdc:Envelope': 'ows:BoundingBox'
+                    }
+                }
             }
         }
-    }
-}
 
 class FGDC(profile.Profile):
     ''' FGDC class '''
-    def __init__(self, model, namespaces):
+    def __init__(self, model, namespaces, globalstaticcontext):
+        self.globalstaticcontext = globalstaticcontext
+        self.staticcontext = FgdcStaticContext(globalstaticcontext)
+
         profile.Profile.__init__(self,
             name='fgdc',
             version='0.0.12',
             title='FGDC CSDGM Application Profile for CSW 2.0',
             url='http://portal.opengeospatial.org/files/?artifact_id=16936',
-            namespace=NAMESPACES['fgdc'],
+            namespace=self.staticcontext.NAMESPACES['fgdc'],
             typename='fgdc:metadata',
-            outputschema=NAMESPACES['fgdc'],
+            outputschema=self.staticcontext.NAMESPACES['fgdc'],
             prefixes=['fgdc'],
             model=model,
             core_namespaces=namespaces,
-            added_namespaces=NAMESPACES,
-            repository=REPOSITORY['fgdc:metadata'])
+            added_namespaces=self.staticcontext.NAMESPACES,
+            repository=self.staticcontext.REPOSITORY['fgdc:metadata'])
+
+    def nspath_eval(self, astr):
+        return util.nspath_eval(astr, self.globalstaticcontext)
 
     def extend_core(self, model, namespaces, config):
         ''' Extend core configuration '''
@@ -122,7 +133,7 @@ class FGDC(profile.Profile):
         ''' Return schema components as lxml.etree.Element list '''
 
         node = etree.Element(
-        util.nspath_eval('csw:SchemaComponent'),
+        self.nspath_eval('csw:SchemaComponent'),
         schemaLanguage = 'XMLSCHEMA', targetNamespace = self.namespace)
 
         schema = etree.parse(os.path.join(
@@ -138,18 +149,18 @@ class FGDC(profile.Profile):
 
     def write_record(self, recobj, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
-        typename = util.getqattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+        typename = util.getqattr(recobj, self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Typename'])
         if esn == 'full' and typename == 'fgdc:metadata':
             # dump record as is and exit
-            return etree.fromstring(util.getqattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:XML']))
+            return etree.fromstring(util.getqattr(recobj, self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:XML']))
 
         if typename == 'csw:Record':
             # transform csw:Record -> fgdc:metadata model mappings
             util.transform_mappings(queryables,
-            REPOSITORY['fgdc:metadata']['mappings']['csw:Record'])
+            self.staticcontext.REPOSITORY['fgdc:metadata']['mappings']['csw:Record'])
 
         node = etree.Element('metadata')
-        node.attrib[util.nspath_eval('xsi:noNamespaceSchemaLocation')] = \
+        node.attrib[self.nspath_eval('xsi:noNamespaceSchemaLocation')] = \
         'http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd'
 
         idinfo = etree.SubElement(node, 'idinfo')
@@ -235,7 +246,7 @@ class FGDC(profile.Profile):
         etree.SubElement(citeinfo, 'onlink').text = val
 
         # links
-        rlinks = util.getqattr(recobj, config.MD_CORE_MODEL['mappings']['pycsw:Links'])
+        rlinks = util.getqattr(recobj, self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Links'])
         if rlinks:
             for link in rlinks.split('^'):
                 linkset = link.split(',')

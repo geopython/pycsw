@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -35,34 +35,43 @@ import uuid
 from lxml import etree
 import config, fes, util
 
-OPENSEARCH_VERSION = '1.1'
+class OpenSearch(object):
 
-NAMESPACES = {
-    'atom': 'http://www.w3.org/2005/Atom',
-    'opensearch': 'http://a9.com/-/spec/opensearch/1.1/'
-}
+    OPENSEARCH_VERSION = '1.1'
 
-config.NAMESPACES.update(NAMESPACES)
+    NAMESPACES = {
+        'atom': 'http://www.w3.org/2005/Atom',
+        'opensearch': 'http://a9.com/-/spec/opensearch/1.1/'
+        }
 
-def response_csw2opensearch(element, cfg):
-    ''' transform a CSW response into an OpenSearch response '''
 
-    if util.xmltag_split(element.tag) == 'GetRecordsResponse':
+    def __init__(self, globalstaticcontext):
+        self.globalstaticcontext = globalstaticcontext
 
-        startindex = int(element.xpath('//@nextRecord')[0]) - int(element.xpath('//@numberOfRecordsReturned')[0])
-        if startindex < 1:
-            startindex = 1
+        self.globalstaticcontext.NAMESPACES.update(OpenSearch.NAMESPACES)
 
-        node = etree.Element(util.nspath_eval('atom:feed'), nsmap=NAMESPACES)
-        etree.SubElement(node, util.nspath_eval('atom:id')).text = cfg.get('server', 'url')
-        etree.SubElement(node, util.nspath_eval('atom:title')).text = cfg.get('metadata:main', 'identification_title')
-        #etree.SubElement(node, util.nspath_eval('atom:updated')).text = element.xpath('//@timestamp')[0]
-        
-        etree.SubElement(node, util.nspath_eval('opensearch:totalResults')).text = element.xpath('//@numberOfRecordsMatched')[0]
-        etree.SubElement(node, util.nspath_eval('opensearch:startIndex')).text = str(startindex)
-        etree.SubElement(node, util.nspath_eval('opensearch:itemsPerPage')).text = element.xpath('//@numberOfRecordsReturned')[0]
+    def nspath_eval(self, astr):
+        return util.nspath_eval(astr, self.globalstaticcontext)
 
-        for rec in element.xpath('//atom:entry', namespaces=config.NAMESPACES):
-            node.append(rec)
+    def response_csw2opensearch(self, element, cfg):
+        ''' transform a CSW response into an OpenSearch response '''
 
-    return node
+        if util.xmltag_split(element.tag) == 'GetRecordsResponse':
+
+            startindex = int(element.xpath('//@nextRecord')[0]) - int(element.xpath('//@numberOfRecordsReturned')[0])
+            if startindex < 1:
+                startindex = 1
+
+            node = etree.Element(self.nspath_eval('atom:feed'), nsmap=OpenSearch.NAMESPACES)
+            etree.SubElement(node, self.nspath_eval('atom:id')).text = cfg.get('server', 'url')
+            etree.SubElement(node, self.nspath_eval('atom:title')).text = cfg.get('metadata:main', 'identification_title')
+            #etree.SubElement(node, self.nspath_eval('atom:updated')).text = element.xpath('//@timestamp')[0]
+                
+            etree.SubElement(node, self.nspath_eval('opensearch:totalResults')).text = element.xpath('//@numberOfRecordsMatched')[0]
+            etree.SubElement(node, self.nspath_eval('opensearch:startIndex')).text = str(startindex)
+            etree.SubElement(node, self.nspath_eval('opensearch:itemsPerPage')).text = element.xpath('//@numberOfRecordsReturned')[0]
+            
+            for rec in element.xpath('//atom:entry', namespaces=self.globalstaticcontext.NAMESPACES):
+                node.append(rec)
+            
+        return node

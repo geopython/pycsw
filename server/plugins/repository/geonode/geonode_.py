@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -49,8 +49,10 @@ from geonode.maps.models import Layer
 
 class GeoNodeRepository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, qconfig):
+    def __init__(self, qconfig, staticcontext):
         ''' Initialize repository '''
+
+        self.staticcontext = staticcontext
 
         self.dbtype = settings.DATABASE_ENGINE
 
@@ -59,7 +61,7 @@ class GeoNodeRepository(object):
             connection.connection.create_function(
             'query_spatial', 4, util.query_spatial)
             connection.connection.create_function(
-            'update_xpath', 2, util.update_xpath)
+            'update_xpath', 2, util.update_xpath(self.staticcontext))
             connection.connection.create_function(
             'get_anytext', 1, util.get_anytext)
 
