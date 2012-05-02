@@ -33,11 +33,12 @@
 from lxml import etree
 import config, fes, util
 
-class SruStaticContext(object):
-    def __init__(self, staticcontext):
-        self.SRU_VERSION = '1.1'
+class Sru(object):
+    ''' SRU wrapper class '''
+    def __init__(self, context):
+        self.sru_version = '1.1'
 
-        self.NAMESPACES = {
+        self.namespaces = {
             'zd': 'http://www.loc.gov/zing/srw/diagnostic/',
             'sru': 'http://www.loc.gov/zing/srw/',
             'zr': 'http://explain.z3950.org/dtd/2.1/',
@@ -45,7 +46,7 @@ class SruStaticContext(object):
             'srw_dc': 'info:srw/schema/1/dc-schema'
             }
 
-        self.MAPPINGS = {
+        self.mappings = {
             'csw:Record': {
                 'schema': {
                     'name': 'dc',
@@ -75,16 +76,8 @@ class SruStaticContext(object):
                 }
         }
 
-
-class Sru(object):
-    def __init__(self, staticcontext):
-        self.globalstaticcontext = staticcontext
-        self.staticcontext = SruStaticContext(self.globalstaticcontext)
-
-        staticcontext.NAMESPACES.update(self.staticcontext.NAMESPACES)
-
-    def nspath_eval(self, astr):
-        return util.nspath_eval(astr, self.globalstaticcontext)
+        self.context = context
+        self.context.namespaces.update(self.namespaces)
 
     def request_sru2csw(self, kvpin, typenames):
         ''' transform an SRU request into a CSW request '''
@@ -131,70 +124,70 @@ class Sru(object):
         ''' transform a CSW response into an SRU response '''
 
         if util.xmltag_split(element.tag) == 'Capabilities':  # explain
-            node = etree.Element(self.nspath_eval('sru:explainResponse'),
-            nsmap=self.staticcontext.NAMESPACES)
+            node = etree.Element(util.nspath_eval('sru:explainResponse', self.namespaces),
+            nsmap=self.namespaces)
 
-            etree.SubElement(node, self.nspath_eval('sru:version')).text = self.staticcontext.SRU_VERSION
+            etree.SubElement(node, util.nspath_eval('sru:version', self.namespaces)).text = self.sru_version
 
-            record = etree.SubElement(node, self.nspath_eval('sru:record'))
+            record = etree.SubElement(node, util.nspath_eval('sru:record', self.namespaces))
 
-            etree.SubElement(record, self.nspath_eval('sru:recordPacking')).text = 'XML'
-            etree.SubElement(record, self.nspath_eval('sru:recordSchema')).text = 'http://explain.z3950.org/dtd/2.1/'
+            etree.SubElement(record, util.nspath_eval('sru:recordPacking', self.namespaces)).text = 'XML'
+            etree.SubElement(record, util.nspath_eval('sru:recordSchema', self.namespaces)).text = 'http://explain.z3950.org/dtd/2.1/'
 
-            recorddata = etree.SubElement(record, self.nspath_eval('sru:recordData'))
+            recorddata = etree.SubElement(record, util.nspath_eval('sru:recordData', self.namespaces))
 
-            explain = etree.SubElement(recorddata, self.nspath_eval('zr:explain'))
+            explain = etree.SubElement(recorddata, util.nspath_eval('zr:explain', self.namespaces))
 
-            serverinfo = etree.SubElement(explain, self.nspath_eval('zr:serverInfo'),
-            protocol='SRU', version=self.staticcontext.SRU_VERSION, transport='http', method='GET POST SOAP')
+            serverinfo = etree.SubElement(explain, util.nspath_eval('zr:serverInfo', self.namespaces),
+            protocol='SRU', version=self.sru_version, transport='http', method='GET POST SOAP')
 
-            etree.SubElement(serverinfo, self.nspath_eval('zr:host')).text = environ.get('HTTP_HOST', environ["SERVER_NAME"]) # WSGI allows for either of these
-            etree.SubElement(serverinfo, self.nspath_eval('zr:port')).text = environ['SERVER_PORT']
-            etree.SubElement(serverinfo, self.nspath_eval('zr:database')).text = 'pycsw'
+            etree.SubElement(serverinfo, util.nspath_eval('zr:host', self.namespaces)).text = environ.get('HTTP_HOST', environ["SERVER_NAME"]) # WSGI allows for either of these
+            etree.SubElement(serverinfo, util.nspath_eval('zr:port', self.namespaces)).text = environ['SERVER_PORT']
+            etree.SubElement(serverinfo, util.nspath_eval('zr:database', self.namespaces)).text = 'pycsw'
 
-            databaseinfo = etree.SubElement(explain, self.nspath_eval('zr:databaseInfo'))
+            databaseinfo = etree.SubElement(explain, util.nspath_eval('zr:databaseInfo', self.namespaces))
 
-            etree.SubElement(databaseinfo, self.nspath_eval('zr:title'), lang='en', primary='true').text = element.xpath('//ows:Title', namespaces=self.globalstaticcontext.NAMESPACES)[0].text
-            etree.SubElement(databaseinfo, self.nspath_eval('zr:description'), lang='en', primary='true').text = element.xpath('//ows:Abstract', namespaces=self.globalstaticcontext.NAMESPACES)[0].text
+            etree.SubElement(databaseinfo, util.nspath_eval('zr:title', self.namespaces), lang='en', primary='true').text = element.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(databaseinfo, util.nspath_eval('zr:description', self.namespaces), lang='en', primary='true').text = element.xpath('//ows:Abstract', namespaces=self.context.namespaces)[0].text
 
-            indexinfo = etree.SubElement(explain, self.nspath_eval('zr:indexInfo'))
-            etree.SubElement(indexinfo, self.nspath_eval('zr:set'), name='dc', identifier='info:srw/cql-context-set/1/dc-v1.1')
+            indexinfo = etree.SubElement(explain, util.nspath_eval('zr:indexInfo', self.namespaces))
+            etree.SubElement(indexinfo, util.nspath_eval('zr:set', self.namespaces), name='dc', identifier='info:srw/cql-context-set/1/dc-v1.1')
 
-            for key, value in self.staticcontext.MAPPINGS['csw:Record']['index'].iteritems():
-                zrindex = etree.SubElement(indexinfo, self.nspath_eval('zr:index'), id=value)
-                etree.SubElement(zrindex, self.nspath_eval('zr:title')).text = key
-                zrmap = etree.SubElement(zrindex, self.nspath_eval('zr:map'))
-                etree.SubElement(zrmap, self.nspath_eval('zr:map'), set='dc').text = key
+            for key, value in self.mappings['csw:Record']['index'].iteritems():
+                zrindex = etree.SubElement(indexinfo, util.nspath_eval('zr:index', self.namespaces), id=value)
+                etree.SubElement(zrindex, util.nspath_eval('zr:title', self.namespaces)).text = key
+                zrmap = etree.SubElement(zrindex, util.nspath_eval('zr:map', self.namespaces))
+                etree.SubElement(zrmap, util.nspath_eval('zr:map', self.namespaces), set='dc').text = key
 
-            zrindex = etree.SubElement(indexinfo, self.nspath_eval('zr:index'))
-            zrmap = etree.SubElement(zrindex, self.nspath_eval('zr:map'))
-            etree.SubElement(zrmap, self.nspath_eval('zr:name'), set='dc').text = 'title222'
+            zrindex = etree.SubElement(indexinfo, util.nspath_eval('zr:index', self.namespaces))
+            zrmap = etree.SubElement(zrindex, util.nspath_eval('zr:map', self.namespaces))
+            etree.SubElement(zrmap, util.nspath_eval('zr:name', self.namespaces), set='dc').text = 'title222'
 
-            schemainfo = etree.SubElement(explain, self.nspath_eval('zr:schemaInfo'))
-            zrschema = etree.SubElement(schemainfo, self.nspath_eval('zr:schema'), name='dc', identifier='info:srw/schema/1/dc-v1.1')
-            etree.SubElement(zrschema, self.nspath_eval('zr:title')).text = 'Simple Dublin Core'
+            schemainfo = etree.SubElement(explain, util.nspath_eval('zr:schemaInfo', self.namespaces))
+            zrschema = etree.SubElement(schemainfo, util.nspath_eval('zr:schema', self.namespaces), name='dc', identifier='info:srw/schema/1/dc-v1.1')
+            etree.SubElement(zrschema, util.nspath_eval('zr:title', self.namespaces)).text = 'Simple Dublin Core'
 
-            configinfo = etree.SubElement(explain, self.nspath_eval('zr:configInfo'))
-            etree.SubElement(configinfo, self.nspath_eval('zr:default'), type='numberOfRecords').text = '0'
+            configinfo = etree.SubElement(explain, util.nspath_eval('zr:configInfo', self.namespaces))
+            etree.SubElement(configinfo, util.nspath_eval('zr:default', self.namespaces), type='numberOfRecords').text = '0'
 
         elif util.xmltag_split(element.tag) == 'GetRecordsResponse':
 
             recpos = int(element.xpath('//@nextRecord')[0]) - int(element.xpath('//@numberOfRecordsReturned')[0])
 
-            node = etree.Element(self.nspath_eval('zs:searchRetrieveResponse'), nsmap=self.staticcontext.NAMESPACES)
-            etree.SubElement(node, self.nspath_eval('zs:version')).text = self.staticcontext.SRU_VERSION
-            etree.SubElement(node, self.nspath_eval('zs:numberOfRecords')).text = element.xpath('//@numberOfRecordsMatched')[0]
+            node = etree.Element(util.nspath_eval('zs:searchRetrieveResponse', self.namespaces), nsmap=self.namespaces)
+            etree.SubElement(node, util.nspath_eval('zs:version', self.namespaces)).text = self.sru_version
+            etree.SubElement(node, util.nspath_eval('zs:numberOfRecords', self.namespaces)).text = element.xpath('//@numberOfRecordsMatched')[0]
 
-            for rec in element.xpath('//csw:BriefRecord', namespaces=self.globalstaticcontext.NAMESPACES):
-                record = etree.SubElement(node, self.nspath_eval('zs:record'))
-                etree.SubElement(node, self.nspath_eval('zs:recordSchema')).text = 'info:srw/schema/1/dc-v1.1'
-                etree.SubElement(node, self.nspath_eval('zs:recordPacking')).text = 'xml'
+            for rec in element.xpath('//csw:BriefRecord', namespaces=self.context.namespaces):
+                record = etree.SubElement(node, util.nspath_eval('zs:record', self.namespaces))
+                etree.SubElement(node, util.nspath_eval('zs:recordSchema', self.namespaces)).text = 'info:srw/schema/1/dc-v1.1'
+                etree.SubElement(node, util.nspath_eval('zs:recordPacking', self.namespaces)).text = 'xml'
 
-                recorddata = etree.SubElement(record, self.nspath_eval('zs:recordData'))
-                rec.tag = self.nspath_eval('srw_dc:srw_dc')
+                recorddata = etree.SubElement(record, util.nspath_eval('zs:recordData', self.namespaces))
+                rec.tag = util.nspath_eval('srw_dc:srw_dc', self.namespaces)
                 recorddata.append(rec)
 
-                etree.SubElement(record, self.nspath_eval('zs:recordPosition')).text = str(recpos)
+                etree.SubElement(record, util.nspath_eval('zs:recordPosition', self.namespaces)).text = str(recpos)
                 recpos += 1
 
         elif util.xmltag_split(element.tag) == 'ExceptionReport':
@@ -204,22 +197,22 @@ class Sru(object):
     def exceptionreport2diagnostic(self, element):
         ''' transform a CSW exception into an SRU diagnostic '''
         node = etree.Element(
-        self.nspath_eval('zs:searchRetrieveResponse'), nsmap=self.staticcontext.NAMESPACES)
+        util.nspath_eval('zs:searchRetrieveResponse', self.namespaces), nsmap=self.namespaces)
 
-        etree.SubElement(node, self.nspath_eval('zs:version')).text = self.staticcontext.SRU_VERSION
+        etree.SubElement(node, util.nspath_eval('zs:version', self.namespaces)).text = self.sru_version
 
-        diagnostics = etree.SubElement(node, self.nspath_eval('zs:diagnostics'))
+        diagnostics = etree.SubElement(node, util.nspath_eval('zs:diagnostics', self.namespaces))
 
         diagnostic = etree.SubElement(
-        diagnostics, self.nspath_eval('zs:diagnostic'))
+        diagnostics, util.nspath_eval('zs:diagnostic', self.namespaces))
 
-        etree.SubElement(diagnostic, self.nspath_eval('zd:diagnostic')).text = \
+        etree.SubElement(diagnostic, util.nspath_eval('zd:diagnostic', self.namespaces)).text = \
         'info:srw/diagnostic/1/7'
 
-        etree.SubElement(diagnostic, self.nspath_eval('zd:message')).text = \
-        element.find(self.nspath_eval('ows:Exception/ows:ExceptionText')).text
+        etree.SubElement(diagnostic, util.nspath_eval('zd:message', self.namespaces)).text = \
+        element.find(util.nspath_eval('ows:Exception/ows:ExceptionText', self.context.namespaces)).text
 
-        etree.SubElement(diagnostic, self.nspath_eval('zd:details')).text = \
-        element.find(self.nspath_eval('ows:Exception')).attrib.get('exceptionCode')
+        etree.SubElement(diagnostic, util.nspath_eval('zd:details', self.namespaces)).text = \
+        element.find(util.nspath_eval('ows:Exception', self.context.namespaces)).attrib.get('exceptionCode')
 
         return node
