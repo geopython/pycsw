@@ -31,10 +31,17 @@
 #
 # =================================================================
 
+# CGI wrapper for pycsw
+
+import cgitb
+cgitb.enable()
+
 import os, sys
+from StringIO import StringIO
 from server import server
 
 CONFIG = 'default.cfg'
+GZIP = False
 
 if os.environ.has_key('PYCSW_CONFIG'):
     CONFIG = os.environ['PYCSW_CONFIG']
@@ -43,42 +50,40 @@ if os.environ['QUERY_STRING'].lower().find('config') != -1:
         if kvp.lower().find('config') != -1:
             CONFIG = kvp.split('=')[1]
 
-gzip = False
 if (os.environ.has_key('HTTP_ACCEPT_ENCODING') and
     os.environ['HTTP_ACCEPT_ENCODING'].find('gzip') != -1):
     # set for gzip compressed response 
-    gzip = True
+    GZIP = True
 
 # get runtime configuration
-csw = server.Csw(CONFIG)
+CSW = server.Csw(CONFIG)
 
 # set compression level
-if csw.config.has_option('server', 'gzip_compresslevel'):
-    gzip_compresslevel = \
-        int(csw.config.get('server', 'gzip_compresslevel'))
+if CSW.config.has_option('server', 'gzip_compresslevel'):
+    GZIP_COMPRESSLEVEL = \
+        int(CSW.config.get('server', 'gzip_compresslevel'))
 else:
-    gzip_compresslevel = 0
-
+    GZIP_COMPRESSLEVEL = 0
 
 # go!
-outp = csw.dispatch_cgi()
+OUTP = CSW.dispatch_cgi()
 
-sys.stdout.write("Content-Type:%s\r\n" % csw.contenttype)
+sys.stdout.write("Content-Type:%s\r\n" % CSW.contenttype)
 
-if gzip and gzip_compresslevel > 0:
+if GZIP and GZIP_COMPRESSLEVEL > 0:
     import gzip
     
-    buf = StringIO()
-    gzipfile = gzip.GzipFile(mode='wb', fileobj=buf,
-                                 compresslevel=self.gzip_compresslevel)
-    gzipfile.write(outp)
-    gzipfile.close()
+    BUF = StringIO()
+    GZIPFILE = gzip.GzipFile(mode='wb', fileobj=BUF,
+                                 compresslevel=GZIP_COMPRESSLEVEL)
+    GZIPFILE.write(OUTP)
+    GZIPFILE.close()
         
-    outp = buf.getvalue()
+    OUTP = BUF.getvalue()
 
     sys.stdout.write('Content-Encoding: gzip\r\n')
 
-sys.stdout.write('Content-Length: %d\r\n' % len(outp))
+sys.stdout.write('Content-Length: %d\r\n' % len(OUTP))
 sys.stdout.write('\r\n')
-sys.stdout.write(outp)
+sys.stdout.write(OUTP)
 

@@ -73,7 +73,7 @@ class Profile(object):
         model['typenames'][self.typename] = self.repository
 
     def extend_core(self, model, namespaces, config):
-        ''' Extend config.MODEL and config.NAMESPACES '''
+        ''' Extend config.model and config.namespaces '''
         raise NotImplementedError
 
     def check_parameters(self):

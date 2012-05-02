@@ -44,15 +44,15 @@ from django.db import connection
 from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
-from server import config, util
+from server import util
 from geonode.maps.models import Layer
 
 class GeoNodeRepository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, qconfig, staticcontext):
+    def __init__(self, qconfig, context):
         ''' Initialize repository '''
 
-        self.staticcontext = staticcontext
+        self.context = context
 
         self.dbtype = settings.DATABASE_ENGINE
 
@@ -61,7 +61,7 @@ class GeoNodeRepository(object):
             connection.connection.create_function(
             'query_spatial', 4, util.query_spatial)
             connection.connection.create_function(
-            'update_xpath', 2, util.update_xpath(self.staticcontext))
+            'update_xpath', 2, util.update_xpath(self.context))
             connection.connection.create_function(
             'get_anytext', 1, util.get_anytext)
 
@@ -81,7 +81,7 @@ class GeoNodeRepository(object):
         self.queryables['_all'] = {}
         for qbl in self.queryables:
             self.queryables['_all'].update(self.queryables[qbl])
-        self.queryables['_all'].update(config.MD_CORE_MODEL['mappings'])
+        self.queryables['_all'].update(self.context.md_core_model['mappings'])
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
