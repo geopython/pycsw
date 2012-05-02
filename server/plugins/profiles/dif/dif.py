@@ -35,38 +35,38 @@ from lxml import etree
 from server import config, util
 from server.plugins.profiles import profile
 
-class DifStaticContext(object):
+class DIF(profile.Profile):
+    ''' DIF class '''
+    def __init__(self, model, namespaces, context):
+        self.context = context
 
-    def __init__(self, globalstaticcontext):
-        self.globalstaticcontext = globalstaticcontext
-
-        self.NAMESPACES = {
+        self.namespaces = {
             'dif': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/'
         }
 
-        self.REPOSITORY = {
+        self.repository = {
             'dif:DIF': {
                 'outputschema': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
                 'queryables': {
                     'SupportedDIFQueryables': {
-                        'dif:Identifier': {'xpath': 'dif:Entry_Title', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
-                        'dif:Entry_Title': {'xpath': 'dif:Entry_Title', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Title']},
-                        'dif:Dataset_Creator': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Creator', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Creator']},
-                        'dif:ISO_Topic_Category': {'xpath': 'dif:ISO_Topic_Category', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:TopicCategory']},
-                        'dif:Keyword': {'xpath': 'dif:Keyword', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
-                        'dif:Summary': {'xpath': 'dif:Summary', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
-                        'dif:Dataset_Publisher': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Publisher', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Publisher']},
-                        'dif:Originating_Center': {'xpath': 'dif:Originating_Center', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:OrganizationName']},
-                        'dif:DIF_Creation_Date': {'xpath': 'dif:DIF_Creation_Date', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:CreationDate']},
-                        'dif:Dataset_Release_Date': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Release_Date', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:PublicationDate']},
-                        'dif:Data_Presentation_Form': {'xpath': 'dif:Data_Set_Citation/dif:Data_Presentation_Form', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Format']},
-                        'dif:Data_Set_Language': {'xpath': 'dif:Data_Set_Language', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:ResourceLanguage']},
-                        'dif:Related_URL': {'xpath': 'dif:Related_URL/dif:URL', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Relation']},
-                        'dif:Access_Constraints': {'xpath': 'dif:Access_Constraints', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
-                        'dif:Start_Date': {'xpath': 'dif:Temporal_Coverage/dif:Start_Date', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:TempExtent_begin']},
-                        'dif:Stop_Date': {'xpath': 'dif:Temporal_Coverage/dif:Stop_Date', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:TempExtent_end']},
-                        'dif:AnyText': {'xpath': '//', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:AnyText']},
-                        'dif:Spatial_Coverage': {'xpath': 'dif:Spatial_Coverage', 'dbcol': self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']}
+                        'dif:Identifier': {'xpath': 'dif:Entry_Title', 'dbcol': self.context.md_core_model['mappings']['pycsw:Identifier']},
+                        'dif:Entry_Title': {'xpath': 'dif:Entry_Title', 'dbcol': self.context.md_core_model['mappings']['pycsw:Title']},
+                        'dif:Dataset_Creator': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Creator', 'dbcol': self.context.md_core_model['mappings']['pycsw:Creator']},
+                        'dif:ISO_Topic_Category': {'xpath': 'dif:ISO_Topic_Category', 'dbcol': self.context.md_core_model['mappings']['pycsw:TopicCategory']},
+                        'dif:Keyword': {'xpath': 'dif:Keyword', 'dbcol': self.context.md_core_model['mappings']['pycsw:Keywords']},
+                        'dif:Summary': {'xpath': 'dif:Summary', 'dbcol': self.context.md_core_model['mappings']['pycsw:Abstract']},
+                        'dif:Dataset_Publisher': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Publisher', 'dbcol': self.context.md_core_model['mappings']['pycsw:Publisher']},
+                        'dif:Originating_Center': {'xpath': 'dif:Originating_Center', 'dbcol': self.context.md_core_model['mappings']['pycsw:OrganizationName']},
+                        'dif:DIF_Creation_Date': {'xpath': 'dif:DIF_Creation_Date', 'dbcol': self.context.md_core_model['mappings']['pycsw:CreationDate']},
+                        'dif:Dataset_Release_Date': {'xpath': 'dif:Data_Set_Citation/dif:Dataset_Release_Date', 'dbcol': self.context.md_core_model['mappings']['pycsw:PublicationDate']},
+                        'dif:Data_Presentation_Form': {'xpath': 'dif:Data_Set_Citation/dif:Data_Presentation_Form', 'dbcol': self.context.md_core_model['mappings']['pycsw:Format']},
+                        'dif:Data_Set_Language': {'xpath': 'dif:Data_Set_Language', 'dbcol': self.context.md_core_model['mappings']['pycsw:ResourceLanguage']},
+                        'dif:Related_URL': {'xpath': 'dif:Related_URL/dif:URL', 'dbcol': self.context.md_core_model['mappings']['pycsw:Relation']},
+                        'dif:Access_Constraints': {'xpath': 'dif:Access_Constraints', 'dbcol': self.context.md_core_model['mappings']['pycsw:AccessConstraints']},
+                        'dif:Start_Date': {'xpath': 'dif:Temporal_Coverage/dif:Start_Date', 'dbcol': self.context.md_core_model['mappings']['pycsw:TempExtent_begin']},
+                        'dif:Stop_Date': {'xpath': 'dif:Temporal_Coverage/dif:Stop_Date', 'dbcol': self.context.md_core_model['mappings']['pycsw:TempExtent_end']},
+                        'dif:AnyText': {'xpath': '//', 'dbcol': self.context.md_core_model['mappings']['pycsw:AnyText']},
+                        'dif:Spatial_Coverage': {'xpath': 'dif:Spatial_Coverage', 'dbcol': self.context.md_core_model['mappings']['pycsw:BoundingBox']}
                     }
                 },
                 'mappings': {
@@ -92,25 +92,19 @@ class DifStaticContext(object):
             }
         }
 
-class DIF(profile.Profile):
-    ''' DIF class '''
-    def __init__(self, model, namespaces, globalstaticcontext):
-        self.globalstaticcontext = globalstaticcontext
-        self.staticcontext = DifStaticContext(self.globalstaticcontext)
-
         profile.Profile.__init__(self,
             name='dif',
             version='9.7',
             title='Directory Interchange Format',
             url='http://gcmd.nasa.gov/User/difguide/difman.html',
-            namespace=self.staticcontext.NAMESPACES['dif'],
+            namespace=self.namespaces['dif'],
             typename='dif:DIF',
-            outputschema=self.staticcontext.NAMESPACES['dif'],
+            outputschema=self.namespaces['dif'],
             prefixes=['dif'],
             model=model,
             core_namespaces=namespaces,
-            added_namespaces=self.staticcontext.NAMESPACES,
-            repository=self.staticcontext.REPOSITORY['dif:DIF'])
+            added_namespaces=self.namespaces,
+            repository=self.repository['dif:DIF'])
 
     def extend_core(self, model, namespaces, config):
         ''' Extend core configuration '''
@@ -124,15 +118,12 @@ class DIF(profile.Profile):
         ''' Add child to ows:OperationsMetadata Element '''
         return None
 
-    def nspath_eval(self, astr):
-        return util.nspath_eval(astr, self.globalstaticcontext)
-
     def get_schemacomponents(self):
         ''' Return schema components as lxml.etree.Element list '''
 
         node = etree.Element(
-        self.nspath_eval('csw:SchemaComponent'),
-        schemaLanguage = 'XMLSCHEMA', targetNamespace = self.namespace)
+        util.nspath_eval('csw:SchemaComponent', self.context.namespaces),
+        schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace)
 
         schema = etree.parse(os.path.join(
                 'server', 'plugins', 'profiles', 'dif',
@@ -148,117 +139,117 @@ class DIF(profile.Profile):
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
 
-        typename = util.getqattr(result, self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Typename'])
+        typename = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Typename'])
 
         if esn == 'full' and typename == 'dif:DIF':
             # dump record as is and exit
-            return etree.fromstring(util.getqattr(result, self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:XML']))
+            return etree.fromstring(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:XML']))
 
         if typename == 'csw:Record':  # transform csw:Record -> dif:DIF model mappings
-            util.transform_mappings(queryables, self.staticcontext.REPOSITORY['dif:DIF']['mappings']['csw:Record'])
+            util.transform_mappings(queryables, self.repository['mappings']['csw:Record'])
 
-        node = etree.Element(self.nspath_eval('dif:DIF'))
-        node.attrib[self.nspath_eval('xsi:schemaLocation')] = \
+        node = etree.Element(util.nspath_eval('dif:DIF', self.namespaces))
+        node.attrib[util.nspath_eval('xsi:schemaLocation', self.context.namespaces)] = \
         '%s http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd' % self.namespace
 
         # identifier
-        etree.SubElement(node, self.nspath_eval('dif:Entry_ID')).text = util.getqattr(result, queryables['dif:Identifier']['dbcol'])
+        etree.SubElement(node, util.nspath_eval('dif:Entry_ID', self.namespaces)).text = util.getqattr(result, queryables['dif:Identifier']['dbcol'])
 
         # title
         val = util.getqattr(result, queryables['dif:Entry_Title']['dbcol'])
         if not val:
             val = ''
-        etree.SubElement(node, self.nspath_eval('dif:Entry_Title')).text = val
+        etree.SubElement(node, util.nspath_eval('dif:Entry_Title', self.namespaces)).text = val
 
         # citation
-        citation = etree.SubElement(node, self.nspath_eval('dif:Data_Set_Citation'))
+        citation = etree.SubElement(node, util.nspath_eval('dif:Data_Set_Citation', self.namespaces))
 
         # creator
         val = util.getqattr(result, queryables['dif:Dataset_Creator']['dbcol'])
-        etree.SubElement(citation, self.nspath_eval('dif:Dataset_Creator')).text = val
+        etree.SubElement(citation, util.nspath_eval('dif:Dataset_Creator', self.namespaces)).text = val
 
         # date
         val = util.getqattr(result, queryables['dif:Dataset_Release_Date']['dbcol'])
-        etree.SubElement(citation, self.nspath_eval('dif:Dataset_Release_Date')).text = val
+        etree.SubElement(citation, util.nspath_eval('dif:Dataset_Release_Date', self.namespaces)).text = val
 
         # publisher
         val = util.getqattr(result, queryables['dif:Dataset_Publisher']['dbcol'])
-        etree.SubElement(citation, self.nspath_eval('dif:Dataset_Publisher')).text = val
+        etree.SubElement(citation, util.nspath_eval('dif:Dataset_Publisher', self.namespaces)).text = val
 
         # format
         val = util.getqattr(result, queryables['dif:Data_Presentation_Form']['dbcol'])
-        etree.SubElement(citation, self.nspath_eval('dif:Data_Presentation_Form')).text = val
+        etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form', self.namespaces)).text = val
 
         # iso topic category
         val = util.getqattr(result, queryables['dif:ISO_Topic_Category']['dbcol'])
-        etree.SubElement(node, self.nspath_eval('dif:ISO_Topic_Category')).text = val
+        etree.SubElement(node, util.nspath_eval('dif:ISO_Topic_Category', self.namespaces)).text = val
 
         # keywords
         val = util.getqattr(result, queryables['dif:Keyword']['dbcol'])
 
         if val:
             for kw in val.split(','):
-                etree.SubElement(node, self.nspath_eval('dif:Keyword')).text = kw
+                etree.SubElement(node, util.nspath_eval('dif:Keyword', self.namespaces)).text = kw
 
         # temporal
-        temporal = etree.SubElement(node, self.nspath_eval('dif:Temporal_Coverage'))
+        temporal = etree.SubElement(node, util.nspath_eval('dif:Temporal_Coverage', self.namespaces))
         val = util.getqattr(result, queryables['dif:Start_Date']['dbcol'])
         val2 = util.getqattr(result, queryables['dif:Stop_Date']['dbcol'])
-        etree.SubElement(temporal, self.nspath_eval('dif:Start_Date')).text = val 
-        etree.SubElement(temporal, self.nspath_eval('dif:End_Date')).text = val2
+        etree.SubElement(temporal, util.nspath_eval('dif:Start_Date', self.namespaces)).text = val 
+        etree.SubElement(temporal, util.nspath_eval('dif:End_Date', self.namespaces)).text = val2
 
         # bbox extent
         val = util.getqattr(result, queryables['dif:Spatial_Coverage']['dbcol'])
-        bboxel = write_extent(val, self.globalstaticcontext)
+        bboxel = write_extent(val, self.namespaces)
         if bboxel is not None:
             node.append(bboxel)
 
         # access constraints
         val = util.getqattr(result, queryables['dif:Access_Constraints']['dbcol'])
-        etree.SubElement(node, self.nspath_eval('dif:Access_Constraints')).text = val
+        etree.SubElement(node, util.nspath_eval('dif:Access_Constraints', self.namespaces)).text = val
 
         # language
         val = util.getqattr(result, queryables['dif:Data_Set_Language']['dbcol'])
-        etree.SubElement(node, self.nspath_eval('dif:Data_Set_Language')).text = val
+        etree.SubElement(node, util.nspath_eval('dif:Data_Set_Language', self.namespaces)).text = val
 
         # contributor
         val = util.getqattr(result, queryables['dif:Originating_Center']['dbcol'])
-        etree.SubElement(node, self.nspath_eval('dif:Originating_Center')).text = val
+        etree.SubElement(node, util.nspath_eval('dif:Originating_Center', self.namespaces)).text = val
 
         # abstract
         val = util.getqattr(result, queryables['dif:Summary']['dbcol'])
         if not val:
             val = ''
-        etree.SubElement(node, self.nspath_eval('dif:Summary')).text = val
+        etree.SubElement(node, util.nspath_eval('dif:Summary', self.namespaces)).text = val
 
         # date 
         val = util.getqattr(result, queryables['dif:DIF_Creation_Date']['dbcol'])
-        etree.SubElement(node, self.nspath_eval('dif:DIF_Creation_Date')).text = val
+        etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date', self.namespaces)).text = val
 
         # URL
         val = util.getqattr(result, queryables['dif:Related_URL']['dbcol'])
-        url = etree.SubElement(node, self.nspath_eval('dif:Related_URL'))
-        etree.SubElement(url, self.nspath_eval('dif:URL')).text = val
+        url = etree.SubElement(node, util.nspath_eval('dif:Related_URL', self.namespaces))
+        etree.SubElement(url, util.nspath_eval('dif:URL', self.namespaces)).text = val
 
-        rlinks = util.getqattr(result, self.globalstaticcontext.MD_CORE_MODEL['mappings']['pycsw:Links'])
+        rlinks = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Links'])
         if rlinks:
             for link in rlinks.split('^'):
                 linkset = link.split(',')
            
-                url2 = etree.SubElement(node, self.nspath_eval('dif:Related_URL'))
+                url2 = etree.SubElement(node, util.nspath_eval('dif:Related_URL', self.namespaces))
 
-                urltype = etree.SubElement(url2, self.nspath_eval('dif:URL_Content_Type'))
-                etree.SubElement(urltype, self.nspath_eval('dif:Type')).text = linkset[2]
+                urltype = etree.SubElement(url2, util.nspath_eval('dif:URL_Content_Type', self.namespaces))
+                etree.SubElement(urltype, util.nspath_eval('dif:Type', self.namespaces)).text = linkset[2]
 
-                etree.SubElement(url2, self.nspath_eval('dif:URL')).text = linkset[-1]
-                etree.SubElement(url2, self.nspath_eval('dif:Description')).text = linkset[1]
+                etree.SubElement(url2, util.nspath_eval('dif:URL', self.namespaces)).text = linkset[-1]
+                etree.SubElement(url2, util.nspath_eval('dif:Description', self.namespaces)).text = linkset[1]
 
-        etree.SubElement(node, self.nspath_eval('dif:Metadata_Name')).text = 'CEOS IDN DIF'
-        etree.SubElement(node, self.nspath_eval('dif:Metadata_Version')).text = '9.7'
+        etree.SubElement(node, util.nspath_eval('dif:Metadata_Name', self.namespaces)).text = 'CEOS IDN DIF'
+        etree.SubElement(node, util.nspath_eval('dif:Metadata_Version', self.namespaces)).text = '9.7'
 
         return node
 
-def write_extent(bbox, config):
+def write_extent(bbox, nsmap):
     ''' Generate BBOX extent '''
 
     from shapely.wkt import loads
@@ -268,10 +259,10 @@ def write_extent(bbox, config):
             bbox2 = loads(bbox.split(';')[-1]).envelope.bounds
         else:
             bbox2 = loads(bbox).envelope.bounds
-        extent = etree.Element(util.nspath_eval('dif:Spatial_Coverage', config))
-        etree.SubElement(extent, util.nspath_eval('dif:Southernmost_Latitude', config)).text = str(bbox2[1])
-        etree.SubElement(extent, util.nspath_eval('dif:Northernmost_Latitude', config)).text = str(bbox2[3])
-        etree.SubElement(extent, util.nspath_eval('dif:Westernmost_Longitude', config)).text = str(bbox2[0])
-        etree.SubElement(extent, util.nspath_eval('dif:Easternmost_Longitude', config)).text = str(bbox2[2])
+        extent = etree.Element(util.nspath_eval('dif:Spatial_Coverage', nsmap))
+        etree.SubElement(extent, util.nspath_eval('dif:Southernmost_Latitude', nsmap)).text = str(bbox2[1])
+        etree.SubElement(extent, util.nspath_eval('dif:Northernmost_Latitude', nsmap)).text = str(bbox2[3])
+        etree.SubElement(extent, util.nspath_eval('dif:Westernmost_Longitude', nsmap)).text = str(bbox2[0])
+        etree.SubElement(extent, util.nspath_eval('dif:Easternmost_Longitude', nsmap)).text = str(bbox2[2])
         return extent
     return None

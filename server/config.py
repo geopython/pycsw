@@ -31,13 +31,14 @@
 # =================================================================
 
 class StaticContext(object):
-
+    ''' core configuration '''
     def __init__(self):
-        self.VERSION = '1.3-dev'
+        ''' initializer '''
+        self.version = '1.3-dev'
 
-        self.OGC_SCHEMAS_BASE = 'http://schemas.opengis.net'
+        self.ogc_schemas_base = 'http://schemas.opengis.net'
 
-        self.NAMESPACES = {
+        self.namespaces = {
             'csw': 'http://www.opengis.net/cat/csw/2.0.2',
             'dc' : 'http://purl.org/dc/elements/1.1/',
             'dct': 'http://purl.org/dc/terms/',
@@ -55,7 +56,7 @@ class StaticContext(object):
             'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
         }
 
-        self.MD_CORE_MODEL = {
+        self.md_core_model = {
             'typename': 'pycsw:CoreMetadata',
             'outputschema': 'http://pycsw.org/metadata',
             'mappings': {
@@ -126,7 +127,7 @@ class StaticContext(object):
             }
         }
 
-        self.MODEL =  {
+        self.model =  {
             'operations': {
                 'GetCapabilities': {
                     'methods': {
@@ -235,41 +236,41 @@ class StaticContext(object):
                         'SupportedDublinCoreQueryables': {
                             # map Dublin Core queryables to core metadata model
                             'dc:title': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Title']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Title']},
                             'dc:creator': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Creator']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Creator']},
                             'dc:subject': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Keywords']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Keywords']},
                             'dct:abstract': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Abstract']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Abstract']},
                             'dc:publisher': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Publisher']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Publisher']},
                             'dc:contributor': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Contributor']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Contributor']},
                             'dct:modified': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Modified']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Modified']},
                             'dc:date': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Date']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Date']},
                             'dc:type': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Type']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Type']},
                             'dc:format': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Format']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Format']},
                             'dc:identifier': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Identifier']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Identifier']},
                             'dc:source': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Source']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Source']},
                             'dc:language': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Language']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Language']},
                             'dc:relation': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:Relation']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:Relation']},
                             'dc:rights': \
                             {'dbcol': \
-                             self.MD_CORE_MODEL['mappings']['pycsw:AccessConstraints']},
+                             self.md_core_model['mappings']['pycsw:AccessConstraints']},
                             # bbox and full text map to internal fixed columns
                             'ows:BoundingBox': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:BoundingBox']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:BoundingBox']},
                             'csw:AnyText': \
-                            {'dbcol': self.MD_CORE_MODEL['mappings']['pycsw:AnyText']},
+                            {'dbcol': self.md_core_model['mappings']['pycsw:AnyText']},
                         }
                     }
                 }
@@ -281,8 +282,8 @@ class StaticContext(object):
         domain = {}
         domain['methods'] = {'get': True, 'post': True}
         domain['parameters'] = {'ParameterName': {'values': [] }}
-        for operation in self.MODEL['operations'].keys():
-            for parameter in self.MODEL['operations'][operation]['parameters']:
+        for operation in self.model['operations'].keys():
+            for parameter in self.model['operations'][operation]['parameters']:
                 domain['parameters']['ParameterName']['values'].append('%s.%s' %
                 (operation, parameter))
         return domain
@@ -310,7 +311,7 @@ class StaticContext(object):
             'csw:AnyText': 'pycsw:AnyText',
         }
 
-        for k, v in defaults.iteritems():
-            self.MODEL['typenames']['csw:Record']['queryables']\
+        for k, val in defaults.iteritems():
+            self.model['typenames']['csw:Record']['queryables']\
             ['SupportedDublinCoreQueryables'][k] = \
-            {'dbcol': mappings['mappings'][v]}
+            {'dbcol': mappings['mappings'][val]}

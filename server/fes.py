@@ -30,7 +30,7 @@
 #
 # =================================================================
 
-import config, gml, util
+import gml, util
 
 MODEL =  {
     'GeometryOperands': {
@@ -66,12 +66,12 @@ MODEL =  {
     }
 }
 
-def parse(element, queryables, dbtype, config):
+def parse(element, queryables, dbtype, nsmap):
     ''' OGC Filter object support '''
 
     boq = None
 
-    tmp = element.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=config.NAMESPACES)
+    tmp = element.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=nsmap)
     if len(tmp) > 0:  # this is binary logic query
         boq = ' %s ' % util.xmltag_split(tmp[0].tag).lower()
         tmp = tmp[0]
@@ -89,24 +89,24 @@ def parse(element, queryables, dbtype, config):
             boolean_true = 'true'
             boolean_false = 'false'
 
-        if child.tag == util.nspath_eval('ogc:Not', config):
+        if child.tag == util.nspath_eval('ogc:Not', nsmap):
             queries.append("%s = %s" %
             (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-            child.xpath('child::*')[0], dbtype, config), boolean_false))
+            child.xpath('child::*')[0], dbtype, nsmap), boolean_false))
 
         elif child.tag in \
-        [util.nspath_eval('ogc:%s' % n, config) for n in \
+        [util.nspath_eval('ogc:%s' % n, nsmap) for n in \
         MODEL['SpatialOperators']['values']]:
             if boq is not None and boq == ' not ':
                 queries.append("%s = %s" %
                 (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-                 child, dbtype, config), boolean_false))
+                 child, dbtype, nsmap), boolean_false))
             else:
                 queries.append("%s = %s" % 
                 (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-                 child, dbtype, config), boolean_true))
+                 child, dbtype, nsmap), boolean_true))
 
-        elif child.tag == util.nspath_eval('ogc:FeatureId', config):
+        elif child.tag == util.nspath_eval('ogc:FeatureId', nsmap):
             queries.append("%s = '%s'" % (queryables['pycsw:Identifier'],
             child.attrib.get('fid')))
 
@@ -122,7 +122,8 @@ def parse(element, queryables, dbtype, config):
             if singlechar is None:
                 singlechar = '_'
 
-            if child.xpath('child::*')[0].tag == util.nspath_eval('ogc:Function', config):
+            if (child.xpath('child::*')[0].tag ==
+                util.nspath_eval('ogc:Function', nsmap)):
                 if (child.xpath('child::*')[0].attrib['name'] not in
                 MODEL['Functions'].keys()):
                     raise RuntimeError, ('Invalid ogc:Function: %s' %
@@ -131,23 +132,26 @@ def parse(element, queryables, dbtype, config):
 
                 try:
                     pname = queryables[child.find(
-                    util.nspath_eval('ogc:Function/ogc:PropertyName', config)).text]['dbcol']
+                    util.nspath_eval('ogc:Function/ogc:PropertyName',
+                    nsmap)).text]['dbcol']
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
-                    (child.find(util.nspath_eval('ogc:Function/ogc:PropertyName', config)).text,
+                    (child.find(util.nspath_eval('ogc:Function/ogc:PropertyName',
+                    nsmap)).text,
                     str(err)))
 
             else:
                 try:
                     pname = queryables[child.find(
-                    util.nspath_eval('ogc:PropertyName', config)).text]['dbcol']
+                    util.nspath_eval('ogc:PropertyName', nsmap)).text]['dbcol']
                 except Exception, err:
                     raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
-                    (child.find(util.nspath_eval('ogc:PropertyName', config)).text,
-                    str(err)))
+                    (child.find(util.nspath_eval('ogc:PropertyName',
+                     nsmap)).text,
+                     str(err)))
 
-            if child.tag != util.nspath_eval('ogc:PropertyIsBetween', config):
-                pval = child.find(util.nspath_eval('ogc:Literal', config)).text
+            if (child.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
+                pval = child.find(util.nspath_eval('ogc:Literal', nsmap)).text
                 pvalue = pval.replace(wildcard,'%').replace(singlechar,'_')
 
             com_op = _get_comparison_operator(child)
@@ -158,12 +162,14 @@ def parse(element, queryables, dbtype, config):
             pname == 'anytext'):
                 com_op = 'ilike' if dbtype == 'postgresql' else 'like'
 
-            if child.tag == util.nspath_eval('ogc:PropertyIsBetween', config):
+            if (child.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
                 com_op = 'between'
                 lower_boundary = child.find(
-                util.nspath_eval('ogc:LowerBoundary/ogc:Literal', config)).text
+                    util.nspath_eval('ogc:LowerBoundary/ogc:Literal',
+                    nsmap)).text
                 upper_boundary = child.find(
-                util.nspath_eval('ogc:UpperBoundary/ogc:Literal', config)).text
+                    util.nspath_eval('ogc:UpperBoundary/ogc:Literal',
+                    nsmap)).text
                 queries.append("%s %s '%s' and '%s'" %
                 (pname, com_op, lower_boundary, upper_boundary))
             else:
@@ -186,10 +192,10 @@ def parse(element, queryables, dbtype, config):
 
     return where
 
-def _get_spatial_operator(geomattr, element, dbtype, config):
+def _get_spatial_operator(geomattr, element, dbtype, nsmap):
     ''' return the spatial predicate function '''
-    property_name = element.find(util.nspath_eval('ogc:PropertyName', config))
-    distance = element.find(util.nspath_eval('ogc:Distance', config))
+    property_name = element.find(util.nspath_eval('ogc:PropertyName', nsmap))
+    distance = element.find(util.nspath_eval('ogc:Distance', nsmap))
 
     distance = 'false' if distance is None else distance.text
 
@@ -202,7 +208,7 @@ def _get_spatial_operator(geomattr, element, dbtype, config):
         ('Invalid ogc:PropertyName in spatial filter: %s' %
         property_name.text)
 
-    geometry = gml.Geometry(element, config)
+    geometry = gml.Geometry(element, nsmap)
 
     spatial_predicate = util.xmltag_split(element.tag).lower()
 

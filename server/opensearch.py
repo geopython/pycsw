@@ -36,22 +36,18 @@ from lxml import etree
 import config, fes, util
 
 class OpenSearch(object):
+    ''' OpenSearch wrapper class '''
 
-    OPENSEARCH_VERSION = '1.1'
+    def __init__(self, context):
+        ''' initialize ''' 
 
-    NAMESPACES = {
-        'atom': 'http://www.w3.org/2005/Atom',
-        'opensearch': 'http://a9.com/-/spec/opensearch/1.1/'
+        self.namespaces = {
+            'atom': 'http://www.w3.org/2005/Atom',
+            'opensearch': 'http://a9.com/-/spec/opensearch/1.1/'
         }
 
-
-    def __init__(self, globalstaticcontext):
-        self.globalstaticcontext = globalstaticcontext
-
-        self.globalstaticcontext.NAMESPACES.update(OpenSearch.NAMESPACES)
-
-    def nspath_eval(self, astr):
-        return util.nspath_eval(astr, self.globalstaticcontext)
+        self.context = context
+        self.context.namespaces.update(self.namespaces)
 
     def response_csw2opensearch(self, element, cfg):
         ''' transform a CSW response into an OpenSearch response '''
@@ -62,16 +58,16 @@ class OpenSearch(object):
             if startindex < 1:
                 startindex = 1
 
-            node = etree.Element(self.nspath_eval('atom:feed'), nsmap=OpenSearch.NAMESPACES)
-            etree.SubElement(node, self.nspath_eval('atom:id')).text = cfg.get('server', 'url')
-            etree.SubElement(node, self.nspath_eval('atom:title')).text = cfg.get('metadata:main', 'identification_title')
-            #etree.SubElement(node, self.nspath_eval('atom:updated')).text = element.xpath('//@timestamp')[0]
+            node = etree.Element(util.nspath_eval('atom:feed', self.context.namespaces), nsmap=self.namespaces)
+            etree.SubElement(node, util.nspath_eval('atom:id', self.context.namespaces)).text = cfg.get('server', 'url')
+            etree.SubElement(node, util.nspath_eval('atom:title', self.context.namespaces)).text = cfg.get('metadata:main', 'identification_title')
+            #etree.SubElement(node, util.nspath_eval('atom:updated', self.context.namespaces)).text = element.xpath('//@timestamp')[0]
                 
-            etree.SubElement(node, self.nspath_eval('opensearch:totalResults')).text = element.xpath('//@numberOfRecordsMatched')[0]
-            etree.SubElement(node, self.nspath_eval('opensearch:startIndex')).text = str(startindex)
-            etree.SubElement(node, self.nspath_eval('opensearch:itemsPerPage')).text = element.xpath('//@numberOfRecordsReturned')[0]
+            etree.SubElement(node, util.nspath_eval('opensearch:totalResults', self.context.namespaces)).text = element.xpath('//@numberOfRecordsMatched')[0]
+            etree.SubElement(node, util.nspath_eval('opensearch:startIndex', self.context.namespaces)).text = str(startindex)
+            etree.SubElement(node, util.nspath_eval('opensearch:itemsPerPage', self.context.namespaces)).text = element.xpath('//@numberOfRecordsReturned')[0]
             
-            for rec in element.xpath('//atom:entry', namespaces=self.globalstaticcontext.NAMESPACES):
+            for rec in element.xpath('//atom:entry', namespaces=self.context.namespaces):
                 node.append(rec)
             
         return node

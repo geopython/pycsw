@@ -77,12 +77,12 @@ def find_exml(val, attrib=False):
     else:
         return None
 
-def nspath_eval(xpath,config):
+def nspath_eval(xpath, nsmap):
     ''' Return an etree friendly xpath '''
     out = []
     for chunks in xpath.split('/'):
         namespace, element = chunks.split(':')
-        out.append('{%s}%s' % (config.NAMESPACES[namespace], element))
+        out.append('{%s}%s' % (nsmap[namespace], element))
     return '/'.join(out)
 
 def xmltag_split(tag):
@@ -177,7 +177,7 @@ def update_xpath(config):
 
         recprop = eval(recprop)
         try:
-            nodes = xml.xpath(recprop['rp']['xpath'], namespaces=config.NAMESPACES)
+            nodes = xml.xpath(recprop['rp']['xpath'], namespaces=config.namespaces)
             if len(nodes) > 0:  # matches
                 for node1 in nodes:
                     if node1.text != recprop['value']:  # values differ, update

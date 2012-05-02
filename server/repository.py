@@ -45,8 +45,10 @@ class Repository(object):
 
         # Don't use relative paths, this is hack to get around
         # most wsgi restriction...
-        if app_root and database.startswith("sqlite:///") and not database.startswith("sqlite:////"):
-            database = database.replace("sqlite:///","sqlite:///%s%s" % (app_root, os.sep))
+        if (app_root and database.startswith('sqlite:///') and
+            not database.startswith('sqlite:////')):
+            database = database.replace('sqlite:///',
+                       'sqlite:///%s%s' % (app_root, os.sep))
 
         engine = create_engine('%s' % database, echo=False)
 
@@ -96,12 +98,12 @@ class Repository(object):
         for qbl in self.queryables:
             self.queryables['_all'].update(self.queryables[qbl])
 
-        self.queryables['_all'].update(self.config.MD_CORE_MODEL['mappings'])
+        self.queryables['_all'].update(self.config.md_core_model['mappings'])
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
         column = getattr(self.dataset, \
-        self.config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+        self.config.md_core_model['mappings']['pycsw:Identifier'])
 
         query = self.session.query(
         self.dataset).filter(column.in_(ids))
@@ -128,7 +130,7 @@ class Repository(object):
     def query_latest_insert(self):
         ''' Query to get latest update to repository '''
         column = getattr(self.dataset, \
-        self.config.MD_CORE_MODEL['mappings']['pycsw:InsertDate'])
+        self.config.md_core_model['mappings']['pycsw:InsertDate'])
 
         return self.session.query(
         func.max(column)).first()[0]
@@ -136,7 +138,7 @@ class Repository(object):
     def query_source(self, source):
         ''' Query by source '''
         column = getattr(self.dataset, \
-        self.config.MD_CORE_MODEL['mappings']['pycsw:Source'])
+        self.config.md_core_model['mappings']['pycsw:Source'])
 
         query = self.session.query(self.dataset).filter(
         column == source)
@@ -196,11 +198,11 @@ class Repository(object):
         ''' Update a record in the repository based on identifier '''
 
         identifier = getattr(record,
-        self.config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+        self.config.md_core_model['mappings']['pycsw:Identifier'])
         xml = getattr(self.dataset,
-        self.config.MD_CORE_MODEL['mappings']['pycsw:XML'])
+        self.config.md_core_model['mappings']['pycsw:XML'])
         anytext = getattr(self.dataset,
-        self.config.MD_CORE_MODEL['mappings']['pycsw:AnyText'])
+        self.config.md_core_model['mappings']['pycsw:AnyText'])
 
         if recprops is None and constraint is None:  # full update
 
