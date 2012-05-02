@@ -33,9 +33,6 @@
 
 # CGI wrapper for pycsw
 
-import cgitb
-cgitb.enable()
-
 import os, sys
 from StringIO import StringIO
 from server import server
