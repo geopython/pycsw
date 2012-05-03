@@ -166,7 +166,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     else:
         return 'false'
 
-def update_xpath(config):
+def update_xpath(nsmap):
     ''' Bind config to update_xpath function '''
 
     def update_xpath_bound(xml, recprop):
@@ -177,7 +177,7 @@ def update_xpath(config):
 
         recprop = eval(recprop)
         try:
-            nodes = xml.xpath(recprop['rp']['xpath'], namespaces=config.namespaces)
+            nodes = xml.xpath(recprop['rp']['xpath'], namespaces=nsmap)
             if len(nodes) > 0:  # matches
                 for node1 in nodes:
                     if node1.text != recprop['value']:  # values differ, update
