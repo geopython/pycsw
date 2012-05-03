@@ -38,10 +38,10 @@ import util
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, database, table, qconfig, config, app_root=None):
+    def __init__(self, database, table, context, app_root=None):
         ''' Initialize repository '''
 
-        self.config = config
+        self.context = context
 
         # Don't use relative paths, this is hack to get around
         # most wsgi restriction...
@@ -69,7 +69,7 @@ class Repository(object):
                     dbapi_connection.create_function(
                     'query_spatial', 4, util.query_spatial)
                     dbapi_connection.create_function(
-                    'update_xpath', 2, util.update_xpath(self.config))
+                    'update_xpath', 2, util.update_xpath(self.context))
                     dbapi_connection.create_function('get_anytext', 1,
                     util.get_anytext)
             else:  # <= 0.6 behaviour
@@ -77,19 +77,19 @@ class Repository(object):
                 self.connection.create_function(
                 'query_spatial', 4, util.query_spatial)
                 self.connection.create_function(
-                'update_xpath', 2, util.update_xpath(self.config))
+                'update_xpath', 2, util.update_xpath(self.context))
                 self.connection.create_function('get_anytext', 1,
                 util.get_anytext)
 
         # generate core queryables db and obj bindings
         self.queryables = {}
 
-        for tname in qconfig:
-            for qname in qconfig[tname]['queryables']:
+        for tname in self.context.model['typenames']:
+            for qname in self.context.model['typenames'][tname]['queryables']:
                 self.queryables[qname] = {}
 
                 for qkey, qvalue in \
-                qconfig[tname]['queryables'][qname].iteritems():
+                self.context.model['typenames'][tname]['queryables'][qname].iteritems():
                     self.queryables[qname][qkey] = qvalue
 
         # flatten all queryables
@@ -98,12 +98,12 @@ class Repository(object):
         for qbl in self.queryables:
             self.queryables['_all'].update(self.queryables[qbl])
 
-        self.queryables['_all'].update(self.config.md_core_model['mappings'])
+        self.queryables['_all'].update(self.context.md_core_model['mappings'])
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
         column = getattr(self.dataset, \
-        self.config.md_core_model['mappings']['pycsw:Identifier'])
+        self.context.md_core_model['mappings']['pycsw:Identifier'])
 
         query = self.session.query(
         self.dataset).filter(column.in_(ids))
@@ -130,7 +130,7 @@ class Repository(object):
     def query_latest_insert(self):
         ''' Query to get latest update to repository '''
         column = getattr(self.dataset, \
-        self.config.md_core_model['mappings']['pycsw:InsertDate'])
+        self.context.md_core_model['mappings']['pycsw:InsertDate'])
 
         return self.session.query(
         func.max(column)).first()[0]
@@ -138,7 +138,7 @@ class Repository(object):
     def query_source(self, source):
         ''' Query by source '''
         column = getattr(self.dataset, \
-        self.config.md_core_model['mappings']['pycsw:Source'])
+        self.context.md_core_model['mappings']['pycsw:Source'])
 
         query = self.session.query(self.dataset).filter(
         column == source)
@@ -198,11 +198,11 @@ class Repository(object):
         ''' Update a record in the repository based on identifier '''
 
         identifier = getattr(record,
-        self.config.md_core_model['mappings']['pycsw:Identifier'])
+        self.context.md_core_model['mappings']['pycsw:Identifier'])
         xml = getattr(self.dataset,
-        self.config.md_core_model['mappings']['pycsw:XML'])
+        self.context.md_core_model['mappings']['pycsw:XML'])
         anytext = getattr(self.dataset,
-        self.config.md_core_model['mappings']['pycsw:AnyText'])
+        self.context.md_core_model['mappings']['pycsw:AnyText'])
 
         if recprops is None and constraint is None:  # full update
 

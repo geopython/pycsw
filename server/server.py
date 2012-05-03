@@ -203,7 +203,7 @@ class Csw(object):
             try:
                 self.repository = \
                 repository.Repository(self.config.get('repository', 'database'),
-                'records', self.context.model['typenames'], self.context,
+                'records', self.context,
                 app_root=self.environ.get('local.app_root', None))
                 self.log.debug('Repository loaded (local): %s.' \
                 % self.repository.dbtype)
