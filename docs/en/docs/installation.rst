@@ -102,7 +102,24 @@ By default, ``default.cfg`` is at the root of the pycsw install.  If pycsw is se
    deny from all
   </Files>
 
+
+Running on WSGI
+---------------
+
+pycsw supports the `Web Server Gateway Interface`_ (WSGI).  To run pycsw in WSGI mode, use ``csw.wsgi`` in your WSGI server environment.  Below is an example of configuring with Apache:
+
+.. code-block:: none
+
+  WSGIDaemonProcess host1 home=/var/www/pycsw processes=2
+  WSGIProcessGroup host1
+  WSGIScriptAlias /pycsw-wsgi /var/www/pycsw/csw.wsgi
+  <Directory /var/www/pycsw>
+    Order deny,allow
+    Allow from all
+  </Directory>
+
 .. _`lxml`: http://lxml.de/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`Shapely`: http://toblerity.github.com/shapely/
 .. _`pyproj`: http://code.google.com/p/pyproj/
+.. _`Web Server Gateway Interface`: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
