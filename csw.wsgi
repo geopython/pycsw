@@ -95,7 +95,7 @@ def csw_application(env, start_response):
 
         buf = StringIO()
         gzipfile = gzip.GzipFile(mode='wb', fileobj=buf,
-                                 compresslevel=self.gzip_compresslevel)
+                                 compresslevel=gzip_compresslevel)
         gzipfile.write(contents)
         gzipfile.close()
         
