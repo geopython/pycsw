@@ -41,6 +41,8 @@ from urlparse import urlparse
 from lxml import etree
 from server import config, metadata, repository, util
 
+CONTEXT = config.StaticContext()
+
 def setup_db(database, home):
     ''' Setup database tables and indexes '''
     from sqlalchemy import Column, create_engine, Integer, String, MetaData, \
@@ -195,7 +197,7 @@ def setup_db(database, home):
 
 def load_records(database, xml_dirpath, recursive=False):
     ''' Load metadata records from directory of files to database ''' 
-    REPO = repository.Repository(database, 'records', {})
+    REPO = repository.Repository(database, 'records', CONTEXT)
 
     file_list = []
 
@@ -221,7 +223,7 @@ def load_records(database, xml_dirpath, recursive=False):
             print 'XML document is not well-formed: %s' % str(err)
             continue
 
-        record = metadata.parse_record(e, REPO)
+        record = metadata.parse_record(CONTEXT, e, REPO)
 
         for rec in record:
             print 'Inserting %s %s into database %s, table records....' % \
@@ -236,7 +238,7 @@ def load_records(database, xml_dirpath, recursive=False):
 
 def export_records(database, xml_dirpath):
     ''' Export metadata records from database to directory of files '''
-    REPO = repository.Repository(database, 'records', {})
+    REPO = repository.Repository(database, 'records', CONTEXT)
 
     print 'Querying database %s, table records....' % database
     RECORDS = REPO.session.query(REPO.dataset)
@@ -246,7 +248,7 @@ def export_records(database, xml_dirpath):
     print 'Exporting records\n'
     for record in RECORDS.all():
         identifier = getattr(record, 
-        config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+        CONTEXT.md_core_model['mappings']['pycsw:Identifier'])
 
         print 'Processing %s' % identifier
         if identifier.find(':') != -1:  # it's a URN
@@ -269,7 +271,7 @@ def refresh_harvested_records(database, url):
     from owslib.csw import CatalogueServiceWeb
 
     # get configuration and init repo connection
-    REPOS = repository.Repository(database, 'records', {})
+    REPOS = repository.Repository(database, 'records', CONTEXT)
 
     # get all harvested records
     COUNT, RECORDS = REPOS.query(constraint={'where': 'source != "local"'})
@@ -280,11 +282,11 @@ def refresh_harvested_records(database, url):
 
         for rec in RECORDS:
             source = getattr(rec, 
-            config.MD_CORE_MODEL['mappings']['pycsw:Source'])
+            CONTEXT.md_core_model['mappings']['pycsw:Source'])
             schema = getattr(rec, 
-            config.MD_CORE_MODEL['mappings']['pycsw:Schema'])
+            CONTEXT.md_core_model['mappings']['pycsw:Schema'])
             identifier = getattr(rec, 
-            config.MD_CORE_MODEL['mappings']['pycsw:Identifier'])
+            CONTEXT.md_core_model['mappings']['pycsw:Identifier'])
 
             print 'Harvesting %s (identifier = %s) ...' % \
             (source, identifier)
@@ -305,32 +307,32 @@ def rebuild_db_indexes(database):
 def optimize_db(database):
     ''' Optimize database '''
     print 'Optimizing %s' % database
-    REPOS = repository.Repository(database, 'records', {})
+    REPOS = repository.Repository(database, 'records', CONTEXT)
     REPOS.connection.execute('VACUUM ANALYZE')
 
 def gen_sitemap(DATABASE, URL, OUTPUT_FILE):
     ''' generate an XML sitemap from all records in repository '''
 
     # get configuration and init repo connection
-    REPOS = repository.Repository(DATABASE, 'records', config.MODEL['typenames'])
+    REPOS = repository.Repository(DATABASE, 'records', CONTEXT)
 
     # write out sitemap document
-    URLSET = etree.Element(util.nspath_eval('sitemap:urlset'),
-    nsmap=config.NAMESPACES)
+    URLSET = etree.Element(util.nspath_eval('sitemap:urlset', CONTEXT.namespaces),
+    nsmap=CONTEXT.namespaces)
 
-    URLSET.attrib[util.nspath_eval('xsi:schemaLocation')] = \
+    URLSET.attrib[util.nspath_eval('xsi:schemaLocation', CONTEXT.namespaces)] = \
     '%s http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' % \
-    config.NAMESPACES['sitemap']
+    CONTEXT.namespaces['sitemap']
 
     # get all records
     COUNT, RECORDS = REPOS.query(constraint={}, maxrecords=99999999)
 
     for rec in RECORDS:
-        url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url'))
+        url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url', CONTEXT.namespaces))
         uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
         (URL, \
-        getattr(rec, config.MD_CORE_MODEL['mappings']['pycsw:Identifier']))
-        etree.SubElement(url, util.nspath_eval('sitemap:loc')).text = uri
+        getattr(rec, CONTEXT.md_core_model['mappings']['pycsw:Identifier']))
+        etree.SubElement(url, util.nspath_eval('sitemap:loc', CONTEXT.namespaces)).text = uri
 
     # write to file
     with open(OUTPUT_FILE, 'w') as of:
@@ -340,7 +342,7 @@ def gen_sitemap(DATABASE, URL, OUTPUT_FILE):
 def gen_opensearch_description(METADATA, URL, OUTPUT_FILE):
     ''' generate an OpenSearch Description document '''
 
-    node0 = etree.Element('OpenSearchDescription', nsmap= {None: config.NAMESPACES['os']})
+    node0 = etree.Element('OpenSearchDescription', nsmap={None: CONTEXT.namespaces['os']})
 
     etree.SubElement(node0, 'ShortName').text = 'pycsw'
     etree.SubElement(node0, 'LongName').text =  METADATA['identification_title']
