@@ -49,7 +49,7 @@ from geonode.maps.models import Layer
 
 class GeoNodeRepository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, qconfig, context):
+    def __init__(self, context):
         ''' Initialize repository '''
 
         self.context = context
@@ -68,12 +68,12 @@ class GeoNodeRepository(object):
         # generate core queryables db and obj bindings
         self.queryables = {}
 
-        for tname in qconfig:
-            for qname in qconfig[tname]['queryables']:
+        for tname in self.context.model['typenames']:
+            for qname in self.context.model['typenames'][tname]['queryables']:
                 self.queryables[qname] = {}
 
                 for qkey, qvalue in \
-                qconfig[tname]['queryables'][qname].iteritems():
+                self.context.model['typenames'][tname]['queryables'][qname].iteritems():
                     self.queryables[qname][qkey] = qvalue
 
         # flatten all queryables

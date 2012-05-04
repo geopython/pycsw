@@ -191,7 +191,7 @@ class Csw(object):
 
             try:
                 self.repository = \
-                geonode_.GeoNodeRepository(self.context.model['typenames'])
+                geonode_.GeoNodeRepository(self.context)
                 self.log.debug('GeoNode repository loaded (geonode): %s.' % \
                 self.repository.dbtype)
             except Exception, err:
