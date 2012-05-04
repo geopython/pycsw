@@ -105,7 +105,7 @@ class EBRIM(profile.Profile):
         util.nspath_eval('csw:SchemaComponent', self.context.namespaces),
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace)
 
-        schema = etree.parse(os.path.join(
+        schema = etree.parse(os.path.join(self.context.pycsw_home,
                 'server', 'plugins', 'profiles', 'ebrim',
                 'etc', 'schemas', 'ogc', 'csw', '2.0.2',
                 'profiles', 'ebrim', '1.0', 'csw-ebrim.xsd')).getroot()

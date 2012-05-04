@@ -83,6 +83,13 @@ class Csw(object):
             'Error opening configuration %s' % configfile)
             return
 
+        # set server.home safely
+        # TODO: make this more abstract
+        self.config.set('server', 'home', os.path.dirname(
+        os.path.join(os.path.dirname(__file__), '..', '..')))
+
+        self.context.pycsw_home = self.config.get('server', 'home')
+
         # configure transaction support, if specified in config
         self._gen_manager()
 
