@@ -357,7 +357,7 @@ class APISO(profile.Profile):
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace,
         parentSchema='gmd.xsd')
 
-        schema = etree.parse(os.path.join(
+        schema = etree.parse(os.path.join(self.context.pycsw_home,
                 'server', 'plugins', 'profiles', 'apiso',
                 'etc', 'schemas', 'ogc', 'iso', '19139',
                 '20060504', 'gmd', 'identification.xsd')).getroot()
@@ -369,7 +369,7 @@ class APISO(profile.Profile):
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace,
         parentSchema='gmd.xsd')
 
-        schema = etree.parse(os.path.join(
+        schema = etree.parse(os.path.join(self.context.pycsw_home,
                 'server', 'plugins', 'profiles', 'apiso',
                 'etc', 'schemas', 'ogc', 'iso', '19139',
                 '20060504', 'srv', 'serviceMetadata.xsd')).getroot()

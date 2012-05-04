@@ -125,7 +125,7 @@ class DIF(profile.Profile):
         util.nspath_eval('csw:SchemaComponent', self.context.namespaces),
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace)
 
-        schema = etree.parse(os.path.join(
+        schema = etree.parse(os.path.join(self.context.pycsw_home,
                 'server', 'plugins', 'profiles', 'dif',
                 'etc', 'schemas', 'dif', 'dif.xsd')).getroot()
         node.append(schema)
