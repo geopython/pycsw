@@ -1333,10 +1333,9 @@ class Csw(object):
                         self.kvp['outputschema'],
                         self.repository.queryables['_all']))
                 except Exception, err:
-                    import traceback
                     self.response = self.exceptionreport(
                     'NoApplicableCode', 'service',
-                    'Record serialization failed: %s' % str(traceback.format_exc()))
+                    'Record serialization failed: %s' % str(err))
                     return self.response
 
         if len(dsresults) > 0:  # return DistributedSearch results
