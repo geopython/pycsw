@@ -302,7 +302,7 @@ def refresh_harvested_records(database, url):
 
 def rebuild_db_indexes(database):
     ''' Rebuild database indexes '''
-    pass
+    print 'Not implemented yet'
 
 def optimize_db(database):
     ''' Optimize database '''
@@ -395,6 +395,20 @@ def get_sysprof():
     pyproj=%s ''' % (sys.version_info, sys.platform, sqlalchemy.__version__,
     shapely.geos.geos_capi_version, etree.__version__, pyproj.__version__)
 
+def validate_xml(xml, xsd):
+    ''' Validate XML document against XML Schema '''
+
+    print 'Validating %s against schema %s' % (xml, xsd)
+
+    SCHEMA = etree.XMLSchema(etree.parse(xsd))
+    PARSER = etree.XMLParser(schema=SCHEMA)
+
+    try:
+        VALID = etree.parse(xml, PARSER)
+        print 'Valid XML document'
+    except Exception, err:
+        print 'ERROR: %s' % str(err)
+
 def usage():
     ''' Provide usage instructions '''
     return '''
@@ -417,6 +431,7 @@ SYNOPSIS
               - gen_opensearch_description
               - post_xml
               - get_sysprof
+              - validate_xml
 
     -f    Filepath to pycsw configuration
 
@@ -430,7 +445,7 @@ SYNOPSIS
 
     -u    URL of CSW
 
-    -x    XML URL of CSW
+    -x    XML document
 
 EXAMPLES
 
@@ -475,9 +490,13 @@ EXAMPLES
 
         pycsw-admin.py -c post_xml -u http://host/csw -x /path/to/request.xml
 
-    8.) get_sysprof: Get versions of dependencies
+    9.) get_sysprof: Get versions of dependencies
 
         pycsw-admin.py -c get_sysprof
+
+   10.) validate_xml: Validate an XML document against an XML Schema
+
+        pycsw-admin.py -c validate_xml -x file.xml -s file.xsd
 
 '''
 
@@ -488,13 +507,14 @@ RECURSIVE = False
 OUTPUT_FILE = None
 CSW_URL = None
 XML = None
+XSD = None
 
 if len(sys.argv) == 1:
     print usage()
     sys.exit(1)
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:')
 except getopt.GetoptError, err:
     print '\nERROR: %s' % err
     print usage()
@@ -515,6 +535,8 @@ for o, a in OPTS:
         CSW_URL = a
     if o == '-x':
         XML = a
+    if o == '-s':
+        XSD = a
     if o == '-h':  # dump help and exit
         print usage()
         sys.exit(3)
@@ -525,11 +547,12 @@ if COMMAND is None:
 
 if COMMAND not in ['setup_db', 'load_records', 'export_records', \
     'rebuild_db_indexes', 'optimize_db', 'refresh_harvested_records', \
-    'gen_sitemap', 'gen_opensearch_description', 'post_xml', 'get_sysprof']:
+    'gen_sitemap', 'gen_opensearch_description', 'post_xml', 'get_sysprof', \
+    'validate_xml']:
     print 'ERROR: invalid command name: %s' % COMMAND
     sys.exit(5)
 
-if CFG is None and COMMAND not in ['post_xml', 'get_sysprof']:
+if CFG is None and COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
     print 'ERROR: -f <cfg> is a required argument'
     sys.exit(6)
 
@@ -542,7 +565,7 @@ if (COMMAND in ['gen_sitemap', 'gen_opensearch_description']
     print 'ERROR: -o </path/to/sitemap.xml> is a required argument'
     sys.exit(8)
 
-if COMMAND not in ['post_xml', 'get_sysprof']:
+if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
     SCP = SafeConfigParser()
     SCP.readfp(open(CFG))
 
@@ -550,13 +573,21 @@ if COMMAND not in ['post_xml', 'get_sysprof']:
     URL = SCP.get('server', 'url')
     HOME = SCP.get('server', 'home')
     METADATA = dict(SCP.items('metadata:main'))
-elif COMMAND != 'get_sysprof':
+
+elif COMMAND not in ['get_sysprof', 'validate_xml']:
     if CSW_URL is None:
         print 'ERROR: -u <http://host/csw> is a required argument'
         sys.exit(9)
     if XML is None:
         print 'ERROR: -x /path/to/request.xml is a required argument'
         sys.exit(10)
+elif COMMAND == 'validate_xml':
+    if XML is None:
+        print 'ERROR: -x /path/to/file.xml is a required argument'
+        sys.exit(11)
+    if XSD is None:
+        print 'ERROR: -s /path/to/file.xsd is a required argument'
+        sys.exit(12)
 
 if COMMAND == 'setup_db': 
     setup_db(DATABASE, HOME)
@@ -578,5 +609,7 @@ elif COMMAND == 'post_xml':
     post_xml(CSW_URL, XML)
 elif COMMAND == 'get_sysprof':
     get_sysprof()
+elif COMMAND == 'validate_xml':
+    validate_xml(XML, XSD)
 
 print 'Done'
