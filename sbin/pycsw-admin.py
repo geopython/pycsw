@@ -371,11 +371,29 @@ def gen_opensearch_description(METADATA, URL, OUTPUT_FILE):
         encoding='UTF-8', xml_declaration=1))
 
 def post_xml(url, xml):
+    ''' Execute HTTP XML POST request and print response '''
     from owslib.util import http_post
     try:
         print http_post(url,open(xml).read())
     except Exception, err:
+
         print err
+
+def get_sysprof():
+    ''' Get versions of dependencies '''
+    import sqlalchemy
+    import shapely.geos
+    import pyproj
+
+    print '''pycsw system profile
+    --------------------
+    python version=%s
+    os=%s
+    sqlalchemy=%s
+    shapely=%s
+    lxml=%s
+    pyproj=%s ''' % (sys.version_info, sys.platform, sqlalchemy.__version__,
+    shapely.geos.geos_capi_version, etree.__version__, pyproj.__version__)
 
 def usage():
     ''' Provide usage instructions '''
@@ -398,6 +416,7 @@ SYNOPSIS
               - gen_sitemap
               - gen_opensearch_description
               - post_xml
+              - get_sysprof
 
     -f    Filepath to pycsw configuration
 
@@ -455,6 +474,11 @@ EXAMPLES
     8.) post_xml: Execute a CSW request via HTTP POST
 
         pycsw-admin.py -c post_xml -u http://host/csw -x /path/to/request.xml
+
+    8.) get_sysprof: Get versions of dependencies
+
+        pycsw-admin.py -c get_sysprof
+
 '''
 
 COMMAND = None
@@ -501,11 +525,11 @@ if COMMAND is None:
 
 if COMMAND not in ['setup_db', 'load_records', 'export_records', \
     'rebuild_db_indexes', 'optimize_db', 'refresh_harvested_records', \
-    'gen_sitemap', 'gen_opensearch_description', 'post_xml']:
+    'gen_sitemap', 'gen_opensearch_description', 'post_xml', 'get_sysprof']:
     print 'ERROR: invalid command name: %s' % COMMAND
     sys.exit(5)
 
-if CFG is None and COMMAND != 'post_xml':
+if CFG is None and COMMAND not in ['post_xml', 'get_sysprof']:
     print 'ERROR: -f <cfg> is a required argument'
     sys.exit(6)
 
@@ -518,7 +542,7 @@ if (COMMAND in ['gen_sitemap', 'gen_opensearch_description']
     print 'ERROR: -o </path/to/sitemap.xml> is a required argument'
     sys.exit(8)
 
-if COMMAND != 'post_xml':
+if COMMAND not in ['post_xml', 'get_sysprof']:
     SCP = SafeConfigParser()
     SCP.readfp(open(CFG))
 
@@ -526,7 +550,7 @@ if COMMAND != 'post_xml':
     URL = SCP.get('server', 'url')
     HOME = SCP.get('server', 'home')
     METADATA = dict(SCP.items('metadata:main'))
-else:
+elif COMMAND != 'get_sysprof':
     if CSW_URL is None:
         print 'ERROR: -u <http://host/csw> is a required argument'
         sys.exit(9)
@@ -552,5 +576,7 @@ elif COMMAND == 'gen_opensearch_description':
     gen_opensearch_description(METADATA, URL, OUTPUT_FILE)
 elif COMMAND == 'post_xml':
     post_xml(CSW_URL, XML)
+elif COMMAND == 'get_sysprof':
+    get_sysprof()
 
 print 'Done'
