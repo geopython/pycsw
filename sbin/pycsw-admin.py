@@ -443,6 +443,8 @@ SYNOPSIS
 
     -r    load records from directory recursively
 
+    -s    XML Schema
+
     -u    URL of CSW
 
     -x    XML document
