@@ -38,9 +38,10 @@ Subversion Commit Guidelines
 - all enhancements or bug fixes must successfully pass all :ref:`tester` tests before they are committed
 - enhancements which can be demonstrated from the pycsw :ref:`tester` should be accompanied by example CSW request XML
 
-Coding Guidelines
------------------
+Coding and Documentation Guidelines
+-----------------------------------
 
+- pycsw instead of PyCSW, pyCSW
 - always code with `PEP 8`_ conventions
 - always run source code through `pylint`_, using all pylint defaults except for ``C0111``.  ``sbin/pycsw-pylint.sh`` is included for convenience
 - for exceptions which make their way to OGC ``ExceptionReport`` XML, always specify the appropriate ``locator`` and ``code`` parameters
