@@ -16,6 +16,7 @@ Features
 - implements the Search/Retrieval via URL (`SRU`_) search protocol
 - implements OpenSearch
 - supports ISO, Dublin Core, DIF, FGDC and Atom metadata models
+- CGI or WSGI deployment
 - simple configuration
 - transactional capabilities (CSW-T)
 - flexible repository configuration
