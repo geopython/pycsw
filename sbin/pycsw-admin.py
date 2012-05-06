@@ -376,7 +376,6 @@ def post_xml(url, xml):
     try:
         print http_post(url,open(xml).read())
     except Exception, err:
-
         print err
 
 def get_sysprof():

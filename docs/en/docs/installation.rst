@@ -118,8 +118,18 @@ pycsw supports the `Web Server Gateway Interface`_ (WSGI).  To run pycsw in WSGI
     Allow from all
   </Directory>
 
+or use the `WSGI reference implementation`_:
+
+.. code-block:: bash
+
+  $ python ./csw.wsgi
+  Serving on port 8000...
+
+which will publish pycsw to http://localhost:8000/
+
 .. _`lxml`: http://lxml.de/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`Shapely`: http://toblerity.github.com/shapely/
 .. _`pyproj`: http://code.google.com/p/pyproj/
 .. _`Web Server Gateway Interface`: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
+.. _`WSGI reference implementation`: http://docs.python.org/library/wsgiref.html

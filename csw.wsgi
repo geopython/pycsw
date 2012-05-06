@@ -31,7 +31,8 @@
 # =================================================================
 
 # WSGI wrapper for pycsw
-# Apache configuration
+# 
+# Apache mod_wsgi configuration
 #
 # ServerName host1
 # WSGIDaemonProcess host1 home=/var/www/pycsw processes=2
@@ -43,6 +44,15 @@
 #  Order deny,allow
 #  Allow from all
 # </Directory>
+#
+# or invoke this script from the command line:
+#
+# $ python ./csw.wsgi
+#
+# which will publish pycsw to:
+#
+# http://localhost:8000/
+#
 
 from StringIO import StringIO
 import os, sys
@@ -112,3 +122,9 @@ def csw_application(env, start_response):
     return [contents]
 
 application = csw_application
+
+if __name__ == '__main__':  # run inline using WSGI reference implementation
+    from wsgiref.simple_server import make_server
+    httpd = make_server('', 8000, application)
+    print "Serving on port 8000..."
+    httpd.serve_forever()
