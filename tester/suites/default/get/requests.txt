@@ -1,2 +1,7 @@
 GetCapabilities,PYCSW_SERVER?config=tester/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetCapabilities
 GetCapabilities-invalid-request,PYCSW_SERVER?config=tester/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetCapabilitiese
+GetRecords-all,PYCSW_SERVER?config=tester/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full
+GetRecords-sortby-asc,PYCSW_SERVER?config=tester/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&sortby=dc:title:A
+GetRecords-sortby-desc,PYCSW_SERVER?config=tester/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&sortby=dc:title:D
+GetRecords-sortby-invalid-propertyname,PYCSW_SERVER?config=tester/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&sortby=dc:titlei:A
+GetRecords-sortby-invalid-order,PYCSW_SERVER?config=tester/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&sortby=dc:titlei:FOO
