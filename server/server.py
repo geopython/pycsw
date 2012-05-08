@@ -229,6 +229,8 @@ class Csw(object):
     def dispatch_cgi(self):
         ''' CGI handler '''
 
+        self.log.debug('CGI mode detected')
+
         if hasattr(self,'response'):
             return self._write_response()
 
@@ -258,11 +260,20 @@ class Csw(object):
 
     def dispatch_wsgi(self):
         ''' WSGI handler '''
+
+        self.log.debug('WSGI mode detected')
+
         if hasattr(self,'response'):
             return self._write_response()
 
         if self.environ['REQUEST_METHOD'] == 'POST':
-            postdata = self.environ['wsgi.input'].read()
+            try:
+                request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
+            except (ValueError):
+                request_body_size = 0
+
+            postdata = self.environ['wsgi.input'].read(request_body_size)
+
             self.requesttype = 'POST'
             self.request = postdata
             self.log.debug('Request type: POST.  Request:\n%s\n', self.request)
