@@ -62,7 +62,7 @@ sys.path.append(app_path)
 
 from server import server
 
-def csw_application(env, start_response):
+def application(env, start_response):
     config = 'default.cfg'
 
     if os.environ.has_key('PYCSW_CONFIG'):
@@ -120,8 +120,6 @@ def csw_application(env, start_response):
     start_response(status, headers.items())
 
     return [contents]
-
-application = csw_application
 
 if __name__ == '__main__':  # run inline using WSGI reference implementation
     from wsgiref.simple_server import make_server
