@@ -1197,6 +1197,33 @@ class Csw(object):
 
         if self.kvp.has_key('sortby') is False:
             self.kvp['sortby'] = None
+        elif self.kvp.has_key('sortby') and self.requesttype == 'GET':
+            self.log.debug('Sorted query specified.')
+            tmp = self.kvp['sortby']
+            self.kvp['sortby'] = {}
+
+            try:
+                name, order = tmp.rsplit(':', 1)
+            except:
+                return self.exceptionreport('InvalidParameterValue',
+                'sortby', 'Invalid SortBy value: must be in the format\
+                propertyname:A or propertyname:D')
+
+            try:
+                self.kvp['sortby']['propertyname'] = \
+                self.repository.queryables['_all'][name]['dbcol']
+            except Exception, err:
+                return self.exceptionreport('InvalidParameterValue',
+                'sortby', 'Invalid SortBy propertyname: %s' % name)
+
+            if order not in ['A', 'D']:
+                return self.exceptionreport('InvalidParameterValue',
+                'sortby', 'Invalid SortBy value: sort order must be "A" or "D"')
+
+            if order == 'D':
+                self.kvp['sortby']['order'] = 'DESC'
+            else: 
+                self.kvp['sortby']['order'] = 'ASC'
 
         if self.kvp.has_key('startposition') is False:
             self.kvp['startposition'] = 1
@@ -1902,7 +1929,7 @@ class Csw(object):
                 tmp2 =  tmp.find(util.nspath_eval(
                 'ogc:SortProperty/ogc:SortOrder', self.context.namespaces))
                 request['sortby']['order'] = tmp2.text if tmp2 is not None \
-                else 'asc'
+                else 'ASC'
             else:
                 request['sortby'] = None
 
