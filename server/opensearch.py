@@ -30,9 +30,8 @@
 #
 # =================================================================
 
-import os
 from lxml import etree
-import config, fes, util
+import util
 
 class OpenSearch(object):
     ''' OpenSearch wrapper class '''
