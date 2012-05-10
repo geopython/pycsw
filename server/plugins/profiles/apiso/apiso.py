@@ -390,7 +390,7 @@ class APISO(profile.Profile):
             return etree.fromstring(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:XML']))
 
         if typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
-            util.transform_mappings(queryables, self.context.REPOSITORY['gmd:MD_Metadata']['mappings']['csw:Record'])
+            util.transform_mappings(queryables, self.repository['gmd:MD_Metadata']['mappings']['csw:Record'])
 
         node = etree.Element(util.nspath_eval('gmd:MD_Metadata', self.namespaces))
         node.attrib[util.nspath_eval('xsi:schemaLocation', self.context.namespaces)] = \
