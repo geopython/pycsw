@@ -54,7 +54,7 @@ def parse_record(staticcontext, record, repos=None,
         md = WebMapService(record)
 
         if identifier is None:
-            identifier = uuid.uuid1().get_urn()
+            identifier = uuid.uuid4().get_urn()
 
         # generate record of service instance
         _set(staticcontext, serviceobj, 'pycsw:Identifier', identifier)
