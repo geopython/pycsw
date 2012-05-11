@@ -95,7 +95,7 @@ class Csw(object):
 
         # configure logging
         try:
-            self.log = log.initlog(self.config)
+            self.log = log.Log(self.config)
         except Exception, err:
             self.response = self.exceptionreport(
             'NoApplicableCode', 'service', str(err))
@@ -229,10 +229,10 @@ class Csw(object):
     def dispatch_cgi(self):
         ''' CGI handler '''
 
-        self.log.debug('CGI mode detected')
-
         if hasattr(self,'response'):
             return self._write_response()
+
+        self.log.debug('CGI mode detected')
 
         cgifs = cgi.FieldStorage(keep_blank_values=1)
     
@@ -261,10 +261,10 @@ class Csw(object):
     def dispatch_wsgi(self):
         ''' WSGI handler '''
 
-        self.log.debug('WSGI mode detected')
-
         if hasattr(self,'response'):
             return self._write_response()
+
+        self.log.debug('WSGI mode detected')
 
         if self.environ['REQUEST_METHOD'] == 'POST':
             try:
