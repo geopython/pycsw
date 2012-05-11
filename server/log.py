@@ -46,57 +46,57 @@ LOGLEVELS = {
     'NOTSET': logging.NOTSET,
 }
 
-def initlog(config=None):
-    ''' Initialize logging facility '''
-    if config is None:
-        return None
+class Log(logging.Logger):
+    ''' Logging facility   '''
+    def __init__(self, config=None):
+        ''' Initialize logging facility '''
+        if config is None:
+            return None
 
-    logfile = None
-    loglevel = 'NOTSET'
+        logfile = None
+        loglevel = 'NOTSET'
 
-    if config.has_option('server', 'loglevel'):
-        loglevel = config.get('server', 'loglevel')
+        if config.has_option('server', 'loglevel'):
+            loglevel = config.get('server', 'loglevel')
 
-        if loglevel not in LOGLEVELS.keys():
+            if loglevel not in LOGLEVELS.keys():
+                raise RuntimeError, \
+                ('Invalid server configuration (server.loglevel).')
+
+            if not config.has_option('server', 'logfile'): 
+                raise RuntimeError\
+                ('Invalid server configuration (server.loglevel set,\
+                  but server.logfile missing).')
+
+        if config.has_option('server', 'logfile'):
+            if not config.has_option('server', 'loglevel'):
+                raise RuntimeError, \
+                ('Invalid server configuration (server.logfile set,\
+                  but server.loglevel missing).')
+
+            logfile = config.get('server', 'logfile')
+
+        if loglevel != 'NOTSET' and logfile is None:
             raise RuntimeError, \
-            ('Invalid server configuration (server.loglevel).')
+            ('Invalid server configuration \
+            (server.loglevel set, but server.logfile is not).')
 
-        if not config.has_option('server', 'logfile'): 
-            raise RuntimeError\
-            ('Invalid server configuration (server.loglevel set,\
-              but server.logfile missing).')
+        logging.Logger.__init__(self, 'pycsw', LOGLEVELS[loglevel])
 
-    if config.has_option('server', 'logfile'):
-        if not config.has_option('server', 'loglevel'):
-            raise RuntimeError, \
-            ('Invalid server configuration (server.logfile set,\
-              but server.loglevel missing).')
+        if logfile:
+            try:
+                filehandler = logging.FileHandler(logfile)
+                filehandler.setLevel(LOGLEVELS[loglevel])
+                filehandler.setFormatter(logging.Formatter(MSG_FORMAT,
+                    TIME_FORMAT))
+                self.addHandler(filehandler)
+            except Exception, err:
+                raise RuntimeError, \
+                ('Invalid server configuration: server.logfile access denied.\
+                Make sure filepath exists and is writable. %s', str(err))
+        self.info('Logging initialized (level: %s).' % loglevel)
 
-        logfile = config.get('server', 'logfile')
-
-    if loglevel != 'NOTSET' and logfile is None:
-        raise RuntimeError, \
-        ('Invalid server configuration \
-        (server.loglevel set, but server.logfile is not).')
-
-    log = logging.getLogger('pycsw')
-    log.setLevel(LOGLEVELS[loglevel])
-
-    if logfile:
-        try:
-            filehandler = logging.FileHandler(logfile)
-            filehandler.setLevel(LOGLEVELS[loglevel])
-            filehandler.setFormatter(logging.Formatter(MSG_FORMAT, TIME_FORMAT))
-            log.addHandler(filehandler)
-        except Exception, err:
-            raise RuntimeError, \
-            ('Invalid server configuration: server.logfile access denied.\
-            Make sure filepath exists and is writable. %s', str(err))
-    log.info('Logging initialized (level: %s).' % loglevel)
-
-    if loglevel == 'DEBUG': #turn on CGI debugging
-        log.info('CGI debugging enabled.')
-        import cgitb
-        cgitb.enable() 
-
-    return log
+        if loglevel == 'DEBUG':  #turn on CGI debugging
+            self.info('CGI debugging enabled.')
+            import cgitb
+            cgitb.enable() 
