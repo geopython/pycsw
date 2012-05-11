@@ -20,6 +20,7 @@ Features
 - simple configuration
 - transactional capabilities (CSW-T)
 - flexible repository configuration
+- `GeoNode`_ connectivity
 - federated catalogue distributed searching
 - realtime XML Schema validation
 - extensible profile plugin architecture
@@ -159,3 +160,4 @@ Functions
 .. _`FGDC CSDGM Application Profile for CSW 2.0`: http://portal.opengeospatial.org/files/?artifact_id=16936
 .. _`SRU`: http://www.loc.gov/standards/sru/
 .. _`A9 OpenSearch`: http://www.opensearch.org/Home
+.. _`GeoNode`: http://geonode.org/
