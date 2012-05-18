@@ -9,9 +9,13 @@ System Requirements
 pycsw requires the following supporting libraries:
 
 - `lxml`_ (version >= 2.2.3) for XML support
-- `SQLAlchemy`_ (version >= 0.0.5) for database bindings
 - `Shapely`_ (version >= 1.2.8) for spatial query / geometry support
+- `SQLAlchemy`_ (version >= 0.0.5) for database bindings
 - `pyproj`_ (version >= 1.8.9) for coordinate transformations
+
+.. note::
+
+  For :ref:`GeoNode <geonode>` deployments, SQLAlchemy is not required
 
 Installing from Source
 ----------------------
