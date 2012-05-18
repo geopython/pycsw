@@ -97,7 +97,7 @@ PostgreSQL
 Mapping to an Existing Repository
 ---------------------------------
 
-pycsw supports publishing metadata from an existing repository.  To enable this functionality, the default database mappings must be modified to represent the existing database columns mapping to the abstract core model (the default mappings are in ``server/config.py:MD_CORE_MODEL``).
+pycsw supports publishing metadata from an existing repository.  To enable this functionality, the default database mappings must be modified to represent the existing database columns mapping to the abstract core model (the default mappings are in ``pycsw/config.py:MD_CORE_MODEL``).
 
 To override the default settings:
 
@@ -137,7 +137,7 @@ Values of mappings can be derived from the following mechanisms:
 - Python datetime objects
 - Python functions 
 
-Further information is provided in ``server/config.py:MD_CORE_MODEL``.
+Further information is provided in ``pycsw/config.py:MD_CORE_MODEL``.
 
 .. _`OGR`: http://www.gdal.org/ogr
 .. _`OGC SFSQL`: http://www.opengeospatial.org/standards/sfs
