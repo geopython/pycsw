@@ -30,11 +30,13 @@
 #
 # =================================================================
 
+from pycsw import __version__
+
 class StaticContext(object):
     ''' core configuration '''
     def __init__(self):
         ''' initializer '''
-        self.version = '1.3-dev'
+        self.version = __version__
 
         self.ogc_schemas_base = 'http://schemas.opengis.net'
 
