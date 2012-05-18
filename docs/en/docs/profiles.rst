@@ -8,7 +8,7 @@ Overview
 
 pycsw allows for the implementation of profiles to the core standard. Profiles allow specification of additional metadata format types (i.e. ISO 19139:2007, NASA DIF, INSPIRE, etc.) to the repository, which can be queried and presented to the client.  pycsw supports a plugin architecture which allows for runtime loading of Python code.
 
-All profiles must be placed in the ``server/plugins/profiles`` directory.
+All profiles must be placed in the ``pycsw/plugins/profiles`` directory.
 
 Requirements
 ------------
@@ -16,16 +16,15 @@ Requirements
 .. code-block:: none
 
    pycsw/
-    server/
-      plugins/
-      __init__.py # empty
-      profiles/ # directory to store profiles
-        __init__.py # empty
-        profile.py # defines abstract profile object (properties and methods) and functions to load plugins
-        apiso/ # profile directory
-          __init__.py # empty
-          apiso.py # profile code
-          ... # supporting files, etc.
+     plugins/
+     __init__.py # empty
+     profiles/ # directory to store profiles
+       __init__.py # empty
+       profile.py # defines abstract profile object (properties and methods) and functions to load plugins
+       apiso/ # profile directory
+         __init__.py # empty
+         apiso.py # profile code
+         ... # supporting files, etc.
 
 Abstract Base Class Definition
 ------------------------------
@@ -34,7 +33,7 @@ All profile code must be instantiated as a subclass of ``profile.Profile``.  Bel
 
 .. code-block:: python
 
-   from server.plugins.profiles import profile
+   from pycsw.plugins.profiles import profile
 
    class FooProfile(profile.Profile):
        profile.Profile.__init__(self,
@@ -56,7 +55,7 @@ Your profile plugin class (``FooProfile``) must implement all methods as per ``p
 Enabling Profiles
 -----------------
 
-All profiles are disabled by default.  To specify profiles at runtime, set the ``server.profiles`` value in the :ref:`configuration` to the name of the package (in the ``server/plugins/profiles`` directory).  To enable multiple profiles, specify as a comma separated value (see :ref:`configuration`).
+All profiles are disabled by default.  To specify profiles at runtime, set the ``server.profiles`` value in the :ref:`configuration` to the name of the package (in the ``pycsw/plugins/profiles`` directory).  To enable multiple profiles, specify as a comma separated value (see :ref:`configuration`).
 
 Testing
 -------
@@ -66,8 +65,8 @@ Profiles must add examples to the :ref:`tester` interface, which must provide ex
 Supported Profiles
 ==================
 
-.. include:: ../../../server/plugins/profiles/apiso/docs/apiso.rst
-.. include:: ../../../server/plugins/profiles/dif/docs/dif.rst
-.. include:: ../../../server/plugins/profiles/fgdc/docs/fgdc.rst
-.. include:: ../../../server/plugins/profiles/ebrim/docs/ebrim.rst
-.. include:: ../../../server/plugins/profiles/atom/docs/atom.rst
+.. include:: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst
+.. include:: ../../../pycsw/plugins/profiles/dif/docs/dif.rst
+.. include:: ../../../pycsw/plugins/profiles/fgdc/docs/fgdc.rst
+.. include:: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst
+.. include:: ../../../pycsw/plugins/profiles/atom/docs/atom.rst

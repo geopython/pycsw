@@ -18,7 +18,7 @@ To connect pycsw to GeoNode's repository, the following steps are required:
 Mapping Queryables
 ^^^^^^^^^^^^^^^^^^
 
-- create a ``mappings.py`` file (a GeoNode sample is in ``server/plugins/repository/geonode/mappings.py``), which associates GeoNode's ResourceBase attributes to pycsw's queryables
+- create a ``mappings.py`` file (a GeoNode sample is in ``pycsw/plugins/repository/geonode/mappings.py``), which associates GeoNode's ResourceBase attributes to pycsw's queryables
 
 Updating Configuration
 ^^^^^^^^^^^^^^^^^^^^^^
