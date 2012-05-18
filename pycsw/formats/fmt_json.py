@@ -31,7 +31,7 @@
 # =================================================================
 
 import json
-from server.util import xmltag_split, xmltag_split2
+from pycsw.util import xmltag_split, xmltag_split2
 
 def _exml2dict(element, namespaces):
     ''' Convert an lxml object to a dict

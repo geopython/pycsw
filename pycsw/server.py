@@ -86,7 +86,7 @@ class Csw(object):
         # set server.home safely
         # TODO: make this more abstract
         self.config.set('server', 'home', os.path.dirname(
-        os.path.join(os.path.dirname(__file__), '..', '..')))
+        os.path.join(os.path.dirname(__file__), '..')))
 
         self.context.pycsw_home = self.config.get('server', 'home')
 
@@ -170,7 +170,7 @@ class Csw(object):
 
         if self.config.has_option('server', 'profiles'):
             self.profiles = plugins.profiles.profile.load_profiles(
-            os.path.join('server', 'plugins', 'profiles'),
+            os.path.join('pycsw', 'plugins', 'profiles'),
             plugins.profiles.profile.Profile,
             self.config.get('server', 'profiles'))
 
@@ -923,10 +923,8 @@ class Csw(object):
                 schemaLanguage='XMLSCHEMA',
                 targetNamespace=self.context.namespaces['csw'])
 
-                path = os.path.join(
-                self.config.get('server', 'home'),
-                'etc', 'schemas', 'ogc', 'csw',
-                '2.0.2', 'record.xsd')
+                path = os.path.join(self.config.get('server', 'home'),
+                'schemas', 'ogc', 'csw', '2.0.2', 'record.xsd')
 
                 dublincore = etree.parse(path).getroot()
 
@@ -1171,7 +1169,7 @@ class Csw(object):
                     # validate filter XML
                     try:
                         schema = os.path.join(self.config.get('server', 'home'),
-                        'etc', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
+                        'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
                         self.log.debug('Validating Filter %s.' %
                         self.kvp['constraint'])
                         schema = etree.XMLSchema(etree.parse(schema))
@@ -1763,10 +1761,10 @@ class Csw(object):
         if (doc.tag in [util.nspath_eval('csw:Transaction',
             self.context.namespaces), util.nspath_eval('csw:Harvest',
             self.context.namespaces)]):
-            schema = os.path.join(self.config.get('server', 'home'), 'etc',
+            schema = os.path.join(self.config.get('server', 'home'),
             'schemas', 'ogc', 'csw', '2.0.2', 'CSW-publication.xsd')
         else:
-            schema = os.path.join(self.config.get('server', 'home'), 'etc',
+            schema = os.path.join(self.config.get('server', 'home'),
             'schemas', 'ogc', 'csw', '2.0.2', 'CSW-discovery.xsd')
 
         try:

@@ -32,8 +32,8 @@
 
 import os
 from lxml import etree
-from server import config, util
-from server.plugins.profiles import profile
+from pycsw import config, util
+from pycsw.plugins.profiles import profile
 
 class FGDC(profile.Profile):
     ''' FGDC class '''
@@ -128,9 +128,9 @@ class FGDC(profile.Profile):
         util.nspath_eval('csw:SchemaComponent', self.context.namespaces),
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace)
 
-        schema = etree.parse(os.path.join(self.context.pycsw_home,
-                'server', 'plugins', 'profiles', 'fgdc',
-                'etc', 'schemas', 'fgdc', 'fgdc-std-001-1998.xsd')).getroot()
+        schema = etree.parse(os.path.join(self.context.pycsw_home, 'plugins',
+                 'profiles', 'fgdc', 'schemas', 'fgdc',
+                 'fgdc-std-001-1998.xsd')).getroot()
         node.append(schema)
 
         return [node]

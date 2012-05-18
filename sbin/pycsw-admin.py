@@ -39,7 +39,7 @@ from glob import glob
 from urlparse import urlparse
 
 from lxml import etree
-from server import config, metadata, repository, util
+from pycsw import config, metadata, repository, util
 
 CONTEXT = config.StaticContext()
 
@@ -178,7 +178,7 @@ def setup_db(database, home):
     AS $$
         import sys
         sys.path.append('%s')
-        from server import util
+        from pycsw import util
         return util.query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance)
         $$ LANGUAGE plpythonu;
     ''' % PYCSW_HOME
@@ -188,7 +188,7 @@ def setup_db(database, home):
     AS $$
         import sys
         sys.path.append('%s')
-        from server import util
+        from pycsw import util
         return util.update_xpath(xml, recprops)
         $$ LANGUAGE plpythonu;
     ''' % PYCSW_HOME

@@ -32,8 +32,8 @@
 
 import os
 from lxml import etree
-from server import config, util
-from server.plugins.profiles import profile
+from pycsw import config, util
+from pycsw.plugins.profiles import profile
 
 class ATOM(profile.Profile):
     ''' Atom class '''
@@ -118,8 +118,8 @@ class ATOM(profile.Profile):
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace)
 
         schema = etree.parse(os.path.join(self.context.pycsw_home,
-                'server', 'plugins', 'profiles', 'atom',
-                'etc', 'schemas', 'atom', 'atom.xsd')).getroot()
+                 'plugins', 'profiles', 'atom',
+                 'schemas', 'atom', 'atom.xsd')).getroot()
         node.append(schema)
 
         return [node]
