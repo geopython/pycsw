@@ -35,7 +35,7 @@
 
 import os, sys
 from StringIO import StringIO
-from server import server
+from pycsw import server
 
 CONFIG = 'default.cfg'
 GZIP = False
@@ -83,4 +83,3 @@ if GZIP and GZIP_COMPRESSLEVEL > 0:
 sys.stdout.write('Content-Length: %d\r\n' % len(OUTP))
 sys.stdout.write('\r\n')
 sys.stdout.write(OUTP)
-

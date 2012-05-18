@@ -32,8 +32,8 @@
 
 import os
 from lxml import etree
-from server import config, util
-from server.plugins.profiles import profile
+from pycsw import config, util
+from pycsw.plugins.profiles import profile
 
 class DIF(profile.Profile):
     ''' DIF class '''
@@ -126,8 +126,8 @@ class DIF(profile.Profile):
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace)
 
         schema = etree.parse(os.path.join(self.context.pycsw_home,
-                'server', 'plugins', 'profiles', 'dif',
-                'etc', 'schemas', 'dif', 'dif.xsd')).getroot()
+                 'plugins', 'profiles', 'dif',
+                 'schemas', 'dif', 'dif.xsd')).getroot()
         node.append(schema)
 
         return [node]

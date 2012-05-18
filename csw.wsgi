@@ -60,7 +60,7 @@ import os, sys
 app_path = os.path.dirname(__file__)
 sys.path.append(app_path)
 
-from server import server
+from pycsw import server
 
 def application(env, start_response):
     config = 'default.cfg'

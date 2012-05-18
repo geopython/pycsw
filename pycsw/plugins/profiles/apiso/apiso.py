@@ -34,8 +34,8 @@
 
 import os
 from lxml import etree
-from server import config, util
-from server.plugins.profiles import profile
+from pycsw import config, util
+from pycsw.plugins.profiles import profile
 
 CODELIST = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml'
 CODESPACE = 'ISOTC211/19115'
@@ -358,9 +358,8 @@ class APISO(profile.Profile):
         parentSchema='gmd.xsd')
 
         schema = etree.parse(os.path.join(self.context.pycsw_home,
-                'server', 'plugins', 'profiles', 'apiso',
-                'etc', 'schemas', 'ogc', 'iso', '19139',
-                '20060504', 'gmd', 'identification.xsd')).getroot()
+                 'plugins', 'profiles', 'apiso', 'schemas', 'ogc', 'iso',
+                 '19139', '20060504', 'gmd', 'identification.xsd')).getroot()
 
         node1.append(schema)
 
@@ -369,10 +368,9 @@ class APISO(profile.Profile):
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace,
         parentSchema='gmd.xsd')
 
-        schema = etree.parse(os.path.join(self.context.pycsw_home,
-                'server', 'plugins', 'profiles', 'apiso',
-                'etc', 'schemas', 'ogc', 'iso', '19139',
-                '20060504', 'srv', 'serviceMetadata.xsd')).getroot()
+        schema = etree.parse(os.path.join(self.context.pycsw_home, 'plugins',
+                 'profiles', 'apiso', 'schemas', 'ogc', 'iso', '19139',
+                 '20060504', 'srv', 'serviceMetadata.xsd')).getroot()
 
         node2.append(schema)
 
