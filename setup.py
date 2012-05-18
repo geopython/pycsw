@@ -1,11 +1,11 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
 #
-# Copyright (c) 2010 Tom Kralidis
+# Copyright (c) 2012 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -30,4 +30,33 @@
 #
 # =================================================================
 
-__version__ = '1-3-dev'
+from setuptools import setup, find_packages
+
+import pycsw
+
+setup(name='pycsw',
+    version=pycsw.__version__,
+    description='pycsw is an OGC CSW server implementation written in Python',
+    long_description=open('README.txt', 'r').read(),
+    license='MIT',
+    platforms='all',
+    keywords='pycsw csw catalogue catalog metadata discovery search ogc iso fgdc dif ebrim inspire',
+    author='Tom Kralidis',
+    author_email='tomkralidis@hotmail.com',
+    maintainer='Tom Kralidis',
+    maintainer_email='tomkralidis@hotmail.com',
+    url='http://pycsw.org/',
+    requires=['lxml', 'shapely', 'pyproj'],
+    packages=find_packages(),
+    data_files=[('pycsw/schemas',['pycsw/schemas/*'])],
+    scripts=['sbin/pycsw-admin.py'],
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Topic :: Scientific/Engineering :: GIS',
+        ],
+)
