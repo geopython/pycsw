@@ -44,7 +44,7 @@ from django.db import connection
 from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
-from server import util
+from pycsw import util
 from geonode.maps.models import Layer
 
 class GeoNodeRepository(object):

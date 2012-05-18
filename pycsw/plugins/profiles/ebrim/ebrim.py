@@ -32,8 +32,8 @@
 
 import os
 from lxml import etree
-from server import config, server, util
-from server.plugins.profiles import profile
+from pycsw import config, server, util
+from pycsw.plugins.profiles import profile
 
 class EBRIM(profile.Profile):
     ''' EBRim class '''
@@ -106,9 +106,9 @@ class EBRIM(profile.Profile):
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace)
 
         schema = etree.parse(os.path.join(self.context.pycsw_home,
-                'server', 'plugins', 'profiles', 'ebrim',
-                'etc', 'schemas', 'ogc', 'csw', '2.0.2',
-                'profiles', 'ebrim', '1.0', 'csw-ebrim.xsd')).getroot()
+                 'plugins', 'profiles', 'ebrim',
+                 'schemas', 'ogc', 'csw', '2.0.2',
+                 'profiles', 'ebrim', '1.0', 'csw-ebrim.xsd')).getroot()
 
         node.append(schema)
 
