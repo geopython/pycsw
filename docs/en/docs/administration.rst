@@ -124,7 +124,7 @@ pycsw requires certain repository attributes and semantics to exist in any repos
 
   - capture all XML element and attribute values
   - store in repository
-- ``pycsw:BoundingBox``: string of WKT or EWKT geometry
+- ``pycsw:BoundingBox``: string of `WKT`_ or `EWKT`_ geometry
 
 The following repository semantics exist if the attributes are specified:
 
@@ -141,3 +141,5 @@ Further information is provided in ``pycsw/config.py:MD_CORE_MODEL``.
 
 .. _`OGR`: http://www.gdal.org/ogr
 .. _`OGC SFSQL`: http://www.opengeospatial.org/standards/sfs
+.. _`WKT`: http://en.wikipedia.org/wiki/Well-known_text
+.. _`EWKT`: http://en.wikipedia.org/wiki/Well-known_text#Variations
