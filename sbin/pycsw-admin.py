@@ -246,6 +246,17 @@ def export_records(database, xml_dirpath):
     print 'Found %d records\n' % RECORDS.count()
 
     print 'Exporting records\n'
+
+    dirpath = os.path.abspath(xml_dirpath)
+
+    if not os.path.exists(dirpath):
+        print 'Directory %s does not exist.  Creating...' % dirpath
+        try:
+            os.makedirs(dirpath)
+        except OSError, err:
+            print 'Could not create os.path%s' % err
+            sys.exit(100)
+
     for record in RECORDS.all():
         identifier = getattr(record, 
         CONTEXT.md_core_model['mappings']['pycsw:Identifier'])
@@ -257,7 +268,7 @@ def export_records(database, xml_dirpath):
             identifier = identifier.split(':')[-1]
 
         # write to XML document
-        FILENAME = os.path.join(xml_dirpath, '%s.xml' % identifier)
+        FILENAME = os.path.join(dirpath, '%s.xml' % identifier)
         try:
             print ' Writing to file %s' % FILENAME
             with open(FILENAME, 'w') as XML:
