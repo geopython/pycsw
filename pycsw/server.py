@@ -64,6 +64,7 @@ class Csw(object):
         self.kvp = {}
 
         self.mode = 'csw'
+        self.async = False
         self.soap = False
         self.request = None
         self.exception = False
@@ -342,7 +343,6 @@ class Csw(object):
         ''' Handle incoming HTTP request '''
 
         error = 0
-        async = False
 
         if isinstance(self.kvp, str):  # it's an exception
             error = 1
@@ -438,7 +438,11 @@ class Csw(object):
             if self.kvp.has_key('responsehandler'):
                 # set flag to process asynchronously
                 import threading
-                async = True
+                self.async = True
+                if (not self.kvp.has_key('requestid')
+                or self.kvp['requestid'] is None):
+                    import uuid
+                    self.kvp['requestid'] = str(uuid.uuid4())
 
             if self.kvp['request'] == 'GetCapabilities':
                 self.response = self.getcapabilities()
@@ -447,7 +451,7 @@ class Csw(object):
             elif self.kvp['request'] == 'GetDomain':
                 self.response = self.getdomain()
             elif self.kvp['request'] == 'GetRecords':
-                if async:  # process asynchronously
+                if self.async:  # process asynchronously
                     threading.Thread(target=self.getrecords).start()
                     self.response = self._write_acknowledgement()
                 else:
@@ -459,7 +463,7 @@ class Csw(object):
             elif self.kvp['request'] == 'Transaction':
                 self.response = self.transaction()
             elif self.kvp['request'] == 'Harvest':
-                if async:  # process asynchronously
+                if self.async:  # process asynchronously
                     threading.Thread(target=self.harvest).start()
                     self.response = self._write_acknowledgement()
                 else:
@@ -1304,6 +1308,10 @@ class Csw(object):
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
         (self.context.namespaces['csw'], self.config.get('server', 'ogc_schemas_base'))
 
+        if self.kvp.has_key('requestid') and self.kvp['requestid'] is not None:
+            etree.SubElement(node, util.nspath_eval('csw:RequestId',
+            self.context.namespaces)).text = self.kvp['requestid']
+
         etree.SubElement(node, util.nspath_eval('csw:SearchStatus',
         self.context.namespaces), timestamp=timestamp)
 
@@ -1856,6 +1864,9 @@ class Csw(object):
             tmp = doc.find('.').attrib.get('startPosition')
             request['startposition'] = tmp if tmp is not None else 1
 
+            tmp = doc.find('.').attrib.get('requestId')
+            request['requestid'] = tmp if tmp is not None else None
+
             tmp = doc.find('.').attrib.get('maxRecords')
             request['maxrecords'] = tmp if tmp is not None else \
             self.config.get('server', 'maxrecords')
@@ -1956,6 +1967,9 @@ class Csw(object):
             if tmp is not None:
                 if tmp in ['false', '0']:
                     request['verboseresponse'] = False
+
+            tmp = doc.find('.').attrib.get('requestId')
+            request['requestid'] = tmp if tmp is not None else None
 
             request['transactions'] = []
 
@@ -2272,6 +2286,9 @@ class Csw(object):
         node = etree.Element(util.nspath_eval('csw:TransactionSummary',
                self.context.namespaces))
 
+        if self.kvp.has_key('requestid') and self.kvp['requestid'] is not None:
+            node.attrib['requestId'] = self.kvp['requestid']
+
         etree.SubElement(node, util.nspath_eval('csw:totalInserted',
         self.context.namespaces)).text = str(inserted)
 
@@ -2304,6 +2321,10 @@ class Csw(object):
                     self.context.namespaces))
 
             node2.text = self.request
+
+        if self.async:
+            etree.SubElement(node, util.nspath_eval('csw:RequestId',
+            self.context.namespaces)).text = self.kvp['requestid']
 
         return node
 
