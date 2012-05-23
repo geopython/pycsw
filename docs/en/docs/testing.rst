@@ -41,25 +41,25 @@ Test Suites
 
 The tester framework is run against a series of 'suites' (in ``tester/suites``), each of which specifies a given configuration to test various functionality of the codebase.  Each suite is structured as follows:
 
-* ``tester/suite/default.cfg``: the configuration for the suite
-* ``tester/suite/post``: directory of XML documents for HTTP POST requests
-* ``tester/suite/get/requests.txt``: directory and text file of KVP for HTTP GET requests
+* ``tester/suites/suite/default.cfg``: the configuration for the suite
+* ``tester/suites/suite/post``: directory of XML documents for HTTP POST requests
+* ``tester/suites/suite/get/requests.txt``: directory and text file of KVP for HTTP GET requests
 
 When the tester is invoked, the following operations are run:
 
-* pycsw configuration is set to ``tester/suite/default.cfg``
-* HTTP POST requests are run against ``tester/suite/post/*.xml``
-* HTTP GET requests are run against each request in ``tester/suite/get/requests.txt``
+* pycsw configuration is set to ``tester/suites/suite/default.cfg``
+* HTTP POST requests are run against ``tester/suites/suite/post/*.xml``
+* HTTP GET requests are run against each request in ``tester/suites/suite/get/requests.txt``
 
-The CSV format of ``tester/suite/get/requests.txt`` is ``testname,request``, with one line for each test.  The ``testname`` value is a unique test name (this value sets the name of the output file in the test results).  The ``request`` value is the HTTP GET request.  The ``PYCSW_SERVER`` token is replaced at runtime with the URL to the pycsw install.
+The CSV format of ``tester/suites/suite/get/requests.txt`` is ``testname,request``, with one line for each test.  The ``testname`` value is a unique test name (this value sets the name of the output file in the test results).  The ``request`` value is the HTTP GET request.  The ``PYCSW_SERVER`` token is replaced at runtime with the URL to the pycsw install.
 
 Adding New Tests
 ^^^^^^^^^^^^^^^^
 
 To add tests to an existing suite:
 
-* for HTTP POST tests, add XML documents to ``tester/suite/post``
-* for HTTP GET tests, add tests (one per line) to ``tester/suite/get/requests.txt``
+* for HTTP POST tests, add XML documents to ``tester/suites/suite/post``
+* for HTTP GET tests, add tests (one per line) to ``tester/suites/suite/get/requests.txt``
 * run ``python ./run_tests.py <url>``
 
 To add a new test suite:
