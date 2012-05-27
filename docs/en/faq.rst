@@ -36,7 +36,7 @@ pycsw provides a plugin framework in which you can implement a custom profile (s
 How can I catalogue 'sets' of metadata?
 ---------------------------------------
 
-Create a 'parent' metadata record from which all relevant metadata records (imagery, features) derive from via the ``dc:source`` element of Dublin Core or ``gmd:parentIdentifier`` element of ISO 19139:2007.  Then, do a ``GetRecords`` request, filtering on the identifier of the parent metadata record.  Sample request:
+Create a 'parent' metadata record from which all relevant metadata records (imagery, features) derive from via the same ``dc:source`` element of Dublin Core or ``gmd:parentIdentifier`` element of ISO 19139:2007.  Then, do a ``GetRecords`` request, filtering on the identifier of the parent metadata record.  Sample request:
 
 .. code-block:: xml
 
