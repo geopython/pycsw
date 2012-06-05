@@ -50,8 +50,8 @@ class FGDC(profile.Profile):
                 'outputschema': 'http://www.opengis.net/cat/csw/csdgm',
                 'queryables': {
                     'SupportedFGDCQueryables': {
-                        'fgdc:Identifier': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': self.context.md_core_model['mappings']['pycsw:Identifier']},
-                        'fgdc:Title': {'xpath': 'idinfo/citation/citinfo/title', 'dbcol': self.context.md_core_model['mappings']['pycsw:Title']},
+                        'fgdc:Identifier': {'xpath': 'idinfo/citation/citeinfo/title', 'dbcol': self.context.md_core_model['mappings']['pycsw:Identifier']},
+                        'fgdc:Title': {'xpath': 'idinfo/citation/citeinfo/title', 'dbcol': self.context.md_core_model['mappings']['pycsw:Title']},
                         'fgdc:Originator': {'xpath': 'idinfo/citation/citeinfo/origin', 'dbcol': self.context.md_core_model['mappings']['pycsw:Creator']},
                         'fgdc:Publisher': {'xpath': 'idinfo/citation/citeinfo/publinfo/publish', 'dbcol': self.context.md_core_model['mappings']['pycsw:Publisher']},
                         'fgdc:Abstract': {'xpath': 'idinfo/descript/abstract', 'dbcol': self.context.md_core_model['mappings']['pycsw:Abstract']},
