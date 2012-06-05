@@ -137,7 +137,7 @@ for testsuite in glob.glob('suites%s*' % os.sep):
 
         for root, dirs, files in os.walk(testsuite):
             if files:
-                for file in files:
+                for file in sorted(files):
                     if os.path.splitext(file)[1] not in ['.xml','.txt']:
                         break
 
