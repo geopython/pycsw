@@ -106,9 +106,9 @@ def normalize(result):
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints
     if result.find('HarvestResponse') != -1:
-        identifier = re.search('<dc:identifier>(\S+)</dc:identifier>', result)
-        if identifier:
-            result = result.replace(identifier.group(0), 'PYCSW_IDENTIFIER')
+        identifier = re.findall('<dc:identifier>(\S+)</dc:identifier>', result)
+        for i in identifier:
+            result = result.replace(i, 'PYCSW_IDENTIFIER')
 
     # JSON responses
     timestamp = re.search('"timestamp": "(.*?)"', result)
