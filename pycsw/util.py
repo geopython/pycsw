@@ -166,28 +166,24 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     else:
         return 'false'
 
-def update_xpath(nsmap):
-    ''' Bind config to update_xpath function '''
+def update_xpath(nsmap, xml, recprop):
+    ''' Update XML document XPath values '''
 
-    def update_xpath_bound(xml, recprop):
-        ''' Update XML document XPath values '''
+    if isinstance(xml, unicode):  # not lxml serialized yet
+        xml = etree.fromstring(xml)
 
-        if isinstance(xml, unicode):  # not lxml serialized yet
-            xml = etree.fromstring(xml)
+    recprop = eval(recprop)
+    nsmap = eval(nsmap)
+    try:
+        nodes = xml.xpath(recprop['rp']['xpath'], namespaces=nsmap)
+        if len(nodes) > 0:  # matches
+            for node1 in nodes:
+                if node1.text != recprop['value']:  # values differ, update
+                    node1.text = recprop['value']
+    except Exception, err:
+        raise RuntimeError, ('ERROR: %s' % str(err))
 
-        recprop = eval(recprop)
-        try:
-            nodes = xml.xpath(recprop['rp']['xpath'], namespaces=nsmap)
-            if len(nodes) > 0:  # matches
-                for node1 in nodes:
-                    if node1.text != recprop['value']:  # values differ, update
-                        node1.text = recprop['value']
-        except Exception, err:
-            raise RuntimeError, ('ERROR: %s' % str(err))
-
-        return etree.tostring(xml)
-
-    return update_xpath_bound
+    return etree.tostring(xml)
 
 def transform_mappings(queryables, typename, reverse=False):
     ''' transform metadata model mappings '''

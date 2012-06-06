@@ -85,9 +85,10 @@ def get_validity(expected, result, outfile):
 def normalize(result):
     ''' Replace time, updateSequence and version specific values with generic
     values '''
+
     # XML responses
     version = re.search('<!-- (.*) -->', result)
-    updatesequence = re.search('updateSequence="(\d+)"', result)
+    updatesequence = re.search('updateSequence="(\S+)"', result)
     timestamp = re.search('timestamp="(.*)"', result)
     timestamp2 = re.search('timeStamp="(.*)"', result)
 
@@ -101,6 +102,13 @@ def normalize(result):
     if timestamp2:
         result = result.replace(timestamp2.group(0),
         'timeStamp="PYCSW_TIMESTAMP"')
+
+    # for csw:HarvestResponse documents, mask identifiers
+    # which are dynamically generated for OWS endpoints
+    if result.find('HarvestResponse') != -1:
+        identifier = re.search('<dc:identifier>(\S+)</dc:identifier>', result)
+        if identifier:
+            result = result.replace(identifier.group(0), 'PYCSW_IDENTIFIER')
 
     # JSON responses
     timestamp = re.search('"timestamp": "(.*?)"', result)
