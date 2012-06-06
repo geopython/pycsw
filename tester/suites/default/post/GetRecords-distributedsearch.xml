@@ -7,7 +7,7 @@
                 <ogc:Filter>
                     <ogc:PropertyIsEqualTo>
                         <ogc:PropertyName>dc:title</ogc:PropertyName>
-                        <ogc:Literal>Maui West IKONOS and Quickbird Imagery - Mosaic</ogc:Literal>
+                        <ogc:Literal>PRESSURE - WATER and Other Data from MOANA WAVE from 19950501 to 19981231 (NODC Accession 9900213)</ogc:Literal>
                     </ogc:PropertyIsEqualTo>
                 </ogc:Filter>
             </csw:Constraint>
