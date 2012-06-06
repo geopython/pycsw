@@ -1610,22 +1610,7 @@ class Csw(object):
 
         if (len(insertresults) > 0 and self.kvp['verboseresponse']):
             # show insert result identifiers
-            insertresult = etree.Element(util.nspath_eval('csw:InsertResult',
-            self.context.namespaces))
-            for ir in insertresults:
-                briefrec = etree.SubElement(insertresult,
-                           util.nspath_eval('csw:BriefRecord',
-                           self.context.namespaces))
-
-                etree.SubElement(briefrec,
-                util.nspath_eval('dc:identifier',
-                self.context.namespaces)).text = ir['identifier']
-
-                etree.SubElement(briefrec,
-                util.nspath_eval('dc:title',
-                self.context.namespaces)).text = ir['title']
-
-            node.append(insertresult)
+            node.append(self._write_verboseresponse(insertresults))
 
         return node
 
@@ -1647,6 +1632,8 @@ class Csw(object):
             ','.join(self.context.model['operations']['Harvest']['parameters']
             ['ResourceType']['values'])))
 
+        #if (self.kvp['resourcetype'].find('opengis.net') == -1 or
+        #    self.kvp['resourcetype'].find('csdgm')):
         if self.kvp['resourcetype'].find('opengis.net') == -1:
             # fetch content-based resource
             self.log.debug('Fetching resource %s' % self.kvp['source'])
@@ -1667,8 +1654,8 @@ class Csw(object):
             results = self.repository.query_source(content)
 
             if len(results) > 0:  # exists, don't insert
-                return self.exceptionreport('NoApplicableCode',
-                'source', 'Insert failed: service %s in repository' % content)
+                return self.exceptionreport('NoApplicableCode', 'source',
+                'Insert failed: service %s already in repository' % content)
 
         # parse resource into record
         try:
@@ -1680,6 +1667,7 @@ class Csw(object):
 
         inserted = 0
         updated = 0
+        ir = []
 
         for record in records_parsed:
             setattr(record, self.context.md_core_model['mappings']['pycsw:Source'],
@@ -1694,6 +1682,11 @@ class Csw(object):
             self.context.md_core_model['mappings']['pycsw:Source'])
             insert_date = getattr(record,
             self.context.md_core_model['mappings']['pycsw:InsertDate'])
+            title = getattr(record,
+            self.context.md_core_model['mappings']['pycsw:Title'])
+
+
+            ir.append({'identifier': identifier, 'title': title})
 
             # query repository to see if record already exists
             self.log.debug('checking if record exists (%s)' % identifier)
@@ -1734,6 +1727,10 @@ class Csw(object):
 
         node2.append(
         self._write_transactionsummary(inserted=inserted, updated=updated))
+
+        if inserted > 0:
+            # show insert result identifiers
+            node2.append(self._write_verboseresponse(ir))
 
         if self.kvp.has_key('responsehandler'):  # process the handler
             self._process_responsehandler(etree.tostring(node,
@@ -2375,6 +2372,25 @@ class Csw(object):
                     self.log.debug('FTP sent successfully.')
                 except Exception, err:
                     self.log.debug('Error processing FTP: %s.' % str(err))
+
+    def _write_verboseresponse(self, insertresults):
+        ''' show insert result identifiers '''
+        insertresult = etree.Element(util.nspath_eval('csw:InsertResult',
+        self.context.namespaces))
+        for ir in insertresults:
+            briefrec = etree.SubElement(insertresult,
+                       util.nspath_eval('csw:BriefRecord',
+                       self.context.namespaces))
+
+            etree.SubElement(briefrec,
+            util.nspath_eval('dc:identifier',
+            self.context.namespaces)).text = ir['identifier']
+
+            etree.SubElement(briefrec,
+            util.nspath_eval('dc:title',
+            self.context.namespaces)).text = ir['title']
+
+        return insertresult
 
 def write_boundingbox(bbox, nsmap):
     ''' Generate ows:BoundingBox '''
