@@ -30,6 +30,7 @@
 #
 # =================================================================
 
+import urllib2
 import uuid
 from lxml import etree
 import util
@@ -49,7 +50,13 @@ def parse_record(context, record, repos=None,
     if (mtype == 'http://www.opengis.net/cat/csw/2.0.2' and
         isinstance(record, str) and record.startswith('http')):
         # CSW service, not csw:Record
-        return _parse_csw(context, repos, record, identifier) 
+        try:
+            return _parse_csw(context, repos, record, identifier) 
+        except Exception, err:
+            req = urllib2.Request(record)
+            req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
+            content = urllib2.urlopen(req).read()
+            return [_parse_dc(context, repos, etree.fromstring(content))]
 
     elif mtype == 'http://www.opengis.net/wms':  # WMS
         return _parse_wms(context, repos, record, identifier)
@@ -59,6 +66,12 @@ def parse_record(context, record, repos=None,
 
     elif mtype == 'http://www.opengis.net/wcs':  # WCS
         pass  # TODO
+
+    elif (mtype == 'http://www.opengis.net/cat/csw/csdgm' and
+          record.startswith('http')):  # FGDC
+        req = urllib2.Request(record)
+        req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
+        record = urllib2.urlopen(record).read()
 
     # parse metadata records
     if isinstance(record, str):
