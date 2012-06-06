@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:Transaction xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:ows="http://www.opengis.net/ows" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd" service="CSW" version="2.0.2">
+<csw:Insert>
+<metadata>
+<idinfo>
+<datasetid>foorecord</datasetid>
+<citation>
+<citeinfo>
+<origin>NOAA/ESRL Physical Sciences Division</origin>
+<pubdate>20001201</pubdate>
+<title>NCEP</title>
+<pubinfo>
+<pubplace>Boulder, CO</pubplace>
+<publish>NOAA/ESRL Physical Sciences Division</publish>
+</pubinfo>
+<onlink>ftp://ftp.cdc.noaa.gov/Datasets/ncep/</onlink>
+<onlink>http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep/</onlink>
+<onlink>http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.html</onlink>
+</citeinfo>
+</citation>
+<descript>
+<abstract>NCEP's twice-daily global analysis at 2.5&amp;#176; resolution on pressure levels which is a product of their operational forecast system.</abstract>
+<purpose>Scientific research.</purpose>
+<supplinf>
+Additional Fields:
+-----------------:
+StartDate: 19790101
+StopDate: 20001201
+Storage_Medium: online
+PSD Search Fields:
+Entry_ID: ncep.fgdc
+</supplinf>
+</descript>
+<timeperd>
+<timeinfo>
+<rngdates>
+<begdate>19790101</begdate>
+<enddate>20001201</enddate>
+</rngdates>
+</timeinfo>
+<current>Publication_Date: 20001201</current>
+</timeperd>
+<status>
+<progress>Complete</progress>
+<update>Irregular</update>
+</status>
+<spdom>
+<bounding>
+<westbc>-180</westbc>
+<eastbc>180</eastbc>
+<northbc>90.00</northbc>
+<southbc>-90.00</southbc>
+</bounding>
+</spdom>
+<keywords>
+<theme>
+<themekt>GCMD DIF 5.33</themekt>
+<themekey>NCEP</themekey>
+<themekey>Air temperature</themekey>
+<themekey>Geopotential height</themekey>
+<themekey>Precipitable Water Content</themekey>
+<themekey>Precipitable water Content</themekey>
+<themekey>Relative humidity</themekey>
+<themekey>Sea level pressure</themekey>
+<themekey>Station pressure</themekey>
+<themekey>Surface potential temperature</themekey>
+<themekey>Surface Pressure</themekey>
+<themekey>Tropopause Pressure</themekey>
+<themekey>Tropopause temperature</themekey>
+<themekey>u-wind</themekey>
+<themekey>v-wind</themekey>
+</theme>
+<place>
+<placekt>none</placekt>
+<placekey>Global</placekey>
+</place>
+<stratum>
+<stratkt>none</stratkt>
+<stratkey>none</stratkey>
+</stratum>
+<temporal>
+<tempkt>none</tempkt>
+<tempkey>19790101, 20001201</tempkey>
+</temporal>
+</keywords>
+<accconst>None</accconst>
+<useconst>None. Acknowledgement of PSD would appreciated in products derived from these data.</useconst>
+<ptcontac>
+<cntinfo>
+<cntperp>
+<cntper>PSD Data Management</cntper>
+</cntperp>
+<cntaddr>
+<addrtype>mailing address</addrtype>
+<address>NOAA/ESRL Physical Sciences Division</address>
+<address>U.S. Dept. of Commerce</address>
+<address>NOAA, R/PSD</address>
+<address>325 Broadway</address>
+<city>Boulder</city>
+<state>CO</state>
+<postal>80305</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>(303) 497-6640</cntvoice>
+<cntfax>(303) 497-6020</cntfax>
+<cntemail>esrl.psd.data@noaa.gov</cntemail>
+</cntinfo>
+</ptcontac>
+<secinfo>
+<secsys>None</secsys>
+<secclass>Unclassified</secclass>
+<sechandl>None</sechandl>
+</secinfo>
+<native>Data resides in netCDF files at PSD</native>
+</idinfo>
+<dataqual>
+<attracc>
+<attraccr>Data QC'd at source. We have checked our stored values.</attraccr>
+</attracc>
+<logic>None</logic>
+<complete>None</complete>
+<posacc>
+<horizpa>
+<horizpar>None</horizpar>
+</horizpa>
+</posacc>
+<lineage>
+<srcinfo>
+<srccite>
+<citeinfo>
+<origin>None</origin>
+<pubdate>20001201</pubdate>
+<title>None</title>
+<geoform>None</geoform>
+<othercit>None</othercit>
+</citeinfo>
+</srccite>
+<typesrc>None</typesrc>
+<srctime>
+<timeinfo>
+<rngdates>
+<begdate>9999</begdate>
+<enddate>9999</enddate>
+</rngdates>
+</timeinfo>
+<srccurr>None</srccurr>
+</srctime>
+<srccitea>None</srccitea>
+<srccontr>None</srccontr>
+</srcinfo>
+<procstep>
+<procdesc>None</procdesc>
+<procdate>9999</procdate>
+</procstep>
+</lineage>
+</dataqual>
+<distinfo>
+<distrib>
+<cntinfo>
+<cntperp>
+<cntper>PSD Data Management</cntper>
+</cntperp>
+<cntaddr>
+<addrtype>mailing address</addrtype>
+<address>NOAA/ESRL Physical Sciences Division</address>
+<address>U.S. Dept. of Commerce</address>
+<address>NOAA, Code R/PSD</address>
+<address>325 Broadway</address>
+<city>Boulder</city>
+<state>CO</state>
+<postal>80305</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>(303) 497-7200</cntvoice>
+<cntfax>(303) 497-6020</cntfax>
+<cntemail>esrl.psd.data@noaa.gov</cntemail>
+</cntinfo>
+</distrib>
+<distliab>No warranty expressed or implied.</distliab>
+</distinfo>
+<metainfo>
+<metd>20001201</metd>
+<metc>
+<cntinfo>
+<cntperp>
+<cntper>PSD Data Management</cntper>
+</cntperp>
+<cntaddr>
+<addrtype>mailing address</addrtype>
+<address>NOAA/ESRL Physical Sciences Division</address>
+<address>U.S. Dept. of Commerce</address>
+<address>NOAA, Code R/PSD</address>
+<address>325 Broadway</address>
+<city>Boulder</city>
+<state>CO</state>
+<postal>80305</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>(303) 497-7200</cntvoice>
+<cntfax>(303) 497-6020</cntfax>
+<cntemail>esrl.psd.data@noaa.gov</cntemail>
+</cntinfo>
+</metc>
+<metstdn>FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+<metstdv>FGDC-STD-001-1998</metstdv>
+<metsi>
+<metscs>None</metscs>
+<metsc>Unclassified</metsc>
+<metshd>None</metshd>
+</metsi>
+</metainfo>
+</metadata>
+</csw:Insert>
+</csw:Transaction>
