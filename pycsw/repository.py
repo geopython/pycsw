@@ -69,7 +69,7 @@ class Repository(object):
                     dbapi_connection.create_function(
                     'query_spatial', 4, util.query_spatial)
                     dbapi_connection.create_function(
-                    'update_xpath', 2, util.update_xpath(self.context))
+                    'update_xpath', 3, util.update_xpath)
                     dbapi_connection.create_function('get_anytext', 1,
                     util.get_anytext)
             else:  # <= 0.6 behaviour
@@ -77,7 +77,7 @@ class Repository(object):
                 self.connection.create_function(
                 'query_spatial', 4, util.query_spatial)
                 self.connection.create_function(
-                'update_xpath', 2, util.update_xpath(self.context))
+                'update_xpath', 3, util.update_xpath)
                 self.connection.create_function('get_anytext', 1,
                 util.get_anytext)
 
@@ -197,12 +197,13 @@ class Repository(object):
     def update(self, record=None, recprops=None, constraint=None):
         ''' Update a record in the repository based on identifier '''
 
-        identifier = getattr(record,
-        self.context.md_core_model['mappings']['pycsw:Identifier'])
-        xml = getattr(self.dataset,
-        self.context.md_core_model['mappings']['pycsw:XML'])
-        anytext = getattr(self.dataset,
-        self.context.md_core_model['mappings']['pycsw:AnyText'])
+        if record is not None:
+            identifier = getattr(record,
+            self.context.md_core_model['mappings']['pycsw:Identifier'])
+            xml = getattr(self.dataset,
+            self.context.md_core_model['mappings']['pycsw:XML'])
+            anytext = getattr(self.dataset,
+            self.context.md_core_model['mappings']['pycsw:AnyText'])
 
         if recprops is None and constraint is None:  # full update
 
@@ -228,14 +229,16 @@ class Repository(object):
                         constraint['where']).update({
                             getattr(self.dataset,
                             rpu['rp']['dbcol']): rpu['value'],
-                            xml: func.update_xpath(
-                            xml, str(rpu)),
+                            'xml': func.update_xpath(str(self.context.namespaces),
+                                   getattr(self.dataset,
+                                   self.context.md_core_model['mappings']['pycsw:XML']),
+                                   str(rpu)),
                         }, synchronize_session='fetch')
                     # then update anytext tokens
                     rows2 += self.session.query(self.dataset).filter(
                         constraint['where']).update({
-                            anytext: func.get_anytext(
-                            xml)
+                            'anytext': func.get_anytext(getattr(
+                            self.dataset, self.context.md_core_model['mappings']['pycsw:XML']))
                         }, synchronize_session='fetch')
                 self.session.commit()
                 return rows
@@ -249,7 +252,22 @@ class Repository(object):
         try:
             self.session.begin()
             rows = self.session.query(self.dataset).filter(
-            constraint['where']).delete(synchronize_session='fetch')
+            constraint['where'])
+
+            parentids = []
+            for row in rows:  # get ids
+                parentids.append(getattr(row,
+                self.context.md_core_model['mappings']['pycsw:Identifier']))
+
+            rows=rows.delete(synchronize_session='fetch')
+
+            if rows > 0:
+                # delete any child records which had this record as a parent
+                rows += self.session.query(self.dataset).filter(
+                    getattr(self.dataset,
+                    self.context.md_core_model['mappings']['pycsw:ParentIdentifier']).in_(parentids)).delete(
+                    synchronize_session='fetch')
+
             self.session.commit()
         except Exception, err:
             self.session.rollback()
