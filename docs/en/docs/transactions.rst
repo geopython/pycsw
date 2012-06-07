@@ -8,13 +8,16 @@ pycsw has the ability to process CSW Harvest and Transaction requests (CSW-T).  
 Supported Resource Types
 ------------------------
 
-For transactions, pycsw supports the following metadata models by default:
+For transactions, pycsw supports the following metadata resource types by default:
 
-- Dublin Core (csw:Record)
+.. csv-table::
+  :header: Resource Type,Transaction,Harvest
 
-.. note::
-
-  Harvesting of other CSW servers will be available in a future release
+  Dublin Core,yes,yes
+  FGDC,yes,yes
+  ISO 19139,yes,yes
+  OGC:WMS 1.1.1,,yes
+  OGC:CSW 2.0.2,,yes
 
 Additional metadata models are supported by enabling the appropriate :ref:`profiles`.
 
@@ -43,6 +46,13 @@ pycsw supports the CSW-T ``Harvest`` operation.  Records which are harvested req
 .. note::
 
   For ``csw:ResponseHandler`` values using the ``mailto:`` protocol, you must have ``server.smtp_host`` set in your :ref:`configuration <configuration>`.
+
+OGC Web Services
+^^^^^^^^^^^^^^^^
+
+When harvesting OGC web services, requests can provide the base URL of the service as part of the Harvest request.  pycsw will construct a ``GetCapabilities`` request dynamically.
+
+When harvesting other CSW servers, pycsw pages through the entire CSW in default increments of 10.  This value can be modified via the ``manager.csw_harvest_pagesize`` :ref:`configuration <configuration>` option.  It is strongly advised to use the ``csw:ResponseHandler`` parameter for harvesting large CSW catalogues to prevent HTTP timeouts.
 
 Transactions
 ------------
