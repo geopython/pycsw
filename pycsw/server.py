@@ -1658,7 +1658,8 @@ class Csw(object):
         # parse resource into record
         try:
             records_parsed = metadata.parse_record(self.context,
-            content, self.repository, self.kvp['resourcetype'])
+            content, self.repository, self.kvp['resourcetype'],
+            pagesize=self.csw_harvest_pagesize)
         except Exception, err:
             return self.exceptionreport('NoApplicableCode', 'source',
             'Harvest failed: record parsing failed: %s' % str(err))
@@ -2225,6 +2226,11 @@ class Csw(object):
             {'methods': {'get': False, 'post': True}, 'parameters': \
             {'ResourceType': {'values': \
             ['http://www.opengis.net/cat/csw/2.0.2']}}}
+
+            self.csw_harvest_pagesize = 10
+            if self.config.has_option('manager', 'csw_harvest_pagesize'):
+                self.csw_harvest_pagesize = int(self.config.get('manager',
+                'csw_harvest_pagesize'))
 
     def _parse_constraint(self, element):
         ''' Parse csw:Constraint '''
