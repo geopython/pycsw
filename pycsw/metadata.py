@@ -185,7 +185,7 @@ def _parse_wms(context, repos, record, identifier):
 
     # generate record of service instance
     _set(context, serviceobj, 'pycsw:Identifier', identifier)
-    _set(context, serviceobj, 'pycsw:Typename', 'gmd:MD_Metadata')
+    _set(context, serviceobj, 'pycsw:Typename', 'csw:Record')
     _set(context, serviceobj, 'pycsw:Schema', 'http://www.opengis.net/wms')
     _set(context, serviceobj, 'pycsw:MdSource', record)
     _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
@@ -224,7 +224,7 @@ def _parse_wms(context, repos, record, identifier):
         recobj = repos.dataset()
         identifier2 = '%s-%s' % (identifier, md.contents[layer].name)
         _set(context, recobj, 'pycsw:Identifier', identifier2)
-        _set(context, recobj, 'pycsw:Typename', 'gmd:MD_Metadata')
+        _set(context, recobj, 'pycsw:Typename', 'csw:Record')
         _set(context, recobj, 'pycsw:Schema', 'http://www.opengis.net/wms')
         _set(context, recobj, 'pycsw:MdSource', record)
         _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
