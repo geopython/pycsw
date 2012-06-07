@@ -2225,7 +2225,9 @@ class Csw(object):
             self.context.model['operations']['Harvest'] = \
             {'methods': {'get': False, 'post': True}, 'parameters': \
             {'ResourceType': {'values': \
-            ['http://www.opengis.net/cat/csw/2.0.2']}}}
+            ['http://www.opengis.net/cat/csw/2.0.2',
+             'http://www.opengis.net/wms',
+            ]}}}
 
             self.csw_harvest_pagesize = 10
             if self.config.has_option('manager', 'csw_harvest_pagesize'):

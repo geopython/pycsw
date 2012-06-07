@@ -158,7 +158,6 @@ class APISO(profile.Profile):
 
         # update harvest resource types with WMS, since WMS is not a typename,
         if model['operations'].has_key('Harvest'):
-            model['operations']['Harvest']['parameters']['ResourceType']['values'].append('http://www.opengis.net/wms')
             model['operations']['Harvest']['parameters']['ResourceType']['values'].append('http://www.isotc211.org/schemas/2005/gmd/')
 
         # set INSPIRE config

@@ -5,8 +5,8 @@
     <csw:ParameterName>Harvest.ResourceType</csw:ParameterName>
     <csw:ListOfValues>
       <csw:Value>http://www.opengis.net/cat/csw/2.0.2</csw:Value>
-      <csw:Value>http://www.isotc211.org/2005/gmd</csw:Value>
       <csw:Value>http://www.opengis.net/wms</csw:Value>
+      <csw:Value>http://www.isotc211.org/2005/gmd</csw:Value>
       <csw:Value>http://www.isotc211.org/schemas/2005/gmd/</csw:Value>
       <csw:Value>http://www.opengis.net/cat/csw/csdgm</csw:Value>
     </csw:ListOfValues>
