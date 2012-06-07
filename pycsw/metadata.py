@@ -34,10 +34,6 @@ import urllib2
 import uuid
 from lxml import etree
 import util
-from owslib.csw import CatalogueServiceWeb, CswRecord
-from owslib.wms import WebMapService
-from owslib.iso import MD_Metadata
-from owslib.fgdc import Metadata
 
 def parse_record(context, record, repos=None,
     mtype='http://www.opengis.net/cat/csw/2.0.2',
@@ -62,6 +58,9 @@ def parse_record(context, record, repos=None,
     elif mtype == 'http://www.opengis.net/wms':  # WMS
         return _parse_wms(context, repos, record, identifier)
      
+    elif mtype == 'http://www.opengis.net/wps/1.0.0':  # WPS
+        return [_parse_wps(context, repos, record, identifier)]
+
     elif mtype == 'http://www.opengis.net/wfs':  # WFS
         pass  # TODO
 
@@ -105,6 +104,8 @@ def _set(context, obj, name, value):
     setattr(obj, context.md_core_model['mappings'][name], value)
 
 def _parse_csw(context, repos, record, identifier, pagesize=10):
+
+    from owslib.csw import CatalogueServiceWeb
 
     recobjs = []  # records
     serviceobj = repos.dataset()
@@ -174,6 +175,9 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     return recobjs
 
 def _parse_wms(context, repos, record, identifier):
+
+    from owslib.wms import WebMapService
+
     recobjs = []
     serviceobj = repos.dataset()
 
@@ -197,7 +201,7 @@ def _parse_wms(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:AccessConstraints', md.identification.accessconstraints)
     _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
-    _set(context, serviceobj,  'pycsw:Source', record)
+    _set(context, serviceobj, 'pycsw:Source', record)
     _set(context, serviceobj, 'pycsw:Format', md.identification.type)
     for c in md.contents:
         if md.contents[c].parent is None:
@@ -250,7 +254,47 @@ def _parse_wms(context, repos, record, identifier):
 
     return recobjs
 
+def _parse_wps(context, repos, record, identifier):
+
+    from owslib.wps import WebProcessingService
+
+    serviceobj = repos.dataset()
+
+    md = WebProcessingService(record)
+
+    # generate record of service instance
+    _set(context, serviceobj, 'pycsw:Identifier', identifier)
+    _set(context, serviceobj, 'pycsw:Typename', 'csw:Record')
+    _set(context, serviceobj, 'pycsw:Schema', 'http://www.opengis.net/wps/1.0.0')
+    _set(context, serviceobj, 'pycsw:MdSource', record)
+    _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
+    _set(context, serviceobj, 'pycsw:XML', etree.tostring(md._capabilities))
+    _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(md._capabilities))
+    _set(context, serviceobj, 'pycsw:Type', 'service')
+    _set(context, serviceobj, 'pycsw:Title', md.identification.title)
+    _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
+    _set(context, serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
+    _set(context, serviceobj, 'pycsw:Creator', md.provider.contact.name)
+    _set(context, serviceobj, 'pycsw:Publisher', md.provider.contact.name)
+    _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
+    _set(context, serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
+    _set(context, serviceobj, 'pycsw:AccessConstraints', md.identification.accessconstraints)
+    _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
+    _set(context, serviceobj, 'pycsw:Source', record)
+    _set(context, serviceobj, 'pycsw:Format', md.identification.type)
+
+    _set(context, serviceobj, 'pycsw:ServiceType', md.identification.type)
+    _set(context, serviceobj, 'pycsw:ServiceTypeVersion', md.identification.version)
+    _set(context, serviceobj, 'pycsw:Operation', ','.join([d.name for d in md.operations]))
+    _set(context, serviceobj, 'pycsw:OperatesOn', ','.join([o.identifier for o in md.processes]))
+    _set(context, serviceobj, 'pycsw:CouplingType', 'loose')
+
+    return serviceobj
+
 def _parse_fgdc(context, repos, exml):
+
+    from owslib.fgdc import Metadata
+
     recobj = repos.dataset()
     links = []
 
@@ -331,6 +375,9 @@ def _parse_fgdc(context, repos, exml):
     return recobj
 
 def _parse_iso(context, repos, exml):
+
+    from owslib.iso import MD_Metadata
+
     recobj = repos.dataset()
     links = []
 
@@ -472,6 +519,9 @@ def _parse_iso(context, repos, exml):
     return recobj
 
 def _parse_dc(context, repos, exml):
+
+    from owslib.csw import CswRecord
+
     recobj = repos.dataset()
     links = []
 
