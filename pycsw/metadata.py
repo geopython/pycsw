@@ -40,7 +40,8 @@ from owslib.iso import MD_Metadata
 from owslib.fgdc import Metadata
 
 def parse_record(context, record, repos=None,
-    mtype='http://www.opengis.net/cat/csw/2.0.2', identifier=None):
+    mtype='http://www.opengis.net/cat/csw/2.0.2',
+    identifier=None, pagesize=10):
     ''' parse metadata '''
 
     if identifier is None:
@@ -51,7 +52,7 @@ def parse_record(context, record, repos=None,
         isinstance(record, str) and record.startswith('http')):
         # CSW service, not csw:Record
         try:
-            return _parse_csw(context, repos, record, identifier) 
+            return _parse_csw(context, repos, record, identifier, pagesize)
         except Exception, err:
             req = urllib2.Request(record)
             req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
@@ -103,7 +104,7 @@ def _set(context, obj, name, value):
     ''' convenience method to set values '''
     setattr(obj, context.md_core_model['mappings'][name], value)
 
-def _parse_csw(context, repos, record, identifier):
+def _parse_csw(context, repos, record, identifier, pagesize=10):
 
     recobjs = []  # records
     serviceobj = repos.dataset()
@@ -160,9 +161,13 @@ def _parse_csw(context, repos, record, identifier):
     md.getrecords(typenames=csw_typenames, resulttype='hits')
     matches = md.results['matches']
 
+    if pagesize > matches:
+        pagesize = matches
+
     # loop over all catalogue records incrementally
-    for r in range(1, matches, 10):
-        md.getrecords(typenames=csw_typenames, startposition=r, maxrecords=10)
+    for r in range(1, matches, pagesize):
+        md.getrecords(typenames=csw_typenames, startposition=r,
+                      maxrecords=pagesize)
         for k, v in md.records.iteritems():
             recobjs.append(_parse_dc(context, repos, etree.fromstring(v.xml)))
 
