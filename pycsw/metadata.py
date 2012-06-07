@@ -104,6 +104,7 @@ def _set(context, obj, name, value):
     setattr(obj, context.md_core_model['mappings'][name], value)
 
 def _parse_csw(context, repos, record, identifier):
+
     recobjs = []  # records
     serviceobj = repos.dataset()
 
@@ -115,7 +116,7 @@ def _parse_csw(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Schema', 'http://www.opengis.net/cat/csw/2.0.2')
     _set(context, serviceobj, 'pycsw:MdSource', record)
     _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
-    _set(context, serviceobj, 'pycsw:XML', etree.tostring(md._exml))
+    _set(context, serviceobj, 'pycsw:XML', md.response)
     _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(md._exml))
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
@@ -149,24 +150,21 @@ def _parse_csw(context, repos, record, identifier):
     for op in md.operations:
         if op.name == 'GetRecords':
             try:
-                pass#csw_typenames = ' '.join(op.parameters['typeNames']['values'])
+                csw_typenames = ' '.join(op.parameters['typeNames']['values'])
             except:  # stay with default
                 pass
 
-    # loop over all catalogue records incrementally
-
+    # now get all records
     # get total number of records to loop against
 
     md.getrecords(typenames=csw_typenames, resulttype='hits')
-    startposition = 1
-        
-    md.getrecords(startposition=startposition)
     matches = md.results['matches']
 
-    for r in range(startposition, matches, 10):
+    # loop over all catalogue records incrementally
+    for r in range(1, matches, 10):
         md.getrecords(typenames=csw_typenames, startposition=r, maxrecords=10)
         for k, v in md.records.iteritems():
-            recobjs.append(_parse_dc(v, context, repos))
+            recobjs.append(_parse_dc(context, repos, etree.fromstring(v.xml)))
 
     return recobjs
 
