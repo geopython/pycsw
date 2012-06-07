@@ -1632,8 +1632,6 @@ class Csw(object):
             ','.join(self.context.model['operations']['Harvest']['parameters']
             ['ResourceType']['values'])))
 
-        #if (self.kvp['resourcetype'].find('opengis.net') == -1 or
-        #    self.kvp['resourcetype'].find('csdgm')):
         if self.kvp['resourcetype'].find('opengis.net') == -1:
             # fetch content-based resource
             self.log.debug('Fetching resource %s' % self.kvp['source'])
