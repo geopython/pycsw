@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:HarvestResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
+  <csw:TransactionResponse version="2.0.2">
+    <csw:TransactionSummary>
+      <csw:totalInserted>43</csw:totalInserted>
+      <csw:totalUpdated>0</csw:totalUpdated>
+      <csw:totalDeleted>0</csw:totalDeleted>
+    </csw:TransactionSummary>
+    <csw:InsertResult>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>MapServer WCS</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_09</dc:identifier>
+        <dc:title>snow water equivalent, September (1987-2002)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_08</dc:identifier>
+        <dc:title>snow water equivalent, August (1987-2002)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_03</dc:identifier>
+        <dc:title>snow water equivalent, March (1988-2003)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_02</dc:identifier>
+        <dc:title>snow water equivalent, February (1988-2003)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_01</dc:identifier>
+        <dc:title>snow water equivalent, January (1988-2003)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_12</dc:identifier>
+        <dc:title>snow extent, December (1966-2004)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_06</dc:identifier>
+        <dc:title>snow water equivalent, June (1988-2003)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_10</dc:identifier>
+        <dc:title>snow extent, October (1967-2004)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_11</dc:identifier>
+        <dc:title>snow extent, November (1966-2004)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-greenland_bedrock_elevation</dc:identifier>
+        <dc:title>Greenland bedrock elevation</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-greenland_accumulation</dc:identifier>
+        <dc:title>Greenland snow accumulation (1971-1990)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_08</dc:identifier>
+        <dc:title>sea ice concentration, August (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_09</dc:identifier>
+        <dc:title>sea ice concentration, September (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-greenland_surface_melt</dc:identifier>
+        <dc:title>Greenland surface melt (1979-2004)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_02</dc:identifier>
+        <dc:title>sea ice concentration, February (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_03</dc:identifier>
+        <dc:title>sea ice concentration, March (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_01</dc:identifier>
+        <dc:title>sea ice concentration, January (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_06</dc:identifier>
+        <dc:title>sea ice concentration, June (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_07</dc:identifier>
+        <dc:title>sea ice concentration, July (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_04</dc:identifier>
+        <dc:title>sea ice concentration, April (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_05</dc:identifier>
+        <dc:title>sea ice concentration, May (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_10</dc:identifier>
+        <dc:title>snow water equivalent, October (1987-2002)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-greenland_elevation</dc:identifier>
+        <dc:title>Greenland surface elevation</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_11</dc:identifier>
+        <dc:title>snow water equivalent, November (1987-2002)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_12</dc:identifier>
+        <dc:title>snow water equivalent, December (1987-2002)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_09</dc:identifier>
+        <dc:title>snow extent, September (1967-2004)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_08</dc:identifier>
+        <dc:title>snow extent, August (1967-2004)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_05</dc:identifier>
+        <dc:title>snow extent, May (1967-2005)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_04</dc:identifier>
+        <dc:title>snow extent, April (1967-2005)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_07</dc:identifier>
+        <dc:title>snow extent, July (1967-2004)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_06</dc:identifier>
+        <dc:title>snow extent, June (1967-2004)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_01</dc:identifier>
+        <dc:title>snow extent, January (1967-2005)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_03</dc:identifier>
+        <dc:title>snow extent, March (1967-2005)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_extent_02</dc:identifier>
+        <dc:title>snow extent, February (1967-2005)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-seasonal_snow_classification</dc:identifier>
+        <dc:title>seasonal snow classification</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_05</dc:identifier>
+        <dc:title>snow water equivalent, May (1988-2003)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_04</dc:identifier>
+        <dc:title>snow water equivalent, April (1988-2003)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-greenland_ice_thickness</dc:identifier>
+        <dc:title>Greenland ice sheet thickness</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_11</dc:identifier>
+        <dc:title>sea ice concentration, November (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_10</dc:identifier>
+        <dc:title>sea ice concentration, October (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-sea_ice_concentration_12</dc:identifier>
+        <dc:title>sea ice concentration, December (1979-2007)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_07</dc:identifier>
+        <dc:title>snow water equivalent, July (1988-2002)</dc:title>
+      </csw:BriefRecord>
+    </csw:InsertResult>
+  </csw:TransactionResponse>
+</csw:HarvestResponse>
