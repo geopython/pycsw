@@ -166,6 +166,22 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     else:
         return 'false'
 
+def bbox_from_polygons(bboxs):
+   ''' Derive an aggregated bbox from n polygons'''
+
+   from shapely.geometry import MultiPolygon
+
+   polys = []
+   for b in bboxs:
+       polys.append(loads(b))
+
+   try:
+       b = MultiPolygon(polys).bounds
+       bstr = '%.2f,%.2f,%.2f,%.2f' % (b[0], b[1], b[2], b[3])
+       return bbox2wktpolygon(bstr)
+   except Exception, err:
+       raise RuntimeError, ('Cannot aggregate polygons: %s' % str(err))
+
 def update_xpath(nsmap, xml, recprop):
     ''' Update XML document XPath values '''
 
