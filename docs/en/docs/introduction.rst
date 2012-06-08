@@ -79,6 +79,10 @@ Supported Operations
 
   Asynchronous processing supported for GetRecords and Harvest requests (via ``csw:ResponseHandler``)
 
+.. note::
+
+  Supported Harvest Resource Types are listed in :ref:`transactions`
+
 Supported Output Formats
 ------------------------
 
