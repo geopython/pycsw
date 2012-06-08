@@ -6,6 +6,8 @@
     <csw:ListOfValues>
       <csw:Value>http://www.opengis.net/cat/csw/2.0.2</csw:Value>
       <csw:Value>http://www.opengis.net/wms</csw:Value>
+      <csw:Value>http://www.opengis.net/wfs</csw:Value>
+      <csw:Value>http://www.opengis.net/wcs</csw:Value>
       <csw:Value>http://www.opengis.net/wps/1.0.0</csw:Value>
       <csw:Value>http://www.isotc211.org/2005/gmd</csw:Value>
       <csw:Value>http://www.isotc211.org/schemas/2005/gmd/</csw:Value>

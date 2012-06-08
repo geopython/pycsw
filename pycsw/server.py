@@ -2228,6 +2228,7 @@ class Csw(object):
             ['http://www.opengis.net/cat/csw/2.0.2',
              'http://www.opengis.net/wms',
              'http://www.opengis.net/wfs',
+             'http://www.opengis.net/wcs',
              'http://www.opengis.net/wps/1.0.0',
             ]}}}
 
