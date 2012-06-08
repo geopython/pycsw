@@ -18,6 +18,7 @@ For transactions, pycsw supports the following metadata resource types by defaul
   ISO 19139,yes,yes
   OGC:CSW 2.0.2,,yes
   OGC:WMS 1.1.1,,yes
+  OGC:WFS 1.1.0,,yes
   OGC:WPS 1.0.0,,yes
 
 Additional metadata models are supported by enabling the appropriate :ref:`profiles`.
