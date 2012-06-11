@@ -466,8 +466,6 @@ def _parse_fgdc(context, repos, exml):
     _set(context, recobj, 'pycsw:XML', md.xml)
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', 'en-US')
-    _set(context, recobj, 'pycsw:Type',  md.idinfo.citation.citeinfo['geoform'])
-    _set(context, recobj, 'pycsw:Title', md.idinfo.citation.citeinfo['title'])
 
     if hasattr(md.idinfo, 'descript'):
         _set(context, recobj, 'pycsw:Abstract', md.idinfo.descript.abstract)
@@ -494,20 +492,23 @@ def _parse_fgdc(context, repos, exml):
     _set(context, recobj, 'pycsw:AccessConstraints', md.idinfo.accconst)
     _set(context, recobj, 'pycsw:OtherConstraints', md.idinfo.useconst)
     _set(context, recobj, 'pycsw:Date', md.metainfo.metd)
-    _set(context, recobj, 
-    'pycsw:PublicationDate', md.idinfo.citation.citeinfo['pubdate'])
-    _set(context, recobj, 'pycsw:Format', md.idinfo.citation.citeinfo['geoform'])
 
     if hasattr(md.idinfo, 'spdom') and hasattr(md.idinfo.spdom, 'bbox'):
         bbox = md.idinfo.spdom.bbox
     else:
         bbox = None
 
-    if hasattr(md, 'citation'):
-        if md.citation.citeinfo['onlink']:
-            for link in md.citation.citeinfo['onlink']:
-                tmp = ',,,%s' % link
-                links.append(tmp)
+    if hasattr(md.idinfo, 'citation'):
+        if hasattr(md.idinfo.citation, 'citeinfo'):
+            _set(context, recobj, 'pycsw:Type',  md.idinfo.citation.citeinfo['geoform'])
+            _set(context, recobj, 'pycsw:Title', md.idinfo.citation.citeinfo['title'])
+            _set(context, recobj,
+            'pycsw:PublicationDate', md.idinfo.citation.citeinfo['pubdate'])
+            _set(context, recobj, 'pycsw:Format', md.idinfo.citation.citeinfo['geoform'])
+            if md.idinfo.citation.citeinfo['onlink']:
+                for link in md.idinfo.citation.citeinfo['onlink']:
+                    tmp = ',,,%s' % link
+                    links.append(tmp)
 
     if hasattr(md, 'distinfo') and hasattr(md.distinfo, 'stdorder'):
         for link in md.distinfo.stdorder['digform']:
