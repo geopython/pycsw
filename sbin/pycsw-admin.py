@@ -43,7 +43,7 @@ from pycsw import config, metadata, repository, util
 
 CONTEXT = config.StaticContext()
 
-def setup_db(database, home):
+def setup_db(database, table, home):
     ''' Setup database tables and indexes '''
     from sqlalchemy import Column, create_engine, Integer, String, MetaData, \
     Table, Text
@@ -80,13 +80,13 @@ def setup_db(database, home):
 
     i = GEOM.insert()
     i.execute(f_table_catalog='public', f_table_schema='public',
-    f_table_name='records', f_geometry_column='wkt_geometry', 
+    f_table_name=table, f_geometry_column='wkt_geometry', 
     geometry_type=3, coord_dimension=2, srid=4326, geometry_format='WKT')
 
     # abstract metadata information model
 
-    print 'Creating table records'
-    RECORDS = Table('records', METADATA,
+    print 'Creating table %s' % table
+    RECORDS = Table(table, METADATA,
         # core; nothing happens without these
         Column('identifier', String(256), primary_key=True),
         Column('typename', String(32),
@@ -195,9 +195,9 @@ def setup_db(database, home):
         CONN.execute(FUNCTION_QUERY_SPATIAL)
         CONN.execute(FUNCTION_UPDATE_XPATH)
 
-def load_records(database, xml_dirpath, recursive=False):
+def load_records(database, table, xml_dirpath, recursive=False):
     ''' Load metadata records from directory of files to database ''' 
-    REPO = repository.Repository(database, 'records', CONTEXT)
+    REPO = repository.Repository(database, CONTEXT, table=table)
 
     file_list = []
 
@@ -226,8 +226,8 @@ def load_records(database, xml_dirpath, recursive=False):
         record = metadata.parse_record(CONTEXT, e, REPO)
 
         for rec in record:
-            print 'Inserting %s %s into database %s, table records....' % \
-            (rec.typename, rec.identifier, database)
+            print 'Inserting %s %s into database %s, table %s ....' % \
+            (rec.typename, rec.identifier, database, table)
 
             # TODO: do this as CSW Harvest
             try:
@@ -236,11 +236,11 @@ def load_records(database, xml_dirpath, recursive=False):
             except Exception, err:
                 print 'ERROR: not inserted %s' % err
 
-def export_records(database, xml_dirpath):
+def export_records(database, table, xml_dirpath):
     ''' Export metadata records from database to directory of files '''
-    REPO = repository.Repository(database, 'records', CONTEXT)
+    REPO = repository.Repository(database, CONTEXT, table=table)
 
-    print 'Querying database %s, table records....' % database
+    print 'Querying database %s, table %s ....' % (database, table)
     RECORDS = REPO.session.query(REPO.dataset)
 
     print 'Found %d records\n' % RECORDS.count()
@@ -277,12 +277,12 @@ def export_records(database, xml_dirpath):
         except Exception, err:
             raise RuntimeError("Error writing to %s" % FILENAME, err)
     
-def refresh_harvested_records(database, url):
+def refresh_harvested_records(database, table, url):
     ''' refresh / harvest all non-local records in repository '''
     from owslib.csw import CatalogueServiceWeb
 
     # get configuration and init repo connection
-    REPOS = repository.Repository(database, 'records', CONTEXT)
+    REPOS = repository.Repository(database, CONTEXT, table=table)
 
     # get all harvested records
     COUNT, RECORDS = REPOS.query(constraint={'where': 'source != "local"'})
@@ -315,17 +315,17 @@ def rebuild_db_indexes(database):
     ''' Rebuild database indexes '''
     print 'Not implemented yet'
 
-def optimize_db(database):
+def optimize_db(database, table):
     ''' Optimize database '''
     print 'Optimizing %s' % database
-    REPOS = repository.Repository(database, 'records', CONTEXT)
+    REPOS = repository.Repository(database, CONTEXT, table=table)
     REPOS.connection.execute('VACUUM ANALYZE')
 
-def gen_sitemap(DATABASE, URL, OUTPUT_FILE):
+def gen_sitemap(DATABASE, TABLE, URL, OUTPUT_FILE):
     ''' generate an XML sitemap from all records in repository '''
 
     # get configuration and init repo connection
-    REPOS = repository.Repository(DATABASE, 'records', CONTEXT)
+    REPOS = repository.Repository(DATABASE, CONTEXT, table=TABLE)
 
     # write out sitemap document
     URLSET = etree.Element(util.nspath_eval('sitemap:urlset', CONTEXT.namespaces),
@@ -585,6 +585,10 @@ if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
     URL = SCP.get('server', 'url')
     HOME = SCP.get('server', 'home')
     METADATA = dict(SCP.items('metadata:main'))
+    try:
+        TABLE = SCP.get('repository', 'table')
+    except:
+        TABLE = 'records'
 
 elif COMMAND not in ['get_sysprof', 'validate_xml']:
     if CSW_URL is None:
@@ -602,19 +606,19 @@ elif COMMAND == 'validate_xml':
         sys.exit(12)
 
 if COMMAND == 'setup_db': 
-    setup_db(DATABASE, HOME)
+    setup_db(DATABASE, TABLE, HOME)
 elif COMMAND == 'load_records':
-    load_records(DATABASE, XML_DIRPATH, RECURSIVE)
+    load_records(DATABASE, TABLE, XML_DIRPATH, RECURSIVE)
 elif COMMAND == 'export_records':
-    export_records(DATABASE, XML_DIRPATH)
+    export_records(DATABASE, TABLE, XML_DIRPATH)
 elif COMMAND == 'rebuild_db_indexes':
-    rebuild_db_indexes(DATABASE)
+    rebuild_db_indexes(DATABASE, TABLE)
 elif COMMAND == 'optimize_db':
-    optimize_db(DATABASE)
+    optimize_db(DATABASE, TABLE)
 elif COMMAND == 'refresh_harvested_records':
-    refresh_harvested_records(DATABASE, URL)
+    refresh_harvested_records(DATABASE, TABLE, URL)
 elif COMMAND == 'gen_sitemap':
-    gen_sitemap(DATABASE, URL, OUTPUT_FILE)
+    gen_sitemap(DATABASE, TABLE, URL, OUTPUT_FILE)
 elif COMMAND == 'gen_opensearch_description':
     gen_opensearch_description(METADATA, URL, OUTPUT_FILE)
 elif COMMAND == 'post_xml':

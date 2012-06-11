@@ -191,6 +191,10 @@ class Csw(object):
         self.log.debug('Namespaces: %s' % self.context.namespaces)
 
         # init repository
+        # look for tablename, set 'records' as default
+        if not self.config.has_option('repository', 'table'):
+            self.config.set('repository', 'table', 'records')
+
         if (self.config.has_option('repository', 'source') and
             self.config.get('repository', 'source') == 'geonode'):
 
@@ -211,8 +215,8 @@ class Csw(object):
             try:
                 self.repository = \
                 repository.Repository(self.config.get('repository', 'database'),
-                'records', self.context,
-                app_root=self.environ.get('local.app_root', None))
+                self.context, self.environ.get('local.app_root', None),
+                self.config.get('repository', 'table'))
                 self.log.debug('Repository loaded (local): %s.' \
                 % self.repository.dbtype)
             except Exception, err:
