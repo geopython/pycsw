@@ -37,7 +37,7 @@ import cgi
 import urllib2
 import urlparse
 from cStringIO import StringIO
-import ConfigParser
+from ConfigParser import SafeConfigParser
 from lxml import etree
 from shapely.wkt import loads
 import config, fes, log, metadata, plugins.profiles.profile, repository, \
@@ -45,7 +45,7 @@ util, sru, opensearch
 
 class Csw(object):
     ''' Base CSW server '''
-    def __init__(self, configfile=None, env=None):
+    def __init__(self, rtconfig=None, env=None):
         ''' Initialize CSW '''
 
         if not env:
@@ -76,12 +76,15 @@ class Csw(object):
 
         # load user configuration
         try:
-            self.config = ConfigParser.SafeConfigParser()
-            self.config.readfp(open(configfile))
+            if isinstance(rtconfig, SafeConfigParser):  # serialized already
+                self.config = rtconfig
+            else:  # configuration file
+                self.config = SafeConfigParser()
+                self.config.readfp(open(rtconfig))
         except Exception, err:
             self.response = self.exceptionreport(
             'NoApplicableCode', 'service',
-            'Error opening configuration %s' % configfile)
+            'Error opening configuration %s' % rtconfig)
             return
 
         # set server.home safely
@@ -102,7 +105,7 @@ class Csw(object):
             'NoApplicableCode', 'service', str(err))
             return
 
-        self.log.debug('running configuration %s' % configfile)
+        self.log.debug('running configuration %s' % rtconfig)
         self.log.debug(str(self.environ['QUERY_STRING']))
 
         # generate domain model
