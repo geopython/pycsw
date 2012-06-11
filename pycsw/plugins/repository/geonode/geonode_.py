@@ -61,8 +61,6 @@ class GeoNodeRepository(object):
             connection.connection.create_function(
             'query_spatial', 4, util.query_spatial)
             connection.connection.create_function(
-            'update_xpath', 3, util.update_xpath(self.context))
-            connection.connection.create_function(
             'get_anytext', 1, util.get_anytext)
 
         # generate core queryables db and obj bindings
