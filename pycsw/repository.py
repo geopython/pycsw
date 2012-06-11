@@ -38,7 +38,7 @@ import util
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, database, table, context, app_root=None):
+    def __init__(self, database, context, app_root=None, table='records'):
         ''' Initialize repository '''
 
         self.context = context
@@ -148,6 +148,9 @@ class Repository(object):
         maxrecords=10, startposition=0):
         ''' Query records from underlying repository '''
 
+        typename_column = getattr(self.dataset, \
+        self.context.md_core_model['mappings']['pycsw:Typename'])
+
         # run the raw query and get total
         if constraint.has_key('where'):  # GetRecords with constraint
             if not typenames:  # any typename
@@ -155,7 +158,7 @@ class Repository(object):
                 constraint['where'])
             else:
                 query = self.session.query(self.dataset).filter(
-                self.dataset.typename.in_(typenames)).filter(
+                typename_column.in_(typenames)).filter(
                 constraint['where'])
 
             total = query.count()
@@ -165,7 +168,7 @@ class Repository(object):
                 query = self.session.query(self.dataset)
             else:
                 query = self.session.query(self.dataset).filter(
-                self.dataset.typename.in_(typenames))
+                typename_column.in_(typenames))
 
             total = query.count()
 
