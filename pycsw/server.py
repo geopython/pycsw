@@ -214,6 +214,22 @@ class Csw(object):
                 'NoApplicableCode', 'service',
                 'Could not load repository (geonode): %s' % str(err))
 
+        elif (self.config.has_option('repository', 'source') and
+            self.config.get('repository', 'source') == 'odc'):
+
+            # load odc repository
+            from plugins.repository.odc import odc 
+
+            try:
+                self.repository = \
+                odc.OpenDataCatalogRepository(self.context)
+                self.log.debug('OpenDataCatalog repository loaded (geonode): %s.' % \
+                self.repository.dbtype)
+            except Exception, err:
+                self.response = self.exceptionreport(
+                'NoApplicableCode', 'service',
+                'Could not load repository (odc): %s' % str(err))
+
         else:  # load default repository
             try:
                 self.repository = \
