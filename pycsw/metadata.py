@@ -133,10 +133,6 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     _set(context, serviceobj, 'pycsw:Source', record)
     _set(context, serviceobj, 'pycsw:Format', md.identification.type)
 
-    # there is no notion of bbox for CSW capabilities, set to global value
-    tmp = '-180,-90,180,90'
-    _set(context, serviceobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
-
     _set(context, serviceobj, 'pycsw:ServiceType', md.identification.type)
     _set(context, serviceobj, 'pycsw:ServiceTypeVersion', md.identification.version)
     _set(context, serviceobj, 'pycsw:Operation', ','.join([d.name for d in md.operations]))
