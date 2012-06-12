@@ -147,7 +147,7 @@ def setup_db(database, table, home):
         # service
         Column('servicetype', String(32), index=True),
         Column('servicetypeversion', String(32), index=True),
-        Column('operation', String(32), index=True),
+        Column('operation', String(256), index=True),
         Column('couplingtype', String(8), index=True),
         Column('operateson', String(32), index=True),
         Column('operatesonidentifier', String(32), index=True),
