@@ -76,7 +76,7 @@ class OpenDataCatalogRepository(object):
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
-        return Resource.objects.filter(id__in=ids).all()
+        return Resource.objects.filter(id__in=[s.split(':')[-1] for s in ids]).all()
 
     def query_domain(self, domain, typenames, domainquerytype='list',
         count=False):
