@@ -76,7 +76,14 @@ class OpenDataCatalogRepository(object):
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
-        return Resource.objects.filter(id__in=[s.split(':')[-1] for s in ids]).all()
+
+        # identifiers are URN masked, where the last token of the identifier
+        # is opendata.models.Resource.id (integer)
+        # if ids are passed which are not int, silently return (does not exist)
+        try:
+            return Resource.objects.filter(id__in=[s.split(':')[-1] for s in ids]).all()
+        except Exception, err:
+            return []
 
     def query_domain(self, domain, typenames, domainquerytype='list',
         count=False):
@@ -114,7 +121,7 @@ class OpenDataCatalogRepository(object):
             if not typenames:  # any typename
                 query = Resource.objects.extra(where=[constraint['where']])
             else:
-                query = Resource.objects.filter(atype__in=typenames).extra(
+                query = Resource.objects.filter(csw_typename__in=typenames).extra(
                 where=[constraint['where']])
 
             total = query.count()
@@ -123,7 +130,7 @@ class OpenDataCatalogRepository(object):
             if not typenames:  # any typename
                 query = Resource.objects
             else:
-                query = Resource.objects.filter(atype__in=typenames)
+                query = Resource.objects.filter(csw_typename__in=typenames)
 
             total = query.count()
 
