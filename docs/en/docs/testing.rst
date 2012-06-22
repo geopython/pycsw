@@ -8,7 +8,7 @@ Testing
 OGC CITE
 --------
 
-Compliance benchmarking is done via the OGC `Compliance & Interoperability Testing & Evaluation Initiative`_.  The pycsw `wiki <http://sourceforge.net/apps/trac/pycsw/wiki/OGCCITECompliance>`_ documents testing procedures and status.
+Compliance benchmarking is done via the OGC `Compliance & Interoperability Testing & Evaluation Initiative`_.  The pycsw `wiki <https://github.com/geopython/pycsw/wiki/OGC-CITE-Compliance>`_ documents testing procedures and status.
 
 .. _tester:
 

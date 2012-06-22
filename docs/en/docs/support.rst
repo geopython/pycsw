@@ -6,9 +6,9 @@ Support
 Bugs
 ----
 
-Bugs, enhancements and related issues can be filed on the pycsw `trac`_.  To submit a `bug`_ (you need a sourceforge account), be sure to specify the version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform.  For convenience, you can run ``sbin/pycsw-admin.py -c get_sysprof`` and copy/paste the output into your bug report.  If you are submitting a patch, please enter the keywords ``has-patch`` in the ``Keywords`` field (so tickets with patches can be easily filtered). Also read the :ref:`faq` before submitting.
+Bugs, enhancements and related issues can be filed on `github`_.  To submit a `bug`_ be sure to specify the version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform.  For convenience, you can run ``sbin/pycsw-admin.py -c get_sysprof`` and copy/paste the output into your bug report.  If you are submitting a patch, please enter the keywords ``has-patch`` in the ``Keywords`` field (so tickets with patches can be easily filtered). Also read the :ref:`faq` before submitting.
 
-The pycsw source code is available at https://pycsw.svn.sourceforge.net/svnroot/pycsw.  You can browse the source code at at http://sourceforge.net/apps/trac/pycsw/browser.
+The pycsw source code is available at https://github.com/geopython/pycsw.
 
 .. _mailing-lists:
 
@@ -27,8 +27,8 @@ IRC
 
 As well, visit pycsw on IRC on ``#pycsw`` at `freenode`_ for realtime discussion.
 
-.. _`trac`: http://sourceforge.net/apps/trac/pycsw
-.. _`bug`: https://sourceforge.net/apps/trac/pycsw/newticket
+.. _`github`: http://github.com/geopython/pycsw/issues
+.. _`bug`: https://github.com/geopython/pycsw/issues/new
 .. _`freenode`: http://freenode.net/
 .. _`ohloh`: http://www.ohloh.net/p/pycsw
 .. _`CIA.vc`: http://cia.vc/stats/project/pycsw

@@ -20,11 +20,11 @@ pycsw requires the following supporting libraries:
 Installing from Source
 ----------------------
 
-:ref:`Download <download>` the latest version or fetch svn trunk:
+:ref:`Download <download>` the latest version or fetch from Git:
 
 .. code-block:: bash
 
-  $ svn co https://pycsw.svn.sourceforge.net/svnroot/pycsw/trunk/ pycsw 
+  $ git clone git@github.com:geopython/pycsw.git
 
 Ensure that CGI is enabled for the install directory.  For example, on Apache, if pycsw is installed in ``/srv/www/htdocs/pycsw`` (where the URL will be ``http://host/pycsw/csw.py``), add the following to ``httpd.conf``:
 
