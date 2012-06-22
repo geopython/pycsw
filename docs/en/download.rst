@@ -12,9 +12,7 @@ Download
 Source Code
 ------------------
 
-* `SVN repository <https://pycsw.svn.sourceforge.net/svnroot/pycsw/trunk>`_
-
-* `Git mirror <https://github.com/tomkralidis/pycsw>`_
+* `Git <https://github.com/geopython/pycsw>`_
 
 * `Mercurial mirror <http://aiolos.survey.ntua.gr/hg/pycsw>`_
 

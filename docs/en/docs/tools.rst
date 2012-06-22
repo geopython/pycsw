@@ -7,7 +7,7 @@ CSW Clients
 -----------
 
 - `Geoportal CSW Clients <http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_
-- `OWSLib <http://owslib.sourceforge.net/>`_
+- `OWSLib <http://geopython.github.com/OWSLib>`_
 - `qgcsw <http://sourceforge.net/apps/trac/qgiscommunitypl/wiki/qgcsw>`_ (`QGIS <http://qgis.org/>`_ plugin)
 
 CSW Servers
