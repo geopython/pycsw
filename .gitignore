@@ -1,3 +1,4 @@
+*.pyc
 default.cfg
 docs/build
 tester/results
