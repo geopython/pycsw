@@ -2,62 +2,13 @@
 <!-- PYCSW_VERSION -->
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults numberOfRecordsReturned="1" nextRecord="0" numberOfRecordsMatched="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+  <csw:SearchResults numberOfRecordsReturned="1" nextRecord="0" numberOfRecordsMatched="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
     <!-- 1 result from http://geo.data.gov/geoportal/csw/discovery -->
-    <csw:Record xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/">
+    <csw:BriefRecord xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/">
 <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">{1A4DFE0D-0126-85CE-8BD9-6EE86406BEE8}</dc:identifier>
 <dc:title>PRESSURE - WATER and Other Data from MOANA WAVE from 19950501 to 19981231 (NODC Accession 9900213)</dc:title>
 <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">NODC ACCESSION # 9900213</dc:type>
 <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">downloadableData</dc:type>
-<dc:subject>AIR PRESSURE</dc:subject>
-<dc:subject>AIR TEMPERATURE</dc:subject>
-<dc:subject>ALKALINITY</dc:subject>
-<dc:subject>AMMONIA</dc:subject>
-<dc:subject>CARBON - DISSOLVED ORGANIC</dc:subject>
-<dc:subject>CARBON - TOTAL ORGANIC</dc:subject>
-<dc:subject>CHLOROPHYLL A</dc:subject>
-<dc:subject>CONDUCTIVITY</dc:subject>
-<dc:subject>DISSOLVED OXYGEN</dc:subject>
-<dc:subject>HYDROCARBONS - TOTAL RESOLVED</dc:subject>
-<dc:subject>NITRATE</dc:subject>
-<dc:subject>NITRITE</dc:subject>
-<dc:subject>PCB</dc:subject>
-<dc:subject>pH</dc:subject>
-<dc:subject>PHAEOPIGMENTS</dc:subject>
-<dc:subject>PHOSPHATE - INORGANIC</dc:subject>
-<dc:subject>PHOSPHORUS - TOTAL</dc:subject>
-<dc:subject>PRESSURE - WATER</dc:subject>
-<dc:subject>SALINITY</dc:subject>
-<dc:subject>SILICATE</dc:subject>
-<dc:subject>SOLAR RADIATION - ATMOSPHERIC</dc:subject>
-<dc:subject>SOUND VELOCITY</dc:subject>
-<dc:subject>AIR TEMPERATURE - WET BULB</dc:subject>
-<dc:subject>TIDE HEIGHT</dc:subject>
-<dc:subject>TIDE STAGE</dc:subject>
-<dc:subject>TOTAL CARBON</dc:subject>
-<dc:subject>turbidity</dc:subject>
-<dc:subject>WAVE HEIGHT</dc:subject>
-<dc:subject>WAVE PERIOD</dc:subject>
-<dc:subject>WIND DIRECTION</dc:subject>
-<dc:subject>WIND SPEED</dc:subject>
-<dc:subject>WATER TEMPERATURE</dc:subject>
-<dc:subject>SUSPENDED PARTICULATE MATTER</dc:subject>
-<dc:subject>WATER DENSITY</dc:subject>
-<dc:subject>CTD</dc:subject>
-<dc:subject>tide gauge</dc:subject>
-<dc:subject>physical</dc:subject>
-<dc:subject>profile</dc:subject>
-<dc:subject>32MW - MOANA WAVE</dc:subject>
-<dc:subject>WORLD OCEAN CIRCULATION EXPERIMENT</dc:subject>
-<dc:subject>University of Hawaii at Manoa (UHM)</dc:subject>
-<dc:subject>oceans</dc:subject>
-<dc:subject>872574</dc:subject>
-<dc:subject>University of Hawaii at Manoa (UHM)</dc:subject>
-<dc:subject>9900213</dc:subject>
-<dct:modified>2012-05-29T19:35:02-07:00</dct:modified>
-<dct:abstract>None</dct:abstract>
-<dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">ftp://ftp.nodc.noaa.gov/nodc/archive/arc0001/9900213/1.1/</dct:references>
-<dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document">http://geo.data.gov/geoportal/csw?getxml=%7B1A4DFE0D-0126-85CE-8BD9-6EE86406BEE8%7D</dct:references>
 <ows:WGS84BoundingBox>
 <ows:LowerCorner>-158.3 21.3</ows:LowerCorner>
 <ows:UpperCorner>-158.3 28.0</ows:UpperCorner>
@@ -66,8 +17,6 @@
 <ows:LowerCorner>-158.3 21.3</ows:LowerCorner>
 <ows:UpperCorner>-158.3 28.0</ows:UpperCorner>
 </ows:BoundingBox>
-<dc:source>{62BF9FE7-688D-41F0-8CE7-B3BB6D713535}</dc:source>
-<dct:isPartOf>data.gov</dct:isPartOf>
-</csw:Record>
+</csw:BriefRecord>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
