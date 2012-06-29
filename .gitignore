@@ -1,6 +1,8 @@
 *.pyc
+*.egg-info
 default.cfg
 docs/build
+build
+dist
 tester/results
 tester/index.html
-tester/suites/manager/data/records.db
