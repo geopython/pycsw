@@ -40,7 +40,7 @@ from cStringIO import StringIO
 from ConfigParser import SafeConfigParser
 from lxml import etree
 from shapely.wkt import loads
-import config, fes, log, metadata, plugins.profiles.profile, repository, \
+import config, fes, log, metadata, plugins.profiles.profile, \
 util, sru, opensearch
 
 class Csw(object):
@@ -231,6 +231,7 @@ class Csw(object):
                 'Could not load repository (odc): %s' % str(err))
 
         else:  # load default repository
+            import repository
             try:
                 self.repository = \
                 repository.Repository(self.config.get('repository', 'database'),
