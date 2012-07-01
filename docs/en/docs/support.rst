@@ -25,7 +25,7 @@ You can find out about software metrics at the pycsw `ohloh`_ page.  pycsw is al
 IRC
 ---
 
-As well, visit pycsw on IRC on ``#pycsw`` at `freenode`_ for realtime discussion.
+As well, visit pycsw on IRC on ``#geopython`` at `freenode`_ for realtime discussion.
 
 .. _`github`: http://github.com/geopython/pycsw/issues
 .. _`bug`: https://github.com/geopython/pycsw/issues/new
