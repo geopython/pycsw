@@ -1,1 +1,4 @@
+lxml>=2.2.3
+pyproj>=1.8.9
+Shapely>=1.2.15
 -e git+git@github.com:geopython/OWSLib.git#egg=OWSLib
