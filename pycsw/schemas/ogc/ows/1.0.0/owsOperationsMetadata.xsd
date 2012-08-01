@@ -121,7 +121,7 @@ elementFormDefault="qualified" version="1.0.0 2010-01-30" xml:lang="en">
 	<!-- ========================================================== -->
 	<complexType name="RequestMethodType">
 		<annotation>
-			<documentation>Connect point URL and any constraints for this HTTP request method for this operation request. In the OnlineResourceType, the xlink:href attribute in the xlink:simpleLink attribute group shall be used to contain this URL. The other attributes in the xlink:simpleLink attribute group should not be used. </documentation>
+			<documentation>Connect point URL and any constraints for this HTTP request method for this operation request. In the OnlineResourceType, the xlink:href attribute in the xlink:simpleAttrs attribute group shall be used to contain this URL. The other attributes in the xlink:simpleAttrs attribute group should not be used. </documentation>
 		</annotation>
 		<complexContent>
 			<extension base="ows:OnlineResourceType">

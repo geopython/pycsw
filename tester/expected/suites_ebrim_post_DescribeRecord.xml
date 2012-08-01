@@ -18,9 +18,9 @@
   </xs:annotation>
     
   <xs:import namespace="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" schemaLocation="http://docs.oasis-open.org/regrep/v3.0/schema/rim.xsd"/>
-  <xs:import namespace="http://www.opengis.net/cat/csw/2.0.2" schemaLocation="../../../../../../../../../../../../etc/schemas/ogc/csw/2.0.2/CSW-publication.xsd"/>
-  <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../../../../etc/schemas/ogc/xlink/1.0.0/xlinks.xsd"/>
-  <xs:import namespace="http://www.opengis.net/ogc" schemaLocation="../../../../../../../../../../../../etc/schemas/ogc/filter/1.1.0/filter.xsd"/>
+  <xs:import namespace="http://www.opengis.net/cat/csw/2.0.2" schemaLocation="../../../../../../../../../../../../pycsw/schemas/ogc/csw/2.0.2/CSW-publication.xsd"/>
+  <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../../../../pycsw/schemas/w3c/1999/xlink.xsd"/>
+  <xs:import namespace="http://www.opengis.net/ogc" schemaLocation="../../../../../../../../../../../../pycsw/schemas/ogc/filter/1.1.0/filter.xsd"/>
     
   <xs:element name="Capabilities" type="csw:CapabilitiesType"/>
   <xs:element name="RecordId" type="wrs:RecordIdType" substitutionGroup="ogc:_Id" id="RecordId">
@@ -86,7 +86,7 @@
       Incorporates the attributes defined for use in simple XLink elements.
       </xs:documentation>
     </xs:annotation>
-    <xs:attributeGroup ref="xlink:simpleLink"/>
+    <xs:attributeGroup ref="xlink:simpleAttrs"/>
   </xs:complexType>
 </xs:schema>
   </csw:SchemaComponent>

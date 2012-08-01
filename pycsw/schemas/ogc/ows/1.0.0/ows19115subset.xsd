@@ -16,7 +16,7 @@ elementFormDefault="qualified" version="1.0.0 2010-01-30" xml:lang="en">
 	<!-- ==============================================================
 		includes and imports
 	============================================================== -->
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../xlink/1.0.0/xlinks.xsd"/>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../w3c/1999/xlink.xsd"/>
 	<!-- ==============================================================
 		elements and types
 	============================================================== -->
@@ -139,7 +139,7 @@ elementFormDefault="qualified" version="1.0.0 2010-01-30" xml:lang="en">
 			</element>
 			<element name="OnlineResource" type="ows:OnlineResourceType" minOccurs="0">
 				<annotation>
-					<documentation>On-line information that can be used to contact the individual or organization. OWS specifics: The xlink:href attribute in the xlink:simpleLink attribute group shall be used to reference this resource. Whenever practical, the xlink:href attribute with type anyURI should be a URL from which more contact information can be electronically retrieved. The xlink:title attribute with type "string" can be used to name this set of information. The other attributes in the xlink:simpleLink attribute group should not be used. </documentation>
+					<documentation>On-line information that can be used to contact the individual or organization. OWS specifics: The xlink:href attribute in the xlink:simpleAttrs attribute group shall be used to reference this resource. Whenever practical, the xlink:href attribute with type anyURI should be a URL from which more contact information can be electronically retrieved. The xlink:title attribute with type "string" can be used to name this set of information. The other attributes in the xlink:simpleAttrs attribute group should not be used. </documentation>
 				</annotation>
 			</element>
 			<element name="HoursOfService" type="string" minOccurs="0">
@@ -158,9 +158,9 @@ elementFormDefault="qualified" version="1.0.0 2010-01-30" xml:lang="en">
 	<complexType name="OnlineResourceType">
 		<annotation>
 			<documentation>Reference to on-line resource from which data can be obtained. </documentation>
-			<documentation>For OWS use in the service metadata document, the CI_OnlineResource class was XML encoded as the attributeGroup "xlink:simpleLink", as used in GML. </documentation>
+			<documentation>For OWS use in the service metadata document, the CI_OnlineResource class was XML encoded as the attributeGroup "xlink:simpleAttrs", as used in GML. </documentation>
 		</annotation>
-		<attributeGroup ref="xlink:simpleLink"/>
+		<attributeGroup ref="xlink:simpleAttrs"/>
 	</complexType>
 	<!-- ========================================================== -->
 	<complexType name="TelephoneType">

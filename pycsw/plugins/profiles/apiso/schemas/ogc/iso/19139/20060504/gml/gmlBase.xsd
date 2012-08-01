@@ -22,7 +22,7 @@ The gmlBase schema components establish the GML model and syntax, in particular
 -	components for constructing definitions and dictionaries.</documentation>
 	</annotation>
 	<include schemaLocation="basicTypes.xsd"/>
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../../etc/schemas/ogc/xlink/1.0.0/xlinks.xsd"/>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../../pycsw/schemas/w3c/1999/xlink.xsd"/>
 	<element name="AbstractObject" abstract="true">
 		<annotation>
 			<documentation>This element has no type defined, and is therefore implicitly (according to the rules of W3C XML Schema) an XML Schema anyType. It is used as the head of an XML Schema substitution group which unifies complex content and certain simple content elements used for datatypes in GML, including the gml:AbstractGML substitution group.</documentation>
@@ -52,7 +52,7 @@ The gmlBase schema components establish the GML model and syntax, in particular
 		<annotation>
 			<documentation>XLink components are the standard method to support hypertext referencing in XML. An XML Schema attribute group, gml:AssociationAttributeGroup, is provided to support the use of Xlinks as the method for indicating the value of a property by reference in a uniform manner in GML.</documentation>
 		</annotation>
-		<attributeGroup ref="xlink:simpleLink"/>
+		<attributeGroup ref="xlink:simpleAttrs"/>
 		<attribute name="nilReason" type="gml:NilReasonType"/>
 		<attribute ref="gml:remoteSchema"/>
 	</attributeGroup>

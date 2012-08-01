@@ -6,7 +6,7 @@
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
 	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="../gml/gml.xsd"/>
-	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../../etc/schemas/ogc/xlink/1.0.0/xlinks.xsd"/>
+	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../../pycsw/schemas/w3c/1999/xlink.xsd"/>
 	<xs:include schemaLocation="../gco/gcoBase.xsd"/>
 	<!-- ########################################################################### -->
 	<!-- ########################################################################### -->
@@ -390,7 +390,7 @@
 	<xs:complexType name="RecordType_Type">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
-				<xs:attributeGroup ref="xlink:simpleLink"/>
+				<xs:attributeGroup ref="xlink:simpleAttrs"/>
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
