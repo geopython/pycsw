@@ -25,7 +25,7 @@
        includes and imports
 	============================================================== -->
 	<include schemaLocation="basicTypes.xsd"/>
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://schemas.opengis.net/xlink/1.0.0/xlinks.xsd"/>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../w3c/1999/xlink.xsd"/>
 	<!-- =========================================================== -->
 	<!-- ==================== Objects ================================ -->
 	<!-- =========================================================== -->
@@ -264,7 +264,7 @@ However, this leads to a non-deterministic content model, since both the base an
 		<annotation>
 			<documentation>Attribute group used to enable property elements to refer to their value remotely. It contains the simple link components from xlinks.xsd, with all members optional, and the remoteSchema attribute, which is also optional.  These attributes can be attached to any element, thus allowing it to act as a pointer. The 'remoteSchema' attribute allows an element  that carries link attributes to indicate that the element is declared  in a remote schema rather than by the schema that constrains the current document instance.</documentation>
 		</annotation>
-		<attributeGroup ref="xlink:simpleLink"/>
+		<attributeGroup ref="xlink:simpleAttrs"/>
 		<attribute ref="gml:remoteSchema" use="optional"/>
 	</attributeGroup>
 	<!-- =========================================================== -->
