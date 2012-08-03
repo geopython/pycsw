@@ -21,6 +21,7 @@ Features
 - transactional capabilities (CSW-T)
 - flexible repository configuration
 - `GeoNode`_ connectivity
+- `Open Data Catalog`_ connectivity
 - federated catalogue distributed searching
 - realtime XML Schema validation
 - extensible profile plugin architecture
@@ -165,3 +166,4 @@ Functions
 .. _`SRU`: http://www.loc.gov/standards/sru/
 .. _`A9 OpenSearch`: http://www.opensearch.org/Home
 .. _`GeoNode`: http://geonode.org/
+.. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
