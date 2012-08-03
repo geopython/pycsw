@@ -12,8 +12,8 @@ Endpoint: http://aiolos.survey.ntua.gr/pycsw/csw.py?service=CSW&version=2.0.2&re
 Tester: http://aiolos.survey.ntua.gr/pycsw/tester/index.html
 
 
-OGC:CSW with APISO / INSPIRE, FGDC, DIF enabled - svn trunk demo
-----------------------------------------------------------------
+OGC:CSW with APISO / INSPIRE, FGDC, DIF enabled - Git master demo
+-----------------------------------------------------------------
 
 Endpoint: http://aiolos.survey.ntua.gr/pycsw_dev/csw.py?service=CSW&version=2.0.2&request=GetCapabilities
 
