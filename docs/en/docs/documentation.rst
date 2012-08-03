@@ -24,6 +24,7 @@ pycsw |release| Documentation
    transactions
    profiles
    geonode
+   odc
    testing
    ../demos
    tools
