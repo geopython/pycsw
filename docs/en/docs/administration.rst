@@ -110,6 +110,8 @@ To override the default settings:
   ...
   mappings=path/to/mappings.py
 
+See the :ref:`geonode` and :ref:`odc` for further examples.
+
 Existing Repository Requirements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

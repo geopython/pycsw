@@ -23,6 +23,9 @@ Installing from Source
 
 :ref:`Download <download>` the latest version or fetch from Git:
 
+The Quick and Dirty Way
+^^^^^^^^^^^^^^^^^^^^^^^
+
 .. code-block:: bash
 
   $ git clone git@github.com:geopython/pycsw.git
@@ -39,6 +42,17 @@ Ensure that CGI is enabled for the install directory.  For example, on Apache, i
 
 .. note::
   If pycsw is installed in ``cgi-bin``, this should work as expected.  In this case, the :ref:`tester <tester>` application must be moved to a different location to serve static HTML documents.
+
+The Clean and Proper Way
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+  $ git clone git@github.com:geopython/pycsw.git
+  $ python setup.py build
+  $ python setup.py install
+
+At this point, pycsw is installed as a library and requires a CGI ``csw.py`` or WSGI ``csw.wsgi`` script to be served into your web server environment (see below for WSGI configuration/deployment).
 
 .. _opensuse:
 
