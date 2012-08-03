@@ -38,19 +38,19 @@ pycsw provides a plugin framework in which you can implement a custom profile (s
 How can I catalogue 'sets' of metadata?
 ---------------------------------------
 
-Create a 'parent' metadata record from which all relevant metadata records (imagery, features) derive from via the same ``dc:source`` element of Dublin Core or ``gmd:parentIdentifier`` element of ISO 19139:2007.  Then, do a ``GetRecords`` request, filtering on the identifier of the parent metadata record.  Sample request:
+Create a 'parent' metadata record from which all relevant metadata records (imagery, features) derive from via the same ``dc:source`` element of Dublin Core or ``apiso:parentIdentifier`` element of ISO 19139:2007.  Then, do a ``GetRecords`` request, filtering on the identifier of the parent metadata record.  Sample request:
 
 .. code-block:: xml
 
   <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
-  <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:ogc="http://www.opengis.net/ogc" service="CSW" version="2.0.2" resultType="results" startPosition="1" maxRecords="5" outputFormat="application/xml" outputSchema="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+  <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:ogc="http://www.opengis.net/ogc" service="CSW" version="2.0.2" resultType="results" startPosition="1" maxRecords="5" outputFormat="application/xml" outputSchema="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0">
     <csw:Query typeNames="csw:Record">
       <csw:ElementSetName>brief</csw:ElementSetName>
       <csw:Constraint version="1.1.0">
         <ogc:Filter>
           <ogc:And>
 	    <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>gmd:parentIdentifier</ogc:PropertyName>
+              <ogc:PropertyName>apiso:parentIdentifier</ogc:PropertyName>
               <ogc:PropertyName>$identifier</ogc:PropertyName>
 	    </ogc:PropertyIsEqualTo>
             <ogc:BBOX>
@@ -66,6 +66,6 @@ Create a 'parent' metadata record from which all relevant metadata records (imag
     </csw:Query>
   </csw:GetRecords>
 
-The above query will search for all metadata records of the same ``gmd:parentIdentifier`` (identified by ``$identifier``) within a given area of interest.  The equivalent query can be done against ``dc:source`` with the same design pattern.
+The above query will search for all metadata records of the same ``apiso:parentIdentifier`` (identified by ``$identifier``) within a given area of interest.  The equivalent query can be done against ``dc:source`` with the same design pattern.
 
 
