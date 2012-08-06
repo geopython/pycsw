@@ -93,7 +93,7 @@ setup(name='pycsw',
     data_files=data_files,
     scripts=['sbin/pycsw-admin.py'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
