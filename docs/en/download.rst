@@ -16,8 +16,6 @@ Source Code
 
 * `Git <https://github.com/geopython/pycsw>`_
 
-* `Mercurial mirror <http://aiolos.survey.ntua.gr/hg/pycsw>`_
-
 Packages
 --------
 
