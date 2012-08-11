@@ -38,7 +38,7 @@ master_doc = 'docs/documentation'
 
 # General information about the project.
 project = u'pycsw'
-copyright = u'2010-2011, Tom Kralidis'
+copyright = u'2010-2012, Tom Kralidis'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
