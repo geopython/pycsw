@@ -53,8 +53,6 @@ class GeoNodeRepository(object):
             'query_spatial', 4, util.query_spatial)
             connection.connection.create_function(
             'get_anytext', 1, util.get_anytext)
-            connection.connection.create_function(
-            'get_geometry_area', 1, util.get_geometry_area)
 
         # generate core queryables db and obj bindings
         self.queryables = {}
