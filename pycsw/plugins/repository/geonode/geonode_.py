@@ -33,12 +33,6 @@
 import os, sys
 # ensure GeoNode based settings are set/enabled
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'geonode.settings'
-sys.path.append('/home/tkralidi/geonode/lib/python2.6/site-packages')
-sys.path.append('/home/tkralidi/geonode/src/GeoNodePy')
-sys.path.append('/home/tkralidi/geonode/src/gsconfig.py/src')
-sys.path.append('/home/tkralidi/geonode/src/avatar')
-
 from django.db import models
 from django.db import connection
 from django.db.models import Avg, Max, Min, Count
@@ -54,7 +48,7 @@ class GeoNodeRepository(object):
 
         self.context = context
 
-        self.dbtype = settings.DATABASE_ENGINE
+        self.dbtype = settings.DATABASES['default']['ENGINE'].split('.')[-1]
 
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             cursor = connection.cursor()
@@ -62,6 +56,8 @@ class GeoNodeRepository(object):
             'query_spatial', 4, util.query_spatial)
             connection.connection.create_function(
             'get_anytext', 1, util.get_anytext)
+            connection.connection.create_function(
+            'get_geometry_area', 1, util.get_geometry_area)
 
         # generate core queryables db and obj bindings
         self.queryables = {}
