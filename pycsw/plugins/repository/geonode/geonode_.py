@@ -85,8 +85,8 @@ class GeoNodeRepository(object):
             Min(domain), Max(domain)).values())]
         else:
             if count is True:
-                return [tuple(i.values()) for i in r.objects.values(
-                domain).annotate(Count(domain))]
+                return [(d[domain], d['%s__count' % domain]) \
+                for d in Layer.objects.values(domain).annotate(Count(domain))]
             else:
                 return Layer.objects.values_list(domain).distinct()
 
