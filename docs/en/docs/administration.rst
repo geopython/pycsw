@@ -136,7 +136,7 @@ The following repository semantics exist if the attributes are specified:
 Values of mappings can be derived from the following mechanisms:
 
 - text fields
-- Python datetime objects
+- Python datetime.datetime or datetime.date objects
 - Python functions 
 
 Further information is provided in ``pycsw/config.py:MD_CORE_MODEL``.
