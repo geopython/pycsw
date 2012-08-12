@@ -30,16 +30,13 @@
 #
 # =================================================================
 
-import os, sys
-# ensure GeoNode based settings are set/enabled
-
 from django.db import models
 from django.db import connection
 from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
 from pycsw import util
-from geonode.maps.models import Layer
+from geonode.layers.models import Layer
 
 class GeoNodeRepository(object):
     ''' Class to interact with underlying repository '''
