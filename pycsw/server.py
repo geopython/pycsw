@@ -1170,7 +1170,7 @@ class Csw(object):
             return self._write_acknowledgement()
 
         if self.kvp.has_key('maxrecords') is False:
-            self.kvp['maxrecords'] = self.config.get('server', 'maxrecords')
+            self.kvp['maxrecords'] = int(self.config.get('server', 'maxrecords'))
 
         if self.requesttype == 'GET':
             if self.kvp.has_key('constraint'):
