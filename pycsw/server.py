@@ -1238,6 +1238,9 @@ class Csw(object):
             try:
                 self.kvp['sortby']['propertyname'] = \
                 self.repository.queryables['_all'][name]['dbcol']
+                if name.find('BoundingBox') != -1 or name.find('Envelope') != -1:
+                    # it's a spatial sort
+                    self.kvp['sortby']['spatial'] = True
             except Exception, err:
                 return self.exceptionreport('InvalidParameterValue',
                 'sortby', 'Invalid SortBy propertyname: %s' % name)
@@ -1943,12 +1946,19 @@ class Csw(object):
                 self.log.debug('Sorted query specified.')
                 request['sortby'] = {}
 
+
                 try:
-                    request['sortby']['propertyname'] = \
-                    self.repository.queryables['_all']\
-                    [tmp.find(util.nspath_eval(
+                    elname = tmp.find(util.nspath_eval(
                     'ogc:SortProperty/ogc:PropertyName',
-                    self.context.namespaces)).text]['dbcol']
+                    self.context.namespaces)).text
+
+                    request['sortby']['propertyname'] = \
+                    self.repository.queryables['_all'][elname]['dbcol']
+
+                    if (elname.find('BoundingBox') != -1 or
+                        elname.find('Envelope') != -1):
+                        # it's a spatial sort
+                        request['sortby']['spatial'] = True
                 except Exception, err:
                     errortext = \
                     'Invalid ogc:SortProperty/ogc:PropertyName: %s' % str(err)

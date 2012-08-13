@@ -166,6 +166,15 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     else:
         return 'false'
 
+def get_geometry_area(geometry):
+    ''' Derive area of a given geometry '''
+    try:
+        if geometry is not None:
+            return str(loads(geometry).area)
+        return '0'
+    except:
+        return '0'
+
 def bbox_from_polygons(bboxs):
    ''' Derive an aggregated bbox from n polygons'''
 
