@@ -55,6 +55,8 @@ class OpenDataCatalogRepository(object):
             'query_spatial', 4, util.query_spatial)
             connection.connection.create_function(
             'get_anytext', 1, util.get_anytext)
+            connection.connection.create_function(
+            'get_geometry_area', 1, util.get_geometry_area)
 
         # generate core queryables db and obj bindings
         self.queryables = {}
@@ -136,6 +138,11 @@ class OpenDataCatalogRepository(object):
 
         # apply sorting, limit and offset
         if sortby is not None:
+            if sortby.has_key('spatial') and sortby['spatial']:  # spatial sort
+                desc = False
+                if sortby['order'] == 'DESC':
+                    desc = True
+                return sorted(query.all(), key=lambda x: float(util.get_geometry_area(x[sortby['propertyname']])), reverse=desc)[startposition:maxrecords]
             if sortby['order'] == 'DESC':
                 pname = '-%s' % sortby['propertyname']
             else:

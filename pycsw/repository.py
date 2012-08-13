@@ -31,7 +31,7 @@
 # =================================================================
 
 import os
-from sqlalchemy import create_engine, desc, func, __version__
+from sqlalchemy import create_engine, asc, desc, func, __version__
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
 import util
@@ -72,6 +72,8 @@ class Repository(object):
                     'update_xpath', 3, util.update_xpath)
                     dbapi_connection.create_function('get_anytext', 1,
                     util.get_anytext)
+                    dbapi_connection.create_function('get_geometry_area', 1,
+                    util.get_geometry_area)
             else:  # <= 0.6 behaviour
                 self.connection = engine.raw_connection()
                 self.connection.create_function(
@@ -80,6 +82,8 @@ class Repository(object):
                 'update_xpath', 3, util.update_xpath)
                 self.connection.create_function('get_anytext', 1,
                 util.get_anytext)
+                self.connection.create_function('get_geometry_area', 1,
+                util.get_geometry_area)
 
         # generate core queryables db and obj bindings
         self.queryables = {}
@@ -172,19 +176,23 @@ class Repository(object):
 
             total = query.count()
 
-        # apply sorting, limit and offset
-        if sortby is not None:
-            if sortby['order'] == 'DESC':
-                return [str(total), query.order_by(desc(
-                sortby['propertyname'])).limit(
-                maxrecords).offset(startposition).all()]
-            else: 
-                return [str(total), query.order_by(
-                sortby['propertyname']).limit(
-                maxrecords).offset(startposition).all()]
-        else:  # no sort
-            return [str(total), query.limit(
-            maxrecords).offset(startposition).all()]
+        if sortby is not None:  # apply sorting
+            sortby_column = getattr(self.dataset, sortby['propertyname'])
+
+            if sortby['order'] == 'DESC':  # descending sort
+                if sortby.has_key('spatial') and sortby['spatial'] is True:  # spatial sort
+                    query = query.order_by(func.get_geometry_area(sortby_column).desc())
+                else:  # aspatial sort
+                    query = query.order_by(sortby_column.desc())
+            else:  # ascending sort
+                if sortby.has_key('spatial') and sortby['spatial'] is True:  # spatial sort
+                    query = query.order_by(func.get_geometry_area(sortby_column))
+                else:  # aspatial sort
+                    query = query.order_by(sortby_column)
+
+        # always apply limit and offset
+        return [str(total), query.limit(
+        maxrecords).offset(startposition).all()]
 
     def insert(self, record, source, insert_date):
         ''' Insert a record into the repository '''
