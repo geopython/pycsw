@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+#-*- coding: iso-8859-15 -*-
 # =================================================================
 #
 # $Id$
@@ -138,11 +138,11 @@ class OpenDataCatalogRepository(object):
 
         # apply sorting, limit and offset
         if sortby is not None:
-            if sortby.has_key('spatial') and sortby['spatial']:  # spatial sort
+            if sortby.has_key('spatial') and sortby['spatial'] is True:  # spatial sort
                 desc = False
                 if sortby['order'] == 'DESC':
                     desc = True
-                return sorted(query.all(), key=lambda x: float(util.get_geometry_area(x[sortby['propertyname']])), reverse=desc)[startposition:maxrecords]
+                return [str(total), sorted(query, key=lambda x: float(util.get_geometry_area(getattr(x, sortby['propertyname']))), reverse=desc)[startposition:maxrecords]]
             if sortby['order'] == 'DESC':
                 pname = '-%s' % sortby['propertyname']
             else:
