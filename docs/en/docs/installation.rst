@@ -28,7 +28,7 @@ The Quick and Dirty Way
 
 .. code-block:: bash
 
-  $ git clone git@github.com:geopython/pycsw.git
+  $ git clone git://github.com/geopython/pycsw.git
 
 Ensure that CGI is enabled for the install directory.  For example, on Apache, if pycsw is installed in ``/srv/www/htdocs/pycsw`` (where the URL will be ``http://host/pycsw/csw.py``), add the following to ``httpd.conf``:
 
@@ -48,7 +48,7 @@ The Clean and Proper Way
 
 .. code-block:: bash
 
-  $ git clone git@github.com:geopython/pycsw.git
+  $ git clone git://github.com/geopython/pycsw.git
   $ python setup.py build
   $ python setup.py install
 
