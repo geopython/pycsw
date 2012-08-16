@@ -258,7 +258,7 @@ def getqattr(obj, name):
     try:
         value = getattr(obj, name)
         if hasattr(value, '__call__'):  # function generated value
-            if name.find('link') != -1:  # link tuple triplet
+            if name.find('link') != -1:  # list of link tuple quadruplets
                 return _linkify(value())
             return value()
         elif (isinstance(value, datetime.datetime)
