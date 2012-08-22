@@ -1,9 +1,16 @@
+# build artifacts
 *.pyc
 *.egg-info
-default.cfg
-docs/build
 build
 dist
-tester/results
-data/tmp
+docs/build
+
+# testing artifacts
 tester/index.html
+tester/results
+
+# test configurations
+default.cfg
+
+# test repositories
+data/tmp
