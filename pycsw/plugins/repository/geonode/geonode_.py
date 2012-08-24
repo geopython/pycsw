@@ -47,6 +47,10 @@ class GeoNodeRepository(object):
 
         self.dbtype = settings.DATABASES['default']['ENGINE'].split('.')[-1]
 
+        # GeoNode PostgreSQL installs are PostGIS enabled
+        if self.dbtype == 'postgresql_psycopg2':
+            self.dbtype = 'postgresql+postgis'
+
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             cursor = connection.cursor()
             connection.connection.create_function(

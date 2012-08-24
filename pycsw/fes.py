@@ -98,9 +98,17 @@ def parse(element, queryables, dbtype, nsmap):
         [util.nspath_eval('ogc:%s' % n, nsmap) for n in \
         MODEL['SpatialOperators']['values']]:
             if boq is not None and boq == ' not ':
-                queries.append("%s = %s" %
-                (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-                 child, dbtype, nsmap), boolean_false))
+                # for ogc:Not spatial queries in PostGIS we must explictly
+                # test that pycsw:BoundingBox is null as well
+                if dbtype == 'postgresql+postgis':
+                    queries.append("%s = %s or %s is null" %
+                    (_get_spatial_operator(queryables['pycsw:BoundingBox'],
+                    child, dbtype, nsmap), boolean_false,
+                    queryables['pycsw:BoundingBox']))
+                else:
+                    queries.append("%s = %s" %
+                    (_get_spatial_operator(queryables['pycsw:BoundingBox'],
+                    child, dbtype, nsmap), boolean_false))
             else:
                 queries.append("%s = %s" % 
                 (_get_spatial_operator(queryables['pycsw:BoundingBox'],
@@ -160,7 +168,7 @@ def parse(element, queryables, dbtype, nsmap):
             # then set the DB-specific LIKE comparison operator
             if ((matchcase is not None and matchcase == 'false') or
             pname == 'anytext'):
-                com_op = 'ilike' if dbtype == 'postgresql' else 'like'
+                com_op = 'ilike' if dbtype in ['postgresql', 'postgresql+postgis'] else 'like'
 
             if (child.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
                 com_op = 'between'
@@ -227,6 +235,20 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
         else:
             spatial_query = "ifnull(%s(geomfromtext(%s), \
             geomfromtext('%s')),false)" % (spatial_predicate, geomattr, geometry.wkt)
+
+    elif dbtype == 'postgresql+postgis':  # adjust spatial query for PostGIS
+        if spatial_predicate == 'bbox':
+            spatial_predicate = 'intersects'
+
+        if spatial_predicate == 'beyond':
+            spatial_query = "not st_dwithin(st_geomfromtext(%s), \
+            st_geomfromtext('%s'), %f)" % (geomattr, geometry.wkt, float(distance))
+        elif spatial_predicate == 'dwithin':
+            spatial_query = "st_dwithin(st_geomfromtext(%s), \
+            st_geomfromtext('%s'), %f)" % (geomattr, geometry.wkt, float(distance))
+        else:
+            spatial_query = "st_%s(st_geomfromtext(%s), \
+            st_geomfromtext('%s'))" % (spatial_predicate, geomattr, geometry.wkt)
     else:
         spatial_query = "query_spatial(%s,'%s','%s','%s')" % \
         (geomattr, geometry.wkt, spatial_predicate, distance)
