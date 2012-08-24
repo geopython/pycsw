@@ -20,6 +20,9 @@ pycsw supports the following databases:
 .. note::
   The easiest and fastest way to deploy pycsw is to use SQLite3 as the backend.
 
+.. note::
+  PostgreSQL support includes support for PostGIS functions if enabled
+
 To expose your geospatial metadata via pycsw, perform the following actions:
 
 - setup the database

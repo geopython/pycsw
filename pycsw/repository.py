@@ -31,7 +31,7 @@
 # =================================================================
 
 import os
-from sqlalchemy import create_engine, asc, desc, func, __version__
+from sqlalchemy import create_engine, asc, desc, func, __version__, select
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
 import util
@@ -60,6 +60,14 @@ class Repository(object):
         self.dbtype = engine.name
 
         self.session = create_session(engine)
+
+        # check if PostgreSQL is enabled with PostGIS
+        if self.dbtype == 'postgresql':
+            try:
+                self.session.execute(select([func.postgis_version()]))
+                self.dbtype = 'postgresql+postgis'
+            except:
+                pass
 
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             if __version__ >= '0.7':
