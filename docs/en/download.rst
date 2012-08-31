@@ -12,9 +12,14 @@ Download
 * `All Releases <http://download.osgeo.org/pycsw/>`_
 
 Source Code
-------------------
+-----------
 
 * `Git <https://github.com/geopython/pycsw>`_
+
+PyPi
+----
+
+* http://pypi.python.org/pypi/pycsw
 
 Packages
 --------

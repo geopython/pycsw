@@ -54,6 +54,18 @@ The Clean and Proper Way
 
 At this point, pycsw is installed as a library and requires a CGI ``csw.py`` or WSGI ``csw.wsgi`` script to be served into your web server environment (see below for WSGI configuration/deployment).
 
+.. _pypi:
+
+Installing from the Python Package Index (PyPi)
+-----------------------------------------------
+
+.. code-block:: bash
+
+  # easy_install or pip will do the trick
+  $ easy_install pycsw
+  # or
+  $ pip install pycsw
+
 .. _opensuse:
 
 Installing from OpenSUSE Build Service
