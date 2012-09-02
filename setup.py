@@ -91,7 +91,7 @@ setup(name='pycsw',
     install_requires=['lxml', 'shapely', 'pyproj', 'OWSLib'],
     packages=find_packages(),
     data_files=data_files,
-    scripts=['sbin/pycsw-admin.py'],
+    scripts=[os.path.join('sbin', 'pycsw-admin.py')],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
