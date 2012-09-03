@@ -35,13 +35,14 @@ from distutils.core import setup
 import pycsw
 
 def is_package(path):
+    """Decipher whether a filepath is a Python package"""
     return (
         os.path.isdir(path) and
         os.path.isfile(os.path.join(path, '__init__.py'))
         )
 
 def find_packages(path, base=''):
-    """ Find all packages in path """
+    """Find all packages in path"""
     packages = {}
     for item in os.listdir(path):
         dir = os.path.join(path, item)
@@ -55,25 +56,32 @@ def find_packages(path, base=''):
     return packages
 
 def find_packages_xsd(location='.'):
+    """
+    Figure out which packages need to be specified as package_data
+    keys (the ones with XML Schema documents
+    """
     packages = []
     for root, dirs, files in os.walk(location):
-        if 'schemas' in dirs:
+        if 'schemas' in dirs:  # include as a package_data key
             packages.append(root.replace(os.sep, '.').replace('..',''))
     return packages
 
 def get_package_data(location='.', forced_dir=None):
+    """Generate package_data dict"""
     package_data = {}
     for p in location:
+        # turn package identifier into filepath
         filepath = p.replace('.', os.sep)
-        if forced_dir is not None:
+        if forced_dir is not None:  # force os.walk to traverse subdir
             filepath = '%s%sschemas' % (filepath, os.sep)
         for root, dirs, files in os.walk(filepath):
             if len(files) > 0:
+                # find all the XML Schema documents
                 xsds = filter(lambda x: x.find('.xsd') != -1, files)
                 if len(xsds) > 0:
-                    if not package_data.has_key(p):
+                    if not package_data.has_key(p):  # set key
                         package_data[p] = []
-                    for x in xsds:
+                    for x in xsds:  # add filename to list
                         root2 = root.replace(filepath, '')
                         if forced_dir is not None:
                             filename = 'schemas%s%s%s%s' % (os.sep, os.sep.join(root2.split(os.sep)[1:]), os.sep, x)
@@ -82,20 +90,27 @@ def get_package_data(location='.', forced_dir=None):
                         package_data[p].append(filename)
     return package_data
 
+# set setup.packages
 packages = find_packages('.').keys()
 
+# get package_data.keys()
 package_data_xsd = find_packages_xsd('pycsw')
 
+# Because package 'pycsw' contains all other packages,
+# process it last, so that it doesn't set it's package_data
+# files to one already set in other packages
 root_package = package_data_xsd.pop(0)
 
+# set package_data
 package_data = get_package_data(package_data_xsd)
 
+# update package_data for pycsw package
 package_data.update(get_package_data([root_package], 'schemas'))
 
 setup(name='pycsw',
     version=pycsw.__version__,
     description='pycsw is an OGC CSW server implementation written in Python',
-    long_description=open('README.txt', 'r').read(),
+    long_description=open('README.txt').read(),
     license='MIT',
     platforms='all',
     keywords='pycsw csw catalogue catalog metadata discovery search ogc iso fgdc dif ebrim inspire',
@@ -110,6 +125,7 @@ setup(name='pycsw',
     scripts=[os.path.join('sbin', 'pycsw-admin.py')],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
+        'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
