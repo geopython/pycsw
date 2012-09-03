@@ -4,6 +4,7 @@
 build
 dist
 docs/build
+MANIFEST
 
 # testing artifacts
 tester/index.html

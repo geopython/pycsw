@@ -30,51 +30,67 @@
 #
 # =================================================================
 
-from setuptools import setup, find_packages
-
-import fnmatch, os
+import os
+from distutils.core import setup
 import pycsw
 
-# get all supporting files (XML Schemas, etc.) in codebase
-# http://wiki.python.org/moin/Distutils/Tutorial
+def is_package(path):
+    return (
+        os.path.isdir(path) and
+        os.path.isfile(os.path.join(path, '__init__.py'))
+        )
 
-def opj(*args):
-    path = os.path.join(*args)
-    return os.path.normpath(path)
+def find_packages(path, base=''):
+    """ Find all packages in path """
+    packages = {}
+    for item in os.listdir(path):
+        dir = os.path.join(path, item)
+        if is_package( dir ):
+            if base:
+                module_name = "%(base)s.%(item)s" % vars()
+            else:
+                module_name = item
+            packages[module_name] = dir
+            packages.update(find_packages(dir, module_name))
+    return packages
 
-def find_data_files(srcdir, *wildcards, **kw):
-    # get a list of all files under the srcdir matching wildcards,
-    # returned in a format to be used for install_data
-    def walk_helper(arg, dirname, files):
-        if '.svn' in dirname:
-            return
+def find_packages_xsd(location='.'):
+    packages = []
+    for root, dirs, files in os.walk(location):
+        if 'schemas' in dirs:
+            packages.append(root.replace(os.sep, '.').replace('..',''))
+    return packages
 
-        names = []
-        lst, wildcards = arg
+def get_package_data(location='.', forced_dir=None):
+    package_data = {}
+    for p in location:
+        filepath = p.replace('.', os.sep)
+        if forced_dir is not None:
+            filepath = '%s%sschemas' % (filepath, os.sep)
+        for root, dirs, files in os.walk(filepath):
+            if len(files) > 0:
+                xsds = filter(lambda x: x.find('.xsd') != -1, files)
+                if len(xsds) > 0:
+                    if not package_data.has_key(p):
+                        package_data[p] = []
+                    for x in xsds:
+                        root2 = root.replace(filepath, '')
+                        if forced_dir is not None:
+                            filename = 'schemas%s%s%s%s' % (os.sep, os.sep.join(root2.split(os.sep)[1:]), os.sep, x)
+                        else:
+                            filename = '%s%s%s' % (os.sep.join(root2.split(os.sep)[1:]), os.sep, x)
+                        package_data[p].append(filename)
+    return package_data
 
-        for wc in wildcards:
-            wc_name = opj(dirname, wc)
-            for f in files:
-                filename = opj(dirname, f)
+packages = find_packages('.').keys()
 
-                if (fnmatch.fnmatch(filename, wc_name) and
-                    not os.path.isdir(filename)):
-                    names.append(filename)
-        if names:
-            lst.append( (dirname, names ) )
+package_data_xsd = find_packages_xsd('pycsw')
 
-    file_list = []
-    recursive = kw.get('recursive', True)
+root_package = package_data_xsd.pop(0)
 
-    if recursive:
-        os.path.walk(srcdir, walk_helper, (file_list, wildcards))
-    else:
-        walk_helper((file_list, wildcards),
-                    srcdir,
-                    [os.path.basename(f) for f in glob.glob(opj(srcdir, '*'))])
-    return file_list
+package_data = get_package_data(package_data_xsd)
 
-data_files = find_data_files('pycsw', '*.*')
+package_data.update(get_package_data([root_package], 'schemas'))
 
 setup(name='pycsw',
     version=pycsw.__version__,
@@ -89,8 +105,8 @@ setup(name='pycsw',
     maintainer_email='tomkralidis@hotmail.com',
     url='http://pycsw.org/',
     install_requires=['lxml', 'shapely', 'pyproj', 'OWSLib'],
-    packages=find_packages(),
-    data_files=data_files,
+    packages=packages,
+    package_data=package_data,
     scripts=[os.path.join('sbin', 'pycsw-admin.py')],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
