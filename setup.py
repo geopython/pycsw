@@ -90,6 +90,10 @@ def get_package_data(location='.', forced_dir=None):
                         package_data[p].append(filename)
     return package_data
 
+# ensure a fresh MANIFEST file is generated
+if (os.path.exists('MANIFEST')):
+    os.unlink('MANIFEST')
+
 # set setup.packages
 packages = find_packages('.').keys()
 
