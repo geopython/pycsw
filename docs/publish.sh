@@ -1,9 +1,17 @@
 #!/bin/bash
 
+LOCAL_PATH=build/html/en
+REMOTE_HOST=projects.osgeo.osuosl.org
+REMOTE_PATH=/osgeo/pycsw/pycsw-web
+
 if [ $# -ne 1 ]
 then
     echo "Usage: $0 <OSGeo userid>"
     exit 1
 fi
 
-scp -rp build/html/en/* $1@projects.osgeo.osuosl.org:/osgeo/pycsw/pycsw-web
+# change privs to be group writeable
+chmod -R g+w $LOCAL_PATH
+
+# copy documentation
+scp -r $LOCAL_PATH/* $1@$REMOTE_HOST:$REMOTE_PATH
