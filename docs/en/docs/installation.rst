@@ -16,7 +16,11 @@ pycsw requires the following supporting libraries:
 
 .. note::
 
-  For :ref:`GeoNode <geonode>` deployments, SQLAlchemy is not required
+  You can install these dependencies via `easy_install`_ or `pip`_
+
+.. note::
+
+  For :ref:`GeoNode <geonode>` or :ref:`Open Data Catalog <odc>` deployments, SQLAlchemy is not required
 
 Installing from Source
 ----------------------
@@ -163,5 +167,7 @@ which will publish pycsw to http://localhost:8000/
 .. _`Shapely`: http://toblerity.github.com/shapely/
 .. _`pyproj`: http://code.google.com/p/pyproj/
 .. _`OWSLib`: http://github.com/geopython/OWSLib
+.. _`easy_install`: http://packages.python.org/distribute/easy_install.html
+.. _`pip`: http://www.pip-installer.org
 .. _`Web Server Gateway Interface`: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
 .. _`WSGI reference implementation`: http://docs.python.org/library/wsgiref.html
