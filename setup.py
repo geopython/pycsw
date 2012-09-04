@@ -123,7 +123,12 @@ setup(name='pycsw',
     maintainer='Tom Kralidis',
     maintainer_email='tomkralidis@hotmail.com',
     url='http://pycsw.org/',
-    install_requires=['lxml', 'shapely', 'pyproj', 'OWSLib'],
+    install_requires=[
+        'lxml>=2.2.3',
+        'Shapely>=1.2.15',
+        'pyproj>=1.8.9',
+        'OWSLib>=0.5.1'
+    ],
     packages=packages,
     package_data=package_data,
     scripts=[os.path.join('sbin', 'pycsw-admin.py')],
