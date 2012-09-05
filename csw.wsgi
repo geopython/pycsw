@@ -65,8 +65,8 @@ from pycsw import server
 def application(env, start_response):
     config = 'default.cfg'
 
-    if os.environ.has_key('PYCSW_CONFIG'):
-        config = os.environ['PYCSW_CONFIG']
+    if env.has_key('PYCSW_CONFIG'):
+        config = env['PYCSW_CONFIG']
 
     if env['QUERY_STRING'].lower().find('config') != -1:
         for kvp in env['QUERY_STRING'].split('&'):
