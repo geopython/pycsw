@@ -1,3 +1,7 @@
+**2012-09-10** - `pycsw 1.4.0 released <http://lists.osgeo.org/pipermail/pycsw-devel/2012-September/000130.html>`_
+
+**2012-08-21** - `pycsw on OSGeo-Live 6.0 <http://lists.osgeo.org/pipermail/discuss/2012-August/010844.html>`_
+
 **2012-04-08** - `pycsw 1.2.0 released <http://lists.osgeo.org/pipermail/pycsw-devel/2012-April/000088.html>`_
 
 **2012-02-28** - `pycsw on OSGeo-Live 5.5 <http://lists.osgeo.org/pipermail/discuss/2012-February/010151.html>`_
