@@ -3,7 +3,7 @@ Section: web
 Priority: optional
 Maintainer: Angelos Tzotsos <gcpp.kalxas@gmail.com>
 Build-Depends: debhelper (>= 7)
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Homepage: http://pycsw.org
 
 Package: pycsw
