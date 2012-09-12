@@ -213,3 +213,5 @@ print '\nResults (%d/%d - %.2f%%)' % \
 print '   %d test%s passed' % (passed, plural(passed))
 print '   %d test%s failed' % (failed, plural(failed))
 print '   %d test%s initialized' % (inited, plural(inited))
+
+sys.exit(failed)
