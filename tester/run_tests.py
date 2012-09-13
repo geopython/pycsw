@@ -138,11 +138,8 @@ if len(sys.argv) == 3:  # write detailed output to CSV
     logwriter = csv.writer(open(sys.argv[2], 'wb'))
     logwriter.writerow(['url','configuration','testname','result'])
 
-print 'test1'
-
 for testsuite in glob.glob('suites%s*' % os.sep):
 
-    print 'testsuite='
     # get configuration
     for cfg in glob.glob('%s%s*.cfg' % (testsuite, os.sep)):
         print '\nTesting configuration %s' % cfg
