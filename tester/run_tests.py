@@ -173,10 +173,6 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                             else:
                                 print '  FAILED'
                                 failed += 1
-                                import subprocess
-                                print 'DIFFBEGIN'
-                                subprocess.call('diff %s %s' % (expected, result), shell=True)
-                                print 'DIFFEND'
 
                             if logwriter:
                                 logwriter.writerow([url, cfg, testfile,status])
@@ -208,10 +204,10 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                             inited += 1
                         else:
                             print '  FAILED'
-                            import subprocess
-                            print 'DIFFBEGIN'
-                            subprocess.call('diff %s %s' % (expected, result), shell=True)
-                            print 'DIFFEND'
+                            print 'EXPECTED='
+                            print expected
+                            print 'RESULT='
+                            print result
                             failed += 1
         
                         if logwriter:
