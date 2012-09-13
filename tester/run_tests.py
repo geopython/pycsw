@@ -174,7 +174,9 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                                 print '  FAILED'
                                 failed += 1
                                 import subprocess
+                                print 'DIFFBEGIN'
                                 subprocess.call('diff %s %s' % (expected, result), shell=True)
+                                print 'DIFFEND'
 
                             if logwriter:
                                 logwriter.writerow([url, cfg, testfile,status])
