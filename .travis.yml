@@ -6,6 +6,8 @@ install:
   - pip install . --use-mirrors
   - pip install -r ./requirements.txt
   - python ./setup.py -q install
-before_script: python ./csw.wsgi 80000 &
+before_script:
+  - python ./csw.wsgi 80000 &
+  - sleep 10
 script: cd ./tester && python ./run_tests.py http://127.0.0.1:80000/
 after_script: kill %1
