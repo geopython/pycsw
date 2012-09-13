@@ -205,7 +205,7 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                         else:
                             print '  FAILED'
                             print 'EXPECTED='
-                            print expected
+                            print open(expected).read()
                             print 'RESULT='
                             print result
                             failed += 1
