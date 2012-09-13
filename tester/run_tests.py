@@ -204,6 +204,7 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                             inited += 1
                         else:
                             print '  FAILED'
+                            print result
                             failed += 1
         
                         if logwriter:
