@@ -3,6 +3,7 @@ python:
   - "2.7"
   - "2.6"
 install:
+  - apt-get install -y libgeos-c1
   - pip install . --use-mirrors
   - pip install -r ./requirements.txt
   - python ./setup.py -q install
