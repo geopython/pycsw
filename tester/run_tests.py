@@ -208,7 +208,10 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                             inited += 1
                         else:
                             print '  FAILED'
-                            print result
+                            import subprocess
+                            print 'DIFFBEGIN'
+                            subprocess.call('diff %s %s' % (expected, result), shell=True)
+                            print 'DIFFEND'
                             failed += 1
         
                         if logwriter:
