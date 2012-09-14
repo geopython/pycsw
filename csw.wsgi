@@ -123,6 +123,9 @@ def application(env, start_response):
 
 if __name__ == '__main__':  # run inline using WSGI reference implementation
     from wsgiref.simple_server import make_server
-    httpd = make_server('', 8000, application)
-    print "Serving on port 8000..."
+    port = 8000
+    if len(sys.argv) > 1:
+        port = int(sys.argv[1])
+    httpd = make_server('', port, application)
+    print "Serving on port %d..." % port
     httpd.serve_forever()
