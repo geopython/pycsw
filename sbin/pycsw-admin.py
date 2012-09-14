@@ -410,7 +410,7 @@ def validate_xml(xml, xsd):
 
     print 'Validating %s against schema %s' % (xml, xsd)
 
-    SCHEMA = etree.XMLSchema(etree.parse(xsd))
+    SCHEMA = etree.XMLSchema(file=xsd)
     PARSER = etree.XMLParser(schema=SCHEMA)
 
     try:

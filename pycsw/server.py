@@ -1200,7 +1200,7 @@ class Csw(object):
                         'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
                         self.log.debug('Validating Filter %s.' %
                         self.kvp['constraint'])
-                        schema = etree.XMLSchema(etree.parse(schema))
+                        schema = etree.XMLSchema(file=schema)
                         parser = etree.XMLParser(schema=schema)
                         doc = etree.fromstring(self.kvp['constraint'], parser)
                         self.log.debug('Filter is valid XML.')
@@ -1809,7 +1809,7 @@ class Csw(object):
             namespaces=self.context.namespaces)) == 0:
 
                 self.log.debug('Validating %s.' % postdata)
-                schema = etree.XMLSchema(etree.parse(schema))
+                schema = etree.XMLSchema(file=schema)
                 parser = etree.XMLParser(schema=schema)
                 if hasattr(self, 'soap') and self.soap:
                 # validate the body of the SOAP request
