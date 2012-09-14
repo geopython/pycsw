@@ -8,11 +8,11 @@ System Requirements
 
 pycsw requires the following supporting libraries:
 
-- `lxml`_ (version >= 2.2.3) for XML support
-- `SQLAlchemy`_ (version >= 0.0.5) for database bindings
-- `pyproj`_ (version >= 1.8.9) for coordinate transformations
-- `Shapely`_ (version >= 1.2.15) for spatial query / geometry support
-- `OWSLib`_ (version >= 0.5.1) for CSW client and metadata parser
+- `lxml`_ for XML support
+- `SQLAlchemy`_ for database bindings
+- `pyproj`_ for coordinate transformations
+- `Shapely`_ for spatial query / geometry support
+- `OWSLib`_ for CSW client and metadata parser
 
 .. note::
 
