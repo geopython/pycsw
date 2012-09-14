@@ -79,6 +79,8 @@ def get_validity(expected, result, outfile):
             os.remove('results%s%s' % (os.sep, outfile))
             status = 1
         else:  # fail
+            print 'EXPECTED=%s' % open(expected).read()
+            print 'RESULT=%s' % open('results%s%s' % (os.sep, outfile)).read()
             status = -1
     return status
 
@@ -204,10 +206,6 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                             inited += 1
                         else:
                             print '  FAILED'
-                            print 'EXPECTED='
-                            print open(expected).read()
-                            print 'RESULT='
-                            print result
                             failed += 1
         
                         if logwriter:
