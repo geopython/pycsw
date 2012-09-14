@@ -91,6 +91,7 @@ def normalize(result):
     updatesequence = re.search('updateSequence="(\S+)"', result)
     timestamp = re.search('timestamp="(.*)"', result)
     timestamp2 = re.search('timeStamp="(.*)"', result)
+    zrhost = re.search('<zr:host>(.*)</zr:host>', result)
     zrport = re.search('<zr:port>(.*)</zr:port>', result)
 
     if version:
@@ -107,6 +108,9 @@ def normalize(result):
     if zrport:
         result = result.replace(zrport.group(0),
         '<zr:port>PYCSW_PORT</zr:port>')
+    if zrhost:
+        result = result.replace(zrhost.group(0),
+        '<zr:host>PYCSW_HOST</zr:host>')
 
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints
