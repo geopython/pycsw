@@ -114,10 +114,10 @@ package_data.update(get_package_data([root_package], 'schemas'))
 # set the dependencies
 # GeoNode and OpenDataCatalog do not require SQLAlchemy
 install_requires= [
-    'lxml>=2.2.3',
-    'Shapely>=1.2.15',
-    'pyproj>=1.8.9',
-    'OWSLib>=0.5.1'
+    'lxml==2.2.8',
+    'Shapely==1.2.15',
+    'pyproj==1.9.2',
+    'OWSLib==0.5.1'
 ]
 
 setup(name='pycsw',

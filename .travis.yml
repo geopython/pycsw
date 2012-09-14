@@ -1,0 +1,14 @@
+language: python
+python:
+  - "2.7"
+  - "2.6"
+install:
+  - sudo apt-get install -y libgeos-c1
+  - pip install . --use-mirrors
+  - pip install -r ./requirements.txt
+  - python ./setup.py -q install
+before_script:
+  - python ./csw.wsgi 8001 &
+  - sleep 10
+script: cd ./tester && python ./run_tests.py http://127.0.0.1:8001/
+after_script: kill %1
