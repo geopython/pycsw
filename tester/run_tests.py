@@ -91,17 +91,22 @@ def normalize(result):
     updatesequence = re.search('updateSequence="(\S+)"', result)
     timestamp = re.search('timestamp="(.*)"', result)
     timestamp2 = re.search('timeStamp="(.*)"', result)
+    zrport = re.search('<zr:port>(.*)</zr:port>', result)
 
     if version:
         result = result.replace(version.group(0),'<!-- PYCSW_VERSION -->')
     if updatesequence:
-        result = result.replace(updatesequence.group(0),'updateSequence="PYCSW_UPDATESEQUENCE"')
+        result = result.replace(updatesequence.group(0),
+        'updateSequence="PYCSW_UPDATESEQUENCE"')
     if timestamp:
         result = result.replace(timestamp.group(0),
         'timestamp="PYCSW_TIMESTAMP"')
     if timestamp2:
         result = result.replace(timestamp2.group(0),
         'timeStamp="PYCSW_TIMESTAMP"')
+    if zrport:
+        result = result.replace(zrport.group(0),
+        '<zr:port>PYCSW_PORT</zr:port>')
 
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints

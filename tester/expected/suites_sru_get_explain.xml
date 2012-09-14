@@ -9,7 +9,7 @@
       <zr:explain>
         <zr:serverInfo version="1.1" protocol="SRU" method="GET POST SOAP" transport="http">
           <zr:host>localhost</zr:host>
-          <zr:port>80</zr:port>
+          <zr:port>PYCSW_PORT</zr:port>
           <zr:database>pycsw</zr:database>
         </zr:serverInfo>
         <zr:databaseInfo>
