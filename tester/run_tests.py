@@ -79,8 +79,6 @@ def get_validity(expected, result, outfile):
             os.remove('results%s%s' % (os.sep, outfile))
             status = 1
         else:  # fail
-            print 'EXPECTED=%s' % open(expected).read()
-            print 'RESULT=%s' % open('results%s%s' % (os.sep, outfile)).read()
             status = -1
     return status
 
