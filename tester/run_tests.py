@@ -79,6 +79,11 @@ def get_validity(expected, result, outfile):
             os.remove('results%s%s' % (os.sep, outfile))
             status = 1
         else:  # fail
+            import difflib
+            diff = difflib.unified_diff(
+                open(expected).readlines(),
+                open('results%s%s' % (os.sep, outfile)).readlines())
+            print '\n'.join(list(diff))
             status = -1
     return status
 
