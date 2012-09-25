@@ -75,16 +75,16 @@ Installing from the Python Package Index (PyPi)
 Installing from OpenSUSE Build Service
 --------------------------------------
 
-In order to install the OBS package in openSUSE 12.1, one can run the following commands as user ``root``:
+In order to install the OBS package in openSUSE 12.2, one can run the following commands as user ``root``:
 
 .. code-block:: bash
 
-  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_12.1/ GEO
-  # zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_12.1/ python
+  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_12.2/ GEO
+  # zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_12.2/ python
   # zypper refresh
-  # zypper install pycsw
+  # zypper install python-pycsw pycsw-cgi
 
-For earlier openSUSE versions change ``12.1`` with ``11.4``. For future openSUSE version use ``Factory``.
+For earlier openSUSE versions change ``12.2`` with ``12.1``. For future openSUSE version use ``Factory``.
 
 An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true>`_.
 
