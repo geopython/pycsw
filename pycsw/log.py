@@ -94,6 +94,10 @@ class Log(logging.Logger):
                 raise RuntimeError, \
                 ('Invalid server configuration: server.logfile access denied.\
                 Make sure filepath exists and is writable. %s', str(err))
+        else:
+            nullhandler = logging.NullHandler()
+            self.addHandler(nullhandler)
+ 
         self.info('Logging initialized (level: %s).' % loglevel)
 
         if loglevel == 'DEBUG':  #turn on CGI debugging
