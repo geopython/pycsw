@@ -30,7 +30,6 @@
 #
 # =================================================================
 
-import os
 import logging
 
 MSG_FORMAT = '%(asctime)s] [%(levelname)s] file=%(pathname)s \
@@ -46,6 +45,11 @@ LOGLEVELS = {
     'DEBUG': logging.DEBUG,
     'NOTSET': logging.NOTSET,
 }
+
+class NullHandlerLocal(logging.Handler):
+    ''' safeguarded nullhandler for Python 2.6/2.7  '''
+    def emit(self, record):
+        pass
 
 class Log(logging.Logger):
     ''' Logging facility   '''
@@ -96,7 +100,7 @@ class Log(logging.Logger):
                 ('Invalid server configuration: server.logfile access denied.\
                 Make sure filepath exists and is writable. %s', str(err))
         else:
-            logging.basicConfig(stream=open(os.devnull, 'w'))
+            self.addHandler(NullHandlerLocal())
  
         self.info('Logging initialized (level: %s).' % loglevel)
 
