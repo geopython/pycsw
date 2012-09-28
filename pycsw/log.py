@@ -30,6 +30,7 @@
 #
 # =================================================================
 
+import os
 import logging
 
 MSG_FORMAT = '%(asctime)s] [%(levelname)s] file=%(pathname)s \
@@ -95,8 +96,7 @@ class Log(logging.Logger):
                 ('Invalid server configuration: server.logfile access denied.\
                 Make sure filepath exists and is writable. %s', str(err))
         else:
-            nullhandler = logging.NullHandler()
-            self.addHandler(nullhandler)
+            logging.basicConfig(stream=open(os.devnull, 'w'))
  
         self.info('Logging initialized (level: %s).' % loglevel)
 
