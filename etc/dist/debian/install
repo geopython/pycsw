@@ -1,3 +1,0 @@
-pycsw/*                        /var/www/pycsw/
-etc/pycsw		       /etc/apache2/conf.d/
-etc/pycsw.desktop	       /usr/share/applications/

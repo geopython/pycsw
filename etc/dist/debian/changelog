@@ -1,3 +1,9 @@
+pycsw (1.4.0-0) precise; urgency=low
+
+  * Update to 1.4.0.
+
+ -- Angelos Tzotsos <gcpp.kalxas@gmail.com>  Sun, 30 Sep 2012 22:50:00 +0300
+
 pycsw (1.2.0-0) oneiric; urgency=low
 
   * Initial build.

@@ -1,0 +1,15 @@
+data/*                   	/var/www/pycsw/data/
+docs/*				/var/www/pycsw/docs/
+etc/harvest-all.cron		/var/www/pycsw/etc/
+etc/mappings.py			/var/www/pycsw/etc/
+sbin/*				/var/www/pycsw/sbin/
+tester/*			/var/www/pycsw/tester/
+etc/pycsw		       	/etc/apache2/conf.d/
+etc/pycsw.desktop	       	/usr/share/applications/
+csw.py				/var/www/pycsw/
+LICENSE.txt			/var/www/pycsw/
+README.txt			/var/www/pycsw/
+VERSION.txt			/var/www/pycsw/
+HISTORY.txt			/var/www/pycsw/
+default-sample.cfg		/var/www/pycsw/
+default.cfg			/var/www/pycsw/
