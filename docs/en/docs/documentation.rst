@@ -26,7 +26,6 @@ pycsw |release| Documentation
    geonode
    odc
    testing
-   ../demos
    tools
    development
    support
