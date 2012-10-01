@@ -99,7 +99,7 @@ In order to install pycsw to an Ubuntu based distribution, one can run the follo
 
   # sudo add-apt-repository ppa:gcpp-kalxas/ppa-tzotsos
   # sudo apt-get updated
-  # sudo apt-get install pycsw
+  # sudo apt-get install python-pycsw pycsw-cgi
 
 An alternative method is to use the OSGeoLive installation script located in ``pycsw/etc/dist/osgeolive``:
 
