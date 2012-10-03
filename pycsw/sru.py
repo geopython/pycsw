@@ -31,7 +31,7 @@
 # =================================================================
 
 from lxml import etree
-import config, fes, util
+from pycsw import config, fes, util
 
 class Sru(object):
     ''' SRU wrapper class '''
