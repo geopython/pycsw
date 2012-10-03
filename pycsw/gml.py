@@ -31,7 +31,7 @@
 #
 # =================================================================
 
-import util
+from pycsw import util
 from owslib import crs
 
 TYPES = ['gml:Point', 'gml:LineString', 'gml:Polygon', 'gml:Envelope']

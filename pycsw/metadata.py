@@ -33,7 +33,7 @@
 import urllib2
 import uuid
 from lxml import etree
-import util
+from pycsw import util
 
 def parse_record(context, record, repos=None,
     mtype='http://www.opengis.net/cat/csw/2.0.2',
