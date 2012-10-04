@@ -2,12 +2,17 @@ Source: pycsw
 Section: web
 Priority: optional
 Maintainer: Angelos Tzotsos <gcpp.kalxas@gmail.com>
-Build-Depends: debhelper (>= 7)
-Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 7.0.50), python-setuptools (>= 0.6), python-support (>=0.6), python-all-dev (>= 2.3.5-11), python (>= 2.6.6-3)
+Standards-Version: 3.9.3
+X-Python-Version: >= 2.5
 Homepage: http://pycsw.org
 
-Package: pycsw
+Package: python-pycsw
 Architecture: all
-Depends: ${misc:Depends}, debconf, python
-Recommends: apache2, python-lxml, python-sqlalchemy, python-shapely, python-pyproj
+Depends: ${misc:Depends}, debconf, python (>=2.5), python-lxml, python-shapely, python-pyproj, python-owslib
 Description: pycsw is an OGC CSW server implementation written in Python.
+
+Package: pycsw-cgi
+Architecture: all
+Depends: ${misc:Depends}, debconf, python (>=2.5), apache2, python-sqlalchemy, python-pycsw
+Description: pycsw-cgi installs a CGI apache service based on python-pycsw.

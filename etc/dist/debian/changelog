@@ -1,10 +1,10 @@
-pycsw (1.2.0-2) oneiric; urgency=low
+pycsw (1.4.0-0) precise; urgency=low
 
-  * fixed installer to handle apache configuration files.
+  * Update to 1.4.0.
 
- -- Angelos Tzotsos <gcpp.kalxas@gmail.com>  Wed, 11 Apr 2012 23:40:22 +0300
+ -- Angelos Tzotsos <gcpp.kalxas@gmail.com>  Sun, 30 Sep 2012 22:50:00 +0300
 
-pycsw (1.2.0-1) oneiric; urgency=low
+pycsw (1.2.0-0) oneiric; urgency=low
 
   * Initial build.
 

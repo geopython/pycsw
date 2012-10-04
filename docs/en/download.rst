@@ -7,8 +7,6 @@ Download
 
 * Current Stable Release (1.4.0): `.tar.gz <http://download.osgeo.org/pycsw/pycsw-1.4.0.tar.gz>`_ | `.zip <http://download.osgeo.org/pycsw/pycsw-1.4.0.zip>`_
 
-* Current Development Release (1.4.0-rc2): `.tar.gz <http://download.osgeo.org/pycsw/pycsw-1.4.0-rc2.tar.gz>`_ | `.zip <http://download.osgeo.org/pycsw/pycsw-1.4.0-rc2.zip>`_
-
 * `All Releases <http://download.osgeo.org/pycsw/>`_
 
 Source Code
@@ -40,3 +38,12 @@ pycsw exists as a package in `Launchpad <https://code.launchpad.net/~gcpp-kalxas
 
 .. seealso::
   :ref:`ubuntu`
+
+OSGeo-Live
+----------
+
+pycsw is available on the `OSGeo-Live`_ project.  The pycsw `overview`_ and `quickstart`_ provides further information on using pycsw in OSGeo-Live.
+
+.. _`OSGeo-Live`: http://live.osgeo.org/
+.. _`overview`: http://live.osgeo.org/en/overview/pycsw_overview.html
+.. _`quickstart`: http://live.osgeo.org/en/quickstart/pycsw_quickstart.html

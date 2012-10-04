@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LOCAL_PATH=build/html/en
-REMOTE_HOST=projects.osgeo.osuosl.org
+REMOTE_HOST=pycsw.org
 REMOTE_PATH=/osgeo/pycsw/pycsw-web
 
 if [ $# -ne 1 ]

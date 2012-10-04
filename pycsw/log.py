@@ -46,6 +46,11 @@ LOGLEVELS = {
     'NOTSET': logging.NOTSET,
 }
 
+class NullHandlerLocal(logging.Handler):
+    ''' safeguarded nullhandler for Python 2.6/2.7  '''
+    def emit(self, record):
+        pass
+
 class Log(logging.Logger):
     ''' Logging facility   '''
     def __init__(self, config=None):
@@ -94,6 +99,9 @@ class Log(logging.Logger):
                 raise RuntimeError, \
                 ('Invalid server configuration: server.logfile access denied.\
                 Make sure filepath exists and is writable. %s', str(err))
+        else:
+            self.addHandler(NullHandlerLocal())
+ 
         self.info('Logging initialized (level: %s).' % loglevel)
 
         if loglevel == 'DEBUG':  #turn on CGI debugging

@@ -1,5 +1,5 @@
 #
-# spec file for package pycsw (1.2.0)
+# spec file for package pycsw (1.4.0)
 #
 # Copyright (c) 2011 Angelos Tzotsos <tzotsos@opensuse.org>
 #
@@ -13,25 +13,23 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 Name:           pycsw
-Version:        1.2.0
+Version:        1.4.0
 Release:        1
 License:        MIT
 Summary:        An OGC CSW server implementation written in Python
 Url:            http://pycsw.org/
-Group:          Development/Tools
+Group:          Productivity/Scientific/Other
 Source0:        %{name}-%{version}.tar.gz
 Requires:	python
 Requires:	python-sqlalchemy
 Requires:	python-Shapely
 Requires:	python-lxml
+Requires:	python-owslib
+Requires:	python-pyproj
 Requires:	apache2
 BuildRequires:  fdupes python 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-
-###%{py_requires}
-
-###%lang_package
 
 %description
 pycsw implements clause 10 (HTTP protocol binding (Catalogue Services for the Web, CSW)) 
@@ -51,8 +49,8 @@ mkdir -p %{buildroot}/srv/www/htdocs
 mkdir -p %{buildroot}%{_sysconfdir}/apache2/conf.d
 
 cd ..
-mv pycsw-1.2.0 %{buildroot}/srv/www/htdocs/pycsw
-mkdir pycsw-1.2.0
+mv pycsw-1.4.0 %{buildroot}/srv/www/htdocs/pycsw
+mkdir pycsw-1.4.0
 
 cat > %{buildroot}%{_sysconfdir}/apache2/conf.d/pycsw.conf << EOF
 <Location /pycsw/>
@@ -67,42 +65,45 @@ cat > %{buildroot}/srv/www/htdocs/pycsw/default.cfg << EOF
 home=/srv/www/htdocs/pycsw
 url=http://localhost/pycsw/csw.py
 mimetype=application/xml; charset=UTF-8                                                             
-encoding=UTF-8                                                                                      
-language=en-US                                                                                      
-maxrecords=10                                                                                       
-#loglevel=DEBUG                                                                                     
+encoding=UTF-8
+language=en-US
+maxrecords=10
+#loglevel=DEBUG
 #logfile=/tmp/pycsw.log
 #ogc_schemas_base=http://foo
-#federatedcatalogues=http://geodiscover.cgdi.ca/wes/serviceManagerCSW/csw
+#federatedcatalogues=http://geo.data.gov/geoportal/csw/discovery
 pretty_print=true
 #gzip_compresslevel=8
+#domainquerytype=range
+#domaincounts=true
 profiles=apiso,fgdc,dif,ebrim
 
 [manager]
 transactions=false
 allowed_ips=127.0.0.1
+#csw_harvest_pagesize=10
 
 [metadata:main]
 identification_title=pycsw Geospatial Catalogue
 identification_abstract=pycsw is an OGC CSW server implementation written in Python
-identification_keywords=catalogue,discovery
+identification_keywords=catalogue,discovery,metadata
 identification_keywords_type=theme
 identification_fees=None
 identification_accessconstraints=None
-provider_name=pycsw
+provider_name=Organization Name
 provider_url=http://pycsw.org/
-contact_name=Kralidis, Tom
-contact_position=Senior Systems Scientist
-contact_address=TBA
-contact_city=Toronto
-contact_stateorprovince=Ontario
-contact_postalcode=M9C 3Z9
-contact_country=Canada
-contact_phone=+01-416-xxx-xxxx
-contact_fax=+01-416-xxx-xxxx
-contact_email=tomkralidis@hotmail.com
-contact_url=http://kralidis.ca/
-contact_hours=0800h - 1600h EST
+contact_name=Lastname, Firstname
+contact_position=Position Title
+contact_address=Mailing Address
+contact_city=City
+contact_stateorprovince=Administrative Area
+contact_postalcode=Zip or Postal Code
+contact_country=Country
+contact_phone=+xx-xxx-xxx-xxxx
+contact_fax=+xx-xxx-xxx-xxxx
+contact_email=Email Address
+contact_url=Contact URL
+contact_hours=Hours of Service
 contact_instructions=During hours of service.  Off on weekends.
 contact_role=pointOfContact
 
@@ -111,22 +112,27 @@ contact_role=pointOfContact
 database=sqlite:////srv/www/htdocs/pycsw/data/cite/records.db
 # postgres
 #database=postgresql://username:password@localhost/pycsw
+# mysql
+#database=mysql://username:password@localhost/pycsw?charset=utf8
+#mappings=path/to/mappings.py
+table=records
 
 [metadata:inspire]
 enabled=true
 languages_supported=eng,gre
 default_language=eng
-date=2011-03-29
+date=YYYY-MM-DD
 gemet_keywords=Utility and governmental services
 conformity_service=notEvaluated
-contact_name=National Technical University of Athens
-contact_email=tzotsos@gmail.com
-temp_extent=2011-02-01/2011-03-30
+contact_name=Organization Name
+contact_email=Email Address
+temp_extent=2012-09-09/2012-09-10
 EOF
 
 %fdupes -s %{buildroot}
 
 %post 
+python /srv/www/htdocs/pycsw/tester/gen_html.py > /srv/www/htdocs/pycsw/tester/index.html
 
 %clean
 rm -rf '%{buildroot}'

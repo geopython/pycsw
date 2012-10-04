@@ -1,0 +1,6 @@
+        <Directory /var/www/pycsw>
+	    Options FollowSymLinks +ExecCGI
+	    Allow from all
+	    AddHandler cgi-script .py
+        </Directory>
+
