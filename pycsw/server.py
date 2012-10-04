@@ -40,8 +40,8 @@ from cStringIO import StringIO
 from ConfigParser import SafeConfigParser
 from lxml import etree
 from shapely.wkt import loads
-import config, fes, log, metadata, plugins.profiles.profile, \
-util, sru, opensearch
+from pycsw.plugins.profiles import profile as pprofile
+from pycsw import config, fes, log, metadata, util, sru, opensearch
 
 class Csw(object):
     ''' Base CSW server '''
@@ -173,9 +173,9 @@ class Csw(object):
         self.log.debug('Loading profiles.')
 
         if self.config.has_option('server', 'profiles'):
-            self.profiles = plugins.profiles.profile.load_profiles(
+            self.profiles = pprofile.load_profiles(
             os.path.join('pycsw', 'plugins', 'profiles'),
-            plugins.profiles.profile.Profile,
+            pprofile.Profile,
             self.config.get('server', 'profiles'))
 
             for prof in self.profiles['plugins'].keys():
@@ -202,7 +202,7 @@ class Csw(object):
             self.config.get('repository', 'source') == 'geonode'):
 
             # load geonode repository
-            from plugins.repository.geonode import geonode_
+            from pycsw.plugins.repository.geonode import geonode_
 
             try:
                 self.repository = \
@@ -218,7 +218,7 @@ class Csw(object):
             self.config.get('repository', 'source') == 'odc'):
 
             # load odc repository
-            from plugins.repository.odc import odc 
+            from pycsw.plugins.repository.odc import odc 
 
             try:
                 self.repository = \
@@ -231,7 +231,7 @@ class Csw(object):
                 'Could not load repository (odc): %s' % str(err))
 
         else:  # load default repository
-            import repository
+            from pycsw import repository
             try:
                 self.repository = \
                 repository.Repository(self.config.get('repository', 'database'),
@@ -1200,7 +1200,7 @@ class Csw(object):
                         'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
                         self.log.debug('Validating Filter %s.' %
                         self.kvp['constraint'])
-                        schema = etree.XMLSchema(etree.parse(schema))
+                        schema = etree.XMLSchema(file=schema)
                         parser = etree.XMLParser(schema=schema)
                         doc = etree.fromstring(self.kvp['constraint'], parser)
                         self.log.debug('Filter is valid XML.')
@@ -1809,7 +1809,7 @@ class Csw(object):
             namespaces=self.context.namespaces)) == 0:
 
                 self.log.debug('Validating %s.' % postdata)
-                schema = etree.XMLSchema(etree.parse(schema))
+                schema = etree.XMLSchema(file=schema)
                 parser = etree.XMLParser(schema=schema)
                 if hasattr(self, 'soap') and self.soap:
                 # validate the body of the SOAP request
@@ -2196,7 +2196,7 @@ class Csw(object):
         if (isinstance(self.kvp, dict) and self.kvp.has_key('outputformat') and
             self.kvp['outputformat'] == 'application/json'):
             self.contenttype = self.kvp['outputformat']
-            from formats import fmt_json
+            from pycsw.formats import fmt_json
             response = fmt_json.exml2json(self.response,
             self.context.namespaces, self.pretty_print)
         else:  # it's XML

@@ -79,6 +79,11 @@ def get_validity(expected, result, outfile):
             os.remove('results%s%s' % (os.sep, outfile))
             status = 1
         else:  # fail
+            import difflib
+            diff = difflib.unified_diff(
+                open(expected).readlines(),
+                open('results%s%s' % (os.sep, outfile)).readlines())
+            print '\n'.join(list(diff))
             status = -1
     return status
 
@@ -91,17 +96,26 @@ def normalize(result):
     updatesequence = re.search('updateSequence="(\S+)"', result)
     timestamp = re.search('timestamp="(.*)"', result)
     timestamp2 = re.search('timeStamp="(.*)"', result)
+    zrhost = re.search('<zr:host>(.*)</zr:host>', result)
+    zrport = re.search('<zr:port>(.*)</zr:port>', result)
 
     if version:
         result = result.replace(version.group(0),'<!-- PYCSW_VERSION -->')
     if updatesequence:
-        result = result.replace(updatesequence.group(0),'updateSequence="PYCSW_UPDATESEQUENCE"')
+        result = result.replace(updatesequence.group(0),
+        'updateSequence="PYCSW_UPDATESEQUENCE"')
     if timestamp:
         result = result.replace(timestamp.group(0),
         'timestamp="PYCSW_TIMESTAMP"')
     if timestamp2:
         result = result.replace(timestamp2.group(0),
         'timeStamp="PYCSW_TIMESTAMP"')
+    if zrport:
+        result = result.replace(zrport.group(0),
+        '<zr:port>PYCSW_PORT</zr:port>')
+    if zrhost:
+        result = result.replace(zrhost.group(0),
+        '<zr:host>PYCSW_HOST</zr:host>')
 
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints
@@ -172,6 +186,8 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                             else:
                                 print '  FAILED'
                                 failed += 1
+                                import subprocess
+                                subprocess.call('diff %s %s' % (expected, result), shell=True)
 
                             if logwriter:
                                 logwriter.writerow([url, cfg, testfile,status])
@@ -213,3 +229,5 @@ print '\nResults (%d/%d - %.2f%%)' % \
 print '   %d test%s passed' % (passed, plural(passed))
 print '   %d test%s failed' % (failed, plural(failed))
 print '   %d test%s initialized' % (inited, plural(inited))
+
+sys.exit(failed)

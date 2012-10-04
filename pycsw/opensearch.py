@@ -31,7 +31,7 @@
 # =================================================================
 
 from lxml import etree
-import util
+from pycsw import util
 
 class OpenSearch(object):
     ''' OpenSearch wrapper class '''

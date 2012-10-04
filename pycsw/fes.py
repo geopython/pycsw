@@ -30,7 +30,7 @@
 #
 # =================================================================
 
-import gml, util
+from pycsw import gml, util
 
 MODEL =  {
     'GeometryOperands': {
