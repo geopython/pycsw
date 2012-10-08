@@ -168,7 +168,7 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                         gets = csv.reader(open('%s%s%s' % (root, os.sep, file)))
                         for row in gets:
                             testfile = '%s%s%s' % (root, os.sep, file)
-                            request = row[1].replace('PYCSW_SERVER', url)
+                            request = ','.join(row[1:]).replace('PYCSW_SERVER', url)
                             outfile = '%s%s' % (root.replace(os.sep, '_'),
                             '_%s.xml' % row[0])
                             expected = 'expected%s%s' % (os.sep, outfile)
