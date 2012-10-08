@@ -3,18 +3,19 @@
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults numberOfRecordsReturned="1" nextRecord="0" numberOfRecordsMatched="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
-    <!-- 1 result from http://geo.data.gov/geoportal/csw/discovery -->
+    <!-- 1 result from http://www.geoplatform.gov/catalog/csw/discovery -->
     <csw:BriefRecord xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/">
-<dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">{8BE9E5F1-8881-9B61-38DD-CD2949DD0619}</dc:identifier>
-<dc:title>C-CAP Lanai 2005 era High Resolution Land Cover Metadata</dc:title>
+<dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">{F2B5F5CC-0D7F-4100-A5D9-CE3801539756}</dc:identifier>
+<dc:title>Temperature profile data collected using BT and XBT from NOAA Ship RESARCHER and other platforms in the Philippine Sea from 06 October 1971 to 21 September 1979 (NODC Accession 8000151)</dc:title>
+<dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">NODC ACCESSION # 8000151</dc:type>
 <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">downloadableData</dc:type>
 <ows:WGS84BoundingBox>
-<ows:LowerCorner>-157.798794 20.7820111</ows:LowerCorner>
-<ows:UpperCorner>-157.067072 20.9345333</ows:UpperCorner>
+<ows:LowerCorner>-160.5 -62.3</ows:LowerCorner>
+<ows:UpperCorner>179.2 69.0</ows:UpperCorner>
 </ows:WGS84BoundingBox>
 <ows:BoundingBox>
-<ows:LowerCorner>-157.798794 20.7820111</ows:LowerCorner>
-<ows:UpperCorner>-157.067072 20.9345333</ows:UpperCorner>
+<ows:LowerCorner>-160.5 -62.3</ows:LowerCorner>
+<ows:UpperCorner>179.2 69.0</ows:UpperCorner>
 </ows:BoundingBox>
 </csw:BriefRecord>
   </csw:SearchResults>
