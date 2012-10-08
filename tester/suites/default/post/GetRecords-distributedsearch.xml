@@ -7,7 +7,7 @@
                 <ogc:Filter>
                     <ogc:PropertyIsEqualTo>
                         <ogc:PropertyName>dc:title</ogc:PropertyName>
-                        <ogc:Literal>C-CAP Lanai 2005 era High Resolution Land Cover Metadata</ogc:Literal>
+                        <ogc:Literal>Temperature profile data collected using BT and XBT from NOAA Ship RESARCHER and other platforms in the Philippine Sea from 06 October 1971 to 21 September 1979 (NODC Accession 8000151)</ogc:Literal>
                     </ogc:PropertyIsEqualTo>
                 </ogc:Filter>
             </csw:Constraint>
