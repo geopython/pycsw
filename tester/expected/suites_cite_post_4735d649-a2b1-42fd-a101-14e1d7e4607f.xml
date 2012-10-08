@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
+  <csw:SearchResults numberOfRecordsReturned="5" nextRecord="8" numberOfRecordsMatched="12" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="summary">
+    <csw:SummaryRecord>
+      <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
+      <dc:title>Lorem ipsum</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
+      <dc:subject>Tourism--Greece</dc:subject>
+      <dc:format>image/svg+xml</dc:format>
+      <dct:abstract>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</dct:abstract>
+    </csw:SummaryRecord>
+    <csw:SummaryRecord>
+      <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
+      <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
+      <dc:subject>Land titles</dc:subject>
+      <dc:format>text/rtf</dc:format>
+      <dct:abstract>Morbi ultri&#231;es, dui suscipit vestibulum pr&#232;tium, velit ante pretium tortor, eg&#235;t tincidunt pede odio ac nulla.</dct:abstract>
+    </csw:SummaryRecord>
+    <csw:SummaryRecord>
+      <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
+      <dc:title></dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <dc:subject>Physiography-Landforms</dc:subject>
+      <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
+    </csw:SummaryRecord>
+    <csw:SummaryRecord>
+      <dc:identifier>urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e</dc:identifier>
+      <dc:title>Vestibulum massa purus</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
+      <dc:subject></dc:subject>
+      <dc:format>image/jp2</dc:format>
+      <dc:relation>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:relation>
+    </csw:SummaryRecord>
+    <csw:SummaryRecord>
+      <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
+      <dc:title>Aliquam fermentum purus quis arcu</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
+      <dc:subject>Hydrography--Dictionaries</dc:subject>
+      <dc:format>application/pdf</dc:format>
+      <dct:abstract>Vestibulum quis ipsum sit amet metus imperdiet vehicula. Nulla scelerisque cursus mi.</dct:abstract>
+    </csw:SummaryRecord>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>
