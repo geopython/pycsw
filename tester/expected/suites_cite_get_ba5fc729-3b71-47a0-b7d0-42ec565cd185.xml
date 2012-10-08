@@ -44,8 +44,8 @@
     <ows:Operation name="GetCapabilities">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="sections">
@@ -55,18 +55,25 @@
         <ows:Value>Filter_Capabilities</ows:Value>
       </ows:Parameter>
     </ows:Operation>
+    <ows:Operation name="Transaction">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+    </ows:Operation>
     <ows:Operation name="GetRepositoryItem">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>
     <ows:Operation name="DescribeRecord">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="schemaLanguage">
@@ -84,31 +91,32 @@
     <ows:Operation name="GetDomain">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ParameterName">
+        <ows:Value>GetCapabilities.sections</ows:Value>
+        <ows:Value>DescribeRecord.schemaLanguage</ows:Value>
+        <ows:Value>DescribeRecord.outputFormat</ows:Value>
+        <ows:Value>DescribeRecord.typeName</ows:Value>
+        <ows:Value>GetRecordById.outputFormat</ows:Value>
+        <ows:Value>GetRecordById.outputSchema</ows:Value>
+        <ows:Value>GetRecordById.ElementSetName</ows:Value>
         <ows:Value>GetRecords.outputFormat</ows:Value>
         <ows:Value>GetRecords.outputSchema</ows:Value>
         <ows:Value>GetRecords.CONSTRAINTLANGUAGE</ows:Value>
         <ows:Value>GetRecords.resultType</ows:Value>
         <ows:Value>GetRecords.typeNames</ows:Value>
         <ows:Value>GetRecords.ElementSetName</ows:Value>
-        <ows:Value>GetCapabilities.sections</ows:Value>
-        <ows:Value>GetRecordById.outputFormat</ows:Value>
-        <ows:Value>GetRecordById.outputSchema</ows:Value>
-        <ows:Value>GetRecordById.ElementSetName</ows:Value>
-        <ows:Value>DescribeRecord.schemaLanguage</ows:Value>
-        <ows:Value>DescribeRecord.outputFormat</ows:Value>
-        <ows:Value>DescribeRecord.typeName</ows:Value>
+        <ows:Value>Harvest.ResourceType</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetRecordById">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
@@ -127,8 +135,8 @@
     <ows:Operation name="GetRecords">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/default/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
@@ -175,6 +183,20 @@
         <ows:Value>dc:rights</ows:Value>
       </ows:Constraint>
     </ows:Operation>
+    <ows:Operation name="Harvest">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tester/suites/cite/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="ResourceType">
+        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://www.opengis.net/wms</ows:Value>
+        <ows:Value>http://www.opengis.net/wfs</ows:Value>
+        <ows:Value>http://www.opengis.net/wcs</ows:Value>
+        <ows:Value>http://www.opengis.net/wps/1.0.0</ows:Value>
+      </ows:Parameter>
+    </ows:Operation>
     <ows:Parameter name="version">
       <ows:Value>2.0.2</ows:Value>
     </ows:Parameter>
@@ -189,7 +211,7 @@
       <ows:Value>SOAP</ows:Value>
     </ows:Constraint>
     <ows:Constraint name="FederatedCatalogues">
-      <ows:Value>http://www.geoplatform.gov/catalog/csw/discovery</ows:Value>
+      <ows:Value>http://geo.data.gov/geoportal/csw/discovery</ows:Value>
     </ows:Constraint>
   </ows:OperationsMetadata>
   <ogc:Filter_Capabilities>
