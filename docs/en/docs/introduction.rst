@@ -90,6 +90,14 @@ Supported Output Formats
 - XML (default)
 - JSON
 
+Supported Sorting Functionality
+-------------------------------
+
+- ogc:SortBy
+- ascending or descending
+- aspatial (queryable properties)
+- spatial (geometric area)
+
 Supported Filters
 -----------------
 
