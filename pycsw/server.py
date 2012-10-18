@@ -78,9 +78,15 @@ class Csw(object):
         try:
             if isinstance(rtconfig, SafeConfigParser):  # serialized already
                 self.config = rtconfig
-            else:  # configuration file
+            else:
                 self.config = SafeConfigParser()
-                self.config.readfp(open(rtconfig))
+                if isinstance(rtconfig, dict):  # dictionary
+                    for section, options in rtconfig.iteritems():
+                        self.config.add_section(section)
+                        for k, v in options.iteritems():
+                            self.config.set(section, k, v)
+                else:  # configuration file
+                    self.config.readfp(open(rtconfig))
         except Exception, err:
             self.response = self.exceptionreport(
             'NoApplicableCode', 'service',
