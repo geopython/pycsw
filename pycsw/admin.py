@@ -30,6 +30,7 @@
 #
 # =================================================================
 
+import logging
 import os
 import sys
 from glob import glob
@@ -42,25 +43,25 @@ def setup_db(database, table, home):
     from sqlalchemy import Column, create_engine, Integer, String, MetaData, \
     Table, Text
 
-    print 'Creating database %s' % database
-    DB = create_engine(database)
+    logging.info('Creating database %s', database)
+    dbase = create_engine(database)
 
-    METADATA = MetaData(DB)
+    mdata = MetaData(dbase)
 
-    print 'Creating table spatial_ref_sys'
-    SRS = Table('spatial_ref_sys', METADATA,
+    logging.info('Creating table spatial_ref_sys')
+    srs = Table('spatial_ref_sys', mdata,
         Column('srid', Integer, nullable=False, primary_key=True),
         Column('auth_name', String(256)),
         Column('auth_srid', Integer),
         Column('srtext', String(2048))
     )
-    SRS.create()
+    srs.create()
 
-    i = SRS.insert()
+    i = srs.insert()
     i.execute(srid=4326, auth_name='EPSG', auth_srid=4326, srtext='GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
 
-    print 'Creating table geometry_columns'
-    GEOM = Table('geometry_columns', METADATA,
+    logging.info('Creating table geometry_columns')
+    geom = Table('geometry_columns', mdata,
         Column('f_table_catalog', String(256), nullable=False),
         Column('f_table_schema', String(256), nullable=False),
         Column('f_table_name', String(256), nullable=False),
@@ -70,17 +71,17 @@ def setup_db(database, table, home):
         Column('srid', Integer, nullable=False),
         Column('geometry_format', String(5), nullable=False),
     )
-    GEOM.create()
+    geom.create()
 
-    i = GEOM.insert()
+    i = geom.insert()
     i.execute(f_table_catalog='public', f_table_schema='public',
     f_table_name=table, f_geometry_column='wkt_geometry', 
     geometry_type=3, coord_dimension=2, srid=4326, geometry_format='WKT')
 
     # abstract metadata information model
 
-    print 'Creating table %s' % table
-    RECORDS = Table(table, METADATA,
+    logging.info('Creating table %s', table)
+    records = Table(table, mdata,
         # core; nothing happens without these
         Column('identifier', String(256), primary_key=True),
         Column('typename', String(32),
@@ -161,12 +162,12 @@ def setup_db(database, table, home):
         # links: format "name,description,protocol,url[^,,,[^,,,]]"
         Column('links', Text, index=True),
     )
-    RECORDS.create()
+    records.create()
     
-    if DB.name == 'postgresql':  # create plpythonu functions within db
-        PYCSW_HOME = home
-        CONN = DB.connect()
-        FUNCTION_QUERY_SPATIAL = '''
+    if dbase.name == 'postgresql':  # create plpythonu functions within db
+        pycsw_home = home
+        conn = dbase.connect()
+        function_query_spatial = '''
     CREATE OR REPLACE FUNCTION query_spatial(bbox_data_wkt text, bbox_input_wkt text, predicate text, distance text)
     RETURNS text
     AS $$
@@ -175,8 +176,8 @@ def setup_db(database, table, home):
         from pycsw import util
         return util.query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance)
         $$ LANGUAGE plpythonu;
-    ''' % PYCSW_HOME
-        FUNCTION_UPDATE_XPATH = '''
+    ''' % pycsw_home
+        function_update_xpath = '''
     CREATE OR REPLACE FUNCTION update_xpath(xml text, recprops text)
     RETURNS text
     AS $$
@@ -185,13 +186,13 @@ def setup_db(database, table, home):
         from pycsw import util
         return util.update_xpath(xml, recprops)
         $$ LANGUAGE plpythonu;
-    ''' % PYCSW_HOME
-        CONN.execute(FUNCTION_QUERY_SPATIAL)
-        CONN.execute(FUNCTION_UPDATE_XPATH)
+    ''' % pycsw_home
+        conn.execute(function_query_spatial)
+        conn.execute(function_update_xpath)
 
 def load_records(context, database, table, xml_dirpath, recursive=False):
     ''' Load metadata records from directory of files to database ''' 
-    REPO = repository.Repository(database, context, table=table)
+    repo = repository.Repository(database, context, table=table)
 
     file_list = []
 
@@ -201,91 +202,90 @@ def load_records(context, database, table, xml_dirpath, recursive=False):
                 if mfile.endswith('.xml'):
                     file_list.append(os.path.join(root, mfile)) 
     else:
-        for r in glob(os.path.join(xml_dirpath, '*.xml')):
-            file_list.append(r)
+        for rec in glob(os.path.join(xml_dirpath, '*.xml')):
+            file_list.append(rec)
 
     total = len(file_list)
     counter = 0
 
-    for r in file_list:
+    for recfile in file_list:
         counter += 1
-        print 'Processing file %s (%d of %d)' % (r, counter, total)
+        logging.info('Processing file %s (%d of %d)', recfile, counter, total)
         # read document
         try:
-            e = etree.parse(r)
+            exml = etree.parse(recfile)
         except Exception, err:
-            print 'XML document is not well-formed: %s' % str(err)
+            logging.warn('XML document is not well-formed: %s', str(err))
             continue
 
-        record = metadata.parse_record(context, e, REPO)
+        record = metadata.parse_record(context, exml, repo)
 
         for rec in record:
-            print 'Inserting %s %s into database %s, table %s ....' % \
-            (rec.typename, rec.identifier, database, table)
+            logging.info('Inserting %s %s into database %s, table %s ....', \
+            rec.typename, rec.identifier, database, table)
 
             # TODO: do this as CSW Harvest
             try:
-                REPO.insert(rec, 'local', util.get_today_and_now())
-                print 'Inserted'
+                repo.insert(rec, 'local', util.get_today_and_now())
+                logging.info('Inserted')
             except Exception, err:
-                print 'ERROR: not inserted %s' % err
+                logging.warn('ERROR: not inserted %s', err)
 
 def export_records(context, database, table, xml_dirpath):
     ''' Export metadata records from database to directory of files '''
-    REPO = repository.Repository(database, context, table=table)
+    repo = repository.Repository(database, context, table=table)
 
-    print 'Querying database %s, table %s ....' % (database, table)
-    RECORDS = REPO.session.query(REPO.dataset)
+    logging.info('Querying database %s, table %s ....', database, table)
+    records = repo.session.query(repo.dataset)
 
-    print 'Found %d records\n' % RECORDS.count()
+    logging.info('Found %d records\n', records.count())
 
-    print 'Exporting records\n'
+    logging.info('Exporting records\n')
 
     dirpath = os.path.abspath(xml_dirpath)
 
     if not os.path.exists(dirpath):
-        print 'Directory %s does not exist.  Creating...' % dirpath
+        logging.info('Directory %s does not exist.  Creating...', dirpath)
         try:
             os.makedirs(dirpath)
         except OSError, err:
-            print 'Could not create os.path%s' % err
-            sys.exit(100)
+            raise RuntimeError('Could not create %s %s' % (dirpath, err))
 
-    for record in RECORDS.all():
+    for record in records.all():
         identifier = getattr(record, 
         context.md_core_model['mappings']['pycsw:Identifier'])
 
-        print 'Processing %s' % identifier
+        logging.info('Processing %s', identifier)
         if identifier.find(':') != -1:  # it's a URN
             # sanitize identifier
-            print ' Sanitizing identifier'
+            logging.info(' Sanitizing identifier')
             identifier = identifier.split(':')[-1]
 
         # write to XML document
-        FILENAME = os.path.join(dirpath, '%s.xml' % identifier)
+        filename = os.path.join(dirpath, '%s.xml' % identifier)
         try:
-            print ' Writing to file %s' % FILENAME
-            with open(FILENAME, 'w') as XML:
-                XML.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-                XML.write(record.xml)
+            logging.info('Writing to file %s', filename)
+            with open(filename, 'w') as xml:
+                xml.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+                xml.write(record.xml)
         except Exception, err:
-            raise RuntimeError("Error writing to %s" % FILENAME, err)
+            raise RuntimeError("Error writing to %s" % filename, err)
     
 def refresh_harvested_records(context, database, table, url):
     ''' refresh / harvest all non-local records in repository '''
     from owslib.csw import CatalogueServiceWeb
 
     # get configuration and init repo connection
-    REPOS = repository.Repository(database, context, table=table)
+    repos = repository.Repository(database, context, table=table)
 
     # get all harvested records
-    COUNT, RECORDS = REPOS.query(constraint={'where': 'source != "local"'})
+    count, records = repos.query(constraint={'where': 'source != "local"'})
 
-    if int(COUNT) > 0:
-        print 'Refreshing %s harvested records' % COUNT
-        CSW = CatalogueServiceWeb(url)
+    if int(count) > 0:
+        logging.info('Refreshing %s harvested records', count)
+        csw = CatalogueServiceWeb(url)
 
-        for rec in RECORDS:
+        for rec in records:
             source = getattr(rec, 
             context.md_core_model['mappings']['pycsw:Source'])
             schema = getattr(rec, 
@@ -293,72 +293,72 @@ def refresh_harvested_records(context, database, table, url):
             identifier = getattr(rec, 
             context.md_core_model['mappings']['pycsw:Identifier'])
 
-            print 'Harvesting %s (identifier = %s) ...' % \
-            (source, identifier)
+            logging.info('Harvesting %s (identifier = %s) ...',
+                source, identifier)
             # TODO: find a smarter way of catching this
             if schema == 'http://www.isotc211.org/2005/gmd':
                 schema = 'http://www.isotc211.org/schemas/2005/gmd/'
             try:
-                CSW.harvest(source, schema)
-                print CSW.response
+                csw.harvest(source, schema)
+                logging.info(csw.response)
             except Exception, err:
-                print err
-    print 'No harvested records to refresh'
+                logging.warn(err)
 
 def rebuild_db_indexes(database):
     ''' Rebuild database indexes '''
-    print 'Not implemented yet'
+    raise NotImplementedError
 
 def optimize_db(context, database, table):
     ''' Optimize database '''
-    print 'Optimizing %s' % database
-    REPOS = repository.Repository(database, context, table=table)
-    REPOS.connection.execute('VACUUM ANALYZE')
+    repos = repository.Repository(database, context, table=table)
+    repos.connection.execute('VACUUM ANALYZE')
 
-def gen_sitemap(context, DATABASE, TABLE, URL, OUTPUT_FILE):
+def gen_sitemap(context, database, table, url, output_file):
     ''' generate an XML sitemap from all records in repository '''
 
     # get configuration and init repo connection
-    REPOS = repository.Repository(DATABASE, context, table=TABLE)
+    repos = repository.Repository(database, context, table=table)
 
     # write out sitemap document
-    URLSET = etree.Element(util.nspath_eval('sitemap:urlset', context.namespaces),
+    urlset = etree.Element(util.nspath_eval('sitemap:urlset', context.namespaces),
     nsmap=context.namespaces)
 
-    URLSET.attrib[util.nspath_eval('xsi:schemaLocation', context.namespaces)] = \
+    urlset.attrib[util.nspath_eval('xsi:schemaLocation', context.namespaces)] = \
     '%s http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' % \
     context.namespaces['sitemap']
 
     # get all records
-    COUNT, RECORDS = REPOS.query(constraint={}, maxrecords=99999999)
+    count, records = repos.query(constraint={}, maxrecords=99999999)
 
-    for rec in RECORDS:
-        url = etree.SubElement(URLSET, util.nspath_eval('sitemap:url', context.namespaces))
+    logging.info('Found %s records', count)
+
+    for rec in records:
+        url = etree.SubElement(urlset, util.nspath_eval('sitemap:url', context.namespaces))
         uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
-        (URL, \
+        (url, \
         getattr(rec, context.md_core_model['mappings']['pycsw:Identifier']))
         etree.SubElement(url, util.nspath_eval('sitemap:loc', context.namespaces)).text = uri
 
     # write to file
-    with open(OUTPUT_FILE, 'w') as of:
-        of.write(etree.tostring(URLSET, pretty_print=1,
+    with open(output_file, 'w') as ofile:
+        ofile.write(etree.tostring(urlset, pretty_print=1,
         encoding='utf8', xml_declaration=1))
 
-def gen_opensearch_description(METADATA, URL, OUTPUT_FILE):
+def gen_opensearch_description(context, mdata, url, output_file):
     ''' generate an OpenSearch Description document '''
 
     node0 = etree.Element('OpenSearchDescription', nsmap={None: context.namespaces['os']})
 
     etree.SubElement(node0, 'ShortName').text = 'pycsw'
-    etree.SubElement(node0, 'LongName').text =  METADATA['identification_title']
-    etree.SubElement(node0, 'Description').text = METADATA['identification_abstract']
+    etree.SubElement(node0, 'LongName').text =  mdata['identification_title']
+    etree.SubElement(node0, 'Description').text = mdata['identification_abstract']
     etree.SubElement(node0, 'Tags').text = \
-    ' '.join(METADATA['identification_keywords'].split(','))
+    ' '.join(mdata['identification_keywords'].split(','))
 
     node1 = etree.SubElement(node0, 'Url')
     node1.set('type', 'text/html')
     node1.set('method', 'get')
-    node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=brief&typenames=csw:Record,gmd:MD_Metadata,fgdc:metadata,dif:DIF&resulttype=results&constraintlanguage=CQL_TEXT&constraint_language_version=1.1.0&constraint=csw:AnyText like "%%{searchTerms}%%" ' % URL)
+    node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=brief&typenames=csw:Record,gmd:MD_Metadata,fgdc:metadata,dif:DIF&resulttype=results&constraintlanguage=CQL_TEXT&constraint_language_version=1.1.0&constraint=csw:AnyText like "%%{searchTerms}%%" ' % url)
 
     node1 = etree.SubElement(node0, 'Image')
     node1.set('type', 'image/vnd.microsoft.icon')
@@ -366,22 +366,22 @@ def gen_opensearch_description(METADATA, URL, OUTPUT_FILE):
     node1.set('height', '16')
     node1.text = 'http://pycsw.org/_static/favicon.ico'
 
-    etree.SubElement(node0, 'Developer').text = METADATA['contact_name']
-    etree.SubElement(node0, 'Contact').text = METADATA['contact_email']
-    etree.SubElement(node0, 'Attribution').text = METADATA['provider_name']
+    etree.SubElement(node0, 'Developer').text = mdata['contact_name']
+    etree.SubElement(node0, 'Contact').text = mdata['contact_email']
+    etree.SubElement(node0, 'Attribution').text = mdata['provider_name']
 
     # write to file
-    with open(OUTPUT_FILE, 'w') as of:
-        of.write(etree.tostring(node0, pretty_print=1,
+    with open(output_file, 'w') as ofile:
+        ofile.write(etree.tostring(node0, pretty_print=1,
         encoding='UTF-8', xml_declaration=1))
 
 def post_xml(url, xml):
     ''' Execute HTTP XML POST request and print response '''
     from owslib.util import http_post
     try:
-        print http_post(url, open(xml).read())
+        return http_post(url, open(xml).read())
     except Exception, err:
-        print err
+        raise RuntimeError(err)
 
 def get_sysprof():
     ''' Get versions of dependencies '''
@@ -389,7 +389,7 @@ def get_sysprof():
     import shapely.geos
     import pyproj
 
-    print '''pycsw system profile
+    return '''pycsw system profile
     --------------------
     python version=%s
     os=%s
@@ -402,13 +402,13 @@ def get_sysprof():
 def validate_xml(xml, xsd):
     ''' Validate XML document against XML Schema '''
 
-    print 'Validating %s against schema %s' % (xml, xsd)
+    logging.info('Validating %s against schema %s', xml, xsd)
 
-    SCHEMA = etree.XMLSchema(file=xsd)
-    PARSER = etree.XMLParser(schema=SCHEMA)
+    schema = etree.XMLSchema(file=xsd)
+    parser = etree.XMLParser(schema=schema)
 
     try:
-        VALID = etree.parse(xml, PARSER)
-        print 'Valid XML document'
+        valid = etree.parse(xml, parser)
+        return 'Valid'
     except Exception, err:
-        print 'ERROR: %s' % str(err)
+        raise RuntimeError('ERROR: %s' % str(err))
