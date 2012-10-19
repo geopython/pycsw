@@ -242,10 +242,10 @@ elif COMMAND == 'gen_sitemap':
 elif COMMAND == 'gen_opensearch_description':
     admin.gen_opensearch_description(CONTEXT, METADATA, URL, OUTPUT_FILE)
 elif COMMAND == 'post_xml':
-    admin.post_xml(CSW_URL, XML)
+    print admin.post_xml(CSW_URL, XML)
 elif COMMAND == 'get_sysprof':
-    admin.get_sysprof()
+    print admin.get_sysprof()
 elif COMMAND == 'validate_xml':
-    admin.validate_xml(XML, XSD)
+    print admin.validate_xml(XML, XSD)
 
 print 'Done'
