@@ -305,6 +305,8 @@ def refresh_harvested_records(context, database, table, url):
                 logger.info(csw.response)
             except Exception, err:
                 logger.warn(err)
+    else:
+        logger.info('No harvested records')
 
 def rebuild_db_indexes(database, table):
     ''' Rebuild database indexes '''
@@ -312,6 +314,8 @@ def rebuild_db_indexes(database, table):
 
 def optimize_db(context, database, table):
     ''' Optimize database '''
+
+    logger.info('Optimizing database %s', database)
     repos = repository.Repository(database, context, table=table)
     repos.connection.execute('VACUUM ANALYZE')
 
@@ -342,6 +346,7 @@ def gen_sitemap(context, database, table, url, output_file):
         etree.SubElement(url, util.nspath_eval('sitemap:loc', context.namespaces)).text = uri
 
     # write to file
+    logger.info('Writing to %s', output_file)
     with open(output_file, 'w') as ofile:
         ofile.write(etree.tostring(urlset, pretty_print=1,
         encoding='utf8', xml_declaration=1))
@@ -373,12 +378,16 @@ def gen_opensearch_description(context, mdata, url, output_file):
     etree.SubElement(node0, 'Attribution').text = mdata['provider_name']
 
     # write to file
+    logger.info('Writing to %s', output_file)
     with open(output_file, 'w') as ofile:
         ofile.write(etree.tostring(node0, pretty_print=1,
         encoding='UTF-8', xml_declaration=1))
 
 def post_xml(url, xml):
     ''' Execute HTTP XML POST request and print response '''
+
+    logger.info('Validating %s against schema %s', xml, xsd)
+
     from owslib.util import http_post
     try:
         return http_post(url, open(xml).read())
@@ -391,7 +400,7 @@ def get_sysprof():
     import shapely.geos
     import pyproj
 
-    return '''pycsw system profile
+    msg = '''pycsw system profile
     --------------------
     python version=%s
     os=%s
@@ -400,6 +409,8 @@ def get_sysprof():
     lxml=%s
     pyproj=%s ''' % (sys.version_info, sys.platform, sqlalchemy.__version__,
     shapely.geos.geos_capi_version, etree.__version__, pyproj.__version__)
+
+    logging.info(msg)
 
 def validate_xml(xml, xsd):
     ''' Validate XML document against XML Schema '''
@@ -411,6 +422,6 @@ def validate_xml(xml, xsd):
 
     try:
         valid = etree.parse(xml, parser)
-        return 'Valid'
+        logging.info('Valid')
     except Exception, err:
         raise RuntimeError('ERROR: %s' % str(err))
