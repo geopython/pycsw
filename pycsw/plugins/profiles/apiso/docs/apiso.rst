@@ -26,7 +26,7 @@ To enable APISO support, add ``apiso`` to ``server.profiles`` as specified in :r
 Testing
 ^^^^^^^
 
-A testing interface is available in ``tester/index.html`` which contains tests specific to APISO to demonstrate functionality.  See :ref:`tester` for more information.
+A testing interface is available in ``tests/index.html`` which contains tests specific to APISO to demonstrate functionality.  See :ref:`tests` for more information.
 
 INSPIRE Extension
 -----------------

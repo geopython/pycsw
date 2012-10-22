@@ -1,0 +1,5 @@
+explain,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=sru
+search,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=sru&version=1.1&operation=searchRetrieve&query=lor
+search_maxrecords,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=sru&operation=searchRetrieve&query=lor&maximumRecords=2
+search_startrecord_maxrecords,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=sru&operation=searchRetrieve&query=lor&maximumRecords=2&startRecord=1
+search_cql,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=sru&operation=searchRetrieve&query=dc:title%20like%20'%lor%'&maximumRecords=5
