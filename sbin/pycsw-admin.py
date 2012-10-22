@@ -33,9 +33,12 @@
 
 import ConfigParser
 import getopt
+import logging
 import sys
 
 from pycsw import admin, config
+
+logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
 CONTEXT = config.StaticContext()
 
@@ -244,8 +247,8 @@ elif COMMAND == 'gen_opensearch_description':
 elif COMMAND == 'post_xml':
     print admin.post_xml(CSW_URL, XML)
 elif COMMAND == 'get_sysprof':
-    print admin.get_sysprof()
+    admin.get_sysprof()
 elif COMMAND == 'validate_xml':
-    print admin.validate_xml(XML, XSD)
+    admin.validate_xml(XML, XSD)
 
 print 'Done'
