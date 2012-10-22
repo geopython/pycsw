@@ -18,7 +18,7 @@ set -e
 # the debian-policy package
 
 install() {
-    cd /var/www/pycsw/tester
+    cd /var/www/pycsw/tests
     python ./gen_html.py > index.html
     /etc/init.d/apache2 force-reload
 

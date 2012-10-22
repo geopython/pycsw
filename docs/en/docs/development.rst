@@ -34,8 +34,8 @@ GitHub Commit Guidelines
 - Git commits shall include a description of changes
 - Git commits shall include the GitHub issue number (i.e. ``#1234``) in the Git commit log message
 - all enhancements or bug fixes must successfully pass all :ref:`ogc-cite` tests before they are committed
-- all enhancements or bug fixes must successfully pass all :ref:`tester` tests before they are committed
-- enhancements which can be demonstrated from the pycsw :ref:`tester` should be accompanied by example CSW request XML
+- all enhancements or bug fixes must successfully pass all :ref:`tests` tests before they are committed
+- enhancements which can be demonstrated from the pycsw :ref:`tests` should be accompanied by example CSW request XML
 
 Coding and Documentation Guidelines
 -----------------------------------

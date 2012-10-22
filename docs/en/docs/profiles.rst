@@ -60,7 +60,7 @@ All profiles are disabled by default.  To specify profiles at runtime, set the `
 Testing
 -------
 
-Profiles must add examples to the :ref:`tester` interface, which must provide example requests specific to the profile.
+Profiles must add examples to the :ref:`tests` interface, which must provide example requests specific to the profile.
 
 Supported Profiles
 ==================

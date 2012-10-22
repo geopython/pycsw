@@ -68,4 +68,4 @@ pycsw supports 3 modes of the ``Transaction`` operation (``Insert``, ``Update``,
 
 Transaction operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) if the Transaction request specifies ``csw:ResponseHandler``.
 
-The :ref:`tester` contains CSW-T request examples.
+The :ref:`tests` contain CSW-T request examples.

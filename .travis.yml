@@ -15,7 +15,7 @@ before_script:
   - sleep 10
 
 script:
-  - cd ./tester && python ./run_tests.py http://127.0.0.1:8001/
+  - cd ./tests && python ./run_tests.py http://127.0.0.1:8001/
 
 after_script:
   - kill %1
