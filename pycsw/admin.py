@@ -38,17 +38,19 @@ from glob import glob
 from lxml import etree
 from pycsw import metadata, repository, util
 
+logger = logging.getLogger(__name__)
+
 def setup_db(database, table, home):
     ''' Setup database tables and indexes '''
     from sqlalchemy import Column, create_engine, Integer, String, MetaData, \
     Table, Text
 
-    logging.info('Creating database %s', database)
+    logger.info('Creating database %s', database)
     dbase = create_engine(database)
 
     mdata = MetaData(dbase)
 
-    logging.info('Creating table spatial_ref_sys')
+    logger.info('Creating table spatial_ref_sys')
     srs = Table('spatial_ref_sys', mdata,
         Column('srid', Integer, nullable=False, primary_key=True),
         Column('auth_name', String(256)),
@@ -60,7 +62,7 @@ def setup_db(database, table, home):
     i = srs.insert()
     i.execute(srid=4326, auth_name='EPSG', auth_srid=4326, srtext='GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
 
-    logging.info('Creating table geometry_columns')
+    logger.info('Creating table geometry_columns')
     geom = Table('geometry_columns', mdata,
         Column('f_table_catalog', String(256), nullable=False),
         Column('f_table_schema', String(256), nullable=False),
@@ -80,7 +82,7 @@ def setup_db(database, table, home):
 
     # abstract metadata information model
 
-    logging.info('Creating table %s', table)
+    logger.info('Creating table %s', table)
     records = Table(table, mdata,
         # core; nothing happens without these
         Column('identifier', String(256), primary_key=True),
@@ -210,42 +212,42 @@ def load_records(context, database, table, xml_dirpath, recursive=False):
 
     for recfile in file_list:
         counter += 1
-        logging.info('Processing file %s (%d of %d)', recfile, counter, total)
+        logger.info('Processing file %s (%d of %d)', recfile, counter, total)
         # read document
         try:
             exml = etree.parse(recfile)
         except Exception, err:
-            logging.warn('XML document is not well-formed: %s', str(err))
+            logger.warn('XML document is not well-formed: %s', str(err))
             continue
 
         record = metadata.parse_record(context, exml, repo)
 
         for rec in record:
-            logging.info('Inserting %s %s into database %s, table %s ....', \
+            logger.info('Inserting %s %s into database %s, table %s ....', \
             rec.typename, rec.identifier, database, table)
 
             # TODO: do this as CSW Harvest
             try:
                 repo.insert(rec, 'local', util.get_today_and_now())
-                logging.info('Inserted')
+                logger.info('Inserted')
             except Exception, err:
-                logging.warn('ERROR: not inserted %s', err)
+                logger.warn('ERROR: not inserted %s', err)
 
 def export_records(context, database, table, xml_dirpath):
     ''' Export metadata records from database to directory of files '''
     repo = repository.Repository(database, context, table=table)
 
-    logging.info('Querying database %s, table %s ....', database, table)
+    logger.info('Querying database %s, table %s ....', database, table)
     records = repo.session.query(repo.dataset)
 
-    logging.info('Found %d records\n', records.count())
+    logger.info('Found %d records\n', records.count())
 
-    logging.info('Exporting records\n')
+    logger.info('Exporting records\n')
 
     dirpath = os.path.abspath(xml_dirpath)
 
     if not os.path.exists(dirpath):
-        logging.info('Directory %s does not exist.  Creating...', dirpath)
+        logger.info('Directory %s does not exist.  Creating...', dirpath)
         try:
             os.makedirs(dirpath)
         except OSError, err:
@@ -255,16 +257,16 @@ def export_records(context, database, table, xml_dirpath):
         identifier = getattr(record, 
         context.md_core_model['mappings']['pycsw:Identifier'])
 
-        logging.info('Processing %s', identifier)
+        logger.info('Processing %s', identifier)
         if identifier.find(':') != -1:  # it's a URN
             # sanitize identifier
-            logging.info(' Sanitizing identifier')
+            logger.info(' Sanitizing identifier')
             identifier = identifier.split(':')[-1]
 
         # write to XML document
         filename = os.path.join(dirpath, '%s.xml' % identifier)
         try:
-            logging.info('Writing to file %s', filename)
+            logger.info('Writing to file %s', filename)
             with open(filename, 'w') as xml:
                 xml.write('<?xml version="1.0" encoding="UTF-8"?>\n')
                 xml.write(record.xml)
@@ -282,7 +284,7 @@ def refresh_harvested_records(context, database, table, url):
     count, records = repos.query(constraint={'where': 'source != "local"'})
 
     if int(count) > 0:
-        logging.info('Refreshing %s harvested records', count)
+        logger.info('Refreshing %s harvested records', count)
         csw = CatalogueServiceWeb(url)
 
         for rec in records:
@@ -293,18 +295,18 @@ def refresh_harvested_records(context, database, table, url):
             identifier = getattr(rec, 
             context.md_core_model['mappings']['pycsw:Identifier'])
 
-            logging.info('Harvesting %s (identifier = %s) ...',
+            logger.info('Harvesting %s (identifier = %s) ...',
                 source, identifier)
             # TODO: find a smarter way of catching this
             if schema == 'http://www.isotc211.org/2005/gmd':
                 schema = 'http://www.isotc211.org/schemas/2005/gmd/'
             try:
                 csw.harvest(source, schema)
-                logging.info(csw.response)
+                logger.info(csw.response)
             except Exception, err:
-                logging.warn(err)
+                logger.warn(err)
 
-def rebuild_db_indexes(database):
+def rebuild_db_indexes(database, table):
     ''' Rebuild database indexes '''
     raise NotImplementedError
 
@@ -330,7 +332,7 @@ def gen_sitemap(context, database, table, url, output_file):
     # get all records
     count, records = repos.query(constraint={}, maxrecords=99999999)
 
-    logging.info('Found %s records', count)
+    logger.info('Found %s records', count)
 
     for rec in records:
         url = etree.SubElement(urlset, util.nspath_eval('sitemap:url', context.namespaces))
@@ -402,7 +404,7 @@ def get_sysprof():
 def validate_xml(xml, xsd):
     ''' Validate XML document against XML Schema '''
 
-    logging.info('Validating %s against schema %s', xml, xsd)
+    logger.info('Validating %s against schema %s', xml, xsd)
 
     schema = etree.XMLSchema(file=xsd)
     parser = etree.XMLParser(schema=schema)
