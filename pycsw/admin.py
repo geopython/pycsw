@@ -167,6 +167,7 @@ def setup_db(database, table, home):
     records.create()
     
     if dbase.name == 'postgresql':  # create plpythonu functions within db
+        logger.info('Setting plpythonu functions')
         pycsw_home = home
         conn = dbase.connect()
         function_query_spatial = '''
@@ -386,7 +387,7 @@ def gen_opensearch_description(context, mdata, url, output_file):
 def post_xml(url, xml):
     ''' Execute HTTP XML POST request and print response '''
 
-    logger.info('Validating %s against schema %s', xml, xsd)
+    logger.info('Executing HTTP POST request %s on server %s', xml, url)
 
     from owslib.util import http_post
     try:
@@ -396,21 +397,50 @@ def post_xml(url, xml):
 
 def get_sysprof():
     ''' Get versions of dependencies '''
-    import sqlalchemy
-    import shapely.geos
-    import pyproj
 
-    msg = '''pycsw system profile
+    none = 'Module not found'
+ 
+    try:
+        import sqlalchemy
+        vsqlalchemy = sqlalchemy.__version__
+    except ImportError:
+        vsqlalchemy = none
+
+    try:
+        import pyproj
+        vpyproj = pyproj.__version__
+    except ImportError:
+        vpyproj = none
+
+    try:
+        import shapely
+        try:
+            vshapely = shapely.__version__
+        except AttributeError:
+            import shapely.geos
+            vshapely = shapely.geos.geos_capi_version
+    except ImportError:
+        vshapely = none
+
+    try:
+        import owslib
+        try:
+            vowslib = owslib.__version__
+        except AttributeError:
+            vowslib = 'Module found, version not specified'
+    except ImportError:
+        vowslib = none
+
+    return '''pycsw system profile
     --------------------
-    python version=%s
-    os=%s
-    sqlalchemy=%s
-    shapely=%s
-    lxml=%s
-    pyproj=%s ''' % (sys.version_info, sys.platform, sqlalchemy.__version__,
-    shapely.geos.geos_capi_version, etree.__version__, pyproj.__version__)
-
-    logging.info(msg)
+    Python version: %s
+    os: %s
+    SQLAlchemy: %s
+    Shapely: %s
+    lxml: %s
+    pyproj: %s
+    OWSLib: %s''' % (sys.version_info, sys.platform, vsqlalchemy,
+    vshapely, etree.__version__, vpyproj, vowslib)
 
 def validate_xml(xml, xsd):
     ''' Validate XML document against XML Schema '''
@@ -422,6 +452,6 @@ def validate_xml(xml, xsd):
 
     try:
         valid = etree.parse(xml, parser)
-        logging.info('Valid')
+        return 'Valid'
     except Exception, err:
         raise RuntimeError('ERROR: %s' % str(err))
