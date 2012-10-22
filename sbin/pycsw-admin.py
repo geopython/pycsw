@@ -247,7 +247,7 @@ elif COMMAND == 'gen_opensearch_description':
 elif COMMAND == 'post_xml':
     print admin.post_xml(CSW_URL, XML)
 elif COMMAND == 'get_sysprof':
-    admin.get_sysprof()
+    print admin.get_sysprof()
 elif COMMAND == 'validate_xml':
     admin.validate_xml(XML, XSD)
 
