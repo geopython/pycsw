@@ -45,7 +45,7 @@ Ensure that CGI is enabled for the install directory.  For example, on Apache, i
   </Location>
 
 .. note::
-  If pycsw is installed in ``cgi-bin``, this should work as expected.  In this case, the :ref:`tester <tester>` application must be moved to a different location to serve static HTML documents.
+  If pycsw is installed in ``cgi-bin``, this should work as expected.  In this case, the :ref:`tests <tests>` application must be moved to a different location to serve static HTML documents.
 
 The Clean and Proper Way
 ^^^^^^^^^^^^^^^^^^^^^^^^

@@ -28,7 +28,7 @@ To enable Atom support, add ``atom`` to ``server.profiles``.
 Testing
 ^^^^^^^
 
-A testing interface is available in ``tester/index.html`` which contains tests specific to Atom to demonstrate functionality.  See :ref:`tester` for more information.
+A testing interface is available in ``tests/index.html`` which contains tests specific to Atom to demonstrate functionality.  See :ref:`tests` for more information.
 
 .. _`Atom Syndication Format`: http://tools.ietf.org/html/rfc4287
 .. _`RSS`: http://en.wikipedia.org/wiki/RSS

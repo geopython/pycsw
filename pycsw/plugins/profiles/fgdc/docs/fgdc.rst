@@ -27,6 +27,6 @@ To enable fgdc support, add ``fgdc`` to ``server.profiles``.
 Testing
 ^^^^^^^
 
-A testing interface is available in ``tester/index.html`` which contains tests specific to FGDC to demonstrate functionality.  See :ref:`tester` for more information.
+A testing interface is available in ``tests/index.html`` which contains tests specific to FGDC to demonstrate functionality.  See :ref:`tests` for more information.
 
 .. _`FGDC CSDGM Application Profile`: http://portal.opengeospatial.org/files/?artifact_id=16936

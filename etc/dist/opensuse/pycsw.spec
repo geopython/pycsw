@@ -132,7 +132,7 @@ EOF
 %fdupes -s %{buildroot}
 
 %post 
-python /srv/www/htdocs/pycsw/tester/gen_html.py > /srv/www/htdocs/pycsw/tester/index.html
+python /srv/www/htdocs/pycsw/tests/gen_html.py > /srv/www/htdocs/pycsw/tests/index.html
 
 %clean
 rm -rf '%{buildroot}'
