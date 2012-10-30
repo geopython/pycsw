@@ -30,7 +30,10 @@
 #
 # =================================================================
 
+import logging
 from pycsw import gml, util
+
+LOGGER = logging.getLogger(__name__)
 
 MODEL =  {
     'GeometryOperands': {
@@ -74,12 +77,14 @@ def parse(element, queryables, dbtype, nsmap):
     tmp = element.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=nsmap)
     if len(tmp) > 0:  # this is binary logic query
         boq = ' %s ' % util.xmltag_split(tmp[0].tag).lower()
+        LOGGER.debug('Binary logic detected; operator=%s' % boq)
         tmp = tmp[0]
     else:
         tmp = element
 
     queries = []
 
+    LOGGER.debug('Scanning children elements')
     for child in tmp.xpath('child::*'):
         com_op = ''
         boolean_true = '\'true\''
@@ -90,6 +95,7 @@ def parse(element, queryables, dbtype, nsmap):
             boolean_false = 'false'
 
         if child.tag == util.nspath_eval('ogc:Not', nsmap):
+            LOGGER.debug('ogc:Not query detected')
             queries.append("%s = %s" %
             (_get_spatial_operator(queryables['pycsw:BoundingBox'],
             child.xpath('child::*')[0], dbtype, nsmap), boolean_false))
@@ -97,10 +103,12 @@ def parse(element, queryables, dbtype, nsmap):
         elif child.tag in \
         [util.nspath_eval('ogc:%s' % n, nsmap) for n in \
         MODEL['SpatialOperators']['values']]:
+            LOGGER.debug('spatial operator detected: %s' % child.tag)
             if boq is not None and boq == ' not ':
                 # for ogc:Not spatial queries in PostGIS we must explictly
                 # test that pycsw:BoundingBox is null as well
                 if dbtype == 'postgresql+postgis':
+                    LOGGER.debug('Setting bbox is null test in PostgreSQL')
                     queries.append("%s = %s or %s is null" %
                     (_get_spatial_operator(queryables['pycsw:BoundingBox'],
                     child, dbtype, nsmap), boolean_false,
@@ -115,6 +123,7 @@ def parse(element, queryables, dbtype, nsmap):
                  child, dbtype, nsmap), boolean_true))
 
         elif child.tag == util.nspath_eval('ogc:FeatureId', nsmap):
+            LOGGER.debug('ogc:FeatureId filter detected')
             queries.append("%s = '%s'" % (queryables['pycsw:Identifier'],
             child.attrib.get('fid')))
 
@@ -132,6 +141,7 @@ def parse(element, queryables, dbtype, nsmap):
 
             if (child.xpath('child::*')[0].tag ==
                 util.nspath_eval('ogc:Function', nsmap)):
+                LOGGER.debug('ogc:Function detected')
                 if (child.xpath('child::*')[0].attrib['name'] not in
                 MODEL['Functions'].keys()):
                     raise RuntimeError, ('Invalid ogc:Function: %s' %
@@ -139,6 +149,7 @@ def parse(element, queryables, dbtype, nsmap):
                 fname = child.xpath('child::*')[0].attrib['name']
 
                 try:
+                    LOGGER.debug('Testing existence of ogc:PropertyName')
                     pname = queryables[child.find(
                     util.nspath_eval('ogc:Function/ogc:PropertyName',
                     nsmap)).text]['dbcol']
@@ -150,6 +161,7 @@ def parse(element, queryables, dbtype, nsmap):
 
             else:
                 try:
+                    LOGGER.debug('Testing existence of ogc:PropertyName')
                     pname = queryables[child.find(
                     util.nspath_eval('ogc:PropertyName', nsmap)).text]['dbcol']
                 except Exception, err:
@@ -163,6 +175,7 @@ def parse(element, queryables, dbtype, nsmap):
                 pvalue = pval.replace(wildcard,'%').replace(singlechar,'_')
 
             com_op = _get_comparison_operator(child)
+            LOGGER.debug('Comparison operator: %s' % com_op)
 
             # if this is a case insensitive search
             # then set the DB-specific LIKE comparison operator
@@ -207,6 +220,8 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
 
     distance = 'false' if distance is None else distance.text
 
+    LOGGER.debug('Scanning for spatial property name')
+
     if property_name is None:
         raise RuntimeError, \
         ('Missing ogc:PropertyName in spatial filter')
@@ -220,7 +235,10 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
 
     spatial_predicate = util.xmltag_split(element.tag).lower()
 
+    LOGGER.debug('Spatial predicate: %s' % spatial_predicate)
+
     if dbtype == 'mysql':  # adjust spatial query for MySQL
+        LOGGER.debug('Adjusting spatial query for MySQL')
         if spatial_predicate == 'bbox':
             spatial_predicate = 'intersects'
 
@@ -237,6 +255,7 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
             geomfromtext('%s')),false)" % (spatial_predicate, geomattr, geometry.wkt)
 
     elif dbtype == 'postgresql+postgis':  # adjust spatial query for PostGIS
+        LOGGER.debug('Adjusting spatial query for PostgreSQL+PostGIS')
         if spatial_predicate == 'bbox':
             spatial_predicate = 'intersects'
 
@@ -250,6 +269,7 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
             spatial_query = "st_%s(st_geomfromtext(%s), \
             st_geomfromtext('%s'))" % (spatial_predicate, geomattr, geometry.wkt)
     else:
+        LOGGER.debug('Adjusting spatial query')
         spatial_query = "query_spatial(%s,'%s','%s','%s')" % \
         (geomattr, geometry.wkt, spatial_predicate, distance)
 
@@ -260,3 +280,4 @@ def _get_comparison_operator(element):
 
     return MODEL['ComparisonOperators']\
     ['ogc:%s' % util.xmltag_split(element.tag)]['opvalue'] 
+
