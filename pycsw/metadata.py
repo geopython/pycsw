@@ -30,10 +30,13 @@
 #
 # =================================================================
 
+import logging
 import urllib2
 import uuid
 from lxml import etree
 from pycsw import util
+
+LOGGER = logging.getLogger(__name__)
 
 def parse_record(context, record, repos=None,
     mtype='http://www.opengis.net/cat/csw/2.0.2',
@@ -46,6 +49,7 @@ def parse_record(context, record, repos=None,
     # parse web services
     if (mtype == 'http://www.opengis.net/cat/csw/2.0.2' and
         isinstance(record, str) and record.startswith('http')):
+        LOGGER.debug('CSW service detected, fetching via HTTP')
         # CSW service, not csw:Record
         try:
             return _parse_csw(context, repos, record, identifier, pagesize)
@@ -83,6 +87,8 @@ def parse_record(context, record, repos=None,
             exml = record
 
     root = exml.tag
+
+    LOGGER.debug('Serialized metadata, parsing content model')
 
     if root == '{%s}MD_Metadata' % context.namespaces['gmd']:  # ISO
         return [_parse_iso(context, repos, exml)]
@@ -161,6 +167,8 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     if pagesize > matches:
         pagesize = matches
 
+    LOGGER.debug('Harvesting %d CSW records' % matches)
+
     # loop over all catalogue records incrementally
     for r in range(1, matches, pagesize):
         md.getrecords(typenames=csw_typenames, startposition=r,
@@ -216,6 +224,9 @@ def _parse_wms(context, repos, record, identifier):
     recobjs.append(serviceobj) 
          
     # generate record foreach layer
+
+    LOGGER.debug('Harvesting %d WMS layers' % len(md.contents))
+
     for layer in md.contents:
         recobj = repos.dataset()
         identifier2 = '%s-%s' % (identifier, md.contents[layer].name)
@@ -289,6 +300,9 @@ def _parse_wfs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
     # generate record foreach featuretype
+
+    LOGGER.debug('Harvesting %d WFS featuretypes' % len(md.contents))
+
     for featuretype in md.contents:
         recobj = repos.dataset()
         identifier2 = '%s-%s' % (identifier, md.contents[featuretype].id)
@@ -366,6 +380,9 @@ def _parse_wcs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
     # generate record foreach coverage
+
+    LOGGER.debug('Harvesting %d WCS coverages ' % len(md.contents))
+
     for coverage in md.contents:
         recobj = repos.dataset()
         identifier2 = '%s-%s' % (identifier, md.contents[coverage].id)
@@ -738,3 +755,4 @@ def _parse_dc(context, repos, exml):
         _set(context, recobj, 'pycsw:BoundingBox', None)
 
     return recobj
+

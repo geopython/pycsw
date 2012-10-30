@@ -32,8 +32,11 @@
 
 import time
 import datetime
+import logging
 from lxml import etree
 from shapely.wkt import loads
+
+LOGGER = logging.getLogger(__name__)
 
 def get_today_and_now():
     ''' Get the date, right now, in ISO8601 '''
@@ -258,11 +261,14 @@ def getqattr(obj, name):
     try:
         value = getattr(obj, name)
         if hasattr(value, '__call__'):  # function generated value
+            LOGGER.debug('attribute is a function')
             if name.find('link') != -1:  # list of link tuple quadruplets
+                LOGGER.debug('attribute is a link')
                 return _linkify(value())
             return value()
         elif (isinstance(value, datetime.datetime)
         or isinstance(value, datetime.date)):  # datetime object
+            LOGGER.debug('attribute is a date')
             return datetime2iso8601(value)
         return value
     except:
