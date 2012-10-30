@@ -31,8 +31,11 @@
 #
 # =================================================================
 
+import logging
 from pycsw import util
 from owslib import crs
+
+LOGGER = logging.getLogger(__name__)
 
 TYPES = ['gml:Point', 'gml:LineString', 'gml:Polygon', 'gml:Envelope']
 
@@ -56,8 +59,10 @@ class Geometry(object):
         '|'.join(TYPES), namespaces={'gml':'http://www.opengis.net/gml'})[0]
 
         if operand.attrib.has_key('srsName'):
+            LOGGER.debug('geometry srsName detected')
             self.crs = crs.Crs(operand.attrib['srsName'])
         else:
+            LOGGER.debug('setting default geometry srsName %s' % DEFAULT_SRS)
             self.crs = DEFAULT_SRS
 
         self.type = util.xmltag_split(operand.tag)
@@ -76,6 +81,7 @@ class Geometry(object):
 
         # reproject data if needed    
         if self.crs is not None and self.crs.code != 4326:
+            LOGGER.debug('transforming geometry to 4326')
             try:
                 self.wkt = self.transform(self.crs.code, DEFAULT_SRS.code)
             except Exception, err:
@@ -180,6 +186,8 @@ class Geometry(object):
         from shapely.geometry import Point, LineString, Polygon
         from shapely.wkt import loads
 
+        LOGGER.debug('Transforming geometry from %s to %s' % (src, dest))
+
         try:
             proj_src = pyproj.Proj(init='epsg:%s' % src)
         except:
@@ -217,3 +225,4 @@ class Geometry(object):
             wkt2 = polygon.wkt
     
         return wkt2
+

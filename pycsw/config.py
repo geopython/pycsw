@@ -30,12 +30,17 @@
 #
 # =================================================================
 
+import logging
 from pycsw import __version__
+
+LOGGER = logging.getLogger(__name__)
 
 class StaticContext(object):
     ''' core configuration '''
     def __init__(self):
         ''' initializer '''
+
+        LOGGER.debug('Initializing static context')
         self.version = __version__
 
         self.ogc_schemas_base = 'http://schemas.opengis.net'
@@ -292,6 +297,8 @@ class StaticContext(object):
 
     def refresh_dc(self, mappings):
         ''' Refresh Dublin Core mappings '''
+
+        LOGGER.debug('refreshing Dublin Core mappings with %s' % str(mappings))
 
         defaults = {
             'dc:title': 'pycsw:Title',

@@ -30,11 +30,14 @@
 #
 # =================================================================
 
+import logging
 import os
 from sqlalchemy import create_engine, asc, desc, func, __version__, select
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
 from pycsw import util
+
+LOGGER = logging.getLogger(__name__)
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
@@ -54,6 +57,8 @@ class Repository(object):
 
         base = declarative_base(bind=engine)
 
+        LOGGER.debug('binding ORM to existing database')
+
         self.dataset = type('dataset', (base,),
         dict(__tablename__=table,__table_args__={'autoload': True}))
 
@@ -66,6 +71,7 @@ class Repository(object):
             try:
                 self.session.execute(select([func.postgis_version()]))
                 self.dbtype = 'postgresql+postgis'
+                LOGGER.debug('PostgreSQL+PostGIS detected')
             except:
                 pass
 
@@ -93,6 +99,7 @@ class Repository(object):
                 self.connection.create_function('get_geometry_area', 1,
                 util.get_geometry_area)
 
+        LOGGER.debug('setting repository queryables')
         # generate core queryables db and obj bindings
         self.queryables = {}
 
@@ -126,11 +133,13 @@ class Repository(object):
         ''' Query by property domain values '''
 
         if domainquerytype == 'range':
+            LOGGER.debug('Generating property name range values')
             query = self.session.query(
             func.min(getattr(self.dataset, domain)),
             func.max(getattr(self.dataset, domain)))
         else:
             if count is True:
+                LOGGER.debug('Generating property name frequency counts')
                 query = self.session.query(getattr(self.dataset, domain),
                 func.count(getattr(self.dataset, domain))).group_by(
                 getattr(self.dataset, domain))
@@ -165,6 +174,7 @@ class Repository(object):
 
         # run the raw query and get total
         if constraint.has_key('where'):  # GetRecords with constraint
+            LOGGER.debug('constraint detected')
             if not typenames:  # any typename
                 query = self.session.query(self.dataset).filter(
                 constraint['where'])
@@ -176,6 +186,7 @@ class Repository(object):
             total = query.count()
 
         else:  # GetRecords sans constraint
+            LOGGER.debug('No constraint detected')
             if not typenames:  # any typename
                 query = self.session.query(self.dataset)
             else:
@@ -185,6 +196,7 @@ class Repository(object):
             total = query.count()
 
         if sortby is not None:  # apply sorting
+            LOGGER.debug('sorting detected')
             sortby_column = getattr(self.dataset, sortby['propertyname'])
 
             if sortby['order'] == 'DESC':  # descending sort
@@ -225,7 +237,7 @@ class Repository(object):
             self.context.md_core_model['mappings']['pycsw:AnyText'])
 
         if recprops is None and constraint is None:  # full update
-
+            LOGGER.debug('full update')
             update_dict = dict([(getattr(self.dataset, key),
             getattr(record, key)) \
             for key in record.__dict__.keys() if key != '_sa_instance_state'])
@@ -239,6 +251,7 @@ class Repository(object):
                 self.session.rollback()
                 raise RuntimeError, 'ERROR: %s' % str(err)
         else:  # update based on record properties
+            LOGGER.debug('property based update')
             try:
                 rows = rows2 = 0
                 self.session.begin()
@@ -281,6 +294,7 @@ class Repository(object):
             rows=rows.delete(synchronize_session='fetch')
 
             if rows > 0:
+                LOGGER.debug('Deleting all child records')
                 # delete any child records which had this record as a parent
                 rows += self.session.query(self.dataset).filter(
                     getattr(self.dataset,
@@ -293,3 +307,4 @@ class Repository(object):
             raise RuntimeError, 'ERROR: %s' % str(err)
 
         return rows
+
