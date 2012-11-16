@@ -381,7 +381,7 @@ class Csw(object):
         LOGGER.debug('HTTP Headers:\n%s.' % self.environ)
         LOGGER.debug('Parsed request parameters: %s' % self.kvp)
 
-        if (isinstance(self.kvp, str) is False and
+        if (not isinstance(self.kvp, str) and
         self.kvp.has_key('mode') and self.kvp['mode'] == 'sru'):
             self.mode = 'sru'
             LOGGER.debug('SRU mode detected; processing request.')
@@ -389,7 +389,7 @@ class Csw(object):
             self.context.model['operations']['GetRecords']['parameters']\
             ['typeNames']['values'])
 
-        if (isinstance(self.kvp, str) is False and
+        if (not isinstance(self.kvp, str) and
         self.kvp.has_key('mode') and self.kvp['mode'] == 'opensearch'):
             self.mode = 'opensearch'
             LOGGER.debug('OpenSearch mode detected; processing request.')
@@ -910,7 +910,7 @@ class Csw(object):
     def describerecord(self):
         ''' Handle DescribeRecord request '''
 
-        if self.kvp.has_key('typename') is False or \
+        if not self.kvp.has_key('typename') or \
         len(self.kvp['typename']) == 0:  # missing typename
         # set to return all typenames
             self.kvp['typename'] = ['csw:Record']
@@ -973,8 +973,8 @@ class Csw(object):
 
     def getdomain(self):
         ''' Handle GetDomain request '''
-        if (self.kvp.has_key('parametername') is False and
-            self.kvp.has_key('propertyname') is False):
+        if (not self.kvp.has_key('parametername') and
+            not self.kvp.has_key('propertyname')):
             return self.exceptionreport('MissingParameterValue',
             'parametername', 'Missing value. \
             One of propertyname or parametername must be specified')
@@ -1079,7 +1079,7 @@ class Csw(object):
                             LOGGER.debug(str(result))
                             if (result is not None and
                                 result[0] is not None):  # drop null values
-                                if count is True:  # show counts
+                                if count:  # show counts
                                     val = '%s (%s)' % (result[0], result[1])
                                 else:
                                     val = result[0]
@@ -1096,14 +1096,14 @@ class Csw(object):
 
         timestamp = util.get_today_and_now()
 
-        if (self.kvp.has_key('elementsetname') is False and
-            self.kvp.has_key('elementname') is False):
+        if (not self.kvp.has_key('elementsetname') and
+            not self.kvp.has_key('elementname')):
             # mutually exclusive required
             return self.exceptionreport('MissingParameterValue',
             'elementsetname',
             'Missing one of ElementSetName or ElementName parameter(s)')
 
-        if self.kvp.has_key('outputschema') is False:
+        if not self.kvp.has_key('outputschema'):
             self.kvp['outputschema'] = self.context.namespaces['csw']
 
         if (self.kvp['outputschema'] not in self.context.model['operations']
@@ -1112,7 +1112,7 @@ class Csw(object):
             'outputschema', 'Invalid outputSchema parameter value: %s' %
             self.kvp['outputschema'])
 
-        if self.kvp.has_key('outputformat') is False:
+        if not self.kvp.has_key('outputformat'):
             self.kvp['outputformat'] = 'application/xml'
 
         if (self.kvp['outputformat'] not in self.context.model['operations']
@@ -1121,7 +1121,7 @@ class Csw(object):
             'outputformat', 'Invalid outputFormat parameter value: %s' %
             self.kvp['outputformat'])
 
-        if self.kvp.has_key('resulttype') is False:
+        if not self.kvp.has_key('resulttype'):
             self.kvp['resulttype'] = 'hits'
 
         if self.kvp['resulttype'] is not None:
@@ -1131,7 +1131,7 @@ class Csw(object):
                 'resulttype', 'Invalid resultType parameter value: %s' %
                 self.kvp['resulttype'])
 
-        if ((self.kvp.has_key('elementname') is False or
+        if ((not self.kvp.has_key('elementname') or
              len(self.kvp['elementname']) == 0) and
              self.kvp['elementsetname'] not in
              self.context.model['operations']['GetRecords']['parameters']
@@ -1145,7 +1145,7 @@ class Csw(object):
             self.kvp['elementname'] = self.kvp['elementname'].split(',')
             self.kvp['elementsetname'] = 'summary'
 
-        if self.kvp.has_key('typenames') is False:
+        if not self.kvp.has_key('typenames'):
             return self.exceptionreport('MissingParameterValue',
             'typenames', 'Missing typenames parameter')
 
@@ -1173,14 +1173,14 @@ class Csw(object):
         if self.kvp['resulttype'] == 'validate':
             return self._write_acknowledgement()
 
-        if self.kvp.has_key('maxrecords') is False:
+        if not self.kvp.has_key('maxrecords'):
             self.kvp['maxrecords'] = int(self.config.get('server', 'maxrecords'))
 
         if self.requesttype == 'GET':
             if self.kvp.has_key('constraint'):
                 # GET request
                 LOGGER.debug('csw:Constraint passed over HTTP GET.')
-                if self.kvp.has_key('constraintlanguage') is False:
+                if not self.kvp.has_key('constraintlanguage'):
                     return self.exceptionreport('MissingParameterValue',
                     'constraintlanguage',
                     'constraintlanguage required when constraint specified')
@@ -1225,7 +1225,7 @@ class Csw(object):
             else:
                 self.kvp['constraint'] = {}
 
-        if self.kvp.has_key('sortby') is False:
+        if not self.kvp.has_key('sortby'):
             self.kvp['sortby'] = None
         elif self.kvp.has_key('sortby') and self.requesttype == 'GET':
             LOGGER.debug('Sorted query specified.')
@@ -1258,7 +1258,7 @@ class Csw(object):
             else:
                 self.kvp['sortby']['order'] = 'ASC'
 
-        if self.kvp.has_key('startposition') is False:
+        if not self.kvp.has_key('startposition'):
             self.kvp['startposition'] = 1
 
         # query repository
@@ -1346,7 +1346,7 @@ class Csw(object):
         etree.SubElement(node, util.nspath_eval('csw:SearchStatus',
         self.context.namespaces), timestamp=timestamp)
 
-        if self.kvp['constraint'].has_key('where') is False and \
+        if not self.kvp['constraint'].has_key('where') and \
         self.kvp['resulttype'] is None:
             returned = '0'
 
@@ -1358,7 +1358,7 @@ class Csw(object):
         if self.kvp['elementsetname'] is not None:
             searchresults.attrib['elementSet'] = self.kvp['elementsetname']
 
-        if self.kvp['constraint'].has_key('where') is False \
+        if not self.kvp['constraint'].has_key('where') \
         and self.kvp['resulttype'] is None:
             LOGGER.debug('Empty result set returned.')
             return node
@@ -1429,13 +1429,13 @@ class Csw(object):
     def getrecordbyid(self, raw=False):
         ''' Handle GetRecordById request '''
 
-        if self.kvp.has_key('id') is False:
+        if not self.kvp.has_key('id'):
             return self.exceptionreport('MissingParameterValue', 'id',
             'Missing id parameter')
         if len(self.kvp['id']) < 1:
             return self.exceptionreport('InvalidParameterValue', 'id',
             'Invalid id parameter')
-        if self.kvp.has_key('outputschema') is False:
+        if not self.kvp.has_key('outputschema'):
             self.kvp['outputschema'] = self.context.namespaces['csw']
 
         if self.requesttype == 'GET':
@@ -1456,7 +1456,7 @@ class Csw(object):
             'outputschema', 'Invalid outputschema parameter %s' %
             self.kvp['outputschema'])
 
-        if self.kvp.has_key('elementsetname') is False:
+        if not self.kvp.has_key('elementsetname'):
             self.kvp['elementsetname'] = 'summary'
         else:
             if (self.kvp['elementsetname'] not in
@@ -1558,8 +1558,8 @@ class Csw(object):
 
                 LOGGER.debug('Transaction operation: %s' % record)
 
-                if hasattr(record,
-                self.context.md_core_model['mappings']['pycsw:Identifier']) is False:
+                if not hasattr(record,
+                self.context.md_core_model['mappings']['pycsw:Identifier']):
                     return self.exceptionreport('NoApplicableCode',
                     'insert', 'Record requires an identifier')
 
@@ -1579,7 +1579,7 @@ class Csw(object):
                     'insert', 'Transaction (insert) failed: %s.' % str(err))
 
             elif ttype['type'] == 'update':
-                if ttype.has_key('constraint') is False:
+                if not ttype.has_key('constraint'):
                     # update full existing resource in repository
                     try:
                         record = metadata.parse_record(self.context,
@@ -1692,8 +1692,9 @@ class Csw(object):
             content, self.repository, self.kvp['resourcetype'],
             pagesize=self.csw_harvest_pagesize)
         except Exception, err:
+            import traceback
             return self.exceptionreport('NoApplicableCode', 'source',
-            'Harvest failed: record parsing failed: %s' % str(err))
+            'Harvest failed: record parsing failed: %s' % traceback.format_exc())
 
         inserted = 0
         updated = 0
@@ -2306,7 +2307,7 @@ class Csw(object):
 
         ipaddress = self.environ['REMOTE_ADDR']
 
-        if self.config.has_option('manager', 'allowed_ips') is False or \
+        if not self.config.has_option('manager', 'allowed_ips') or \
         (self.config.has_option('manager', 'allowed_ips') and ipaddress not in
         self.config.get('manager', 'allowed_ips').split(',')):
             raise RuntimeError, \

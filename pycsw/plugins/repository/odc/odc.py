@@ -95,7 +95,7 @@ class OpenDataCatalogRepository(object):
             return [tuple(Resource.objects.aggregate(
             Min(domain), Max(domain)).values())]
         else:
-            if count is True:
+            if count:
                 return [(d[domain], d['%s__count' % domain]) \
                 for d in Resource.objects.values(domain).annotate(Count(domain))]
             else:
@@ -138,7 +138,7 @@ class OpenDataCatalogRepository(object):
 
         # apply sorting, limit and offset
         if sortby is not None:
-            if sortby.has_key('spatial') and sortby['spatial'] is True:  # spatial sort
+            if sortby.has_key('spatial') and sortby['spatial']:  # spatial sort
                 desc = False
                 if sortby['order'] == 'DESC':
                     desc = True

@@ -90,7 +90,7 @@ class GeoNodeRepository(object):
             return [tuple(Layer.objects.aggregate(
             Min(domain), Max(domain)).values())]
         else:
-            if count is True:
+            if count:
                 return [(d[domain], d['%s__count' % domain]) \
                 for d in Layer.objects.values(domain).annotate(Count(domain))]
             else:

@@ -64,13 +64,13 @@ def http_req(method, url, request):
 
 def get_validity(expected, result, outfile):
     ''' Decipher whether the output passes, fails, or initializes '''
-    if os.path.exists(expected) is False:  # create expected file
+    if not os.path.exists(expected):  # create expected file
         expectedfile = open(expected, 'w')
         expectedfile.write(normalize(result))
         expectedfile.close()
         status = 0
     else:  # compare result with expected
-        if os.path.exists('results') is False:
+        if not os.path.exists('results'):
             os.mkdir('results')
         resultfile = open('results%s%s' % (os.sep, outfile), 'wb')
         resultfile.write(normalize(result))

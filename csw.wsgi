@@ -73,7 +73,7 @@ def application(env, start_response):
             if kvp.lower().find('config') != -1:
                 config = kvp.split('=')[1]
     
-    if os.path.isabs(config) is False:
+    if not os.path.isabs(config):
         config = os.path.join(app_path, config)
 
     if 'HTTP_HOST' in env and ':' in env['HTTP_HOST']:
