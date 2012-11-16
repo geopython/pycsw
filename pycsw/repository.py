@@ -138,7 +138,7 @@ class Repository(object):
             func.min(getattr(self.dataset, domain)),
             func.max(getattr(self.dataset, domain)))
         else:
-            if count is True:
+            if count:
                 LOGGER.debug('Generating property name frequency counts')
                 query = self.session.query(getattr(self.dataset, domain),
                 func.count(getattr(self.dataset, domain))).group_by(
@@ -200,12 +200,12 @@ class Repository(object):
             sortby_column = getattr(self.dataset, sortby['propertyname'])
 
             if sortby['order'] == 'DESC':  # descending sort
-                if sortby.has_key('spatial') and sortby['spatial'] is True:  # spatial sort
+                if sortby.has_key('spatial') and sortby['spatial']:  # spatial sort
                     query = query.order_by(func.get_geometry_area(sortby_column).desc())
                 else:  # aspatial sort
                     query = query.order_by(sortby_column.desc())
             else:  # ascending sort
-                if sortby.has_key('spatial') and sortby['spatial'] is True:  # spatial sort
+                if sortby.has_key('spatial') and sortby['spatial']:  # spatial sort
                     query = query.order_by(func.get_geometry_area(sortby_column))
                 else:  # aspatial sort
                     query = query.order_by(sortby_column)
