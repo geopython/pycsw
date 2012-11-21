@@ -12,7 +12,6 @@ install:
 
 before_script:
   - paver start
-  - sleep 10
 
 script:
   - paver test
