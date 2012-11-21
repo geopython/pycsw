@@ -31,9 +31,11 @@
 # =================================================================
 
 import os
-from paver.easy import task, options, cmdopts, needs, pushd, sh, call_task
+import time
+from paver.easy import task, options, cmdopts, needs, pushd, sh, call_task, path, info
 
 docs = 'docs'
+stage_dir = '/tmp'
 
 @task
 def build_release():
@@ -83,6 +85,9 @@ def publish_docs(options):
 def gen_tests_html():
     """Generated tests/index.html for online testing"""
     with pushd('tests'):
+        # ensure manager testsuite is writeable
+        os.chmod(os.path.join('suites', 'manager', 'data'), 0777)
+        os.chmod(os.path.join('suites', 'manager', 'data', 'records.db'), 0666)
         sh('python gen_html.py > index.html')
 
 
@@ -91,4 +96,118 @@ def gen_tests_html():
 def publish_pypi():
     """Publish to PyPI"""
     pass
+
+
+@task
+def package():
+    """Package a distribution .tar.gz/.zip"""
+
+    import pycsw
+
+    version = pycsw.__version__
+
+    package_name = 'pycsw-%s' % version
+
+    call_task('package_tar_gz', options={'package_name': package_name})
+
+
+@task
+@cmdopts([
+    ('package_name=', 'p', 'Name of package'),
+])
+def package_tar_gz(options):
+    """Package a .tar.gz distribution"""
+
+    import tarfile
+
+    package_name = options.get('package_name', None)
+
+    if package_name is None:
+        raise Exception('Package name required')
+
+    filename = path('%s/%s.tar.gz' % (stage_dir, package_name))
+
+    if filename.exists():
+        info('Package %s already exists' % filename)
+        return
+
+    with pushd(stage_dir):
+        stage_path = '%s/%s' % (stage_dir, package_name)
+
+        if not path(stage_path).exists():
+            raise Exception('Directory %s does not exist' % stage_path)
+
+        tar = tarfile.open(filename, 'w:gz')
+        tar.add(package_name)
+        tar.close()
+
+
+@task
+@cmdopts([
+    ('url=', 'u', 'pycsw endpoint'),
+])
+def test(options):
+    """Run unit tests"""
+
+    url = options.get('url', None)
+
+    if url is None:
+        raise Exception('pycsw endpoint required')
+
+    with pushd('tests'):
+        sh('python run_tests.py %s' % url)
+
+
+@task
+def start(options):
+    """Start local WSGI server instance"""
+    sh('python csw.wsgi 8000 &')
+
+
+@task
+def stop(options):
+    """Stop local WSGI server instance"""
+    kill('python', 'csw.wsgi')
+
+
+def kill(arg1, arg2):
+    """Stops a proces that contains arg1 and is filtered by arg2"""
+
+    # from https://github.com/GeoNode/geonode/blob/dev/pavement.py#L443
+    from subprocess import Popen, PIPE
+
+    # Wait until ready
+    t0 = time.time()
+    # Wait no more than these many seconds
+    time_out = 30
+    running = True
+
+    while running and time.time() - t0 < time_out:
+        p = Popen('ps aux | grep %s' % arg1, shell=True,
+                  stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
+
+        lines = p.stdout.readlines()
+
+        running = False
+        for line in lines:
+
+            if '%s' % arg2 in line:
+                running = True
+
+                # Get pid
+                fields = line.strip().split()
+
+                info('Stopping %s (process number %s)' % (arg1, fields[1]))
+                kill = 'kill -9 %s 2> /dev/null' % fields[1]
+                os.system(kill)
+
+        # Give it a little more time
+        time.sleep(1)
+    else:
+        pass
+
+    if running:
+        raise Exception('Could not stop %s: '
+                        'Running processes are\n%s'
+                        % (arg1, '\n'.join([l.strip() for l in lines])))
 
