@@ -153,7 +153,9 @@ def test(options):
     url = options.get('url', None)
 
     if url is None:
-        raise Exception('pycsw endpoint required')
+        # run against default server
+        call_task('start')
+        url = 'http://localhost:8000'
 
     with pushd('tests'):
         sh('python run_tests.py %s' % url)
@@ -162,8 +164,8 @@ def test(options):
 @task
 def start(options):
     """Start local WSGI server instance"""
-
     sh('python csw.wsgi 8000 &')
+    time.sleep(10)
 
 
 @task
