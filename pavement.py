@@ -32,10 +32,11 @@
 
 import os
 import time
-from paver.easy import task, options, cmdopts, needs, pushd, sh, call_task, path, info
+from paver.easy import task, cmdopts, needs, \
+    pushd, sh, call_task, path, info
 
-docs = 'docs'
-stage_dir = '/tmp'
+DOCS = 'docs'
+STAGE_DIR = '/tmp'
 
 @task
 def build_release():
@@ -46,7 +47,7 @@ def build_release():
 @task
 def refresh_docs():
     """Build sphinx docs from scratch"""
-    with pushd(docs):
+    with pushd(DOCS):
         sh('make clean')
         sh('make html')
 
@@ -68,7 +69,7 @@ def publish_docs(options):
 
     call_task('make_docs')
 
-    with pushd(docs):
+    with pushd(DOCS):
         # change privs to be group writeable
         for root, dirs, files in os.walk(local_path):
             for dfile in files:
@@ -125,14 +126,14 @@ def package_tar_gz(options):
     if package_name is None:
         raise Exception('Package name required')
 
-    filename = path('%s/%s.tar.gz' % (stage_dir, package_name))
+    filename = path('%s/%s.tar.gz' % (STAGE_DIR, package_name))
 
     if filename.exists():
         info('Package %s already exists' % filename)
         return
 
-    with pushd(stage_dir):
-        stage_path = '%s/%s' % (stage_dir, package_name)
+    with pushd(STAGE_DIR):
+        stage_path = '%s/%s' % (STAGE_DIR, package_name)
 
         if not path(stage_path).exists():
             raise Exception('Directory %s does not exist' % stage_path)
@@ -161,12 +162,14 @@ def test(options):
 @task
 def start(options):
     """Start local WSGI server instance"""
+
     sh('python csw.wsgi 8000 &')
 
 
 @task
-def stop(options):
+def stop():
     """Stop local WSGI server instance"""
+
     kill('python', 'csw.wsgi')
 
 
@@ -177,16 +180,16 @@ def kill(arg1, arg2):
     from subprocess import Popen, PIPE
 
     # Wait until ready
-    t0 = time.time()
+    time0 = time.time()
     # Wait no more than these many seconds
     time_out = 30
     running = True
 
-    while running and time.time() - t0 < time_out:
-        p = Popen('ps aux | grep %s' % arg1, shell=True,
+    while running and time.time() - time0 < time_out:
+        proc = Popen('ps aux | grep %s' % arg1, shell=True,
                   stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
 
-        lines = p.stdout.readlines()
+        lines = proc.stdout.readlines()
 
         running = False
         for line in lines:
@@ -198,8 +201,8 @@ def kill(arg1, arg2):
                 fields = line.strip().split()
 
                 info('Stopping %s (process number %s)' % (arg1, fields[1]))
-                kill = 'kill -9 %s 2> /dev/null' % fields[1]
-                os.system(kill)
+                kill2 = 'kill -9 %s 2> /dev/null' % fields[1]
+                os.system(kill2)
 
         # Give it a little more time
         time.sleep(1)
