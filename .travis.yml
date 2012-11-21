@@ -11,14 +11,14 @@ install:
   - python ./setup.py -q install
 
 before_script:
-  - python ./csw.wsgi 8001 &
+  - paver start
   - sleep 10
 
 script:
-  - cd ./tests && python ./run_tests.py http://127.0.0.1:8001/
+  - paver test
 
 after_script:
-  - kill %1
+  - paver stop
 
 notifications:
   irc:
