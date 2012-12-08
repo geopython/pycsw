@@ -63,11 +63,11 @@ def publish_docs(options):
     remote_path = '/osgeo/pycsw/pycsw-web'
 
     user = options.get('user', False)
-
+    user='tomkralidis'
     if not user:
         raise Exception('OSGeo userid required')
 
-    call_task('make_docs')
+    call_task('refresh_docs')
 
     with pushd(DOCS):
         # change privs to be group writeable
