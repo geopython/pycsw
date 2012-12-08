@@ -42,6 +42,10 @@ from lxml import etree
 from shapely.wkt import loads
 from pycsw.plugins.profiles import profile as pprofile
 from pycsw import config, fes, log, metadata, util, sru, opensearch
+import logging
+
+LOGGER = logging.getLogger(__name__)
+
 
 class Csw(object):
     ''' Base CSW server '''
@@ -57,8 +61,8 @@ class Csw(object):
 
         # Lazy load this when needed
         # (it will permanently update global cfg namespaces)
-        self.sruobj = None 
-        self.opensearchobj = None 
+        self.sruobj = None
+        self.opensearchobj = None
 
         # init kvp
         self.kvp = {}
@@ -103,16 +107,10 @@ class Csw(object):
         # configure transaction support, if specified in config
         self._gen_manager()
 
-        # configure logging
-        try:
-            self.log = log.Log(self.config)
-        except Exception, err:
-            self.response = self.exceptionreport(
-            'NoApplicableCode', 'service', str(err))
-            return
+        log.setup_logger(self.config)
 
-        self.log.debug('running configuration %s' % rtconfig)
-        self.log.debug(str(self.environ['QUERY_STRING']))
+        LOGGER.debug('running configuration %s' % rtconfig)
+        LOGGER.debug(str(self.environ['QUERY_STRING']))
 
         # generate domain model
         # NOTE: We should probably avoid this sort of mutable state for WSGI
@@ -144,7 +142,7 @@ class Csw(object):
 
         # generate distributed search model, if specified in config
         if self.config.has_option('server', 'federatedcatalogues'):
-            self.log.debug('Configuring distributed search.')
+            LOGGER.debug('Configuring distributed search.')
 
             self.context.model['constraints']['FederatedCatalogues'] = \
             {'values': []}
@@ -154,8 +152,8 @@ class Csw(object):
                 self.context.model\
                 ['constraints']['FederatedCatalogues']['values'].append(fedcat)
 
-        self.log.debug('Configuration: %s.' % self.config)
-        self.log.debug('Model: %s.' % self.context.model)
+        LOGGER.debug('Configuration: %s.' % self.config)
+        LOGGER.debug('Model: %s.' % self.context.model)
 
         # load user-defined mappings if they exist
         if self.config.has_option('repository', 'mappings'):
@@ -165,7 +163,7 @@ class Csw(object):
                 module = self.config.get('repository','mappings')
                 modulename = '%s' % \
                 os.path.splitext(module)[0].replace(os.sep, '.')
-                self.log.debug(
+                LOGGER.debug(
                 'Loading custom repository mappings from %s.' % module)
                 mappings = imp.load_source(modulename, module)
                 self.context.md_core_model = mappings.MD_CORE_MODEL
@@ -176,7 +174,7 @@ class Csw(object):
                 'Could not load repository.mappings %s' % str(err))
 
         # load profiles
-        self.log.debug('Loading profiles.')
+        LOGGER.debug('Loading profiles.')
 
         if self.config.has_option('server', 'profiles'):
             self.profiles = pprofile.load_profiles(
@@ -194,10 +192,10 @@ class Csw(object):
                 self.context.model, self.context.namespaces,
                 self.config)
 
-            self.log.debug('Profiles loaded: %s.' %
+            LOGGER.debug('Profiles loaded: %s.' %
             self.profiles['loaded'].keys())
 
-        self.log.debug('Namespaces: %s' % self.context.namespaces)
+        LOGGER.debug('Namespaces: %s' % self.context.namespaces)
 
         # init repository
         # look for tablename, set 'records' as default
@@ -213,7 +211,7 @@ class Csw(object):
             try:
                 self.repository = \
                 geonode_.GeoNodeRepository(self.context)
-                self.log.debug('GeoNode repository loaded (geonode): %s.' % \
+                LOGGER.debug('GeoNode repository loaded (geonode): %s.' % \
                 self.repository.dbtype)
             except Exception, err:
                 self.response = self.exceptionreport(
@@ -224,12 +222,12 @@ class Csw(object):
             self.config.get('repository', 'source') == 'odc'):
 
             # load odc repository
-            from pycsw.plugins.repository.odc import odc 
+            from pycsw.plugins.repository.odc import odc
 
             try:
                 self.repository = \
                 odc.OpenDataCatalogRepository(self.context)
-                self.log.debug('OpenDataCatalog repository loaded (geonode): %s.' % \
+                LOGGER.debug('OpenDataCatalog repository loaded (geonode): %s.' % \
                 self.repository.dbtype)
             except Exception, err:
                 self.response = self.exceptionreport(
@@ -243,7 +241,7 @@ class Csw(object):
                 repository.Repository(self.config.get('repository', 'database'),
                 self.context, self.environ.get('local.app_root', None),
                 self.config.get('repository', 'table'))
-                self.log.debug('Repository loaded (local): %s.' \
+                LOGGER.debug('Repository loaded (local): %s.' \
                 % self.repository.dbtype)
             except Exception, err:
                 self.response = self.exceptionreport(
@@ -263,27 +261,27 @@ class Csw(object):
         if hasattr(self,'response'):
             return self._write_response()
 
-        self.log.debug('CGI mode detected')
+        LOGGER.debug('CGI mode detected')
 
         cgifs = cgi.FieldStorage(keep_blank_values=1)
-    
+
         if cgifs.file:  # it's a POST request
             postdata = cgifs.file.read()
             self.requesttype = 'POST'
             self.request = postdata
-            self.log.debug('Request type: POST.  Request:\n%s\n', self.request)
+            LOGGER.debug('Request type: POST.  Request:\n%s\n', self.request)
             self.kvp = self.parse_postdata(postdata)
             if isinstance(self.kvp, str):  # it's an exception
                 error = 1
                 locator = 'service'
                 code = 'InvalidRequest'
                 text = self.kvp
-    
+
         else:  # it's a GET request
             self.requesttype = 'GET'
             self.request = 'http://%s%s' % \
             (self.environ['HTTP_HOST'], self.environ['REQUEST_URI'])
-            self.log.debug('Request type: GET.  Request:\n%s\n', self.request)
+            LOGGER.debug('Request type: GET.  Request:\n%s\n', self.request)
             for key in cgifs.keys():
                 self.kvp[key.lower()] = cgifs[key].value
 
@@ -295,7 +293,7 @@ class Csw(object):
         if hasattr(self,'response'):
             return self._write_response()
 
-        self.log.debug('WSGI mode detected')
+        LOGGER.debug('WSGI mode detected')
 
         if self.environ['REQUEST_METHOD'] == 'POST':
             try:
@@ -307,9 +305,9 @@ class Csw(object):
 
             self.requesttype = 'POST'
             self.request = postdata
-            self.log.debug('Request type: POST.  Request:\n%s\n', self.request)
+            LOGGER.debug('Request type: POST.  Request:\n%s\n', self.request)
             self.kvp = self.parse_postdata(postdata)
-    
+
         else:  # it's a GET request
             from urllib import quote
             self.requesttype = 'GET'
@@ -335,8 +333,8 @@ class Csw(object):
                 url += '?' + self.environ['QUERY_STRING']
 
             self.request = url
-            self.log.debug('Request type: GET.  Request:\n%s\n', self.request)
-            
+            LOGGER.debug('Request type: GET.  Request:\n%s\n', self.request)
+
             pairs = self.environ.get('QUERY_STRING').split("&")
 
             kvp = {}
@@ -350,11 +348,11 @@ class Csw(object):
                     kvp[pair[0]] = ""
                 else:
                     kvp[pair[0]] = pair[1]
-                    
+
             self.kvp = kvp
 
         return self.dispatch()
-        
+
     def opensearch(self):
         ''' enable OpenSearch '''
         if not self.opensearchobj:
@@ -380,21 +378,21 @@ class Csw(object):
             code = 'InvalidRequest'
             text = self.kvp
 
-        self.log.debug('HTTP Headers:\n%s.' % self.environ)
-        self.log.debug('Parsed request parameters: %s' % self.kvp)
+        LOGGER.debug('HTTP Headers:\n%s.' % self.environ)
+        LOGGER.debug('Parsed request parameters: %s' % self.kvp)
 
-        if (isinstance(self.kvp, str) is False and
+        if (not isinstance(self.kvp, str) and
         self.kvp.has_key('mode') and self.kvp['mode'] == 'sru'):
             self.mode = 'sru'
-            self.log.debug('SRU mode detected; processing request.')
+            LOGGER.debug('SRU mode detected; processing request.')
             self.kvp = self.sru().request_sru2csw(self.kvp,
             self.context.model['operations']['GetRecords']['parameters']\
             ['typeNames']['values'])
 
-        if (isinstance(self.kvp, str) is False and
+        if (not isinstance(self.kvp, str) and
         self.kvp.has_key('mode') and self.kvp['mode'] == 'opensearch'):
             self.mode = 'opensearch'
-            self.log.debug('OpenSearch mode detected; processing request.')
+            LOGGER.debug('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
         if error == 0:
@@ -410,7 +408,7 @@ class Csw(object):
                         code = 'MissingParameterValue'
                         text = 'Missing keyword: %s' % k
                         break
-        
+
             # test each of the basic keyword values
             if error == 0:
                 # test service
@@ -420,7 +418,7 @@ class Csw(object):
                     code = 'InvalidParameterValue'
                     text = 'Invalid value for service: %s.\
                     Value MUST be CSW' % self.kvp['service']
-        
+
                 # test version
                 if (self.kvp.has_key('version') and
                     util.get_version_integer(self.kvp['version']) !=
@@ -431,7 +429,7 @@ class Csw(object):
                     code = 'InvalidParameterValue'
                     text = 'Invalid value for version: %s.\
                     Value MUST be 2.0.2' % self.kvp['version']
-        
+
                 # check for GetCapabilities acceptversions
                 if self.kvp.has_key('acceptversions'):
                     for vers in self.kvp['acceptversions'].split(','):
@@ -462,7 +460,7 @@ class Csw(object):
 
         if error == 1:  # return an ExceptionReport
             self.response = self.exceptionreport(code, locator, text)
-    
+
         else:  # process per the request value
 
             if self.kvp.has_key('responsehandler'):
@@ -504,11 +502,11 @@ class Csw(object):
                 self.kvp['request'])
 
         if self.mode == 'sru':
-            self.log.debug('SRU mode detected; processing response.')
+            LOGGER.debug('SRU mode detected; processing response.')
             self.response = self.sru().response_csw2sru(self.response,
                             self.environ)
         elif self.mode == 'opensearch':
-            self.log.debug('OpenSearch mode detected; processing response.')
+            LOGGER.debug('OpenSearch mode detected; processing response.')
             self.response = self.opensearch().response_csw2opensearch(
                             self.response, self.config)
 
@@ -543,7 +541,7 @@ class Csw(object):
         self.context.namespaces)).text = text
 
         return node
-    
+
     def getcapabilities(self):
         ''' Handle GetCapabilities request '''
         serviceidentification = True
@@ -587,9 +585,9 @@ class Csw(object):
                 return node
             elif int(self.kvp['updatesequence']) > updatesequence:
                 return self.exceptionreport('InvalidUpdateSequence',
-                'updatesequence', 
+                'updatesequence',
                 'outputsequence specified (%s) is higher than server\'s \
-                updatesequence (%s)' % (self.kvp['updatesequence'], 
+                updatesequence (%s)' % (self.kvp['updatesequence'],
                 updatesequence))
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
@@ -600,7 +598,7 @@ class Csw(object):
         metadata_main = dict(self.config.items('metadata:main'))
 
         if serviceidentification:
-            self.log.debug('Writing section ServiceIdentification.')
+            LOGGER.debug('Writing section ServiceIdentification.')
 
             serviceidentification = etree.SubElement(node, \
             util.nspath_eval('ows:ServiceIdentification',
@@ -646,7 +644,7 @@ class Csw(object):
             metadata_main.get('identification_accessconstraints', 'missing')
 
         if serviceprovider:
-            self.log.debug('Writing section ServiceProvider.')
+            LOGGER.debug('Writing section ServiceProvider.')
             serviceprovider = etree.SubElement(node,
             util.nspath_eval('ows:ServiceProvider', self.context.namespaces))
 
@@ -748,7 +746,7 @@ class Csw(object):
             metadata_main.get('contact_role', 'missing')
 
         if operationsmetadata:
-            self.log.debug('Writing section OperationsMetadata.')
+            LOGGER.debug('Writing section OperationsMetadata.')
             operationsmetadata = etree.SubElement(node,
             util.nspath_eval('ows:OperationsMetadata',
             self.context.namespaces))
@@ -775,7 +773,7 @@ class Csw(object):
                     self.context.namespaces)] = self.config.get('server', 'url')
 
                 if self.context.model['operations'][operation]['methods']['post']:
-                    post = etree.SubElement(http, util.nspath_eval('ows:Post', 
+                    post = etree.SubElement(http, util.nspath_eval('ows:Post',
                     self.context.namespaces))
                     post.attrib[util.nspath_eval('xlink:type',
                     self.context.namespaces)] = 'simple'
@@ -802,7 +800,7 @@ class Csw(object):
                             param = etree.SubElement(oper,
                             util.nspath_eval('ows:Constraint',
                             self.context.namespaces), name=qbl)
-    
+
                             for qbl2 in self.repository.queryables[qbl]:
                                 etree.SubElement(param,
                                 util.nspath_eval('ows:Value',
@@ -837,7 +835,7 @@ class Csw(object):
                 for val in self.context.model['constraints'][constraint]['values']:
                     etree.SubElement(param, util.nspath_eval('ows:Value',
                     self.context.namespaces)).text = val
-            
+
             if self.profiles is not None:
                 for prof in self.profiles['loaded'].keys():
                     ecnode = \
@@ -846,7 +844,7 @@ class Csw(object):
                         operationsmetadata.append(ecnode)
 
         # always write out Filter_Capabilities
-        self.log.debug('Writing section Filter_Capabilities.')
+        LOGGER.debug('Writing section Filter_Capabilities.')
         fltcaps = etree.SubElement(node,
         util.nspath_eval('ogc:Filter_Capabilities', self.context.namespaces))
 
@@ -861,7 +859,7 @@ class Csw(object):
             etree.SubElement(geomops,
             util.nspath_eval('ogc:GeometryOperand',
             self.context.namespaces)).text = geomtype
-    
+
         spatialops = etree.SubElement(spatialcaps,
         util.nspath_eval('ogc:SpatialOperators', self.context.namespaces))
 
@@ -870,16 +868,16 @@ class Csw(object):
             etree.SubElement(spatialops,
             util.nspath_eval('ogc:SpatialOperator', self.context.namespaces),
             name=spatial_comparison)
-    
+
         scalarcaps = etree.SubElement(fltcaps,
         util.nspath_eval('ogc:Scalar_Capabilities', self.context.namespaces))
 
         etree.SubElement(scalarcaps, util.nspath_eval('ogc:LogicalOperators',
         self.context.namespaces))
-        
+
         cmpops = etree.SubElement(scalarcaps,
         util.nspath_eval('ogc:ComparisonOperators', self.context.namespaces))
-    
+
         for cmpop in fes.MODEL['ComparisonOperators'].keys():
             etree.SubElement(cmpops,
             util.nspath_eval('ogc:ComparisonOperator',
@@ -908,11 +906,11 @@ class Csw(object):
             self.context.namespaces))
 
         return node
-    
+
     def describerecord(self):
         ''' Handle DescribeRecord request '''
-    
-        if self.kvp.has_key('typename') is False or \
+
+        if not self.kvp.has_key('typename') or \
         len(self.kvp['typename']) == 0:  # missing typename
         # set to return all typenames
             self.kvp['typename'] = ['csw:Record']
@@ -932,7 +930,7 @@ class Csw(object):
             return self.exceptionreport('InvalidParameterValue',
             'outputformat', 'Invalid value for outputformat: %s' %
             self.kvp['outputformat'])
-    
+
         if (self.kvp.has_key('schemalanguage') and
             self.kvp['schemalanguage'] not in
             self.context.model['operations']['DescribeRecord']['parameters']
@@ -950,8 +948,8 @@ class Csw(object):
         self.config.get('server', 'ogc_schemas_base'))
 
         for typename in self.kvp['typename']:
-            if typename == 'csw:Record':   # load core schema    
-                self.log.debug('Writing csw:Record schema.')
+            if typename == 'csw:Record':   # load core schema
+                LOGGER.debug('Writing csw:Record schema.')
                 schemacomponent = etree.SubElement(node,
                 util.nspath_eval('csw:SchemaComponent', self.context.namespaces),
                 schemaLanguage='XMLSCHEMA',
@@ -972,15 +970,15 @@ class Csw(object):
                         if scnodes is not None:
                             map(node.append, scnodes)
         return node
-    
+
     def getdomain(self):
         ''' Handle GetDomain request '''
-        if (self.kvp.has_key('parametername') is False and
-            self.kvp.has_key('propertyname') is False):
+        if (not self.kvp.has_key('parametername') and
+            not self.kvp.has_key('propertyname')):
             return self.exceptionreport('MissingParameterValue',
             'parametername', 'Missing value. \
             One of propertyname or parametername must be specified')
-        
+
         node = etree.Element(util.nspath_eval('csw:GetDomainResponse',
         self.context.namespaces), nsmap=self.context.namespaces)
 
@@ -991,7 +989,7 @@ class Csw(object):
 
         if self.kvp.has_key('parametername'):
             for pname in self.kvp['parametername'].split(','):
-                self.log.debug('Parsing parametername %s.' % pname)
+                LOGGER.debug('Parsing parametername %s.' % pname)
                 domainvalue = etree.SubElement(node,
                 util.nspath_eval('csw:DomainValues', self.context.namespaces),
                 type='csw:Record')
@@ -1016,7 +1014,7 @@ class Csw(object):
 
         if self.kvp.has_key('propertyname'):
             for pname in self.kvp['propertyname'].split(','):
-                self.log.debug('Parsing propertyname %s.' % pname)
+                LOGGER.debug('Parsing propertyname %s.' % pname)
 
                 if pname.find('/') == 0:  # it's an XPath
                     pname2 = pname
@@ -1045,7 +1043,7 @@ class Csw(object):
                 self.context.namespaces)).text = pname
 
                 try:
-                    self.log.debug(
+                    LOGGER.debug(
                     'Querying repository property %s, typename %s, \
                     domainquerytype %s.' % \
                     (pname2, dvtype, self.domainquerytype))
@@ -1059,7 +1057,7 @@ class Csw(object):
                     results = self.repository.query_domain(
                     pname2, dvtype, self.domainquerytype, count)
 
-                    self.log.debug('Results: %s' % str(len(results)))
+                    LOGGER.debug('Results: %s' % str(len(results)))
 
                     if self.domainquerytype == 'range':
                         rangeofvalues = etree.SubElement(domainvalue,
@@ -1078,10 +1076,10 @@ class Csw(object):
                         util.nspath_eval('csw:ListOfValues',
                         self.context.namespaces))
                         for result in results:
-                            self.log.debug(str(result))
+                            LOGGER.debug(str(result))
                             if (result is not None and
                                 result[0] is not None):  # drop null values
-                                if count is True:  # show counts
+                                if count:  # show counts
                                     val = '%s (%s)' % (result[0], result[1])
                                 else:
                                     val = result[0]
@@ -1089,7 +1087,7 @@ class Csw(object):
                                 util.nspath_eval('csw:Value',
                                 self.context.namespaces)).text = val
                 except Exception, err:
-                    self.log.debug('No results for propertyname %s: %s.' %
+                    LOGGER.debug('No results for propertyname %s: %s.' %
                     (pname2, str(err)))
         return node
 
@@ -1098,14 +1096,14 @@ class Csw(object):
 
         timestamp = util.get_today_and_now()
 
-        if (self.kvp.has_key('elementsetname') is False and
-            self.kvp.has_key('elementname') is False):
+        if (not self.kvp.has_key('elementsetname') and
+            not self.kvp.has_key('elementname')):
             # mutually exclusive required
             return self.exceptionreport('MissingParameterValue',
             'elementsetname',
             'Missing one of ElementSetName or ElementName parameter(s)')
 
-        if self.kvp.has_key('outputschema') is False:
+        if not self.kvp.has_key('outputschema'):
             self.kvp['outputschema'] = self.context.namespaces['csw']
 
         if (self.kvp['outputschema'] not in self.context.model['operations']
@@ -1114,16 +1112,16 @@ class Csw(object):
             'outputschema', 'Invalid outputSchema parameter value: %s' %
             self.kvp['outputschema'])
 
-        if self.kvp.has_key('outputformat') is False:
+        if not self.kvp.has_key('outputformat'):
             self.kvp['outputformat'] = 'application/xml'
-     
+
         if (self.kvp['outputformat'] not in self.context.model['operations']
             ['GetRecords']['parameters']['outputFormat']['values']):
             return self.exceptionreport('InvalidParameterValue',
             'outputformat', 'Invalid outputFormat parameter value: %s' %
             self.kvp['outputformat'])
 
-        if self.kvp.has_key('resulttype') is False:
+        if not self.kvp.has_key('resulttype'):
             self.kvp['resulttype'] = 'hits'
 
         if self.kvp['resulttype'] is not None:
@@ -1133,7 +1131,7 @@ class Csw(object):
                 'resulttype', 'Invalid resultType parameter value: %s' %
                 self.kvp['resulttype'])
 
-        if ((self.kvp.has_key('elementname') is False or 
+        if ((not self.kvp.has_key('elementname') or
              len(self.kvp['elementname']) == 0) and
              self.kvp['elementsetname'] not in
              self.context.model['operations']['GetRecords']['parameters']
@@ -1147,7 +1145,7 @@ class Csw(object):
             self.kvp['elementname'] = self.kvp['elementname'].split(',')
             self.kvp['elementsetname'] = 'summary'
 
-        if self.kvp.has_key('typenames') is False:
+        if not self.kvp.has_key('typenames'):
             return self.exceptionreport('MissingParameterValue',
             'typenames', 'Missing typenames parameter')
 
@@ -1175,14 +1173,14 @@ class Csw(object):
         if self.kvp['resulttype'] == 'validate':
             return self._write_acknowledgement()
 
-        if self.kvp.has_key('maxrecords') is False:
+        if not self.kvp.has_key('maxrecords'):
             self.kvp['maxrecords'] = int(self.config.get('server', 'maxrecords'))
 
         if self.requesttype == 'GET':
             if self.kvp.has_key('constraint'):
                 # GET request
-                self.log.debug('csw:Constraint passed over HTTP GET.')
-                if self.kvp.has_key('constraintlanguage') is False:
+                LOGGER.debug('csw:Constraint passed over HTTP GET.')
+                if not self.kvp.has_key('constraintlanguage'):
                     return self.exceptionreport('MissingParameterValue',
                     'constraintlanguage',
                     'constraintlanguage required when constraint specified')
@@ -1204,12 +1202,12 @@ class Csw(object):
                     try:
                         schema = os.path.join(self.config.get('server', 'home'),
                         'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
-                        self.log.debug('Validating Filter %s.' %
+                        LOGGER.debug('Validating Filter %s.' %
                         self.kvp['constraint'])
                         schema = etree.XMLSchema(file=schema)
                         parser = etree.XMLParser(schema=schema)
                         doc = etree.fromstring(self.kvp['constraint'], parser)
-                        self.log.debug('Filter is valid XML.')
+                        LOGGER.debug('Filter is valid XML.')
                         self.kvp['constraint'] = {}
                         self.kvp['constraint']['type'] = 'filter'
                         self.kvp['constraint']['where'] = \
@@ -1220,17 +1218,17 @@ class Csw(object):
                     except Exception, err:
                         errortext = \
                         'Exception: document not valid.\nError: %s.' % str(err)
-    
-                        self.log.debug(errortext)
+
+                        LOGGER.debug(errortext)
                         return self.exceptionreport('InvalidParameterValue',
                         'constraint', 'Invalid Filter query: %s' % errortext)
             else:
                 self.kvp['constraint'] = {}
 
-        if self.kvp.has_key('sortby') is False:
+        if not self.kvp.has_key('sortby'):
             self.kvp['sortby'] = None
         elif self.kvp.has_key('sortby') and self.requesttype == 'GET':
-            self.log.debug('Sorted query specified.')
+            LOGGER.debug('Sorted query specified.')
             tmp = self.kvp['sortby']
             self.kvp['sortby'] = {}
 
@@ -1257,14 +1255,14 @@ class Csw(object):
 
             if order == 'D':
                 self.kvp['sortby']['order'] = 'DESC'
-            else: 
+            else:
                 self.kvp['sortby']['order'] = 'ASC'
 
-        if self.kvp.has_key('startposition') is False:
+        if not self.kvp.has_key('startposition'):
             self.kvp['startposition'] = 1
 
         # query repository
-        self.log.debug('Querying repository with constraint: %s,\
+        LOGGER.debug('Querying repository with constraint: %s,\
         sortby: %s, typenames: %s, maxrecords: %s, startposition: %s.' %
         (self.kvp['constraint'], self.kvp['sortby'], self.kvp['typenames'],
         self.kvp['maxrecords'], self.kvp['startposition']))
@@ -1286,19 +1284,19 @@ class Csw(object):
             self.kvp['distributedsearch'] and self.kvp['hopcount'] > 0):
             # do distributed search
 
-            self.log.debug('DistributedSearch specified (hopCount: %s).' %
+            LOGGER.debug('DistributedSearch specified (hopCount: %s).' %
             self.kvp['hopcount'])
 
             from owslib.csw import CatalogueServiceWeb
             for fedcat in \
             self.config.get('server', 'federatedcatalogues').split(','):
-                self.log.debug('Performing distributed search on federated \
+                LOGGER.debug('Performing distributed search on federated \
                 catalogue: %s.' % fedcat)
                 remotecsw = CatalogueServiceWeb(fedcat, skip_caps=True)
                 try:
                     remotecsw.getrecords(xml=self.request)
                     if hasattr(remotecsw, 'results'):
-                        self.log.debug(
+                        LOGGER.debug(
                         'Distributed search results from catalogue \
                         %s: %s.' % (fedcat, remotecsw.results))
 
@@ -1316,7 +1314,7 @@ class Csw(object):
                     error_string = 'remote CSW %s returned error: ' % fedcat
                     dsresults.append(etree.Comment(
                     ' %s\n\n%s ' % (error_string, remotecsw.response)))
-                    self.log.debug(str(err))
+                    LOGGER.debug(str(err))
 
         if int(matched) == 0:
             returned = nextrecord = '0'
@@ -1329,7 +1327,7 @@ class Csw(object):
                 nextrecord = str(int(self.kvp['startposition']) + \
                 int(self.kvp['maxrecords']))
 
-        self.log.debug('Results: matched: %s, returned: %s, next: %s.' % \
+        LOGGER.debug('Results: matched: %s, returned: %s, next: %s.' % \
         (matched, returned, nextrecord))
 
         node = etree.Element(util.nspath_eval('csw:GetRecordsResponse',
@@ -1348,7 +1346,7 @@ class Csw(object):
         etree.SubElement(node, util.nspath_eval('csw:SearchStatus',
         self.context.namespaces), timestamp=timestamp)
 
-        if self.kvp['constraint'].has_key('where') is False and \
+        if not self.kvp['constraint'].has_key('where') and \
         self.kvp['resulttype'] is None:
             returned = '0'
 
@@ -1360,26 +1358,26 @@ class Csw(object):
         if self.kvp['elementsetname'] is not None:
             searchresults.attrib['elementSet'] = self.kvp['elementsetname']
 
-        if self.kvp['constraint'].has_key('where') is False \
+        if not self.kvp['constraint'].has_key('where') \
         and self.kvp['resulttype'] is None:
-            self.log.debug('Empty result set returned.')
+            LOGGER.debug('Empty result set returned.')
             return node
 
         if self.kvp['resulttype'] == 'hits':
             return node
 
- 
+
         if results is not None:
             if len(results) < self.kvp['maxrecords']:
                 max1 = len(results)
             else:
                 max1 = int(self.kvp['startposition']) + (int(self.kvp['maxrecords'])-1)
-            self.log.debug('Presenting records %s - %s.' %
+            LOGGER.debug('Presenting records %s - %s.' %
             (self.kvp['startposition'], max1))
 
             for res in results:
                 try:
-                    if (self.kvp['outputschema'] == 
+                    if (self.kvp['outputschema'] ==
                         'http://www.opengis.net/cat/csw/2.0.2' and
                         'csw:Record' in self.kvp['typenames']):
                         # serialize csw:Record inline
@@ -1389,18 +1387,18 @@ class Csw(object):
                         'http://www.opengis.net/cat/csw/2.0.2' and
                         'csw:Record' not in self.kvp['typenames']):
                         # serialize into csw:Record model
-    
+
                         for prof in self.profiles['loaded']:
                             # find source typename
                             if self.profiles['loaded'][prof].typename in \
                             self.kvp['typenames']:
                                 typename = self.profiles['loaded'][prof].typename
                                 break
-    
+
                         util.transform_mappings(self.repository.queryables['_all'],
                         self.context.model['typenames'][typename]\
                         ['mappings']['csw:Record'], reverse=True)
-    
+
                         searchresults.append(self._write_record(
                         res, self.repository.queryables['_all']))
                     else:  # use profile serializer
@@ -1431,13 +1429,13 @@ class Csw(object):
     def getrecordbyid(self, raw=False):
         ''' Handle GetRecordById request '''
 
-        if self.kvp.has_key('id') is False:
+        if not self.kvp.has_key('id'):
             return self.exceptionreport('MissingParameterValue', 'id',
             'Missing id parameter')
         if len(self.kvp['id']) < 1:
             return self.exceptionreport('InvalidParameterValue', 'id',
             'Invalid id parameter')
-        if self.kvp.has_key('outputschema') is False:
+        if not self.kvp.has_key('outputschema'):
             self.kvp['outputschema'] = self.context.namespaces['csw']
 
         if self.requesttype == 'GET':
@@ -1458,7 +1456,7 @@ class Csw(object):
             'outputschema', 'Invalid outputschema parameter %s' %
             self.kvp['outputschema'])
 
-        if self.kvp.has_key('elementsetname') is False:
+        if not self.kvp.has_key('elementsetname'):
             self.kvp['elementsetname'] = 'summary'
         else:
             if (self.kvp['elementsetname'] not in
@@ -1476,11 +1474,11 @@ class Csw(object):
         (self.context.namespaces['csw'], self.config.get('server', 'ogc_schemas_base'))
 
         # query repository
-        self.log.debug('Querying repository with ids: %s.' % self.kvp['id'][0])
+        LOGGER.debug('Querying repository with ids: %s.' % self.kvp['id'][0])
         results = self.repository.query_ids(self.kvp['id'])
 
         if raw:  # GetRepositoryItem request
-            self.log.debug('GetRepositoryItem request.')
+            LOGGER.debug('GetRepositoryItem request.')
             if len(results) > 0:
                 return etree.fromstring(util.getqattr(results[0],
                 self.context.md_core_model['mappings']['pycsw:XML']))
@@ -1546,7 +1544,7 @@ class Csw(object):
 
         insertresults = []
 
-        self.log.debug('Transaction list: %s' % self.kvp['transactions'])
+        LOGGER.debug('Transaction list: %s' % self.kvp['transactions'])
 
         for ttype in self.kvp['transactions']:
             if ttype['type'] == 'insert':
@@ -1558,10 +1556,10 @@ class Csw(object):
                     'Transaction (insert) failed: record parsing failed: %s' \
                     % str(err))
 
-                self.log.debug('Transaction operation: %s' % record)
+                LOGGER.debug('Transaction operation: %s' % record)
 
-                if hasattr(record,
-                self.context.md_core_model['mappings']['pycsw:Identifier']) is False:
+                if not hasattr(record,
+                self.context.md_core_model['mappings']['pycsw:Identifier']):
                     return self.exceptionreport('NoApplicableCode',
                     'insert', 'Record requires an identifier')
 
@@ -1572,7 +1570,7 @@ class Csw(object):
 
                     inserted += 1
                     insertresults.append(
-                    {'identifier': getattr(record, 
+                    {'identifier': getattr(record,
                     self.context.md_core_model['mappings']['pycsw:Identifier']),
                     'title': getattr(record,
                     self.context.md_core_model['mappings']['pycsw:Title'])})
@@ -1581,7 +1579,7 @@ class Csw(object):
                     'insert', 'Transaction (insert) failed: %s.' % str(err))
 
             elif ttype['type'] == 'update':
-                if ttype.has_key('constraint') is False:
+                if not ttype.has_key('constraint'):
                     # update full existing resource in repository
                     try:
                         record = metadata.parse_record(self.context,
@@ -1592,15 +1590,15 @@ class Csw(object):
                         return self.exceptionreport('NoApplicableCode', 'insert',
                         'Transaction (update) failed: record parsing failed: %s' \
                         % str(err))
-            
+
                     # query repository to see if record already exists
-                    self.log.debug('checking if record exists (%s)' % \
+                    LOGGER.debug('checking if record exists (%s)' % \
                     identifier)
 
                     results = self.repository.query_ids(ids=[identifier])
-            
+
                     if len(results) == 0:
-                        self.log.debug('id %s does not exist in repository' % \
+                        LOGGER.debug('id %s does not exist in repository' % \
                         identifier)
                     else:  # existing record, it's an update
                         try:
@@ -1616,8 +1614,8 @@ class Csw(object):
                         rp['rp']= \
                         self.repository.queryables['_all'][rp['name']]
 
-                    self.log.debug('Record Properties: %s.' %
-                    ttype['recordproperty']) 
+                    LOGGER.debug('Record Properties: %s.' %
+                    ttype['recordproperty'])
                     try:
                         updated += self.repository.update(record=None,
                         recprops=ttype['recordproperty'],
@@ -1667,21 +1665,21 @@ class Csw(object):
 
         if self.kvp['resourcetype'].find('opengis.net') == -1:
             # fetch content-based resource
-            self.log.debug('Fetching resource %s' % self.kvp['source'])
+            LOGGER.debug('Fetching resource %s' % self.kvp['source'])
             try:
                 req = urllib2.Request(self.kvp['source'])
                 req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
-                content = urllib2.urlopen(req).read() 
+                content = urllib2.urlopen(req).read()
             except Exception, err:
                 errortext = 'Error fetching resource %s.\nError: %s.' % \
                 (self.kvp['source'], str(err))
-                self.log.debug(errortext)
+                LOGGER.debug(errortext)
                 return self.exceptionreport('InvalidParameterValue', 'source',
                 errortext)
         else:  # it's a service URL
             content = self.kvp['source']
             # query repository to see if service already exists
-            self.log.debug('checking if service exists (%s)' % content)
+            LOGGER.debug('checking if service exists (%s)' % content)
             results = self.repository.query_source(content)
 
             if len(results) > 0:  # exists, don't insert
@@ -1694,8 +1692,9 @@ class Csw(object):
             content, self.repository, self.kvp['resourcetype'],
             pagesize=self.csw_harvest_pagesize)
         except Exception, err:
+            import traceback
             return self.exceptionreport('NoApplicableCode', 'source',
-            'Harvest failed: record parsing failed: %s' % str(err))
+            'Harvest failed: record parsing failed: %s' % traceback.format_exc())
 
         inserted = 0
         updated = 0
@@ -1721,7 +1720,7 @@ class Csw(object):
             ir.append({'identifier': identifier, 'title': title})
 
             # query repository to see if record already exists
-            self.log.debug('checking if record exists (%s)' % identifier)
+            LOGGER.debug('checking if record exists (%s)' % identifier)
             results = self.repository.query_ids(ids=[identifier])
 
             if len(results) == 0:  # new record, it's a new insert
@@ -1775,20 +1774,20 @@ class Csw(object):
 
         request = {}
         try:
-            self.log.debug('Parsing %s.' % postdata)
+            LOGGER.debug('Parsing %s.' % postdata)
             doc = etree.fromstring(postdata)
         except Exception, err:
             errortext = \
             'Exception: document not well-formed.\nError: %s.' % str(err)
 
-            self.log.debug(errortext)
+            LOGGER.debug(errortext)
             return errortext
 
         # if this is a SOAP request, get to SOAP-ENV:Body/csw:*
         if (doc.tag == util.nspath_eval('soapenv:Envelope',
             self.context.namespaces)):
 
-            self.log.debug('SOAP request specified.')
+            LOGGER.debug('SOAP request specified.')
             self.soap = True
 
             doc = doc.find(
@@ -1814,7 +1813,7 @@ class Csw(object):
             len(doc.xpath('//csw:Update/child::*',
             namespaces=self.context.namespaces)) == 0:
 
-                self.log.debug('Validating %s.' % postdata)
+                LOGGER.debug('Validating %s.' % postdata)
                 schema = etree.XMLSchema(file=schema)
                 parser = etree.XMLParser(schema=schema)
                 if hasattr(self, 'soap') and self.soap:
@@ -1822,17 +1821,17 @@ class Csw(object):
                     doc = etree.fromstring(etree.tostring(doc), parser)
                 else:  # validate the request normally
                     doc = etree.fromstring(postdata, parser)
-                self.log.debug('Request is valid XML.')
+                LOGGER.debug('Request is valid XML.')
             else:  # parse Transaction without validation
                 doc = etree.fromstring(postdata)
         except Exception, err:
             errortext = \
             'Exception: the document is not valid.\nError: %s' % str(err)
-            self.log.debug(errortext)
+            LOGGER.debug(errortext)
             return errortext
 
         request['request'] = util.xmltag_split(doc.tag)
-        self.log.debug('Request operation %s specified.' % request['request'])
+        LOGGER.debug('Request operation %s specified.' % request['request'])
         tmp = doc.find('.').attrib.get('service')
         if tmp is not None:
             request['service'] = tmp
@@ -1846,7 +1845,7 @@ class Csw(object):
 
         if tmp is not None:
             request['version'] = tmp.text
-    
+
         tmp = doc.find('.').attrib.get('updateSequence')
         if tmp is not None:
             request['updatesequence'] = tmp
@@ -1856,11 +1855,11 @@ class Csw(object):
             request['typename'] = [typename.text for typename in \
             doc.findall(util.nspath_eval('csw:TypeName',
             self.context.namespaces))]
-    
+
             tmp = doc.find('.').attrib.get('schemaLanguage')
             if tmp is not None:
                 request['schemalanguage'] = tmp
-    
+
             tmp = doc.find('.').attrib.get('outputFormat')
             if tmp is not None:
                 request['outputformat'] = tmp
@@ -1942,14 +1941,14 @@ class Csw(object):
                 request['constraint'] = self._parse_constraint(tmp)
                 if isinstance(request['constraint'], str):  # parse error
                     return 'Invalid Constraint: %s' % request['constraint']
-            else: 
-                self.log.debug('No csw:Constraint (ogc:Filter or csw:CqlText) \
+            else:
+                LOGGER.debug('No csw:Constraint (ogc:Filter or csw:CqlText) \
                 specified.')
 
             tmp = doc.find(util.nspath_eval('csw:Query/ogc:SortBy',
                   self.context.namespaces))
             if tmp is not None:
-                self.log.debug('Sorted query specified.')
+                LOGGER.debug('Sorted query specified.')
                 request['sortby'] = {}
 
 
@@ -1968,8 +1967,8 @@ class Csw(object):
                 except Exception, err:
                     errortext = \
                     'Invalid ogc:SortProperty/ogc:PropertyName: %s' % str(err)
-                    self.log.debug(errortext)
-                    return errortext       
+                    LOGGER.debug(errortext)
+                    return errortext
 
                 tmp2 =  tmp.find(util.nspath_eval(
                 'ogc:SortProperty/ogc:SortOrder', self.context.namespaces))
@@ -2103,7 +2102,7 @@ class Csw(object):
             for elemname in self.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
                     elemname.find('Envelope') != -1):
-                    bboxel = write_boundingbox(util.getqattr(recobj, 
+                    bboxel = write_boundingbox(util.getqattr(recobj,
                     self.context.md_core_model['mappings']['pycsw:BoundingBox']),
                     self.context.namespaces)
                     if bboxel is not None:
@@ -2139,7 +2138,7 @@ class Csw(object):
                 keywords = util.getqattr(recobj, queryables['dc:subject']['dbcol'])
                 if keywords is not None:
                     for keyword in keywords.split(','):
-                        etree.SubElement(record, 
+                        etree.SubElement(record,
                         util.nspath_eval('dc:subject',
                         self.context.namespaces)).text = keyword
 
@@ -2177,7 +2176,7 @@ class Csw(object):
                         etree.SubElement(record,
                         util.nspath_eval(i, self.context.namespaces)).text = val
 
-            # always write out ows:BoundingBox 
+            # always write out ows:BoundingBox
             bboxel = write_boundingbox(getattr(recobj,
             self.context.md_core_model['mappings']['pycsw:BoundingBox']),
             self.context.namespaces)
@@ -2194,10 +2193,10 @@ class Csw(object):
         appinfo=''
 
         if hasattr(self, 'log'):
-            self.log.debug('Writing response.')
+            LOGGER.debug('Writing response.')
 
         if hasattr(self, 'soap') and self.soap:
-            self._gen_soap_wrapper() 
+            self._gen_soap_wrapper()
 
         if (isinstance(self.kvp, dict) and self.kvp.has_key('outputformat') and
             self.kvp['outputformat'] == 'application/json'):
@@ -2214,20 +2213,20 @@ class Csw(object):
             appinfo = '<!-- pycsw %s -->\n' % self.context.version
 
         if hasattr(self, 'log'):
-            self.log.debug('Response:\n%s' % response)
+            LOGGER.debug('Response:\n%s' % response)
 
         return "%s%s%s" % (xmldecl, appinfo, response)
 
 
     def _gen_soap_wrapper(self):
         ''' Generate SOAP wrapper '''
-        self.log.debug('Writing SOAP wrapper.')
+        LOGGER.debug('Writing SOAP wrapper.')
         node = etree.Element(util.nspath_eval('soapenv:Envelope',
         self.context.namespaces), nsmap=self.context.namespaces)
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.context.namespaces)] = '%s %s' % \
-        (self.context.namespaces['soapenv'], self.context.namespaces['soapenv']) 
+        (self.context.namespaces['soapenv'], self.context.namespaces['soapenv'])
 
         node2 = etree.SubElement(node, util.nspath_eval('soapenv:Body',
         self.context.namespaces))
@@ -2284,7 +2283,7 @@ class Csw(object):
 
         tmp = element.find(util.nspath_eval('ogc:Filter', self.context.namespaces))
         if tmp is not None:
-            self.log.debug('Filter constraint specified.')
+            LOGGER.debug('Filter constraint specified.')
             try:
                 query['type'] = 'filter'
                 query['where'] = fes.parse(tmp,
@@ -2294,7 +2293,7 @@ class Csw(object):
                 return 'Invalid Filter request: %s' % err
         tmp = element.find(util.nspath_eval('csw:CqlText', self.context.namespaces))
         if tmp is not None:
-            self.log.debug('CQL specified: %s.' % tmp.text)
+            LOGGER.debug('CQL specified: %s.' % tmp.text)
             query['type'] = 'cql'
             query['where'] = self._cql_update_queryables_mappings(tmp.text,
             self.repository.queryables['_all'])
@@ -2308,7 +2307,7 @@ class Csw(object):
 
         ipaddress = self.environ['REMOTE_ADDR']
 
-        if self.config.has_option('manager', 'allowed_ips') is False or \
+        if not self.config.has_option('manager', 'allowed_ips') or \
         (self.config.has_option('manager', 'allowed_ips') and ipaddress not in
         self.config.get('manager', 'allowed_ips').split(',')):
             raise RuntimeError, \
@@ -2316,15 +2315,15 @@ class Csw(object):
 
     def _cql_update_queryables_mappings(self, cql, mappings):
         ''' Transform CQL query's properties to underlying DB columns '''
-        self.log.debug('Raw CQL text = %s.' % cql)
-        self.log.debug(str(mappings.keys()))
+        LOGGER.debug('Raw CQL text = %s.' % cql)
+        LOGGER.debug(str(mappings.keys()))
         if cql is not None:
             for key in mappings.keys():
                 try:
                     cql = cql.replace(key, mappings[key]['dbcol'])
                 except:
                     cql = cql.replace(key, mappings[key])
-            self.log.debug('Interpolated CQL text = %s.' % cql)
+            LOGGER.debug('Interpolated CQL text = %s.' % cql)
             return cql
 
     def _write_transactionsummary(self, inserted=0, updated=0, deleted=0):
@@ -2357,7 +2356,7 @@ class Csw(object):
             self.context.namespaces)] = \
             '%s %s/csw/2.0.2/CSW-discovery.xsd' % (self.context.namespaces['csw'], \
             self.config.get('server', 'ogc_schemas_base'))
-    
+
         node1 = etree.SubElement(node, util.nspath_eval('csw:EchoedRequest',
                 self.context.namespaces))
         if self.requesttype == 'POST':
@@ -2378,7 +2377,7 @@ class Csw(object):
         ''' Process response handler '''
 
         if self.kvp['responsehandler'] is not None:
-            self.log.debug('Processing responsehandler %s.' %
+            LOGGER.debug('Processing responsehandler %s.' %
             self.kvp['responsehandler'])
 
             uprh = urlparse.urlparse(self.kvp['responsehandler'])
@@ -2386,7 +2385,7 @@ class Csw(object):
             if uprh.scheme == 'mailto':  # email
                 import smtplib
 
-                self.log.debug('Email detected.')
+                LOGGER.debug('Email detected.')
 
                 smtp_host = 'localhost'
                 if self.config.has_option('server', 'smtp_host'):
@@ -2396,31 +2395,31 @@ class Csw(object):
                 (self.kvp['request'], xml)
 
                 try:
-                    self.log.debug('Sending email.')
+                    LOGGER.debug('Sending email.')
                     msg = smtplib.SMTP(smtp_host)
                     msg.sendmail(
                     self.config.get('metadata:main', 'contact_email'),
                     uprh.path, body)
                     msg.quit()
-                    self.log.debug('Email sent successfully.')
+                    LOGGER.debug('Email sent successfully.')
                 except Exception, err:
-                    self.log.debug('Error processing email: %s.' % str(err))
+                    LOGGER.debug('Error processing email: %s.' % str(err))
 
             elif uprh.scheme == 'ftp':
                 import ftplib
 
-                self.log.debug('FTP detected.')
+                LOGGER.debug('FTP detected.')
 
                 try:
-                    self.log.debug('Sending to FTP server.')
+                    LOGGER.debug('Sending to FTP server.')
                     ftp = ftplib.FTP(uprh.hostname)
                     if uprh.username is not None:
                         ftp.login(uprh.username, uprh.password)
                     ftp.storbinary('STOR %s' % uprh.path[1:], StringIO(xml))
                     ftp.quit()
-                    self.log.debug('FTP sent successfully.')
+                    LOGGER.debug('FTP sent successfully.')
                 except Exception, err:
-                    self.log.debug('Error processing FTP: %s.' % str(err))
+                    LOGGER.debug('Error processing FTP: %s.' % str(err))
 
     def _write_verboseresponse(self, insertresults):
         ''' show insert result identifiers '''

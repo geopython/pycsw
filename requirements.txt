@@ -1,2 +1,4 @@
 # required for standalone installs
 SQLAlchemy>=0.6
+# required for developer tasks
+Paver==1.1.1

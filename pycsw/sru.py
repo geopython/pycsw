@@ -111,7 +111,7 @@ class Sru(object):
 
                     kvpout['constraint'] = {'type': 'cql'}
 
-                    if pname_in_query is False:
+                    if not pname_in_query:
                         kvpout['constraint'] = 'csw:AnyText like \'%%%s%%\'' % kvpin['query']
                     else:
                         kvpout['constraint'] = kvpin['query']

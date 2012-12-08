@@ -7,8 +7,8 @@ docs/build
 MANIFEST
 
 # testing artifacts
-tester/index.html
-tester/results
+tests/index.html
+tests/results
 
 # test configurations
 default.cfg
