@@ -35,10 +35,11 @@ from pycsw import __version__
 
 LOGGER = logging.getLogger(__name__)
 
+
 class StaticContext(object):
-    ''' core configuration '''
+    """core configuration"""
     def __init__(self):
-        ''' initializer '''
+        """initializer"""
 
         LOGGER.debug('Initializing static context')
         self.version = __version__
@@ -47,7 +48,7 @@ class StaticContext(object):
 
         self.namespaces = {
             'csw': 'http://www.opengis.net/cat/csw/2.0.2',
-            'dc' : 'http://purl.org/dc/elements/1.1/',
+            'dc': 'http://purl.org/dc/elements/1.1/',
             'dct': 'http://purl.org/dc/terms/',
             'dif': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
             'fgdc': 'http://www.opengis.net/cat/csw/csdgm',
@@ -68,17 +69,17 @@ class StaticContext(object):
             'outputschema': 'http://pycsw.org/metadata',
             'mappings': {
                 'pycsw:Identifier': 'identifier',
-                 # CSW typename (e.g. csw:Record, md:MD_Metadata)
+                # CSW typename (e.g. csw:Record, md:MD_Metadata)
                 'pycsw:Typename': 'typename',
-                 # schema namespace, i.e. http://www.isotc211.org/2005/gmd
+                # schema namespace, i.e. http://www.isotc211.org/2005/gmd
                 'pycsw:Schema': 'schema',
-                 # origin of resource, either 'local', or URL to web service
+                # origin of resource, either 'local', or URL to web service
                 'pycsw:MdSource': 'mdsource',
-                 # date of insertion
+                # date of insertion
                 'pycsw:InsertDate': 'insert_date',  # date of insertion
-                 # raw XML metadata
+                # raw XML metadata
                 'pycsw:XML': 'xml',
-                 # bag of metadata element and attributes ONLY, no XML tages
+                # bag of metadata element and attributes ONLY, no XML tages
                 'pycsw:AnyText': 'anytext',
                 'pycsw:Language': 'language',
                 'pycsw:Title': 'title',
@@ -90,7 +91,7 @@ class StaticContext(object):
                 'pycsw:Date': 'date',
                 'pycsw:Modified': 'date_modified',
                 'pycsw:Type': 'type',
-                 # geometry, specified in OGC WKT
+                # geometry, specified in OGC WKT
                 'pycsw:BoundingBox': 'wkt_geometry',
                 'pycsw:CRS': 'crs',
                 'pycsw:AlternateTitle': 'title_alternate',
@@ -129,12 +130,12 @@ class StaticContext(object):
                 'pycsw:Publisher': 'publisher',
                 'pycsw:Contributor': 'contributor',
                 'pycsw:Relation': 'relation',
-                 # links: format "name,description,protocol,url[^,,,[^,,,]]"
+                # links: format "name,description,protocol,url[^,,,[^,,,]]"
                 'pycsw:Links': 'links',
             }
         }
 
-        self.model =  {
+        self.model = {
             'operations': {
                 'GetCapabilities': {
                     'methods': {
@@ -188,7 +189,7 @@ class StaticContext(object):
                             'values': ['FILTER', 'CQL_TEXT']
                         },
                         'ElementSetName': {
-                            'values': ['brief','summary','full']
+                            'values': ['brief', 'summary', 'full']
                         }
                     },
                     'constraints': {
@@ -207,7 +208,7 @@ class StaticContext(object):
                             'values': ['application/xml', 'application/json']
                         },
                         'ElementSetName': {
-                            'values': ['brief','summary','full']
+                            'values': ['brief', 'summary', 'full']
                         }
                     }
                 },
@@ -221,7 +222,7 @@ class StaticContext(object):
                 }
             },
             'parameters': {
-                'version': { 
+                'version': {
                     'values': ['2.0.2']
                 },
                 'service': {
@@ -242,41 +243,41 @@ class StaticContext(object):
                     'queryables': {
                         'SupportedDublinCoreQueryables': {
                             # map Dublin Core queryables to core metadata model
-                            'dc:title': \
+                            'dc:title':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Title']},
-                            'dc:creator': \
+                            'dc:creator':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Creator']},
-                            'dc:subject': \
+                            'dc:subject':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Keywords']},
-                            'dct:abstract': \
+                            'dct:abstract':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Abstract']},
-                            'dc:publisher': \
+                            'dc:publisher':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Publisher']},
-                            'dc:contributor': \
+                            'dc:contributor':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Contributor']},
-                            'dct:modified': \
+                            'dct:modified':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Modified']},
-                            'dc:date': \
+                            'dc:date':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Date']},
-                            'dc:type': \
+                            'dc:type':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Type']},
-                            'dc:format': \
+                            'dc:format':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Format']},
-                            'dc:identifier': \
+                            'dc:identifier':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Identifier']},
-                            'dc:source': \
+                            'dc:source':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Source']},
-                            'dc:language': \
+                            'dc:language':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Language']},
-                            'dc:relation': \
+                            'dc:relation':
                             {'dbcol': self.md_core_model['mappings']['pycsw:Relation']},
-                            'dc:rights': \
-                            {'dbcol': \
+                            'dc:rights':
+                            {'dbcol':
                              self.md_core_model['mappings']['pycsw:AccessConstraints']},
                             # bbox and full text map to internal fixed columns
-                            'ows:BoundingBox': \
+                            'ows:BoundingBox':
                             {'dbcol': self.md_core_model['mappings']['pycsw:BoundingBox']},
-                            'csw:AnyText': \
+                            'csw:AnyText':
                             {'dbcol': self.md_core_model['mappings']['pycsw:AnyText']},
                         }
                     }
@@ -285,18 +286,18 @@ class StaticContext(object):
         }
 
     def gen_domains(self):
-        ''' Generate parameter domain model '''
+        """Generate parameter domain model"""
         domain = {}
         domain['methods'] = {'get': True, 'post': True}
-        domain['parameters'] = {'ParameterName': {'values': [] }}
+        domain['parameters'] = {'ParameterName': {'values': []}}
         for operation in self.model['operations'].keys():
             for parameter in self.model['operations'][operation]['parameters']:
                 domain['parameters']['ParameterName']['values'].append('%s.%s' %
-                (operation, parameter))
+                                                        (operation, parameter))
         return domain
 
     def refresh_dc(self, mappings):
-        ''' Refresh Dublin Core mappings '''
+        """Refresh Dublin Core mappings"""
 
         LOGGER.debug('refreshing Dublin Core mappings with %s' % str(mappings))
 
@@ -321,6 +322,5 @@ class StaticContext(object):
         }
 
         for k, val in defaults.iteritems():
-            self.model['typenames']['csw:Record']['queryables']\
-            ['SupportedDublinCoreQueryables'][k] = \
-            {'dbcol': mappings['mappings'][val]}
+            self.model['typenames']['csw:Record']['queryables']['SupportedDublinCoreQueryables'][k] = \
+                {'dbcol': mappings['mappings'][val]}

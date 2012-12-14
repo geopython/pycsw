@@ -38,12 +38,14 @@ from shapely.wkt import loads
 
 LOGGER = logging.getLogger(__name__)
 
+
 def get_today_and_now():
-    ''' Get the date, right now, in ISO8601 '''
+    """Get the date, right now, in ISO8601"""
     return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
 
+
 def datetime2iso8601(value):
-    ''' Return a datetime value as ISO8601 '''
+    """Return a datetime value as ISO8601"""
     if isinstance(value, datetime.date):
         return value.strftime('%Y-%m-%d')
     if value.hour == 0 and value.minute == 0 and value.second == 0:
@@ -52,13 +54,15 @@ def datetime2iso8601(value):
     else:
         return value.strftime('%Y-%m-%dT%H:%M:%SZ')
 
+
 def get_time_iso2unix(isotime):
-    ''' Convert ISO8601 to UNIX timestamp '''
+    """Convert ISO8601 to UNIX timestamp"""
     return int(time.mktime(time.strptime(
-    isotime, '%Y-%m-%dT%H:%M:%SZ'))) - time.timezone
+        isotime, '%Y-%m-%dT%H:%M:%SZ'))) - time.timezone
+
 
 def get_version_integer(version):
-    ''' Get an integer of the OGC version value x.y.z '''
+    """Get an integer of the OGC version value x.y.z"""
     if version is not None:  # split and make integer
         xyz = version.split('.')
         if len(xyz) != 3:
@@ -70,8 +74,9 @@ def get_version_integer(version):
     else:  # not a valid version string
         return -1
 
+
 def find_exml(val, attrib=False):
-    ''' Test that the XML value exists, return value, else return None '''
+    """Test that the XML value exists, return value, else return None"""
     if val is not None:
         if attrib:  # it's an XML attribute
             return val
@@ -80,27 +85,30 @@ def find_exml(val, attrib=False):
     else:
         return None
 
+
 def nspath_eval(xpath, nsmap):
-    ''' Return an etree friendly xpath '''
+    """Return an etree friendly xpath"""
     out = []
     for chunks in xpath.split('/'):
         namespace, element = chunks.split(':')
         out.append('{%s}%s' % (nsmap[namespace], element))
     return '/'.join(out)
 
+
 def xmltag_split(tag):
-    ''' Return XML element bare tag name (without prefix) '''
+    """Return XML element bare tag name (without prefix)"""
     try:
         return tag.split('}')[1]
     except:
         return tag
 
+
 def xmltag_split2(tag, namespaces, colon=False):
-    ''' Return XML namespace prefix of element '''
+    """Return XML namespace prefix of element"""
     try:
         nsuri = tag.split('}')[0].split('{')[1]
-        nsprefix = [key for key, value in namespaces.iteritems() \
-        if value == nsuri]
+        nsprefix = [key for key, value in namespaces.iteritems()
+                    if value == nsuri]
         value = nsprefix[0]
         if colon:
             return '%s:' % nsprefix[0]
@@ -109,18 +117,20 @@ def xmltag_split2(tag, namespaces, colon=False):
     except:
         return ''
 
+
 def bbox2wktpolygon(bbox):
-    ''' Return OGC WKT Polygon of a simple bbox string '''
+    """Return OGC WKT Polygon of a simple bbox string"""
     tmp = bbox.split(',')
     minx = float(tmp[0])
     miny = float(tmp[1])
     maxx = float(tmp[2])
     maxy = float(tmp[3])
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' \
-    % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
+        % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
+
 
 def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
-    ''' perform spatial query '''
+    """perform spatial query"""
 
     if bbox_data_wkt is None or bbox_input_wkt is None:
         return 'false'
@@ -162,15 +172,16 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
     elif predicate == 'within':
         result = bbox1.within(bbox2)
     else:
-        raise RuntimeError, ('Invalid spatial query predicate: %s' % predicate)
+        raise RuntimeError('Invalid spatial query predicate: %s' % predicate)
 
     if result:
         return 'true'
     else:
         return 'false'
 
+
 def get_geometry_area(geometry):
-    ''' Derive area of a given geometry '''
+    """Derive area of a given geometry"""
     try:
         if geometry is not None:
             return str(loads(geometry).area)
@@ -178,24 +189,26 @@ def get_geometry_area(geometry):
     except:
         return '0'
 
+
 def bbox_from_polygons(bboxs):
-   ''' Derive an aggregated bbox from n polygons'''
+    """Derive an aggregated bbox from n polygons"""
 
-   from shapely.geometry import MultiPolygon
+    from shapely.geometry import MultiPolygon
 
-   polys = []
-   for b in bboxs:
-       polys.append(loads(b))
+    polys = []
+    for bbx in bboxs:
+        polys.append(loads(bbx))
 
-   try:
-       b = MultiPolygon(polys).bounds
-       bstr = '%.2f,%.2f,%.2f,%.2f' % (b[0], b[1], b[2], b[3])
-       return bbox2wktpolygon(bstr)
-   except Exception, err:
-       raise RuntimeError, ('Cannot aggregate polygons: %s' % str(err))
+    try:
+        bbx = MultiPolygon(polys).bounds
+        bstr = '%.2f,%.2f,%.2f,%.2f' % (bbx[0], bbx[1], bbx[2], bbx[3])
+        return bbox2wktpolygon(bstr)
+    except Exception, err:
+        raise RuntimeError('Cannot aggregate polygons: %s' % str(err))
+
 
 def update_xpath(nsmap, xml, recprop):
-    ''' Update XML document XPath values '''
+    """Update XML document XPath values"""
 
     if isinstance(xml, unicode):  # not lxml serialized yet
         xml = etree.fromstring(xml)
@@ -209,12 +222,13 @@ def update_xpath(nsmap, xml, recprop):
                 if node1.text != recprop['value']:  # values differ, update
                     node1.text = recprop['value']
     except Exception, err:
-        raise RuntimeError, ('ERROR: %s' % str(err))
+        raise RuntimeError('ERROR: %s' % str(err))
 
     return etree.tostring(xml)
 
+
 def transform_mappings(queryables, typename, reverse=False):
-    ''' transform metadata model mappings '''
+    """transform metadata model mappings"""
     if reverse:  # from csw:Record
         for qbl in queryables.keys():
             if qbl in typename.values():
@@ -228,36 +242,39 @@ def transform_mappings(queryables, typename, reverse=False):
             if qbl in typename.keys():
                 queryables[qbl] = queryables[qbl]
 
+
 def get_anytext(xml):
-    ''' get all element and attribute data from an XML document '''
+    """get all element and attribute data from an XML document"""
 
     if isinstance(xml, unicode) or isinstance(xml, str):  # not serialized yet
         xml = etree.fromstring(xml)
     return '%s %s' % (' '.join([value for value in xml.xpath('//text()')]),
-    ' '.join([value for value in xml.xpath('//attribute::*')]))
+           ' '.join([value for value in xml.xpath('//attribute::*')]))
+
 
 def exml2dict(element, namespaces):
-    ''' Convert an lxml object to JSON
+    """Convert an lxml object to JSON
         From:
-        https://bitbucket.org/smulloni/pesterfish/src/1578db946d74/pesterfish.py
-    '''
-   
-    d=dict(tag='%s%s' % \
-    (xmltag_split2(element.tag, namespaces, True), xmltag_split(element.tag)))
+        http://bitbucket.org/smulloni/pesterfish/src/1578db946d74/pesterfish.py
+    """
+
+    jdict = dict(tag='%s%s' % (xmltag_split2(element.tag, namespaces, True),
+                               xmltag_split(element.tag)))
     if element.text:
         if element.text.find('\n') == -1:
-            d['text']=element.text
+            jdict['text'] = element.text
     if element.attrib:
-        d['attributes']=dict(('%s%s' %(xmltag_split2(k, namespaces, True), \
-        xmltag_split(k)),f(v) if hasattr(v,'keys') else v) \
-        for k,v in element.attrib.items())
-    children=element.getchildren()
+        jdict['attributes'] = dict(('%s%s' % (xmltag_split2(k, namespaces, True),
+                                   xmltag_split(k)), f(v) if hasattr(v, 'keys') else v)
+                                   for k, v in element.attrib.items())
+    children = element.getchildren()
     if children:
-        d['children']=map(lambda x: exml2dict(x, namespaces), children)
-    return d
+        jdict['children'] = map(lambda x: exml2dict(x, namespaces), children)
+    return jdict
+
 
 def getqattr(obj, name):
-    ''' get value of an object, safely '''
+    """get value of an object, safely"""
     try:
         value = getattr(obj, name)
         if hasattr(value, '__call__'):  # function generated value
@@ -267,15 +284,16 @@ def getqattr(obj, name):
                 return _linkify(value())
             return value()
         elif (isinstance(value, datetime.datetime)
-        or isinstance(value, datetime.date)):  # datetime object
+              or isinstance(value, datetime.date)):  # datetime object
             LOGGER.debug('attribute is a date')
             return datetime2iso8601(value)
         return value
     except:
         return None
 
+
 def _linkify(value):
-    ''' create link format '''
+    """create link format"""
     out = []
     for link in value:
         out.append(','.join(list(link)))
