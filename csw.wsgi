@@ -31,7 +31,7 @@
 # =================================================================
 
 # WSGI wrapper for pycsw
-# 
+#
 # Apache mod_wsgi configuration
 #
 # ServerName host1
@@ -55,24 +55,27 @@
 #
 
 from StringIO import StringIO
-import os, sys
+import os
+import sys
 
 app_path = os.path.dirname(__file__)
 sys.path.append(app_path)
 
 from pycsw import server
 
+
 def application(env, start_response):
+    """WSGI wrapper"""
     config = 'default.cfg'
 
-    if env.has_key('PYCSW_CONFIG'):
+    if 'PYCSW_CONFIG' in env:
         config = env['PYCSW_CONFIG']
 
     if env['QUERY_STRING'].lower().find('config') != -1:
         for kvp in env['QUERY_STRING'].split('&'):
             if kvp.lower().find('config') != -1:
                 config = kvp.split('=')[1]
-    
+
     if not os.path.isabs(config):
         config = os.path.join(app_path, config)
 
@@ -84,9 +87,9 @@ def application(env, start_response):
     csw = server.Csw(config, env)
 
     gzip = False
-    if (env.has_key('HTTP_ACCEPT_ENCODING') and
-        env['HTTP_ACCEPT_ENCODING'].find('gzip') != -1):
-        # set for gzip compressed response 
+    if ('HTTP_ACCEPT_ENCODING' in env and
+            env['HTTP_ACCEPT_ENCODING'].find('gzip') != -1):
+        # set for gzip compressed response
         gzip = True
 
     # set compression level
@@ -108,7 +111,7 @@ def application(env, start_response):
                                  compresslevel=gzip_compresslevel)
         gzipfile.write(contents)
         gzipfile.close()
-        
+
         contents = buf.getvalue()
 
         headers['Content-Encoding'] = 'gzip'

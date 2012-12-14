@@ -30,9 +30,10 @@
 #
 # =================================================================
 
-import csv, os
+import csv
+import os
 
-jquery_version = '1.6.4'
+JQUERY_VERSION = '1.6.4'
 
 print '''
 <?xml version="1.0" encoding="utf-8"?>
@@ -90,7 +91,7 @@ print '''
             });
         </script>
     </head>
-''' % jquery_version
+''' % JQUERY_VERSION
 
 print '''
     <body>
@@ -110,9 +111,9 @@ print '''
 
 for root, dirs, files in os.walk('suites'):
     if files:
-        for file in files:
-            if os.path.splitext(file)[1] in ['.xml']:  # it's a POST request
-                query = '%s%s%s' % (root.replace(os.sep, '/'), '/', file)
+        for sfile in files:
+            if os.path.splitext(sfile)[1] in ['.xml']:  # it's a POST request
+                query = '%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)
                 print '                            <option value="tests/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[1], query, query)
 print '''
                         </select>
@@ -138,9 +139,9 @@ print '''
 '''
 for root, dirs, files in os.walk('suites'):
     if files:
-        for file in files:
-            if file == 'requests.txt':  # it's a list of GET requests
-                gets = csv.reader(open('%s%s%s' % (root.replace(os.sep, '/'), '/', file)))
+        for sfile in files:
+            if sfile == 'requests.txt':  # it's a list of GET requests
+                gets = csv.reader(open('%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)))
                 for row in gets:
                     query = row[1].replace('PYCSW_SERVER', '../csw.py')
                     print '<li><a href="%s">%s</a></li>' % (query, row[0])
