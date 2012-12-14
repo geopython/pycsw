@@ -38,6 +38,7 @@ from paver.easy import task, cmdopts, needs, \
 DOCS = 'docs'
 STAGE_DIR = '/tmp'
 
+
 @task
 def build_release():
     """Create release package"""
@@ -63,7 +64,6 @@ def publish_docs(options):
     remote_path = '/osgeo/pycsw/pycsw-web'
 
     user = options.get('user', False)
-    user='tomkralidis'
     if not user:
         raise Exception('OSGeo userid required')
 
@@ -79,7 +79,7 @@ def publish_docs(options):
 
         # copy documentation
         sh('scp -r %s%s* %s@%s:%s' % (local_path, os.sep, user, remote_host,
-                                     remote_path))
+                                      remote_path))
 
 
 @task
@@ -189,7 +189,7 @@ def kill(arg1, arg2):
 
     while running and time.time() - time0 < time_out:
         proc = Popen('ps aux | grep %s' % arg1, shell=True,
-                  stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
+                     stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
 
         lines = proc.stdout.readlines()
 
@@ -215,4 +215,3 @@ def kill(arg1, arg2):
         raise Exception('Could not stop %s: '
                         'Running processes are\n%s'
                         % (arg1, '\n'.join([l.strip() for l in lines])))
-

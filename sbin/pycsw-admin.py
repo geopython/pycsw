@@ -42,8 +42,9 @@ logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
 CONTEXT = config.StaticContext()
 
+
 def usage():
-    ''' Provide usage instructions '''
+    """Provide usage instructions"""
     return '''
 NAME
     pycsw-admin.py - pycsw admin utility
@@ -180,10 +181,11 @@ if COMMAND is None:
     print '-c <command> is a required argument'
     sys.exit(4)
 
-if COMMAND not in ['setup_db', 'load_records', 'export_records', \
-    'rebuild_db_indexes', 'optimize_db', 'refresh_harvested_records', \
-    'gen_sitemap', 'gen_opensearch_description', 'post_xml', 'get_sysprof', \
-    'validate_xml']:
+if COMMAND not in ['setup_db', 'load_records', 'export_records',
+                   'rebuild_db_indexes', 'optimize_db',
+                   'refresh_harvested_records', 'gen_sitemap',
+                   'gen_opensearch_description', 'post_xml', 'get_sysprof',
+                   'validate_xml']:
     print 'ERROR: invalid command name: %s' % COMMAND
     sys.exit(5)
 
@@ -195,8 +197,8 @@ if COMMAND in ['load_records', 'export_records'] and XML_DIRPATH is None:
     print 'ERROR: -p </path/to/records> is a required argument'
     sys.exit(7)
 
-if (COMMAND in ['gen_sitemap', 'gen_opensearch_description']
-    and OUTPUT_FILE is None):
+if (COMMAND in ['gen_sitemap', 'gen_opensearch_description'] and
+        OUTPUT_FILE is None):
     print 'ERROR: -o </path/to/sitemap.xml> is a required argument'
     sys.exit(8)
 
@@ -228,7 +230,7 @@ elif COMMAND == 'validate_xml':
         print 'ERROR: -s /path/to/file.xsd is a required argument'
         sys.exit(12)
 
-if COMMAND == 'setup_db': 
+if COMMAND == 'setup_db':
     admin.setup_db(DATABASE, TABLE, HOME)
 elif COMMAND == 'load_records':
     admin.load_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH, RECURSIVE)
