@@ -33,23 +33,24 @@
 
 # CGI wrapper for pycsw
 
-import os, sys
+import os
+import sys
 from StringIO import StringIO
 from pycsw import server
 
 CONFIG = 'default.cfg'
 GZIP = False
 
-if os.environ.has_key('PYCSW_CONFIG'):
+if 'PYCSW_CONFIG' in os.environ:
     CONFIG = os.environ['PYCSW_CONFIG']
 if os.environ['QUERY_STRING'].lower().find('config') != -1:
     for kvp in os.environ['QUERY_STRING'].split('&'):
         if kvp.lower().find('config') != -1:
             CONFIG = kvp.split('=')[1]
 
-if (os.environ.has_key('HTTP_ACCEPT_ENCODING') and
-    os.environ['HTTP_ACCEPT_ENCODING'].find('gzip') != -1):
-    # set for gzip compressed response 
+if ('HTTP_ACCEPT_ENCODING' in os.environ and
+        os.environ['HTTP_ACCEPT_ENCODING'].find('gzip') != -1):
+    # set for gzip compressed response
     GZIP = True
 
 # get runtime configuration
@@ -69,13 +70,13 @@ sys.stdout.write("Content-Type:%s\r\n" % CSW.contenttype)
 
 if GZIP and GZIP_COMPRESSLEVEL > 0:
     import gzip
-    
+
     BUF = StringIO()
     GZIPFILE = gzip.GzipFile(mode='wb', fileobj=BUF,
-                                 compresslevel=GZIP_COMPRESSLEVEL)
+                             compresslevel=GZIP_COMPRESSLEVEL)
     GZIPFILE.write(OUTP)
     GZIPFILE.close()
-        
+
     OUTP = BUF.getvalue()
 
     sys.stdout.write('Content-Encoding: gzip\r\n')
