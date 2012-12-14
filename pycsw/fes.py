@@ -35,7 +35,7 @@ from pycsw import gml, util
 
 LOGGER = logging.getLogger(__name__)
 
-MODEL =  {
+MODEL = {
     'GeometryOperands': {
         'values': gml.TYPES
     },
@@ -44,33 +44,34 @@ MODEL =  {
         'DWithin', 'Equals', 'Intersects', 'Overlaps', 'Touches', 'Within']
     },
     'ComparisonOperators': {
-        'ogc:PropertyIsBetween': { 'opname': 'Between', 'opvalue': 'and'},
-        'ogc:PropertyIsEqualTo': { 'opname': 'EqualTo', 'opvalue': '='},
-        'ogc:PropertyIsGreaterThan': { 'opname': 'GreaterThan', 'opvalue': '>'},
-        'ogc:PropertyIsGreaterThanOrEqualTo': { 
+        'ogc:PropertyIsBetween': {'opname': 'Between', 'opvalue': 'and'},
+        'ogc:PropertyIsEqualTo': {'opname': 'EqualTo', 'opvalue': '='},
+        'ogc:PropertyIsGreaterThan': {'opname': 'GreaterThan', 'opvalue': '>'},
+        'ogc:PropertyIsGreaterThanOrEqualTo': {
             'opname': 'GreaterThanEqualTo', 'opvalue': '>='},
-        'ogc:PropertyIsLessThan': { 'opname': 'LessThan', 'opvalue': '<'},
+        'ogc:PropertyIsLessThan': {'opname': 'LessThan', 'opvalue': '<'},
         'ogc:PropertyIsLessThanOrEqualTo': {
             'opname': 'LessThanEqualTo', 'opvalue': '<='},
-        'ogc:PropertyIsLike': { 'opname': 'Like', 'opvalue': 'like'},
-        'ogc:PropertyIsNotEqualTo': { 'opname': 'NotEqualTo', 'opvalue': '!='},
-        'ogc:PropertyIsNull': { 'opname': 'NullCheck', 'opvalue': 'is null'},
+        'ogc:PropertyIsLike': {'opname': 'Like', 'opvalue': 'like'},
+        'ogc:PropertyIsNotEqualTo': {'opname': 'NotEqualTo', 'opvalue': '!='},
+        'ogc:PropertyIsNull': {'opname': 'NullCheck', 'opvalue': 'is null'},
     },
     'Functions': {
-        'length': { 'args': '1'},
-        'lower': { 'args': '1'},
-        'ltrim': { 'args': '1'},
-        'rtrim': { 'args': '1'},
-        'trim': { 'args': '1'},
-        'upper': { 'args': '1'},
+        'length': {'args': '1'},
+        'lower': {'args': '1'},
+        'ltrim': {'args': '1'},
+        'rtrim': {'args': '1'},
+        'trim': {'args': '1'},
+        'upper': {'args': '1'},
     },
     'Ids': {
         'values': ['EID', 'FID']
     }
 }
 
+
 def parse(element, queryables, dbtype, nsmap):
-    ''' OGC Filter object support '''
+    """OGC Filter object support"""
 
     boq = None
 
@@ -97,12 +98,14 @@ def parse(element, queryables, dbtype, nsmap):
         if child.tag == util.nspath_eval('ogc:Not', nsmap):
             LOGGER.debug('ogc:Not query detected')
             queries.append("%s = %s" %
-            (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-            child.xpath('child::*')[0], dbtype, nsmap), boolean_false))
+                           (_get_spatial_operator(
+                               queryables['pycsw:BoundingBox'],
+                               child.xpath('child::*')[0], dbtype, nsmap),
+                               boolean_false))
 
         elif child.tag in \
-        [util.nspath_eval('ogc:%s' % n, nsmap) for n in \
-        MODEL['SpatialOperators']['values']]:
+            [util.nspath_eval('ogc:%s' % n, nsmap) for n in
+                MODEL['SpatialOperators']['values']]:
             LOGGER.debug('spatial operator detected: %s' % child.tag)
             if boq is not None and boq == ' not ':
                 # for ogc:Not spatial queries in PostGIS we must explictly
@@ -110,22 +113,25 @@ def parse(element, queryables, dbtype, nsmap):
                 if dbtype == 'postgresql+postgis':
                     LOGGER.debug('Setting bbox is null test in PostgreSQL')
                     queries.append("%s = %s or %s is null" %
-                    (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-                    child, dbtype, nsmap), boolean_false,
-                    queryables['pycsw:BoundingBox']))
+                                   (_get_spatial_operator(
+                                       queryables['pycsw:BoundingBox'],
+                                       child, dbtype, nsmap), boolean_false,
+                                       queryables['pycsw:BoundingBox']))
                 else:
                     queries.append("%s = %s" %
-                    (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-                    child, dbtype, nsmap), boolean_false))
+                                   (_get_spatial_operator(
+                                       queryables['pycsw:BoundingBox'],
+                                       child, dbtype, nsmap), boolean_false))
             else:
-                queries.append("%s = %s" % 
-                (_get_spatial_operator(queryables['pycsw:BoundingBox'],
-                 child, dbtype, nsmap), boolean_true))
+                queries.append("%s = %s" %
+                               (_get_spatial_operator(
+                                   queryables['pycsw:BoundingBox'],
+                                   child, dbtype, nsmap), boolean_true))
 
         elif child.tag == util.nspath_eval('ogc:FeatureId', nsmap):
             LOGGER.debug('ogc:FeatureId filter detected')
             queries.append("%s = '%s'" % (queryables['pycsw:Identifier'],
-            child.attrib.get('fid')))
+                           child.attrib.get('fid')))
 
         else:
             fname = None
@@ -140,39 +146,33 @@ def parse(element, queryables, dbtype, nsmap):
                 singlechar = '_'
 
             if (child.xpath('child::*')[0].tag ==
-                util.nspath_eval('ogc:Function', nsmap)):
+                    util.nspath_eval('ogc:Function', nsmap)):
                 LOGGER.debug('ogc:Function detected')
                 if (child.xpath('child::*')[0].attrib['name'] not in
-                MODEL['Functions'].keys()):
-                    raise RuntimeError, ('Invalid ogc:Function: %s' %
-                    (child.xpath('child::*')[0].attrib['name']))
+                        MODEL['Functions']):
+                    raise RuntimeError('Invalid ogc:Function: %s' %
+                                       (child.xpath('child::*')[0].attrib['name']))
                 fname = child.xpath('child::*')[0].attrib['name']
 
                 try:
                     LOGGER.debug('Testing existence of ogc:PropertyName')
-                    pname = queryables[child.find(
-                    util.nspath_eval('ogc:Function/ogc:PropertyName',
-                    nsmap)).text]['dbcol']
+                    pname = queryables[child.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text]['dbcol']
                 except Exception, err:
-                    raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
-                    (child.find(util.nspath_eval('ogc:Function/ogc:PropertyName',
-                    nsmap)).text,
-                    str(err)))
+                    raise RuntimeError('Invalid PropertyName: %s.  %s' % (child.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err)))
 
             else:
                 try:
                     LOGGER.debug('Testing existence of ogc:PropertyName')
                     pname = queryables[child.find(
-                    util.nspath_eval('ogc:PropertyName', nsmap)).text]['dbcol']
+                        util.nspath_eval('ogc:PropertyName', nsmap)).text]['dbcol']
                 except Exception, err:
-                    raise RuntimeError, ('Invalid PropertyName: %s.  %s' %
-                    (child.find(util.nspath_eval('ogc:PropertyName',
-                     nsmap)).text,
-                     str(err)))
+                    raise RuntimeError('Invalid PropertyName: %s.  %s' %
+                                       (child.find(util.nspath_eval('ogc:PropertyName',
+                                       nsmap)).text, str(err)))
 
             if (child.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
                 pval = child.find(util.nspath_eval('ogc:Literal', nsmap)).text
-                pvalue = pval.replace(wildcard,'%').replace(singlechar,'_')
+                pvalue = pval.replace(wildcard, '%').replace(singlechar, '_')
 
             com_op = _get_comparison_operator(child)
             LOGGER.debug('Comparison operator: %s' % com_op)
@@ -180,41 +180,43 @@ def parse(element, queryables, dbtype, nsmap):
             # if this is a case insensitive search
             # then set the DB-specific LIKE comparison operator
             if ((matchcase is not None and matchcase == 'false') or
-            pname == 'anytext'):
-                com_op = 'ilike' if dbtype in ['postgresql', 'postgresql+postgis'] else 'like'
+                    pname == 'anytext'):
+                com_op = 'ilike' if dbtype in \
+                    ['postgresql', 'postgresql+postgis'] else 'like'
 
             if (child.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
                 com_op = 'between'
                 lower_boundary = child.find(
                     util.nspath_eval('ogc:LowerBoundary/ogc:Literal',
-                    nsmap)).text
+                                     nsmap)).text
                 upper_boundary = child.find(
                     util.nspath_eval('ogc:UpperBoundary/ogc:Literal',
-                    nsmap)).text
+                                     nsmap)).text
                 queries.append("%s %s '%s' and '%s'" %
-                (pname, com_op, lower_boundary, upper_boundary))
+                               (pname, com_op, lower_boundary, upper_boundary))
             else:
                 if boq == ' not ':
                     if fname is not None:
                         queries.append("%s is null or not %s(%s) %s '%s'" %
-                        (pname, fname, pname, com_op, pvalue))
+                                       (pname, fname, pname, com_op, pvalue))
                     else:
                         queries.append("%s is null or not %s %s '%s'" %
-                        (pname, pname, com_op, pvalue))
+                                       (pname, pname, com_op, pvalue))
                 else:
                     if fname is not None:
-                        queries.append("%s(%s) %s '%s'" % \
-                        (fname, pname, com_op, pvalue))
+                        queries.append("%s(%s) %s '%s'" %
+                                       (fname, pname, com_op, pvalue))
                     else:
                         queries.append("%s %s '%s'" % (pname, com_op, pvalue))
 
     where = boq.join(queries) if (boq is not None and boq != ' not ') \
-    else queries[0]
+        else queries[0]
 
     return where
 
+
 def _get_spatial_operator(geomattr, element, dbtype, nsmap):
-    ''' return the spatial predicate function '''
+    """return the spatial predicate function"""
     property_name = element.find(util.nspath_eval('ogc:PropertyName', nsmap))
     distance = element.find(util.nspath_eval('ogc:Distance', nsmap))
 
@@ -223,13 +225,11 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
     LOGGER.debug('Scanning for spatial property name')
 
     if property_name is None:
-        raise RuntimeError, \
-        ('Missing ogc:PropertyName in spatial filter')
+        raise RuntimeError('Missing ogc:PropertyName in spatial filter')
     if (property_name.text.find('BoundingBox') == -1 and
-        property_name.text.find('Envelope') == -1):
-        raise RuntimeError, \
-        ('Invalid ogc:PropertyName in spatial filter: %s' %
-        property_name.text)
+            property_name.text.find('Envelope') == -1):
+        raise RuntimeError('Invalid ogc:PropertyName in spatial filter: %s' %
+                           property_name.text)
 
     geometry = gml.Geometry(element, nsmap)
 
@@ -245,14 +245,15 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
         if spatial_predicate == 'beyond':
             spatial_query = "ifnull(distance(geomfromtext(%s), \
             geomfromtext('%s')) > convert(%s, signed),false)" % \
-            (geomattr, geometry.wkt, distance)
+                (geomattr, geometry.wkt, distance)
         elif spatial_predicate == 'dwithin':
             spatial_query = "ifnull(distance(geomfromtext(%s), \
             geomfromtext('%s')) <= convert(%s, signed),false)" % \
-            (geomattr, geometry.wkt, distance)
+                (geomattr, geometry.wkt, distance)
         else:
             spatial_query = "ifnull(%s(geomfromtext(%s), \
-            geomfromtext('%s')),false)" % (spatial_predicate, geomattr, geometry.wkt)
+            geomfromtext('%s')),false)" % \
+                (spatial_predicate, geomattr, geometry.wkt)
 
     elif dbtype == 'postgresql+postgis':  # adjust spatial query for PostGIS
         LOGGER.debug('Adjusting spatial query for PostgreSQL+PostGIS')
@@ -261,23 +262,25 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
 
         if spatial_predicate == 'beyond':
             spatial_query = "not st_dwithin(st_geomfromtext(%s), \
-            st_geomfromtext('%s'), %f)" % (geomattr, geometry.wkt, float(distance))
+            st_geomfromtext('%s'), %f)" % \
+                (geomattr, geometry.wkt, float(distance))
         elif spatial_predicate == 'dwithin':
             spatial_query = "st_dwithin(st_geomfromtext(%s), \
-            st_geomfromtext('%s'), %f)" % (geomattr, geometry.wkt, float(distance))
+            st_geomfromtext('%s'), %f)" % \
+                (geomattr, geometry.wkt, float(distance))
         else:
             spatial_query = "st_%s(st_geomfromtext(%s), \
-            st_geomfromtext('%s'))" % (spatial_predicate, geomattr, geometry.wkt)
+            st_geomfromtext('%s'))" % \
+                (spatial_predicate, geomattr, geometry.wkt)
     else:
         LOGGER.debug('Adjusting spatial query')
         spatial_query = "query_spatial(%s,'%s','%s','%s')" % \
-        (geomattr, geometry.wkt, spatial_predicate, distance)
+                        (geomattr, geometry.wkt, spatial_predicate, distance)
 
     return spatial_query
 
+
 def _get_comparison_operator(element):
-    ''' return the SQL operator based on Filter query '''
+    """return the SQL operator based on Filter query"""
 
-    return MODEL['ComparisonOperators']\
-    ['ogc:%s' % util.xmltag_split(element.tag)]['opvalue'] 
-
+    return MODEL['ComparisonOperators']['ogc:%s' % util.xmltag_split(element.tag)]['opvalue']
