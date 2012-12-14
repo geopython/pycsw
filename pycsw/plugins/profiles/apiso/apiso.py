@@ -157,7 +157,7 @@ class APISO(profile.Profile):
         self.context.namespaces.update(self.inspire_namespaces)
 
         # update harvest resource types with WMS, since WMS is not a typename,
-        if model['operations'].has_key('Harvest'):
+        if 'Harvest' in model['operations']:
             model['operations']['Harvest']['parameters']['ResourceType']['values'].append('http://www.isotc211.org/schemas/2005/gmd/')
 
         # set INSPIRE config
@@ -182,7 +182,7 @@ class APISO(profile.Profile):
 
         if self.inspire_config is not None:
             result = None
-            if not kvp.has_key('language'):
+            if 'language' not in kvp:
                 self.inspire_config['current_language'] = self.inspire_config['default_language']
             else:
                 if kvp['language'] not in self.inspire_config['languages_supported'].split(','):
