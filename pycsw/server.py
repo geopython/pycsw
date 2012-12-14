@@ -382,7 +382,7 @@ class Csw(object):
         LOGGER.debug('Parsed request parameters: %s' % self.kvp)
 
         if (not isinstance(self.kvp, str) and
-        self.kvp.has_key('mode') and self.kvp['mode'] == 'sru'):
+        'mode' in self.kvp and self.kvp['mode'] == 'sru'):
             self.mode = 'sru'
             LOGGER.debug('SRU mode detected; processing request.')
             self.kvp = self.sru().request_sru2csw(self.kvp,
@@ -390,7 +390,7 @@ class Csw(object):
             ['typeNames']['values'])
 
         if (not isinstance(self.kvp, str) and
-        self.kvp.has_key('mode') and self.kvp['mode'] == 'opensearch'):
+        'mode' in self.kvp and self.kvp['mode'] == 'opensearch'):
             self.mode = 'opensearch'
             LOGGER.debug('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
@@ -398,8 +398,8 @@ class Csw(object):
         if error == 0:
             # test for the basic keyword values (service, version, request)
             for k in ['service', 'version', 'request']:
-                if self.kvp.has_key(k) == False:
-                    if (k == 'version' and self.kvp.has_key('request') and
+                if k not in self.kvp:
+                    if (k == 'version' and 'request' in self.kvp and
                     self.kvp['request'] == 'GetCapabilities'):
                         pass
                     else:
@@ -420,7 +420,7 @@ class Csw(object):
                     Value MUST be CSW' % self.kvp['service']
 
                 # test version
-                if (self.kvp.has_key('version') and
+                if ('version' in self.kvp and
                     util.get_version_integer(self.kvp['version']) !=
                     util.get_version_integer('2.0.2') and
                     self.kvp['request'] != 'GetCapabilities'):
@@ -431,7 +431,7 @@ class Csw(object):
                     Value MUST be 2.0.2' % self.kvp['version']
 
                 # check for GetCapabilities acceptversions
-                if self.kvp.has_key('acceptversions'):
+                if 'acceptversions' in self.kvp:
                     for vers in self.kvp['acceptversions'].split(','):
                         if (util.get_version_integer(vers) ==
                             util.get_version_integer('2.0.2')):
@@ -463,11 +463,11 @@ class Csw(object):
 
         else:  # process per the request value
 
-            if self.kvp.has_key('responsehandler'):
+            if 'responsehandler' in self.kvp:
                 # set flag to process asynchronously
                 import threading
                 self.async = True
-                if (not self.kvp.has_key('requestid')
+                if ('requestid' not in self.kvp
                 or self.kvp['requestid'] is None):
                     import uuid
                     self.kvp['requestid'] = str(uuid.uuid4())
@@ -547,7 +547,7 @@ class Csw(object):
         serviceidentification = True
         serviceprovider = True
         operationsmetadata = True
-        if self.kvp.has_key('sections'):
+        if 'sections' in self.kvp:
             serviceidentification = False
             serviceprovider = False
             operationsmetadata = False
@@ -580,7 +580,7 @@ class Csw(object):
         nsmap=self.context.namespaces, version='2.0.2',
         updateSequence=str(updatesequence))
 
-        if self.kvp.has_key('updatesequence'):
+        if 'updatesequence' in self.kvp:
             if int(self.kvp['updatesequence']) == updatesequence:
                 return node
             elif int(self.kvp['updatesequence']) > updatesequence:
@@ -910,7 +910,7 @@ class Csw(object):
     def describerecord(self):
         ''' Handle DescribeRecord request '''
 
-        if not self.kvp.has_key('typename') or \
+        if 'typename' not in self.kvp or \
         len(self.kvp['typename']) == 0:  # missing typename
         # set to return all typenames
             self.kvp['typename'] = ['csw:Record']
@@ -923,7 +923,7 @@ class Csw(object):
         elif self.requesttype == 'GET':  # pass via GET
             self.kvp['typename'] = self.kvp['typename'].split(',')
 
-        if (self.kvp.has_key('outputformat') and
+        if ('outputformat' in self.kvp and
             self.kvp['outputformat'] not in
             self.context.model['operations']['DescribeRecord']
             ['parameters']['outputFormat']['values']):  # bad outputformat
@@ -931,7 +931,7 @@ class Csw(object):
             'outputformat', 'Invalid value for outputformat: %s' %
             self.kvp['outputformat'])
 
-        if (self.kvp.has_key('schemalanguage') and
+        if ('schemalanguage' in self.kvp and
             self.kvp['schemalanguage'] not in
             self.context.model['operations']['DescribeRecord']['parameters']
             ['schemaLanguage']['values']):  # bad schemalanguage
@@ -973,8 +973,8 @@ class Csw(object):
 
     def getdomain(self):
         ''' Handle GetDomain request '''
-        if (not self.kvp.has_key('parametername') and
-            not self.kvp.has_key('propertyname')):
+        if ('parametername' not in self.kvp and
+            'propertyname' not in self.kvp):
             return self.exceptionreport('MissingParameterValue',
             'parametername', 'Missing value. \
             One of propertyname or parametername must be specified')
@@ -987,7 +987,7 @@ class Csw(object):
         (self.context.namespaces['csw'],
         self.config.get('server', 'ogc_schemas_base'))
 
-        if self.kvp.has_key('parametername'):
+        if 'parametername' in self.kvp:
             for pname in self.kvp['parametername'].split(','):
                 LOGGER.debug('Parsing parametername %s.' % pname)
                 domainvalue = etree.SubElement(node,
@@ -1012,7 +1012,7 @@ class Csw(object):
                         util.nspath_eval('csw:Value',
                         self.context.namespaces)).text = val
 
-        if self.kvp.has_key('propertyname'):
+        if 'propertyname' in self.kvp:
             for pname in self.kvp['propertyname'].split(','):
                 LOGGER.debug('Parsing propertyname %s.' % pname)
 
@@ -1096,14 +1096,14 @@ class Csw(object):
 
         timestamp = util.get_today_and_now()
 
-        if (not self.kvp.has_key('elementsetname') and
-            not self.kvp.has_key('elementname')):
+        if ('elementsetname' not in self.kvp and
+            'elementname' not in self.kvp):
             # mutually exclusive required
             return self.exceptionreport('MissingParameterValue',
             'elementsetname',
             'Missing one of ElementSetName or ElementName parameter(s)')
 
-        if not self.kvp.has_key('outputschema'):
+        if 'outputschema' not in self.kvp:
             self.kvp['outputschema'] = self.context.namespaces['csw']
 
         if (self.kvp['outputschema'] not in self.context.model['operations']
@@ -1112,7 +1112,7 @@ class Csw(object):
             'outputschema', 'Invalid outputSchema parameter value: %s' %
             self.kvp['outputschema'])
 
-        if not self.kvp.has_key('outputformat'):
+        if 'outputformat' not in self.kvp:
             self.kvp['outputformat'] = 'application/xml'
 
         if (self.kvp['outputformat'] not in self.context.model['operations']
@@ -1121,7 +1121,7 @@ class Csw(object):
             'outputformat', 'Invalid outputFormat parameter value: %s' %
             self.kvp['outputformat'])
 
-        if not self.kvp.has_key('resulttype'):
+        if 'resulttype' not in self.kvp:
             self.kvp['resulttype'] = 'hits'
 
         if self.kvp['resulttype'] is not None:
@@ -1131,7 +1131,7 @@ class Csw(object):
                 'resulttype', 'Invalid resultType parameter value: %s' %
                 self.kvp['resulttype'])
 
-        if ((not self.kvp.has_key('elementname') or
+        if (('elementname' not in self.kvp or
              len(self.kvp['elementname']) == 0) and
              self.kvp['elementsetname'] not in
              self.context.model['operations']['GetRecords']['parameters']
@@ -1140,20 +1140,20 @@ class Csw(object):
             'elementsetname', 'Invalid ElementSetName parameter value: %s' %
             self.kvp['elementsetname'])
 
-        if (self.kvp.has_key('elementname') and
+        if ('elementname' in self.kvp and
             self.requesttype == 'GET'):  # passed via GET
             self.kvp['elementname'] = self.kvp['elementname'].split(',')
             self.kvp['elementsetname'] = 'summary'
 
-        if not self.kvp.has_key('typenames'):
+        if 'typenames' not in self.kvp:
             return self.exceptionreport('MissingParameterValue',
             'typenames', 'Missing typenames parameter')
 
-        if (self.kvp.has_key('typenames') and
+        if ('typenames' in self.kvp and
             self.requesttype == 'GET'):  # passed via GET
             self.kvp['typenames'] = self.kvp['typenames'].split(',')
 
-        if self.kvp.has_key('typenames'):
+        if 'typenames' in self.kvp:
             for tname in self.kvp['typenames']:
                 if (tname not in self.context.model['operations']['GetRecords']
                     ['parameters']['typeNames']['values']):
@@ -1162,7 +1162,7 @@ class Csw(object):
                     tname)
 
         # check elementname's
-        if self.kvp.has_key('elementname'):
+        if 'elementname' in self.kvp:
             for ename in self.kvp['elementname']:
                 enamelist = self.repository.queryables['_all'].keys()
                 if ename not in enamelist:
@@ -1173,14 +1173,14 @@ class Csw(object):
         if self.kvp['resulttype'] == 'validate':
             return self._write_acknowledgement()
 
-        if not self.kvp.has_key('maxrecords'):
+        if 'maxrecords' not in self.kvp:
             self.kvp['maxrecords'] = int(self.config.get('server', 'maxrecords'))
 
         if self.requesttype == 'GET':
-            if self.kvp.has_key('constraint'):
+            if 'constraint' in self.kvp:
                 # GET request
                 LOGGER.debug('csw:Constraint passed over HTTP GET.')
-                if not self.kvp.has_key('constraintlanguage'):
+                if 'constraintlanguage' not in self.kvp:
                     return self.exceptionreport('MissingParameterValue',
                     'constraintlanguage',
                     'constraintlanguage required when constraint specified')
@@ -1225,9 +1225,9 @@ class Csw(object):
             else:
                 self.kvp['constraint'] = {}
 
-        if not self.kvp.has_key('sortby'):
+        if 'sortby' not in self.kvp:
             self.kvp['sortby'] = None
-        elif self.kvp.has_key('sortby') and self.requesttype == 'GET':
+        elif 'sortby' in self.kvp and self.requesttype == 'GET':
             LOGGER.debug('Sorted query specified.')
             tmp = self.kvp['sortby']
             self.kvp['sortby'] = {}
@@ -1258,7 +1258,7 @@ class Csw(object):
             else:
                 self.kvp['sortby']['order'] = 'ASC'
 
-        if not self.kvp.has_key('startposition'):
+        if 'startposition' not in self.kvp:
             self.kvp['startposition'] = 1
 
         # query repository
@@ -1280,7 +1280,7 @@ class Csw(object):
         dsresults = []
 
         if (self.config.has_option('server', 'federatedcatalogues') and
-            self.kvp.has_key('distributedsearch') and
+            'distributedsearch' in self.kvp and
             self.kvp['distributedsearch'] and self.kvp['hopcount'] > 0):
             # do distributed search
 
@@ -1339,14 +1339,14 @@ class Csw(object):
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
         (self.context.namespaces['csw'], self.config.get('server', 'ogc_schemas_base'))
 
-        if self.kvp.has_key('requestid') and self.kvp['requestid'] is not None:
+        if 'requestid' in self.kvp and self.kvp['requestid'] is not None:
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
             self.context.namespaces)).text = self.kvp['requestid']
 
         etree.SubElement(node, util.nspath_eval('csw:SearchStatus',
         self.context.namespaces), timestamp=timestamp)
 
-        if not self.kvp['constraint'].has_key('where') and \
+        if 'where' not in self.kvp['constraint'] and \
         self.kvp['resulttype'] is None:
             returned = '0'
 
@@ -1358,7 +1358,7 @@ class Csw(object):
         if self.kvp['elementsetname'] is not None:
             searchresults.attrib['elementSet'] = self.kvp['elementsetname']
 
-        if not self.kvp['constraint'].has_key('where') \
+        if 'where' not in self.kvp['constraint'] \
         and self.kvp['resulttype'] is None:
             LOGGER.debug('Empty result set returned.')
             return node
@@ -1420,7 +1420,7 @@ class Csw(object):
                 for rec in resultset:
                     searchresults.append(etree.fromstring(resultset[rec].xml))
 
-        if self.kvp.has_key('responsehandler'):  # process the handler
+        if 'responsehandler' in self.kvp:  # process the handler
             self._process_responsehandler(etree.tostring(node,
             pretty_print=self.pretty_print))
         else:
@@ -1429,19 +1429,19 @@ class Csw(object):
     def getrecordbyid(self, raw=False):
         ''' Handle GetRecordById request '''
 
-        if not self.kvp.has_key('id'):
+        if 'id' not in self.kvp:
             return self.exceptionreport('MissingParameterValue', 'id',
             'Missing id parameter')
         if len(self.kvp['id']) < 1:
             return self.exceptionreport('InvalidParameterValue', 'id',
             'Invalid id parameter')
-        if not self.kvp.has_key('outputschema'):
+        if 'outputschema' not in self.kvp:
             self.kvp['outputschema'] = self.context.namespaces['csw']
 
         if self.requesttype == 'GET':
             self.kvp['id'] = self.kvp['id'].split(',')
 
-        if (self.kvp.has_key('outputformat') and
+        if ('outputformat' in self.kvp and
             self.kvp['outputformat'] not in
             self.context.model['operations']['GetRecordById']['parameters']
             ['outputFormat']['values']):
@@ -1449,14 +1449,14 @@ class Csw(object):
             'outputformat', 'Invalid outputformat parameter %s' %
             self.kvp['outputformat'])
 
-        if (self.kvp.has_key('outputschema') and self.kvp['outputschema'] not in
+        if ('outputschema' in self.kvp and self.kvp['outputschema'] not in
             self.context.model['operations']['GetRecordById']['parameters']
             ['outputSchema']['values']):
             return self.exceptionreport('InvalidParameterValue',
             'outputschema', 'Invalid outputschema parameter %s' %
             self.kvp['outputschema'])
 
-        if not self.kvp.has_key('elementsetname'):
+        if 'elementsetname' not in self.kvp:
             self.kvp['elementsetname'] = 'summary'
         else:
             if (self.kvp['elementsetname'] not in
@@ -1579,7 +1579,7 @@ class Csw(object):
                     'insert', 'Transaction (insert) failed: %s.' % str(err))
 
             elif ttype['type'] == 'update':
-                if not ttype.has_key('constraint'):
+                if 'constraint' not in ttype:
                     # update full existing resource in repository
                     try:
                         record = metadata.parse_record(self.context,
@@ -1763,7 +1763,7 @@ class Csw(object):
             # show insert result identifiers
             node2.append(self._write_verboseresponse(ir))
 
-        if self.kvp.has_key('responsehandler'):  # process the handler
+        if 'responsehandler' in self.kvp:  # process the handler
             self._process_responsehandler(etree.tostring(node,
             pretty_print=self.pretty_print))
         else:
@@ -2097,7 +2097,7 @@ class Csw(object):
         record = etree.Element(util.nspath_eval('csw:%s' % elname,
                  self.context.namespaces))
 
-        if (self.kvp.has_key('elementname') and
+        if ('elementname' in self.kvp and
             len(self.kvp['elementname']) > 0):
             for elemname in self.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
@@ -2113,7 +2113,7 @@ class Csw(object):
                         etree.SubElement(record,
                         util.nspath_eval(elemname,
                         self.context.namespaces)).text = value
-        elif self.kvp.has_key('elementsetname'):
+        elif 'elementsetname' in self.kvp:
             if (self.kvp['elementsetname'] == 'full' and
             util.getqattr(recobj, self.context.md_core_model['mappings']\
             ['pycsw:Typename']) == 'csw:Record'):
@@ -2198,7 +2198,7 @@ class Csw(object):
         if hasattr(self, 'soap') and self.soap:
             self._gen_soap_wrapper()
 
-        if (isinstance(self.kvp, dict) and self.kvp.has_key('outputformat') and
+        if (isinstance(self.kvp, dict) and 'outputformat' in self.kvp and
             self.kvp['outputformat'] == 'application/json'):
             self.contenttype = self.kvp['outputformat']
             from pycsw.formats import fmt_json
@@ -2331,7 +2331,7 @@ class Csw(object):
         node = etree.Element(util.nspath_eval('csw:TransactionSummary',
                self.context.namespaces))
 
-        if self.kvp.has_key('requestid') and self.kvp['requestid'] is not None:
+        if 'requestid' in self.kvp and self.kvp['requestid'] is not None:
             node.attrib['requestId'] = self.kvp['requestid']
 
         etree.SubElement(node, util.nspath_eval('csw:totalInserted',

@@ -173,7 +173,7 @@ class Repository(object):
         self.context.md_core_model['mappings']['pycsw:Typename'])
 
         # run the raw query and get total
-        if constraint.has_key('where'):  # GetRecords with constraint
+        if 'where' in constraint:  # GetRecords with constraint
             LOGGER.debug('constraint detected')
             if not typenames:  # any typename
                 query = self.session.query(self.dataset).filter(
@@ -200,12 +200,12 @@ class Repository(object):
             sortby_column = getattr(self.dataset, sortby['propertyname'])
 
             if sortby['order'] == 'DESC':  # descending sort
-                if sortby.has_key('spatial') and sortby['spatial']:  # spatial sort
+                if 'spatial' in sortby and sortby['spatial']:  # spatial sort
                     query = query.order_by(func.get_geometry_area(sortby_column).desc())
                 else:  # aspatial sort
                     query = query.order_by(sortby_column.desc())
             else:  # ascending sort
-                if sortby.has_key('spatial') and sortby['spatial']:  # spatial sort
+                if 'spatial' in sortby and sortby['spatial']:  # spatial sort
                     query = query.order_by(func.get_geometry_area(sortby_column))
                 else:  # aspatial sort
                     query = query.order_by(sortby_column)
