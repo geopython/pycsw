@@ -112,7 +112,7 @@ class GeoNodeRepository(object):
         ''' Query records from underlying repository '''
 
         # run the raw query and get total
-        if constraint.has_key('where'):  # GetRecords with constraint
+        if 'where' in constraint:  # GetRecords with constraint
             # escape wildcards for django
             if constraint['where'].find('%') != -1:
                 constraint['where'] = constraint['where'].replace('%','%%')
@@ -134,7 +134,7 @@ class GeoNodeRepository(object):
 
         # apply sorting, limit and offset
         if sortby is not None:
-            if sortby.has_key('spatial') and sortby['spatial']:  # spatial sort
+            if 'spatial' in sortby and sortby['spatial']:  # spatial sort
                 desc = False
                 if sortby['order'] == 'DESC':
                     desc = True

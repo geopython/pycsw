@@ -62,7 +62,7 @@ class Profile(object):
         model['operations']['GetRecordById']['parameters']['outputSchema']\
         ['values'].append(self.outputschema)
 
-        if model['operations'].has_key('Harvest'):
+        if 'Harvest' in model['operations']:
             model['operations']['Harvest']['parameters']['ResourceType']\
             ['values'].append(self.outputschema)
 
