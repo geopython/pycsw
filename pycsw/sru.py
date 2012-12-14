@@ -31,10 +31,11 @@
 # =================================================================
 
 from lxml import etree
-from pycsw import config, fes, util
+from pycsw import fes, util
+
 
 class Sru(object):
-    ''' SRU wrapper class '''
+    """SRU wrapper class"""
     def __init__(self, context):
         self.sru_version = '1.1'
 
@@ -44,14 +45,14 @@ class Sru(object):
             'zr': 'http://explain.z3950.org/dtd/2.1/',
             'zs': 'http://www.loc.gov/zing/srw/',
             'srw_dc': 'info:srw/schema/1/dc-schema'
-            }
+        }
 
         self.mappings = {
             'csw:Record': {
                 'schema': {
                     'name': 'dc',
                     'identifier': 'info:srw/cql-context-set/1/dc-v1.1',
-                    },
+                },
                 'index': {
                     # map OGC queryables to XPath expressions
                     'title': '4',
@@ -72,26 +73,26 @@ class Sru(object):
                     # bbox and full text map to internal fixed columns
                     #'ows:BoundingBox': 'bbox',
                     #'csw:AnyText': 'xml'
-                    }
                 }
+            }
         }
 
         self.context = context
         self.context.namespaces.update(self.namespaces)
 
     def request_sru2csw(self, kvpin, typenames):
-        ''' transform an SRU request into a CSW request '''
+        """transform an SRU request into a CSW request"""
 
         kvpout = {'service': 'CSW', 'version': '2.0.2', 'mode': 'sru'}
 
-        if kvpin.has_key('operation'):
+        if 'operation' in kvpin:
             if kvpin['operation'] == 'explain':
                 kvpout['request'] = 'GetCapabilities'
             elif kvpin['operation'] == 'searchRetrieve':
                 kvpout['request'] = 'GetRecords'
-                if kvpin.has_key('startrecord'):
+                if 'startrecord' in kvpin:
                     kvpout['startposition'] = int(kvpin['startrecord'])
-                if kvpin.has_key('maximumrecords'):
+                if 'maximumrecords' in kvpin:
                     kvpout['maxrecords'] = int(kvpin['maximumrecords'])
                 else:
                     kvpout['maxrecords'] = 0
@@ -102,7 +103,7 @@ class Sru(object):
                 kvpout['constraintlanguage'] = 'CQL_TEXT'
                 kvpout['resulttype'] = 'results'
 
-                if kvpin.has_key('query'):
+                if 'query' in kvpin:
                     pname_in_query = False
                     for coops in fes.MODEL['ComparisonOperators'].keys():
                         if kvpin['query'].find(fes.MODEL['ComparisonOperators'][coops]['opvalue']) != -1:
@@ -121,11 +122,10 @@ class Sru(object):
         return kvpout
 
     def response_csw2sru(self, element, environ):
-        ''' transform a CSW response into an SRU response '''
+        """transform a CSW response into an SRU response"""
 
         if util.xmltag_split(element.tag) == 'Capabilities':  # explain
-            node = etree.Element(util.nspath_eval('sru:explainResponse', self.namespaces),
-            nsmap=self.namespaces)
+            node = etree.Element(util.nspath_eval('sru:explainResponse', self.namespaces), nsmap=self.namespaces)
 
             etree.SubElement(node, util.nspath_eval('sru:version', self.namespaces)).text = self.sru_version
 
@@ -138,10 +138,9 @@ class Sru(object):
 
             explain = etree.SubElement(recorddata, util.nspath_eval('zr:explain', self.namespaces))
 
-            serverinfo = etree.SubElement(explain, util.nspath_eval('zr:serverInfo', self.namespaces),
-            protocol='SRU', version=self.sru_version, transport='http', method='GET POST SOAP')
+            serverinfo = etree.SubElement(explain, util.nspath_eval('zr:serverInfo', self.namespaces), protocol='SRU', version=self.sru_version, transport='http', method='GET POST SOAP')
 
-            etree.SubElement(serverinfo, util.nspath_eval('zr:host', self.namespaces)).text = environ.get('HTTP_HOST', environ["SERVER_NAME"]) # WSGI allows for either of these
+            etree.SubElement(serverinfo, util.nspath_eval('zr:host', self.namespaces)).text = environ.get('HTTP_HOST', environ["SERVER_NAME"])  # WSGI allows for either of these
             etree.SubElement(serverinfo, util.nspath_eval('zr:port', self.namespaces)).text = environ['SERVER_PORT']
             etree.SubElement(serverinfo, util.nspath_eval('zr:database', self.namespaces)).text = 'pycsw'
 
@@ -195,24 +194,24 @@ class Sru(object):
         return node
 
     def exceptionreport2diagnostic(self, element):
-        ''' transform a CSW exception into an SRU diagnostic '''
+        """transform a CSW exception into an SRU diagnostic"""
         node = etree.Element(
-        util.nspath_eval('zs:searchRetrieveResponse', self.namespaces), nsmap=self.namespaces)
+            util.nspath_eval('zs:searchRetrieveResponse', self.namespaces), nsmap=self.namespaces)
 
         etree.SubElement(node, util.nspath_eval('zs:version', self.namespaces)).text = self.sru_version
 
         diagnostics = etree.SubElement(node, util.nspath_eval('zs:diagnostics', self.namespaces))
 
         diagnostic = etree.SubElement(
-        diagnostics, util.nspath_eval('zs:diagnostic', self.namespaces))
+            diagnostics, util.nspath_eval('zs:diagnostic', self.namespaces))
 
         etree.SubElement(diagnostic, util.nspath_eval('zd:diagnostic', self.namespaces)).text = \
-        'info:srw/diagnostic/1/7'
+            'info:srw/diagnostic/1/7'
 
         etree.SubElement(diagnostic, util.nspath_eval('zd:message', self.namespaces)).text = \
-        element.find(util.nspath_eval('ows:Exception/ows:ExceptionText', self.context.namespaces)).text
+            element.find(util.nspath_eval('ows:Exception/ows:ExceptionText', self.context.namespaces)).text
 
         etree.SubElement(diagnostic, util.nspath_eval('zd:details', self.namespaces)).text = \
-        element.find(util.nspath_eval('ows:Exception', self.context.namespaces)).attrib.get('exceptionCode')
+            element.find(util.nspath_eval('ows:Exception', self.context.namespaces)).attrib.get('exceptionCode')
 
         return node

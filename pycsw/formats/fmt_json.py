@@ -31,30 +31,11 @@
 # =================================================================
 
 import json
-from pycsw.util import xmltag_split, xmltag_split2
+from pycsw.util import exml2dict
 
-def _exml2dict(element, namespaces):
-    ''' Convert an lxml object to a dict
-        From:
-        https://bitbucket.org/smulloni/pesterfish/src/1578db946d74/pesterfish.py
-    '''
-   
-    d = dict(tag='%s%s' % \
-    (xmltag_split2(element.tag, namespaces, True), xmltag_split(element.tag)))
-    if element.text:
-        if element.text.find('\n') == -1:
-            d['text'] = element.text
-    if element.attrib:
-        d['attributes'] = dict(('%s%s' %(xmltag_split2(k, namespaces, True), \
-        xmltag_split(k)),f(v) if hasattr(v, 'keys') else v) \
-        for k,v in element.attrib.items())
-    children = element.getchildren()
-    if children:
-        d['children'] = map(lambda x: _exml2dict(x, namespaces), children)
-    return d
 
 def exml2json(response, namespaces, pretty_print=False):
-    ''' Convert an lxml object to JSON '''
+    """Convert an lxml object to JSON"""
     if pretty_print:
-        return json.dumps(_exml2dict(response, namespaces), indent=4)
-    return json.dumps(_exml2dict(response, namespaces))
+        return json.dumps(exml2dict(response, namespaces), indent=4)
+    return json.dumps(exml2dict(response, namespaces))

@@ -78,7 +78,7 @@ class Geometry(object):
             '|'.join(TYPES),
             namespaces={'gml': 'http://www.opengis.net/gml'})[0]
 
-        if operand.attrib.has_key('srsName'):
+        if 'srsName' in operand.attrib:
             LOGGER.debug('geometry srsName detected')
             self.crs = crs.Crs(operand.attrib['srsName'])
         else:
