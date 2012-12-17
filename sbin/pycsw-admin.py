@@ -79,6 +79,8 @@ SYNOPSIS
 
     -s    XML Schema
 
+    -t    Timeout (in seconds) for HTTP requests (default is 30)
+
     -u    URL of CSW
 
     -x    XML document
@@ -144,13 +146,14 @@ OUTPUT_FILE = None
 CSW_URL = None
 XML = None
 XSD = None
+TIMEOUT = 30
 
 if len(sys.argv) == 1:
     print usage()
     sys.exit(1)
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:')
 except getopt.GetoptError, err:
     print '\nERROR: %s' % err
     print usage()
@@ -173,6 +176,8 @@ for o, a in OPTS:
         XML = a
     if o == '-s':
         XSD = a
+    if o == '-t':
+        TIMEOUT = int(a)
     if o == '-h':  # dump help and exit
         print usage()
         sys.exit(3)
@@ -247,7 +252,7 @@ elif COMMAND == 'gen_sitemap':
 elif COMMAND == 'gen_opensearch_description':
     admin.gen_opensearch_description(CONTEXT, METADATA, URL, OUTPUT_FILE)
 elif COMMAND == 'post_xml':
-    print admin.post_xml(CSW_URL, XML)
+    print admin.post_xml(CSW_URL, XML, TIMEOUT)
 elif COMMAND == 'get_sysprof':
     print admin.get_sysprof()
 elif COMMAND == 'validate_xml':

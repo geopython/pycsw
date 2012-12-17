@@ -411,14 +411,14 @@ def gen_opensearch_description(context, mdata, url, output_file):
                     encoding='UTF-8', xml_declaration=1))
 
 
-def post_xml(url, xml):
+def post_xml(url, xml, timeout=30):
     """Execute HTTP XML POST request and print response"""
 
     LOGGER.info('Executing HTTP POST request %s on server %s', xml, url)
 
     from owslib.util import http_post
     try:
-        return http_post(url, open(xml).read())
+        return http_post(url=url, request=open(xml).read(), timeout=timeout)
     except Exception, err:
         raise RuntimeError(err)
 
