@@ -23,4 +23,5 @@ notifications:
   irc:
     channels:
       - "irc.freenode.org#geopython"
+      - "irc.freenode.org#pycsw"
     use_notice: true
