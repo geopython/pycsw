@@ -14,15 +14,16 @@ GitHub
 - pycsw source code and documentation are managed using GitHub.  lxml, Shapely, pyproj, OWSLib, and sqlalchemy are required for pycsw to be functional
 - documentation is managed in ``docs/``, in reStructuredText format.  `Sphinx`_ is used to generate the docs
 
-Submitting Patches
-------------------
+Submitting Patches or Pull Requests
+-----------------------------------
 
-- where possible, submit patches or pull requests as part of a GitHub issue (see :ref:`support`)
+- where possible, submit patches or pull requests as part of a GitHub issue
+- if you are submitting a patch, please add the ``has-patch`` label to the ticket (so tickets with patches can be easily filtered).  Also read the :ref:`faq` before submitting
 
 GitHub Commit Access
 --------------------
 
-- proposals to provide developers with GitHub commit access shall be emailed to the pycsw-devel mailing list (see :ref:`mailing-lists`).  Proposals shall be approved by the pycsw development team.  Committers shall be added by the project admin
+- proposals to provide developers with GitHub commit access shall be emailed to the pycsw-devel mailing list (see :ref:`support`).  Proposals shall be approved by the pycsw development team.  Committers shall be added by the project admin
 - removal of commit access shall be handled in the same manner
 - each committer shall be listed in https://github.com/geopython/pycsw/blob/master/COMMITTERS.txt
  
