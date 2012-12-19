@@ -33,8 +33,10 @@
 import time
 import datetime
 import logging
+import urllib2
 from lxml import etree
 from shapely.wkt import loads
+from owslib.util import http_post
 
 LOGGER = logging.getLogger(__name__)
 
@@ -298,3 +300,13 @@ def _linkify(value):
     for link in value:
         out.append(','.join(list(link)))
     return '^'.join(out)
+
+
+def http_request(method, url, request=None, timeout=10):
+    """Perform HTTP request"""
+    if method == 'POST':
+        return http_post(url, request, timeout)
+    else:  # GET
+        request = urllib2.Request(url)
+        request.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
+        return urllib2.urlopen(request, timeout=timeout).read()
