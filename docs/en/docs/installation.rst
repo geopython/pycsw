@@ -166,7 +166,7 @@ which will publish pycsw to http://localhost:8000/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`Shapely`: http://toblerity.github.com/shapely/
 .. _`pyproj`: http://code.google.com/p/pyproj/
-.. _`OWSLib`: http://github.com/geopython/OWSLib
+.. _`OWSLib`: https://github.com/geopython/OWSLib
 .. _`easy_install`: http://packages.python.org/distribute/easy_install.html
 .. _`pip`: http://www.pip-installer.org
 .. _`Web Server Gateway Interface`: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface

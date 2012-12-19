@@ -31,4 +31,4 @@ Announcements
 .. _`Python`: http://www.python.org/
 .. _`OpenGIS Catalogue Service Implementation Specification`: http://www.opengeospatial.org/standards/cat
 .. _`2011`: http://www.kralidis.ca/blog/2011/02/04/help-wanted-baking-a-csw-server-in-python/
-.. _`Open Source`: http://www.opensource.org/
+.. _`Open Source`: http://opensource.org/
