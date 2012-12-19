@@ -54,9 +54,18 @@ def parse_record(context, record, repos=None,
         try:
             return _parse_csw(context, repos, record, identifier, pagesize)
         except Exception, err:
+            # TODO: implement better exception handling
+            if err.message.find('ExceptionReport') != -1:
+                msg = 'CSW harvesting error: %s' % str(err)
+                LOGGER.debug(msg)
+                raise RuntimeError(msg)
+            LOGGER.debug('Not a CSW, attempting to fetch Dublin Core')
             req = urllib2.Request(record)
             req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
-            content = urllib2.urlopen(req).read()
+            try:
+                content = urllib2.urlopen(req).read()
+            except Exception, err:
+                raise RuntimeError('HTTP error: %s' % str(err))
             return [_parse_dc(context, repos, etree.fromstring(content))]
 
     elif mtype == 'http://www.opengis.net/wms':  # WMS
@@ -116,6 +125,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     recobjs = []  # records
     serviceobj = repos.dataset()
 
+    # if init raises error, this might not be a CSW
     md = CatalogueServiceWeb(record)
 
     # generate record of service instance
@@ -161,8 +171,11 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     # now get all records
     # get total number of records to loop against
 
-    md.getrecords(typenames=csw_typenames, resulttype='hits')
-    matches = md.results['matches']
+    try:
+        md.getrecords(typenames=csw_typenames, resulttype='hits')
+        matches = md.results['matches']
+    except:  # this is a CSW, but server rejects query
+        raise RuntimeError(md.response)
 
     if pagesize > matches:
         pagesize = matches
@@ -171,8 +184,11 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
 
     # loop over all catalogue records incrementally
     for r in range(1, matches, pagesize):
-        md.getrecords(typenames=csw_typenames, startposition=r,
-                      maxrecords=pagesize)
+        try:
+            md.getrecords(typenames=csw_typenames, startposition=r,
+                          maxrecords=pagesize)
+        except Exception, err:  # this is a CSW, but server rejects query
+            raise RuntimeError(md.response)
         for k, v in md.records.iteritems():
             recobjs.append(_parse_dc(context, repos, etree.fromstring(v.xml)))
 
