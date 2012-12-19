@@ -1689,9 +1689,8 @@ class Csw(object):
             content, self.repository, self.kvp['resourcetype'],
             pagesize=self.csw_harvest_pagesize)
         except Exception, err:
-            import traceback
             return self.exceptionreport('NoApplicableCode', 'source',
-            'Harvest failed: record parsing failed: %s' % traceback.format_exc())
+            'Harvest failed: record parsing failed: %s' % str(err))
 
         inserted = 0
         updated = 0

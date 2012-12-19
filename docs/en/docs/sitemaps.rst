@@ -13,4 +13,4 @@ XML Sitemaps
 
 The ``sitemap.xml`` file should be saved to an an area on your web server (parallel to or above your pycsw install location) to enable web crawlers to index your repository. 
 
-.. _`XML Sitemaps`: http://sitemaps.org/
+.. _`XML Sitemaps`: http://www.sitemaps.org/

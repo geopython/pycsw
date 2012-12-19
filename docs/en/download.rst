@@ -25,7 +25,7 @@ Packages
 openSUSE
 ********
 
-pycsw exists as a `package <https://build.opensuse.org/package/show?package=pycsw&project=Application%3AGeo>`_ in openSUSE Build Service (OBS). Since release 0.1.0 it is included in the official `Application:Geo <https://build.opensuse.org/project/show?project=Application%3AGeo>`_ repository. 
+pycsw exists as a `package <https://build.opensuse.org/package/show?package=python-pycsw&project=Application%3AGeo>`_ in openSUSE Build Service (OBS). Since release 0.1.0 it is included in the official `Application:Geo <https://build.opensuse.org/project/show?project=Application%3AGeo>`_ repository. 
 
 .. seealso::
   :ref:`opensuse`
