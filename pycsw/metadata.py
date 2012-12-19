@@ -31,7 +31,6 @@
 # =================================================================
 
 import logging
-import urllib2
 import uuid
 from lxml import etree
 from pycsw import util
@@ -54,9 +53,7 @@ def parse_record(context, record, repos=None,
         try:
             return _parse_csw(context, repos, record, identifier, pagesize)
         except Exception, err:
-            req = urllib2.Request(record)
-            req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
-            content = urllib2.urlopen(req).read()
+            content = util.http_request('GET', record)
             return [_parse_dc(context, repos, etree.fromstring(content))]
 
     elif mtype == 'http://www.opengis.net/wms':  # WMS
@@ -73,9 +70,7 @@ def parse_record(context, record, repos=None,
 
     elif (mtype == 'http://www.opengis.net/cat/csw/csdgm' and
           record.startswith('http')):  # FGDC
-        req = urllib2.Request(record)
-        req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
-        record = urllib2.urlopen(record).read()
+        record = util.http_request('GET', record)
 
     # parse metadata records
     if isinstance(record, str):

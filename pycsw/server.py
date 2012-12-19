@@ -34,7 +34,7 @@
 import os
 import sys
 import cgi
-import urllib2
+from urllib2 import quote, unquote
 import urlparse
 from cStringIO import StringIO
 from ConfigParser import SafeConfigParser
@@ -309,7 +309,6 @@ class Csw(object):
             self.kvp = self.parse_postdata(postdata)
 
         else:  # it's a GET request
-            from urllib import quote
             self.requesttype = 'GET'
 
             scheme = '%s://' % self.environ['wsgi.url_scheme']
@@ -342,7 +341,7 @@ class Csw(object):
             for pairstr in pairs:
                 pair = pairstr.split("=")
                 pair[0] = pair[0].lower()
-                pair = [urllib2.unquote(a) for a in pair]
+                pair = [unquote(a) for a in pair]
 
                 if len(pair) is 1:
                     kvp[pair[0]] = ""
@@ -1667,9 +1666,7 @@ class Csw(object):
             # fetch content-based resource
             LOGGER.debug('Fetching resource %s' % self.kvp['source'])
             try:
-                req = urllib2.Request(self.kvp['source'])
-                req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
-                content = urllib2.urlopen(req).read()
+                content = util.http_request('GET', self.kvp['source'])
             except Exception, err:
                 errortext = 'Error fetching resource %s.\nError: %s.' % \
                 (self.kvp['source'], str(err))
