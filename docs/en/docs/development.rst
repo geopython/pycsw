@@ -48,4 +48,4 @@ Coding and Documentation Guidelines
 
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 .. _`pylint`: http://www.logilab.org/857
-.. _`Sphinx`: http://sphinx.pocoo.org/
+.. _`Sphinx`: http://sphinx-doc.org/
