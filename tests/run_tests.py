@@ -35,13 +35,11 @@
 import csv
 import sys
 import os
-import urllib2
-import httplib
 import glob
 import urlparse
 import filecmp
 import re
-
+from pycsw.util import http_request
 
 def plural(num):
     """Determine plurality given an integer"""
@@ -49,28 +47,6 @@ def plural(num):
         return 's'
     else:
         return ''
-
-
-def http_req(method, surl, srequest):
-    """Perform HTTP request"""
-    if method == 'POST':
-        # send an XML document as a HTTP POST request
-        ups = urlparse.urlsplit(surl)
-
-        htl = httplib.HTTP(ups.netloc)
-        htl.putrequest('POST', '%s?%s' % (ups.path, ups.query))
-        htl.putheader('Content-type', 'text/xml')
-        htl.putheader('Content-length', '%d' % len(srequest))
-        htl.putheader('Accepts', 'text/xml')
-        htl.putheader('Host', ups.netloc)
-        htl.putheader('User-Agent', 'pycsw unit tests')
-        htl.endheaders()
-        htl.send(srequest)
-        reply, msg, hdrs = htl.getreply()
-        return htl.getfile().read()
-    else:  # GET
-        req = urllib2.Request(surl)
-        return urllib2.urlopen(req).read()
 
 
 def get_validity(sexpected, sresult, soutfile):
@@ -189,7 +165,7 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                             expected = 'expected%s%s' % (os.sep, outfile)
                             print '\n test %s:%s' % (testfile, row[0])
 
-                            result = http_req('GET', request, request)
+                            result = http_request('GET', request)
 
                             status = get_validity(expected, result, outfile)
 
@@ -223,7 +199,7 @@ for testsuite in glob.glob('suites%s*' % os.sep):
                         url2 = '%s?%s' % (URL, configkvp)
 
                         # invoke request
-                        result = http_req('POST', url2, request)
+                        result = http_request('POST', url2, request)
 
                         status = get_validity(expected, result, outfile)
 
