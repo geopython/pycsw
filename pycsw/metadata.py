@@ -31,7 +31,6 @@
 # =================================================================
 
 import logging
-import urllib2
 import uuid
 from lxml import etree
 from pycsw import util
@@ -60,10 +59,8 @@ def parse_record(context, record, repos=None,
                 LOGGER.debug(msg)
                 raise RuntimeError(msg)
             LOGGER.debug('Not a CSW, attempting to fetch Dublin Core')
-            req = urllib2.Request(record)
-            req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
             try:
-                content = urllib2.urlopen(req).read()
+                content = util.http_request('GET', record)
             except Exception, err:
                 raise RuntimeError('HTTP error: %s' % str(err))
             return [_parse_dc(context, repos, etree.fromstring(content))]
@@ -82,9 +79,7 @@ def parse_record(context, record, repos=None,
 
     elif (mtype == 'http://www.opengis.net/cat/csw/csdgm' and
           record.startswith('http')):  # FGDC
-        req = urllib2.Request(record)
-        req.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
-        record = urllib2.urlopen(record).read()
+        record = util.http_request('GET', record)
 
     # parse metadata records
     if isinstance(record, str):
