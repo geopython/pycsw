@@ -22,4 +22,4 @@ Metadata Editing Tools
 
 - `CatMDEdit <http://catmdedit.sourceforge.net/>`_
 - `EUOSME <https://joinup.ec.europa.eu/software/euosme/description>`_
-- `GIMED <http://gimed.sourceforge.net/>`_
+- `GIMED <http://sourceforge.net/projects/gimed/>`_
