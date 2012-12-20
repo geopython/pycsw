@@ -1,0 +1,3 @@
+Exception-Harvest-missing-resourcetype,PYCSW_SERVER?config=tests/suites/manager/default.cfg&service=CSW&version=2.0.2&request=Harvest
+Exception-Harvest-missing-source,PYCSW_SERVER?config=tests/suites/manager/default.cfg&service=CSW&version=2.0.2&request=Harvest&resourcetype=http://www.opengis.net/wms
+Exception-Harvest-invalid-resourcetype,PYCSW_SERVER?config=tests/suites/manager/default.cfg&service=CSW&version=2.0.2&request=Harvest&resourcetype=http://www.opengis.net/wms1234&source=http://demo.pycsw.org/cite/csw

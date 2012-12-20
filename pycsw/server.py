@@ -1653,6 +1653,14 @@ class Csw(object):
         except Exception, err:
             return self.exceptionreport('NoApplicableCode', 'harvest', str(err))
 
+        if self.requesttype == 'GET':
+            if 'resourcetype' not in self.kvp:
+                return self.exceptionreport('MissingParameterValue',
+                'resourcetype', 'Missing resourcetype parameter')
+            if 'source' not in self.kvp:
+                return self.exceptionreport('MissingParameterValue',
+                'source', 'Missing source parameter')
+
         # validate resourcetype
         if (self.kvp['resourcetype'] not in
             self.context.model['operations']['Harvest']['parameters']['ResourceType']
