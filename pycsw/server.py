@@ -1670,7 +1670,8 @@ class Csw(object):
             ','.join(self.context.model['operations']['Harvest']['parameters']
             ['ResourceType']['values'])))
 
-        if self.kvp['resourcetype'].find('opengis.net') == -1:
+        if (self.kvp['resourcetype'].find('opengis.net') == -1 and
+            self.kvp['resourcetype'].find('urn:geoss:waf') == -1):
             # fetch content-based resource
             LOGGER.debug('Fetching resource %s' % self.kvp['source'])
             try:
@@ -1705,8 +1706,13 @@ class Csw(object):
         ir = []
 
         for record in records_parsed:
+            if self.kvp['resourcetype'] == 'urn:geoss:waf':
+                src = record.source
+            else:
+                src = self.kvp['source']
+
             setattr(record, self.context.md_core_model['mappings']['pycsw:Source'],
-            self.kvp['source'])
+                    src)
 
             setattr(record, self.context.md_core_model['mappings']['pycsw:InsertDate'],
             util.get_today_and_now())
@@ -1727,6 +1733,8 @@ class Csw(object):
             LOGGER.debug('checking if record exists (%s)' % identifier)
             results = self.repository.query_ids(ids=[identifier])
 
+            LOGGER.debug(str(results))
+
             if len(results) == 0:  # new record, it's a new insert
                 inserted += 1
                 try:
@@ -1735,11 +1743,11 @@ class Csw(object):
                     return self.exceptionreport('NoApplicableCode',
                     'source', 'Harvest (insert) failed: %s.' % str(err))
             else:  # existing record, it's an update
-                if record.source != results[0].source:
+                if source != results[0].source:
                     # same identifier, but different source
                     return self.exceptionreport('NoApplicableCode',
                     'source', 'Insert failed: identifier %s in repository\
-                    has source %s.' % str(err))
+                    has source %s.' % (identifier, source))
 
                 try:
                     self.repository.update(record)
@@ -2273,6 +2281,7 @@ class Csw(object):
              'http://www.opengis.net/wfs',
              'http://www.opengis.net/wcs',
              'http://www.opengis.net/wps/1.0.0',
+             'urn:geoss:waf',
             ]}}}
 
             self.csw_harvest_pagesize = 10

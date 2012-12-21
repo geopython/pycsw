@@ -32,6 +32,7 @@
 
 import logging
 import uuid
+from urlparse import urlparse
 from lxml import etree
 from pycsw import util
 
@@ -54,7 +55,7 @@ def parse_record(context, record, repos=None,
             return _parse_csw(context, repos, record, identifier, pagesize)
         except Exception, err:
             # TODO: implement better exception handling
-            if err.message.find('ExceptionReport') != -1:
+            if str(err).find('ExceptionReport') != -1:
                 msg = 'CSW harvesting error: %s' % str(err)
                 LOGGER.debug(msg)
                 raise RuntimeError(msg)
@@ -65,23 +66,40 @@ def parse_record(context, record, repos=None,
                 raise RuntimeError('HTTP error: %s' % str(err))
             return [_parse_dc(context, repos, etree.fromstring(content))]
 
+    elif mtype == 'urn:geoss:waf':  # WAF
+        LOGGER.debug('WAF detected, fetching via HTTP')
+        return _parse_waf(context, repos, record, identifier)
+
     elif mtype == 'http://www.opengis.net/wms':  # WMS
+        LOGGER.debug('WMS detected, fetching via OWSLib')
         return _parse_wms(context, repos, record, identifier)
      
     elif mtype == 'http://www.opengis.net/wps/1.0.0':  # WPS
+        LOGGER.debug('WPS detected, fetching via OWSLib')
         return [_parse_wps(context, repos, record, identifier)]
 
     elif mtype == 'http://www.opengis.net/wfs':  # WFS
+        LOGGER.debug('WFS detected, fetching via OWSLib')
         return _parse_wfs(context, repos, record, identifier)
 
     elif mtype == 'http://www.opengis.net/wcs':  # WCS
+        LOGGER.debug('WCS detected, fetching via OWSLib')
         return _parse_wcs(context, repos, record, identifier)
 
     elif (mtype == 'http://www.opengis.net/cat/csw/csdgm' and
           record.startswith('http')):  # FGDC
+        LOGGER.debug('FGDC detected, fetching via HTTP')
         record = util.http_request('GET', record)
 
-    # parse metadata records
+    return _parse_metadata(context, repos, record)
+
+def _set(context, obj, name, value):
+    ''' convenience method to set values '''
+    setattr(obj, context.md_core_model['mappings'][name], value)
+
+def _parse_metadata(context, repos, record):
+    """parse metadata formats"""
+
     if isinstance(record, str):
         exml = etree.fromstring(record)
     else:  # already serialized to lxml
@@ -96,22 +114,15 @@ def parse_record(context, record, repos=None,
 
     if root == '{%s}MD_Metadata' % context.namespaces['gmd']:  # ISO
         return [_parse_iso(context, repos, exml)]
-
     elif root == 'metadata':  # FGDC
         return [_parse_fgdc(context, repos, exml)]
-
     elif root == '{%s}Record' % context.namespaces['csw']:  # Dublin Core
         return [_parse_dc(context, repos, exml)]
-
     elif root == '{%s}DIF' % context.namespaces['dif']:  # DIF
         pass  # TODO
-
     else:
         raise RuntimeError('Unsupported metadata format')
 
-def _set(context, obj, name, value):
-    ''' convenience method to set values '''
-    setattr(obj, context.md_core_model['mappings'][name], value)
 
 def _parse_csw(context, repos, record, identifier, pagesize=10):
 
@@ -186,6 +197,56 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
             raise RuntimeError(md.response)
         for k, v in md.records.iteritems():
             recobjs.append(_parse_dc(context, repos, etree.fromstring(v.xml)))
+
+    return recobjs
+
+def _parse_waf(context, repos, record, identifier):
+
+    recobjs = []
+
+    content = util.http_request('GET', record)
+
+    LOGGER.debug(content)
+
+    try:
+        parser = etree.HTMLParser()
+        tree = etree.fromstring(content, parser=parser)
+    except Exception, err:
+        raise Exception('Could not parse WAF: %s' % str(err))
+        
+    up = urlparse(record)
+    links = []
+
+    LOGGER.debug('collecting links')
+    for link in tree.xpath('//a/@href'):
+        link = link.strip()
+        if not link:
+            continue
+        if link.find('?') != -1:
+            continue
+        if not link.endswith('.xml'):
+            LOGGER.debug('Skipping, not .xml')
+            continue
+        if '/' in link:  # path is embedded in link
+            if link[-1] == '/':  # directory, skip
+                continue
+            if link[0] == '/':
+                # strip path of WAF URL
+                link = '%s://%s%s' % (up.scheme, up.netloc, link)
+        else:  # tack on href to WAF URL
+            link = '%s/%s' % (record, link)
+        LOGGER.debug('URL is: %s', link)
+        links.append(link)
+
+    LOGGER.debug('%d links found', len(links))
+    for link in links:
+        LOGGER.debug('Processing link %s', link)
+        # fetch and parse
+        linkcontent = util.http_request('GET', link)
+        recobj = _parse_metadata(context, repos, linkcontent)[0]
+        recobj.source = link
+        recobj.mdsource = link
+        recobjs.append(recobj)
 
     return recobjs
 
