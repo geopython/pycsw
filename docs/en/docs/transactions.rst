@@ -11,16 +11,17 @@ Supported Resource Types
 For transactions, pycsw supports the following metadata resource types by default:
 
 .. csv-table::
-  :header: Resource Type,Transaction,Harvest
+  :header: Resource Type,Namespace,Transaction,Harvest
 
-  Dublin Core,yes,yes
-  FGDC,yes,yes
-  ISO 19139,yes,yes
-  OGC:CSW 2.0.2,,yes
-  OGC:WMS 1.1.1,,yes
-  OGC:WFS 1.1.0,,yes
-  OGC:WCS 1.0.0,,yes
-  OGC:WPS 1.0.0,,yes
+  Dublin Core,http://www.opengis.net/cat/csw/2.0.2,yes,yes
+  FGDC,http://www.opengis.net/cat/csw/csdgm,yes,yes
+  ISO 19139,http://www.isotc211.org/2005/gmd,yes,yes
+  OGC:CSW 2.0.2,http://www.opengis.net/cat/csw/2.0.2,,yes
+  OGC:WMS 1.1.1,http://www.opengis.net/wms,,yes
+  OGC:WFS 1.1.0,http://www.opengis.net/wfs,,yes
+  OGC:WCS 1.0.0,http://www.opengis.net/wcs,,yes
+  OGC:WPS 1.0.0,http://www.opengis.net/wps/1.0.0,,yes
+  `WAF`_,urn:geoss:urn,yes
 
 Additional metadata models are supported by enabling the appropriate :ref:`profiles`.
 
@@ -69,3 +70,5 @@ pycsw supports 3 modes of the ``Transaction`` operation (``Insert``, ``Update``,
 Transaction operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) if the Transaction request specifies ``csw:ResponseHandler``.
 
 The :ref:`tests` contain CSW-T request examples.
+
+.. _`WAF`: http://seabass.ieee.org/groups/geoss/index.php?option=com_sir_200&Itemid=157&ID=183
