@@ -1738,11 +1738,11 @@ class Csw(object):
                     return self.exceptionreport('NoApplicableCode',
                     'source', 'Harvest (insert) failed: %s.' % str(err))
             else:  # existing record, it's an update
-                if record.source != results[0].source:
+                if source != results[0].source:
                     # same identifier, but different source
                     return self.exceptionreport('NoApplicableCode',
                     'source', 'Insert failed: identifier %s in repository\
-                    has source %s.' % str(err))
+                    has source %s.' % (identifier, source))
 
                 try:
                     self.repository.update(record)
