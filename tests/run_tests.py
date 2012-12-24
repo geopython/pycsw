@@ -35,11 +35,12 @@
 import csv
 import sys
 import os
+import getopt
 import glob
-import urlparse
 import filecmp
 import re
 from pycsw.util import http_request
+
 
 def plural(num):
     """Determine plurality given an integer"""
@@ -121,13 +122,52 @@ def normalize(sresult):
                                   '"timestamp": "PYCSW_TIMESTAMP"')
     return sresult
 
+
+def usage():
+    """Provide usage instructions"""
+    return '''
+NAME
+    run_tests.py - pycsw unit test testrunner
+
+SYNOPSIS
+    run_tests.py -u <url> [-l logfile] [-s suite1[,suite2]]
+
+    Available options:
+
+    -u    URL to test
+
+    -l    log results to file
+
+    -s    testsuites to run (comma-seperated list)
+
+EXAMPLES
+
+    1.) default test example
+
+        run_tests.py -u http://localhost:8000/
+
+    2.) log results to logfile
+
+        run_tests.py -u http://localhost:8000/ -l /path/to/results.log
+
+    3.) run only specified testsuites
+
+        run_tests.py -u http://localhost:8000/ -s default,apiso
+
+
+'''
+
 # main
 
 if len(sys.argv) < 2:
-    print 'Usage: %s <url> [log]' % sys.argv[0]
+    print usage()
     sys.exit(1)
 
 URL = sys.argv[1]
+
+URL = None
+LOGFILE = None
+TESTSUITES = []
 
 PASSED = 0
 FAILED = 0
@@ -135,13 +175,38 @@ INITED = 0
 
 LOGWRITER = None
 
+try:
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:h')
+except getopt.GetoptError, err:
+    print '\nERROR: %s' % err
+    print usage()
+    sys.exit(2)
+
+for o, a in OPTS:
+    if o == '-u':
+        URL = a
+    if o == '-l':
+        LOGFILE = a
+    if o == '-s':
+        TESTSUITES = a.split(',')
+    if o == '-h':  # dump help and exit
+        print usage()
+        sys.exit(3)
+
 print '\nRunning tests against %s' % URL
 
-if len(sys.argv) == 3:  # write detailed output to CSV
-    LOGWRITER = csv.writer(open(sys.argv[2], 'wb'))
+if LOGFILE is not None:  # write detailed output to CSV
+    LOGWRITER = csv.writer(open(LOGFILE, 'wb'))
     LOGWRITER.writerow(['url', 'configuration', 'testname', 'result'])
 
-for testsuite in glob.glob('suites%s*' % os.sep):
+if TESTSUITES:
+    TESTSUITES_LIST = ['suites%s%s' % (os.sep, x) for x in TESTSUITES]
+else:
+    TESTSUITES_LIST = glob.glob('suites%s*' % os.sep)
+
+for testsuite in TESTSUITES_LIST:
+    if not os.path.exists(testsuite):
+        raise RuntimeError('Testsuite %s not found' % testsuite)
 
     # get configuration
     for cfg in glob.glob('%s%s*.cfg' % (testsuite, os.sep)):

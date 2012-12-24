@@ -84,7 +84,7 @@ def publish_docs(options):
 
 @task
 def gen_tests_html():
-    """Generated tests/index.html for online testing"""
+    """Generate tests/index.html for online testing"""
     with pushd('tests'):
         # ensure manager testsuite is writeable
         os.chmod(os.path.join('suites', 'manager', 'data'), 0777)
@@ -146,19 +146,27 @@ def package_tar_gz(options):
 @task
 @cmdopts([
     ('url=', 'u', 'pycsw endpoint'),
+    ('suites=', 's', 'comma-separated list of testsuites'),
 ])
 def test(options):
     """Run unit tests"""
 
     url = options.get('url', None)
+    suites = options.get('suites', None)
 
     if url is None:
         # run against default server
+        call_task('stop')
         call_task('start')
         url = 'http://localhost:8000'
 
+    if suites is not None:
+        cmd = 'python run_tests.py -u %s -s %s' % (url, suites)
+    else:
+        cmd = 'python run_tests.py -u %s' % url
+
     with pushd('tests'):
-        sh('python run_tests.py %s' % url)
+        sh(cmd)
 
 
 @task
