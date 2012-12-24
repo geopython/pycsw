@@ -45,8 +45,10 @@ Coding and Documentation Guidelines
 - always code with `PEP 8`_ conventions
 - always run source code through ``pep8`` and `pylint`_, using all pylint defaults except for ``C0111``.  ``sbin/pycsw-pylint.sh`` is included for convenience
 - for exceptions which make their way to OGC ``ExceptionReport`` XML, always specify the appropriate ``locator`` and ``code`` parameters
+- the pycsw wiki documents `developer tasks`_ for things like releasing documentation, testing, etc.
 
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 .. _`pep8`: http://pypi.python.org/pypi/pep8/
 .. _`pylint`: http://www.logilab.org/857
 .. _`Sphinx`: http://sphinx-doc.org/
+.. _`developer tasks`: https://github.com/geopython/pycsw/wiki/Developer-Tasks
