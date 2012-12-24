@@ -26,7 +26,10 @@ The tests framework can be run from ``tests``:
 
   $ cd /path/to/pycsw
   $ cd tests
-  $ python ./run_tests.py
+  # run all tests against http://localhost:8000/
+  $ python ./run_tests.py -u http://localhost:8000/
+  # run only specific testsuites against http://localhost:8000/
+  $ python ./run_tests.py -u http://localhost:8000/ -s apiso,fgdc
   # lots of output
 
 The tests runs HTTP GET and POST requests.  The expected output for each test can be found in ``expected``.  Results are categorized as ``passed``, ``failed``, or ``initialized``.  A summary of results is output at the end of the run.
@@ -60,7 +63,7 @@ To add tests to an existing suite:
 
 * for HTTP POST tests, add XML documents to ``tests/suites/suite/post``
 * for HTTP GET tests, add tests (one per line) to ``tests/suites/suite/get/requests.txt``
-* run ``python ./run_tests.py <url>``
+* run ``python ./run_tests.py -u <url>``
 
 To add a new test suite:
 
@@ -68,7 +71,7 @@ To add a new test suite:
 * create a new configuration in ``tests/suites/foo/default.cfg``.  Ensure that all file paths are relative to ``path/to/pycsw``
 * populate HTTP POST requests in ``tests/suites/foo/post``
 * populate HTTP GET requests in ``tests/suites/foo/get/requests.txt``
-* run ``python ./run_tests.py <url>``
+* run ``python ./run_tests.py -u <url>``
 
 Web Testing
 ^^^^^^^^^^^
