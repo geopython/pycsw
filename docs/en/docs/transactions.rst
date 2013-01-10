@@ -8,7 +8,7 @@ pycsw has the ability to process CSW Harvest and Transaction requests (CSW-T).  
 Supported Resource Types
 ------------------------
 
-For transactions, pycsw supports the following metadata resource types by default:
+For transactions and harvesting, pycsw supports the following metadata resource types by default:
 
 .. csv-table::
   :header: Resource Type,Namespace,Transaction,Harvest
