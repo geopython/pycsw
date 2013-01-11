@@ -8,7 +8,7 @@ pycsw is an OGC CSW server implementation written in Python.
 Features
 ========
 
-- fully `implements`_ OGC CSW 2.0.2
+- fully `compliant`_ OGC CSW 2.0.2
 - fully passes the `OGC CITE CSW`_ test suite (103/103)
 - implements `INSPIRE Discovery Services 3.0`_
 - implements `ISO Metadata Application Profile 1.0.0`_
@@ -175,4 +175,4 @@ Functions
 .. _`A9 OpenSearch`: http://www.opensearch.org/Home
 .. _`GeoNode`: http://geonode.org/
 .. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
-.. _`implements`: http://www.opengeospatial.org/resource/products/details/?pid=1104
+.. _`compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1104
