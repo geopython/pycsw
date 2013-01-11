@@ -116,7 +116,9 @@ def _parse_metadata(context, repos, record):
         return [_parse_iso(context, repos, exml)]
     elif root == 'metadata':  # FGDC
         return [_parse_fgdc(context, repos, exml)]
-    elif root == '{%s}Record' % context.namespaces['csw']:  # Dublin Core
+    elif root == '{%s}Record' % context.namespaces['csw']:  # Dublin Core CSW
+        return [_parse_dc(context, repos, exml)]
+    elif root == '{%s}RDF' % context.namespaces['rdf']:  # Dublin Core RDF
         return [_parse_dc(context, repos, exml)]
     elif root == '{%s}DIF' % context.namespaces['dif']:  # DIF
         pass  # TODO
