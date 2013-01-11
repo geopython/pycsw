@@ -57,6 +57,7 @@ class StaticContext(object):
             'ogc': 'http://www.opengis.net/ogc',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
             'ows': 'http://www.opengis.net/ows',
+            'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             'sitemap': 'http://www.sitemaps.org/schemas/sitemap/0.9',
             'soapenv': 'http://www.w3.org/2003/05/soap-envelope',
             'xlink': 'http://www.w3.org/1999/xlink',
