@@ -1,8 +1,6 @@
 # -*- coding: ISO-8859-15 -*-
 # =================================================================
 #
-# $Id$
-#
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
 #
 # Copyright (c) 2011 Tom Kralidis

@@ -1,8 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 # =================================================================
 #
-# $Id$
-#
 # Authors: Adam Hinz <hinz.adam@gmail.com>
 #
 # Copyright (c) 2012 Adam Hinz

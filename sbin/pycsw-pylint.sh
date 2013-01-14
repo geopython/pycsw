@@ -1,8 +1,6 @@
 #!/bin/sh
 # =================================================================
 #
-# $Id$
-#
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
 #
 # Copyright (c) 2011 Tom Kralidis
