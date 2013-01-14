@@ -1,8 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 # =================================================================
 #
-# $Id$
-#
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
 #                Angelos Tzotsos <tzotsos@gmail.com>
 #

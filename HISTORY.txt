@@ -1,6 +1,4 @@
 pycsw Revision History
 ===========================
 
-$Id$
-
 See http://github.com/geopython/pycsw for commit and release history.
