@@ -30,18 +30,15 @@
 
 import csv
 import os
+from urllib2 import quote
 
-JQUERY_VERSION = '1.6.4'
+JQUERY_VERSION = '1.9.0'
 
 print '''
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-        <meta http-equiv="Content-Style-Type" content="text/css"/>
-        <meta http-equiv="pragma" content="no-cache"/>
-        <meta http-equiv="Expires" content="Thu, 01 Dec 1994 120000 GMT"/>
+        <meta charset="utf-8"/>
         <title>pycsw Tester</title>
         <style type="text/css">
             body {
@@ -141,15 +138,16 @@ for root, dirs, files in os.walk('suites'):
             if sfile == 'requests.txt':  # it's a list of GET requests
                 gets = csv.reader(open('%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)))
                 for row in gets:
-                    query = row[1].replace('PYCSW_SERVER', '../csw.py')
+                    baseurl, query_string = row[1].split('?')
+                    query = '%s?%s' % (baseurl.replace('PYCSW_SERVER', '../csw.py'), query_string.replace('&', '&amp;'))
                     print '<li><a href="%s">%s</a></li>' % (query, row[0])
 print '''
             </ul>
         <hr/>
-        <p>
-            <a href="http://validator.w3.org/check?verbose=1&amp;uri=referer" title="[ Valid XHTML 1.0! ]"><img class="flat" src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="[ Valid XHTML 1.0! ]" height="31" width="88"/></a>
-            <a href="http://jigsaw.w3.org/css-validator/check/referer" title="[ Valid CSS! ]"><img class="flat" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="[ Valid CSS! ]" height="31" width="88"/></a>
-        </p>
+        <footer>
+            <a href="http://validator.w3.org/check?verbose=1&amp;uri=referer" title="Valid HTML 5!"><img class="flat" src="http://www.w3.org/html/logo/downloads/HTML5_Badge_32.png" alt="Valid HTML 5!" height="32" width="32"/></a>
+            <a href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS!"><img class="flat" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!" height="31" width="88"/></a>
+        </footer>
     </body>
 </html>
 '''
