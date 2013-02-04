@@ -10,8 +10,8 @@ install:
   - pip install -r ./requirements.txt
   - python ./setup.py -q install
 
-before_script:
-  - paver start
+#before_script:
+#  - paver start
 
 script:
   - paver test
