@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/" xmlns:ows="http://www.opengis.net/ows">
+<rdf:Description rdf:about="http://atlas.resources.ca.gov/arcgis/rest/services/Environment/CSMW/MapServer">
+<dc:identifier>http://atlas.resources.ca.gov/arcgis/rest/services/Environment/CSMW/MapServer</dc:identifier>
+<dc:title>Website_gdb</dc:title>
+<dc:creator>jcarotta</dc:creator>
+<dct:references scheme="urn:x-esri:specification:ServiceType:ArcGIS:MapServer">http://atlas.resources.ca.gov/arcgis/rest/services/Environment/CSMW/MapServer</dct:references>
+<dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Thumbnail">http://atlas.resources.ca.gov/arcgis/rest/services/Environment/CSMW/MapServer/export?size=256,256&amp;f=image</dct:references>
+<dc:subject>MapServer</dc:subject>
+<dc:subject>liveData</dc:subject>
+<dc:subject>service</dc:subject>
+<ows:WGS84BoundingBox>
+<ows:LowerCorner>-125.10134656849151 32.0319211273111</ows:LowerCorner>
+<ows:UpperCorner>-108.46925537764542 42.14543052829707</ows:UpperCorner>
+</ows:WGS84BoundingBox>
+<dct:abstract>
+<rdf:value rdf:resource="service.layername">Beach Erosion_Receiver Sites
+</rdf:value>
+<rdf:value rdf:resource="service.layername">BECA Locations
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Beca Beaches
+</rdf:value>
+<rdf:value rdf:resource="service.layername">San Diego Reciever Site Areas
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Historic Beach Nourishment Sites
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Potential Sediment Sources
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal Dams
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Harbors
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Offshore Locations
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Upland
+</rdf:value>
+<rdf:value rdf:resource="service.layername">San Diego Offshore Borrow Areas
+</rdf:value>
+<rdf:value rdf:resource="service.layername">PRI Coastal Wetlands
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal RSM Plan Data
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Ventura/Santa Barbara Counties
+</rdf:value>
+<rdf:value rdf:resource="service.layername">BEACON Debris Basins
+</rdf:value>
+<rdf:value rdf:resource="service.layername">BEACON Offshore Sediment Locations
+</rdf:value>
+<rdf:value rdf:resource="service.layername">BEACON Coastal Sediment Sources
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Ventura &amp; Santa Barbara Beaches
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Southern Monterey Bay
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Reid_Sample_Points
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Eelgrass
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Critical Erosion
+</rdf:value>
+<rdf:value rdf:resource="service.layername">critical erosion sites
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Monterey_Interceptor_line
+</rdf:value>
+<rdf:value rdf:resource="service.layername">sediment type
+</rdf:value>
+<rdf:value rdf:resource="service.layername">SMB Potential Sediment Sources
+</rdf:value>
+<rdf:value rdf:resource="service.layername">CEMEX Sand Mine
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Monterey Interceptor Pipeline
+</rdf:value>
+<rdf:value rdf:resource="service.layername">SMB_Receiver Site
+</rdf:value>
+<rdf:value rdf:resource="service.layername">San Diego County
+</rdf:value>
+<rdf:value rdf:resource="service.layername">MN_Upland_Sand_Sources
+</rdf:value>
+<rdf:value rdf:resource="service.layername">MN_Beach_Profile_Locations
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Offshore Borrow Areas
+</rdf:value>
+<rdf:value rdf:resource="service.layername">LeastTern Nesting Areas
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Snowy Plover Critical Habitat
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Snowy Plover Occurrence Areas
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Vegetation
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Substrate_Type
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastline (Reference Layer)
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal Setting
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Beaches
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Littoral Cells
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Bathymetry
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal Erosion
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Shoreline Change (USGS)
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Southern California
+</rdf:value>
+<rdf:value rdf:resource="service.layername">1971_1976
+</rdf:value>
+<rdf:value rdf:resource="service.layername">1920_1934
+</rdf:value>
+<rdf:value rdf:resource="service.layername">1852_1889
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Central California
+</rdf:value>
+<rdf:value rdf:resource="service.layername">1998_2002
+</rdf:value>
+<rdf:value rdf:resource="service.layername">1945_1976
+</rdf:value>
+<rdf:value rdf:resource="service.layername">1929_42
+</rdf:value>
+<rdf:value rdf:resource="service.layername">1853_1910
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Northern California
+</rdf:value>
+<rdf:value rdf:resource="service.layername">nc2002
+</rdf:value>
+<rdf:value rdf:resource="service.layername">nc1952_1971
+</rdf:value>
+<rdf:value rdf:resource="service.layername">nc1928_1936
+</rdf:value>
+<rdf:value rdf:resource="service.layername">nc1854_1880
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Bluff Erosion (California Coastal Commission)
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Sand Retention
+</rdf:value>
+<rdf:value rdf:resource="service.layername">UCSC Sand Retention Structures
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Retention Structures
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Offshore Disposal
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Sites
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Areas
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Jurisdictional Boundaries
+</rdf:value>
+<rdf:value rdf:resource="service.layername">State Waters Boundary
+</rdf:value>
+<rdf:value rdf:resource="service.layername">StateParks
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal Cities
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal Counties
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal Zone Boundary (California Coastal Commission)
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Marine Protected Areas
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Existing MPAs
+</rdf:value>
+<rdf:value rdf:resource="service.layername">MLPA South Coast Integrated Preferred Alternative (IPA)
+</rdf:value>
+<rdf:value rdf:resource="service.layername">SoCal Proposed Round_3
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Round 3 Revised SCRSG Proposal 1 091022
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Round 3 Revised SCRSG Proposal 2 091022
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Round 3 Revised SCRSG Proposal 3 091022
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal Hydro-Data
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal Streams
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Coastal Lakes
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Environmental
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Endangered Species
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Birds - Central Cal
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Birds
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Fish
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Marine Mammals
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Kelp
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Sea Level Rise
+</rdf:value>
+<rdf:value rdf:resource="service.layername">Flood inundation 55-inch rise
+</rdf:value>
+<rdf:value rdf:resource="service.layername">MHHW Inundation 55-inch rise
+</rdf:value>
+</dct:abstract>
+</rdf:Description>
+</rdf:RDF>
