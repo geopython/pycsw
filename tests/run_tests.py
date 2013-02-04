@@ -248,6 +248,8 @@ for testsuite in TESTSUITES_LIST:
 
                     else:  # POST requests
                         testfile = '%s%s%s' % (root, os.sep, sfile)
+                        if '%sdata' % os.sep in testfile:  # sample data
+                            break
                         outfile = '%s%s' % (os.sep,
                                             testfile.replace(os.sep, '_'))
                         expected = 'expected%s%s' % (os.sep, outfile)
