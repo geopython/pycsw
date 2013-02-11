@@ -1,0 +1,221 @@
+% Template For OSGeo Journal
+% Language: Latex
+
+% Head
+
+\title{pycsw: an OGC CSW server implementation written in Python}
+\author{The pycsw Development Team}
+
+\maketitle
+
+\section{Overview}
+\label{sec:overview}
+
+pycsw (\url{http://pycsw.org}) is an OGC CSW server implementation written in Python.
+pycsw implements clause 10 (HTTP protocol binding (Catalogue Services for the Web, CSW)) of the OpenGIS Catalogue Service Implementation Specification, version 2.0.2.
+
+pycsw allows for metadata publishing either from it's built in data model, or through configuration to bind to an existing metadata mode.
+
+pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X).
+
+\subsection{History}
+\label{subsec:history}
+
+pycsw is a young project.  Initial development began in 2010, with the main focus being to provide a very lightweight Python CSW server solution (in comparison to many Java-based CSW servers).
+
+Another goal was to provide a standalone CSW server implementation.  This means that metadata is created and managed/updated elsewhere, and pycsw thus acts as the final publishing component for geospatial resource discovery.
+
+Another focus was extensibility; OGC Catalogue Service, by design, allows for the definition of application profiles to support additional metadata formats (the core metadata model is Dublin Core + ows;BoundingBox), so this was an important design decision prior to initial implementation.  Features (such as metadata formats, encodings, harvesting) are implemented such that they can be extended to provide additional variations of a given feature.
+
+The OGC CITE tests were/are extensively used to establish a benchmark of compliance to the specification (pycsw is not an OGC approved compliant product, but does pass all the CITE tests).
+
+Version 1.0.0 was released in June 2011, providing initial support for basic CSW operations, ISO Application Profile and INSPIRE Discovery Services support.  SQLite and PostgreSQL were the initially supported databases.
+
+In April 2012, version 1.2.0 was released, adding additional search interfaces (SRU, OpenSearch).  MySQL support was also added in this version, providing further flexibility for deployment.  WMS harvesting, GeoNode harvesting (more on that later) were also implemented, as well as the ability to provide JSON output of search results.
+
+Version 1.4.0 (September 2012) brought many important features, the most of important of which was the WSGI development which enabled pycsw to be integrated into existing Python frameworks, such as Django.  In addition, 1.4.0 added harvesting support for WFS, WCS, WPS, and other CSW endpoints, as well as W3C XLink 1.1 support.
+
+The first formal deployment of pycsw was by INSIDE Idaho (\url{http://insideidaho.org}).  
+INSIDE Idaho is the official geospatial data clearinghouse for the  State of Idaho.  INSIDE Idaho serves as a comprehensive geospatial data digital library, providing access to, and a context within which to use, geospatial data and information by, for, and about Idaho. 
+What makes this deployment interesting is that pycsw, developed in a Linux / Apache environment, was successfully deployed in a Windows / IIS environment.
+
+\section{Design}
+\label{sec:design}
+
+From its inception, pycsw strived to be lightweight, flexible and easy to install and deploy.  A typical install takes less than 10 minutes.
+
+\subsection{Simple Configuration}
+
+Configuration is governed by a simple config file using the familiar Windows INI syntax.  Users simply edit this file as required and changes are reflected in server behaviour.  Python supports this format natively with its ConfigParser standard library.  In addition, those with customized applications can generate their own ConfigParser object (e.g. from an external configuration or database) and send to pycsw in the same fashion.  XML configuration files were considered early on in development, but it was decided for performance reasons to stick with a simple, plain text format.
+
+\subsection{Repository}
+Metadata is handled by way of a "Repository", which is defined as a physical database instance along with advertised queryables.  CSW requires the advertisement of specific queryables.  pycsw advertises these via mappings to their underlying columns/properties in the database.
+
+\subsection{Dispatcher}
+All requests are performed via HTTP GET or HTTP POST.  The dispatcher is vital in deciphering what the nature of the request is (CSW, SRU, OpenSearch, etc.), and responds with the appropriate headers and payload.
+
+\subsection{Plugin Architecture}
+A plugin architecture is provided for developers to extend the codebase in order to support additional application profiles, formats, and repositories.
+
+\subsection{No XSLT}
+To avoid the overhead of XSLT processing, pycsw was designed to handle metadata by processing XML elements into a relational model (database).  Thus there is almost no transformation of XML within the codebase.  Metadata XML is generated from the database.
+
+\section{Features}
+\label{sec:features}
+
+As of current writing (August 2012), pycsw implements the following features:
+
+\begin{itemize}
+ \item fully implements OGC CSW 2.0.2
+ \item fully passes the OGC CITE CSW test suite (103/103)
+ \item implements INSPIRE Discovery Services 3.0
+ \item implements ISO Metadata Application Profile 1.0.0
+ \item implements FGDC CSDGM Application Profile for CSW 2.0
+ \item implements the Search/Retrieval via URL (SRU) search protocol
+ \item implements OpenSearch
+ \item supports ISO, Dublin Core, DIF, FGDC and Atom metadata models
+ \item CGI or WSGI deployment
+ \item simple configuration
+ \item transactional capabilities (CSW-T)
+ \item flexible repository configuration
+ \item GeoNode connectivity
+ \item Open Data Catalog connectivity
+ \item federated catalogue distributed searching
+ \item realtime XML Schema validation
+ \item extensible profile plugin architecture
+\end{itemize}
+
+
+\section{Technology}
+\label{sec:technology}
+
+pycsw is written in Python and leverages the following technologies:
+
+\begin{itemize}
+\item lxml (\url{http://lxml.de}) is used for XML request parsing and validation, as well as serializing XML responses.  lxml is a cornerstone technology used in the codebase.  lxml is the Python binding to the libxml2 C library
+\item Shapely (\url{http://toblerity.github.com/shapely}) is used for handling spatial predicates in an independent manner.  It was decided to use Shapely to be able to deal with geometries agnostic to a given database environment.  This allows pycsw to bind to any database.  OGC Well Known Text (WKT) is used as the internal geometry format.  EPSG:4326 is used as the internal coordinate reference system.  Shapely is the Python binding to the GEOS C library
+\item SQLAlchemy (\url{http://sqlalchemy.org}) is used as the database abstraction layer and provides a Pythonic approach to working with databases (as opposed to raw SQL scripting)
+\item OWSLib (\url{http://geopython.github.com/OWSLib}) is used to perform the heavy lifting of parsing geospatial metadata formats and interacting with OGC Web Services for harvesting
+\item pyproj (\url{http://code.google.com/p/pyproj}) is used to handle coordinate transformations, e.g. for CSW requests which provide non-geographic coordinates.  pyproj provides Python bindings to the proj.4 C library
+\end{itemize}
+
+\section{INSPIRE Support}
+\label{sec:inspire}
+
+Early versions of pycsw supported only core CSW 2.0.2 \citep{csw:2007} and were able to complete OGC Cite tests with a 100% success rate. There was an initial goal of the project to be able to work with plugins, in a way that would make it very extendable and easy to configure. For example, the end user should be able to install/uninstall a plugin by adding/removing a folder within the plugins directory of pycsw. Towards this the first profile selected to be implemented was the APISO \citep{apiso:2007} profile of CSW 2.0.2 since it was very popular and widely used in current CSW implementations. This profile was ready and stable for version 1.0 of pycsw.
+
+Around that time, there was a growing interest in Europe about Catalogue Service implementations that would support the draft guidelines of INSPIRE Discovery Service Specification. This specification was not final at that point but there was a final decision about the specification of metadata, through the INSPIRE Directive \citep{inspiremd:2008} which supported ISO 19115 and 19136 specifications with some additions and profile modifications.
+
+Just before pycsw 1.0.0 was released, version 3.0 of the INSPIRE Discovery Services \citep{discovery:2011} specification was the first to leave beta and become official. At this point pycsw supported multilingual metadata, as well as additional service metadata needed to comply to the directive. This was implemented within the APISO profile and not in a separate profile since INSPIRE is heavily based on APISO and would make a new profile highly redundant. The APISO plugin was configured to have INSPIRE support by setting a configuration switch and the user should also provide the additional metadata needed by the INSPIRE specification. The final specification for Discovery Service brought some changes and a new XML namespace to follow. This was added and fully supported in pycsw 1.0.0.
+
+On the pycsw database model, the mandatory fields of INSPIRE were already supported for APISO and search/read/write/update procedures were already there by enhancements made to underlying OWSLib ISO 19115 implementation. Those patches were also contributed back to OWSLib.
+
+
+\section{Integration with Python frameworks}
+\label{sec:integration}
+
+pycsw has the ability to operate in 'library' mode, and be leveraged by external applications.  It is also possible to use pycsw within your application through pure Python request/response (no HTTP) mechanisms.  This results in easy integration and inclusion of a CSW into an existing website/application.
+
+\subsection{GeoNode}
+\label{subsec:geonode}
+
+GeoNode (\url{http://geonode.org}) is a platform for the management and publication of  geospatial data.  It brings together mature and stable open-source  software projects under a consistent and easy-to-use interface allowing  users, with little training, to quickly and easily share data and create interactive maps. GeoNode provides a cost-effective and scalable tool for developing information management systems.
+
+As part of the GeoNode 2.0 roadmap, development was undertaken to  abstract CSW functionality to any CSW (pycsw, GeoNetwork OpenSource, deegree), which allows flexibility in cataloguing in GeoNode.  In addition, GeoNode has been updated to deploy pycsw inline as a WSGI application and working directly off the GeoNode database (Django models), thus reducing redundancy in metadata management and software deployment footprint.
+
+pycsw is the default CSW server for GeoNode 2.0.
+
+\subsection{Open Data Catalog}
+\label{subsec:opendatacatalog}
+
+Open Data Catalog (\url{https://github.com/azavea/Open-Data-Catalog}) is an open data catalog based on Django, Python and  PostgreSQL.  It was originally developed for OpenDataPhilly.org, a portal that provides access to open data sets, applications, and APIs related to the Philadelphia region. The Open Data Catalog is a generalized version of the original source code with a simple skin.  It is intended to display information and links to publicly available data in an easily searchable format. The code also includes options for data owners to submit data for consideration and for registered public users to nominate a type of data they would like to see openly available to the public.
+
+In the same spirit as GeoNode, pycsw was chosen as the CSW server for Open Data Catalogue.  Given the ODC's desire to have an interoperable CSW as part of the project, and pycsw's ability to integrate with Django, pycsw was a natural fit for the project.  As in the GeoNode scenario, pycsw uses ODC's database directly via Django models.
+
+\section{OSGeo Involvement}
+\label{sec:osgeo}
+
+\subsection{LiveDVD}
+\label{subsec:livedvd}
+
+pycsw is available on the OSGeo-Live (\url{http://live.osgeo.org}) project.  The pycsw overview and quickstart provides further information on using pycsw in OSGeo-Live.
+
+\subsection{Labs/Incubation}
+\label{subsec:labs}
+
+The project is currently an OSGeo Labs project, and leverages various components of the OSGeo infrastructure.  The future goal is for pycsw to reach incubation status, and hopefully become an approved OSGeo project.
+
+\section{Future Development}
+\label{sec:futuredevelopment}
+
+A few areas of interest for future development include:
+
+\begin{itemize}
+\item spatial database and geometry object support (PostGIS, MySQL spatial): currently pycsw works from a WKT string column and Shapely for spatial operations.  Adding support for true geometric objects would enable using direct spatial support.  In addition, for non-spatial databases, WKB is being considered as a means to improve performance
+\item search engine support: currently pycsw works in a similar manner as an OGC Web Feature Service (WFS).  Adding support for true search engine libraries would enable full text indexing and search result relevance
+\item web administration / metadata editing: providing a front end administration tool would allow for more user-friendly interaction to load metadata, edit server settings, etc.  Having said this, applications such as GeoNode and Open Data Catalog can be regarded as possessing this functionality already
+\item OGC Catalogue 3.0: future versions of the OGC Catalogue Service Specification will require pycsw to support multiple versions (the codebase is currently bound to 2.0.2)
+\end{itemize}
+
+Some of the abovementioned features will come at the cost of ease of installment and deployment, and will be developed as optional, configurable components.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+pycsw is a young, lightweight, flexible and fast CSW server implementation.  Already, the project is being used as a standalone service and in various applications and will hopefully expand in usage over time.
+
+Community involvement is welcome from users and developers are welcome.  Please feel free to visit \url{pycsw.org}.
+
+if you want to cite please use:
+
+% \cite{name:year} or \citep{name:year}
+
+.... revealed by \cite{herborg:2003}
+if it shall be in parentheses use \citep{herborg:2003}
+
+
+End of text.
+
+\begin{footnotesize}
+\begin{thebibliography}{99}
+
+\bibitem[Nebert et al 2007]{csw:2007} 
+D. Nebert, A. Whiteside, P. Vretanos (2007)
+\newblock Open Geospatial Consortium - Catalogue Service for Web.
+\newblock {\em  OGC 07-006r1} pp.204.
+
+\bibitem[Voges and Senkler 2007]{apiso:2007} 
+U. Voges, K. Senkler (2007)
+\newblock Open Geospatial Consortium Inc. ISO Metadata Application Profile
+\newblock {\em  OGC 07-045} pp.125.
+
+\bibitem[INSPIRE 2007]{inspire:2007} 
+Directive 2007/2/EC of the European Parliament and of the Council of 14 March 2007
+\newblock http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:32007L0002:EN:NOT
+
+\bibitem[INSPIRE 2008]{inspiremd:2008}
+Commission Regulation (EC) No 1205/2008
+\newblock http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:32008R1205:EN:NOT
+
+\bibitem[INSPIRE 2011]{discovery:2011}
+Technical Guidance for INSPIRE Discovery Services
+\newblock http://inspire.jrc.ec.europa.eu/documents/Network_Services/TechnicalGuidance_DiscoveryServices_v3.1.pdf
+
+
+\end{thebibliography}
+\end{footnotesize}
+
+\address{Tom Kralidis\\
+\url{http://kralidis.ca/}\\
+\email{tomkralidis AT hotmail.com}}
+
+\address{Angelos Tzotsos\\
+National Technical University of Athens\\
+\url{http://users.ntua.gr/tzotsos/}\\
+\email{tzotsos AT gmail.com}}
+
+\address{Adam Hinz\\
+Azavea\\
+\url{https://github.com/ahinz}\\
+\email{hinz.adam AT gmail.com}}
+
