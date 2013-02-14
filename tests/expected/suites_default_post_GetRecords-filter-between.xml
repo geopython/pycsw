@@ -4,13 +4,13 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="5" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
-    <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
-    <dc:format>image/svg+xml</dc:format>
-    <dc:title>Lorem ipsum</dc:title>
-    <dct:spatial>GR-22</dct:spatial>
-    <dc:subject>Tourism--Greece</dc:subject>
-    <dct:abstract>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</dct:abstract>
+    <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
+    <dc:title>Aliquam fermentum purus quis arcu</dc:title>
+    <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
+    <dc:subject>Hydrography--Dictionaries</dc:subject>
+    <dc:format>application/pdf</dc:format>
+    <dc:date>2006-05-12Z</dc:date>
+    <dct:abstract>Vestibulum quis ipsum sit amet metus imperdiet vehicula. Nulla scelerisque cursus mi.</dct:abstract>
 </csw:Record>
     <csw:Record>
     <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
@@ -22,13 +22,13 @@
     <dct:abstract>Morbi ultri&#231;es, dui suscipit vestibulum pr&#232;tium, velit ante pretium tortor, eg&#235;t tincidunt pede odio ac nulla.</dct:abstract>
 </csw:Record>
     <csw:Record>
-    <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
-    <dc:title>Aliquam fermentum purus quis arcu</dc:title>
-    <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
-    <dc:subject>Hydrography--Dictionaries</dc:subject>
-    <dc:format>application/pdf</dc:format>
-    <dc:date>2006-05-12Z</dc:date>
-    <dct:abstract>Vestibulum quis ipsum sit amet metus imperdiet vehicula. Nulla scelerisque cursus mi.</dct:abstract>
+    <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:title>Lorem ipsum</dc:title>
+    <dct:spatial>GR-22</dct:spatial>
+    <dc:subject>Tourism--Greece</dc:subject>
+    <dct:abstract>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</dct:abstract>
 </csw:Record>
     <csw:Record>
     <dc:identifier>urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</dc:identifier>

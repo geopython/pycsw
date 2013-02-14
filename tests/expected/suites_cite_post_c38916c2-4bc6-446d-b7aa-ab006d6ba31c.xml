@@ -12,16 +12,16 @@
       </ows:BoundingBox>
     </csw:Record>
     <csw:Record>
+      <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
+      <dc:date>2006-05-12Z</dc:date>
+    </csw:Record>
+    <csw:Record>
       <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
       <dc:date>2006-03-26Z</dc:date>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>47.59 -4.1</ows:LowerCorner>
         <ows:UpperCorner>51.22 0.89</ows:UpperCorner>
       </ows:BoundingBox>
-    </csw:Record>
-    <csw:Record>
-      <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
-      <dc:date>2006-05-12Z</dc:date>
     </csw:Record>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
