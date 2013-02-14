@@ -167,31 +167,16 @@ class Repository(object):
         maxrecords=10, startposition=0):
         ''' Query records from underlying repository '''
 
-        typename_column = getattr(self.dataset, \
-        self.context.md_core_model['mappings']['pycsw:Typename'])
-
         # run the raw query and get total
         if 'where' in constraint:  # GetRecords with constraint
             LOGGER.debug('constraint detected')
-            if not typenames:  # any typename
-                query = self.session.query(self.dataset).filter(
-                constraint['where'])
-            else:
-                query = self.session.query(self.dataset).filter(
-                typename_column.in_(typenames)).filter(
-                constraint['where'])
-
-            total = query.count()
-
+            query = self.session.query(self.dataset).filter(
+            constraint['where'])
         else:  # GetRecords sans constraint
             LOGGER.debug('No constraint detected')
-            if not typenames:  # any typename
-                query = self.session.query(self.dataset)
-            else:
-                query = self.session.query(self.dataset).filter(
-                typename_column.in_(typenames))
+            query = self.session.query(self.dataset)
 
-            total = query.count()
+        total = query.count()
 
         if sortby is not None:  # apply sorting
             LOGGER.debug('sorting detected')
