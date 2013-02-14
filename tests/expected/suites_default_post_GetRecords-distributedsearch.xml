@@ -5,17 +5,16 @@
   <csw:SearchResults numberOfRecordsReturned="1" nextRecord="0" numberOfRecordsMatched="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
     <!-- 1 result from http://www.geoplatform.gov/catalog/csw/discovery -->
     <csw:BriefRecord xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/">
-<dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">{F2B5F5CC-0D7F-4100-A5D9-CE3801539756}</dc:identifier>
-<dc:title>Temperature profile data collected using BT and XBT from NOAA Ship RESARCHER and other platforms in the Philippine Sea from 06 October 1971 to 21 September 1979 (NODC Accession 8000151)</dc:title>
-<dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">NODC ACCESSION # 8000151</dc:type>
-<dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">downloadableData</dc:type>
+<dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">{5A584A52-9729-5A0F-699A-ABEF43A38862}</dc:identifier>
+<dc:title>Roads of Grand Teton N.P. and the JDR Memorial Parkway</dc:title>
+<dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">roads</dc:type>
 <ows:WGS84BoundingBox>
-<ows:LowerCorner>-160.5 -62.3</ows:LowerCorner>
-<ows:UpperCorner>179.2 69.0</ows:UpperCorner>
+<ows:LowerCorner>-110.94787 43.536</ows:LowerCorner>
+<ows:UpperCorner>-110.41902 44.13184</ows:UpperCorner>
 </ows:WGS84BoundingBox>
 <ows:BoundingBox>
-<ows:LowerCorner>-160.5 -62.3</ows:LowerCorner>
-<ows:UpperCorner>179.2 69.0</ows:UpperCorner>
+<ows:LowerCorner>-110.94787 43.536</ows:LowerCorner>
+<ows:UpperCorner>-110.41902 44.13184</ows:UpperCorner>
 </ows:BoundingBox>
 </csw:BriefRecord>
   </csw:SearchResults>
