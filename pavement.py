@@ -155,6 +155,7 @@ def test(options):
     if url is None:
         # run against default server
         call_task('stop')
+        call_task('reset')
         call_task('start')
         url = 'http://localhost:8000'
 
@@ -179,6 +180,19 @@ def stop():
     """Stop local WSGI server instance"""
 
     kill('python', 'csw.wsgi')
+
+
+@task
+@cmdopts([
+    ('force', 'f', 'forces git clean'),
+])
+def reset(options):
+    """Return codebase to pristine state"""
+    sh('git checkout tests/suites/manager/data/records.db')
+
+    force = options.get('force')
+    if force:
+        sh('git clean -dxf')
 
 
 def kill(arg1, arg2):
