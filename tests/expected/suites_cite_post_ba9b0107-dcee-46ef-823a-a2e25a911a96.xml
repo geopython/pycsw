@@ -4,14 +4,6 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults numberOfRecordsReturned="4" nextRecord="0" numberOfRecordsMatched="4" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="summary">
     <csw:SummaryRecord>
-      <dc:identifier>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</dc:identifier>
-      <dc:title>Maecenas enim</dc:title>
-      <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
-      <dc:subject>Marine sediments</dc:subject>
-      <dc:format>application/xhtml+xml</dc:format>
-      <dct:abstract>Pellentesque tempus magna non sapien fringilla blandit.</dct:abstract>
-    </csw:SummaryRecord>
-    <csw:SummaryRecord>
       <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
       <dc:title>Lorem ipsum</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
@@ -33,6 +25,14 @@
       <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
       <dc:subject></dc:subject>
       <dc:format>image/jpeg</dc:format>
+    </csw:SummaryRecord>
+    <csw:SummaryRecord>
+      <dc:identifier>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</dc:identifier>
+      <dc:title>Maecenas enim</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
+      <dc:subject>Marine sediments</dc:subject>
+      <dc:format>application/xhtml+xml</dc:format>
+      <dct:abstract>Pellentesque tempus magna non sapien fringilla blandit.</dct:abstract>
     </csw:SummaryRecord>
   </csw:SearchResults>
 </csw:GetRecordsResponse>

@@ -118,21 +118,12 @@ class OpenDataCatalogRepository(object):
             # escape wildcards for django
             if constraint['where'].find('%') != -1:
                 constraint['where'] = constraint['where'].replace('%','%%')
-            if not typenames:  # any typename
-                query = Resource.objects.extra(where=[constraint['where']])
-            else:
-                query = Resource.objects.filter(csw_typename__in=typenames).extra(
-                where=[constraint['where']])
-
-            total = query.count()
+            query = Resource.objects.extra(where=[constraint['where']])
 
         else:  # GetRecords sans constraint
-            if not typenames:  # any typename
-                query = Resource.objects
-            else:
-                query = Resource.objects.filter(csw_typename__in=typenames)
+            query = Resource.objects
 
-            total = query.count()
+        total = query.count()
 
         # apply sorting, limit and offset
         if sortby is not None:
