@@ -161,13 +161,6 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
 
     csw_typenames = 'csw:Record'
 
-    for op in md.operations:
-        if op.name == 'GetRecords':
-            try:
-                csw_typenames = ' '.join(op.parameters['typeNames']['values'])
-            except:  # stay with default
-                pass
-
     # now get all records
     # get total number of records to loop against
 

@@ -392,7 +392,7 @@ def gen_opensearch_description(context, mdata, url, output_file):
     node1 = etree.SubElement(node0, 'Url')
     node1.set('type', 'text/html')
     node1.set('method', 'get')
-    node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=brief&typenames=csw:Record,gmd:MD_Metadata,fgdc:metadata,dif:DIF&resulttype=results&constraintlanguage=CQL_TEXT&constraint_language_version=1.1.0&constraint=csw:AnyText like "%%{searchTerms}%%" ' % url)
+    node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=brief&typenames=csw:Record&resulttype=results&constraintlanguage=CQL_TEXT&constraint_language_version=1.1.0&constraint=csw:AnyText like "%%{searchTerms}%%" ' % url)
 
     node1 = etree.SubElement(node0, 'Image')
     node1.set('type', 'image/vnd.microsoft.icon')

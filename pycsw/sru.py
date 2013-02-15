@@ -80,7 +80,7 @@ class Sru(object):
         self.context = context
         self.context.namespaces.update(self.namespaces)
 
-    def request_sru2csw(self, kvpin, typenames):
+    def request_sru2csw(self, kvpin):
         """transform an SRU request into a CSW request"""
 
         kvpout = {'service': 'CSW', 'version': '2.0.2', 'mode': 'sru'}
@@ -98,7 +98,7 @@ class Sru(object):
                     kvpout['maxrecords'] = 0
 
                 # TODO: make smarter typename fetching
-                kvpout['typenames'] = ','.join(typenames)
+                kvpout['typenames'] = 'csw:Record'
                 kvpout['elementsetname'] = 'brief'
                 kvpout['constraintlanguage'] = 'CQL_TEXT'
                 kvpout['resulttype'] = 'results'
