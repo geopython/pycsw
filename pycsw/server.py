@@ -382,9 +382,7 @@ class Csw(object):
         'mode' in self.kvp and self.kvp['mode'] == 'sru'):
             self.mode = 'sru'
             LOGGER.debug('SRU mode detected; processing request.')
-            self.kvp = self.sru().request_sru2csw(self.kvp,
-            self.context.model['operations']['GetRecords']['parameters']\
-            ['typeNames']['values'])
+            self.kvp = self.sru().request_sru2csw(self.kvp)
 
         if (not isinstance(self.kvp, str) and
         'mode' in self.kvp and self.kvp['mode'] == 'opensearch'):
