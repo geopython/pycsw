@@ -637,11 +637,7 @@ def _write_date(dateval, datetypeval, nsmap):
 
 def _get_resource_opname(operations):
     for op in operations.split(','):
-        if op == 'GetMap':
-            return op
-        elif op == 'GetFeature':
-            return op
-        elif op == 'GetCoverage':
+        if op in ['GetMap', 'GetFeature', 'GetCoverage', 'GetObservation']:
             return op
     return None
 

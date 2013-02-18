@@ -84,6 +84,14 @@ def parse_record(context, record, repos=None,
         LOGGER.debug('WCS detected, fetching via OWSLib')
         return _parse_wcs(context, repos, record, identifier)
 
+    elif mtype == 'http://www.opengis.net/sos/1.0':  # SOS 1.0.0
+        LOGGER.debug('SOS 1.0.0 detected, fetching via OWSLib')
+        return _parse_sos(context, repos, record, identifier, '1.0.0')
+
+    elif mtype == 'http://www.opengis.net/sos/2.0':  # SOS 2.0.0
+        LOGGER.debug('SOS 2.0.0 detected, fetching via OWSLib')
+        return _parse_sos(context, repos, record, identifier, '2.0.0')
+
     elif (mtype == 'http://www.opengis.net/cat/csw/csdgm' and
           record.startswith('http')):  # FGDC
         LOGGER.debug('FGDC detected, fetching via HTTP')
@@ -522,6 +530,94 @@ def _parse_wps(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:CouplingType', 'loose')
 
     return serviceobj
+
+
+def _parse_sos(context, repos, record, identifier, version):
+
+    from owslib.sos import SensorObservationService
+
+    bboxs = []
+    recobjs = []
+    serviceobj = repos.dataset()
+
+    if version == '1.0.0':
+        schema = 'http://www.opengis.net/sos/1.0'
+    else:
+        schema = 'http://www.opengis.net/sos/2.0'
+
+    md = SensorObservationService(record, version=version)
+
+    # generate record of service instance
+    _set(context, serviceobj, 'pycsw:Identifier', identifier)
+    _set(context, serviceobj, 'pycsw:Typename', 'csw:Record')
+    _set(context, serviceobj, 'pycsw:Schema', schema)
+    _set(context, serviceobj, 'pycsw:MdSource', record)
+    _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
+    _set(context, serviceobj, 'pycsw:XML', etree.tostring(md._capabilities))
+    _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(etree.tostring(md._capabilities)))
+    _set(context, serviceobj, 'pycsw:Type', 'service')
+    _set(context, serviceobj, 'pycsw:Title', md.identification.title)
+    _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
+    _set(context, serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
+    _set(context, serviceobj, 'pycsw:Creator', md.provider.contact.name)
+    _set(context, serviceobj, 'pycsw:Publisher', md.provider.contact.name)
+    _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
+    _set(context, serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
+    _set(context, serviceobj, 'pycsw:AccessConstraints', md.identification.accessconstraints)
+    _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
+    _set(context, serviceobj, 'pycsw:Source', record)
+    _set(context, serviceobj, 'pycsw:Format', md.identification.type)
+    _set(context, serviceobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:4326')
+    _set(context, serviceobj, 'pycsw:DistanceUOM', 'degrees')
+    _set(context, serviceobj, 'pycsw:ServiceType', md.identification.type)
+    _set(context, serviceobj, 'pycsw:ServiceTypeVersion', md.identification.version)
+    _set(context, serviceobj, 'pycsw:Operation', ','.join([d.name for d in md.operations]))
+    _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
+    _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
+
+    # generate record foreach offering
+
+    LOGGER.debug('Harvesting %d SOS ObservationOffering\'s ', len(md.contents))
+
+    for offering in md.contents:
+        recobj = repos.dataset()
+        identifier2 = '%s-%s' % (identifier, md.contents[offering].id)
+        _set(context, recobj, 'pycsw:Identifier', identifier2)
+        _set(context, recobj, 'pycsw:Typename', 'csw:Record')
+        _set(context, recobj, 'pycsw:Schema', schema)
+        _set(context, recobj, 'pycsw:MdSource', record)
+        _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
+        _set(context, recobj, 'pycsw:XML', etree.tostring(md._capabilities))
+        _set(context, recobj, 'pycsw:AnyText', util.get_anytext(md._capabilities))
+        _set(context, recobj, 'pycsw:Type', 'dataset')
+        _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
+        _set(context, recobj, 'pycsw:Title', md.contents[offering].description)
+        _set(context, recobj, 'pycsw:Abstract', md.contents[offering].description)
+        _set(context, recobj, 'pycsw:TempExtent_begin', util.datetime2iso8601(md.contents[offering].begin_position))
+        _set(context, recobj, 'pycsw:TempExtent_end', util.datetime2iso8601(md.contents[offering].end_position))
+
+        bbox = md.contents[offering].bbox
+        if bbox is not None:
+            tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
+            wkt_polygon = util.bbox2wktpolygon(tmp)
+            _set(context, recobj, 'pycsw:BoundingBox', wkt_polygon)
+            _set(context, recobj, 'pycsw:CRS', md.contents[offering].bbox_srs.id)
+            _set(context, recobj, 'pycsw:Denominator', 'degrees')
+            bboxs.append(wkt_polygon)
+
+        recobjs.append(recobj)
+
+    # Derive a bbox based on aggregated featuretype bbox values
+
+    bbox_agg = util.bbox_from_polygons(bboxs)
+
+    if bbox_agg is not None:
+        _set(context, serviceobj, 'pycsw:BoundingBox', bbox_agg)
+
+    recobjs.insert(0, serviceobj)
+
+    return recobjs
+
 
 def _parse_fgdc(context, repos, exml):
 
