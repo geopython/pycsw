@@ -2121,7 +2121,9 @@ class Csw(object):
         elif 'elementsetname' in self.kvp:
             if (self.kvp['elementsetname'] == 'full' and
             util.getqattr(recobj, self.context.md_core_model['mappings']\
-            ['pycsw:Typename']) == 'csw:Record'):
+            ['pycsw:Typename']) == 'csw:Record' and
+            util.getqattr(recobj, self.context.md_core_model['mappings']\
+            ['pycsw:Schema']) == 'http://www.opengis.net/cat/csw/2.0.2'):
                 # dump record as is and exit
                 return etree.fromstring(util.getqattr(recobj,
                 self.context.md_core_model['mappings']['pycsw:XML']))
