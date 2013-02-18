@@ -195,6 +195,8 @@
         <ows:Value>http://www.opengis.net/wfs</ows:Value>
         <ows:Value>http://www.opengis.net/wcs</ows:Value>
         <ows:Value>http://www.opengis.net/wps/1.0.0</ows:Value>
+        <ows:Value>http://www.opengis.net/sos/1.0</ows:Value>
+        <ows:Value>http://www.opengis.net/sos/2.0</ows:Value>
         <ows:Value>urn:geoss:waf</ows:Value>
       </ows:Parameter>
     </ows:Operation>

@@ -46,6 +46,8 @@ def get_today_and_now():
 
 def datetime2iso8601(value):
     """Return a datetime value as ISO8601"""
+    if value is None:
+        return None
     if isinstance(value, datetime.date):
         return value.strftime('%Y-%m-%d')
     if value.hour == 0 and value.minute == 0 and value.second == 0:
