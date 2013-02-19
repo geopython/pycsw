@@ -221,7 +221,6 @@ for testsuite in TESTSUITES_LIST:
 
     force_id_mask = False
     if testsuite == 'suites%smanager' % os.sep:
-        print 'force_id_mask = True'
         force_id_mask = True
    
     # get configuration
