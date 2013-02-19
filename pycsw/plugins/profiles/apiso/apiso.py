@@ -481,6 +481,12 @@ class APISO(profile.Profile):
             tmp = etree.SubElement(resident, util.nspath_eval('gmd:abstract', self.namespaces))
             etree.SubElement(tmp, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val
 
+            # keywords
+            kw = util.getqattr(result, queryables['apiso:Subject']['dbcol'])
+            if kw is not None:
+                md_keywords = etree.SubElement(resident, util.nspath_eval('gmd:descriptiveKeywords', self.namespaces))
+                md_keywords.append(write_keywords(kw, self.namespaces))
+
             # spatial resolution
             val = util.getqattr(result, queryables['apiso:Denominator']['dbcol'])
             if val:
@@ -522,6 +528,11 @@ class APISO(profile.Profile):
                 tmp = etree.SubElement(resident, util.nspath_eval('srv:serviceTypeVersion', self.namespaces))
                 etree.SubElement(tmp, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val2
 
+            kw = util.getqattr(result, queryables['apiso:Subject']['dbcol'])
+            if kw is not None:
+                srv_keywords = etree.SubElement(resident, util.nspath_eval('srv:keywords', self.namespaces))
+                srv_keywords.append(write_keywords(kw, self.namespaces))
+                 
             if bboxel is not None:
                 bboxel.tag = util.nspath_eval('srv:extent', self.namespaces)
                 resident.append(bboxel)
@@ -596,6 +607,14 @@ class APISO(profile.Profile):
                 etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[1]
 
         return node
+
+def write_keywords(keywords, nsmap):
+    """generate gmd:MD_Keywords construct"""
+    md_keywords = etree.Element(util.nspath_eval('gmd:MD_Keywords', nsmap))
+    for kw in keywords.split(','):
+        keyword = etree.SubElement(md_keywords, util.nspath_eval('gmd:keyword', nsmap))
+        etree.SubElement(keyword, util.nspath_eval('gco:CharacterString', nsmap)).text = kw
+    return md_keywords
 
 def write_extent(bbox, nsmap):
     ''' Generate BBOX extent '''
