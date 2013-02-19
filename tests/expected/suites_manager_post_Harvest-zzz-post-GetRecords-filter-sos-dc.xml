@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
+  <csw:SearchResults numberOfRecordsReturned="2" nextRecord="0" numberOfRecordsMatched="2" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+    <csw:Record>
+      <dc:identifier>urn:uuid:e9bbddc4-762b-4f7a-aeac-8d4cdc3a20de</dc:identifier>
+      <dc:title>Texas Automated Buoy System SOS</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>OCEANOGRAPHY</dc:subject>
+      <dc:subject>Ocean Observations</dc:subject>
+      <dc:subject>TABS</dc:subject>
+      <dc:subject>Gulf of Mexico</dc:subject>
+      <dc:subject>Oil Spill Response</dc:subject>
+      <dc:format>OGC:SOS</dc:format>
+      <dc:creator>Norman Guinasso</dc:creator>
+      <dc:publisher>Norman Guinasso</dc:publisher>
+      <dc:contributor>Norman Guinasso</dc:contributor>
+      <dc:source>http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</dc:source>
+      <dc:rights>NONE</dc:rights>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>26.19 -97.05</ows:LowerCorner>
+        <ows:UpperCorner>29.46 -93.62</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>urn:uuid:60a94a66-7bc4-4447-ba8b-6dbd3302cad7</dc:identifier>
+      <dc:title>GNS Science New Zealand, NGMP SOS timeseries</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>water level</dc:subject>
+      <dc:subject>groundwater</dc:subject>
+      <dc:subject>hydrogeology</dc:subject>
+      <dc:subject>ngmp</dc:subject>
+      <dc:format>OGC:SOS</dc:format>
+      <dct:abstract>GNS Hydrogeology Section, serving NGMP groundwater level through customised 52N SOS, data quality cannot be represented yet, there is no liability regarding this service, for more information go to http://ggw.gns.cri.nz/ggwdata/ (SVN: 0 @ 2013-01-12 19:55:25)</dct:abstract>
+      <dc:creator>Alex Kmoch</dc:creator>
+      <dc:publisher>Alex Kmoch</dc:publisher>
+      <dc:contributor>Alex Kmoch</dc:contributor>
+      <dc:source>https://geier.gns.cri.nz/ngmp-sos/sos</dc:source>
+      <dc:rights>SERVICE IS IN TEST MODE, NOT RELIABLE, DATA QUALITY NOT YET VISIBLE</dc:rights>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>-46.31 168.06</ows:LowerCorner>
+        <ows:UpperCorner>-34.85 177.98</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>
