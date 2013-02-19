@@ -5,7 +5,7 @@
   <csw:SearchResults numberOfRecordsReturned="2" nextRecord="0" numberOfRecordsMatched="2" recordSchema="http://www.isotc211.org/2005/gmd" elementSet="full">
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:CharacterString>urn:uuid:e9bbddc4-762b-4f7a-aeac-8d4cdc3a20de</gco:CharacterString>
+        <gco:CharacterString>PYCSW_IDENTIFIER</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:language>
         <gco:CharacterString/>
@@ -30,7 +30,7 @@
         <gco:CharacterString>2005/PDAM 1</gco:CharacterString>
       </gmd:metadataStandardVersion>
       <gmd:identificationInfo>
-        <srv:SV_ServiceIdentification id="urn:uuid:e9bbddc4-762b-4f7a-aeac-8d4cdc3a20de">
+        <srv:SV_ServiceIdentification id="PYCSW_IDENTIFIER">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
@@ -237,7 +237,7 @@
     </gmd:MD_Metadata>
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:CharacterString>urn:uuid:60a94a66-7bc4-4447-ba8b-6dbd3302cad7</gco:CharacterString>
+        <gco:CharacterString>PYCSW_IDENTIFIER</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:language>
         <gco:CharacterString/>
@@ -262,7 +262,7 @@
         <gco:CharacterString>2005/PDAM 1</gco:CharacterString>
       </gmd:metadataStandardVersion>
       <gmd:identificationInfo>
-        <srv:SV_ServiceIdentification id="urn:uuid:60a94a66-7bc4-4447-ba8b-6dbd3302cad7">
+        <srv:SV_ServiceIdentification id="PYCSW_IDENTIFIER">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>

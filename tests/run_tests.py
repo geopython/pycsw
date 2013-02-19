@@ -48,18 +48,18 @@ def plural(num):
         return ''
 
 
-def get_validity(sexpected, sresult, soutfile):
+def get_validity(sexpected, sresult, soutfile, force_id_mask=False):
     """Decipher whether the output passes, fails, or initializes"""
     if not os.path.exists(sexpected):  # create expected file
         expectedfile = open(sexpected, 'w')
-        expectedfile.write(normalize(sresult))
+        expectedfile.write(normalize(sresult, force_id_mask))
         expectedfile.close()
         sstatus = 0
     else:  # compare result with expected
         if not os.path.exists('results'):
             os.mkdir('results')
         resultfile = open('results%s%s' % (os.sep, soutfile), 'wb')
-        resultfile.write(normalize(sresult))
+        resultfile.write(normalize(sresult, force_id_mask))
         resultfile.close()
         if filecmp.cmp(sexpected, 'results%s%s' % (os.sep, soutfile)):  # pass
             os.remove('results%s%s' % (os.sep, soutfile))
@@ -74,7 +74,7 @@ def get_validity(sexpected, sresult, soutfile):
     return sstatus
 
 
-def normalize(sresult):
+def normalize(sresult, force_id_mask=False):
     """Replace time, updateSequence and version specific values with generic
     values"""
 
@@ -118,8 +118,21 @@ def normalize(sresult):
     if timestamp:
         sresult = sresult.replace(timestamp.group(0),
                                   '"timestamp": "PYCSW_TIMESTAMP"')
-    return sresult
 
+    # harvesting-based GetRecords/GetRecordById responses
+    if force_id_mask:
+        dcid = re.findall('<dc:identifier>(urn:uuid.*)</dc:identifier>', sresult)
+        isoid = re.findall('id="(urn:uuid.*)"', sresult)
+        isoid2 = re.findall('<gco:CharacterString>(urn:uuid.*)</gco', sresult)
+    
+        for d in dcid:
+            sresult = sresult.replace(d, 'PYCSW_IDENTIFIER')
+        for i in isoid:
+            sresult = sresult.replace(i, 'PYCSW_IDENTIFIER')
+        for i2 in isoid2:
+            sresult = sresult.replace(i2, 'PYCSW_IDENTIFIER')
+
+    return sresult
 
 def usage():
     """Provide usage instructions"""
@@ -206,6 +219,11 @@ for testsuite in TESTSUITES_LIST:
     if not os.path.exists(testsuite):
         raise RuntimeError('Testsuite %s not found' % testsuite)
 
+    force_id_mask = False
+    if testsuite == 'suites%smanager' % os.sep:
+        print 'force_id_mask = True'
+        force_id_mask = True
+   
     # get configuration
     for cfg in glob.glob('%s%s*.cfg' % (testsuite, os.sep)):
         print '\nTesting configuration %s' % cfg
@@ -230,7 +248,8 @@ for testsuite in TESTSUITES_LIST:
 
                             result = http_request('GET', request)
 
-                            status = get_validity(expected, result, outfile)
+                            status = get_validity(expected, result, outfile,
+                                                  force_id_mask)
 
                             if status == 1:
                                 print '  passed'
@@ -266,7 +285,8 @@ for testsuite in TESTSUITES_LIST:
                         # invoke request
                         result = http_request('POST', url2, request)
 
-                        status = get_validity(expected, result, outfile)
+                        status = get_validity(expected, result, outfile,
+                                              force_id_mask)
 
                         if status == 1:
                             print '  passed'
