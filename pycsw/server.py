@@ -2126,7 +2126,9 @@ class Csw(object):
             util.getqattr(recobj, self.context.md_core_model['mappings']\
             ['pycsw:Typename']) == 'csw:Record' and
             util.getqattr(recobj, self.context.md_core_model['mappings']\
-            ['pycsw:Schema']) == 'http://www.opengis.net/cat/csw/2.0.2'):
+            ['pycsw:Schema']) == 'http://www.opengis.net/cat/csw/2.0.2' and
+            util.getqattr(recobj, self.context.md_core_model['mappings']\
+            ['pycsw:Type']) != 'service'):
                 # dump record as is and exit
                 return etree.fromstring(util.getqattr(recobj,
                 self.context.md_core_model['mappings']['pycsw:XML']))
