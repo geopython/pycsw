@@ -4,7 +4,7 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults numberOfRecordsReturned="2" nextRecord="0" numberOfRecordsMatched="2" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
-      <dc:identifier>urn:uuid:e9bbddc4-762b-4f7a-aeac-8d4cdc3a20de</dc:identifier>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
       <dc:title>Texas Automated Buoy System SOS</dc:title>
       <dc:type>service</dc:type>
       <dc:subject>OCEANOGRAPHY</dc:subject>
@@ -24,7 +24,7 @@
       </ows:BoundingBox>
     </csw:Record>
     <csw:Record>
-      <dc:identifier>urn:uuid:60a94a66-7bc4-4447-ba8b-6dbd3302cad7</dc:identifier>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
       <dc:title>GNS Science New Zealand, NGMP SOS timeseries</dc:title>
       <dc:type>service</dc:type>
       <dc:subject>water level</dc:subject>
