@@ -47,7 +47,8 @@ class APISO(profile.Profile):
             'apiso': 'http://www.opengis.net/cat/csw/apiso/1.0',
             'gco': 'http://www.isotc211.org/2005/gco',
             'gmd': 'http://www.isotc211.org/2005/gmd',
-            'srv': 'http://www.isotc211.org/2005/srv'
+            'srv': 'http://www.isotc211.org/2005/srv',
+            'xlink': 'http://www.w3.org/1999/xlink'
         }
 
         self.inspire_namespaces = {
@@ -163,7 +164,6 @@ class APISO(profile.Profile):
             self.inspire_config = {}
             self.inspire_config['languages_supported'] = config.get('metadata:inspire', 'languages_supported')
             self.inspire_config['default_language'] = config.get('metadata:inspire', 'default_language')
-            self.inspire_config['url'] = config.get('server', 'url')
             self.inspire_config['date'] = config.get('metadata:inspire', 'date')
             self.inspire_config['gemet_keywords'] = config.get('metadata:inspire', 'gemet_keywords')
             self.inspire_config['conformity_service'] = config.get('metadata:inspire', 'conformity_service')
@@ -174,6 +174,7 @@ class APISO(profile.Profile):
             self.inspire_config = None
 
         self.ogc_schemas_base = config.get('server', 'ogc_schemas_base')
+        self.url = config.get('server', 'url')
 
     def check_parameters(self, kvp):
         '''Check for Language parameter in GetCapabilities request'''
@@ -208,13 +209,8 @@ class APISO(profile.Profile):
             res_loc = etree.SubElement(ex_caps,
             util.nspath_eval('inspire_common:ResourceLocator', self.inspire_namespaces))
 
-            # if the endpoint has a query string, append KVP separator
-            bindparam = '?'
-            if self.inspire_config['url'].find('?') != -1:
-                bindparam = '&'
-     
             etree.SubElement(res_loc,
-            util.nspath_eval('inspire_common:URL', self.inspire_namespaces)).text = '%s%sservice=CSW&version=2.0.2&request=GetCapabilities' % (self.inspire_config['url'], bindparam)
+            util.nspath_eval('inspire_common:URL', self.inspire_namespaces)).text = '%sservice=CSW&version=2.0.2&request=GetCapabilities' % (util.bind_url(self.url))
 
             etree.SubElement(res_loc,
             util.nspath_eval('inspire_common:MediaType', self.inspire_namespaces)).text = 'application/xml'
@@ -577,7 +573,8 @@ class APISO(profile.Profile):
                 # operates on resource(s)
                 if coupledresources:
                     for i in coupledresources.split(','):
-                        etree.SubElement(resident, util.nspath_eval('srv:operatesOn', self.namespaces), uuidref=i)
+                        operates_on = etree.SubElement(resident, util.nspath_eval('srv:operatesOn', self.namespaces), uuidref=i)
+                        operates_on.attrib[util.nspath_eval('xlink:href', self.namespaces)] = '%sservice=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&id=%s-%s' % (util.bind_url(self.url), idval, i)
 
         rlinks = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Links'])
 
