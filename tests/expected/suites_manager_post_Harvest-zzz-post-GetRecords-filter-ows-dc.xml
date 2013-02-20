@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
+  <csw:SearchResults numberOfRecordsReturned="5" nextRecord="6" numberOfRecordsMatched="7" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+    <csw:Record>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+      <dc:title>pycsw Geospatial Catalogue OGC CITE demo</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>ogc</dc:subject>
+      <dc:subject>cite</dc:subject>
+      <dc:subject>compliance</dc:subject>
+      <dc:subject>interoperability</dc:subject>
+      <dc:format>CSW</dc:format>
+      <dct:references scheme="OGC:CSW">http://demo.pycsw.org/cite/csw</dct:references>
+      <dct:references scheme="OGC:CSW-2.0.2-http-get-capabilities">http://demo.pycsw.org/cite/csw</dct:references>
+      <dct:abstract>pycsw is an OGC CSW server implementation written in Python</dct:abstract>
+      <dc:creator>Lastname, Firstname</dc:creator>
+      <dc:publisher>Lastname, Firstname</dc:publisher>
+      <dc:contributor>Lastname, Firstname</dc:contributor>
+      <dc:source>http://demo.pycsw.org/cite/csw</dc:source>
+      <dc:rights>None</dc:rights>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+      <dc:title>Texas Automated Buoy System SOS</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>OCEANOGRAPHY</dc:subject>
+      <dc:subject>Ocean Observations</dc:subject>
+      <dc:subject>TABS</dc:subject>
+      <dc:subject>Gulf of Mexico</dc:subject>
+      <dc:subject>Oil Spill Response</dc:subject>
+      <dc:format>OGC:SOS</dc:format>
+      <dct:references scheme="OGC:SOS">http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</dct:references>
+      <dct:references scheme="OGC:SOS-1.0.0-http-get-capabilities">http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi?version=1.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
+      <dc:creator>Norman Guinasso</dc:creator>
+      <dc:publisher>Norman Guinasso</dc:publisher>
+      <dc:contributor>Norman Guinasso</dc:contributor>
+      <dc:source>http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</dc:source>
+      <dc:rights>NONE</dc:rights>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>26.19 -97.05</ows:LowerCorner>
+        <ows:UpperCorner>29.46 -93.62</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+      <dc:title>GNS Science New Zealand, NGMP SOS timeseries</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>water level</dc:subject>
+      <dc:subject>groundwater</dc:subject>
+      <dc:subject>hydrogeology</dc:subject>
+      <dc:subject>ngmp</dc:subject>
+      <dc:format>OGC:SOS</dc:format>
+      <dct:references scheme="OGC:SOS">https://geier.gns.cri.nz/ngmp-sos/sos</dct:references>
+      <dct:references scheme="OGC:SOS-2.0.0-http-get-capabilities">https://geier.gns.cri.nz/ngmp-sos/sos?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
+      <dct:abstract>GNS Hydrogeology Section, serving NGMP groundwater level through customised 52N SOS, data quality cannot be represented yet, there is no liability regarding this service, for more information go to http://ggw.gns.cri.nz/ggwdata/ (SVN: 0 @ 2013-01-12 19:55:25)</dct:abstract>
+      <dc:creator>Alex Kmoch</dc:creator>
+      <dc:publisher>Alex Kmoch</dc:publisher>
+      <dc:contributor>Alex Kmoch</dc:contributor>
+      <dc:source>https://geier.gns.cri.nz/ngmp-sos/sos</dc:source>
+      <dc:rights>SERVICE IS IN TEST MODE, NOT RELIABLE, DATA QUALITY NOT YET VISIBLE</dc:rights>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>-46.31 168.06</ows:LowerCorner>
+        <ows:UpperCorner>-34.85 177.98</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+      <dc:title>MapServer WCS</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>Arctic</dc:subject>
+      <dc:subject>Cryosphere</dc:subject>
+      <dc:subject>Earth Science</dc:subject>
+      <dc:subject>Ice Extent</dc:subject>
+      <dc:subject>Ice Sheets</dc:subject>
+      <dc:subject>Northern Hemisphere</dc:subject>
+      <dc:subject>Oceans</dc:subject>
+      <dc:subject>Polar</dc:subject>
+      <dc:subject>Sea Ice</dc:subject>
+      <dc:subject>Sea Ice Concentration</dc:subject>
+      <dc:subject>Snow/Ice</dc:subject>
+      <dc:subject>Snow Cover</dc:subject>
+      <dc:subject>Snow Melt</dc:subject>
+      <dc:subject>Snow Water Equivalent</dc:subject>
+      <dc:format>OGC:WCS</dc:format>
+      <dct:references scheme="OGC:WCS">http://nsidc.org/cgi-bin/atlas_north</dct:references>
+      <dct:references scheme="OGC:WCS-1.1.0-http-get-capabilities">http://nsidc.org/cgi-bin/atlas_north?version=1.0.0&amp;request=GetCapabilities&amp;service=WCS</dct:references>
+      <dct:abstract>The National Snow and Ice Data Center (NSIDC) Atlas of the Cryosphere is a map server that provides data and information pertinent to the frozen regions of Earth, including monthly climatologies of sea ice extent and concentration, snow cover extent, and snow water equivalent, in addition to glacier outlines, permafrost extent and classification, ice sheet elevation and accumulation, and more. In order to support polar projections, the Atlas is divided into two separate map servers: one for the Northern Hemisphere and one for the Southern Hemisphere. In addition to providing map images and source data through Open Geospatial Consortium, Inc. (OGC) protocols (WMS, WFS, and WCS), a dynamic web interface for exploring these data is also available at http://nsidc.org/data/atlas. If you have questions, comments or suggestions, please contact NSIDC User Services at +1.303.492.6199 or nsidc@nsidc.org. The development of this map server application was supported by NASA's Earth Observing System (EOS) Program under contract NAS5-03099 and was developed using MapServer, an Open Source development environment for building spatially-enabled internet applications. To cite the Atlas of the Cryosphere: Maurer, J. 2007. Atlas of the Cryosphere. Boulder, Colorado USA: National Snow and Ice Data Center. Digital media. Available at http://nsidc.org/data/atlas/.</dct:abstract>
+      <dc:creator>NSIDC User Services</dc:creator>
+      <dc:publisher>NSIDC User Services</dc:publisher>
+      <dc:contributor>NSIDC User Services</dc:contributor>
+      <dc:source>http://nsidc.org/cgi-bin/atlas_north</dc:source>
+      <dc:rights>
+    none
+  </dc:rights>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>-89.32 -180.0</ows:LowerCorner>
+        <ows:UpperCorner>89.59 179.98</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+      <dc:title>Wisconsin Lake Clarity</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>SSEC</dc:subject>
+      <dc:subject>PAW</dc:subject>
+      <dc:subject>remote sensing</dc:subject>
+      <dc:subject>meteorology</dc:subject>
+      <dc:subject>atmospheric science</dc:subject>
+      <dc:subject>University of Wisconsin</dc:subject>
+      <dc:subject>Madison</dc:subject>
+      <dc:subject>weather</dc:subject>
+      <dc:subject>land</dc:subject>
+      <dc:format>OGC:WMS</dc:format>
+      <dct:references scheme="OGC:WMS">http://wmsserv1.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
+      <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://wmsserv1.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
+      <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
+      <dc:creator>Dr. Sam Batzli</dc:creator>
+      <dc:publisher>Dr. Sam Batzli</dc:publisher>
+      <dc:contributor>Dr. Sam Batzli</dc:contributor>
+      <dc:source>http://wmsserv1.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dc:source>
+      <dc:rights>The following attribution is required if published or reproduced: Source: Space Science and Engineering Center, University of Wisconsin-Madison</dc:rights>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>42.41 -93.03</ows:LowerCorner>
+        <ows:UpperCorner>47.13 -86.64</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>
