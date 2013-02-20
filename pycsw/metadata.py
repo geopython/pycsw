@@ -32,6 +32,7 @@ import logging
 import uuid
 from urlparse import urlparse
 from lxml import etree
+from owslib.util import build_get_url
 from pycsw import util
 
 LOGGER = logging.getLogger(__name__)
@@ -168,6 +169,13 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     _set(context, serviceobj, 'pycsw:Operation', ','.join([d.name for d in md.operations]))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
+    links = [
+        '%s,OGC-CSW Catalogue Service for the Web,OGC:CSW,%s' % (identifier, md.url),
+        '%s,OGC-CSW Capabilities service (ver 2.0.2),OGC:CSW-2.0.2-http-get-capabilities,%s' % (identifier, md.url),
+    ]
+
+    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+
     recobjs.append(serviceobj)
 
     # get all supported typenames of metadata
@@ -294,6 +302,13 @@ def _parse_wms(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
+    links = [
+        '%s,OGC-WMS Web Map Service,OGC:WMS,%s' % (identifier, md.url),
+        '%s,OGC-WMS Capabilities service (ver 1.1.1),OGC:WMS-1.1.1-http-get-capabilities,%s' % (identifier, build_get_url(md.url, {'service': 'WMS', 'version': '1.1.1', 'request': 'GetCapabilities'})),
+    ]
+
+    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+
     recobjs.append(serviceobj) 
          
     # generate record foreach layer
@@ -329,6 +344,25 @@ def _parse_wms(context, repos, record, identifier):
                 _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
                 _set(context, recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:%s' % \
                 bbox[-1].split(':')[1])
+
+        params = {
+            'service': 'WMS',
+            'version': '1.1.1',
+            'request': 'GetMap',
+            'layers': md.contents[layer].name,
+            'format': 'image/png',
+            'height': '200',
+            'width': '200',
+            'srs': 'EPSG:4326',
+            'bbox':  '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3]),
+            'styles': ''
+        }
+
+        links = [
+            '%s,Web image thumbnail (URL),WWW:LINK-1.0-http--image-thumbnail,%s' % (md.contents[layer].name, build_get_url(md.url, params))
+        ]
+
+        _set(context, recobj, 'pycsw:Links', '^'.join(links))
 
         recobjs.append(recobj)
 
@@ -372,6 +406,13 @@ def _parse_wfs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
+    links = [
+        '%s,OGC-WFS Web Feature Service,OGC:WFS,%s' % (identifier, md.url),
+        '%s,OGC-WFS Capabilities service (ver 1.1.0),OGC:WFS-1.1.0-http-get-capabilities,%s' % (identifier, build_get_url(md.url, {'service': 'WFS', 'version': '1.1.0', 'request': 'GetCapabilities'})),
+    ]
+
+    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+
     # generate record foreach featuretype
 
     LOGGER.debug('Harvesting %d WFS featuretypes' % len(md.contents))
@@ -400,6 +441,19 @@ def _parse_wfs(context, repos, record, identifier):
             _set(context, recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:4326')
             _set(context, recobj, 'pycsw:Denominator', 'degrees')
             bboxs.append(wkt_polygon)
+
+        params = {
+            'service': 'WFS',
+            'version': '1.1.0',
+            'request': 'GetFeature',
+            'typename': md.contents[featuretype].id,
+        }
+
+        links = [
+            '%s,File for download,WWW:DOWNLOAD-1.0-http--download,%s' % (md.contents[featuretype].id, build_get_url(md.url, params))
+        ]
+
+        _set(context, recobj, 'pycsw:Links', '^'.join(links))
 
         recobjs.append(recobj)
 
@@ -451,6 +505,13 @@ def _parse_wcs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Operation', ','.join([d.name for d in md.operations]))
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
+
+    links = [
+        '%s,OGC-WCS Web Coverage Service,OGC:WCS,%s' % (identifier, md.url),
+        '%s,OGC-WCS Capabilities service (ver 1.0.0),OGC:WCS-1.1.0-http-get-capabilities,%s' % (identifier, build_get_url(md.url, {'service': 'WCS', 'version': '1.0.0', 'request': 'GetCapabilities'})),
+    ]
+
+    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
 
     # generate record foreach coverage
 
@@ -529,6 +590,13 @@ def _parse_wps(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join([o.identifier for o in md.processes]))
     _set(context, serviceobj, 'pycsw:CouplingType', 'loose')
 
+    links = [
+        '%s,OGC-WPS Web Processing Service,OGC:WPS,%s' % (identifier, md.url),
+        '%s,OGC-WPS Capabilities service (ver 1.0.0),OGC:WPS-1.1.0-http-get-capabilities,%s' % (identifier, build_get_url(md.url, {'service': 'WPS', 'version': '1.0.0', 'request': 'GetCapabilities'})),
+    ]
+
+    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+
     return serviceobj
 
 
@@ -574,6 +642,13 @@ def _parse_sos(context, repos, record, identifier, version):
     _set(context, serviceobj, 'pycsw:Operation', ','.join([d.name for d in md.operations]))
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
+
+    links = [
+        '%s,OGC-SOS Sensor Observation Service,OGC:SOS,%s' % (identifier, md.url),
+        '%s,OGC-SOS Capabilities service (ver %s),OGC:SOS-%s-http-get-capabilities,%s' % (identifier, version, version, build_get_url(md.url, {'service': 'SOS', 'version': version, 'request': 'GetCapabilities'})),
+    ]
+
+    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
 
     # generate record foreach offering
 
