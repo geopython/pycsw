@@ -41,7 +41,7 @@
                 <gco:CharacterString>Geographic viewer (humanGeographicViewer)</gco:CharacterString>
               </gmd:keyword>
             </gmd:MD_Keywords>
-        </srv:keywords>
+          </srv:keywords>
           <srv:extent>
             <gmd:EX_Extent>
               <gmd:geographicElement>
