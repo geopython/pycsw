@@ -34,7 +34,7 @@ from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
 from pycsw import util
-from geonode.layers.models import Layer
+from geonode.base.models import ResourceBase
 
 class GeoNodeRepository(object):
     ''' Class to interact with underlying repository '''
@@ -78,32 +78,32 @@ class GeoNodeRepository(object):
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
-        return Layer.objects.filter(uuid__in=ids).all()
+        return ResourceBase.objects.filter(uuid__in=ids).all()
 
     def query_domain(self, domain, typenames, domainquerytype='list',
         count=False):
         ''' Query by property domain values '''
 
         if domainquerytype == 'range':
-            return [tuple(Layer.objects.aggregate(
+            return [tuple(ResourceBase.objects.aggregate(
             Min(domain), Max(domain)).values())]
         else:
             if count:
                 return [(d[domain], d['%s__count' % domain]) \
-                for d in Layer.objects.values(domain).annotate(Count(domain))]
+                for d in ResourceBase.objects.values(domain).annotate(Count(domain))]
             else:
-                return Layer.objects.values_list(domain).distinct()
+                return ResourceBase.objects.values_list(domain).distinct()
 
 
     def query_latest_insert(self):
         ''' Query to get latest update to repository '''
         from datetime import datetime
-        return Layer.objects.aggregate(
+        return ResourceBase.objects.aggregate(
             Max('date'))['date__max'].strftime('%Y-%m-%dT%H:%M:%SZ')
 
     def query_source(self, source):
         ''' Query by source '''
-        return Layer.objects.filter(source=source)
+        return ResourceBase.objects.filter(source=source)
 
     def query(self, constraint, sortby=None, typenames=None,
         maxrecords=10, startposition=0):
@@ -114,10 +114,10 @@ class GeoNodeRepository(object):
             # escape wildcards for django
             if constraint['where'].find('%') != -1:
                 constraint['where'] = constraint['where'].replace('%','%%')
-            query = Layer.objects.extra(where=[constraint['where']])
+            query = ResourceBase.objects.extra(where=[constraint['where']])
 
         else:  # GetRecords sans constraint
-            query = Layer.objects
+            query = ResourceBase.objects
 
         total = query.count()
 
