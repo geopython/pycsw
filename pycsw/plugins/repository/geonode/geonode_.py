@@ -127,6 +127,7 @@ class GeoNodeRepository(object):
                 desc = False
                 if sortby['order'] == 'DESC':
                     desc = True
+                query = query.all()
                 return [str(total), sorted(query, key=lambda x: float(util.get_geometry_area(getattr(x, sortby['propertyname']))), reverse=desc)[startposition:maxrecords]]
             else:
                 if sortby['order'] == 'DESC':
