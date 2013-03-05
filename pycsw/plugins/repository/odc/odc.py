@@ -139,4 +139,4 @@ class OpenDataCatalogRepository(object):
             return [str(total), \
             query.order_by(pname)[startposition:maxrecords]]
         else:  # no sort
-            return [str(total), query[startposition:maxrecords]]
+            return [str(total), query.all()[startposition:maxrecords]]
