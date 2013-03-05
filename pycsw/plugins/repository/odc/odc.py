@@ -133,6 +133,7 @@ class OpenDataCatalogRepository(object):
                 desc = False
                 if sortby['order'] == 'DESC':
                     desc = True
+                query = query.all()
                 return [str(total), sorted(query, key=lambda x: float(util.get_geometry_area(getattr(x, sortby['propertyname']))), reverse=desc)[startposition:maxrecords]]
             if sortby['order'] == 'DESC':
                 pname = '-%s' % sortby['propertyname']
