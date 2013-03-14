@@ -1,3 +1,5 @@
+**2013-02-21** - `pycsw on OSGeo-Live 6.5 <http://lists.osgeo.org/pipermail/discuss/2013-February/011394.html>`_
+
 **2013-01-14** -  `pycsw Receives OGC Compliance Certification and Reference Implementation Status <http://lists.osgeo.org/pipermail/pycsw-devel/2013-January/000161.html>`_
 
 **2012-09-10** - `pycsw 1.4.0 released <http://lists.osgeo.org/pipermail/pycsw-devel/2012-September/000130.html>`_
