@@ -25,7 +25,7 @@
 # Requires: Apache2, python-lxml, python-shapely and python-sqlalchemy
 
 
-VERSION=1.4.0
+VERSION=1.4.1
 
 echo "Installing pycsw $VERSION"
 
