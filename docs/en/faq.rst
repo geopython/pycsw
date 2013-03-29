@@ -8,7 +8,7 @@ FAQ
 Can I use pycsw within my WSGI application?
 -------------------------------------------
 
-Yes.  pycsw can be deployed as both via traditional CGI or WSGI.  You can also integrate pycsw via `Django`_ views or `Pylons`_ controllers.
+Yes.  pycsw can be deployed as both via traditional CGI or WSGI.  You can also integrate pycsw via `Django`_ views, `Pylons`_ controllers or `Flask`_ routes.
 
 How do I export my repository?
 -------------------------------
@@ -19,9 +19,6 @@ Use the ``pycsw-admin.py`` utility to dump the records as XML documents to a dir
 
   $ pycsw-admin.py -c export_records -f default.cfg -p /path/to/output_dir
 
-
-.. _`Django`: https://www.djangoproject.com/
-.. _`Pylons`: http://www.pylonsproject.org/
 
 How do I add a custom metadata format?
 --------------------------------------
@@ -65,3 +62,7 @@ How can I handle transactions safely?
 -------------------------------------
 
 Transactions are handled by an IP-based authentication list which can be set in pycsw's :ref:`configuration <configuration>` (in ``manager.allowed_ips``).  Supported notations includes traditional IP address, wildcard, and CIDR.
+
+.. _`Django`: https://www.djangoproject.com/
+.. _`Pylons`: http://www.pylonsproject.org/
+.. _`Flask`: http://flask.pocoo.org/
