@@ -61,4 +61,7 @@ Create a 'parent' metadata record from which all relevant metadata records (imag
 
 The above query will search for all metadata records of the same ``apiso:parentIdentifier`` (identified by ``$identifier``) within a given area of interest.  The equivalent query can be done against ``dc:source`` with the same design pattern.
 
+How can I handle transactions safely?
+-------------------------------------
 
+Transactions are handled by an IP-based authentication list which can be set in pycsw's :ref:`configuration <configuration>` (in ``manager.allowed_ips``).  Supported notations includes traditional IP address, wildcard, and CIDR.
