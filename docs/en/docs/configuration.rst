@@ -27,7 +27,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 **[manager]**
 
 - **transactions**: whether to enable transactions (``true`` or ``false``).  Default is ``false`` (see :ref:`transactions`)
-- **allowed_ips**: comma delimited list of IP addresses which can perform transactions (see :ref:`transactions`)
+- **allowed_ips**: comma delimited list of IP addresses (e.g. 192.168.0.103), wildcards (e.g. 192.168.0.*) or CIDR notations (e.g. 192.168.100.0/24) allowed to perform transactions (see :ref:`transactions`)
 - **csw_harvest_pagesize**: when harvesting other CSW servers, the number of records per request to page by (default is 10)
 
 **[metadata:main]**

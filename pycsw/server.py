@@ -2323,8 +2323,9 @@ class Csw(object):
         ipaddress = self.environ['REMOTE_ADDR']
 
         if not self.config.has_option('manager', 'allowed_ips') or \
-        (self.config.has_option('manager', 'allowed_ips') and ipaddress not in
-        self.config.get('manager', 'allowed_ips').split(',')):
+        (self.config.has_option('manager', 'allowed_ips') and not 
+         util.ipaddress_in_whitelist(ipaddress,
+                        self.config.get('manager', 'allowed_ips').split(','))):
             raise RuntimeError, \
             'CSW-T operations not allowed for this IP address: %s' % ipaddress
 
