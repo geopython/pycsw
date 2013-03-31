@@ -121,6 +121,9 @@ def _parse_metadata(context, repos, record):
 
     if root == '{%s}MD_Metadata' % context.namespaces['gmd']:  # ISO
         return [_parse_iso(context, repos, exml)]
+    elif root == '{http://www.isotc211.org/2005/gmi}MI_Metadata':
+        # ISO Metadata for Imagery
+        return [_parse_iso(context, repos, exml)]
     elif root == 'metadata':  # FGDC
         return [_parse_fgdc(context, repos, exml)]
     elif root == '{%s}Record' % context.namespaces['csw']:  # Dublin Core CSW
