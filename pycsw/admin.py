@@ -39,7 +39,7 @@ from pycsw import metadata, repository, util
 LOGGER = logging.getLogger(__name__)
 
 
-def setup_db(database, table, home):
+def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True):
     """Setup database tables and indexes"""
     from sqlalchemy import Column, create_engine, Integer, String, MetaData, \
         Table, Text
@@ -49,38 +49,39 @@ def setup_db(database, table, home):
 
     mdata = MetaData(dbase)
 
-    LOGGER.info('Creating table spatial_ref_sys')
-    srs = Table(
-        'spatial_ref_sys', mdata,
-        Column('srid', Integer, nullable=False, primary_key=True),
-        Column('auth_name', String(256)),
-        Column('auth_srid', Integer),
-        Column('srtext', String(2048))
-    )
-    srs.create()
-
-    i = srs.insert()
-    i.execute(srid=4326, auth_name='EPSG', auth_srid=4326, srtext='GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
-
-    LOGGER.info('Creating table geometry_columns')
-    geom = Table(
-        'geometry_columns', mdata,
-        Column('f_table_catalog', String(256), nullable=False),
-        Column('f_table_schema', String(256), nullable=False),
-        Column('f_table_name', String(256), nullable=False),
-        Column('f_geometry_column', String(256), nullable=False),
-        Column('geometry_type', Integer),
-        Column('coord_dimension', Integer),
-        Column('srid', Integer, nullable=False),
-        Column('geometry_format', String(5), nullable=False),
-    )
-    geom.create()
-
-    i = geom.insert()
-    i.execute(f_table_catalog='public', f_table_schema='public',
-              f_table_name=table, f_geometry_column='wkt_geometry',
-              geometry_type=3, coord_dimension=2,
-              srid=4326, geometry_format='WKT')
+    if create_sfsql_tables:
+        LOGGER.info('Creating table spatial_ref_sys')
+        srs = Table(
+            'spatial_ref_sys', mdata,
+            Column('srid', Integer, nullable=False, primary_key=True),
+            Column('auth_name', String(256)),
+            Column('auth_srid', Integer),
+            Column('srtext', String(2048))
+        )
+        srs.create()
+    
+        i = srs.insert()
+        i.execute(srid=4326, auth_name='EPSG', auth_srid=4326, srtext='GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
+    
+        LOGGER.info('Creating table geometry_columns')
+        geom = Table(
+            'geometry_columns', mdata,
+            Column('f_table_catalog', String(256), nullable=False),
+            Column('f_table_schema', String(256), nullable=False),
+            Column('f_table_name', String(256), nullable=False),
+            Column('f_geometry_column', String(256), nullable=False),
+            Column('geometry_type', Integer),
+            Column('coord_dimension', Integer),
+            Column('srid', Integer, nullable=False),
+            Column('geometry_format', String(5), nullable=False),
+        )
+        geom.create()
+    
+        i = geom.insert()
+        i.execute(f_table_catalog='public', f_table_schema='public',
+                  f_table_name=table, f_geometry_column='wkt_geometry',
+                  geometry_type=3, coord_dimension=2,
+                  srid=4326, geometry_format='WKT')
 
     # abstract metadata information model
 
@@ -169,32 +170,33 @@ def setup_db(database, table, home):
     )
     records.create()
 
-    if dbase.name == 'postgresql':  # create plpythonu functions within db
-        LOGGER.info('Setting plpythonu functions')
-        pycsw_home = home
-        conn = dbase.connect()
-        function_query_spatial = '''
-    CREATE OR REPLACE FUNCTION query_spatial(bbox_data_wkt text, bbox_input_wkt text, predicate text, distance text)
-    RETURNS text
-    AS $$
-        import sys
-        sys.path.append('%s')
-        from pycsw import util
-        return util.query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance)
-        $$ LANGUAGE plpythonu;
-    ''' % pycsw_home
-        function_update_xpath = '''
-    CREATE OR REPLACE FUNCTION update_xpath(xml text, recprops text)
-    RETURNS text
-    AS $$
-        import sys
-        sys.path.append('%s')
-        from pycsw import util
-        return util.update_xpath(xml, recprops)
-        $$ LANGUAGE plpythonu;
-    ''' % pycsw_home
-        conn.execute(function_query_spatial)
-        conn.execute(function_update_xpath)
+    if create_plpythonu_functions:
+        if dbase.name == 'postgresql':  # create plpythonu functions within db
+            LOGGER.info('Setting plpythonu functions')
+            pycsw_home = home
+            conn = dbase.connect()
+            function_query_spatial = '''
+        CREATE OR REPLACE FUNCTION query_spatial(bbox_data_wkt text, bbox_input_wkt text, predicate text, distance text)
+        RETURNS text
+        AS $$
+            import sys
+            sys.path.append('%s')
+            from pycsw import util
+            return util.query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance)
+            $$ LANGUAGE plpythonu;
+        ''' % pycsw_home
+            function_update_xpath = '''
+        CREATE OR REPLACE FUNCTION update_xpath(xml text, recprops text)
+        RETURNS text
+        AS $$
+            import sys
+            sys.path.append('%s')
+            from pycsw import util
+            return util.update_xpath(xml, recprops)
+            $$ LANGUAGE plpythonu;
+        ''' % pycsw_home
+            conn.execute(function_query_spatial)
+            conn.execute(function_update_xpath)
 
 
 def load_records(context, database, table, xml_dirpath, recursive=False):
