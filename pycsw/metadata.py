@@ -861,7 +861,8 @@ def _parse_iso(context, repos, exml):
                 elif datenode.type == 'publication':
                     _set(context, recobj, 'pycsw:PublicationDate', datenode.date)
 
-        _set(context, recobj, 'pycsw:GeographicDescriptionCode', md.identification.extent.description_code)
+        if hasattr(md.identification, 'extent') and hasattr(md.identification.extent, 'description_code'):
+            _set(context, recobj, 'pycsw:GeographicDescriptionCode', md.identification.extent.description_code)
 
         if len(md.identification.denominators) > 0:
             _set(context, recobj, 'pycsw:Denominator', md.identification.denominators[0])
