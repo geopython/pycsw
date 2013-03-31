@@ -581,8 +581,11 @@ def _parse_iso(context, repos, exml):
         _set(context, recobj, 'pycsw:AlternateTitle', md.identification.alternatetitle)
         _set(context, recobj, 'pycsw:Abstract', md.identification.abstract)
         _set(context, recobj, 'pycsw:Relation', md.identification.aggregationinfo)
-        _set(context, recobj, 'pycsw:TempExtent_begin', md.identification.temporalextent_start)
-        _set(context, recobj, 'pycsw:TempExtent_end', md.identification.temporalextent_end)
+
+        if hasattr(md.identification, 'temporalextent_start'):
+            _set(context, recobj, 'pycsw:TempExtent_begin', md.identification.temporalextent_start)
+        if hasattr(md.identification, 'temporalextent_end'):
+            _set(context, recobj, 'pycsw:TempExtent_end', md.identification.temporalextent_end)
 
         if len(md.identification.topiccategory) > 0:
             _set(context, recobj, 'pycsw:TopicCategory', md.identification.topiccategory[0])
