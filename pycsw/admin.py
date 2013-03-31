@@ -39,7 +39,7 @@ from pycsw import metadata, repository, util
 LOGGER = logging.getLogger(__name__)
 
 
-def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True):
+def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, extra_columns=[]):
     """Setup database tables and indexes"""
     from sqlalchemy import Column, create_engine, Integer, String, MetaData, \
         Table, Text
@@ -168,6 +168,15 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         # links: format "name,description,protocol,url[^,,,[^,,,]]"
         Column('links', Text, index=True),
     )
+
+    # add extra columns that may have been passed via extra_columns
+    # extra_columns is a list of sqlalchemy.Column objects
+    if extra_columns:
+        LOGGER.info('Extra column definitions detected')
+        for extra_column in extra_columns:
+            LOGGER.info('Adding extra column: %s', extra_column)
+            records.append_column(extra_column)
+
     records.create()
 
     if create_plpythonu_functions:
