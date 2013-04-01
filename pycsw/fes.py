@@ -68,7 +68,7 @@ MODEL = {
 }
 
 
-def parse(element, queryables, dbtype, nsmap):
+def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
     """OGC Filter object support"""
 
     boq = None
@@ -130,7 +130,10 @@ def parse(element, queryables, dbtype, nsmap):
 
         elif child.tag == util.nspath_eval('ogc:FeatureId', nsmap):
             LOGGER.debug('ogc:FeatureId filter detected')
-            queries.append("%s = :fid" % (queryables['pycsw:Identifier']))
+            if orm == 'sqlalchemy':
+                queries.append("%s = :fid" % (queryables['pycsw:Identifier']))
+            elif orm == 'django':
+                queries.append("%s = %%s" % (queryables['pycsw:Identifier']))
             values['fid'] = child.attrib.get('fid') 
 
         else:
@@ -192,25 +195,43 @@ def parse(element, queryables, dbtype, nsmap):
                 upper_boundary = child.find(
                     util.nspath_eval('ogc:UpperBoundary/ogc:Literal',
                                      nsmap)).text
-                queries.append("%s %s :lower_boundary and :upper_boundary" %
-                               (pname, com_op)) 
+                if orm == 'sqlalchemy':
+                    queries.append("%s %s :lower_boundary and :upper_boundary" %
+                                   (pname, com_op)) 
+                elif orm == 'django':
+                    queries.append("%s %s %%s and %%s" % (pname, com_op)) 
                 values['lower_boundary'] = lower_boundary
                 values['upper_boundary'] = upper_boundary 
             else:
                 values['pvalue%d' % pvalue_serial] = pvalue
                 if boq == ' not ':
                     if fname is not None:
-                        queries.append("%s is null or not %s(%s) %s :pvalue%d" %
-                                       (pname, fname, pname, com_op, pvalue_serial))
+                        if orm == 'sqlalchemy':
+                            queries.append("%s is null or not %s(%s) %s :pvalue%d" %
+                                           (pname, fname, pname, com_op, pvalue_serial))
+                        elif orm == 'django':
+                            queries.append("%s is null or not %s(%s) %s %%s" %
+                                           (pname, fname, pname, com_op))
                     else:
-                        queries.append("%s is null or not %s %s :pvalue%d" %
-                                       (pname, pname, com_op, pvalue_serial))
+                        if orm == 'sqlalchemy':
+                            queries.append("%s is null or not %s %s :pvalue%d" %
+                                           (pname, pname, com_op, pvalue_serial))
+                        elif orm == 'django':
+                            queries.append("%s is null or not %s %s %%s" %
+                                           (pname, pname, com_op))
                 else:
                     if fname is not None:
-                        queries.append("%s(%s) %s :pvalue%d" %
-                                       (fname, pname, com_op, pvalue_serial))
+                        if orm == 'sqlalchemy':
+                            queries.append("%s(%s) %s :pvalue%d" %
+                                           (fname, pname, com_op, pvalue_serial))
+                        elif orm == 'django':
+                            queries.append("%s(%s) %s %%s" %
+                                           (fname, pname, com_op))
                     else:
-                        queries.append("%s %s :pvalue%d" % (pname, com_op, pvalue_serial))
+                        if orm == 'sqlalchemy':
+                            queries.append("%s %s :pvalue%d" % (pname, com_op, pvalue_serial))
+                        elif orm == 'django':
+                            queries.append("%s %s %%s" % (pname, com_op))
                 pvalue_serial += 1
 
     where = boq.join(queries) if (boq is not None and boq != ' not ') \
