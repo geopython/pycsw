@@ -33,6 +33,7 @@
 import logging
 import os
 from sqlalchemy import create_engine, asc, desc, func, __version__, select
+from sqlalchemy.sql import text 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
 from pycsw import util
@@ -173,7 +174,7 @@ class Repository(object):
         if 'where' in constraint:  # GetRecords with constraint
             LOGGER.debug('constraint detected')
             query = self.session.query(self.dataset).filter(
-            constraint['where'])
+            text(constraint['where'])).params(constraint['values']) 
         else:  # GetRecords sans constraint
             LOGGER.debug('No constraint detected')
             query = self.session.query(self.dataset)
@@ -243,7 +244,7 @@ class Repository(object):
                 for rpu in recprops:
                     # update queryable column and XML document via XPath
                     rows += self.session.query(self.dataset).filter(
-                        constraint['where']).update({
+                        text(constraint['where'])).params(constraint['values']).update({
                             getattr(self.dataset,
                             rpu['rp']['dbcol']): rpu['value'],
                             'xml': func.update_xpath(str(self.context.namespaces),
@@ -253,7 +254,7 @@ class Repository(object):
                         }, synchronize_session='fetch')
                     # then update anytext tokens
                     rows2 += self.session.query(self.dataset).filter(
-                        constraint['where']).update({
+                        text(constraint['where'])).params(constraint['values']).update({
                             'anytext': func.get_anytext(getattr(
                             self.dataset, self.context.md_core_model['mappings']['pycsw:XML']))
                         }, synchronize_session='fetch')
@@ -269,7 +270,7 @@ class Repository(object):
         try:
             self.session.begin()
             rows = self.session.query(self.dataset).filter(
-            constraint['where'])
+            text(constraint['where'])).params(constraint['values'])
 
             parentids = []
             for row in rows:  # get ids
