@@ -248,7 +248,7 @@ def get_anytext(xml):
 
     if isinstance(xml, unicode) or isinstance(xml, str):  # not serialized yet
         xml = etree.fromstring(xml)
-    return ' '.join([value for value in xml.xpath('//text()')])
+    return ' '.join([value.strip() for value in xml.xpath('//text()')])
 
 
 def exml2dict(element, namespaces):
