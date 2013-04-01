@@ -281,6 +281,7 @@
         <ows:Value>http://www.opengis.net/wps/1.0.0</ows:Value>
         <ows:Value>http://www.opengis.net/sos/1.0</ows:Value>
         <ows:Value>http://www.opengis.net/sos/2.0</ows:Value>
+        <ows:Value>http://www.isotc211.org/2005/gmi</ows:Value>
         <ows:Value>urn:geoss:waf</ows:Value>
         <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
         <ows:Value>http://www.isotc211.org/schemas/2005/gmd/</ows:Value>
