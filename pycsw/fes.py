@@ -81,6 +81,7 @@ def parse(element, queryables, dbtype, nsmap):
     else:
         tmp = element
 
+    pvalue_serial = 0
     queries = []
     values = {}
 
@@ -196,20 +197,21 @@ def parse(element, queryables, dbtype, nsmap):
                 values['lower_boundary'] = lower_boundary
                 values['upper_boundary'] = upper_boundary 
             else:
-                values['pvalue'] = pvalue
+                values['pvalue%d' % pvalue_serial] = pvalue
                 if boq == ' not ':
                     if fname is not None:
-                        queries.append("%s is null or not %s(%s) %s :pvalue" %
-                                       (pname, fname, pname, com_op))
+                        queries.append("%s is null or not %s(%s) %s :pvalue%d" %
+                                       (pname, fname, pname, com_op, pvalue_serial))
                     else:
-                        queries.append("%s is null or not %s %s :pvalue" %
-                                       (pname, pname, com_op))
+                        queries.append("%s is null or not %s %s :pvalue%d" %
+                                       (pname, pname, com_op, pvalue_serial))
                 else:
                     if fname is not None:
-                        queries.append("%s(%s) %s :pvalue" %
-                                       (fname, pname, com_op))
+                        queries.append("%s(%s) %s :pvalue%d" %
+                                       (fname, pname, com_op, pvalue_serial))
                     else:
-                        queries.append("%s %s :pvalue" % (pname, com_op))
+                        queries.append("%s %s :pvalue%d" % (pname, com_op, pvalue_serial))
+                pvalue_serial += 1
 
     where = boq.join(queries) if (boq is not None and boq != ' not ') \
         else queries[0]
