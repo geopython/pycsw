@@ -250,8 +250,7 @@ def get_anytext(xml):
 
     if isinstance(xml, unicode) or isinstance(xml, str):  # not serialized yet
         xml = etree.fromstring(xml)
-    return '%s %s' % (' '.join([value for value in xml.xpath('//text()')]),
-           ' '.join([value for value in xml.xpath('//attribute::*')]))
+    return ' '.join([value for value in xml.xpath('//text()')])
 
 
 def exml2dict(element, namespaces):
