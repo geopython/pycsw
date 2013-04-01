@@ -77,6 +77,7 @@ class Csw(object):
         self.encoding = 'UTF-8'
         self.pretty_print = 0
         self.domainquerytype = 'list'
+        self.orm = 'django'
 
         # load user configuration
         try:
@@ -235,6 +236,7 @@ class Csw(object):
                 'Could not load repository (odc): %s' % str(err))
 
         else:  # load default repository
+            self.orm = 'sqlalchemy'
             from pycsw import repository
             try:
                 self.repository = \
@@ -1213,7 +1215,7 @@ class Csw(object):
                         fes.parse(doc,
                         self.repository.queryables['_all'].keys(),
                         self.repository.dbtype,
-                        self.context.namespaces)
+                        self.context.namespaces, self.orm)
                     except Exception, err:
                         errortext = \
                         'Exception: document not valid.\nError: %s.' % str(err)
@@ -2298,7 +2300,7 @@ class Csw(object):
                 query['type'] = 'filter'
                 query['where'], query['values'] = fes.parse(tmp,
                 self.repository.queryables['_all'], self.repository.dbtype,
-                self.context.namespaces)
+                self.context.namespaces, self.orm)
             except Exception, err:
                 return 'Invalid Filter request: %s' % err
         tmp = element.find(util.nspath_eval('csw:CqlText', self.context.namespaces))

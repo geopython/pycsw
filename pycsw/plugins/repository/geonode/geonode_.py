@@ -116,7 +116,7 @@ class GeoNodeRepository(object):
             # escape wildcards for django
             if constraint['where'].find('%') != -1:
                 constraint['where'] = constraint['where'].replace('%','%%')
-            query = ResourceBase.objects.extra(where=[constraint['where']])
+            query = ResourceBase.objects.extra(where=[constraint['where']], params=constraint['values'].values())
 
         else:  # GetRecords sans constraint
             query = ResourceBase.objects
