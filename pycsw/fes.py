@@ -82,6 +82,7 @@ def parse(element, queryables, dbtype, nsmap):
         tmp = element
 
     queries = []
+    values = {}
 
     LOGGER.debug('Scanning children elements')
     for child in tmp.xpath('child::*'):
@@ -128,8 +129,8 @@ def parse(element, queryables, dbtype, nsmap):
 
         elif child.tag == util.nspath_eval('ogc:FeatureId', nsmap):
             LOGGER.debug('ogc:FeatureId filter detected')
-            queries.append("%s = '%s'" % (queryables['pycsw:Identifier'],
-                           child.attrib.get('fid')))
+            queries.append("%s = :fid" % (queryables['pycsw:Identifier']))
+            values['fid'] = child.attrib.get('fid') 
 
         else:
             fname = None
@@ -190,27 +191,30 @@ def parse(element, queryables, dbtype, nsmap):
                 upper_boundary = child.find(
                     util.nspath_eval('ogc:UpperBoundary/ogc:Literal',
                                      nsmap)).text
-                queries.append("%s %s '%s' and '%s'" %
-                               (pname, com_op, lower_boundary, upper_boundary))
+                queries.append("%s %s :lower_boundary and :upper_boundary" %
+                               (pname, com_op)) 
+                values['lower_boundary'] = lower_boundary
+                values['upper_boundary'] = upper_boundary 
             else:
+                values['pvalue'] = pvalue
                 if boq == ' not ':
                     if fname is not None:
-                        queries.append("%s is null or not %s(%s) %s '%s'" %
-                                       (pname, fname, pname, com_op, pvalue))
+                        queries.append("%s is null or not %s(%s) %s :pvalue" %
+                                       (pname, fname, pname, com_op))
                     else:
-                        queries.append("%s is null or not %s %s '%s'" %
-                                       (pname, pname, com_op, pvalue))
+                        queries.append("%s is null or not %s %s :pvalue" %
+                                       (pname, pname, com_op))
                 else:
                     if fname is not None:
-                        queries.append("%s(%s) %s '%s'" %
-                                       (fname, pname, com_op, pvalue))
+                        queries.append("%s(%s) %s :pvalue" %
+                                       (fname, pname, com_op))
                     else:
-                        queries.append("%s %s '%s'" % (pname, com_op, pvalue))
+                        queries.append("%s %s :pvalue" % (pname, com_op))
 
     where = boq.join(queries) if (boq is not None and boq != ' not ') \
         else queries[0]
 
-    return where
+    return where, values
 
 
 def _get_spatial_operator(geomattr, element, dbtype, nsmap):

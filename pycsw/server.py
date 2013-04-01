@@ -1192,6 +1192,7 @@ class Csw(object):
                     self.kvp['constraint']['where'] = \
                     self._cql_update_queryables_mappings(tmp,
                     self.repository.queryables['_all'])
+                    self.kvp['constraint']['values'] = {}
                 elif self.kvp['constraintlanguage'] == 'FILTER':
                     # validate filter XML
                     try:
@@ -1205,7 +1206,7 @@ class Csw(object):
                         LOGGER.debug('Filter is valid XML.')
                         self.kvp['constraint'] = {}
                         self.kvp['constraint']['type'] = 'filter'
-                        self.kvp['constraint']['where'] = \
+                        self.kvp['constraint']['where'], self.kvp['constraint']['values'] = \
                         fes.parse(doc,
                         self.repository.queryables['_all'].keys(),
                         self.repository.dbtype,
@@ -1269,8 +1270,9 @@ class Csw(object):
             maxrecords=self.kvp['maxrecords'],
             startposition=int(self.kvp['startposition'])-1)
         except Exception, err:
+            import traceback
             return self.exceptionreport('InvalidParameterValue', 'constraint',
-            'Invalid query: %s' % err)
+            'Invalid query: %s' % traceback.format_exc())
 
         dsresults = []
 
@@ -2302,7 +2304,7 @@ class Csw(object):
             LOGGER.debug('Filter constraint specified.')
             try:
                 query['type'] = 'filter'
-                query['where'] = fes.parse(tmp,
+                query['where'], query['values'] = fes.parse(tmp,
                 self.repository.queryables['_all'], self.repository.dbtype,
                 self.context.namespaces)
             except Exception, err:
