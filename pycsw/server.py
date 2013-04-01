@@ -2283,6 +2283,7 @@ class Csw(object):
              'http://www.opengis.net/wps/1.0.0',
              'http://www.opengis.net/sos/1.0',
              'http://www.opengis.net/sos/2.0',
+             'http://www.isotc211.org/2005/gmi',
              'urn:geoss:waf',
             ]}}}
 

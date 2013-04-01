@@ -11,6 +11,7 @@
       <csw:Value>http://www.opengis.net/wps/1.0.0</csw:Value>
       <csw:Value>http://www.opengis.net/sos/1.0</csw:Value>
       <csw:Value>http://www.opengis.net/sos/2.0</csw:Value>
+      <csw:Value>http://www.isotc211.org/2005/gmi</csw:Value>
       <csw:Value>urn:geoss:waf</csw:Value>
       <csw:Value>http://www.isotc211.org/2005/gmd</csw:Value>
       <csw:Value>http://www.isotc211.org/schemas/2005/gmd/</csw:Value>
