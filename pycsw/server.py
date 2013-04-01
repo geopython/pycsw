@@ -1270,9 +1270,8 @@ class Csw(object):
             maxrecords=self.kvp['maxrecords'],
             startposition=int(self.kvp['startposition'])-1)
         except Exception, err:
-            import traceback
             return self.exceptionreport('InvalidParameterValue', 'constraint',
-            'Invalid query: %s' % traceback.format_exc())
+            'Invalid query: %s' % err)
 
         dsresults = []
 
@@ -2315,6 +2314,7 @@ class Csw(object):
             query['type'] = 'cql'
             query['where'] = self._cql_update_queryables_mappings(tmp.text,
             self.repository.queryables['_all'])
+            query['values'] = {}
         return query
 
     def _test_manager(self):
