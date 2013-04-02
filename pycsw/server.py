@@ -75,6 +75,7 @@ class Csw(object):
         self.encoding = 'UTF-8'
         self.pretty_print = 0
         self.domainquerytype = 'list'
+        self.orm = 'django'
 
         # load user configuration
         try:
@@ -233,6 +234,7 @@ class Csw(object):
                 'Could not load repository (odc): %s' % str(err))
 
         else:  # load default repository
+            self.orm = 'sqlalchemy'
             from pycsw import repository
             try:
                 self.repository = \
@@ -1192,6 +1194,7 @@ class Csw(object):
                     self.kvp['constraint']['where'] = \
                     self._cql_update_queryables_mappings(tmp,
                     self.repository.queryables['_all'])
+                    self.kvp['constraint']['values'] = {}
                 elif self.kvp['constraintlanguage'] == 'FILTER':
                     # validate filter XML
                     try:
@@ -1205,11 +1208,11 @@ class Csw(object):
                         LOGGER.debug('Filter is valid XML.')
                         self.kvp['constraint'] = {}
                         self.kvp['constraint']['type'] = 'filter'
-                        self.kvp['constraint']['where'] = \
+                        self.kvp['constraint']['where'], self.kvp['constraint']['values'] = \
                         fes.parse(doc,
                         self.repository.queryables['_all'].keys(),
                         self.repository.dbtype,
-                        self.context.namespaces)
+                        self.context.namespaces, self.orm)
                     except Exception, err:
                         errortext = \
                         'Exception: document not valid.\nError: %s.' % str(err)
@@ -2302,9 +2305,9 @@ class Csw(object):
             LOGGER.debug('Filter constraint specified.')
             try:
                 query['type'] = 'filter'
-                query['where'] = fes.parse(tmp,
+                query['where'], query['values'] = fes.parse(tmp,
                 self.repository.queryables['_all'], self.repository.dbtype,
-                self.context.namespaces)
+                self.context.namespaces, self.orm)
             except Exception, err:
                 return 'Invalid Filter request: %s' % err
         tmp = element.find(util.nspath_eval('csw:CqlText', self.context.namespaces))
@@ -2313,6 +2316,7 @@ class Csw(object):
             query['type'] = 'cql'
             query['where'] = self._cql_update_queryables_mappings(tmp.text,
             self.repository.queryables['_all'])
+            query['values'] = {}
         return query
 
     def _test_manager(self):
