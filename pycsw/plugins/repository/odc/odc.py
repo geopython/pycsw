@@ -115,10 +115,7 @@ class OpenDataCatalogRepository(object):
 
         # run the raw query and get total
         if 'where' in constraint:  # GetRecords with constraint
-            # escape wildcards for django
-            if constraint['where'].find('%') != -1:
-                constraint['where'] = constraint['where'].replace('%','%%')
-            query = Resource.objects.extra(where=[constraint['where']])
+            query = Resource.objects.extra(where=[constraint['where']], params=constraint['values'].values())
 
         else:  # GetRecords sans constraint
             query = Resource.objects
