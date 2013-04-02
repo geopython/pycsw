@@ -3,7 +3,7 @@
 <csw:HarvestResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
   <csw:TransactionResponse version="2.0.2">
     <csw:TransactionSummary>
-      <csw:totalInserted>15</csw:totalInserted>
+      <csw:totalInserted>18</csw:totalInserted>
       <csw:totalUpdated>0</csw:totalUpdated>
       <csw:totalDeleted>0</csw:totalDeleted>
     </csw:TransactionSummary>
@@ -21,12 +21,16 @@
         <dc:title>Rare-Earth Element Analyses (Earthchem)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-aasg:States</dc:identifier>
-        <dc:title>States</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-azgs:activefaults</dc:identifier>
+        <dc:title>Arizona Active Faults</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-usgin:heatflow</dc:identifier>
         <dc:title>Heatflow</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-aasg:States</dc:identifier>
+        <dc:title>States</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-azgs:trace_metals_earthchem</dc:identifier>
@@ -49,6 +53,10 @@
         <dc:title>Major Element Analyses (Earthchem)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-azgs:earthfissures</dc:identifier>
+        <dc:title>Arizona Earth Fissures</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-ncgmp:mapunitpolys</dc:identifier>
         <dc:title>Map Unit Polys</dc:title>
       </csw:BriefRecord>
@@ -59,6 +67,10 @@
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-usgin:thermalgradient</dc:identifier>
         <dc:title>Thermal Gradient</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-azgs:floodhazards</dc:identifier>
+        <dc:title>Arizona Flood Hazards</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-azgs:trace_nonmetals_earthchem</dc:identifier>
