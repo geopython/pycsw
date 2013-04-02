@@ -111,10 +111,7 @@ class GeoNodeRepository(object):
 
         # run the raw query and get total
         if 'where' in constraint:  # GetRecords with constraint
-            # escape wildcards for django
-            if constraint['where'].find('%') != -1:
-                constraint['where'] = constraint['where'].replace('%','%%')
-            query = ResourceBase.objects.extra(where=[constraint['where']])
+            query = ResourceBase.objects.extra(where=[constraint['where']], params=constraint['values'].values())
 
         else:  # GetRecords sans constraint
             query = ResourceBase.objects
