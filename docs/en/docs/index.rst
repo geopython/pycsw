@@ -5,6 +5,6 @@
 Documentation
 =============
 
-* `Current Release (1.4.0) <./1.4.0/documentation.html>`_
+* `Current Release (1.4.1) <./1.4.1/documentation.html>`_
 * :ref:`Latest (master) <documentation>`
 
