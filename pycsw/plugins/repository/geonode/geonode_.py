@@ -113,7 +113,7 @@ class GeoNodeRepository(object):
 
         # run the raw query and get total
         if 'where' in constraint:  # GetRecords with constraint
-            query = ResourceBase.objects.extra(where=[constraint['where']], params=constraint['values'].values())
+            query = ResourceBase.objects.extra(where=[constraint['where']], params=constraint['values'])
 
         else:  # GetRecords sans constraint
             query = ResourceBase.objects
