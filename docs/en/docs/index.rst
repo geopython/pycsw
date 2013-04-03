@@ -6,5 +6,5 @@ Documentation
 =============
 
 * `Current Release (1.4.1) <./1.4.1/documentation.html>`_
-* :ref:`Latest (trunk) <documentation>`
+* :ref:`Latest (master) <documentation>`
 
