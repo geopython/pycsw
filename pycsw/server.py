@@ -1612,8 +1612,12 @@ class Csw(object):
                 else:  # update by record property and constraint
                     # get / set XPath for property names
                     for rp in ttype['recordproperty']:
-                        rp['rp']= \
-                        self.repository.queryables['_all'][rp['name']]
+                        try:
+                            rp['rp']= \
+                            self.repository.queryables['_all'][rp['name']]
+                        except Exception, err:
+                            return self.exceptionreport('NoApplicableCode',
+                            'update', 'Transaction (update) failed: invalid property: %s.' % str(err))
 
                     LOGGER.debug('Record Properties: %s.' %
                     ttype['recordproperty'])
