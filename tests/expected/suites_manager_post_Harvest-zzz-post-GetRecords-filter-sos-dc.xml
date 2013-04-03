@@ -16,7 +16,7 @@
       <dct:references scheme="OGC:SOS">http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</dct:references>
       <dct:references scheme="OGC:SOS-1.0.0-http-get-capabilities">http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi?version=1.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
       <dc:creator>Norman Guinasso</dc:creator>
-      <dc:publisher>Norman Guinasso</dc:publisher>
+      <dc:publisher>TABS</dc:publisher>
       <dc:contributor>Norman Guinasso</dc:contributor>
       <dc:source>http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</dc:source>
       <dc:rights>NONE</dc:rights>
@@ -38,7 +38,7 @@
       <dct:references scheme="OGC:SOS-2.0.0-http-get-capabilities">https://geier.gns.cri.nz/ngmp-sos/sos?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
       <dct:abstract>GNS Hydrogeology Section, serving NGMP groundwater level through customised 52N SOS, data quality cannot be represented yet, there is no liability regarding this service, for more information go to http://ggw.gns.cri.nz/ggwdata/ (SVN: 0 @ 2013-01-12 19:55:25)</dct:abstract>
       <dc:creator>Alex Kmoch</dc:creator>
-      <dc:publisher>Alex Kmoch</dc:publisher>
+      <dc:publisher>GNS Science</dc:publisher>
       <dc:contributor>Alex Kmoch</dc:contributor>
       <dc:source>https://geier.gns.cri.nz/ngmp-sos/sos</dc:source>
       <dc:rights>SERVICE IS IN TEST MODE, NOT RELIABLE, DATA QUALITY NOT YET VISIBLE</dc:rights>
