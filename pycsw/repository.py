@@ -249,6 +249,9 @@ class Repository(object):
                 self.session.begin()
                 for rpu in recprops:
                     # update queryable column and XML document via XPath
+                    if 'xpath' not in rpu['rp']:
+                        self.session.rollback()
+                        raise RuntimeError, 'XPath not found for property %s' % rpu['rp']['name']
                     rows += self.session.query(self.dataset).filter(
                         text(constraint['where'])).params(self._create_values(constraint['values'])).update({
                             getattr(self.dataset,
