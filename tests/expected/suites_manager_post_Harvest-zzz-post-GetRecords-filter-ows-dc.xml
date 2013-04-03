@@ -16,7 +16,7 @@
       <dct:references scheme="OGC:CSW-2.0.2-http-get-capabilities">http://demo.pycsw.org/cite/csw</dct:references>
       <dct:abstract>pycsw is an OGC CSW server implementation written in Python</dct:abstract>
       <dc:creator>Lastname, Firstname</dc:creator>
-      <dc:publisher>Lastname, Firstname</dc:publisher>
+      <dc:publisher>Organization Name</dc:publisher>
       <dc:contributor>Lastname, Firstname</dc:contributor>
       <dc:source>http://demo.pycsw.org/cite/csw</dc:source>
       <dc:rights>None</dc:rights>
@@ -34,7 +34,7 @@
       <dct:references scheme="OGC:SOS">http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</dct:references>
       <dct:references scheme="OGC:SOS-1.0.0-http-get-capabilities">http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi?version=1.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
       <dc:creator>Norman Guinasso</dc:creator>
-      <dc:publisher>Norman Guinasso</dc:publisher>
+      <dc:publisher>TABS</dc:publisher>
       <dc:contributor>Norman Guinasso</dc:contributor>
       <dc:source>http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</dc:source>
       <dc:rights>NONE</dc:rights>
@@ -56,7 +56,7 @@
       <dct:references scheme="OGC:SOS-2.0.0-http-get-capabilities">https://geier.gns.cri.nz/ngmp-sos/sos?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
       <dct:abstract>GNS Hydrogeology Section, serving NGMP groundwater level through customised 52N SOS, data quality cannot be represented yet, there is no liability regarding this service, for more information go to http://ggw.gns.cri.nz/ggwdata/ (SVN: 0 @ 2013-01-12 19:55:25)</dct:abstract>
       <dc:creator>Alex Kmoch</dc:creator>
-      <dc:publisher>Alex Kmoch</dc:publisher>
+      <dc:publisher>GNS Science</dc:publisher>
       <dc:contributor>Alex Kmoch</dc:contributor>
       <dc:source>https://geier.gns.cri.nz/ngmp-sos/sos</dc:source>
       <dc:rights>SERVICE IS IN TEST MODE, NOT RELIABLE, DATA QUALITY NOT YET VISIBLE</dc:rights>
@@ -88,7 +88,7 @@
       <dct:references scheme="OGC:WCS-1.1.0-http-get-capabilities">http://nsidc.org/cgi-bin/atlas_north?version=1.0.0&amp;request=GetCapabilities&amp;service=WCS</dct:references>
       <dct:abstract>The National Snow and Ice Data Center (NSIDC) Atlas of the Cryosphere is a map server that provides data and information pertinent to the frozen regions of Earth, including monthly climatologies of sea ice extent and concentration, snow cover extent, and snow water equivalent, in addition to glacier outlines, permafrost extent and classification, ice sheet elevation and accumulation, and more. In order to support polar projections, the Atlas is divided into two separate map servers: one for the Northern Hemisphere and one for the Southern Hemisphere. In addition to providing map images and source data through Open Geospatial Consortium, Inc. (OGC) protocols (WMS, WFS, and WCS), a dynamic web interface for exploring these data is also available at http://nsidc.org/data/atlas. If you have questions, comments or suggestions, please contact NSIDC User Services at +1.303.492.6199 or nsidc@nsidc.org. The development of this map server application was supported by NASA's Earth Observing System (EOS) Program under contract NAS5-03099 and was developed using MapServer, an Open Source development environment for building spatially-enabled internet applications. To cite the Atlas of the Cryosphere: Maurer, J. 2007. Atlas of the Cryosphere. Boulder, Colorado USA: National Snow and Ice Data Center. Digital media. Available at http://nsidc.org/data/atlas/.</dct:abstract>
       <dc:creator>NSIDC User Services</dc:creator>
-      <dc:publisher>NSIDC User Services</dc:publisher>
+      <dc:publisher>National Snow and Ice Data Center</dc:publisher>
       <dc:contributor>NSIDC User Services</dc:contributor>
       <dc:source>http://nsidc.org/cgi-bin/atlas_north</dc:source>
       <dc:rights>
@@ -117,7 +117,7 @@
       <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://wmsserv1.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
       <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
       <dc:creator>Dr. Sam Batzli</dc:creator>
-      <dc:publisher>Dr. Sam Batzli</dc:publisher>
+      <dc:publisher>Space Science and Engineering Center, University of Wisconsin-Madison</dc:publisher>
       <dc:contributor>Dr. Sam Batzli</dc:contributor>
       <dc:source>http://wmsserv1.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dc:source>
       <dc:rights>The following attribution is required if published or reproduced: Source: Space Science and Engineering Center, University of Wisconsin-Madison</dc:rights>
