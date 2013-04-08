@@ -213,7 +213,7 @@ class Repository(object):
             self.session.commit()
         except Exception, err:
             self.session.rollback()
-            raise RuntimeError, 'ERROR: %s' % str(err)
+            raise RuntimeError('ERROR: %s' % str(err))
 
     def update(self, record=None, recprops=None, constraint=None):
         ''' Update a record in the repository based on identifier '''
@@ -239,7 +239,7 @@ class Repository(object):
                 self.session.commit()
             except Exception, err:
                 self.session.rollback()
-                raise RuntimeError, 'ERROR: %s' % str(err)
+                raise RuntimeError('ERROR: %s' % str(err))
         else:  # update based on record properties
             LOGGER.debug('property based update')
             try:
@@ -249,7 +249,7 @@ class Repository(object):
                     # update queryable column and XML document via XPath
                     if 'xpath' not in rpu['rp']:
                         self.session.rollback()
-                        raise RuntimeError, 'XPath not found for property %s' % rpu['rp']['name']
+                        raise RuntimeError('XPath not found for property %s' % rpu['rp']['name'])
                     rows += self.session.query(self.dataset).filter(
                         text(constraint['where'])).params(self._create_values(constraint['values'])).update({
                             getattr(self.dataset,
@@ -269,7 +269,7 @@ class Repository(object):
                 return rows
             except Exception, err:
                 self.session.rollback()
-                raise RuntimeError, 'ERROR: %s' % str(err)
+                raise RuntimeError('ERROR: %s' % str(err))
 
     def delete(self, constraint):
         ''' Delete a record from the repository '''
@@ -297,7 +297,7 @@ class Repository(object):
             self.session.commit()
         except Exception, err:
             self.session.rollback()
-            raise RuntimeError, 'ERROR: %s' % str(err)
+            raise RuntimeError('ERROR: %s' % str(err))
 
         return rows
 
