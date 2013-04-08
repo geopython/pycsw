@@ -2327,7 +2327,7 @@ class Csw(object):
         ''' Verify that transactions are allowed '''
 
         if self.config.get('manager', 'transactions') != 'true':
-            raise RuntimeError, 'CSW-T interface is disabled'
+            raise RuntimeError('CSW-T interface is disabled')
 
         ipaddress = self.environ['REMOTE_ADDR']
 
@@ -2335,8 +2335,8 @@ class Csw(object):
         (self.config.has_option('manager', 'allowed_ips') and not 
          util.ipaddress_in_whitelist(ipaddress,
                         self.config.get('manager', 'allowed_ips').split(','))):
-            raise RuntimeError, \
-            'CSW-T operations not allowed for this IP address: %s' % ipaddress
+            raise RuntimeError(
+            'CSW-T operations not allowed for this IP address: %s' % ipaddress)
 
     def _cql_update_queryables_mappings(self, cql, mappings):
         ''' Transform CQL query's properties to underlying DB columns '''
