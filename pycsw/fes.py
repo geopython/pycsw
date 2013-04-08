@@ -81,7 +81,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
     else:
         tmp = element
 
-    pvalue_serial = [0] #in list as python 2 has no nonlocal variable
+    pvalue_serial = [0]  # in list as python 2 has no nonlocal variable
     def assign_param():
         if orm == 'django':
             return '%s'
@@ -89,7 +89,91 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
         pvalue_serial[0] += 1
         return param
 
+    def _get_comparison_expression(elem):
+        """return the SQL expression based on Filter query"""
+        fname = None
+        matchcase = elem.attrib.get('matchCase')
+        wildcard = elem.attrib.get('wildCard')
+        singlechar = elem.attrib.get('singleChar')
+        expression = None
+
+        if wildcard is None:
+            wildcard = '%'
+
+        if singlechar is None:
+            singlechar = '_'
+
+        if (elem.xpath('child::*')[0].tag ==
+                util.nspath_eval('ogc:Function', nsmap)):
+            LOGGER.debug('ogc:Function detected')
+            if (elem.xpath('child::*')[0].attrib['name'] not in
+                    MODEL['Functions']):
+                raise RuntimeError('Invalid ogc:Function: %s' %
+                                   (elem.xpath('child::*')[0].attrib['name']))
+            fname = elem.xpath('child::*')[0].attrib['name']
+
+            try:
+                LOGGER.debug('Testing existence of ogc:PropertyName')
+                pname = queryables[elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text]['dbcol']
+            except Exception, err:
+                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err)))
+
+        else:
+            try:
+                LOGGER.debug('Testing existence of ogc:PropertyName')
+                pname = queryables[elem.find(
+                    util.nspath_eval('ogc:PropertyName', nsmap)).text]['dbcol']
+            except Exception, err:
+                raise RuntimeError('Invalid PropertyName: %s.  %s' %
+                                   (elem.find(util.nspath_eval('ogc:PropertyName',
+                                   nsmap)).text, str(err)))
+
+        if (elem.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
+            pval = elem.find(util.nspath_eval('ogc:Literal', nsmap)).text
+            pvalue = pval.replace(wildcard, '%').replace(singlechar, '_')
+
+        com_op = _get_comparison_operator(elem)
+        LOGGER.debug('Comparison operator: %s' % com_op)
+
+        # if this is a case insensitive search
+        # then set the DB-specific LIKE comparison operator
+        if ((matchcase is not None and matchcase == 'false') or
+                pname == 'anytext'):
+            com_op = 'ilike' if dbtype in \
+                ['postgresql', 'postgresql+postgis'] else 'like'
+
+        if (elem.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
+            com_op = 'between'
+            lower_boundary = elem.find(
+                util.nspath_eval('ogc:LowerBoundary/ogc:Literal',
+                                 nsmap)).text
+            upper_boundary = elem.find(
+                util.nspath_eval('ogc:UpperBoundary/ogc:Literal',
+                                 nsmap)).text
+            expression = "%s %s %s and %s" % \
+                           (pname, com_op, assign_param(), assign_param())
+            values.append(lower_boundary)
+            values.append(upper_boundary)
+        else:
+            values.append(pvalue)
+            if boq == ' not ':
+                if fname is not None:
+                    expression = "%s is null or not %s(%s) %s %s" % \
+                                   (pname, fname, pname, com_op, assign_param())
+                else:
+                    expression = "%s is null or not %s %s %s" % \
+                                   (pname, pname, com_op, assign_param())
+            else:
+                if fname is not None:
+                    expression = "%s(%s) %s %s" % \
+                                   (fname, pname, com_op, assign_param())
+                else:
+                    expression = "%s %s %s" % (pname, com_op, assign_param())
+
+        return expression
+
     queries = []
+    queries_nested = []
     values = []
 
     LOGGER.debug('Scanning children elements')
@@ -139,84 +223,16 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
             LOGGER.debug('ogc:FeatureId filter detected')
             queries.append("%s = %s" % (queryables['pycsw:Identifier'], assign_param()))
             values.append(child.attrib.get('fid'))
-        else:
-            fname = None
-            matchcase = child.attrib.get('matchCase')
-            wildcard = child.attrib.get('wildCard')
-            singlechar = child.attrib.get('singleChar')
-
-            if wildcard is None:
-                wildcard = '%'
-
-            if singlechar is None:
-                singlechar = '_'
-
-            if (child.xpath('child::*')[0].tag ==
-                    util.nspath_eval('ogc:Function', nsmap)):
-                LOGGER.debug('ogc:Function detected')
-                if (child.xpath('child::*')[0].attrib['name'] not in
-                        MODEL['Functions']):
-                    raise RuntimeError('Invalid ogc:Function: %s' %
-                                       (child.xpath('child::*')[0].attrib['name']))
-                fname = child.xpath('child::*')[0].attrib['name']
-
-                try:
-                    LOGGER.debug('Testing existence of ogc:PropertyName')
-                    pname = queryables[child.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text]['dbcol']
-                except Exception, err:
-                    raise RuntimeError('Invalid PropertyName: %s.  %s' % (child.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err)))
-
+        else:  # comparison operator
+            LOGGER.debug('Comparison operator processing')
+            tagname = ' %s ' % util.xmltag_split(child.tag).lower()
+            if tagname in [' or ', ' and ']:  # this is a nested binary logic query
+                LOGGER.debug('Nested binary logic detected; operator=%s' % tagname)
+                for child2 in child.xpath('child::*'):
+                    queries_nested.append(_get_comparison_expression(child2))
+                queries.append('(%s)' % tagname.join(queries_nested))
             else:
-                try:
-                    LOGGER.debug('Testing existence of ogc:PropertyName')
-                    pname = queryables[child.find(
-                        util.nspath_eval('ogc:PropertyName', nsmap)).text]['dbcol']
-                except Exception, err:
-                    raise RuntimeError('Invalid PropertyName: %s.  %s' %
-                                       (child.find(util.nspath_eval('ogc:PropertyName',
-                                       nsmap)).text, str(err)))
-
-            if (child.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
-                pval = child.find(util.nspath_eval('ogc:Literal', nsmap)).text
-                pvalue = pval.replace(wildcard, '%').replace(singlechar, '_')
-
-            com_op = _get_comparison_operator(child)
-            LOGGER.debug('Comparison operator: %s' % com_op)
-
-            # if this is a case insensitive search
-            # then set the DB-specific LIKE comparison operator
-            if ((matchcase is not None and matchcase == 'false') or
-                    pname == 'anytext'):
-                com_op = 'ilike' if dbtype in \
-                    ['postgresql', 'postgresql+postgis'] else 'like'
-
-            if (child.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
-                com_op = 'between'
-                lower_boundary = child.find(
-                    util.nspath_eval('ogc:LowerBoundary/ogc:Literal',
-                                     nsmap)).text
-                upper_boundary = child.find(
-                    util.nspath_eval('ogc:UpperBoundary/ogc:Literal',
-                                     nsmap)).text
-                queries.append("%s %s %s and %s" %
-                               (pname, com_op, assign_param(), assign_param()))
-                values.append(lower_boundary)
-                values.append(upper_boundary)
-            else:
-                values.append(pvalue)
-                if boq == ' not ':
-                    if fname is not None:
-                        queries.append("%s is null or not %s(%s) %s %s" %
-                                       (pname, fname, pname, com_op, assign_param()))
-                    else:
-                        queries.append("%s is null or not %s %s %s" %
-                                       (pname, pname, com_op, assign_param()))
-                else:
-                    if fname is not None:
-                        queries.append("%s(%s) %s %s" %
-                                       (fname, pname, com_op, assign_param()))
-                    else:
-                        queries.append("%s %s %s" % (pname, com_op, assign_param()))
+                queries.append(_get_comparison_expression(child))
 
     where = boq.join(queries) if (boq is not None and boq != ' not ') \
         else queries[0]
