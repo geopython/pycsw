@@ -29,5 +29,5 @@ Testing
 
 A testing interface is available in ``tests/index.html`` which contains tests specific to DIF to demonstrate functionality.  See :ref:`tests` for more information.
 
-.. _`Directory Interchange Format`: http://gcmd.nasa.gov/User/difguide/whatisadif.html
+.. _`Directory Interchange Format`: http://gcmd.gsfc.nasa.gov/add/difguide/index.html
 .. _`Global Change Master Directory`: http://gcmd.nasa.gov/

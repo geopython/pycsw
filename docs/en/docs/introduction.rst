@@ -168,7 +168,7 @@ Functions
 .. _`ISO 19115`: http://www.iso.org/iso/catalogue_detail.htm?csnumber=26020
 .. _`ISO 19139`: http://www.iso.org/iso/catalogue_detail.htm?csnumber=32557
 .. _`ISO 19119`: http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39890
-.. _`NASA DIF`: http://gcmd.nasa.gov/User/difguide/whatisadif.html
+.. _`NASA DIF`: http://gcmd.gsfc.nasa.gov/add/difguide/index.html
 .. _`FGDC CSDGM`: http://www.fgdc.gov/metadata/csdgm
 .. _`FGDC CSDGM Application Profile for CSW 2.0`: http://portal.opengeospatial.org/files/?artifact_id=16936
 .. _`SRU`: http://www.loc.gov/standards/sru/
