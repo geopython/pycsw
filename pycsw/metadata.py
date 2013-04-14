@@ -339,7 +339,7 @@ def _parse_wms(context, repos, record, identifier):
             tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
             _set(context, recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:4326')
-            _set(context, recobj, 'pycsw:Denominator', 'degrees')
+            _set(context, recobj, 'pycsw:DistanceUOM', 'degrees')
         else:
             bbox = md.contents[layer].boundingBox
             if bbox:
@@ -442,7 +442,7 @@ def _parse_wfs(context, repos, record, identifier):
             wkt_polygon = util.bbox2wktpolygon(tmp)
             _set(context, recobj, 'pycsw:BoundingBox', wkt_polygon)
             _set(context, recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:4326')
-            _set(context, recobj, 'pycsw:Denominator', 'degrees')
+            _set(context, recobj, 'pycsw:DistanceUOM', 'degrees')
             bboxs.append(wkt_polygon)
 
         params = {
@@ -542,7 +542,7 @@ def _parse_wcs(context, repos, record, identifier):
             wkt_polygon = util.bbox2wktpolygon(tmp)
             _set(context, recobj, 'pycsw:BoundingBox', wkt_polygon)
             _set(context, recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:4326')
-            _set(context, recobj, 'pycsw:Denominator', 'degrees')
+            _set(context, recobj, 'pycsw:DistanceUOM', 'degrees')
             bboxs.append(wkt_polygon)
 
         recobjs.append(recobj)
@@ -680,7 +680,7 @@ def _parse_sos(context, repos, record, identifier, version):
             wkt_polygon = util.bbox2wktpolygon(tmp)
             _set(context, recobj, 'pycsw:BoundingBox', wkt_polygon)
             _set(context, recobj, 'pycsw:CRS', md.contents[offering].bbox_srs.id)
-            _set(context, recobj, 'pycsw:Denominator', 'degrees')
+            _set(context, recobj, 'pycsw:DistanceUOM', 'degrees')
             bboxs.append(wkt_polygon)
 
         recobjs.append(recobj)
