@@ -246,7 +246,7 @@ def transform_mappings(queryables, typename, reverse=False):
 
 
 def get_anytext(xml):
-    """get all element and attribute data from an XML document"""
+    """get all element content from an XML document"""
 
     if isinstance(xml, unicode) or isinstance(xml, str):  # not serialized yet
         xml = etree.fromstring(xml)
