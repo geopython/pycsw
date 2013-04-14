@@ -195,17 +195,28 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
             function_update_xpath = '''
-        CREATE OR REPLACE FUNCTION update_xpath(xml text, recprops text)
+        CREATE OR REPLACE FUNCTION update_xpath(nsmap text, xml text, recprops text)
         RETURNS text
         AS $$
             import sys
             sys.path.append('%s')
             from pycsw import util
-            return util.update_xpath(xml, recprops)
+            return util.update_xpath(nsmap, xml, recprops)
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
+            function_get_geometry_area = '''
+        CREATE OR REPLACE FUNCTION get_geometry_area(geom text)
+        RETURNS text
+        AS $$
+            import sys
+            sys.path.append('%s')
+            from pycsw import util
+            return util.get_geometry_area(geom)
+            $$ LANGUAGE plpythonu;
+        ''' % pycsw_home 
             conn.execute(function_query_spatial)
             conn.execute(function_update_xpath)
+            conn.execute(function_get_geometry_area)
 
 
 def load_records(context, database, table, xml_dirpath, recursive=False):
