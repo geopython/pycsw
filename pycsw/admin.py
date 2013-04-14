@@ -175,6 +175,16 @@ def setup_db(database, table, home):
         LOGGER.info('Setting plpythonu functions')
         pycsw_home = home
         conn = dbase.connect()
+        function_get_anytext = '''
+        CREATE OR REPLACE FUNCTION get_anytext(xml text)
+        RETURNS text
+        AS $$
+            import sys
+            sys.path.append('%s')
+            from pycsw import util
+            return util.get_anytext(xml)
+            $$ LANGUAGE plpythonu;
+        ''' % pycsw_home
         function_query_spatial = '''
     CREATE OR REPLACE FUNCTION query_spatial(bbox_data_wkt text, bbox_input_wkt text, predicate text, distance text)
     RETURNS text
@@ -205,6 +215,7 @@ def setup_db(database, table, home):
             return util.get_geometry_area(geom)
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home  
+        conn.execute(function_get_anytext)
         conn.execute(function_query_spatial)
         conn.execute(function_update_xpath)
         conn.execute(function_get_geometry_area)
