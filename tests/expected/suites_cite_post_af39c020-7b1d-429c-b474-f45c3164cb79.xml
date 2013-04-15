@@ -15,7 +15,6 @@
       <dc:identifier>urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</dc:identifier>
       <dc:title>Lorem ipsum dolor sit amet</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
-      <dc:subject></dc:subject>
       <dc:format>image/jpeg</dc:format>
     </csw:SummaryRecord>
   </csw:SearchResults>

@@ -15,7 +15,6 @@
       <dc:identifier>urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e</dc:identifier>
       <dc:title>Vestibulum massa purus</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
-      <dc:subject></dc:subject>
       <dc:format>image/jp2</dc:format>
       <dc:relation>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:relation>
     </csw:SummaryRecord>
@@ -23,7 +22,6 @@
       <dc:identifier>urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</dc:identifier>
       <dc:title>Lorem ipsum dolor sit amet</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
-      <dc:subject></dc:subject>
       <dc:format>image/jpeg</dc:format>
     </csw:SummaryRecord>
     <csw:SummaryRecord>
