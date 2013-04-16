@@ -192,14 +192,14 @@ def get_geometry_area(geometry):
     except:
         return '0'
 
-def get_spatial_overlay_rank(geometry, query_geometry):
+def get_spatial_overlay_rank(target_geometry, query_geometry):
     """Derive spatial overlay rank for geospatial search as per Lanfear (2006)
     http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf"""
     
     try:
-	if geometry is not None and query_geometry is not None:
+	if target_geometry is not None and query_geometry is not None:
 	    q_geom = loads(query_geometry)
-	    t_geom = loads(geometry)
+	    t_geom = loads(target_geometry)
 	    Q = q_geom.area
 	    T = t_geom.area
 	    X = t_geom.intersection(q_geom).area
