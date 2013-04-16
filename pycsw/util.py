@@ -196,6 +196,7 @@ def get_spatial_overlay_rank(target_geometry, query_geometry, kt=1.0, kq=1.0):
     """Derive spatial overlay rank for geospatial search as per Lanfear (2006)
     http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf"""
     
+    from shapely.geometry.base import BaseGeometry
     try:
 	if target_geometry is not None and query_geometry is not None:
 	    q_geom = loads(query_geometry)
