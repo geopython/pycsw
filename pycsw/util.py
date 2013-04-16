@@ -2,6 +2,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2010 Tom Kralidis
 #
@@ -191,6 +192,21 @@ def get_geometry_area(geometry):
     except:
         return '0'
 
+def get_spatial_overlay_rank(geometry, query_geometry):
+    """Derive spatial overlay rank for geospatial search as per Lanfear (2006)
+    http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf"""
+    
+    try:
+	if geometry is not None and query_geometry is not None:
+	    q_geom = loads(query_geometry)
+	    t_geom = loads(geometry)
+	    Q = q_geom.area
+	    T = t_geom.area
+	    X = t_geom.intersection(q_geom).area
+	    return str((X*X)/Q*T))
+	return '0'
+    except:
+	return '0'
 
 def bbox_from_polygons(bboxs):
     """Derive an aggregated bbox from n polygons"""
