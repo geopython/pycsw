@@ -197,20 +197,25 @@ def get_spatial_overlay_rank(target_geometry, query_geometry, kt=1.0, kq=1.0):
     http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf"""
     
     from shapely.geometry.base import BaseGeometry
-    try:
-	if target_geometry is not None and query_geometry is not None:
+    
+    if target_geometry is not None and query_geometry is not None:
+	try:
 	    q_geom = loads(query_geometry)
 	    t_geom = loads(target_geometry)
 	    Q = q_geom.area
 	    T = t_geom.area
+	    if any(item == 0.0 for item in [Q, T]):
+                LOGGER.warn('Geometry has no area')
+                return '0'
 	    X = t_geom.intersection(q_geom).area
 	    if kt == 1.0 and kq == 1.0:
 		return str((X/Q)*(X/T))
 	    else:
 		return str(((X/Q)**kq)*((X/T)**kt))
-	return '0'
-    except:
-	return '0'
+	except Exception, err:
+            LOGGER.warn('Cannot derive spatial overlay ranking %s', err)
+            return '0'
+    return '0'
 
 def bbox_from_polygons(bboxs):
     """Derive an aggregated bbox from n polygons"""
