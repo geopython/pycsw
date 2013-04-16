@@ -192,7 +192,7 @@ def get_geometry_area(geometry):
     except:
         return '0'
 
-def get_spatial_overlay_rank(target_geometry, query_geometry):
+def get_spatial_overlay_rank(target_geometry, query_geometry, kt=1.0, kq=1.0):
     """Derive spatial overlay rank for geospatial search as per Lanfear (2006)
     http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf"""
     
@@ -203,7 +203,10 @@ def get_spatial_overlay_rank(target_geometry, query_geometry):
 	    Q = q_geom.area
 	    T = t_geom.area
 	    X = t_geom.intersection(q_geom).area
-	    return str((X*X)/Q*T))
+	    if kt == 1.0 and kq == 1.0:
+		return str((X/Q)*(X/T))
+	    else:
+		return str(((X/Q)**kq)*((X/T)**kt))
 	return '0'
     except:
 	return '0'
