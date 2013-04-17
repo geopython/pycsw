@@ -320,15 +320,9 @@ def set_spatial_ranking(geometry):
     
     #TODO: Add a switch check to disable spatial ranking here
     
-    if geometry.type == 'Polygon':
+    if geometry.type in ['Polygon','Envelope']:
 	util.ranking_enabled = True
 	util.ranking_query_geometry = geometry.wkt
-    elif geometry.type == 'Envelope':
-	from shapely.wkt import loads
-	ls = loads(geometry.wkt)
-	if ls.area > 0:
-	    util.ranking_enabled = True
-	    util.ranking_query_geometry = geometry.wkt
     elif geometry.type == 'LineString':
 	from shapely.geometry.base import BaseGeometry
 	from shapely.geometry import box
