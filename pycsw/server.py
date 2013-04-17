@@ -139,7 +139,7 @@ class Csw(object):
         self.config.get('server', 'pretty_print') == 'true'):
             self.pretty_print = 1
         
-        # set XML pretty print
+        # set Spatial Ranking option
         if (self.config.has_option('server', 'spatial_ranking') and
         self.config.get('server', 'spatial_ranking') == 'true'):
             util.ranking_enabled = True
