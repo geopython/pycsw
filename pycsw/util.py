@@ -41,6 +41,7 @@ LOGGER = logging.getLogger(__name__)
 
 #Global variables for spatial ranking algorithm
 ranking_enabled = False
+ranking_pass = False
 ranking_query_geometry = ''
 
 def get_today_and_now():
