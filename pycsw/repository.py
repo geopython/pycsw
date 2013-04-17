@@ -189,6 +189,14 @@ class Repository(object):
             query = self.session.query(self.dataset)
 
         total = query.count()
+        
+        if util.ranking_pass:  #apply spatial ranking
+	    LOGGER.debug('spatial ranking detected')
+	    from pycsw import config
+	    query = query.order_by(func.get_spatial_overlay_rank(config.md_core_model['mappings']['pycsw:BoundingBox'], util.ranking_query_geometry).desc())
+	    #trying to make this wsgi safe
+	    util.ranking_pass = False
+	    util.ranking_query_geometry = ''
 
         if sortby is not None:  # apply sorting
             LOGGER.debug('sorting detected')
