@@ -39,6 +39,9 @@ from owslib.util import http_post
 
 LOGGER = logging.getLogger(__name__)
 
+#Global variables for spatial ranking algorithm
+ranking_enabled = False
+ranking_query_geometry = ''
 
 def get_today_and_now():
     """Get the date, right now, in ISO8601"""
