@@ -10,7 +10,7 @@
     <csw:InsertResult>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Geo Data Portal WPS Processing</dc:title>
+        <dc:title>Geo Data Portal WPS Implementation</dc:title>
       </csw:BriefRecord>
     </csw:InsertResult>
   </csw:TransactionResponse>

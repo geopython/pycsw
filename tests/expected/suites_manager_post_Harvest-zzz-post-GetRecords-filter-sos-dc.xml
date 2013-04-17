@@ -34,13 +34,13 @@
       <dc:subject>hydrogeology</dc:subject>
       <dc:subject>ngmp</dc:subject>
       <dc:format>OGC:SOS</dc:format>
-      <dct:references scheme="OGC:SOS">https://geier.gns.cri.nz/ngmp-sos/sos</dct:references>
-      <dct:references scheme="OGC:SOS-2.0.0-http-get-capabilities">https://geier.gns.cri.nz/ngmp-sos/sos?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
+      <dct:references scheme="OGC:SOS">https://repo.gns.cri.nz/ngmp-sos/sos</dct:references>
+      <dct:references scheme="OGC:SOS-2.0.0-http-get-capabilities">https://repo.gns.cri.nz/ngmp-sos/sos?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
       <dct:abstract>GNS Hydrogeology Section, serving NGMP groundwater level through customised 52N SOS, data quality cannot be represented yet, there is no liability regarding this service, for more information go to http://ggw.gns.cri.nz/ggwdata/ (SVN: 0 @ 2013-01-12 19:55:25)</dct:abstract>
       <dc:creator>Alex Kmoch</dc:creator>
       <dc:publisher>GNS Science</dc:publisher>
       <dc:contributor>Alex Kmoch</dc:contributor>
-      <dc:source>https://geier.gns.cri.nz/ngmp-sos/sos</dc:source>
+      <dc:source>https://repo.gns.cri.nz/ngmp-sos/sos</dc:source>
       <dc:rights>SERVICE IS IN TEST MODE, NOT RELIABLE, DATA QUALITY NOT YET VISIBLE</dc:rights>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>-46.31 168.06</ows:LowerCorner>
