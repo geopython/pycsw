@@ -192,7 +192,8 @@ class Repository(object):
         
         if util.ranking_pass:  #apply spatial ranking
 	    LOGGER.debug('spatial ranking detected')
-	    LOGGER.warn('Target WKT: %s', self.context.md_core_model['mappings']['pycsw:BoundingBox'])
+	    LOGGER.debug('Target WKT: %s', getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']))
+	    LOGGER.debug('Query WKT: %s', util.ranking_query_geometry)
 	    query = query.order_by(func.get_spatial_overlay_rank(getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']), util.ranking_query_geometry).desc())
 	    #trying to make this wsgi safe
 	    util.ranking_pass = False

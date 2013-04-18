@@ -215,8 +215,10 @@ def get_spatial_overlay_rank(target_geometry, query_geometry):
                 return '0'
 	    X = t_geom.intersection(q_geom).area
 	    if kt == 1.0 and kq == 1.0:
+		LOGGER.debug('Spatial Rank: %s', str((X/Q)*(X/T)))
 		return str((X/Q)*(X/T))
 	    else:
+		LOGGER.debug('Spatial Rank: %s', str(((X/Q)**kq)*((X/T)**kt)))
 		return str(((X/Q)**kq)*((X/T)**kt))
 	except Exception, err:
             LOGGER.warn('Cannot derive spatial overlay ranking %s', err)
