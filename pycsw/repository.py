@@ -88,7 +88,7 @@ class Repository(object):
                     util.get_anytext)
                     dbapi_connection.create_function('get_geometry_area', 1,
                     util.get_geometry_area)
-                    dbapi_connection.create_function('get_spatial_overlay_rank', 4,
+                    dbapi_connection.create_function('get_spatial_overlay_rank', 2,
                     util.get_spatial_overlay_rank)
             else:  # <= 0.6 behaviour
                 self.connection = engine.raw_connection()
@@ -100,7 +100,7 @@ class Repository(object):
                 util.get_anytext)
                 self.connection.create_function('get_geometry_area', 1,
                 util.get_geometry_area)
-                self.connection.create_function('get_spatial_overlay_rank', 4,
+                self.connection.create_function('get_spatial_overlay_rank', 2,
                 util.get_spatial_overlay_rank)
 
         LOGGER.debug('setting repository queryables')
@@ -192,7 +192,8 @@ class Repository(object):
         
         if util.ranking_pass:  #apply spatial ranking
 	    LOGGER.debug('spatial ranking detected')
-	    query = query.order_by(func.get_spatial_overlay_rank(self.context.md_core_model['mappings']['pycsw:BoundingBox']['dbcol'], util.ranking_query_geometry).desc())
+	    LOGGER.warn('Target WKT: %s', self.context.md_core_model['mappings']['pycsw:BoundingBox'])
+	    query = query.order_by(func.get_spatial_overlay_rank(getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']), util.ranking_query_geometry).desc())
 	    #trying to make this wsgi safe
 	    util.ranking_pass = False
 	    util.ranking_query_geometry = ''
