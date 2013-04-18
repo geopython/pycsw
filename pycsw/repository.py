@@ -88,7 +88,7 @@ class Repository(object):
                     util.get_anytext)
                     dbapi_connection.create_function('get_geometry_area', 1,
                     util.get_geometry_area)
-                    dbapi_connection.create_function('get_spatial_overlay_rank', 1,
+                    dbapi_connection.create_function('get_spatial_overlay_rank', 4,
                     util.get_spatial_overlay_rank)
             else:  # <= 0.6 behaviour
                 self.connection = engine.raw_connection()
@@ -100,7 +100,7 @@ class Repository(object):
                 util.get_anytext)
                 self.connection.create_function('get_geometry_area', 1,
                 util.get_geometry_area)
-                self.connection.create_function('get_spatial_overlay_rank', 1,
+                self.connection.create_function('get_spatial_overlay_rank', 4,
                 util.get_spatial_overlay_rank)
 
         LOGGER.debug('setting repository queryables')
