@@ -225,13 +225,13 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
 	    function_get_spatial_overlay_rank = '''
-	CREATE OR REPLACE FUNCTION get_spatial_overlay_rank(target_geom text, query_geom text, kt float, kq float)
+	CREATE OR REPLACE FUNCTION get_spatial_overlay_rank(target_geom text, query_geom text)
         RETURNS text
         AS $$
             import sys
             sys.path.append('%s')
             from pycsw import util
-            return util.get_spatial_overlay_rank(target_geom, query_geom, kt, kq)
+            return util.get_spatial_overlay_rank(target_geom, query_geom)
             $$ LANGUAGE plpythonu;
 	''' % pycsw_home
             conn.execute(function_get_anytext)
