@@ -6,7 +6,7 @@
       <gco:CharacterString>3e9a8c05</gco:CharacterString>
     </gmd:fileIdentifier>
     <gmd:hierarchyLevel>
-      <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="service">service</gmd:MD_ScopeCode>
+      <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="service" codeSpace="ISOTC211/19115">service</gmd:MD_ScopeCode>
     </gmd:hierarchyLevel>
     <gmd:identificationInfo>
       <srv:SV_ServiceIdentification id="3e9a8c05">
@@ -21,7 +21,7 @@
                   <gco:Date>2011-04-19</gco:Date>
                 </gmd:date>
                 <gmd:dateType>
-                  <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeSpace="ISOTC211/19115" codeListValue="creation">creation</gmd:CI_DateTypeCode>
+                  <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
                 </gmd:dateType>
               </gmd:CI_Date>
             </gmd:date>

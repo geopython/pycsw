@@ -6,7 +6,7 @@
       <gco:CharacterString>de53e931-778a-4792-94ad-9fe507aca483</gco:CharacterString>
     </gmd:fileIdentifier>
     <gmd:hierarchyLevel>
-      <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
+      <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
     </gmd:hierarchyLevel>
     <gmd:identificationInfo>
       <gmd:MD_DataIdentification id="de53e931-778a-4792-94ad-9fe507aca483">
@@ -21,7 +21,7 @@
                   <gco:Date>2000-01-01</gco:Date>
                 </gmd:date>
                 <gmd:dateType>
-                  <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeSpace="ISOTC211/19115" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+                  <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</gmd:CI_DateTypeCode>
                 </gmd:dateType>
               </gmd:CI_Date>
             </gmd:date>

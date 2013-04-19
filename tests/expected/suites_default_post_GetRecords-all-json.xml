@@ -13,9 +13,9 @@
         }, 
         {
             "attributes": {
-                "numberOfRecordsMatched": "12", 
-                "nextRecord": "6", 
                 "numberOfRecordsReturned": "5", 
+                "nextRecord": "6", 
+                "numberOfRecordsMatched": "12", 
                 "elementSet": "full", 
                 "recordSchema": "http://www.opengis.net/cat/csw/2.0.2"
             }, 
