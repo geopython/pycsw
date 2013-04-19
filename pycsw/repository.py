@@ -2,6 +2,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2010 Tom Kralidis
 #
@@ -87,6 +88,8 @@ class Repository(object):
                     util.get_anytext)
                     dbapi_connection.create_function('get_geometry_area', 1,
                     util.get_geometry_area)
+                    dbapi_connection.create_function('get_spatial_overlay_rank', 2,
+                    util.get_spatial_overlay_rank)
             else:  # <= 0.6 behaviour
                 self.connection = engine.raw_connection()
                 self.connection.create_function(
@@ -97,6 +100,8 @@ class Repository(object):
                 util.get_anytext)
                 self.connection.create_function('get_geometry_area', 1,
                 util.get_geometry_area)
+                self.connection.create_function('get_spatial_overlay_rank', 2,
+                util.get_spatial_overlay_rank)
 
         LOGGER.debug('setting repository queryables')
         # generate core queryables db and obj bindings
@@ -184,6 +189,15 @@ class Repository(object):
             query = self.session.query(self.dataset)
 
         total = query.count()
+        
+        if util.ranking_pass:  #apply spatial ranking
+	    LOGGER.debug('spatial ranking detected')
+	    LOGGER.debug('Target WKT: %s', getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']))
+	    LOGGER.debug('Query WKT: %s', util.ranking_query_geometry)
+	    query = query.order_by(func.get_spatial_overlay_rank(getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']), util.ranking_query_geometry).desc())
+	    #trying to make this wsgi safe
+	    util.ranking_pass = False
+	    util.ranking_query_geometry = ''
 
         if sortby is not None:  # apply sorting
             LOGGER.debug('sorting detected')
