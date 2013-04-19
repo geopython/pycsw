@@ -28,7 +28,10 @@
 #
 # =================================================================
 
+from ConfigParser import SafeConfigParser
+import glob
 import os
+import sys
 import time
 from paver.easy import task, cmdopts, needs, \
     pushd, sh, call_task, path, info
@@ -145,12 +148,20 @@ def package_tar_gz(options):
 @cmdopts([
     ('url=', 'u', 'pycsw endpoint'),
     ('suites=', 's', 'comma-separated list of testsuites'),
+    ('database=', 'd', 'database (SQLite3 [default], PostgreSQL, MySQL)'),
+    ('user=', 'U', 'database username'),
+    ('pass=', 'p', 'database password'),
 ])
 def test(options):
     """Run unit tests"""
 
+    db_setup = False
+    db_conn = None
+    cfg_files = []
+
     url = options.get('url', None)
     suites = options.get('suites', None)
+    database = options.get('database', 'SQLite3')
 
     if url is None:
         # run against default server
@@ -164,8 +175,76 @@ def test(options):
     else:
         cmd = 'python run_tests.py -u %s' % url
 
+    # configure/setup database if not default
+    if database != 'SQLite3':
+        db_setup = True
+        temp_db = 'pycsw_ci_test_pid_%d' % os.getpid()
+
+        if database == 'PostgreSQL':  # configure PG
+
+            from pycsw.admin import setup_db, load_records
+            from pycsw.config import StaticContext
+
+            cmd = '%s -d %s' % (cmd, database)
+
+            init_sfsql = True
+            home = os.path.abspath(os.path.dirname(__file__))
+            user = options.get('user', 'postgres')
+            password = options.get('pass', '')
+            context = StaticContext()
+
+            db_conn = 'postgresql://%s:%s@localhost/%s' % (
+                      user, password, temp_db)
+
+            if password:
+                sh('set PGPASSWORD=%s' % password)
+
+            sh('createdb %s -U %s' % (temp_db, user))
+            sh('createlang --dbname=%s plpythonu -U %s' % (temp_db, user))
+
+            # update all default.cfg files to point to test DB
+            cfg_files = glob.glob('tests%ssuites%s*%s*.cfg' % (3*(os.sep,)))
+
+            for cfg in cfg_files:
+                # generate table
+                suite = cfg.split(os.sep)[2]
+
+                tablename = 'records_cite'
+
+                if suite == 'manager':
+                    tablename = 'records_manager'
+                elif suite == 'apiso':
+                    tablename = 'records_apiso'
+
+                config = SafeConfigParser()
+                with open(cfg) as read_data:
+                    config.readfp(read_data)
+                config.set('repository', 'database', db_conn)
+                config.set('repository', 'table', tablename)
+                with open(cfg, 'wb') as config2:
+                    config.write(config2)
+
+                if suite in ['cite', 'manager', 'apiso']:  # setup tables
+                    setup_db(db_conn, tablename, home, init_sfsql, init_sfsql)
+                    init_sfsql = False
+
+                if suite in ['cite', 'apiso']:  # load test data
+                    dirname = '%s%sdata' % (os.path.dirname(cfg), os.sep)
+                    load_records(context, db_conn, tablename, dirname)
+
+        else:
+            raise Exception('Invalid database specified')
+
     with pushd('tests'):
         sh(cmd)
+
+    if db_setup:  # tearDown
+        for cfg in cfg_files:
+            sh('git checkout %s' % cfg)
+        if database == 'PostgreSQL':
+            sh("psql -c \"select pg_terminate_backend(procpid) from pg_stat_activity where datname='%s';\" -U %s" % (temp_db, user))
+            sh('dropdb %s -U %s' % (temp_db, user))
+            sh('unset PGPASSWORD')
 
 
 @task
