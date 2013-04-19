@@ -2,6 +2,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2010 Tom Kralidis
 #
@@ -38,6 +39,10 @@ from owslib.util import http_post
 
 LOGGER = logging.getLogger(__name__)
 
+#Global variables for spatial ranking algorithm
+ranking_enabled = False
+ranking_pass = False
+ranking_query_geometry = ''
 
 def get_today_and_now():
     """Get the date, right now, in ISO8601"""
@@ -191,6 +196,34 @@ def get_geometry_area(geometry):
     except:
         return '0'
 
+def get_spatial_overlay_rank(target_geometry, query_geometry):
+    """Derive spatial overlay rank for geospatial search as per Lanfear (2006)
+    http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf"""
+    
+    from shapely.geometry.base import BaseGeometry
+    #TODO: Add those parameters to config file
+    kt = 1.0
+    kq = 1.0
+    if target_geometry is not None and query_geometry is not None:
+	try:
+	    q_geom = loads(query_geometry)
+	    t_geom = loads(target_geometry)
+	    Q = q_geom.area
+	    T = t_geom.area
+	    if any(item == 0.0 for item in [Q, T]):
+                LOGGER.warn('Geometry has no area')
+                return '0'
+	    X = t_geom.intersection(q_geom).area
+	    if kt == 1.0 and kq == 1.0:
+		LOGGER.debug('Spatial Rank: %s', str((X/Q)*(X/T)))
+		return str((X/Q)*(X/T))
+	    else:
+		LOGGER.debug('Spatial Rank: %s', str(((X/Q)**kq)*((X/T)**kt)))
+		return str(((X/Q)**kq)*((X/T)**kt))
+	except Exception, err:
+            LOGGER.warn('Cannot derive spatial overlay ranking %s', err)
+            return '0'
+    return '0'
 
 def bbox_from_polygons(bboxs):
     """Derive an aggregated bbox from n polygons"""

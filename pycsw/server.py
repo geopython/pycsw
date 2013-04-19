@@ -2,7 +2,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
-#                Angelos Tzotsos <tzotsos@gmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2010 Tom Kralidis
 #
@@ -138,6 +138,11 @@ class Csw(object):
         if (self.config.has_option('server', 'pretty_print') and
         self.config.get('server', 'pretty_print') == 'true'):
             self.pretty_print = 1
+        
+        # set Spatial Ranking option
+        if (self.config.has_option('server', 'spatial_ranking') and
+        self.config.get('server', 'spatial_ranking') == 'true'):
+            util.ranking_enabled = True
 
         # generate distributed search model, if specified in config
         if self.config.has_option('server', 'federatedcatalogues'):

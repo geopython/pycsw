@@ -2,6 +2,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2010 Tom Kralidis
 #
@@ -257,6 +258,9 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
                            property_name.text)
 
     geometry = gml.Geometry(element, nsmap)
+    
+    #make decision to apply spatial ranking to results
+    set_spatial_ranking(geometry)
 
     spatial_predicate = util.xmltag_split(element.tag).lower()
 
@@ -309,3 +313,24 @@ def _get_comparison_operator(element):
     """return the SQL operator based on Filter query"""
 
     return MODEL['ComparisonOperators']['ogc:%s' % util.xmltag_split(element.tag)]['opvalue']
+
+def set_spatial_ranking(geometry):
+    """Given that we have a spatial query in ogc:filter we check the type of geometry 
+    and set the ranking variables"""
+    
+    if util.ranking_enabled:
+	if geometry.type in ['Polygon','Envelope']:
+	    util.ranking_pass = True
+	    util.ranking_query_geometry = geometry.wkt
+	elif geometry.type == 'LineString':
+	    from shapely.geometry.base import BaseGeometry
+	    from shapely.geometry import box
+	    from shapely.wkt import loads,dumps
+	    ls = loads(geometry.wkt)
+	    b = ls.bounds
+	    tmp_box = box(b[0],b[1],b[2],b[3])
+	    tmp_wkt = dumps(tmp_box)
+	    if tmp_box.area > 0:
+		util.ranking_pass = True
+		util.ranking_query_geometry = tmp_wkt
+
