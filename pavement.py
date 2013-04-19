@@ -151,6 +151,7 @@ def package_tar_gz(options):
     ('database=', 'd', 'database (SQLite3 [default], PostgreSQL, MySQL)'),
     ('user=', 'U', 'database username'),
     ('pass=', 'p', 'database password'),
+    ('remote', 'r', 'remote testing (harvesting)'),
 ])
 def test(options):
     """Run unit tests"""
@@ -162,6 +163,7 @@ def test(options):
     url = options.get('url', None)
     suites = options.get('suites', None)
     database = options.get('database', 'SQLite3')
+    remote = options.get('remote')
 
     if url is None:
         # run against default server
@@ -174,6 +176,9 @@ def test(options):
         cmd = 'python run_tests.py -u %s -s %s' % (url, suites)
     else:
         cmd = 'python run_tests.py -u %s' % url
+
+    if remote:
+        cmd = '%s -r' % cmd
 
     # configure/setup database if not default
     if database != 'SQLite3':

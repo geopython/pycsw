@@ -153,6 +153,8 @@ SYNOPSIS
 
     -d    database (SQLite3 [default], PostgreSQL, MySQL)
 
+    -r    run tests which harvest remote resources (default off)
+
 EXAMPLES
 
     1.) default test example
@@ -166,6 +168,10 @@ EXAMPLES
     3.) run only specified testsuites
 
         run_tests.py -u http://localhost:8000/ -s default,apiso
+
+    3.) run tests including remote harvest tests
+
+        run_tests.py -u http://localhost:8000/ -s default,apiso -r
 
 
 '''
@@ -189,9 +195,10 @@ INITED = 0
 
 LOGWRITER = None
 DATABASE = 'SQLite3'
+REMOTE = False
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:h')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:rh')
 except getopt.GetoptError, err:
     print '\nERROR: %s' % err
     print usage()
@@ -204,6 +211,8 @@ for o, a in OPTS:
         LOGFILE = a
     if o == '-d':
         DATABASE = a
+    if o == '-r':
+        REMOTE = True
     if o == '-s':
         TESTSUITES = a.split(',')
     if o == '-h':  # dump help and exit
@@ -217,6 +226,8 @@ if LOGFILE is not None:  # write detailed output to CSV
     LOGWRITER.writerow(['url', 'configuration', 'testname', 'result'])
 
 if TESTSUITES:
+    if 'harvesting' in TESTSUITES:
+        REMOTE = True
     TESTSUITES_LIST = ['suites%s%s' % (os.sep, x) for x in TESTSUITES]
 else:
     TESTSUITES_LIST = glob.glob('suites%s*' % os.sep)
@@ -225,8 +236,11 @@ for testsuite in TESTSUITES_LIST:
     if not os.path.exists(testsuite):
         raise RuntimeError('Testsuite %s not found' % testsuite)
 
+    if testsuite == 'suites%sharvesting' % os.sep and not REMOTE:
+        continue
+
     force_id_mask = False
-    if testsuite == 'suites%smanager' % os.sep:
+    if testsuite in ['suites%smanager' % os.sep, 'suites%sharvesting' % os.sep]:
         force_id_mask = True
    
     # get configuration
