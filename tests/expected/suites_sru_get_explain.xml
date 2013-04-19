@@ -7,7 +7,7 @@
     <zs:recordSchema>http://explain.z3950.org/dtd/2.1/</zs:recordSchema>
     <zs:recordData>
       <zr:explain>
-        <zr:serverInfo version="1.1" protocol="SRU" method="GET POST SOAP" transport="http">
+        <zr:serverInfo method="GET POST SOAP" protocol="SRU" transport="http" version="1.1">
           <zr:host>PYCSW_HOST</zr:host>
           <zr:port>PYCSW_PORT</zr:port>
           <zr:database>pycsw</zr:database>
