@@ -70,8 +70,12 @@ class Repository(object):
         if self.dbtype == 'postgresql':
             try:
                 self.session.execute(select([func.postgis_version()]))
-                self.dbtype = 'postgresql+postgis'
-                LOGGER.debug('PostgreSQL+PostGIS detected')
+                self.dbtype = 'postgresql+postgis+wkt'
+                LOGGER.debug('PostgreSQL+PostGIS+WKT detected')
+                #TODO: Detect if native geometry is present
+                #if ():
+		    #self.dbtype = 'postgresql+postgis+native'
+		    #LOGGER.debug('PostgreSQL+PostGIS+native detected')
             except:
                 pass
 
@@ -191,6 +195,7 @@ class Repository(object):
         total = query.count()
         
         if util.ranking_pass:  #apply spatial ranking
+	    #TODO: Check here for dbtype so to extract wkt from postgis native to wkt
 	    LOGGER.debug('spatial ranking detected')
 	    LOGGER.debug('Target WKT: %s', getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']))
 	    LOGGER.debug('Query WKT: %s', util.ranking_query_geometry)
@@ -201,6 +206,7 @@ class Repository(object):
 
         if sortby is not None:  # apply sorting
             LOGGER.debug('sorting detected')
+            #TODO: Check here for dbtype so to extract wkt from postgis native to wkt
             sortby_column = getattr(self.dataset, sortby['propertyname'])
 
             if sortby['order'] == 'DESC':  # descending sort
