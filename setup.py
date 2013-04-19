@@ -118,8 +118,8 @@ PACKAGE_DATA.update(get_package_data([ROOT_PACKAGE], 'schemas'))
 # GeoNode and OpenDataCatalog do not require SQLAlchemy
 INSTALL_REQUIRES = [
     'lxml==3.1.2',
-    'Shapely==1.2.16',
-    'pyproj==1.9.2',
+    'Shapely==1.2.17',
+    'pyproj==1.9.3',
     'OWSLib==0.7.2'
 ]
 
