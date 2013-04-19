@@ -141,7 +141,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
         if ((matchcase is not None and matchcase == 'false') or
                 pname == 'anytext'):
             com_op = 'ilike' if dbtype in \
-                ['postgresql', 'postgresql+postgis'] else 'like'
+                ['postgresql', 'postgresql+postgis+wkt'] else 'like'
 
         if (elem.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
             com_op = 'between'
@@ -202,7 +202,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
             if boq is not None and boq == ' not ':
                 # for ogc:Not spatial queries in PostGIS we must explictly
                 # test that pycsw:BoundingBox is null as well
-                if dbtype == 'postgresql+postgis':
+                if dbtype == 'postgresql+postgis+wkt':
                     LOGGER.debug('Setting bbox is null test in PostgreSQL')
                     queries.append("%s = %s or %s is null" %
                                    (_get_spatial_operator(
@@ -284,8 +284,8 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
             geomfromtext('%s')),false)" % \
                 (spatial_predicate, geomattr, geometry.wkt)
 
-    elif dbtype == 'postgresql+postgis':  # adjust spatial query for PostGIS
-        LOGGER.debug('Adjusting spatial query for PostgreSQL+PostGIS')
+    elif dbtype == 'postgresql+postgis+wkt':  # adjust spatial query for PostGIS with WKT geometry column
+        LOGGER.debug('Adjusting spatial query for PostgreSQL+PostGIS+WKT')
         if spatial_predicate == 'bbox':
             spatial_predicate = 'intersects'
 
@@ -301,6 +301,25 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
             spatial_query = "st_%s(st_geomfromtext(%s), \
             st_geomfromtext('%s'))" % \
                 (spatial_predicate, geomattr, geometry.wkt)
+                
+    elif dbtype == 'postgresql+postgis+native':  # adjust spatial query for PostGIS with native geometry
+        LOGGER.debug('Adjusting spatial query for PostgreSQL+PostGIS+native')
+        if spatial_predicate == 'bbox':
+            spatial_predicate = 'intersects'
+
+        if spatial_predicate == 'beyond':
+            spatial_query = "not st_dwithin(%s, \
+            st_geomfromtext('%s'), %f)" % \
+                (geomattr, geometry.wkt, float(distance))
+        elif spatial_predicate == 'dwithin':
+            spatial_query = "st_dwithin(%s, \
+            st_geomfromtext('%s'), %f)" % \
+                (geomattr, geometry.wkt, float(distance))
+        else:
+            spatial_query = "st_%s(%s, \
+            st_geomfromtext('%s'))" % \
+                (spatial_predicate, geomattr, geometry.wkt)
+                
     else:
         LOGGER.debug('Adjusting spatial query')
         spatial_query = "query_spatial(%s,'%s','%s','%s')" % \
