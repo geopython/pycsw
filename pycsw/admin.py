@@ -109,7 +109,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         Column('abstract', String(2048), index=True),
         Column('keywords', String(2048), index=True),
         Column('keywordstype', String(256), index=True),
-        Column('parentidentifier', String(32), index=True),
+        Column('parentidentifier', String(256), index=True),
         Column('relation', String(256), index=True),
         Column('time_begin', String(20), index=True),
         Column('time_end', String(20), index=True),
@@ -148,11 +148,11 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         # service
         Column('servicetype', String(32), index=True),
         Column('servicetypeversion', String(32), index=True),
-        Column('operation', String(256), index=True),
+        Column('operation', String(512), index=True),
         Column('couplingtype', String(8), index=True),
-        Column('operateson', String(32), index=True),
-        Column('operatesonidentifier', String(32), index=True),
-        Column('operatesoname', String(32), index=True),
+        Column('operateson', String(2048), index=True),
+        Column('operatesonidentifier', String(512), index=True),
+        Column('operatesoname', String(512), index=True),
 
         # additional
         Column('degree', String(8), index=True),
@@ -224,8 +224,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             return util.get_geometry_area(geom)
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
-	    function_get_spatial_overlay_rank = '''
-	CREATE OR REPLACE FUNCTION get_spatial_overlay_rank(target_geom text, query_geom text)
+            function_get_spatial_overlay_rank = '''
+        CREATE OR REPLACE FUNCTION get_spatial_overlay_rank(target_geom text, query_geom text)
         RETURNS text
         AS $$
             import sys
@@ -233,7 +233,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             from pycsw import util
             return util.get_spatial_overlay_rank(target_geom, query_geom)
             $$ LANGUAGE plpythonu;
-	''' % pycsw_home
+        ''' % pycsw_home 
             conn.execute(function_get_anytext)
             conn.execute(function_query_spatial)
             conn.execute(function_update_xpath)

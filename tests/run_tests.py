@@ -151,6 +151,8 @@ SYNOPSIS
 
     -s    testsuites to run (comma-seperated list)
 
+    -d    database (SQLite3 [default], PostgreSQL, MySQL)
+
 EXAMPLES
 
     1.) default test example
@@ -182,12 +184,14 @@ TESTSUITES = []
 
 PASSED = 0
 FAILED = 0
+WARNING = 0
 INITED = 0
 
 LOGWRITER = None
+DATABASE = 'SQLite3'
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:h')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:h')
 except getopt.GetoptError, err:
     print '\nERROR: %s' % err
     print usage()
@@ -198,6 +202,8 @@ for o, a in OPTS:
         URL = a
     if o == '-l':
         LOGFILE = a
+    if o == '-d':
+        DATABASE = a
     if o == '-s':
         TESTSUITES = a.split(',')
     if o == '-h':  # dump help and exit
@@ -256,6 +262,9 @@ for testsuite in TESTSUITES_LIST:
                             elif status == 0:
                                 print '  initialized'
                                 INITED += 1
+                            elif status == -1 and DATABASE == 'PostgreSQL':
+                                print '  warning: possible collation issue'
+                                WARNING += 1
                             else:
                                 print '  FAILED'
                                 FAILED += 1
@@ -293,6 +302,9 @@ for testsuite in TESTSUITES_LIST:
                         elif status == 0:
                             print '  initialized'
                             INITED += 1
+                        elif status == -1 and DATABASE == 'PostgreSQL':
+                            print '  warning: possible sorting collation issue'
+                            WARNING += 1
                         else:
                             print '  FAILED'
                             FAILED += 1
@@ -303,6 +315,7 @@ for testsuite in TESTSUITES_LIST:
 print '\nResults (%d/%d - %.2f%%)' % \
     (PASSED, PASSED + FAILED, float(PASSED) / float(PASSED + FAILED) * 100)
 print '   %d test%s passed' % (PASSED, plural(PASSED))
+print '   %d test%s warnings' % (WARNING, plural(WARNING))
 print '   %d test%s failed' % (FAILED, plural(FAILED))
 print '   %d test%s initialized' % (INITED, plural(INITED))
 
