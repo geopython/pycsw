@@ -141,7 +141,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
         if ((matchcase is not None and matchcase == 'false') or
                 pname == 'anytext'):
             com_op = 'ilike' if dbtype in \
-                ['postgresql', 'postgresql+postgis+wkt'] else 'like'
+                ['postgresql', 'postgresql+postgis+wkt', 'postgresql+postgis+native'] else 'like'
 
         if (elem.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
             com_op = 'between'
