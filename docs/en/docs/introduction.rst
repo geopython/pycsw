@@ -90,6 +90,15 @@ Supported Output Formats
 - XML (default)
 - JSON
 
+Supported Output Formats
+------------------------
+
+- Dublin Core
+- ISO 19139
+- FGDC CSDGM
+- NASA DIF
+- Atom
+
 Supported Sorting Functionality
 -------------------------------
 
