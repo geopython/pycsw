@@ -27,4 +27,4 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
-__all__ = ['dif', 'fgdc']
+__all__ = ['atom', 'dif', 'fgdc']

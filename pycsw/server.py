@@ -1420,7 +1420,7 @@ class Csw(object):
                         searchresults.append(self._write_record(
                         res, self.repository.queryables['_all']))
                     elif self.kvp['outputschema'] in self.outputschemas.keys():  # use outputschema serializer
-                        searchresults.append(self.outputschemas[self.kvp['outputschema']].write_record(res, self.kvp['elementsetname'], self.context))
+                        searchresults.append(self.outputschemas[self.kvp['outputschema']].write_record(res, self.kvp['elementsetname'], self.context, self.config.get('server', 'url')))
                     else:  # use profile serializer
                         searchresults.append(
                         self.profiles['loaded'][self.kvp['outputschema']].\
@@ -1528,7 +1528,7 @@ class Csw(object):
                 node.append(self._write_record(
                 result, self.repository.queryables['_all']))
             elif self.kvp['outputschema'] in self.outputschemas.keys():  # use outputschema serializer
-                searchresults.append(self.outputschemas[self.kvp['outputschema']].write_record(res, self.kvp['elementsetname'], self.context))
+                node.append(self.outputschemas[self.kvp['outputschema']].write_record(result, self.kvp['elementsetname'], self.context, self.config.get('server', 'url')))
             else:  # it's a profile output
                 node.append(
                 self.profiles['loaded'][self.kvp['outputschema']].write_record(

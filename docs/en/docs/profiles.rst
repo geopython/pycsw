@@ -66,7 +66,4 @@ Supported Profiles
 ==================
 
 .. include:: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst
-.. include:: ../../../pycsw/plugins/profiles/dif/docs/dif.rst
-.. include:: ../../../pycsw/plugins/profiles/fgdc/docs/fgdc.rst
 .. include:: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst
-.. include:: ../../../pycsw/plugins/profiles/atom/docs/atom.rst
