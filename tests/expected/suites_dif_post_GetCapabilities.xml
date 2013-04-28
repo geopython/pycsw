@@ -79,7 +79,6 @@
       </ows:Parameter>
       <ows:Parameter name="typeName">
         <ows:Value>csw:Record</ows:Value>
-        <ows:Value>dif:DIF</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetDomain">
@@ -119,6 +118,7 @@
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
         <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="ElementSetName">
         <ows:Value>brief</ows:Value>
@@ -140,6 +140,7 @@
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
         <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="CONSTRAINTLANGUAGE">
         <ows:Value>FILTER</ows:Value>
@@ -152,33 +153,12 @@
       </ows:Parameter>
       <ows:Parameter name="typeNames">
         <ows:Value>csw:Record</ows:Value>
-        <ows:Value>dif:DIF</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="ElementSetName">
         <ows:Value>brief</ows:Value>
         <ows:Value>summary</ows:Value>
         <ows:Value>full</ows:Value>
       </ows:Parameter>
-      <ows:Constraint name="SupportedDIFQueryables">
-        <ows:Value>dif:Keyword</ows:Value>
-        <ows:Value>dif:Data_Presentation_Form</ows:Value>
-        <ows:Value>dif:Summary</ows:Value>
-        <ows:Value>dif:Stop_Date</ows:Value>
-        <ows:Value>dif:Identifier</ows:Value>
-        <ows:Value>dif:ISO_Topic_Category</ows:Value>
-        <ows:Value>dif:Originating_Center</ows:Value>
-        <ows:Value>dif:DIF_Creation_Date</ows:Value>
-        <ows:Value>dif:Dataset_Publisher</ows:Value>
-        <ows:Value>dif:Dataset_Release_Date</ows:Value>
-        <ows:Value>dif:Related_URL</ows:Value>
-        <ows:Value>dif:AnyText</ows:Value>
-        <ows:Value>dif:Data_Set_Language</ows:Value>
-        <ows:Value>dif:Access_Constraints</ows:Value>
-        <ows:Value>dif:Spatial_Coverage</ows:Value>
-        <ows:Value>dif:Entry_Title</ows:Value>
-        <ows:Value>dif:Start_Date</ows:Value>
-        <ows:Value>dif:Dataset_Creator</ows:Value>
-      </ows:Constraint>
       <ows:Constraint name="SupportedDublinCoreQueryables">
         <ows:Value>dc:contributor</ows:Value>
         <ows:Value>dc:source</ows:Value>
