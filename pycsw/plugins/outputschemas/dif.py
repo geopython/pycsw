@@ -36,7 +36,7 @@ NAMESPACES = {'dif': NAMESPACE}
 
 XPATH_MAPPINGS = {}
 
-def write_record(result, esn, context):
+def write_record(result, esn, context, url=None):
     ''' Return csw:SearchResults child as lxml.etree.Element '''
 
     typename = util.getqattr(result, context.md_core_model['mappings']['pycsw:Typename'])

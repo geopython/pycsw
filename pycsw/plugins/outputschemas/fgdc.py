@@ -54,7 +54,7 @@ XPATH_MAPPINGS = {
     'pycsw:Relation': 'idinfo/citation/citeinfo/onlink',
 }
 
-def write_record(recobj, esn, context):
+def write_record(recobj, esn, context, url=None):
     ''' Return csw:SearchResults child as lxml.etree.Element '''
     typename = util.getqattr(recobj, context.md_core_model['mappings']['pycsw:Typename'])
     if esn == 'full' and typename == 'fgdc:metadata':
