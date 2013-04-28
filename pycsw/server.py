@@ -39,6 +39,7 @@ from ConfigParser import SafeConfigParser
 from lxml import etree
 from shapely.wkt import loads
 from pycsw.plugins.profiles import profile as pprofile
+import pycsw.plugins.outputschemas
 from pycsw import config, fes, log, metadata, util, sru, opensearch
 import logging
 
@@ -71,6 +72,7 @@ class Csw(object):
         self.request = None
         self.exception = False
         self.profiles = None
+        self.outputschemas = {}
         self.mimetype = 'application/xml; charset=UTF-8'
         self.encoding = 'UTF-8'
         self.pretty_print = 0
@@ -198,6 +200,19 @@ class Csw(object):
 
             LOGGER.debug('Profiles loaded: %s.' %
             self.profiles['loaded'].keys())
+
+        # load profiles
+        LOGGER.debug('Loading outputschemas.')
+
+        for osch in pycsw.plugins.outputschemas.__all__:
+            mod = getattr(__import__('pycsw.plugins.outputschemas.%s' % osch).plugins.outputschemas, osch)
+            self.context.model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(mod.NAMESPACE)
+            self.context.model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(mod.NAMESPACE)
+            if 'Harvest' in self.context.model['operations']:
+                self.context.model['operations']['Harvest']['parameters']['ResourceType']['values'].append(mod.NAMESPACE)
+            self.outputschemas[mod.NAMESPACE] = mod
+
+        LOGGER.debug('Outputschemas loaded: %s.' % self.outputschemas)
 
         LOGGER.debug('Namespaces: %s' % self.context.namespaces)
 
@@ -1404,6 +1419,8 @@ class Csw(object):
 
                         searchresults.append(self._write_record(
                         res, self.repository.queryables['_all']))
+                    elif self.kvp['outputschema'] in self.outputschemas.keys():  # use outputschema serializer
+                        searchresults.append(self.outputschemas[self.kvp['outputschema']].write_record(res, self.kvp['elementsetname'], self.context))
                     else:  # use profile serializer
                         searchresults.append(
                         self.profiles['loaded'][self.kvp['outputschema']].\
@@ -1510,6 +1527,8 @@ class Csw(object):
 
                 node.append(self._write_record(
                 result, self.repository.queryables['_all']))
+            elif self.kvp['outputschema'] in self.outputschemas.keys():  # use outputschema serializer
+                searchresults.append(self.outputschemas[self.kvp['outputschema']].write_record(res, self.kvp['elementsetname'], self.context))
             else:  # it's a profile output
                 node.append(
                 self.profiles['loaded'][self.kvp['outputschema']].write_record(
@@ -1614,12 +1633,22 @@ class Csw(object):
                 else:  # update by record property and constraint
                     # get / set XPath for property names
                     for rp in ttype['recordproperty']:
-                        try:
+                        if rp['name'] not in self.repository.queryables['_all']:
+                            # is it an XPath?
+                            if rp['name'].find('/') != -1:
+                                # scan outputschemas; if match, bind
+                                for osch in self.outputschemas.values():
+                                    for key, value in osch.XPATH_MAPPINGS.iteritems():
+                                        if value == rp['name']:  # match
+                                            rp['rp'] = {'xpath': value, 'name': key}
+                                            rp['rp']['dbcol'] = self.repository.queryables['_all'][key]
+                                            break
+                            else:
+                                return self.exceptionreport('NoApplicableCode',
+                                       'update', 'Transaction (update) failed: invalid property2: %s.' % str(rp['name']))
+                        else:
                             rp['rp']= \
                             self.repository.queryables['_all'][rp['name']]
-                        except Exception, err:
-                            return self.exceptionreport('NoApplicableCode',
-                            'update', 'Transaction (update) failed: invalid property: %s.' % str(err))
 
                     LOGGER.debug('Record Properties: %s.' %
                     ttype['recordproperty'])

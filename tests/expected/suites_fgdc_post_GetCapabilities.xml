@@ -79,7 +79,6 @@
       </ows:Parameter>
       <ows:Parameter name="typeName">
         <ows:Value>csw:Record</ows:Value>
-        <ows:Value>fgdc:metadata</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetDomain">
@@ -118,6 +117,7 @@
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="ElementSetName">
@@ -139,6 +139,7 @@
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="CONSTRAINTLANGUAGE">
@@ -152,37 +153,12 @@
       </ows:Parameter>
       <ows:Parameter name="typeNames">
         <ows:Value>csw:Record</ows:Value>
-        <ows:Value>fgdc:metadata</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="ElementSetName">
         <ows:Value>brief</ows:Value>
         <ows:Value>summary</ows:Value>
         <ows:Value>full</ows:Value>
       </ows:Parameter>
-      <ows:Constraint name="SupportedFGDCQueryables">
-        <ows:Value>fgdc:Contributor</ows:Value>
-        <ows:Value>fgdc:GeospatialPresentationForm</ows:Value>
-        <ows:Value>fgdc:Publisher</ows:Value>
-        <ows:Value>fgdc:AccessConstraints</ows:Value>
-        <ows:Value>fgdc:AnyText</ows:Value>
-        <ows:Value>fgdc:Source</ows:Value>
-        <ows:Value>fgdc:Origin</ows:Value>
-        <ows:Value>fgdc:Type</ows:Value>
-        <ows:Value>fgdc:Format</ows:Value>
-        <ows:Value>fgdc:Originator</ows:Value>
-        <ows:Value>fgdc:Modified</ows:Value>
-        <ows:Value>fgdc:Envelope</ows:Value>
-        <ows:Value>fgdc:ThemeKeywords</ows:Value>
-        <ows:Value>fgdc:PublicationDate</ows:Value>
-        <ows:Value>fgdc:Title</ows:Value>
-        <ows:Value>fgdc:Purpose</ows:Value>
-        <ows:Value>fgdc:Abstract</ows:Value>
-        <ows:Value>fgdc:Identifier</ows:Value>
-        <ows:Value>fgdc:Progress</ows:Value>
-        <ows:Value>fgdc:BeginDate</ows:Value>
-        <ows:Value>fgdc:EndDate</ows:Value>
-        <ows:Value>fgdc:Relation</ows:Value>
-      </ows:Constraint>
       <ows:Constraint name="SupportedDublinCoreQueryables">
         <ows:Value>dc:contributor</ows:Value>
         <ows:Value>dc:source</ows:Value>
