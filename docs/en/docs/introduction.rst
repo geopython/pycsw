@@ -90,7 +90,7 @@ Supported Output Formats
 - XML (default)
 - JSON
 
-Supported Output Formats
+Supported Output Schemas
 ------------------------
 
 - Dublin Core
