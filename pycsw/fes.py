@@ -333,4 +333,13 @@ def set_spatial_ranking(geometry):
 	    if tmp_box.area > 0:
 		util.ranking_pass = True
 		util.ranking_query_geometry = tmp_wkt
-
+	elif geometry.type == 'Point':
+	    from shapely.geometry.base import BaseGeometry
+	    from shapely.geometry import box
+	    from shapely.wkt import loads,dumps
+	    ls = loads(geometry.wkt)
+	    b = ls.bounds
+	    tmp_box = box((float(b[0])-1.0),(float(b[1])-1.0),(float(b[2])+1.0),(float(b[3])+1.0))
+	    tmp_wkt = dumps(tmp_box)
+	    util.ranking_pass = True
+	    util.ranking_query_geometry = tmp_wkt
