@@ -34,7 +34,22 @@ from pycsw import util
 NAMESPACE = 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/'
 NAMESPACES = {'dif': NAMESPACE}
 
-XPATH_MAPPINGS = {}
+XPATH_MAPPINGS = {
+    'pycsw:Title': 'dif:Entry_Title', 
+    'pycsw:Creator': 'dif:Data_Set_Citation/dif:Dataset_Creator', 
+    'pycsw:TopicCategory': 'dif:ISO_Topic_Category', 
+    'pycsw:Keywords': 'dif:Keyword',
+    'pycsw:Abstract': 'dif:Summary', 
+    'pycsw:Publisher': 'dif:Data_Set_Citation/dif:Dataset_Publisher', 
+    'pycsw:OrganizationName': 'dif:Originating_Center',
+    'pycsw:CreationDate': 'dif:DIF_Creation_Date','pycsw:PublicationDate': 'dif:Data_Set_Citation/dif:Dataset_Release_Date', 
+    'pycsw:Format': 'dif:Data_Set_Citation/dif:Data_Presentation_Form', 
+    'pycsw:ResourceLanguage': 'dif:Data_Set_Language',
+    'pycsw:Relation': 'dif:Related_URL/dif:URL', 
+    'pycsw:AccessConstraints': 'dif:Access_Constraints',
+    'pycsw:TempExtent_begin': 'dif:Temporal_Coverage/dif:Start_Date', 
+    'pycsw:TempExtent_end': 'dif:Temporal_Coverage/dif:Stop_Date', 
+}
 
 def write_record(result, esn, context, url=None):
     ''' Return csw:SearchResults child as lxml.etree.Element '''
