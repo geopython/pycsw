@@ -45,6 +45,7 @@ class StaticContext(object):
         self.ogc_schemas_base = 'http://schemas.opengis.net'
 
         self.namespaces = {
+            'atom': 'http://www.w3.org/2005/Atom',
             'csw': 'http://www.opengis.net/cat/csw/2.0.2',
             'dc': 'http://purl.org/dc/elements/1.1/',
             'dct': 'http://purl.org/dc/terms/',

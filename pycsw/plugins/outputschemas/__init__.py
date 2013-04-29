@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
 #
-# Copyright (c) 2011 Tom Kralidis
+# Copyright (c) 2013 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -27,3 +27,4 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
+__all__ = ['atom', 'dif', 'fgdc']

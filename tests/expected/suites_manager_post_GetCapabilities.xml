@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:Capabilities xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" updateSequence="PYCSW_UPDATESEQUENCE" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+<csw:Capabilities xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" updateSequence="PYCSW_UPDATESEQUENCE" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <ows:ServiceIdentification>
     <ows:Title>pycsw Geospatial Catalogue</ows:Title>
     <ows:Abstract>pycsw is an OGC CSW server implementation written in Python</ows:Abstract>
@@ -87,7 +87,6 @@
       <ows:Parameter name="typeName">
         <ows:Value>csw:Record</ows:Value>
         <ows:Value>gmd:MD_Metadata</ows:Value>
-        <ows:Value>fgdc:metadata</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetDomain">
@@ -128,6 +127,8 @@
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
         <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="ElementSetName">
@@ -150,6 +151,8 @@
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
         <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="CONSTRAINTLANGUAGE">
@@ -164,7 +167,6 @@
       <ows:Parameter name="typeNames">
         <ows:Value>csw:Record</ows:Value>
         <ows:Value>gmd:MD_Metadata</ows:Value>
-        <ows:Value>fgdc:metadata</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="ElementSetName">
         <ows:Value>brief</ows:Value>
@@ -223,30 +225,6 @@
         <ows:Value>apiso:AccessConstraints</ows:Value>
         <ows:Value>apiso:Publisher</ows:Value>
       </ows:Constraint>
-      <ows:Constraint name="SupportedFGDCQueryables">
-        <ows:Value>fgdc:Contributor</ows:Value>
-        <ows:Value>fgdc:GeospatialPresentationForm</ows:Value>
-        <ows:Value>fgdc:Publisher</ows:Value>
-        <ows:Value>fgdc:AccessConstraints</ows:Value>
-        <ows:Value>fgdc:AnyText</ows:Value>
-        <ows:Value>fgdc:Source</ows:Value>
-        <ows:Value>fgdc:Origin</ows:Value>
-        <ows:Value>fgdc:Type</ows:Value>
-        <ows:Value>fgdc:Format</ows:Value>
-        <ows:Value>fgdc:Originator</ows:Value>
-        <ows:Value>fgdc:Modified</ows:Value>
-        <ows:Value>fgdc:Envelope</ows:Value>
-        <ows:Value>fgdc:ThemeKeywords</ows:Value>
-        <ows:Value>fgdc:PublicationDate</ows:Value>
-        <ows:Value>fgdc:Title</ows:Value>
-        <ows:Value>fgdc:Purpose</ows:Value>
-        <ows:Value>fgdc:Abstract</ows:Value>
-        <ows:Value>fgdc:Identifier</ows:Value>
-        <ows:Value>fgdc:Progress</ows:Value>
-        <ows:Value>fgdc:BeginDate</ows:Value>
-        <ows:Value>fgdc:EndDate</ows:Value>
-        <ows:Value>fgdc:Relation</ows:Value>
-      </ows:Constraint>
       <ows:Constraint name="SupportedDublinCoreQueryables">
         <ows:Value>dc:contributor</ows:Value>
         <ows:Value>dc:source</ows:Value>
@@ -285,6 +263,8 @@
         <ows:Value>urn:geoss:waf</ows:Value>
         <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
         <ows:Value>http://www.isotc211.org/schemas/2005/gmd/</ows:Value>
+        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
       </ows:Parameter>
     </ows:Operation>
