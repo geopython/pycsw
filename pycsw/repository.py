@@ -72,23 +72,26 @@ class Repository(object):
                 self.session.execute(select([func.postgis_version()]))
                 self.dbtype = 'postgresql+postgis+wkt'
                 LOGGER.debug('PostgreSQL+PostGIS+WKT detected')
-                #TODO: Detect if native geometry is present
-                #if ():
-		    #self.dbtype = 'postgresql+postgis+native'
-		    #LOGGER.debug('PostgreSQL+PostGIS+native detected')
             except:
                 pass
 
         # check if PostgreSQL is enabled with PostGIS 2.x
         if self.dbtype == 'postgresql':
             try:
-                self.session.execute(select(postgis_version()))
+                self.session.execute('select(postgis_version())')
                 self.dbtype = 'postgresql+postgis+wkt'
                 LOGGER.debug('PostgreSQL+PostGIS+WKT detected')
-                #TODO: Detect if native geometry is present
-                #if ():
-		    #self.dbtype = 'postgresql+postgis+native'
-		    #LOGGER.debug('PostgreSQL+PostGIS+native detected')
+            except:
+                pass
+
+        # check if a native PostGIS geometry column exists
+        if self.dbtype == 'postgresql':
+            try:
+                result = self.session.execute("select f_geometry_column from geometry_columns where f_table_name = '%s' limit 1;" % table)
+		row = result.fetchone()
+                util.geomattr_native = str(row["f_geometry_column"])
+                self.dbtype = 'postgresql+postgis+native'
+                LOGGER.debug('PostgreSQL+PostGIS+Native detected')
             except:
                 pass
 
