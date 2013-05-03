@@ -66,10 +66,23 @@ class Repository(object):
 
         self.session = create_session(engine)
 
-        # check if PostgreSQL is enabled with PostGIS
+        # check if PostgreSQL is enabled with PostGIS 1.x
         if self.dbtype == 'postgresql':
             try:
                 self.session.execute(select([func.postgis_version()]))
+                self.dbtype = 'postgresql+postgis+wkt'
+                LOGGER.debug('PostgreSQL+PostGIS+WKT detected')
+                #TODO: Detect if native geometry is present
+                #if ():
+		    #self.dbtype = 'postgresql+postgis+native'
+		    #LOGGER.debug('PostgreSQL+PostGIS+native detected')
+            except:
+                pass
+
+        # check if PostgreSQL is enabled with PostGIS 2.x
+        if self.dbtype == 'postgresql':
+            try:
+                self.session.execute(select(postgis_version()))
                 self.dbtype = 'postgresql+postgis+wkt'
                 LOGGER.debug('PostgreSQL+PostGIS+WKT detected')
                 #TODO: Detect if native geometry is present
