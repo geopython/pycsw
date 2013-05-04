@@ -44,12 +44,23 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
     """Setup database tables and indexes"""
     from sqlalchemy import Column, create_engine, Integer, String, MetaData, \
         Table, Text
+    from sqlalchemy.orm import create_session
 
     LOGGER.info('Creating database %s', database)
     dbase = create_engine(database)
 
     mdata = MetaData(dbase)
 
+    #If PostGIS 2.x detected, do not create sfsql tables.
+    dbsession = create_session(dbase)
+    if (dbase.name == 'postgresql'):
+	try:
+	    dbsession.execute('select(postgis_version())')
+	    create_sfsql_tables=False
+	    LOGGER.info('PostGIS 2.x detected: Skipping SFSQL tables creation')
+	except:
+	    pass
+    
     if create_sfsql_tables:
         LOGGER.info('Creating table spatial_ref_sys')
         srs = Table(
@@ -245,7 +256,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         if dbase.name == 'postgresql':  # create native geometry column within db
             LOGGER.info('Creating native PostGIS geometry column')
             conn2 = dbase.connect()
-            create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry;" % (table, postgis_geometry_column)
+            create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
             create_insert_update_trigger_sql = '''
 DROP TRIGGER %(table)s_update_geometry ON %(table)s;
 DROP FUNCTION %(table)s_update_geometry();
