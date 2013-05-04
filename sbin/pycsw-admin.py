@@ -242,7 +242,7 @@ elif COMMAND == 'validate_xml':
 if COMMAND == 'setup_db':
     if (POSTGIS_NATIVE):
 	admin.setup_db(DATABASE, TABLE, HOME, create_postgis_geometry=True, postgis_geometry_column=POSTGIS)
-    elif:
+    else:
 	admin.setup_db(DATABASE, TABLE, HOME)
 elif COMMAND == 'load_records':
     admin.load_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH, RECURSIVE)
