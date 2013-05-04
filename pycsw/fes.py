@@ -310,15 +310,15 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
 
         if spatial_predicate == 'beyond':
             spatial_query = "not st_dwithin(%s, \
-            st_geomfromtext('%s'), %f)" % \
+            st_geomfromtext('%s',4326), %f)" % \
                 (util.geomattr_native, geometry.wkt, float(distance))
         elif spatial_predicate == 'dwithin':
             spatial_query = "st_dwithin(%s, \
-            st_geomfromtext('%s'), %f)" % \
+            st_geomfromtext('%s',4326), %f)" % \
                 (util.geomattr_native, geometry.wkt, float(distance))
         else:
             spatial_query = "st_%s(%s, \
-            st_geomfromtext('%s'))" % \
+            st_geomfromtext('%s',4326))" % \
                 (spatial_predicate, util.geomattr_native, geometry.wkt)
                 
     else:
