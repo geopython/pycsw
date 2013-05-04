@@ -83,12 +83,18 @@ SYNOPSIS
     -u    URL of CSW
 
     -x    XML document
+    
+    -g	  PostGIS Geometry column name (set to value 'default' for default column name)
 
 EXAMPLES
 
     1.) setup_db: Creates repository tables and indexes
 
         pycsw-admin.py -c setup_db -f default.cfg
+        
+        Setup PostGIS (postgis and plpythonu extensions have to be loaded)
+        
+        pycsw-admin.py -c setup_db -f default.cfg -g default
 
     2.) load_records: Loads metadata records from directory into repository
 
@@ -145,6 +151,7 @@ OUTPUT_FILE = None
 CSW_URL = None
 XML = None
 XSD = None
+POSTGIS = None
 TIMEOUT = 30
 
 if len(sys.argv) == 1:
@@ -152,7 +159,7 @@ if len(sys.argv) == 1:
     sys.exit(1)
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:g:')
 except getopt.GetoptError, err:
     print '\nERROR: %s' % err
     print usage()
@@ -177,6 +184,8 @@ for o, a in OPTS:
         XSD = a
     if o == '-t':
         TIMEOUT = int(a)
+    if o == '-g':
+	POSTGIS = a
     if o == '-h':  # dump help and exit
         print usage()
         sys.exit(3)
@@ -213,11 +222,6 @@ if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
     DATABASE = SCP.get('repository', 'database')
     URL = SCP.get('server', 'url')
     HOME = SCP.get('server', 'home')
-    try:
-	POSTGIS = SCP.get('repository', 'geometry_column')
-	POSTGIS_NATIVE = True
-    except ConfigParser.NoOptionError:
-	POSTGIS_NATIVE = False
     METADATA = dict(SCP.items('metadata:main'))
     try:
         TABLE = SCP.get('repository', 'table')
@@ -240,8 +244,11 @@ elif COMMAND == 'validate_xml':
         sys.exit(12)
 
 if COMMAND == 'setup_db':
-    if (POSTGIS_NATIVE):
-	admin.setup_db(DATABASE, TABLE, HOME, create_postgis_geometry=True, postgis_geometry_column=POSTGIS)
+    if (POSTGIS):
+	if (POSTGIS == 'default'):
+	    admin.setup_db(DATABASE, TABLE, HOME, create_postgis_geometry=True)
+	else:
+	    admin.setup_db(DATABASE, TABLE, HOME, create_postgis_geometry=True, postgis_geometry_column=POSTGIS)
     else:
 	admin.setup_db(DATABASE, TABLE, HOME)
 elif COMMAND == 'load_records':
