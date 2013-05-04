@@ -258,8 +258,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             conn2 = dbase.connect()
             create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
             create_insert_update_trigger_sql = '''
-DROP TRIGGER %(table)s_update_geometry ON %(table)s;
-DROP FUNCTION %(table)s_update_geometry();
+DROP TRIGGER IF EXISTS %(table)s_update_geometry ON %(table)s;
+DROP FUNCTION IF EXISTS %(table)s_update_geometry();
 CREATE FUNCTION %(table)s_update_geometry() RETURNS trigger AS $%(table)s_update_geometry$
     BEGIN
         IF NEW.wkt_geometry IS NULL THEN
