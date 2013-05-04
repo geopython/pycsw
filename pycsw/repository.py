@@ -65,13 +65,14 @@ class Repository(object):
         self.dbtype = engine.name
 
         self.session = create_session(engine)
-
+	
+	temp_dbtype = ''
         # check if PostgreSQL is enabled with PostGIS 1.x
         if self.dbtype == 'postgresql':
             try:
                 self.session.execute(select([func.postgis_version()]))
-                self.dbtype = 'postgresql+postgis+wkt'
-                LOGGER.debug('PostgreSQL+PostGIS+WKT detected')
+                temp_dbtype = 'postgresql+postgis+wkt'
+                LOGGER.debug('PostgreSQL+PostGIS1+WKT detected')
             except:
                 pass
 
@@ -79,8 +80,8 @@ class Repository(object):
         if self.dbtype == 'postgresql':
             try:
                 self.session.execute('select(postgis_version())')
-                self.dbtype = 'postgresql+postgis+wkt'
-                LOGGER.debug('PostgreSQL+PostGIS+WKT detected')
+                temp_dbtype = 'postgresql+postgis+wkt'
+                LOGGER.debug('PostgreSQL+PostGIS2+WKT detected')
             except:
                 pass
 
@@ -90,10 +91,13 @@ class Repository(object):
                 result = self.session.execute("select f_geometry_column from geometry_columns where f_table_name = '%s' and f_geometry_column != 'wkt_geometry' limit 1;" % table)
 		row = result.fetchone()
                 util.geomattr_native = str(row["f_geometry_column"])
-                self.dbtype = 'postgresql+postgis+native'
+                temp_dbtype = 'postgresql+postgis+native'
                 LOGGER.debug('PostgreSQL+PostGIS+Native detected')
             except:
                 pass
+	
+	if (temp_dbtype != ''):
+	    self.dbtype = temp_dbtype
 
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             if __version__ >= '0.7':
