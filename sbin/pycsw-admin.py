@@ -3,6 +3,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2012 Tom Kralidis
 #
@@ -212,6 +213,11 @@ if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
     DATABASE = SCP.get('repository', 'database')
     URL = SCP.get('server', 'url')
     HOME = SCP.get('server', 'home')
+    try:
+	POSTGIS = SCP.get('repository', 'geometry_column')
+	POSTGIS_NATIVE = True
+    except ConfigParser.NoOptionError:
+	POSTGIS_NATIVE = False
     METADATA = dict(SCP.items('metadata:main'))
     try:
         TABLE = SCP.get('repository', 'table')
@@ -234,7 +240,10 @@ elif COMMAND == 'validate_xml':
         sys.exit(12)
 
 if COMMAND == 'setup_db':
-    admin.setup_db(DATABASE, TABLE, HOME)
+    if (POSTGIS_NATIVE):
+	admin.setup_db(DATABASE, TABLE, HOME, create_postgis_geometry=True, postgis_geometry_column=POSTGIS)
+    elif:
+	admin.setup_db(DATABASE, TABLE, HOME)
 elif COMMAND == 'load_records':
     admin.load_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH, RECURSIVE)
 elif COMMAND == 'export_records':

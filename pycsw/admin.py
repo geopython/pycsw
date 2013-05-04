@@ -2,6 +2,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2012 Tom Kralidis
 #
@@ -39,7 +40,7 @@ from pycsw import metadata, repository, util
 LOGGER = logging.getLogger(__name__)
 
 
-def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, extra_columns=[]):
+def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, create_postgis_geometry=False, postgis_geometry_column='postgis_geometry', extra_columns=[]):
     """Setup database tables and indexes"""
     from sqlalchemy import Column, create_engine, Integer, String, MetaData, \
         Table, Text
@@ -240,6 +241,29 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             conn.execute(function_get_geometry_area)
             conn.execute(function_get_spatial_overlay_rank)
 
+    if create_postgis_geometry:
+        if dbase.name == 'postgresql':  # create native geometry column within db
+            LOGGER.info('Creating native PostGIS geometry column')
+            conn2 = dbase.connect()
+            create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry;" % (table, postgis_geometry_column)
+            create_insert_update_trigger_sql = '''
+DROP TRIGGER %(table)s_update_geometry ON %(table)s;
+DROP FUNCTION %(table)s_update_geometry();
+CREATE FUNCTION %(table)s_update_geometry() RETURNS trigger AS $%(table)s_update_geometry$
+    BEGIN
+        IF NEW.wkt_geometry IS NULL THEN
+            RETURN NEW;
+        END IF;
+        NEW.%(geometry)s := ST_GeomFromText(NEW.wkt_geometry,4326);
+        RETURN NEW;
+    END;
+$%(table)s_update_geometry$ LANGUAGE plpgsql;
+
+CREATE TRIGGER %(table)s_update_geometry BEFORE INSERT OR UPDATE ON %(table)s
+    FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
+        ''' % {"table": table, "geometry": postgis_geometry_column}
+	    conn2.execute(create_column_sql)
+	    conn2.execute(create_insert_update_trigger_sql)
 
 def load_records(context, database, table, xml_dirpath, recursive=False):
     """Load metadata records from directory of files to database"""
