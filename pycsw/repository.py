@@ -87,7 +87,7 @@ class Repository(object):
         # check if a native PostGIS geometry column exists
         if self.dbtype == 'postgresql':
             try:
-                result = self.session.execute("select f_geometry_column from geometry_columns where f_table_name = '%s' limit 1;" % table)
+                result = self.session.execute("select f_geometry_column from geometry_columns where f_table_name = '%s' and f_geometry_column != 'wkt_geometry' limit 1;" % table)
 		row = result.fetchone()
                 util.geomattr_native = str(row["f_geometry_column"])
                 self.dbtype = 'postgresql+postgis+native'
