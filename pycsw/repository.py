@@ -58,6 +58,8 @@ class Repository(object):
         base = declarative_base(bind=engine)
 
         LOGGER.debug('binding ORM to existing database')
+        
+        self.postgis_geometry_column = ''
 
         self.dataset = type('dataset', (base,),
         dict(__tablename__=table,__table_args__={'autoload': True}))
@@ -90,7 +92,7 @@ class Repository(object):
             try:
                 result = self.session.execute("select f_geometry_column from geometry_columns where f_table_name = '%s' and f_geometry_column != 'wkt_geometry' limit 1;" % table)
 		row = result.fetchone()
-                util.geomattr_native = str(row["f_geometry_column"])
+                self.postgis_geometry_column = str(row["f_geometry_column"])
                 temp_dbtype = 'postgresql+postgis+native'
                 #LOGGER.debug('PostgreSQL+PostGIS+Native detected')
             except:

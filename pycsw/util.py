@@ -44,9 +44,6 @@ ranking_enabled = False
 ranking_pass = False
 ranking_query_geometry = ''
 
-#Name of PostGIS native geometry column that was automatically detected
-geomattr_native = ''
-
 def get_today_and_now():
     """Get the date, right now, in ISO8601"""
     return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())

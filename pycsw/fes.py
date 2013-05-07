@@ -242,7 +242,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
     return where, values
 
 
-def _get_spatial_operator(geomattr, element, dbtype, nsmap):
+def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_column='wkb_geometry'):
     """return the spatial predicate function"""
     property_name = element.find(util.nspath_eval('ogc:PropertyName', nsmap))
     distance = element.find(util.nspath_eval('ogc:Distance', nsmap))
@@ -311,15 +311,15 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap):
         if spatial_predicate == 'beyond':
             spatial_query = "not st_dwithin(%s, \
             st_geomfromtext('%s',4326), %f)" % \
-                (util.geomattr_native, geometry.wkt, float(distance))
+                (postgis_geometry_column, geometry.wkt, float(distance))
         elif spatial_predicate == 'dwithin':
             spatial_query = "st_dwithin(%s, \
             st_geomfromtext('%s',4326), %f)" % \
-                (util.geomattr_native, geometry.wkt, float(distance))
+                (postgis_geometry_column, geometry.wkt, float(distance))
         else:
             spatial_query = "st_%s(%s, \
             st_geomfromtext('%s',4326))" % \
-                (spatial_predicate, util.geomattr_native, geometry.wkt)
+                (spatial_predicate, postgis_geometry_column, geometry.wkt)
                 
     else:
         LOGGER.debug('Adjusting spatial query')
