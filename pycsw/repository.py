@@ -58,6 +58,8 @@ class Repository(object):
         base = declarative_base(bind=engine)
 
         LOGGER.debug('binding ORM to existing database')
+        
+        self.postgis_geometry_column = ''
 
         self.dataset = type('dataset', (base,),
         dict(__tablename__=table,__table_args__={'autoload': True}))
@@ -65,15 +67,40 @@ class Repository(object):
         self.dbtype = engine.name
 
         self.session = create_session(engine)
-
-        # check if PostgreSQL is enabled with PostGIS
+	
+	temp_dbtype = ''
+        # check if PostgreSQL is enabled with PostGIS 1.x
         if self.dbtype == 'postgresql':
             try:
                 self.session.execute(select([func.postgis_version()]))
-                self.dbtype = 'postgresql+postgis'
-                LOGGER.debug('PostgreSQL+PostGIS detected')
+                temp_dbtype = 'postgresql+postgis+wkt'
+                #LOGGER.debug('PostgreSQL+PostGIS1+WKT detected')
             except:
                 pass
+
+        # check if PostgreSQL is enabled with PostGIS 2.x
+        if self.dbtype == 'postgresql':
+            try:
+                self.session.execute('select(postgis_version())')
+                temp_dbtype = 'postgresql+postgis+wkt'
+                #LOGGER.debug('PostgreSQL+PostGIS2+WKT detected')
+            except:
+                pass
+
+        # check if a native PostGIS geometry column exists
+        if self.dbtype == 'postgresql':
+            try:
+                result = self.session.execute("select f_geometry_column from geometry_columns where f_table_name = '%s' and f_geometry_column != 'wkt_geometry' limit 1;" % table)
+		row = result.fetchone()
+                self.postgis_geometry_column = str(row["f_geometry_column"])
+                temp_dbtype = 'postgresql+postgis+native'
+                #LOGGER.debug('PostgreSQL+PostGIS+Native detected')
+            except:
+                pass
+	
+	if (temp_dbtype != ''):
+	    LOGGER.debug('%s support detected' % temp_dbtype)
+	    self.dbtype = temp_dbtype
 
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             if __version__ >= '0.7':
@@ -191,6 +218,7 @@ class Repository(object):
         total = query.count()
         
         if util.ranking_pass:  #apply spatial ranking
+	    #TODO: Check here for dbtype so to extract wkt from postgis native to wkt
 	    LOGGER.debug('spatial ranking detected')
 	    LOGGER.debug('Target WKT: %s', getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']))
 	    LOGGER.debug('Query WKT: %s', util.ranking_query_geometry)
@@ -201,6 +229,7 @@ class Repository(object):
 
         if sortby is not None:  # apply sorting
             LOGGER.debug('sorting detected')
+            #TODO: Check here for dbtype so to extract wkt from postgis native to wkt
             sortby_column = getattr(self.dataset, sortby['propertyname'])
 
             if sortby['order'] == 'DESC':  # descending sort
