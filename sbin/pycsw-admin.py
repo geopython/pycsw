@@ -84,7 +84,7 @@ SYNOPSIS
 
     -x    XML document
     
-    -g	  PostGIS Geometry column name (set to value 'default' for default column name)
+    -g	  Enable PostGIS native geometry (set to value 'enabled' to enable)
 
 EXAMPLES
 
@@ -94,7 +94,7 @@ EXAMPLES
         
         Setup PostGIS (postgis and plpythonu extensions have to be loaded)
         
-        pycsw-admin.py -c setup_db -f default.cfg -g default
+        pycsw-admin.py -c setup_db -f default.cfg -g enabled
 
     2.) load_records: Loads metadata records from directory into repository
 
@@ -245,10 +245,10 @@ elif COMMAND == 'validate_xml':
 
 if COMMAND == 'setup_db':
     if (POSTGIS):
-	if (POSTGIS == 'default'):
+	if (POSTGIS == 'enabled'):
 	    admin.setup_db(DATABASE, TABLE, HOME, create_postgis_geometry=True)
 	else:
-	    admin.setup_db(DATABASE, TABLE, HOME, create_postgis_geometry=True, postgis_geometry_column=POSTGIS)
+	    admin.setup_db(DATABASE, TABLE, HOME)
     else:
 	admin.setup_db(DATABASE, TABLE, HOME)
 elif COMMAND == 'load_records':
