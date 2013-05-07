@@ -15,6 +15,7 @@ pycsw supports the following databases:
 
 - SQLite3
 - PostgreSQL
+- PostgreSQL with PostGIS enabled
 - MySQL
 
 .. note::
@@ -47,6 +48,10 @@ Setting up the Database
   $ python ./sbin/pycsw-admin.py -c setup_db -f default.cfg
 
 This will create the necessary tables and values for the repository.
+
+In case you already have a PostGIS database you can set it up with native geometry support with:
+
+  $ python ./sbin/pycsw-admin.py -c setup_db -f default.cfg -g enabled
 
 The database created is an `OGC SFSQL`_ compliant database, and can be used with any implementing software.  For example, to use with `OGR`_:
 
