@@ -39,10 +39,10 @@ Create a 'parent' metadata record from which all relevant metadata records (imag
       <csw:Constraint version="1.1.0">
         <ogc:Filter>
           <ogc:And>
-	    <ogc:PropertyIsEqualTo>
+            <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>apiso:parentIdentifier</ogc:PropertyName>
               <ogc:PropertyName>$identifier</ogc:PropertyName>
-	    </ogc:PropertyIsEqualTo>
+            </ogc:PropertyIsEqualTo>
             <ogc:BBOX>
               <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
               <gml:Envelope>
