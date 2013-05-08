@@ -335,31 +335,27 @@ def _get_comparison_operator(element):
     return MODEL['ComparisonOperators']['ogc:%s' % util.xmltag_split(element.tag)]['opvalue']
 
 def set_spatial_ranking(geometry):
-    """Given that we have a spatial query in ogc:filter we check the type of geometry 
+    """Given that we have a spatial query in ogc:Filter we check the type of geometry 
     and set the ranking variables"""
     
     if util.ranking_enabled:
-	if geometry.type in ['Polygon','Envelope']:
-	    util.ranking_pass = True
-	    util.ranking_query_geometry = geometry.wkt
-	elif geometry.type == 'LineString':
-	    from shapely.geometry.base import BaseGeometry
-	    from shapely.geometry import box
-	    from shapely.wkt import loads,dumps
-	    ls = loads(geometry.wkt)
-	    b = ls.bounds
-	    tmp_box = box(b[0],b[1],b[2],b[3])
-	    tmp_wkt = dumps(tmp_box)
-	    if tmp_box.area > 0:
-		util.ranking_pass = True
-		util.ranking_query_geometry = tmp_wkt
-	elif geometry.type == 'Point':
-	    from shapely.geometry.base import BaseGeometry
-	    from shapely.geometry import box
-	    from shapely.wkt import loads,dumps
-	    ls = loads(geometry.wkt)
-	    b = ls.bounds
-	    tmp_box = box((float(b[0])-1.0),(float(b[1])-1.0),(float(b[2])+1.0),(float(b[3])+1.0))
-	    tmp_wkt = dumps(tmp_box)
-	    util.ranking_pass = True
-	    util.ranking_query_geometry = tmp_wkt
+        if geometry.type in ['Polygon', 'Envelope']:
+            util.ranking_pass = True
+            util.ranking_query_geometry = geometry.wkt
+        elif geometry.type in ['LineString', 'Point']:
+            from shapely.geometry.base import BaseGeometry
+            from shapely.geometry import box
+            from shapely.wkt import loads,dumps
+            ls = loads(geometry.wkt)
+            b = ls.bounds
+            if geometry.type == 'LineString':
+                tmp_box = box(b[0],b[1],b[2],b[3])
+                tmp_wkt = dumps(tmp_box)
+                if tmp_box.area > 0:
+                    util.ranking_pass = True
+                    util.ranking_query_geometry = tmp_wkt
+            elif geometry.type == 'Point':
+                tmp_box = box((float(b[0])-1.0),(float(b[1])-1.0),(float(b[2])+1.0),(float(b[3])+1.0))
+                tmp_wkt = dumps(tmp_box)
+                util.ranking_pass = True
+                util.ranking_query_geometry = tmp_wkt
