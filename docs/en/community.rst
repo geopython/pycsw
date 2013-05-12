@@ -25,7 +25,7 @@ pycsw is `used`_ in government, academia and industry, both as a standalone and 
    :width: 76px
    :height: 80px
    :alt: INSIDE Idaho
-   :target: http://inside-idaho.org
+   :target: http://insideidaho.org
    :class: padded
 
 |
@@ -33,22 +33,22 @@ pycsw is `used`_ in government, academia and industry, both as a standalone and 
 .. image:: ../_static/ogc-chisp.jpg
    :width: 108px 
    :height: 81px
-   :alt: OGC CHISP-1
+   :alt: OGC Climate-Hydrologic Information Sharing Pilot 
    :target: http://www.opengeospatial.org/projects/initiatives/chisp
    :class: padded
 
 .. image:: ../_static/open-data-catalog.png
    :width: 240px
    :height: 91px
-   :alt: Open Data Catalog
+   :alt: Open Data Catalog, Code for America Brigade
    :target: http://commons.codeforamerica.org/apps/open-data-catalog
    :class: padded
 
 .. image:: ../_static/uni-koeln.png
    :height: 77px
    :width: 77px
-   :alt: University of Cologne
-   :target: http://www.uni-koeln.de/
+   :alt: University of Cologne, Department of Geography, Collaborative Research Centre 806
+   :target: http://crc806db.uni-koeln.de/
    :class: padded
 
 
