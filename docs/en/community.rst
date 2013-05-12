@@ -5,7 +5,60 @@
 Community
 =========
 
-pycsw is `used`_ in government, academia and industry, both as a standalone and embedded component in geospatial data portal applications such as GeoNode and Open Data Catalog.
+pycsw is `used`_ in government, academia and industry, both as a standalone and embedded component in geospatial data portal applications.
+
+.. image:: ../_static/geonode.jpg
+   :width: 162px
+   :height: 56px
+   :alt: GeoNode
+   :target: http://geonode.org
+   :class: padded
+
+.. image:: ../_static/sopac.jpg
+   :width: 139px
+   :height: 80px
+   :alt: Secretariat of the Pacific Community
+   :target: http://sopac.org
+   :class: padded
+
+.. image:: ../_static/inside-idaho.jpg
+   :width: 76px
+   :height: 80px
+   :alt: INSIDE Idaho
+   :target: http://inside-idaho.org
+   :class: padded
+
+|
+
+.. image:: ../_static/ogc-chisp.jpg
+   :width: 108px 
+   :height: 81px
+   :alt: OGC CHISP-1
+   :target: http://www.opengeospatial.org/projects/initiatives/chisp
+   :class: padded
+
+.. image:: ../_static/open-data-catalog.png
+   :width: 240px
+   :height: 91px
+   :alt: Open Data Catalog
+   :target: http://commons.codeforamerica.org/apps/open-data-catalog
+   :class: padded
+
+.. image:: ../_static/uni-koeln.png
+   :height: 77px
+   :width: 77px
+   :alt: University of Cologne
+   :target: http://www.uni-koeln.de/
+   :class: padded
+
+
+
+There are numerous ways to interact with the pycsw community.
+
+Google+
+-------
+
+pycsw exists as a `Google+ community`_.  Join us there for pycsw news discussion, and more.
 
 FAQ
 ---
@@ -65,6 +118,7 @@ Users, developers and others are more than welcome!  There are plenty of ways to
 
 
 
+.. _`Google+ community`: https://plus.google.com/communities/104084873011085696113
 .. _`bug`: https://github.com/geopython/pycsw/issues/new
 .. _`used`: https://github.com/geopython/pycsw/wiki/Live-Deployments
 .. _`pull requests`: https://help.github.com/articles/creating-a-pull-request
