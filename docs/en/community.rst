@@ -11,7 +11,7 @@ pycsw is `used`_ in government, academia and industry, both as a standalone and 
    :width: 150px
    :height: 84px
    :alt: USGS Center for Integrated Data Analytics
-   :target: http://cida.usgs.org
+   :target: http://cida.usgs.gov
    :class: padded
 
 .. image:: ../_static/geonode.jpg
