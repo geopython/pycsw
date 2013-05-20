@@ -30,6 +30,7 @@
 # =================================================================
 
 import os
+import warnings
 
 class Profile(object):
     ''' base Profile class '''
@@ -124,6 +125,15 @@ def load_profiles(path, cls, profiles):
     aps['loaded'] = {}
 
     for prof in profiles.split(','):
-        modulename='%s.%s.%s' % (path.replace(os.sep, '.'), prof, prof)
-        look_for_subclass(modulename)
+        # fgdc, atom, dif are supported in core
+        # no need to specify them explicitly anymore
+        # provide deprecation warning
+        # https://github.com/geopython/pycsw/issues/118
+        if prof in ['fgdc', 'atom', 'dif']:
+            warnings.warn('%s is now a core module, and does not need to be'
+                          ' specified explicitly.  So you can remove %s from '
+                          'server.profiles' % (prof, prof), DeprecationWarning)
+        else: 
+            modulename='%s.%s.%s' % (path.replace(os.sep, '.'), prof, prof)
+            look_for_subclass(modulename)
     return aps
