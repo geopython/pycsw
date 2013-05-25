@@ -54,7 +54,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **contact_url**: the URL to more information about the provider contact
 - **contact_hours**: the hours of service to contact the provider
 - **contact_instructions**: the how to contact the provider contact
-- **contact_role**: the role of the provider contact
+- **contact_role**: the role of the provider contact as per the `ISO 19115 CI_RoleCode codelist <http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode>`_).  Accepted values are ``author``, ``processor``, ``publisher``, ``custodian``, ``pointOfContact``, ``distributor``, ``user``, ``resourceProvider``, ``originator``, ``owner``, ``principalInvestigator``
 
 **[repository]**
 
