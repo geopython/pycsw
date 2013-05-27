@@ -77,7 +77,7 @@ Mailing List
 
 The pycsw-devel mailing list enables users and developers to exchange ideas, discuss improvements / issues, and ask questions. To subscribe, visit http://lists.osgeo.org/mailman/listinfo/pycsw-devel.
 
-Mailing list archives are available at http://lists.osgeo.org/pipermail/pycsw-devel.
+Mailing list archives are available at http://lists.osgeo.org/pipermail/pycsw-devel.  The mailing list is also available/searchable via the OSGeo `Nabble`_ forum.
 
 IRC
 ---
@@ -129,6 +129,7 @@ Users, developers and others are more than welcome!  There are plenty of ways to
 .. _`bug`: https://github.com/geopython/pycsw/issues/new
 .. _`used`: https://github.com/geopython/pycsw/wiki/Live-Deployments
 .. _`pull requests`: https://help.github.com/articles/creating-a-pull-request
+.. _`Nabble`: http://osgeo-org.1560.x6.nabble.com/pycsw-devel-f5055821.html
 .. _`Chatzilla`: http://chatzilla.hacksrus.com/
 .. _`Colloquy`: http://colloquy.info/
 .. _`irssi`: http://irssi.org/
