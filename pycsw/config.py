@@ -226,7 +226,7 @@ class StaticContext(object):
                     'values': ['2.0.2']
                 },
                 'service': {
-                    'values': ['http://www.opengis.net/cat/csw/2.0.2']
+                    'values': ['CSW']
                 }
             },
             'constraints': {
