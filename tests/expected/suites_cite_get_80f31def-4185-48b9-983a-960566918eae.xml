@@ -214,7 +214,7 @@
       <ows:Value>2.0.2</ows:Value>
     </ows:Parameter>
     <ows:Parameter name="service">
-      <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+      <ows:Value>CSW</ows:Value>
     </ows:Parameter>
     <ows:Constraint name="XPathQueryables">
       <ows:Value>allowed</ows:Value>
