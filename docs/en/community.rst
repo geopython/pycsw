@@ -85,7 +85,7 @@ IRC
 Internet Relay Chat (IRC) allows for real-time communication and group discussion.  The pycsw IRC channel can be found at:
 
 - **Server**: ``irc.freenode.net``
-- **Channel**: ``#geopython``
+- **Channel**: ``#pycsw`` (or ``#geopython``)
 - **Port**: ``6667``
 
 pycsw developers can be found in the IRC channel.  Below are some suggested IRC clients:
