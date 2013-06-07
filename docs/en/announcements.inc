@@ -1,3 +1,5 @@
+**2013-06-07** - `pycsw 1.4.2 released <http://lists.osgeo.org/pipermail/pycsw-devel/2013-June/000206.html>`_
+
 **2013-04-12** - `pycsw enters OSGeo Incubation <http://lists.osgeo.org/pipermail/pycsw-devel/2013-April/000180.html>`_
 
 **2013-03-26** - `pycsw 1.4.1 released <http://lists.osgeo.org/pipermail/pycsw-devel/2013-March/000179.html>`_
