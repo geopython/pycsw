@@ -7,6 +7,8 @@ Community
 
 pycsw is `used`_ in government, academia and industry, both as a standalone and embedded component in geospatial data portal applications.
 
+.. include:: ../build/map.rst
+
 .. image:: ../_static/usgs-cida.jpg
    :width: 150px
    :height: 84px

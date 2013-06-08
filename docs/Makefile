@@ -54,6 +54,7 @@ init:
 	@echo "Init finished. Other targets can now be built.";\
 
 html:
+	python build_map.py > $(BUILDDIR)/map.rst
 	@for lang in $(LANGUAGES);\
 	do \
 		mkdir -p $(BUILDDIR)/html/$$lang $(BUILDDIR)/doctrees/$$lang; \
