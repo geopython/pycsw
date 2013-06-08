@@ -1,7 +1,7 @@
 #
-# spec file for package pycsw (1.4.0)
+# spec file for package pycsw (1.4.2)
 #
-# Copyright (c) 2011 Angelos Tzotsos <tzotsos@opensuse.org>
+# Copyright (c) 2013 Angelos Tzotsos <tzotsos@opensuse.org>
 #
 # This file and all modifications and additions to the pycsw
 # package are under the same license as the package itself.
@@ -12,48 +12,66 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
-Name:           pycsw
-Version:        1.4.0
+%define pyname pycsw
+
+Name:           python-%{pyname}
+Version:        1.4.2
 Release:        1
 License:        MIT
 Summary:        An OGC CSW server implementation written in Python
 Url:            http://pycsw.org/
 Group:          Productivity/Scientific/Other
-Source0:        %{name}-%{version}.tar.gz
+Source0:        %{pyname}-%{version}.tar.gz
 Requires:	python
 Requires:	python-sqlalchemy
 Requires:	python-Shapely
 Requires:	python-lxml
 Requires:	python-owslib
 Requires:	python-pyproj
-Requires:	apache2
 BuildRequires:  fdupes python 
+Provides:       %{pyname} = %{version}
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
-pycsw fully implements the OpenGIS Catalogue Service Implementation Specification
-[Catalogue Service for the Web].
+pycsw implements clause 10 (HTTP protocol binding (Catalogue Services for the Web, CSW)) 
+of the OpenGIS Catalogue Service Implementation Specification, version 2.0.2. 
 Initial development started in 2010 (more formally announced in 2011).
-The project is certified OGC Compliant, and is an OGC Reference Implementation.
-pycsw allows for the publishing and discovery of geospatial metadata.
-Existing repositories of geospatial metadata can also be exposed via OGC:CSW 2.0.2,
-providing a standards-based metadata and catalogue component of spatial data infrastructures.
-pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X).
+pycsw allows for the publishing and discovery of geospatial metadata. Existing repositories of geospatial metadata can be exposed via OGC:CSW 2.0.2.
+pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X)
 
+%package -n %{pyname}-cgi
+Summary:        CGI frondend to pycsw using apache web server
+Group:          Productivity/Scientific/Other
+Requires:       apache2
+Requires:       %{pyname} = %{version}
+%description -n %{pyname}-cgi
+Python CGI frondend to pycsw using apache web server
 
 %prep
-%setup -q
+%setup -q -n %{pyname}-%{version}
 
 %build
 
 %install
-mkdir -p %{buildroot}/srv/www/htdocs
+rm -rf %{buildroot}
+
+python setup.py install --prefix=%{_prefix} --root=%{buildroot} \
+                                            --record-rpm=INSTALLED_FILES
+
+mkdir -p %{buildroot}/srv/www/htdocs/pycsw
 mkdir -p %{buildroot}%{_sysconfdir}/apache2/conf.d
 
-cd ..
-mv pycsw-1.4.0 %{buildroot}/srv/www/htdocs/pycsw
-mkdir pycsw-1.4.0
+mv data %{buildroot}/srv/www/htdocs/pycsw/
+mv tests %{buildroot}/srv/www/htdocs/pycsw/
+mv csw.py %{buildroot}/srv/www/htdocs/pycsw/
+mv csw.wsgi %{buildroot}/srv/www/htdocs/pycsw/
+mv COMMITTERS.txt %{buildroot}/srv/www/htdocs/pycsw/
+mv default-sample.cfg %{buildroot}/srv/www/htdocs/pycsw/
+mv HISTORY.txt %{buildroot}/srv/www/htdocs/pycsw/
+mv LICENSE.txt %{buildroot}/srv/www/htdocs/pycsw/
+mv README.txt %{buildroot}/srv/www/htdocs/pycsw/
+mv VERSION.txt %{buildroot}/srv/www/htdocs/pycsw/
 
 cat > %{buildroot}%{_sysconfdir}/apache2/conf.d/pycsw.conf << EOF
 <Location /pycsw/>
@@ -138,9 +156,14 @@ EOF
 python /srv/www/htdocs/pycsw/tests/gen_html.py > /srv/www/htdocs/pycsw/tests/index.html
 
 %clean
-rm -rf '%{buildroot}'
+rm -rf %{buildroot}
 
-%files
+%files -f INSTALLED_FILES
+%defattr(-,root,root)
+%dir %{python_sitelib}/pycsw
+%{python_sitelib}/pycsw/
+
+%files -n %{pyname}-cgi
 %defattr(-,root,root)
 %config(noreplace) %{_webappconfdir}/pycsw.conf
 %dir %{_sysconfdir}/apache2/
