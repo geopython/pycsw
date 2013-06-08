@@ -3,90 +3,210 @@
 <csw:HarvestResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
   <csw:TransactionResponse version="2.0.2">
     <csw:TransactionSummary>
-      <csw:totalInserted>20</csw:totalInserted>
+      <csw:totalInserted>50</csw:totalInserted>
       <csw:totalUpdated>0</csw:totalUpdated>
       <csw:totalDeleted>0</csw:totalDeleted>
     </csw:TransactionSummary>
     <csw:InsertResult>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>OpenGeo Web Feature Demo - Contact OpenGeo for GeoServer, PostGIS, and OpenLayers support and services</dc:title>
+        <dc:title>OpenGeo Demo Web Feature Service</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-og:roads</dc:identifier>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:water_lines</dc:identifier>
+        <dc:title>Water Lines</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:roads</dc:identifier>
         <dc:title>Roads</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-za:za_points</dc:identifier>
-        <dc:title>Points of Interest in South Africa</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-za:za_natural</dc:identifier>
-        <dc:title>Natural Landmarks in South Africa</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-topp:tasmania_state_boundaries</dc:identifier>
-        <dc:title>Tasmania state boundaries</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-topp:world</dc:identifier>
-        <dc:title>ThematicMapping.org World Borderse</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-topp:tasmania_water_bodies</dc:identifier>
-        <dc:title>Tasmania water bodies</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-tiger:poly_landmarks</dc:identifier>
-        <dc:title>Manhattan (NY) landmarks</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:roads_text_ref</dc:identifier>
+        <dc:title>Road Reference Names</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-og:streams</dc:identifier>
-        <dc:title>Streams</dc:title>
+        <dc:title>streams</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-og:archsites</dc:identifier>
-        <dc:title>Archeological sites</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:polygon_barrier</dc:identifier>
+        <dc:title>Barriers</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-usgs:tracts</dc:identifier>
-        <dc:title>Census Tracts</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:placenames_capital</dc:identifier>
+        <dc:title>Capital Cities</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-tiger:tiger_roads</dc:identifier>
-        <dc:title>Manhattan (NY) roads</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:water_lines_casing</dc:identifier>
+        <dc:title>Water Line Casing</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-og:bugsites</dc:identifier>
-        <dc:title>Bug sites</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-ne:ne_10m_populated_places</dc:identifier>
+        <dc:title>Populated Places</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-tiger:poi</dc:identifier>
-        <dc:title>Manhattan (NY) points of interest</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-topp:tasmania_cities</dc:identifier>
-        <dc:title>Tasmania cities</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-og:restricted</dc:identifier>
-        <dc:title>Restricted areas</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:landcover</dc:identifier>
+        <dc:title>Landcover</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-topp:states</dc:identifier>
         <dc:title>USA Population</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-za:za_vegetation</dc:identifier>
-        <dc:title>South African Vegetation</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:admin_other</dc:identifier>
+        <dc:title>Other Administrative Boundaries</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:minor_roads_casing</dc:identifier>
+        <dc:title>Minor Road Casing</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:highway_area_casing</dc:identifier>
+        <dc:title>Highway Casing</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:buildings</dc:identifier>
+        <dc:title>Buildings</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:admin_5678</dc:identifier>
+        <dc:title>Regional Administrative Boundaries</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:water_lines_low_zoom</dc:identifier>
+        <dc:title>Rivers</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:roads_text_ref_low_zoom</dc:identifier>
+        <dc:title>Road Reference Names Large</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:highway_area_fill</dc:identifier>
+        <dc:title>Highway Fill</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:admin_01234</dc:identifier>
+        <dc:title>National Administrative Boundaries</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ne:ne_10m_admin_1_states_provinces_lines_shp</dc:identifier>
+        <dc:title>State Boundaries</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:placenames_large</dc:identifier>
+        <dc:title>Countries and States</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-topp:tasmania_state_boundaries</dc:identifier>
+        <dc:title>Tasmania State Boundaries</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:glaciers_text</dc:identifier>
+        <dc:title>Glaciers</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-topp:tasmania_roads</dc:identifier>
-        <dc:title>Tasmania roads</dc:title>
+        <dc:title>Tasmania Roads</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-za:za_roads</dc:identifier>
-        <dc:title>South African Roads</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:water_areas_overlay</dc:identifier>
+        <dc:title>Wetlands</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-og:roads</dc:identifier>
+        <dc:title>roads</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:shoreline_300</dc:identifier>
+        <dc:title>World</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:builtup_area</dc:identifier>
+        <dc:title>Urban Areas</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:placenames_medium</dc:identifier>
+        <dc:title>Cities</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ne:ne_10m_admin_0_boundary_lines_land</dc:identifier>
+        <dc:title>Country Boundary Lines</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-og:bugsites</dc:identifier>
+        <dc:title>bugsites</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:water_areas</dc:identifier>
+        <dc:title>Water Area</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:buildings_lz</dc:identifier>
+        <dc:title>Buildings</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:placenames_small</dc:identifier>
+        <dc:title>placenames-small</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-topp:tasmania_cities</dc:identifier>
+        <dc:title>Tasmania Cities</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:ne_10m_populated_places</dc:identifier>
+        <dc:title>Populated Places</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:minor_roads_fill</dc:identifier>
+        <dc:title>Minor Road Fill</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:landuse_overlay</dc:identifier>
+        <dc:title>Landuse</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ne:ne_10m_admin_0_countries</dc:identifier>
+        <dc:title>Countries</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:ne_110m_admin_0_boundary_lines_land</dc:identifier>
+        <dc:title>Land Boundaries</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:processed_p</dc:identifier>
+        <dc:title>Coastlines</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:landcover_line</dc:identifier>
+        <dc:title>Cutlines</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-og:archsites</dc:identifier>
+        <dc:title>archsites</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ne:ne_10m_roads</dc:identifier>
+        <dc:title>Roads</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:roads_text_name</dc:identifier>
+        <dc:title>Road Names</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ne:ne_10m_roads_north_america</dc:identifier>
+        <dc:title>Roads North America</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-osm:sports_grounds</dc:identifier>
+        <dc:title>Sporting Grounds</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-og:restricted</dc:identifier>
+        <dc:title>restricted</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-topp:tasmania_water_bodies</dc:identifier>
+        <dc:title>Tasmania Water Bodies</dc:title>
       </csw:BriefRecord>
     </csw:InsertResult>
   </csw:TransactionResponse>
