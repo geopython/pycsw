@@ -10,7 +10,7 @@ Features
 
 - fully `compliant`_ OGC CSW 2.0.2
 - fully passes the `OGC CITE CSW`_ test suite (103/103)
-- harvesting support for WMS, WFS, WCS, WPS, WAF, CSW
+- harvesting support for WMS, WFS, WCS, WPS, WAF, CSW, SOS
 - implements `INSPIRE Discovery Services 3.0`_
 - implements `ISO Metadata Application Profile 1.0.0`_
 - implements `FGDC CSDGM Application Profile for CSW 2.0`_
