@@ -13,18 +13,18 @@ For transactions and harvesting, pycsw supports the following metadata resource 
 .. csv-table::
   :header: Resource Type,Namespace,Transaction,Harvest
 
-  Dublin Core,http://www.opengis.net/cat/csw/2.0.2,yes,yes
-  FGDC,http://www.opengis.net/cat/csw/csdgm,yes,yes
-  ISO 19139,http://www.isotc211.org/2005/gmd,yes,yes
-  ISO GMI,http://www.isotc211.org/2005/gmi,yes,yes
-  OGC:CSW 2.0.2,http://www.opengis.net/cat/csw/2.0.2,,yes
-  OGC:WMS 1.1.1,http://www.opengis.net/wms,,yes
-  OGC:WFS 1.1.0,http://www.opengis.net/wfs,,yes
-  OGC:WCS 1.0.0,http://www.opengis.net/wcs,,yes
-  OGC:WPS 1.0.0,http://www.opengis.net/wps/1.0.0,,yes
-  OGC:SOS 1.0.0,http://www.opengis.net/sos/1.0,,yes
-  OGC:SOS 2.0.0,http://www.opengis.net/sos/2.0,,yes
-  `WAF`_,urn:geoss:urn,yes
+  Dublin Core,``http://www.opengis.net/cat/csw/2.0.2``,yes,yes
+  FGDC,``http://www.opengis.net/cat/csw/csdgm``,yes,yes
+  ISO 19139,``http://www.isotc211.org/2005/gmd``,yes,yes
+  ISO GMI,``http://www.isotc211.org/2005/gmi``,yes,yes
+  OGC:CSW 2.0.2,``http://www.opengis.net/cat/csw/2.0.2``,,yes
+  OGC:WMS 1.1.1,``http://www.opengis.net/wms``,,yes
+  OGC:WFS 1.1.0,``http://www.opengis.net/wfs``,,yes
+  OGC:WCS 1.0.0,``http://www.opengis.net/wcs``,,yes
+  OGC:WPS 1.0.0,``http://www.opengis.net/wps/1.0.0``,,yes
+  OGC:SOS 1.0.0,``http://www.opengis.net/sos/1.0``,,yes
+  OGC:SOS 2.0.0,``http://www.opengis.net/sos/2.0``,,yes
+  `WAF`_,``urn:geoss:urn``,,yes
 
 Additional metadata models are supported by enabling the appropriate :ref:`profiles`.
 

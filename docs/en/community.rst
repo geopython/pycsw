@@ -27,7 +27,7 @@ pycsw is `used`_ in government, academia and industry, both as a standalone and 
    :width: 139px
    :height: 80px
    :alt: Secretariat of the Pacific Community
-   :target: http://sopac.org
+   :target: http://www.sopac.org
    :class: padded
 
 .. image:: ../_static/inside-idaho.jpg
