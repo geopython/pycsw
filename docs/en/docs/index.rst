@@ -11,4 +11,4 @@ Documentation
 Workshop
 --------
 
-* `pycsw Workshop <https://geopython.github.io/pycsw-workshop>`_
+* `pycsw Workshop <http://geopython.github.io/pycsw-workshop>`_
