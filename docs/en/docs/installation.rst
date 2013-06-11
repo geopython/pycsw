@@ -6,7 +6,9 @@ Installation
 System Requirements
 -------------------
 
-pycsw requires the following supporting libraries:
+pycsw is written in `Python <http://python.org>`_, and works with (tested) version 2.6 and 2.7
+
+pycsw requires the following Python supporting libraries:
 
 - `lxml`_ for XML support
 - `SQLAlchemy`_ for database bindings
@@ -25,7 +27,27 @@ pycsw requires the following supporting libraries:
 Installing from Source
 ----------------------
 
-:ref:`Download <download>` the latest version or fetch from Git:
+:ref:`Download <download>` the latest stable version or fetch from Git.
+
+For Developers and the Truly Impatient
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The 4 minute install:
+
+.. code-block:: bash
+
+  $ virtualenv pycsw && cd pycsw && . bin/activate
+  $ git clone git@github.com:geopython/pycsw.git && cd pycsw
+  $ pip install -e . && pip install -r requirements.txt
+  $ cp default-sample.cfg default.cfg
+  $ vi default.cfg
+  # adjust paths in
+  # - server.home
+  # - repository.database
+  # set server.url to http://localhost:8000/
+  $ python csw.wsgi
+  $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
+
 
 The Quick and Dirty Way
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -160,11 +182,11 @@ or use the `WSGI reference implementation`_:
   $ python ./csw.wsgi
   Serving on port 8000...
 
-which will publish pycsw to http://localhost:8000/
+which will publish pycsw to ``http://localhost:8000/``
 
 .. _`lxml`: http://lxml.de/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
-.. _`Shapely`: http://toblerity.github.com/shapely/
+.. _`Shapely`: http://toblerity.github.io/shapely/
 .. _`pyproj`: http://code.google.com/p/pyproj/
 .. _`OWSLib`: https://github.com/geopython/OWSLib
 .. _`easy_install`: http://packages.python.org/distribute/easy_install.html
