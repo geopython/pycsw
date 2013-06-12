@@ -291,11 +291,6 @@ class Csw(object):
             self.request = postdata
             LOGGER.debug('Request type: POST.  Request:\n%s\n', self.request)
             self.kvp = self.parse_postdata(postdata)
-            if isinstance(self.kvp, str):  # it's an exception
-                error = 1
-                locator = 'service'
-                code = 'InvalidRequest'
-                text = self.kvp
 
         else:  # it's a GET request
             self.requesttype = 'GET'
@@ -394,8 +389,12 @@ class Csw(object):
         if isinstance(self.kvp, str):  # it's an exception
             error = 1
             locator = 'service'
-            code = 'InvalidRequest'
             text = self.kvp
+            if (self.kvp.find('the document is not valid') != -1 or
+                self.kvp.find('document not well-formed') != -1):
+                code = 'NoApplicableCode'
+            else:
+                code = 'InvalidParameterValue'
 
         LOGGER.debug('HTTP Headers:\n%s.' % self.environ)
         LOGGER.debug('Parsed request parameters: %s' % self.kvp)
