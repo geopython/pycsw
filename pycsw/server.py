@@ -964,6 +964,9 @@ class Csw(object):
         self.config.get('server', 'ogc_schemas_base'))
 
         for typename in self.kvp['typename']:
+            if typename.find(':') == -1:  # unqualified typename
+                return self.exceptionreport('InvalidParameterValue',
+                'typename', 'Typename not qualitied: %s' % typename)
             if typename == 'csw:Record':   # load core schema
                 LOGGER.debug('Writing csw:Record schema.')
                 schemacomponent = etree.SubElement(node,
