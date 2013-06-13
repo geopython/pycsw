@@ -365,6 +365,11 @@ def _parse_wms(context, repos, record, identifier):
             '%s,Web image thumbnail (URL),WWW:LINK-1.0-http--image-thumbnail,%s' % (md.contents[layer].name, build_get_url(md.url, params))
         ]
 
+        params['width'] = '500'
+        params['height'] = '300'
+
+        links.append('%s,OGC Web Map Service (ver 1.1.1),OGC:WMS-1.1.1-http-get-map,%s' % (md.contents[layer].name, build_get_url(md.url, params)))
+
         _set(context, recobj, 'pycsw:Links', '^'.join(links))
 
         recobjs.append(recobj)
