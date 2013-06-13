@@ -253,11 +253,11 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             conn.execute(function_get_geometry_area)
             conn.execute(function_get_spatial_overlay_rank)
 
-        if create_postgis_geometry:
-            if dbase.name == 'postgresql':  # create native geometry column within db
-                LOGGER.info('Creating native PostGIS geometry column')
-                create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
-                create_insert_update_trigger_sql = '''
+        if dbase.name == 'postgresql' and create_postgis_geometry:
+            # create native geometry column within db
+            LOGGER.info('Creating native PostGIS geometry column')
+            create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
+            create_insert_update_trigger_sql = '''
 DROP TRIGGER IF EXISTS %(table)s_update_geometry ON %(table)s;
 DROP FUNCTION IF EXISTS %(table)s_update_geometry();
 CREATE FUNCTION %(table)s_update_geometry() RETURNS trigger AS $%(table)s_update_geometry$
