@@ -410,7 +410,7 @@ def optimize_db(context, database, table):
 
     LOGGER.info('Optimizing database %s', database)
     repos = repository.Repository(database, context, table=table)
-    repos.connection.execute('VACUUM ANALYZE')
+    repos.engine.connect().execute('VACUUM ANALYZE').close()
 
 
 def gen_sitemap(context, database, table, url, output_file):
