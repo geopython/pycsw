@@ -7,7 +7,7 @@ Download
 
 * Current Stable Release (1.4.2): `.tar.gz <http://download.osgeo.org/pycsw/pycsw-1.4.2.tar.gz>`__ | `.zip <http://download.osgeo.org/pycsw/pycsw-1.4.2.zip>`__
 
-* Current Development Release (1.6.0-beta1): `.tar.gz <http://download.osgeo.org/pycsw/pycsw-1.6.0-beta1.tar.gz>`__ | `.zip <http://download.osgeo.org/pycsw/pycsw-1.6.0-beta1.zip>`__
+* Current Development Release (1.6.0-rc1): `.tar.gz <http://download.osgeo.org/pycsw/pycsw-1.6.0-rc1.tar.gz>`__ | `.zip <http://download.osgeo.org/pycsw/pycsw-1.6.0-rc1.zip>`__
 
 * `All Releases <http://download.osgeo.org/pycsw/>`_
 
