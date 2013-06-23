@@ -54,18 +54,18 @@ class Repository(object):
             database = database.replace('sqlite:///',
                        'sqlite:///%s%s' % (app_root, os.sep))
 
-        engine = create_engine('%s' % database, echo=False)
+        self.engine = create_engine('%s' % database, echo=False)
 
-        base = declarative_base(bind=engine)
+        base = declarative_base(bind=self.engine)
 
         LOGGER.debug('binding ORM to existing database')
 
         self.dataset = type('dataset', (base,),
         dict(__tablename__=table,__table_args__={'autoload': True}))
 
-        self.dbtype = engine.name
+        self.dbtype = self.engine.name
 
-        self.session = create_session(engine)
+        self.session = create_session(self.engine)
 
         # check if PostgreSQL is enabled with PostGIS
         if self.dbtype == 'postgresql':
@@ -79,7 +79,7 @@ class Repository(object):
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             if __version__ >= '0.7':
                 from sqlalchemy import event
-                @event.listens_for(engine, "connect")
+                @event.listens_for(self.engine, "connect")
                 def connect(dbapi_connection, connection_rec):
                     dbapi_connection.create_function(
                     'query_spatial', 4, util.query_spatial)
@@ -90,7 +90,7 @@ class Repository(object):
                     dbapi_connection.create_function('get_geometry_area', 1,
                     util.get_geometry_area)
             else:  # <= 0.6 behaviour
-                self.connection = engine.raw_connection()
+                self.connection = self.engine.raw_connection()
                 self.connection.create_function(
                 'query_spatial', 4, util.query_spatial)
                 self.connection.create_function(
