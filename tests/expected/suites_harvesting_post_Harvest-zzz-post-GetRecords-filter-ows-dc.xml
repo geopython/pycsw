@@ -5,16 +5,17 @@
   <csw:SearchResults nextRecord="6" numberOfRecordsMatched="6" numberOfRecordsReturned="5" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
       <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-      <dc:title>pycsw Geospatial Catalogue OGC CITE demo</dc:title>
+      <dc:title>pycsw Geospatial Catalogue OGC CITE demo and Reference Implementation</dc:title>
       <dc:type>service</dc:type>
       <dc:subject>ogc</dc:subject>
       <dc:subject>cite</dc:subject>
       <dc:subject>compliance</dc:subject>
       <dc:subject>interoperability</dc:subject>
+      <dc:subject>reference implementation</dc:subject>
       <dc:format>CSW</dc:format>
       <dct:references scheme="OGC:CSW">http://demo.pycsw.org/cite/csw</dct:references>
       <dct:references scheme="OGC:CSW-2.0.2-http-get-capabilities">http://demo.pycsw.org/cite/csw</dct:references>
-      <dct:abstract>pycsw is an OGC CSW server implementation written in Python</dct:abstract>
+      <dct:abstract>pycsw is an OGC CSW server implementation written in Python. pycsw fully implements the OpenGIS Catalogue Service Implementation Specification [Catalogue Service for the Web]. Initial development started in 2010 (more formally announced in 2011). The project is certified OGC Compliant, and is an OGC Reference Implementation. pycsw allows for the publishing and discovery of geospatial metadata. Existing repositories of geospatial metadata can also be exposed via OGC:CSW 2.0.2, providing a standards-based metadata and catalogue component of spatial data infrastructures. pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X)</dct:abstract>
       <dc:creator>Lastname, Firstname</dc:creator>
       <dc:publisher>Organization Name</dc:publisher>
       <dc:contributor>Lastname, Firstname</dc:contributor>

@@ -10,7 +10,7 @@
     <csw:InsertResult>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>pycsw Geospatial Catalogue OGC CITE demo</dc:title>
+        <dc:title>pycsw Geospatial Catalogue OGC CITE demo and Reference Implementation</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
