@@ -55,10 +55,11 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
     if dbase.name == 'postgresql':
         try:
             dbsession = create_session(dbase)
-            dbsession.execute('select(postgis_version())')
+            for row in dbsession.execute('select(postgis_lib_version())'):
+                postgis_lib_version = row[0]
             create_sfsql_tables=False
             create_postgis_geometry = True
-            LOGGER.info('PostGIS 2.x detected: Skipping SFSQL tables creation')
+            LOGGER.info('PostGIS %s detected: Skipping SFSQL tables creation' % postgis_lib_version)
         except:
             create_postgis_geometry = False
     
@@ -256,7 +257,10 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         if dbase.name == 'postgresql' and create_postgis_geometry:
             # create native geometry column within db
             LOGGER.info('Creating native PostGIS geometry column')
-            create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
+            if postgis_lib_version < '2':
+                create_column_sql = "SELECT AddGeometryColumn('%s', '%s', 4236, 'POLYGON', 2)" % (table, postgis_geometry_column)
+            else:
+                create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
             create_insert_update_trigger_sql = '''
 DROP TRIGGER IF EXISTS %(table)s_update_geometry ON %(table)s;
 DROP FUNCTION IF EXISTS %(table)s_update_geometry();
