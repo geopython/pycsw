@@ -40,16 +40,3 @@ The 1.6.0 release brings numerous features, enhancements and fixes to the codeba
 The full list of enhancements and bug fixes is available on https://github.com/geopython/pycsw/issues?milestone=7&state=closed
 
 This release also moves pycsw forward as an OSGeo project in incubation.
-
-Source and binary downloads
----------------------------
-
-The source code is available at:
-
-http://pycsw.org/download.html
-
-Testers and developers are welcome.
-
-The pycsw developer team.
-
-http://pycsw.org/
