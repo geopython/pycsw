@@ -1,3 +1,5 @@
+**2013-06-28** - :doc:`pycsw 1.6.0 released <development/announce/1.6.0>`
+
 **2013-06-26** - `Oregon Coastal & Marine Data Network pycsw Workshop Materials Available <http://www.coastalmarinedata.net/?p=229>`_
 
 **2013-06-07** - `pycsw 1.4.2 released <http://lists.osgeo.org/pipermail/pycsw-devel/2013-June/000206.html>`_
