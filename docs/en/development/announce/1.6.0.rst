@@ -3,3 +3,61 @@
 1.6.0 Announcement
 ==================
 
+The pycsw team announces the release of pycsw 1.6.0.
+
+The 1.6.0 release brings numerous features, enhancements and fixes to the codebase, including:
+
+ * Nabble community forum now available via OSGeo at http://osgeo-org.1560.x6.nabble.com/pycsw-devel-f5055821.html
+ * fix broken connection in pycsw.admin.optimize_db
+ * native PostGIS geometry support
+ * new community section on website (http://pycsw.org/community.html) 
+ * Web Accessible Folder (WAF) harvesting support
+ * added spatial ranking for spatial queries
+ * added lxml 3 support
+ * fixes for new OGC CITE tests
+ * added support for SOS 2.0.0 harvesting
+ * added support for SOS 1.0.0 harvesting
+ * added database specific unit tests
+ * added support for nested OGC Filter queries
+ * fixed ISO output/safeguarding extent elements
+ * fixed parameterization of OGC Filter queries
+ * fixed fulltext search to dump only XML element values
+ * added flexibility to pycsw.admin.setup_db to handle use cases from calling applications, like specifying extra columns, skipping SFSQL setup, etc.
+ * added support for ISO 19115-2 (gmi) harvesting
+ * FGDC, Atom, and DIF are now core supported outputschema formats, and do not need to be explicitly set in configuration
+ * added CIDR notation support for CSW transactions
+ * enhanced link support when harvesting OWS endpoints
+ * fix tighten Dublin Core writer when checking on dumping XML
+ * fixed harvesting logic for unsupported typenames
+ * fixed GetRecords typename handling to _not_ behave like a record filter, but as a query model
+ * harvesting support for RDF Dublin Core
+ * fixed Harvest operation parameter checks in HTTP GET mode
+ * added timeout flag to pycsw-admin.py post_xml command
+ * continuous integration testing (using travis-ci)
+ * modular Python logging capability
+ * paver implementation for developer tasks
+
+The full list of enhancements and bug fixes is available on `https://github.com/geopython/pycsw/issues?milestone=7&state=closed GitHub`
+
+This release also moves pycsw forward as an OSGeo project in incubation.
+
+pycsw is an OGC CSW server implementation written in Python.
+
+pycsw fully implements the OpenGIS Catalogue Service Implementation Specification [Catalogue Service for the Web]. Initial development started in 2010 (more formally announced in 2011). The project is certified OGC Compliant, and is an OGC Reference Implementation.
+
+pycsw allows for the publishing and discovery of geospatial metadata. Existing repositories of geospatial metadata can also be exposed via OGC:CSW 2.0.2, providing a standards-based metadata and catalogue component of spatial data infrastructures.
+
+pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X).
+
+Source and binary downloads
+---------------------------
+
+The source code is available at:
+
+http://pycsw.org/download.html
+
+Testers and developers are welcome.
+
+The pycsw developer team.
+
+http://pycsw.org/
