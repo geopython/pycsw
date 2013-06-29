@@ -20,6 +20,8 @@ set -e
 install() {
     cd /var/www/pycsw/tests
     python ./gen_html.py > index.html
+    cd /var/www/pycsw
+    cp default-sample.cfg default.cfg
     /etc/init.d/apache2 force-reload
 
 }
