@@ -3,6 +3,9 @@
 1.6.0 Announcement
 ==================
 
+:Authors: Development Team
+:Released: 2013-06-28
+
 The pycsw team announces the release of pycsw 1.6.0.
 
 The 1.6.0 release brings numerous features, enhancements and fixes to the codebase, including:
