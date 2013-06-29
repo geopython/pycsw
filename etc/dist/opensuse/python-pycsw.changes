@@ -1,25 +1,45 @@
 -------------------------------------------------------------------
+Sat Jun 29 10:20:58 UTC 2013 - tzotsos@opensuse.org
+
+- Updated to 1.6.0 release
+
+-------------------------------------------------------------------
 Sat Jun  8 07:20:57 UTC 2013 - tzotsos@opensuse.org
+
 - Updated to 1.4.2 release
+
 -------------------------------------------------------------------
 Sat Mar 30 16:55:13 UTC 2013 - tzotsos@opensuse.org
+
 - Updated to 1.4.1 release
+
 -------------------------------------------------------------------
 Tue Sep 11 11:29:12 UTC 2012 - tzotsos@opensuse.org
+
 - Renamed package to python-pycsw
+
 -------------------------------------------------------------------
 Mon Sep 10 21:37:30 UTC 2012 - tzotsos@opensuse.org
+
 - Updated to 1.4.0 release
+
 -------------------------------------------------------------------
 Sun Apr 08 20:00:00 UTC 2012 - tzotsos@opensuse.org
+
 - Updated to 1.2.0 release
+
 -------------------------------------------------------------------
 Wed Jun 29 00:05:00 UTC 2011 - tzotsos@opensuse.org
+
 - Updated to 1.0.0 release
+
 -------------------------------------------------------------------
 Wed Apr 20 01:07:54 UTC 2011 - tzotsos@opensuse.org
+
 - Updated to 0.1.0 release
+
 -------------------------------------------------------------------
 Thu Mar 09 21:47:54 UTC 2011 - tzotsos@opensuse.org
+
 - Initial spec file for OBS - 0.0.1
 
