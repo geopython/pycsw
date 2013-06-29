@@ -1,10 +1,29 @@
 #
-# spec file for package pycsw (1.4.2)
+# spec file for package python-pycsw (1.6.0)
 #
 # Copyright (c) 2013 Angelos Tzotsos <tzotsos@opensuse.org>
 #
-# This file and all modifications and additions to the pycsw
-# package are under the same license as the package itself.
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
 
 %define _webappconfdir /etc/apache2/conf.d/
 %define _htdocsdir /srv/www/htdocs/
@@ -29,6 +48,7 @@ Requires:	python-lxml
 Requires:	python-owslib
 Requires:	python-pyproj
 BuildRequires:  fdupes python 
+BuildArch:      noarch
 Provides:       %{pyname} = %{version}
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -36,8 +56,10 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %description
 pycsw implements clause 10 (HTTP protocol binding (Catalogue Services for the Web, CSW)) 
 of the OpenGIS Catalogue Service Implementation Specification, version 2.0.2. 
-Initial development started in 2010 (more formally announced in 2011).
-pycsw allows for the publishing and discovery of geospatial metadata. Existing repositories of geospatial metadata can be exposed via OGC:CSW 2.0.2.
+Initial development started in 2010 (more formally announced in 2011). 
+The  project  is  certified  OGC  Compliant,  and  is  an  OGC  Reference  Implementation. 
+pycsw allows for the publishing and discovery of geospatial metadata. 
+Existing repositories of geospatial metadata can be exposed via OGC:CSW 2.0.2.
 pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X)
 
 %package -n %{pyname}-cgi
@@ -62,7 +84,7 @@ python setup.py install --prefix=%{_prefix} --root=%{buildroot} \
 mkdir -p %{buildroot}/srv/www/htdocs/pycsw
 mkdir -p %{buildroot}%{_sysconfdir}/apache2/conf.d
 
-mv data %{buildroot}/srv/www/htdocs/pycsw/
+#mv data %{buildroot}/srv/www/htdocs/pycsw/
 mv tests %{buildroot}/srv/www/htdocs/pycsw/
 mv csw.py %{buildroot}/srv/www/htdocs/pycsw/
 mv csw.wsgi %{buildroot}/srv/www/htdocs/pycsw/
@@ -97,7 +119,7 @@ pretty_print=true
 #gzip_compresslevel=8
 #domainquerytype=range
 #domaincounts=true
-profiles=apiso,fgdc,dif,ebrim
+profiles=apiso
 
 [manager]
 transactions=false
@@ -130,7 +152,7 @@ contact_role=pointOfContact
 
 [repository]
 # sqlite
-database=sqlite:////srv/www/htdocs/pycsw/data/cite/records.db
+database=sqlite:////srv/www/htdocs/pycsw/tests/suites/cite/data/records.db
 # postgres
 #database=postgresql://username:password@localhost/pycsw
 # mysql
