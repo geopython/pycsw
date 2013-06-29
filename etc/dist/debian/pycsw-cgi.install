@@ -1,4 +1,3 @@
-data/*                   	/var/www/pycsw/data/
 docs/*				/var/www/pycsw/docs/
 etc/harvest-all.cron		/var/www/pycsw/etc/
 etc/mappings.py			/var/www/pycsw/etc/
@@ -12,4 +11,3 @@ README.txt			/var/www/pycsw/
 VERSION.txt			/var/www/pycsw/
 HISTORY.txt			/var/www/pycsw/
 default-sample.cfg		/var/www/pycsw/
-default.cfg			/var/www/pycsw/
