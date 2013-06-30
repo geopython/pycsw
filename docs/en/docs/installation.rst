@@ -97,18 +97,18 @@ Installing from the Python Package Index (PyPi)
 Installing from OpenSUSE Build Service
 --------------------------------------
 
-In order to install the OBS package in openSUSE 12.2, one can run the following commands as user ``root``:
+In order to install the OBS package in openSUSE 12.3, one can run the following commands as user ``root``:
 
 .. code-block:: bash
 
-  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_12.2/ GEO
-  # zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_12.2/ python
+  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_12.3/ GEO
+  # zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_12.3/ python
   # zypper refresh
   # zypper install python-pycsw pycsw-cgi
 
-For earlier openSUSE versions change ``12.2`` with ``12.1``. For future openSUSE version use ``Factory``.
+For earlier openSUSE versions change ``12.3`` with ``12.2``. For future openSUSE version use ``Factory``.
 
-An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true>`_.
+An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A12.3&lang=en&include_home=true&exclude_debug=true>`_.
 
 .. _ubuntu:
 
@@ -119,8 +119,8 @@ In order to install pycsw to an Ubuntu based distribution, one can run the follo
 
 .. code-block:: bash
 
-  # sudo add-apt-repository ppa:gcpp-kalxas/ppa-tzotsos
-  # sudo apt-get updated
+  # sudo add-apt-repository ppa:pycsw/stable
+  # sudo apt-get update
   # sudo apt-get install python-pycsw pycsw-cgi
 
 An alternative method is to use the OSGeoLive installation script located in ``pycsw/etc/dist/osgeolive``:
