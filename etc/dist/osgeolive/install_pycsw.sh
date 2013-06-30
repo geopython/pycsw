@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2011 The Open Source Geospatial Foundation.
+# Copyright (c) 2013 The Open Source Geospatial Foundation.
 # Licensed under the GNU LGPL.
 # 
 # This library is free software; you can redistribute it and/or modify it
@@ -24,25 +24,31 @@
 #
 # Requires: Apache2, python-lxml, python-shapely and python-sqlalchemy
 
+SCRIPT="install_pycsw.sh"
+echo "==============================================================="
+echo "$SCRIPT"
+echo "==============================================================="
 
-VERSION=1.6.0
+# live disc's username is "user"
+if [ -z "$USER_NAME" ] ; then
+   USER_NAME="user"
+fi
+USER_HOME="/home/$USER_NAME"
 
-echo "Installing pycsw $VERSION"
+# VERSION=1.6.0
 
-echo 'Installing dependencies ...'
+echo 'Installing pycsw dependencies ...'
 
 # install dependencies
-apt-get install --yes apache2 python-lxml python-sqlalchemy python-shapely python-pyproj
+apt-get install --yes apache2 python-lxml python-sqlalchemy \
+   python-shapely python-pyproj
 
 echo 'Installing pycsw ...'
 
-add-apt-repository --yes ppa:gcpp-kalxas/ppa-tzotsos
-apt-get update
-apt-get install --yes pycsw
+#add-apt-repository --yes ppa:gcpp-kalxas/ppa-tzotsos
+#apt-get -q update
+apt-get install --yes python-owslib python-pycsw pycsw-cgi
 
-# live disc's username is "user"
-USER_NAME=user
-USER_HOME=/home/$USER_NAME
 
 cp /usr/share/applications/pycsw.desktop "$USER_HOME/Desktop/"
 chown "$USER_NAME:$USER_NAME" "$USER_HOME/Desktop/pycsw.desktop"
@@ -50,4 +56,9 @@ chown "$USER_NAME:$USER_NAME" "$USER_HOME/Desktop/pycsw.desktop"
 # Reload Apache
 #/etc/init.d/apache2 force-reload
 
+echo "==============================================================="
+echo "Finished $SCRIPT"
+echo Disk Usage1:, $SCRIPT, `df . -B 1M | grep "Filesystem" | sed -e "s/  */,/g"`, date
+echo Disk Usage2:, $SCRIPT, `df . -B 1M | grep " /$" | sed -e "s/  */,/g"`, `date`
+echo "==============================================================="
 
