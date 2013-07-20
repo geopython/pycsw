@@ -195,7 +195,7 @@
       <ows:Value>SOAP</ows:Value>
     </ows:Constraint>
     <ows:Constraint name="FederatedCatalogues">
-      <ows:Value>http://www.geoplatform.gov/catalog/csw/discovery</ows:Value>
+      <ows:Value>http://demo.pycsw.org/gisdata/csw</ows:Value>
     </ows:Constraint>
   </ows:OperationsMetadata>
   <ogc:Filter_Capabilities>
