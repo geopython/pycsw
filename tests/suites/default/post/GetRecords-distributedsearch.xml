@@ -7,7 +7,7 @@
                 <ogc:Filter>
                     <ogc:PropertyIsEqualTo>
                         <ogc:PropertyName>dc:title</ogc:PropertyName>
-                        <ogc:Literal>Roads of Grand Teton N.P. and the JDR Memorial Parkway</ogc:Literal>
+                        <ogc:Literal>Aquifers</ogc:Literal>
                     </ogc:PropertyIsEqualTo>
                 </ogc:Filter>
             </csw:Constraint>
