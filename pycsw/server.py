@@ -1516,6 +1516,7 @@ class Csw(object):
             elif (self.kvp['outputschema'] ==
                 'http://www.opengis.net/cat/csw/2.0.2'):
                 # serialize into csw:Record model
+                typename = None
 
                 for prof in self.profiles['loaded']:  # find source typename
                     if self.profiles['loaded'][prof].typename in \
@@ -1523,9 +1524,10 @@ class Csw(object):
                         typename = self.profiles['loaded'][prof].typename
                         break
 
-                util.transform_mappings(self.repository.queryables['_all'],
-                self.context.model['typenames'][typename]\
-                ['mappings']['csw:Record'], reverse=True)
+                if typename is not None:
+                    util.transform_mappings(self.repository.queryables['_all'],
+                    self.context.model['typenames'][typename]\
+                    ['mappings']['csw:Record'], reverse=True)
 
                 node.append(self._write_record(
                 result, self.repository.queryables['_all']))
