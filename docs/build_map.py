@@ -33,7 +33,7 @@ from urllib2 import urlopen
 
 def build_live_deployments_map():
     dep_url = 'https://raw.github.com/wiki/geopython/pycsw/Live-Deployments.md'
-    dep_file = 'build%sLive-Deployments.md' % os.sep
+    dep_file = '_build%sLive-Deployments.md' % os.sep
     
     leaflet = '''
 .. raw:: html

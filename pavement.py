@@ -60,7 +60,7 @@ def refresh_docs():
 ])
 def publish_docs(options):
     """Publish dev docs to production"""
-    local_path = 'build/html/en'
+    local_path = '_build/html'
     remote_host = 'pycsw.org'
     remote_path = '/osgeo/pycsw/pycsw-web'
 
