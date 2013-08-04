@@ -1,191 +1,155 @@
 # Makefile for Sphinx documentation
 #
-# $(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/$$lang;
-#
 
 # You can set these variables from the command line.
-BUILDDIR     = build
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-TRANSLATIONS  = 
-LANGUAGES     = en $(TRANSLATIONS) 
+BUILDDIR      = _build
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
-ALLSPHINXOPTS   = -W -d $(BUILDDIR)/doctrees/$$lang $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) -c . -A language=$$lang -D language=$$lang -A target=$(TARGET) -A languages='$(LANGUAGES)'
+ALLSPHINXOPTS   = -W -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+# the i18n builder cannot share the environment and doctrees with the others
+I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: help clean html web pickle htmlhelp latex changes linkcheck
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
-	@echo "  html      to make standalone HTML files"
-	@echo "  init	   to preprocess translation directories"
-	@echo "  pickle    to make pickle files"
-	@echo "  json      to make JSON files"
-	@echo "  htmlhelp  to make HTML files and a HTML help project"
-	@echo "  latex     to make LaTeX files, you can set PAPER=a4 or PAPER=letter"
-	@echo "  all-pdf   to make PDF file"
-	@echo "  all-ps    to make PS file"
-	@echo "  changes   to make an overview over all changed/added/deprecated items"
-	@echo "  linkcheck to check all external links for integrity"
+	@echo "  html       to make standalone HTML files"
+	@echo "  dirhtml    to make HTML files named index.html in directories"
+	@echo "  singlehtml to make a single large HTML file"
+	@echo "  pickle     to make pickle files"
+	@echo "  json       to make JSON files"
+	@echo "  htmlhelp   to make HTML files and a HTML help project"
+	@echo "  qthelp     to make HTML files and a qthelp project"
+	@echo "  devhelp    to make HTML files and a Devhelp project"
+	@echo "  epub       to make an epub"
+	@echo "  latex      to make LaTeX files, you can set PAPER=a4 or PAPER=letter"
+	@echo "  latexpdf   to make LaTeX files and run them through pdflatex"
+	@echo "  text       to make text files"
+	@echo "  man        to make manual pages"
+	@echo "  texinfo    to make Texinfo files"
+	@echo "  info       to make Texinfo files and run them through makeinfo"
+	@echo "  gettext    to make PO message catalogs"
+	@echo "  changes    to make an overview of all changed/added/deprecated items"
+	@echo "  linkcheck  to check all external links for integrity"
+	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
 clean:
 	-rm -rf $(BUILDDIR)/*
 
-init:
-	@for lang in $(TRANSLATIONS) ;\
-	do \
-# 		We change the Internal Field Separator (IFS) because to handle filename with special char like space. \
-		OLDIFS="$$IFS"; \
-		IFS=$$'\n'; \
-		for file in `cd en; find . -type f -a -regex '.*\.txt$$' -a -not -regex '.*\.svn.*' -printf "%p\n" ; cd ..;`; \
-		do \
-			if [ ! -f $$lang/$$file ]; then  \
-				mkdir -p `dirname "$$lang/$$file"`; \
-				(echo ".. meta::"; echo "  :ROBOTS: NOINDEX") | cat - "en/$$file" > "$$lang/$$file"; \
-			fi \
-		done; \
-		IFS=$$OLDIFS; \
-#		Copy all no .txt files \
-		yes n | cp -ipR en/* $$lang &> /dev/null; \
-	done
-	@echo "Init finished. Other targets can now be built.";\
-
 html:
 	mkdir -p $(BUILDDIR)
 	python build_map.py > $(BUILDDIR)/map.rst
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/html/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		echo "$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/html/$$lang";\
-		$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/html/$$lang;\
-	done
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
-	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html/<language>.";\
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
-man:
-	@for lang in $(LANGUAGES);\
-	do \
-		$(SPHINXBUILD) -b man $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/man;\
-	done
+dirhtml:
+	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
 	@echo
-	@echo "Build finished. The manual pages are in $(BUILDDIR)/man."
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/dirhtml."
 
 singlehtml:
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/singlehtml/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b singlehtml $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/singlehtml/$$lang;\
-	done
+	$(SPHINXBUILD) -b singlehtml $(ALLSPHINXOPTS) $(BUILDDIR)/singlehtml
 	@echo
-	@echo "Build finished. The HTML pages are in $(BUILDDIR)/singlehtml/<language>.";\
+	@echo "Build finished. The HTML page is in $(BUILDDIR)/singlehtml."
 
 pickle:
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/pickle/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/pickle/$$lang;\
-	done
+	$(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) $(BUILDDIR)/pickle
 	@echo
 	@echo "Build finished; now you can process the pickle files."
 
-web: pickle
-
 json:
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/json/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b json $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/json/$$lang;\
-	done
+	$(SPHINXBUILD) -b json $(ALLSPHINXOPTS) $(BUILDDIR)/json
 	@echo
 	@echo "Build finished; now you can process the JSON files."
 
 htmlhelp:
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/htmlhelp/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/htmlhelp/$$lang;\
-	done
+	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) $(BUILDDIR)/htmlhelp
 	@echo
 	@echo "Build finished; now you can run HTML Help Workshop with the" \
-	      ".hhp project file in $(BUILDDIR)/htmlhelp/<language>."
+	      ".hhp project file in $(BUILDDIR)/htmlhelp."
 
-latex:
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/latex/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/latex/$$lang;\
-	done
+qthelp:
+	$(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) $(BUILDDIR)/qthelp
 	@echo
-	@echo "Build finished; the LaTeX files are in $(BUILDDIR)/latex/<language>."\
-	@echo "Run \`make all-pdf' or \`make all-ps'"
+	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
+	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/pycsw.qhcp"
+	@echo "To view the help file:"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/pycsw.qhc"
 
-pdf:
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/pdf/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b pdf $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/pdf/$$lang;\
-	done
+devhelp:
+	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
-	@echo "Build finished; the PDF files are in $(BUILDDIR)/pdf/<language>."\
-	@echo "Run \`make pdf' "
+	@echo "Build finished."
+	@echo "To view the help file:"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/pycsw"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/pycsw"
+	@echo "# devhelp"
 
 epub:
-	@for lang in en;\
-	do \
-		mkdir -p $(BUILDDIR)/epub/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/epub/$$lang;\
-	done
+	$(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) $(BUILDDIR)/epub
 	@echo
-	@echo "Build finished; the epub files are in $(BUILDDIR)/epub/<language>."\
-	@echo "Run \`make epub' "
+	@echo "Build finished. The epub file is in $(BUILDDIR)/epub."
 
-all-pdf:
-	@for lang in $(LANGUAGES);\
-	do \
-		/usr/bin/make -C $(BUILDDIR)/latex/$$lang all-pdf ; \
-		if [ -d $(BUILDDIR)/html/$$lang ]; then \
-		mv -f $(BUILDDIR)/latex/$$lang/pycsw.pdf $(BUILDDIR)/html/$$lang ; \
-		fi \
-	done
+latex:
+	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+	@echo
+	@echo "Build finished; the LaTeX files are in $(BUILDDIR)/latex."
+	@echo "Run \`make' in that directory to run these through (pdf)latex" \
+	      "(use \`make latexpdf' here to do that automatically)."
 
-all-ps:
-	@for lang in $(LANGUAGES);\
-	do \
-		/usr/bin/make -C $(BUILDDIR)/latex/$$lang all-ps ; \
-		if [ -d $(BUILDDIR)/html/$$lang ]; then \
-		mv -f $(BUILDDIR)/latex/$$lang/pycsw.pdf $(BUILDDIR)/html/$$lang ; \
-		fi \
-	done
+latexpdf:
+	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+	@echo "Running LaTeX files through pdflatex..."
+	$(MAKE) -C $(BUILDDIR)/latex all-pdf
+	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
+
+text:
+	$(SPHINXBUILD) -b text $(ALLSPHINXOPTS) $(BUILDDIR)/text
+	@echo
+	@echo "Build finished. The text files are in $(BUILDDIR)/text."
+
+man:
+	$(SPHINXBUILD) -b man $(ALLSPHINXOPTS) $(BUILDDIR)/man
+	@echo
+	@echo "Build finished. The manual pages are in $(BUILDDIR)/man."
+
+texinfo:
+	$(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) $(BUILDDIR)/texinfo
+	@echo
+	@echo "Build finished. The Texinfo files are in $(BUILDDIR)/texinfo."
+	@echo "Run \`make' in that directory to run these through makeinfo" \
+	      "(use \`make info' here to do that automatically)."
+
+info:
+	$(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) $(BUILDDIR)/texinfo
+	@echo "Running Texinfo files through makeinfo..."
+	make -C $(BUILDDIR)/texinfo info
+	@echo "makeinfo finished; the Info files are in $(BUILDDIR)/texinfo."
+
+gettext:
+	$(SPHINXBUILD) -b gettext $(I18NSPHINXOPTS) $(BUILDDIR)/locale
+	@echo
+	@echo "Build finished. The message catalogs are in $(BUILDDIR)/locale."
 
 changes:
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/changes/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/changes/$$lang;\
-	done
+	$(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) $(BUILDDIR)/changes
 	@echo
-	@echo "The overview file is in $(BUILDDIR)/changes/<language>."
+	@echo "The overview file is in $(BUILDDIR)/changes."
 
 linkcheck:
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/linkcheck/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/linkcheck/$$lang;\
-	done
+	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
 	@echo
 	@echo "Link check complete; look for any errors in the above output " \
-	      "or in $(BUILDDIR)/linkcheck/<language>/output.txt."
+	      "or in $(BUILDDIR)/linkcheck/output.txt."
 
-labels:
-	@for lang in $(LANGUAGES);\
-	do \
-		mkdir -p $(BUILDDIR)/labels/$$lang $(BUILDDIR)/doctrees/$$lang; \
-		$(SPHINXBUILD) -b labels $(ALLSPHINXOPTS) $$lang $(BUILDDIR)/labels/$$lang;\
-		cp $(BUILDDIR)/labels/$$lang/labels.txt $$lang/include/labels.inc;\
-	done
-	@echo
-	@echo "Label generation complete; look for any errors in the above output " \
-	      "or in $(BUILDDIR)/labels/<language>/labels.txt."
+doctest:
+	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
+	@echo "Testing of doctests in the sources finished, look at the " \
+	      "results in $(BUILDDIR)/doctest/output.txt."

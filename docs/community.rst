@@ -7,30 +7,30 @@ Community
 
 pycsw is `used`_ in government, academia and industry, both as a standalone and embedded component in geospatial data portal applications.
 
-.. include:: ../build/map.rst
+.. include:: _build/map.rst
 
-.. image:: ../_static/usgs-cida.jpg
+.. image:: _static/usgs-cida.jpg
    :width: 150px
    :height: 84px
    :alt: USGS Center for Integrated Data Analytics
    :target: http://cida.usgs.gov
    :class: padded
 
-.. image:: ../_static/geonode.jpg
+.. image:: _static/geonode.jpg
    :width: 162px
    :height: 56px
    :alt: GeoNode
    :target: http://geonode.org
    :class: padded
 
-.. image:: ../_static/sopac.jpg
+.. image:: _static/sopac.jpg
    :width: 139px
    :height: 80px
    :alt: Secretariat of the Pacific Community
    :target: http://www.sopac.org
    :class: padded
 
-.. image:: ../_static/inside-idaho.jpg
+.. image:: _static/inside-idaho.jpg
    :width: 76px
    :height: 80px
    :alt: INSIDE Idaho
@@ -39,21 +39,21 @@ pycsw is `used`_ in government, academia and industry, both as a standalone and 
 
 |
 
-.. image:: ../_static/ogc-chisp.jpg
+.. image:: _static/ogc-chisp.jpg
    :width: 108px 
    :height: 81px
    :alt: OGC Climate-Hydrologic Information Sharing Pilot 
    :target: http://www.opengeospatial.org/projects/initiatives/chisp
    :class: padded
 
-.. image:: ../_static/open-data-catalog.png
+.. image:: _static/open-data-catalog.png
    :width: 240px
    :height: 91px
    :alt: Open Data Catalog, Code for America Brigade
    :target: http://commons.codeforamerica.org/apps/open-data-catalog
    :class: padded
 
-.. image:: ../_static/uni-koeln.png
+.. image:: _static/uni-koeln.png
    :height: 77px
    :width: 77px
    :alt: University of Cologne, Department of Geography, Collaborative Research Centre 806

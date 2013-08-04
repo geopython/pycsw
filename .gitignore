@@ -3,7 +3,7 @@
 *.egg-info
 build
 dist
-docs/build
+docs/_build
 MANIFEST
 
 # testing artifacts
