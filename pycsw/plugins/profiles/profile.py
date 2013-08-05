@@ -132,7 +132,7 @@ def load_profiles(path, cls, profiles):
         if prof in ['fgdc', 'atom', 'dif']:
             warnings.warn('%s is now a core module, and does not need to be'
                           ' specified explicitly.  So you can remove %s from '
-                          'server.profiles' % (prof, prof), DeprecationWarning)
+                          'server.profiles' % (prof, prof))
         else: 
             modulename='%s.%s.%s' % (path.replace(os.sep, '.'), prof, prof)
             look_for_subclass(modulename)
