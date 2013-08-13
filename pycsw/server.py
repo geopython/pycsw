@@ -2249,8 +2249,7 @@ class Csw(object):
         xmldecl=''
         appinfo=''
 
-        if hasattr(self, 'log'):
-            LOGGER.debug('Writing response.')
+        LOGGER.debug('Writing response.')
 
         if hasattr(self, 'soap') and self.soap:
             self._gen_soap_wrapper()
@@ -2269,8 +2268,7 @@ class Csw(object):
             % self.encoding
             appinfo = '<!-- pycsw %s -->\n' % self.context.version
 
-        if hasattr(self, 'log'):
-            LOGGER.debug('Response:\n%s' % response)
+        LOGGER.debug('Response:\n%s' % response)
 
         return "%s%s%s" % (xmldecl, appinfo, response)
 
