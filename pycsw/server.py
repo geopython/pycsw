@@ -1344,8 +1344,11 @@ class Csw(object):
                 nextrecord = '0'
             else:
                 returned = str(self.kvp['maxrecords'])
-                nextrecord = str(int(self.kvp['startposition']) + \
-                int(self.kvp['maxrecords']))
+                if int(self.kvp['startposition']) + int(self.kvp['maxrecords']) >= int(matched):
+                    nextrecord = '0'
+                else:
+                    nextrecord = str(int(self.kvp['startposition']) + \
+                    int(self.kvp['maxrecords']))
 
         LOGGER.debug('Results: matched: %s, returned: %s, next: %s.' % \
         (matched, returned, nextrecord))
