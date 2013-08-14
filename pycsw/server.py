@@ -1906,6 +1906,15 @@ class Csw(object):
         if tmp is not None:
             request['updatesequence'] = tmp
 
+        # GetCapabilities
+        if request['request'] == 'GetCapabilities':
+            tmp = doc.find(util.nspath_eval('ows:Sections',
+                  self.context.namespaces))
+            if tmp is not None:
+                request['sections'] = ','.join([section.text for section in \
+                doc.findall(util.nspath_eval('ows:Sections/ows:Section',
+                self.context.namespaces))])
+
         # DescribeRecord
         if request['request'] == 'DescribeRecord':
             request['typename'] = [typename.text for typename in \
