@@ -91,7 +91,9 @@ class Csw(object):
                         for k, v in options.iteritems():
                             self.config.set(section, k, v)
                 else:  # configuration file
-                    self.config.readfp(open(rtconfig))
+                    import codecs
+                    with codecs.open(rtconfig, encoding='utf-8') as scp:
+                        self.config.readfp(scp)
         except Exception, err:
             self.response = self.exceptionreport(
             'NoApplicableCode', 'service',
@@ -126,7 +128,7 @@ class Csw(object):
 
         # set mimetype
         if self.config.has_option('server', 'mimetype'):
-            self.mimetype = self.config.get('server', 'mimetype')
+            self.mimetype = self.config.get('server', 'mimetype').encode()
 
         # set encoding
         if self.config.has_option('server', 'encoding'):
@@ -2282,7 +2284,8 @@ class Csw(object):
 
         LOGGER.debug('Response:\n%s' % response)
 
-        return "%s%s%s" % (xmldecl, appinfo, response)
+        s = '%s%s%s' % (xmldecl, appinfo, response)
+        return s.encode()
 
 
     def _gen_soap_wrapper(self):
