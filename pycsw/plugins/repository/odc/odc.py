@@ -36,7 +36,7 @@ from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
 from pycsw import util
-from opendata.models import Resource
+from OpenDataCatalog.opendata.models import Resource
 
 class OpenDataCatalogRepository(object):
     ''' Class to interact with underlying repository '''
