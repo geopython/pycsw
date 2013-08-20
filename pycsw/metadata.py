@@ -327,12 +327,16 @@ def _parse_wms(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:MdSource', record)
         _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
         _set(context, recobj, 'pycsw:XML', md.getServiceXML())
-        _set(context, recobj, 'pycsw:AnyText', util.get_anytext(md._capabilities))
         _set(context, recobj, 'pycsw:Type', 'dataset')
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
         _set(context, recobj, 'pycsw:Title', md.contents[layer].title)
         _set(context, recobj, 'pycsw:Abstract', md.contents[layer].abstract)
         _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[layer].keywords))
+
+        _set(context, recobj, 'pycsw:AnyText',
+             util.get_anytext([md.contents[layer].title,
+                              md.contents[layer].abstract,
+                              ','.join(md.contents[layer].keywords)]))
 
         bbox = md.contents[layer].boundingBoxWGS84
         if bbox is not None:
@@ -434,12 +438,16 @@ def _parse_wfs(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:MdSource', record)
         _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
         _set(context, recobj, 'pycsw:XML', etree.tostring(md._capabilities))
-        _set(context, recobj, 'pycsw:AnyText', util.get_anytext(md._capabilities))
         _set(context, recobj, 'pycsw:Type', 'dataset')
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
         _set(context, recobj, 'pycsw:Title', md.contents[featuretype].title)
         _set(context, recobj, 'pycsw:Abstract', md.contents[featuretype].abstract)
         _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[featuretype].keywords))
+
+        _set(context, recobj, 'pycsw:AnyText',
+             util.get_anytext([md.contents[featuretype].title,
+                              md.contents[featuretype].abstract,
+                              ','.join(md.contents[featuretype].keywords)]))
 
         bbox = md.contents[featuretype].boundingBoxWGS84
         if bbox is not None:
@@ -534,12 +542,16 @@ def _parse_wcs(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:MdSource', record)
         _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
         _set(context, recobj, 'pycsw:XML', etree.tostring(md._capabilities))
-        _set(context, recobj, 'pycsw:AnyText', util.get_anytext(md._capabilities))
         _set(context, recobj, 'pycsw:Type', 'dataset')
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
         _set(context, recobj, 'pycsw:Title', md.contents[coverage].title)
         _set(context, recobj, 'pycsw:Abstract', md.contents[coverage].abstract)
         _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[coverage].keywords))
+
+        _set(context, recobj, 'pycsw:AnyText',
+             util.get_anytext([md.contents[coverage].title,
+                              md.contents[coverage].abstract,
+                              ','.join(md.contents[coverage].keywords)]))
 
         bbox = md.contents[coverage].boundingBoxWGS84
         if bbox is not None:
@@ -671,13 +683,15 @@ def _parse_sos(context, repos, record, identifier, version):
         _set(context, recobj, 'pycsw:MdSource', record)
         _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
         _set(context, recobj, 'pycsw:XML', etree.tostring(md._capabilities))
-        _set(context, recobj, 'pycsw:AnyText', util.get_anytext(md._capabilities))
         _set(context, recobj, 'pycsw:Type', 'dataset')
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
         _set(context, recobj, 'pycsw:Title', md.contents[offering].description)
         _set(context, recobj, 'pycsw:Abstract', md.contents[offering].description)
         _set(context, recobj, 'pycsw:TempExtent_begin', util.datetime2iso8601(md.contents[offering].begin_position))
         _set(context, recobj, 'pycsw:TempExtent_end', util.datetime2iso8601(md.contents[offering].end_position))
+
+        _set(context, recobj, 'pycsw:AnyText',
+             util.get_anytext([md.contents[offering].description]))
 
         bbox = md.contents[offering].bbox
         if bbox is not None:
