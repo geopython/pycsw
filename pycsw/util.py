@@ -278,12 +278,19 @@ def transform_mappings(queryables, typename, reverse=False):
                 queryables[qbl] = queryables[qbl]
 
 
-def get_anytext(xml):
-    """get all element content from an XML document"""
+def get_anytext(bag):
+    """
+    generate bag of text for free text searches
+    accepts list of words, string of XML, or etree.Element
+    """
 
-    if isinstance(xml, unicode) or isinstance(xml, str):  # not serialized yet
-        xml = etree.fromstring(xml)
-    return ' '.join([value.strip() for value in xml.xpath('//text()')])
+    if isinstance(bag, list):  # list of words
+        return ' '.join(filter(None, bag)).strip()
+    else:  # xml
+        if isinstance(bag, unicode) or isinstance(bag, str):  # not serialized yet
+            bag = etree.fromstring(bag)
+            # get all XML element content
+        return ' '.join([value.strip() for value in bag.xpath('//text()')])
 
 
 def exml2dict(element, namespaces):
