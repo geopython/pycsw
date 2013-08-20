@@ -334,10 +334,10 @@ def _linkify(value):
     return '^'.join(out)
 
 
-def http_request(method, url, request=None, timeout=10):
+def http_request(method, url, request=None, timeout=30):
     """Perform HTTP request"""
     if method == 'POST':
-        return http_post(url, request, timeout)
+        return http_post(url, request, timeout=timeout)
     else:  # GET
         request = urllib2.Request(url)
         request.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
