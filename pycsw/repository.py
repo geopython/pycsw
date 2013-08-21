@@ -256,7 +256,7 @@ class Repository(object):
             self.session.commit()
         except Exception, err:
             self.session.rollback()
-            raise RuntimeError('ERROR: %s' % str(err))
+            raise RuntimeError('ERROR: %s' % str(err.orig))
 
     def update(self, record=None, recprops=None, constraint=None):
         ''' Update a record in the repository based on identifier '''
@@ -282,7 +282,7 @@ class Repository(object):
                 self.session.commit()
             except Exception, err:
                 self.session.rollback()
-                raise RuntimeError('ERROR: %s' % str(err))
+                raise RuntimeError('ERROR: %s' % str(err.orig))
         else:  # update based on record properties
             LOGGER.debug('property based update')
             try:
@@ -315,7 +315,7 @@ class Repository(object):
                 return rows
             except Exception, err:
                 self.session.rollback()
-                raise RuntimeError('ERROR: %s' % str(err))
+                raise RuntimeError('ERROR: %s' % str(err.orig))
 
     def delete(self, constraint):
         ''' Delete a record from the repository '''
@@ -343,7 +343,7 @@ class Repository(object):
             self.session.commit()
         except Exception, err:
             self.session.rollback()
-            raise RuntimeError('ERROR: %s' % str(err))
+            raise RuntimeError('ERROR: %s' % str(err.orig))
 
         return rows
 
