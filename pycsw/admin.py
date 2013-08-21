@@ -193,11 +193,12 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
 
     records.create()
 
+    conn = dbase.connect()
+
     if create_plpythonu_functions:
         if dbase.name == 'postgresql':  # create plpythonu functions within db
             LOGGER.info('Setting plpythonu functions')
             pycsw_home = home
-            conn = dbase.connect()
             function_get_anytext = '''
         CREATE OR REPLACE FUNCTION get_anytext(xml text)
         RETURNS text
@@ -254,32 +255,32 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             conn.execute(function_get_geometry_area)
             conn.execute(function_get_spatial_overlay_rank)
 
-        if dbase.name == 'postgresql' and create_postgis_geometry:
-            # create native geometry column within db
-            LOGGER.info('Creating native PostGIS geometry column')
-            if postgis_lib_version < '2':
-                create_column_sql = "SELECT AddGeometryColumn('%s', '%s', 4236, 'POLYGON', 2)" % (table, postgis_geometry_column)
-            else:
-                create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
-            create_insert_update_trigger_sql = '''
+    if dbase.name == 'postgresql' and create_postgis_geometry:
+        # create native geometry column within db
+        LOGGER.info('Creating native PostGIS geometry column')
+        if postgis_lib_version < '2':
+            create_column_sql = "SELECT AddGeometryColumn('%s', '%s', 4326, 'POLYGON', 2)" % (table, postgis_geometry_column)
+        else:
+            create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
+        create_insert_update_trigger_sql = '''
 DROP TRIGGER IF EXISTS %(table)s_update_geometry ON %(table)s;
 DROP FUNCTION IF EXISTS %(table)s_update_geometry();
 CREATE FUNCTION %(table)s_update_geometry() RETURNS trigger AS $%(table)s_update_geometry$
-    BEGIN
-        IF NEW.wkt_geometry IS NULL THEN
-            RETURN NEW;
-        END IF;
-        NEW.%(geometry)s := ST_GeomFromText(NEW.wkt_geometry,4326);
+BEGIN
+    IF NEW.wkt_geometry IS NULL THEN
         RETURN NEW;
-    END;
+    END IF;
+    NEW.%(geometry)s := ST_GeomFromText(NEW.wkt_geometry,4326);
+    RETURN NEW;
+END;
 $%(table)s_update_geometry$ LANGUAGE plpgsql;
 
 CREATE TRIGGER %(table)s_update_geometry BEFORE INSERT OR UPDATE ON %(table)s
-    FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
-        ''' % {'table': table, 'geometry': postgis_geometry_column}
+FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
+    ''' % {'table': table, 'geometry': postgis_geometry_column}
 
-            conn.execute(create_column_sql)
-            conn.execute(create_insert_update_trigger_sql)
+        conn.execute(create_column_sql)
+        conn.execute(create_insert_update_trigger_sql)
 
 def load_records(context, database, table, xml_dirpath, recursive=False):
     """Load metadata records from directory of files to database"""
