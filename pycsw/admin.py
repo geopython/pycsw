@@ -259,7 +259,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         # create native geometry column within db
         LOGGER.info('Creating native PostGIS geometry column')
         if postgis_lib_version < '2':
-            create_column_sql = "SELECT AddGeometryColumn('%s', '%s', 4236, 'POLYGON', 2)" % (table, postgis_geometry_column)
+            create_column_sql = "SELECT AddGeometryColumn('%s', '%s', 4326, 'POLYGON', 2)" % (table, postgis_geometry_column)
         else:
             create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
         create_insert_update_trigger_sql = '''
