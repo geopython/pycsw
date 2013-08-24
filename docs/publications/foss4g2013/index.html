@@ -56,15 +56,16 @@
         <!--Metadata Background-->
         <section>
             <section>
-                <h2>What is metadata?</h2>
+                <h2>What is Metadata?</h2>
                 <p align="left">Metadata is often described as “data about data”, or the who, what, where, and when.</p> 
-                <p align="left">In the spatial world, for each dataset we maintain, we should record information about the data such as:</p><br/>
+                <p align="left">In the geospatial world, for each dataset we maintain, we should record information about the data such as:</p><br/>
                 <ul>
                 <li>general description</li>
                 <li>location</li>
                 <li>usage restrictions</li>
                 <li>projection</li>
                 <li>technical contact</li>
+                <li>time period</li>
                 <li>date created</li>
                 <li>date modified</li>
                 <li>version</li>
@@ -73,7 +74,7 @@
             </section>
             
             <section>
-                <h2>Metadata standards</h2>
+                <h2>Metadata Standards</h2>
                 <p align="left">Metadata standards have been introduced since the mid 1990’s with the goals of:</p>
                 <ul style="text-align: left;">
                 <li>outlining specific required parameters</li>
@@ -84,7 +85,7 @@
             </section>
             
             <section>
-                <h2>Metadata standards</h2>
+                <h2>Metadata Standards</h2>
                 <ul>
                 <li>Dublin Core: established a core/common group of 15 metadata elements</li>
                 <li>FGDC CSDGM: approved by the U.S. Federal Geographic Data Committee originally in 1994 and composed of Sections, Compound Elements, Data Elements</li>
@@ -94,21 +95,21 @@
             </section>
             
             <section>
-                <h2>OGC: CSW Specification</h2>
-                <p align="left">The Open Geospatial Consortium (OGC) <a href="http://www.opengeospatial.org/standards/specifications/catalog">OpenGIS Catalog Service Implementation Specification</a>, currently at version 2.0.2, is a standard for discovering and retrieving spatial data and metadata.</p>
-                <p align="left">Catalog Services for the Web (CSW) is a profile/part of the Catalog Service Implementation Specificaton that allows for publishing and searching of metadata.</p>
+                <h2>OGC CSW Specification</h2>
+                <p align="left">The Open Geospatial Consortium (OGC) <a href="http://www.opengeospatial.org/standards/specifications/catalog">OpenGIS Catalogue Service Implementation Specification</a>, currently at version 2.0.2, is a standard for discovering and retrieving spatial data and metadata.</p>
+                <p align="left">Catalogue Services for the Web (CSW) is the HTTP protocol binding of the Catalogue Service Implementation Specificaton that allows for publishing and searching of metadata.</p>
             </section>
             
             <section>
                 <h2>CSW Operations</h2>
                 <ul>
                 <li><strong>GetCapabilities</strong> (mandatory) - allow clients to retrieve information describing the service instance</li>
-                <li><strong>DescribeRecord</strong> (mandatory) - allows a client to discover elements of the information model supported by the target catalog service</li>
+                <li><strong>DescribeRecord</strong> (mandatory) - allows a client to discover elements of the information model supported by the target catalogue service</li>
                 <li><strong>GetRecords</strong> (mandatory) - get metadata records</li>
                 <li><strong>GetRecordById</strong> (optional) - get metadata records by ID</li>
                 <li><strong>GetDomain</strong> (optional) - obtain runtime information about the range of values of a metadata record element or request parameter</li>
                 <li><strong>Harvest</strong> (optional) - references the data to be inserted or updated in the catalog</li>
-                <li><strong>Transaction</strong> (optional) - defines an interface for creating, modifying and deleting catalog records</li>
+                <li><strong>Transaction</strong> (optional) - defines an interface for creating, modifying and deleting catalogue records</li>
                 </ul>
             </section>
             
@@ -117,7 +118,7 @@
                 <ul>
                 <li><a href="http://demo.pycsw.org/gisdata/csw?service=CSW&version=2.0.2&request=GetCapabilities">GetCapabilities</a></li>
                 <li><a href="http://demo.pycsw.org/gisdata/csw?service=CSW&version=2.0.2&request=DescribeRecord&TypeName=csw:Record">DescribeRecord</a></li>
-                <li><a href="http://demo.pycsw.org/gisdata/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record">GetRecords</a></li>
+                <li><a href="http://demo.pycsw.org/gisdata/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&resulttype=results">GetRecords</a></li>
                 <!--<li><a href="http://geo.gov.ckan.org/csw?service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full">GetRecords</a></li>-->
                 <li><a href="http://demo.pycsw.org/gisdata/csw?service=CSW&version=2.0.2&request=GetRecordById&ElementSetName=full&Id=urn:uuid:b58db4c2-f765-11e1-bf69-aa0000ae6bfc">GetRecordById</a></li>
                 <li><a href="http://demo.pycsw.org/gisdata/csw?service=CSW&version=2.0.2&request=GetDomain&parametername=GetRecords.resultType">GetDomain</a></li>
@@ -172,12 +173,12 @@
             <section>
                 <h2>Project History</h2>
                 <ul>
-                <li>2010: Development started by Tom Kralidis in 2010 and was announced in Feb 2011</li>
-                <li>Feb 2011: Project was officially announced</li>
+                <li>2010: Development started by <a href="https://github.com/tomkralidis">Tom Kralidis</a> in 2010 and was announced in Feb 2011</li>
+                <li>Feb 2011: Project officially <a href="http://www.kralidis.ca/blog/2011/02/04/help-wanted-baking-a-csw-server-in-python/">announced</a></li>
                 <li>Apr 2011: First official release (0.1) was released and already passed all CITE tests</li>
-                <li>Jul 2011: Version 1.0 was released</li>
-                <li>Feb 2012: pycsw was included in OSGeoLive 5.5</li>
-                <li>Jan 2013: pycsw 1.4 was certified as OGC Compliant</li>
+                <li>Jul 2011: Version 1.0 released</li>
+                <li>Feb 2012: pycsw included in OSGeoLive 5.5</li>
+                <li>Jan 2013: pycsw 1.4 certified as OGC Compliant</li>
                 <li>Apr 2013: pycsw entered OSGeo Incubation</li>
                 <li>Aug 2013: Latest stable release (1.6.1)</li>
                 </ul>
@@ -213,7 +214,7 @@
                 <li> Implements FGDC CSDGM Application Profile for CSW 2.0</li>
                 <li> Implements INSPIRE Discovery Services 3.0</li>
                 <li> Supports ISO, Dublin Core, DIF, FGDC and Atom metadata models</li>
-                <li> CGI or WSGI deployment</li>
+                <li> Standalone of embedded deployment (CGI or WSGI)</li>
                 <li> Transactional capabilities (CSW-T)</li>
                 <li> Flexible repository configuration (SQLite, PostgreSQL, PostGIS, MySQL)</li>
                 <li> Federated catalogue distributed searching</li>
@@ -224,9 +225,9 @@
                 <h2>More features...</h2>
                 <ul>
                 <li> Simple configuration</li>
-                <li> Extensible profile plugin architecture</li>
+                <li> Extensible plugin architecture (profiles, repositories/backends)</li>
                 <li> Seamless integration with Python environments (e.g. GeoNode, Open Data Catalog)</li>
-                <li> Includes a commandline utility to administer the metadata repository</li>
+                <li> Includes commandline utility to administer the metadata repository</li>
                 <li> Implements the Search/Retrieval via URL (SRU) search protocol</li>
                 <li> Implements OpenSearch</li>
                 <li> Realtime XML Schema validation</li>
@@ -324,6 +325,7 @@ $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
             <section>
                 <h2>Configuration</h2>
                 <p align="left">pycsw’s runtime configuration is defined by default.cfg file.</p>
+                <p align="left">Configuration is flexible for integration (easy as passing a dict to pycsw.server.Csw()).</p>
                 <p align="left">Key configuration parameters:</p>
                 <ul>
                 <li>server.home: absolute path of where pycsw is located</li>
@@ -373,6 +375,14 @@ $ sudo ./sbin/pycsw-admin.py -c load_records -f default.cfg -p ~/gisdata-master/
                 <h2>Tester Application</h2>
                 <p><img src="http://geopython.github.io/pycsw-workshop/_images/pycsw_tester_bbox.png" width="800" alt="" /></p>
             </section>
+
+            <section>
+                <h2>Command Line</h2>
+               <pre><code data-trim contenteditable>
+$ pycsw-admin.py -c post_xml -u http://host/csw -x path/to/request.xml
+                </code></pre>
+            </section>
+
             
         </section>
         
@@ -453,7 +463,7 @@ $ sudo ./sbin/pycsw-admin.py -c load_records -f default.cfg -p ~/gisdata-master/
                 <h2>Data.gov</h2>
                 <ul>
                     <li>Next generation of the <a href="http://catalog.data.gov/dataset">US Government Open Data portal</a> is developed using CKAN</li>
-                    <li>pycsw is currently deployed as <a href="http://geo.gov.ckan.org/csw?service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full">beta</a> serving 350k of XML files</li>
+                    <li>pycsw is currently deployed as <a href="http://geo.gov.ckan.org/csw?service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full">beta</a> serving 350,000 XML documents</li>
                     <li>pycsw will be fully deployed as the CSW backend within the next months</li>
                 </ul>
             </section>
@@ -477,7 +487,7 @@ $ sudo ./sbin/pycsw-admin.py -c load_records -f default.cfg -p ~/gisdata-master/
                 <li>Enhanced harvesting / additional formats / APIs</li>
                 <li><a href="http://project-open-data.github.io/metadata-resources/">Open Data metadata</a> JSON format</li>
                 <li>OPeNDAP integration via <a href="http://www.pydap.org">pydap</a></li>
-                <li>THREDDS catalog harvesting</li>
+                <li>THREDDS catalogue harvesting</li>
             </ul>
         </section>
         
