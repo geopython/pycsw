@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../assets/ico/favicon.png">
 
-    <title>{{ page.title }}</title>
+    <title>pycsw &bull; {{ page.title }}</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
@@ -30,28 +30,28 @@
 
       <div class="masthead">
         <ul class="nav nav-justified">
-          <li {% if page.activePage == 'home' %}class="active"{% endif %}>
+          <li {% if page.active_page == 'home' %}class="active"{% endif %}>
             <a href="/">Home</a>
           </li>
-          <li {% if page.activePage == 'community' %}class="active"{% endif %}>
+          <li {% if page.active_page == 'community' %}class="active"{% endif %}>
             <a href="/community.html">Community</a>
           </li>
           <li>
             <a href="http://demo.pycsw.org">Demos</a>
           </li>
-          <li {% if page.activePage == 'docs' %}class="active"{% endif %}>
+          <li {% if page.active_page == 'docs' %}class="active"{% endif %}>
             <a href="/docs.html">Docs</a>
           </li>
           <li>
             <a href="https://github.com/geopython/pycsw/issues">Bugs</a>
           </li>
-          <li {% if page.activePage == 'faq' %}class="active"{% endif %}>
+          <li {% if page.active_page == 'faq' %}class="active"{% endif %}>
             <a href="/faq.html">FAQ</a>
           </li>
-          <li {% if page.activePage == 'download' %}class="active"{% endif %}>
+          <li {% if page.active_page == 'download' %}class="active"{% endif %}>
             <a href="/download.html">Download</a>
           </li>
-          <li {% if page.activePage == 'development' %}class="active"{% endif %}>
+          <li {% if page.active_page == 'development' %}class="active"{% endif %}>
             <a href="/development.html">Development</a>
           </li>
         </ul>
@@ -64,12 +64,12 @@
       <!-- Site footer -->
       <div class="footer">
         <p class="copyright">
-          &copy; Tom Kralidis & Ryan Clark 2010 - 2013 <a href="https://github.com/geopython/pycsw.org/blob/master/LICENSE">License</a>. Powered by <a href="http://jekyllrb.com/">Jekyll</a>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-dnt="true" data-count="none" data-via="twitterapi">Tweet</a>
+          &copy; Tom Kralidis 2010 - 2013 <a href="https://github.com/geopython/pycsw.org/blob/master/LICENSE">License</a>, Website <a href="https://github.com/rclark">Ryan Clark</a> 2013.  Powered by <a href="http://jekyllrb.com/">Jekyll</a>
+          <a href="https://twitter.com/share" class="twitter-share-button" data-dnt="true" data-count="none" data-via="twitterapi">Tweet</a>
 
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-    <iframe allowTransparency="true" frameborder="0" scrolling="0" width="53" height="20" src="http://ghbtns.com/github-btn.html?user=geopython&repo=pycsw&type=fork"/>
+          <iframe allowTransparency="true" frameborder="0" scrolling="0" width="53" height="20" src="http://ghbtns.com/github-btn.html?user=geopython&repo=pycsw&type=fork"/>
         </p>
       </div>
 

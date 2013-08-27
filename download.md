@@ -1,7 +1,7 @@
 ---
 layout: default
-title: pycsw - Download
-activePage: download
+title: Download
+active_page: download
 ---
 
 # Download

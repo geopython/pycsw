@@ -1,7 +1,7 @@
 ---
 layout: default
-title: pycsw - FAQ
-activePage: faq
+title: FAQ
+active_page: faq
 ---
 
 FAQ

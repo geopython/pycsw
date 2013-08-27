@@ -1,7 +1,7 @@
 ---
 layout: default
-title: pycsw - Community
-activePage: community
+title: Community
+active_page: community
 ---
 
 # Community
