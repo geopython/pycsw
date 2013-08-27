@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.png">
+
+    <title>{{ page.title }}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+
+    <!-- Pygments CSS -->
+    <link rel="stylesheet" href="{{ site.baseurl }}/css/syntax.css">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ site.baseurl }}/css/justified-nav.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.2.0/respond.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container">
+
+      <div class="masthead">
+        <ul class="nav nav-justified">
+          <li {% if page.activePage == 'home' %}class="active"{% endif %}>
+            <a href="{{ site.baseurl }}/">Home</a>
+          </li>
+          <li {% if page.activePage == 'community' %}class="active"{% endif %}>
+            <a href="{{ site.baseurl }}/community/">Community</a>
+          </li>
+          <li>
+            <a href="http://demo.pycsw.org">Demos</a>
+          </li>
+          <li {% if page.activePage == 'docs' %}class="active"{% endif %}>
+            <a href="{{ site.baseurl }}/docs/">Docs</a>
+          </li>
+          <li>
+            <a href="https://github.com/geopython/pycsw/issues">Bugs</a>
+          </li>
+          <li {% if page.activePage == 'faq' %}class="active"{% endif %}>
+            <a href="{{ site.baseurl }}/faq/">FAQ</a>
+          </li>
+          <li {% if page.activePage == 'download' %}class="active"{% endif %}>
+            <a href="{{ site.baseurl }}/download/">Download</a>
+          </li>
+          <li {% if page.activePage == 'development' %}class="active"{% endif %}>
+            <a href="{{ site.baseurl }}/development/">Development</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="pycsw-content">
+        {{ content }}
+      </div>
+
+      <!-- Site footer -->
+      <div class="footer">
+        <p class="copyright">
+          &copy; Tom Kralidis & Ryan Clark 2010 - 2013 <a href="https://github.com/geopython/pycsw.org/blob/master/LICENSE">License</a>. Powered by <a href="http://jekyllrb.com/">Jekyll</a>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-dnt="true" data-count="none" data-via="twitterapi">Tweet</a>
+
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+    <iframe allowTransparency="true" frameborder="0" scrolling="0" width="53" height="20" src="http://ghbtns.com/github-btn.html?user=geopython&repo=pycsw&type=fork"/>
+        </p>
+      </div>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
+</html>
