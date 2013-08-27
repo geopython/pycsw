@@ -26,7 +26,7 @@ pycsw exists as a [Google+ community](https://plus.google.com/communities/104084
 
 ## FAQ
 
-The [_FAQ_](/faq/) provides answers to commonly asked questions about pycsw.
+The [_FAQ_](/faq.html) provides answers to commonly asked questions about pycsw.
 
 ## Mailing List
 
@@ -58,7 +58,7 @@ The pycsw [wiki](https://github.com/geopython/pycsw/wiki) provides an area for s
 
 pycsw's [issue tracker](https://github.com/geopython/pycsw/issues) is the place to report bugs or request enhancements.  To submit a [bug](https://github.com/geopython/pycsw/issues/new) be sure to specify the version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform.  For convenience, you can run `sbin/pycsw-admin.py -c get_sysprof` and copy/paste the output into your bug report.
 
-GitHub provides the ability for users to issue [pull requests](https://help.github.com/articles/creating-a-pull-request), and is the preferred way to have your contributions added to pycsw, although patches and other mechanisms are welcome as well.  If you are submitting a patch, please add the `has-patch` label to the ticket (so tickets with patches can be easily filtered).  Also read the [_FAQ_](/faq/) before submitting.
+GitHub provides the ability for users to issue [pull requests](https://help.github.com/articles/creating-a-pull-request), and is the preferred way to have your contributions added to pycsw, although patches and other mechanisms are welcome as well.  If you are submitting a patch, please add the `has-patch` label to the ticket (so tickets with patches can be easily filtered).  Also read the [_FAQ_](/faq.html) before submitting.
 
 All pycsw [source code](https://github.com/geopython/pycsw) is managed on GitHub, which includes the latest (`master`) and other supported branches.
 
@@ -66,7 +66,7 @@ All pycsw [source code](https://github.com/geopython/pycsw) is managed on GitHub
 
 Users, developers and others are more than welcome!  There are plenty of ways to get involved:
 
-__Developers__ (check [_Development_](/development/) for more info)
+__Developers__ (check [_Development_](/development.html) for more info)
 
 - adding new functionality
 - fixing issues
