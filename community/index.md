@@ -8,7 +8,7 @@ activePage: community
 
 pycsw is [used](https://github.com/geopython/pycsw/wiki/Live-Deployments) in government, academia and industry, both as a standalone and embedded component in geospatial data portal applications.
 
-<script src="https://embed.github.com/view/geojson/rclark/pycsw/website/live-deployments.geojson"> </script>
+<script src="https://embed.github.com/view/geojson/geopython/pycsw/website/live-deployments.geojson"> </script>
 
 [![USGS Center for Integrated Data Analytics]({{ site.baseUrl }}/img/usgs-cida.jpg)](http://cida.usgs.gov/)
 [![Geonode]({{ site.baseUrl }}/img/geonode.jpg)](http://geonode.org/)
