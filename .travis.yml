@@ -1,0 +1,12 @@
+language: ruby
+
+install:
+  - gem install jekyll link-checker
+
+script:
+  - jekyll build
+  - check-links _site
+
+branches:
+  only:
+    - website
