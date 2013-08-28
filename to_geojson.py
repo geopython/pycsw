@@ -49,7 +49,7 @@ def build_live_deployments_geojson():
 
         feature = {
             'type': 'Feature',
-            'properties': { 'url': '<a href="%s">%s</a>' % (row[1], row[0]) },
+            'properties': { 'url': '<a href="%s">%s</a>' % (row[2].strip(), row[1].strip()) },
             'geometry': { 'type': 'Point', 'coordinates': [ float(xy[1]), float(xy[0]) ] }
         }
 
