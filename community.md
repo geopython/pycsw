@@ -14,6 +14,7 @@ pycsw is [used](https://github.com/geopython/pycsw/wiki/Live-Deployments) in gov
 [![Geonode](/img/geonode.jpg)](http://geonode.org/)
 [![Secretariat of the Pacific Community](/img/sopac.jpg)](http://www.sopac.org)
 [![INSIDE Idaho](/img/inside-idaho.jpg)](http://insideidaho.org)
+
 [![OGC Climate-Hydrologic Information Sharing Pilot](/img/ogc-chisp.jpg)](http://www.opengeospatial.org/projects/initiatives/chisp)
 [![Open Data Catalog, Code for America Brigade](/img/open-data-catalog.png)](http://commons.codeforamerica.org/apps/open-data-catalog)
 [![University of Cologne, Department of Geography, Collaborative Research Centre 806](/img/uni-koeln.png)](http://crc806db.uni-koeln.de/)
@@ -30,9 +31,9 @@ The [_FAQ_](/faq.html) provides answers to commonly asked questions about pycsw.
 
 ## Mailing List
 
-The pycsw-devel mailing list enables users and developers to exchange ideas, discuss improvements / issues, and ask questions. To subscribe, visit http://lists.osgeo.org/mailman/listinfo/pycsw-devel.
+The pycsw-devel mailing list enables users and developers to exchange ideas, discuss improvements / issues, and ask questions. To subscribe, visit <http://lists.osgeo.org/mailman/listinfo/pycsw-devel>.
 
-Mailing list archives are available at http://lists.osgeo.org/pipermail/pycsw-devel.  The mailing list is also available/searchable via the OSGeo [Nabble](http://osgeo-org.1560.x6.nabble.com/pycsw-devel-f5055821.html) forum.
+Mailing list archives are available at <http://lists.osgeo.org/pipermail/pycsw-devel>.  The mailing list is also available/searchable via the OSGeo [Nabble](http://osgeo-org.1560.x6.nabble.com/pycsw-devel-f5055821.html) forum.
 
 ## IRC
 
@@ -56,7 +57,7 @@ pycsw service providers (core development, support, training) can be found on th
 
 The pycsw [wiki](https://github.com/geopython/pycsw/wiki) provides an area for supporting information that frequently changes and / or is outside the scope of the formal documentation.
 
-pycsw's [issue tracker](https://github.com/geopython/pycsw/issues) is the place to report bugs or request enhancements.  To submit a [bug](https://github.com/geopython/pycsw/issues/new) be sure to specify the version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform.  For convenience, you can run `sbin/pycsw-admin.py -c get_sysprof` and copy/paste the output into your bug report.
+pycsw's [issue tracker](https://github.com/geopython/pycsw/issues) is the place to report bugs or request enhancements.  To submit a [bug](https://github.com/geopython/pycsw/issues/) be sure to specify the version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform.  For convenience, you can run `sbin/pycsw-admin.py -c get_sysprof` and copy/paste the output into your bug report.
 
 GitHub provides the ability for users to issue [pull requests](https://help.github.com/articles/creating-a-pull-request), and is the preferred way to have your contributions added to pycsw, although patches and other mechanisms are welcome as well.  If you are submitting a patch, please add the `has-patch` label to the ticket (so tickets with patches can be easily filtered).  Also read the [_FAQ_](/faq.html) before submitting.
 
@@ -66,7 +67,7 @@ All pycsw [source code](https://github.com/geopython/pycsw) is managed on GitHub
 
 Users, developers and others are more than welcome!  There are plenty of ways to get involved:
 
-__Developers__ (check [_Development_](/development.html) for more info)
+__Developers__ (check [Development](http://pycsw.org/docs/development.html) for more info)
 
 - adding new functionality
 - fixing issues

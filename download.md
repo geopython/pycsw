@@ -16,7 +16,7 @@ active_page: download
 
 ## PyPi
 
-* https://pypi.python.org/pypi/pycsw
+* [https://pypi.python.org/pypi/pycsw](https://pypi.python.org/pypi/pycsw)
 
 ## Packages
 

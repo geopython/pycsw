@@ -7,4 +7,4 @@ linkcheck:
 	check-links $(BUILDDIR)
 
 clean:
-	rm -fr $(BUILDDIR)
+	rm -fr $(BUILDDIR)/*

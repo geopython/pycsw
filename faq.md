@@ -7,6 +7,16 @@ active_page: faq
 FAQ
 ===
 
+[Can I use pycsw within my WSGI application?](#can_i_use_pycsw_within_my_wsgi_application)
+
+[How do I export my repository?](#how_do_i_export_my_repository)
+
+[How do I add a custom metadata format?](#how_do_i_add_a_custom_metadata_format)
+
+[How can I catalogue 'sets' of metadata?](#how_can_i_catalogue_sets_of_metadata)
+
+[How can I handle transactions safely?](#how_can_i_handle_transactions_safely)
+
 Can I use pycsw within my WSGI application?
 -------------------------------------------
 
