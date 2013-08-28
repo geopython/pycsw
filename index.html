@@ -11,27 +11,7 @@ active_page: home
     <p>Started in 2010 (more formally announced in <a href="http://www.kralidis.ca/blog/2011/02/04/help-wanted-baking-a-csw-server-in-python/">2011</a>), pycsw allows for the publishing and discovery of geospatial metadata, providing a standards-based metadata and catalogue component of spatial data infrastructures.</p>
     <p>pycsw is <a class="reference external" href="http://opensource.org/">Open Source</a>, released under an MIT <a class="reference internal" href="docs/license.html">license</a>, and runs on all major platforms (Windows, Linux, Mac OS X).</p>
   </p>
-  <p>
-    <a class="btn btn-lg btn-success" href="#">Deploy in 4 Minutes</a>
-<div class="row">
-  <div class="col-md-12 col-md-offset-2">
-
-    <pre class="text-left col-lg-8">
-$ virtualenv pycsw && cd pycsw && . bin/activate
-$ git clone git@github.com:geopython/pycsw.git && cd pycsw
-$ pip install -e . && pip install -r requirements.txt
-$ cp default-sample.cfg default.cfg
-$ vi default.cfg
-# adjust paths in
-# - server.home
-# - repository.database
-# set server.url to http://localhost:8000/
-$ python csw.wsgi
-$ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
-    </pre>
-</div>
-</div>
-  </p>
+  <p><a class="btn btn-lg btn-success" href="#deploy-in-4-minutes">Deploy in 4 Minutes</a></p>
 </div>
 <!-- Example row of columns -->
 <div class="row">
@@ -59,7 +39,7 @@ $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
       </ul>
     </p>
     <p>
-      <a class="btn btn-primary" href="#">View details &raquo;</a>
+      <a class="btn btn-primary" href="/docs">Read the Docs</a>
     </p>
   </div>
   <div class="col-lg-4">
@@ -70,14 +50,30 @@ $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
 </p>
 
 <p>
-    <a title="This product conforms to the OpenGIS Catalogue Service Implementation Specification [Catalogue Service for the Web], Revision 2.0.2. OGC, OGC®, and CERTIFIED OGC COMPLIANT are trademarks or registered trademarks of the Open Geospatial Consortium, Inc. in the United States and other countries." href="http://www.opengeospatial.org/resource/products/details/?pid=1104"><img alt="This product conforms to the OpenGIS Catalogue Service Implementation Specification [Catalogue Service for the Web], Revision 2.0.2. OGC, OGC®, and CERTIFIED OGC COMPLIANT are trademarks or registered trademarks of the Open Geospatial Consortium, Inc. in the United States and other countries." src="https://portal.opengeospatial.org/public_ogc/compliance/badge.php?s=CAT%20CSW%202.0.2&r=1" height="38"/></a>
+    <a title="This product conforms to the OpenGIS Catalogue Service Implementation Specification [Catalogue Service for the Web], Revision 2.0.2. OGC, OGC®, and CERTIFIED OGC COMPLIANT are trademarks or registered trademarks of the Open Geospatial Consortium, Inc. in the United States and other countries." href="http://www.opengeospatial.org/resource/products/details/?pid=1104"><img alt="This product conforms to the OpenGIS Catalogue Service Implementation Specification [Catalogue Service for the Web], Revision 2.0.2. OGC, OGC®, and CERTIFIED OGC COMPLIANT are trademarks or registered trademarks of the Open Geospatial Consortium, Inc. in the United States and other countries." src="https://portal.opengeospatial.org/public_ogc/compliance/badge.php?s=CAT%20CSW%202.0.2&amp;r=1" height="38"/></a>
 </p>
 
 <p>
     <a title="OSGeo Project in Incubation" href="https://github.com/geopython/pycsw/wiki/OSGeo-Incubation"><img alt="OSGeo Project in Incubation" src="http://svn.osgeo.org/osgeo/marketing/logo/png8/150/OSGeo_incubation.png" height="64"/></a>
 </p>
     <p>
-      <a class="btn btn-primary" href="#">Check out the demo &raquo;</a>
+      <a class="btn btn-primary" href="http://demo.pycsw.org/">View the Demos</a>
     </p>
   </div>
+</div>
+
+<div id="deploy-in-4-minutes" class="text-left">
+{% highlight bash %}
+$ virtualenv pycsw && cd pycsw && . bin/activate
+$ git clone git@github.com:geopython/pycsw.git && cd pycsw
+$ pip install -e . && pip install -r requirements.txt
+$ cp default-sample.cfg default.cfg
+$ vi default.cfg
+# adjust paths in
+# - server.home
+# - repository.database
+# set server.url to http://localhost:8000/
+$ python csw.wsgi
+$ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
+{% endhighlight %}
 </div>
