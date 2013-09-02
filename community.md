@@ -10,11 +10,12 @@ pycsw is [used](https://github.com/geopython/pycsw/wiki/Live-Deployments) in gov
 
 <script src="https://embed.github.com/view/geojson/geopython/pycsw/website/live-deployments.geojson"> </script>
 
+[![CKAN](/img/ckan.png)](http://ckan.org)
 [![USGS Center for Integrated Data Analytics](/img/usgs-cida.jpg)](http://cida.usgs.gov/)
 [![Geonode](/img/geonode.jpg)](http://geonode.org/)
 [![Secretariat of the Pacific Community](/img/sopac.jpg)](http://www.sopac.org)
-[![INSIDE Idaho](/img/inside-idaho.jpg)](http://insideidaho.org)
 
+[![INSIDE Idaho](/img/inside-idaho.jpg)](http://insideidaho.org)
 [![OGC Climate-Hydrologic Information Sharing Pilot](/img/ogc-chisp.jpg)](http://www.opengeospatial.org/projects/initiatives/chisp)
 [![Open Data Catalog, Code for America Brigade](/img/open-data-catalog.png)](http://commons.codeforamerica.org/apps/open-data-catalog)
 [![University of Cologne, Department of Geography, Collaborative Research Centre 806](/img/uni-koeln.png)](http://crc806db.uni-koeln.de/)
