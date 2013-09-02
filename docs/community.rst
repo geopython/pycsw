@@ -9,6 +9,13 @@ pycsw is `used`_ in government, academia and industry, both as a standalone and 
 
 .. include:: _build/map.rst
 
+.. image:: _static/ckan.png
+   :width: 102px
+   :height: 102px
+   :alt: CKAN
+   :target: http://ckan.org
+   :class: padded
+
 .. image:: _static/usgs-cida.jpg
    :width: 150px
    :height: 84px
@@ -30,14 +37,14 @@ pycsw is `used`_ in government, academia and industry, both as a standalone and 
    :target: http://www.sopac.org
    :class: padded
 
+|
+
 .. image:: _static/inside-idaho.jpg
    :width: 76px
    :height: 80px
    :alt: INSIDE Idaho
    :target: http://insideidaho.org
    :class: padded
-
-|
 
 .. image:: _static/ogc-chisp.jpg
    :width: 108px 
