@@ -5,7 +5,7 @@ install:
 
 script:
   - jekyll build
-  - check-links _site
+#  - check-links _site
 
 branches:
   only:
