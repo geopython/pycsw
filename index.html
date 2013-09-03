@@ -21,6 +21,9 @@ active_page: home
         # - server.home
         # - repository.database
         # set server.url to http://localhost:8000/
+        # init database
+        $ pycsw-admin.py -c setup_db -f default.cfg
+        $ pycsw-admin.py -c load_records -f default.cfg -p /path/to/xml/  # directory of XML files, use -r for recursive
         $ python csw.wsgi
         $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
         {% endhighlight %}
@@ -35,6 +38,7 @@ active_page: home
       <li>Just a Python library</li>
       <li>Install in just 4 minutes</li>
       <li>Run multiple CSW endpoints with a single install</li>
+      <li>Headless: no GUI, just simple, scriptable command line configuration/deployment</li>
       <li>Fully compliant, transactional, extensible metadata server in less than 250KB</li>
     </ul>
     <p>
@@ -48,9 +52,11 @@ active_page: home
       <ul>
         <li>Embed within your Python application, or use standalone</li>
         <li>Deploy via mod_wsgi, Django, Flask, Pylons, or CGI</li>
+        <li>Integrated with popular open data portal software: <a href="http://geonode.org">GeoNode</a>, <a href="http://ckan.org">CKAN</a>, <a href="http://commons.codeforamerica.org/apps/open-data-catalog">Open Data Catalog</a></li>
         <li>Hook up to your existing metadata database, or use pycsw's native model</li>
         <li>Choose your backend: PostgreSQL (with or without PostGIS), MySQL, or hack with SQLite</li>
         <li>Manage settings in a configuration file, database, or even pass a Python dict</li>
+        <li>Robust, byte-level <a href="http://travis-ci.org/geopython/pycsw">testing / continuous integration</a></li>
       </ul>
     <p>
       <a class="btn btn-primary" href="/docs">Read the Docs</a>
