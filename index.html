@@ -8,7 +8,23 @@ active_page: home
   <h1>Metadata Publishing Just Got Easier</h1>
   <p class="lead">
     <img alt="pycsw" class="pull-left" src="/img/pycsw-logo.png" /><p class="text-left">pycsw is an OGC CSW server implementation written in <a href="http://www.python.org/">Python</a>. Started in 2010 (more formally announced in <a href="http://www.kralidis.ca/blog/2011/02/04/help-wanted-baking-a-csw-server-in-python/">2011</a>), pycsw allows for the publishing and discovery of geospatial metadata, providing a standards-based metadata and catalogue component of spatial data infrastructures.  pycsw is <a class="reference external" href="http://opensource.org/">Open Source</a>, released under an MIT <a class="reference internal" href="docs/license.html">license</a>, and runs on all major platforms (Windows, Linux, Mac OS X).</p>
-  <p><a class="btn btn-lg btn-success" href="#deploy-in-4-minutes">Deploy in 4 Minutes</a></p>
+  <p>
+    <a class="btn btn-lg btn-success collapse-data-btn" data-toggle="collapse" href="#deploy-in-4-minutes">Deploy in 4 Minutes</a>
+    <div id="deploy-in-4-minutes" class="collapse panel panel-default text-left">
+        {% highlight bash %}
+        $ virtualenv pycsw && cd pycsw && . bin/activate
+        $ git clone git@github.com:geopython/pycsw.git && cd pycsw
+        $ pip install -e . && pip install -r requirements.txt
+        $ cp default-sample.cfg default.cfg
+        $ vi default.cfg
+        # adjust paths in
+        # - server.home
+        # - repository.database
+        # set server.url to http://localhost:8000/
+        $ python csw.wsgi
+        $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
+        {% endhighlight %}
+    </div>
 </div>
 <!-- Example row of columns -->
 <div class="row">
@@ -59,20 +75,4 @@ active_page: home
       <a class="btn btn-primary" href="http://demo.pycsw.org/">View the Demos</a>
     </p>
   </div>
-</div>
-
-<div id="deploy-in-4-minutes" class="text-left">
-{% highlight bash %}
-$ virtualenv pycsw && cd pycsw && . bin/activate
-$ git clone git@github.com:geopython/pycsw.git && cd pycsw
-$ pip install -e . && pip install -r requirements.txt
-$ cp default-sample.cfg default.cfg
-$ vi default.cfg
-# adjust paths in
-# - server.home
-# - repository.database
-# set server.url to http://localhost:8000/
-$ python csw.wsgi
-$ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
-{% endhighlight %}
 </div>
