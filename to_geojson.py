@@ -1,6 +1,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@hotmail.com>
+#          Ryan Clark <ryan.clark@azgs.az.gov>
 #
 # Copyright (c) 2013 Tom Kralidis
 #
@@ -29,11 +30,11 @@
 
 import csv
 import json
-import os
 from StringIO import StringIO
 from urllib2 import urlopen
 
 def build_live_deployments_geojson():
+    """Convert Live Deployments wiki page to GeoJSON for GitHub to render"""
     dep_url = 'https://raw.github.com/wiki/geopython/pycsw/Live-Deployments.md'
     geojson = { 'type': 'FeatureCollection', 'features': [] }
 
@@ -45,12 +46,16 @@ def build_live_deployments_geojson():
     next(dep_reader)  # skip fields row
     next(dep_reader)  # skip dashed line row
     for row in dep_reader:
-        xy = row[3].split(',')
+        xycoords = row[3].split(',')
 
         feature = {
             'type': 'Feature',
-            'properties': { 'url': '<a href="%s">%s</a>' % (row[2].strip(), row[1].strip()) },
-            'geometry': { 'type': 'Point', 'coordinates': [ float(xy[1]), float(xy[0]) ] }
+            'properties': {
+                'url': '<a href="%s">%s</a>' % (row[2].strip(), row[1].strip())
+            },
+            'geometry': {
+                'type': 'Point',
+                'coordinates': [ float(xycoords[1]), float(xycoords[0]) ] }
         }
 
         geojson['features'].append(feature)
@@ -58,5 +63,5 @@ def build_live_deployments_geojson():
     with open('live-deployments.geojson', 'w') as output_file:
         output_file.write(json.dumps(geojson))
 
-build_live_deployments_geojson()
-
+if __name__ == '__main__':
+    build_live_deployments_geojson()
