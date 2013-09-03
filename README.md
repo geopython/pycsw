@@ -12,7 +12,7 @@ Setting up website environment locally
     # get the website branch
     git clone git@github.com/geopython/pycsw.git -b website && cd pycsw
     # set Ruby environment variables
-    . setenv-ruby
+    . setenv-ruby-gem
     # install Jekyll
     gem install jekyll link-checker
 
