@@ -4,7 +4,7 @@ title: Blog
 active_page: blog
 ---
 
-# Archive [![RSS]({{site.url}}/img/rss.png)]({{site.url}}/feed.xml)
+# Archive [![RSS]({{site.url}}/img/rss.png)]({{site.url}}/blog/feed.xml)
 
 <ul>
   {% for post in site.posts %}
