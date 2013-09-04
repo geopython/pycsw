@@ -26,7 +26,7 @@ Workflow
     check-links _site
     # view at http://localhost:4000
     # publish to live
-    scp -r _site/* username@pycsw.org:/osgeo/pycsw-web
+    ./publish.sh <username>
     # update live deployment map
     python to_geojson.py
     git commit -m 'update live deployment map' live-deployments.geojson
@@ -38,3 +38,4 @@ the familiar targets:
     make html
     make linkcheck
     make clean
+    make username=<username> publish 

@@ -8,3 +8,6 @@ linkcheck:
 
 clean:
 	rm -fr $(BUILDDIR)/*
+
+publish: html
+	./publish.sh $(username)
