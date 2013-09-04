@@ -27,6 +27,10 @@ Workflow
     # view at http://localhost:4000
     # publish to live
     scp -r _site/* username@pycsw.org:/osgeo/pycsw-web
+    # update live deployment map
+    python to_geojson.py
+    git commit -m 'update live deployment map' live-deployments.geojson
+    git push origin website
 
 For a [Sphinx](http://sphinx-doc.org/) feel, there's a `Makefile` with
 the familiar targets:
