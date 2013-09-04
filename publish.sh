@@ -10,7 +10,7 @@ END
 fi
 
 SITE=_site
-REMOTE_HOST=demo.pycsw.org
+REMOTE_HOST=pycsw.org
 REMOTE_PATH=/osgeo/pycsw/pycsw-web
 
 find $SITE -type f -exec chmod 664 {} +
