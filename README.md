@@ -31,6 +31,11 @@ Workflow
     python to_geojson.py
     git commit -m 'update live deployment map' live-deployments.geojson
     git push origin website
+    # adding blogposts
+    cd _drafts
+    vi newpost.md
+    # preview with `make drafts` and draft will show up as latest post
+    # publish with `git mv _drafts/newpost.md _posts/YYYY-MM-DD-newpost.md && git commit -m 'publish article'`
 
 For a [Sphinx](http://sphinx-doc.org/) feel, there's a `Makefile` with
 the familiar targets:

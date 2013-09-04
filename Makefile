@@ -3,6 +3,9 @@ BUILDDIR=_site
 html:
 	jekyll build
 
+drafts:
+	jekyll build --drafts
+
 linkcheck:
 	check-links $(BUILDDIR)
 
