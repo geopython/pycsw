@@ -23,6 +23,7 @@ active_page: home
         # set server.url to http://localhost:8000/
         # init database
         $ pycsw-admin.py -c setup_db -f default.cfg
+        # load records
         $ pycsw-admin.py -c load_records -f default.cfg -p /path/to/xml/  # directory of XML files, use -r for recursive
         $ python csw.wsgi
         $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
