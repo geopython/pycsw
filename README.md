@@ -44,3 +44,4 @@ the familiar targets:
     make linkcheck
     make clean
     make username=<username> publish 
+    make drafts
