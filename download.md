@@ -4,9 +4,9 @@ title: Download
 active_page: download
 ---
 
-# Download
+# Download <span class="glyphicon glyphicon-download"> </span>
 
-* Current Stable Release (1.6.1): [.tar.gz](http://download.osgeo.org/pycsw/pycsw-1.6.1.tar.gz) | [.zip](http://download.osgeo.org/pycsw/pycsw-1.6.1.zip)
+* Current Stable Release (1.6.1) <a class="btn btn-default" href="http://download.osgeo.org/pycsw/pycsw-1.6.1.tar.gz">tar.gz <span class="glyphicon glyphicon-compressed"> </span></a> <a class="btn btn-default" href="http://download.osgeo.org/pycsw/pycsw-1.6.1.zip">zip <span class="glyphicon glyphicon-compressed"> </span></a>
 
 * [All Releases](http://download.osgeo.org/pycsw/)
 

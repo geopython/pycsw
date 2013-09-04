@@ -4,7 +4,7 @@ title: Community
 active_page: community
 ---
 
-# Community
+# Community <span class="glyphicon glyphicon-user"> </span>
 
 pycsw is [used](https://github.com/geopython/pycsw/wiki/Live-Deployments) in government, academia and industry, both as a standalone and embedded component in geospatial data portal applications.
 

@@ -4,8 +4,7 @@ title: FAQ
 active_page: faq
 ---
 
-FAQ
-===
+# FAQ <span class="glyphicon glyphicon-question-sign"> </span>
 
 [Can I use pycsw within my WSGI application?](#can_i_use_pycsw_within_my_wsgi_application)
 
