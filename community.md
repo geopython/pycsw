@@ -10,15 +10,15 @@ pycsw is [used](https://github.com/geopython/pycsw/wiki/Live-Deployments) in gov
 
 <script src="https://embed.github.com/view/geojson/geopython/pycsw/website/live-deployments.geojson"> </script>
 
-[![CKAN](/img/ckan.png)](http://ckan.org)
-[![USGS Center for Integrated Data Analytics](/img/usgs-cida.jpg)](http://cida.usgs.gov/)
-[![Geonode](/img/geonode.jpg)](http://geonode.org/)
-[![Secretariat of the Pacific Community](/img/sopac.jpg)](http://www.sopac.org)
+[![CKAN]({{site.baseurl}}/img/ckan.png)](http://ckan.org)
+[![USGS Center for Integrated Data Analytics]({{site.baseurl}}/img/usgs-cida.jpg)](http://cida.usgs.gov/)
+[![Geonode]({{site.baseurl}}/img/geonode.jpg)](http://geonode.org/)
+[![Secretariat of the Pacific Community]({{site.baseurl}}/img/sopac.jpg)](http://www.sopac.org)
 
-[![INSIDE Idaho](/img/inside-idaho.jpg)](http://insideidaho.org)
-[![OGC Climate-Hydrologic Information Sharing Pilot](/img/ogc-chisp.jpg)](http://www.opengeospatial.org/projects/initiatives/chisp)
-[![Open Data Catalog, Code for America Brigade](/img/open-data-catalog.png)](http://commons.codeforamerica.org/apps/open-data-catalog)
-[![University of Cologne, Department of Geography, Collaborative Research Centre 806](/img/uni-koeln.png)](http://crc806db.uni-koeln.de/)
+[![INSIDE Idaho]({{site.baseurl}}/img/inside-idaho.jpg)](http://insideidaho.org)
+[![OGC Climate-Hydrologic Information Sharing Pilot]({{site.baseurl}}/img/ogc-chisp.jpg)](http://www.opengeospatial.org/projects/initiatives/chisp)
+[![Open Data Catalog, Code for America Brigade]({{site.baseurl}}/img/open-data-catalog.png)](http://commons.codeforamerica.org/apps/open-data-catalog)
+[![University of Cologne, Department of Geography, Collaborative Research Centre 806]({{site.baseurl}}/img/uni-koeln.png)](http://crc806db.uni-koeln.de/)
 
 There are numerous ways to interact with the pycsw community.
 
@@ -28,7 +28,7 @@ pycsw exists as a [Google+ community](https://plus.google.com/communities/104084
 
 ## FAQ
 
-The [_FAQ_](/faq.html) provides answers to commonly asked questions about pycsw.
+The [_FAQ_]({{site.baseurl}}/faq.html) provides answers to commonly asked questions about pycsw.
 
 ## Mailing List
 
@@ -60,7 +60,7 @@ The pycsw [wiki](https://github.com/geopython/pycsw/wiki) provides an area for s
 
 pycsw's [issue tracker](https://github.com/geopython/pycsw/issues) is the place to report bugs or request enhancements.  To submit a [bug](https://github.com/geopython/pycsw/issues/) be sure to specify the version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform.  For convenience, you can run `sbin/pycsw-admin.py -c get_sysprof` and copy/paste the output into your bug report.
 
-GitHub provides the ability for users to issue [pull requests](https://help.github.com/articles/creating-a-pull-request), and is the preferred way to have your contributions added to pycsw, although patches and other mechanisms are welcome as well.  If you are submitting a patch, please add the `has-patch` label to the ticket (so tickets with patches can be easily filtered).  Also read the [_FAQ_](/faq.html) before submitting.
+GitHub provides the ability for users to issue [pull requests](https://help.github.com/articles/creating-a-pull-request), and is the preferred way to have your contributions added to pycsw, although patches and other mechanisms are welcome as well.  If you are submitting a patch, please add the `has-patch` label to the ticket (so tickets with patches can be easily filtered).  Also read the [_FAQ_]({{site.baseurl}}/faq.html) before submitting.
 
 All pycsw [source code](https://github.com/geopython/pycsw) is managed on GitHub, which includes the latest (`master`) and other supported branches.
 
