@@ -29,10 +29,10 @@ active_page: home
         # init database
         
         # Setup the database:
-        $ ./sbin/pycsw-admin.py -c setup_db -f default.cfg
+        $ pycsw-admin.py -c setup_db -f default.cfg
         
         # Load records by indicating a directory of XML files, use -r for recursive:
-        $ ./sbin/pycsw-admin.py -c load_records -f default.cfg -p /path/to/xml/
+        $ pycsw-admin.py -c load_records -f default.cfg -p /path/to/xml/
         
         # Run the server:
         $ python csw.wsgi
