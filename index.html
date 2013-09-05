@@ -7,14 +7,19 @@ active_page: home
 <div class="jumbotron">
   <h1>Metadata Publishing Just Got Easier</h1>
   <p class="lead">
-    <img alt="pycsw" class="logo" src="{{site.url}}/img/pycsw-logo.png" /><p class="text-left">pycsw is an OGC CSW server implementation written in <a href="http://www.python.org/">Python</a>. Started in 2010 (more formally announced in <a href="http://www.kralidis.ca/blog/2011/02/04/help-wanted-baking-a-csw-server-in-python/">2011</a>), pycsw allows for the publishing and discovery of geospatial metadata, providing a standards-based metadata and catalogue component of spatial data infrastructures.  pycsw is <a class="reference external" href="http://opensource.org/">Open Source</a>, released under an MIT <a class="reference internal" href="docs/license.html">license</a>, and runs on all major platforms (Windows, Linux, Mac OS X).</p>
+    <img alt="pycsw" class="logo" src="{{site.baseurl}}/img/pycsw-logo.png" /><p class="text-left">pycsw is an OGC CSW server implementation written in <a href="http://www.python.org/">Python</a>. Started in 2010 (more formally announced in <a href="http://www.kralidis.ca/blog/2011/02/04/help-wanted-baking-a-csw-server-in-python/">2011</a>), pycsw allows for the publishing and discovery of geospatial metadata, providing a standards-based metadata and catalogue component of spatial data infrastructures.  pycsw is <a class="reference external" href="http://opensource.org/">Open Source</a>, released under an MIT <a class="reference internal" href="docs/license.html">license</a>, and runs on all major platforms (Windows, Linux, Mac OS X).</p>
   <p>
     <a class="btn btn-lg btn-success collapse-data-btn" data-toggle="collapse" href="#deploy-in-4-minutes">Deploy in 4 Minutes</a>
     <div id="deploy-in-4-minutes" class="collapse panel panel-default text-left">
         {% highlight bash %}
+        # Setup a virtual environment:
         $ virtualenv pycsw && cd pycsw && . bin/activate
+        
+        # Grab the pycsw source code:
         $ git clone git@github.com:geopython/pycsw.git && cd pycsw
         $ pip install -e . && pip install -r requirements.txt
+        
+        # Create and adjust a configuration file:
         $ cp default-sample.cfg default.cfg
         $ vi default.cfg
         # adjust paths in
@@ -22,10 +27,17 @@ active_page: home
         # - repository.database
         # set server.url to http://localhost:8000/
         # init database
-        $ pycsw-admin.py -c setup_db -f default.cfg
-        # load records
-        $ pycsw-admin.py -c load_records -f default.cfg -p /path/to/xml/  # directory of XML files, use -r for recursive
+        
+        # Setup the database:
+        $ ./sbin/pycsw-admin.py -c setup_db -f default.cfg
+        
+        # Load records by indicating a directory of XML files, use -r for recursive:
+        $ ./sbin/pycsw-admin.py -c load_records -f default.cfg -p /path/to/xml/
+        
+        # Run the server:
         $ python csw.wsgi
+        
+        # See that it works!
         $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
         {% endhighlight %}
     </div>
@@ -59,7 +71,7 @@ active_page: home
         <li>Robust, byte-level <a href="http://travis-ci.org/geopython/pycsw">testing / continuous integration</a></li>
       </ul>
     <p>
-      <a class="btn btn-primary" href="{{site.url}}/docs">Read the Docs</a>
+      <a class="btn btn-primary" href="{{site.baseurl}}/docs">Read the Docs</a>
     </p>
   </div>
   <div class="col-lg-4">
