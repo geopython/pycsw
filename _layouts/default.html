@@ -6,7 +6,7 @@
     <meta name="description" content="{{site.description -- {{page.title }}">
     <meta name="keywords" content="pycsw, csw, catalogue, catalog, metadata, discovery, search, ogc, iso, fgdc, dif, ebrim, inspire">
     <meta name="author" content="Tom Kralidis">
-    <link rel="shortcut icon" href="{{site.url}}/img/favicon.ico">
+    <link rel="shortcut icon" href="{{site.baseurl}}/img/favicon.ico">
 
     <title>{{ site.name }} &bull; {{ page.title }}</title>
 
@@ -14,10 +14,11 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
     <!-- Pygments CSS -->
-    <link rel="stylesheet" href="{{site.url}}/css/syntax.css">
+    <link rel="stylesheet" href="{{site.baseurl}}/css/syntax.css">
 
     <!-- Custom styles for this template -->
-    <link href="{{site.url}}/css/justified-nav.css" rel="stylesheet">
+    <link href="{{site.baseurl}}/css/justified-nav.css" rel="stylesheet">
+    <link href="{{site.baseurl}}/css/main.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -59,28 +60,28 @@
       <div class="masthead">
         <ul class="nav nav-justified">
           <li {% if page.active_page == 'home' %}class="active"{% endif %}>
-            <a href="{{site.url}}"><img src="{{site.url}}/img/pycsw-logo.png" width="20" height="20" alt="pycsw"/> Home</a>
+            <a href="{{site.baseurl}}"><img src="{{site.baseurl}}/img/pycsw-logo.png" width="20" height="20" alt="pycsw"/> Home</a>
           </li>
           <li {% if page.active_page == 'community' %}class="active"{% endif %}>
-            <a href="{{site.url}}/community.html">Community</a>
+            <a href="{{site.baseurl}}/community.html">Community</a>
           </li>
           <li {% if page.active_page == 'blog' %}class="active"{% endif %}>
-            <a href="{{site.url}}/blog">Blog</a>
+            <a href="{{site.baseurl}}/blog">Blog</a>
           </li>
           <li {% if page.active_page == 'docs' %}class="active"{% endif %}>
-            <a href="{{site.url}}/docs/index.html">Docs</a>
+            <a href="{{site.baseurl}}/docs/index.html">Docs</a>
           </li>
           <li>
             <a href="https://github.com/geopython/pycsw/issues">Bugs</a>
           </li>
           <li {% if page.active_page == 'faq' %}class="active"{% endif %}>
-            <a href="{{site.url}}/faq.html">FAQ</a>
+            <a href="{{site.baseurl}}/faq.html">FAQ</a>
           </li>
           <li {% if page.active_page == 'download' %}class="active"{% endif %}>
-            <a href="{{site.url}}/download.html">Download</a>
+            <a href="{{site.baseurl}}/download.html">Download</a>
           </li>
           <li {% if page.active_page == 'development' %}class="active"{% endif %}>
-            <a href="{{site.url}}/development/index.html">Development</a>
+            <a href="{{site.baseurl}}/development/index.html">Development</a>
           </li>
         </ul>
       </div>
