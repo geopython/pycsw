@@ -62,7 +62,7 @@ def publish_docs(options):
     """Publish dev docs to production"""
     local_path = '_build/html'
     remote_host = 'pycsw.org'
-    remote_path = '/osgeo/pycsw/pycsw-web'
+    remote_path = '/osgeo/pycsw/pycsw-web/docs/latest'
 
     user = options.get('user', False)
     if not user:

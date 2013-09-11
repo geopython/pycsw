@@ -27,7 +27,7 @@ pycsw requires the following Python supporting libraries:
 Installing from Source
 ----------------------
 
-:ref:`Download <download>` the latest stable version or fetch from Git.
+`Download </download.html>`_ the latest stable version or fetch from Git.
 
 For Developers and the Truly Impatient
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

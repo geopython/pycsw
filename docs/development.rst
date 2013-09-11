@@ -18,12 +18,12 @@ Submitting Pull Requests
 ------------------------
 
 - where possible, pull requests as part of a GitHub issue
-- if you are submitting a patch, please add the ``has-patch`` label to the ticket (so tickets with patches can be easily filtered).  Also read the :ref:`faq` before submitting
+- if you are submitting a patch, please add the ``has-patch`` label to the ticket (so tickets with patches can be easily filtered).  Also read the `faq </faq.html>`_ before submitting
 
 GitHub Commit Access
 --------------------
 
-- proposals to provide developers with GitHub commit access shall be emailed to the pycsw-devel mailing list (see :ref:`community`).  Proposals shall be approved by the pycsw development team.  Committers shall be added by the project admin
+- proposals to provide developers with GitHub commit access shall be emailed to the pycsw-devel mailing list (see `community </community.html>`_ page).  Proposals shall be approved by the pycsw development team.  Committers shall be added by the project admin
 - removal of commit access shall be handled in the same manner
 - each committer shall be listed in https://github.com/geopython/pycsw/blob/master/COMMITTERS.txt
  
