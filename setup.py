@@ -117,10 +117,10 @@ PACKAGE_DATA.update(get_package_data([ROOT_PACKAGE], 'schemas'))
 # set the dependencies
 # GeoNode and OpenDataCatalog do not require SQLAlchemy
 INSTALL_REQUIRES = [
-    'lxml==3.1.2',
-    'Shapely==1.2.17',
+    'lxml==3.2.3',
+    'Shapely==1.2.18',
     'pyproj==1.9.3',
-    'OWSLib==0.7.2'
+    'OWSLib==0.8.1'
 ]
 
 KEYWORDS = ('pycsw csw catalogue catalog metadata discovery search'
