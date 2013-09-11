@@ -43,7 +43,6 @@ clean:
 
 html:
 	mkdir -p $(BUILDDIR)
-	python build_map.py > $(BUILDDIR)/map.rst
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."

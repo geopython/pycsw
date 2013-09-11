@@ -3,4 +3,4 @@
 Committers
 ==========
 
-.. include:: ../../COMMITTERS.txt
+.. include:: ../COMMITTERS.txt

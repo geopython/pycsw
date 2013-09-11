@@ -65,5 +65,5 @@ Profiles must add examples to the :ref:`tests` interface, which must provide exa
 Supported Profiles
 ==================
 
-.. include:: ../../pycsw/plugins/profiles/apiso/docs/apiso.rst
-.. include:: ../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst
+.. include:: ../pycsw/plugins/profiles/apiso/docs/apiso.rst
+.. include:: ../pycsw/plugins/profiles/ebrim/docs/ebrim.rst
