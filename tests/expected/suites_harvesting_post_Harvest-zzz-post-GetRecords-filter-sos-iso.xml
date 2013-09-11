@@ -326,7 +326,7 @@
       <gmd:contact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName>
-            <gco:CharacterString>Alex Kmoch</gco:CharacterString>
+            <gco:CharacterString>Boyan Brodaric</gco:CharacterString>
           </gmd:organisationName>
         </gmd:CI_ResponsibleParty>
       </gmd:contact>
@@ -344,26 +344,32 @@
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>GNS Science New Zealand, NGMP SOS timeseries</gco:CharacterString>
+                <gco:CharacterString>GIN SOS</gco:CharacterString>
               </gmd:title>
             </gmd:CI_Citation>
           </gmd:citation>
           <gmd:abstract>
-            <gco:CharacterString>GNS Hydrogeology Section, serving NGMP groundwater level through customised 52N SOS, data quality cannot be represented yet, there is no liability regarding this service, for more information go to http://ggw.gns.cri.nz/ggwdata/ (SVN: 0 @ 2013-01-12 19:55:25)</gco:CharacterString>
+            <gco:CharacterString>Historical groundwater  level  monitoring stations from Alberta, Ontario and Nova Scotia. This SOS web service delivers the data using OGC's WaterML 2.0. The SOS service federates data from various  provincial  sources and publishes  them as a single service.   Many monitoring stations also have water well characteristics available  through the  GIN WFS  web service.</gco:CharacterString>
           </gmd:abstract>
           <gmd:descriptiveKeywords>
             <gmd:MD_Keywords>
               <gmd:keyword>
-                <gco:CharacterString>water level</gco:CharacterString>
+                <gco:CharacterString>groundwater level</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>groundwater</gco:CharacterString>
+                <gco:CharacterString>monitoring</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>hydrogeology</gco:CharacterString>
+                <gco:CharacterString>timeseries</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>ngmp</gco:CharacterString>
+                <gco:CharacterString>Alberta</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Ontario</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Nova Scotia</gco:CharacterString>
               </gmd:keyword>
             </gmd:MD_Keywords>
           </gmd:descriptiveKeywords>
@@ -379,16 +385,22 @@
           <srv:keywords>
             <gmd:MD_Keywords>
               <gmd:keyword>
-                <gco:CharacterString>water level</gco:CharacterString>
+                <gco:CharacterString>groundwater level</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>groundwater</gco:CharacterString>
+                <gco:CharacterString>monitoring</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>hydrogeology</gco:CharacterString>
+                <gco:CharacterString>timeseries</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>ngmp</gco:CharacterString>
+                <gco:CharacterString>Alberta</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Ontario</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Nova Scotia</gco:CharacterString>
               </gmd:keyword>
             </gmd:MD_Keywords>
           </srv:keywords>
@@ -397,16 +409,16 @@
               <gmd:geographicElement>
                 <gmd:EX_GeographicBoundingBox>
                   <gmd:westBoundLongitude>
-                    <gco:Decimal>168.06</gco:Decimal>
+                    <gco:Decimal>-120.0</gco:Decimal>
                   </gmd:westBoundLongitude>
                   <gmd:eastBoundLongitude>
-                    <gco:Decimal>177.98</gco:Decimal>
+                    <gco:Decimal>-60.0</gco:Decimal>
                   </gmd:eastBoundLongitude>
                   <gmd:southBoundLatitude>
-                    <gco:Decimal>-46.31</gco:Decimal>
+                    <gco:Decimal>41.0</gco:Decimal>
                   </gmd:southBoundLatitude>
                   <gmd:northBoundLatitude>
-                    <gco:Decimal>-34.85</gco:Decimal>
+                    <gco:Decimal>60.0</gco:Decimal>
                   </gmd:northBoundLatitude>
                 </gmd:EX_GeographicBoundingBox>
               </gmd:geographicElement>
@@ -421,97 +433,7 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>NGMP_DISSOLVED_MANGANESE</gco:CharacterString>
-              </srv:identifier>
-            </srv:SV_CoupledResource>
-          </srv:coupledResource>
-          <srv:coupledResource>
-            <srv:SV_CoupledResource>
-              <srv:operationName>
-                <gco:CharacterString>GetObservation</gco:CharacterString>
-              </srv:operationName>
-              <srv:identifier>
-                <gco:CharacterString>NGMP_HYDRAULIC_CONDUCTIVITY</gco:CharacterString>
-              </srv:identifier>
-            </srv:SV_CoupledResource>
-          </srv:coupledResource>
-          <srv:coupledResource>
-            <srv:SV_CoupledResource>
-              <srv:operationName>
-                <gco:CharacterString>GetObservation</gco:CharacterString>
-              </srv:operationName>
-              <srv:identifier>
-                <gco:CharacterString>NGMP_DISSOLVED_NITRATE_NO3_AS_N</gco:CharacterString>
-              </srv:identifier>
-            </srv:SV_CoupledResource>
-          </srv:coupledResource>
-          <srv:coupledResource>
-            <srv:SV_CoupledResource>
-              <srv:operationName>
-                <gco:CharacterString>GetObservation</gco:CharacterString>
-              </srv:operationName>
-              <srv:identifier>
-                <gco:CharacterString>NGMP_DISSOLVED_IRON</gco:CharacterString>
-              </srv:identifier>
-            </srv:SV_CoupledResource>
-          </srv:coupledResource>
-          <srv:coupledResource>
-            <srv:SV_CoupledResource>
-              <srv:operationName>
-                <gco:CharacterString>GetObservation</gco:CharacterString>
-              </srv:operationName>
-              <srv:identifier>
-                <gco:CharacterString>NGMP_TRITIUM_ALL_FORMS</gco:CharacterString>
-              </srv:identifier>
-            </srv:SV_CoupledResource>
-          </srv:coupledResource>
-          <srv:coupledResource>
-            <srv:SV_CoupledResource>
-              <srv:operationName>
-                <gco:CharacterString>GetObservation</gco:CharacterString>
-              </srv:operationName>
-              <srv:identifier>
-                <gco:CharacterString>NGMP_GROUNDWATER_LEVEL</gco:CharacterString>
-              </srv:identifier>
-            </srv:SV_CoupledResource>
-          </srv:coupledResource>
-          <srv:coupledResource>
-            <srv:SV_CoupledResource>
-              <srv:operationName>
-                <gco:CharacterString>GetObservation</gco:CharacterString>
-              </srv:operationName>
-              <srv:identifier>
-                <gco:CharacterString>NGMP_TEMPERATURE</gco:CharacterString>
-              </srv:identifier>
-            </srv:SV_CoupledResource>
-          </srv:coupledResource>
-          <srv:coupledResource>
-            <srv:SV_CoupledResource>
-              <srv:operationName>
-                <gco:CharacterString>GetObservation</gco:CharacterString>
-              </srv:operationName>
-              <srv:identifier>
-                <gco:CharacterString>NGMP_CONDUCTIVITY</gco:CharacterString>
-              </srv:identifier>
-            </srv:SV_CoupledResource>
-          </srv:coupledResource>
-          <srv:coupledResource>
-            <srv:SV_CoupledResource>
-              <srv:operationName>
-                <gco:CharacterString>GetObservation</gco:CharacterString>
-              </srv:operationName>
-              <srv:identifier>
-                <gco:CharacterString>NGMP_DISSOLVED_CHLORIDE</gco:CharacterString>
-              </srv:identifier>
-            </srv:SV_CoupledResource>
-          </srv:coupledResource>
-          <srv:coupledResource>
-            <srv:SV_CoupledResource>
-              <srv:operationName>
-                <gco:CharacterString>GetObservation</gco:CharacterString>
-              </srv:operationName>
-              <srv:identifier>
-                <gco:CharacterString>NGMP_ACIDITY</gco:CharacterString>
+                <gco:CharacterString>GW_LEVEL</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -529,7 +451,7 @@
               <srv:connectPoint>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>https://repo.gns.cri.nz/ngmp-sos/sos</gmd:URL>
+                    <gmd:URL>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</gmd:URL>
                   </gmd:linkage>
                 </gmd:CI_OnlineResource>
               </srv:connectPoint>
@@ -549,7 +471,7 @@
               <srv:connectPoint>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>https://repo.gns.cri.nz/ngmp-sos/sos</gmd:URL>
+                    <gmd:URL>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</gmd:URL>
                   </gmd:linkage>
                 </gmd:CI_OnlineResource>
               </srv:connectPoint>
@@ -569,7 +491,7 @@
               <srv:connectPoint>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>https://repo.gns.cri.nz/ngmp-sos/sos</gmd:URL>
+                    <gmd:URL>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</gmd:URL>
                   </gmd:linkage>
                 </gmd:CI_OnlineResource>
               </srv:connectPoint>
@@ -589,22 +511,13 @@
               <srv:connectPoint>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>https://repo.gns.cri.nz/ngmp-sos/sos</gmd:URL>
+                    <gmd:URL>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</gmd:URL>
                   </gmd:linkage>
                 </gmd:CI_OnlineResource>
               </srv:connectPoint>
             </srv:SV_OperationMetadata>
           </srv:containsOperations>
-          <srv:operatesOn uuidref="NGMP_DISSOLVED_MANGANESE" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_DISSOLVED_MANGANESE"/>
-          <srv:operatesOn uuidref="NGMP_HYDRAULIC_CONDUCTIVITY" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_HYDRAULIC_CONDUCTIVITY"/>
-          <srv:operatesOn uuidref="NGMP_DISSOLVED_NITRATE_NO3_AS_N" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_DISSOLVED_NITRATE_NO3_AS_N"/>
-          <srv:operatesOn uuidref="NGMP_DISSOLVED_IRON" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_DISSOLVED_IRON"/>
-          <srv:operatesOn uuidref="NGMP_TRITIUM_ALL_FORMS" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_TRITIUM_ALL_FORMS"/>
-          <srv:operatesOn uuidref="NGMP_GROUNDWATER_LEVEL" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_GROUNDWATER_LEVEL"/>
-          <srv:operatesOn uuidref="NGMP_TEMPERATURE" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_TEMPERATURE"/>
-          <srv:operatesOn uuidref="NGMP_CONDUCTIVITY" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_CONDUCTIVITY"/>
-          <srv:operatesOn uuidref="NGMP_DISSOLVED_CHLORIDE" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_DISSOLVED_CHLORIDE"/>
-          <srv:operatesOn uuidref="NGMP_ACIDITY" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-NGMP_ACIDITY"/>
+          <srv:operatesOn uuidref="GW_LEVEL" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-GW_LEVEL"/>
         </srv:SV_ServiceIdentification>
       </gmd:identificationInfo>
       <gmd:distributionInfo>
@@ -614,7 +527,7 @@
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>https://repo.gns.cri.nz/ngmp-sos/sos</gmd:URL>
+                    <gmd:URL>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
                     <gco:CharacterString>OGC:SOS</gco:CharacterString>
@@ -630,7 +543,7 @@
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>https://repo.gns.cri.nz/ngmp-sos/sos?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</gmd:URL>
+                    <gmd:URL>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
                     <gco:CharacterString>OGC:SOS-2.0.0-http-get-capabilities</gco:CharacterString>
