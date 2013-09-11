@@ -46,24 +46,26 @@
     </csw:Record>
     <csw:Record>
       <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-      <dc:title>GNS Science New Zealand, NGMP SOS timeseries</dc:title>
+      <dc:title>GIN SOS</dc:title>
       <dc:type>service</dc:type>
-      <dc:subject>water level</dc:subject>
-      <dc:subject>groundwater</dc:subject>
-      <dc:subject>hydrogeology</dc:subject>
-      <dc:subject>ngmp</dc:subject>
+      <dc:subject>groundwater level</dc:subject>
+      <dc:subject>monitoring</dc:subject>
+      <dc:subject>timeseries</dc:subject>
+      <dc:subject>Alberta</dc:subject>
+      <dc:subject>Ontario</dc:subject>
+      <dc:subject>Nova Scotia</dc:subject>
       <dc:format>OGC:SOS</dc:format>
-      <dct:references scheme="OGC:SOS">https://repo.gns.cri.nz/ngmp-sos/sos</dct:references>
-      <dct:references scheme="OGC:SOS-2.0.0-http-get-capabilities">https://repo.gns.cri.nz/ngmp-sos/sos?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
-      <dct:abstract>GNS Hydrogeology Section, serving NGMP groundwater level through customised 52N SOS, data quality cannot be represented yet, there is no liability regarding this service, for more information go to http://ggw.gns.cri.nz/ggwdata/ (SVN: 0 @ 2013-01-12 19:55:25)</dct:abstract>
-      <dc:creator>Alex Kmoch</dc:creator>
-      <dc:publisher>GNS Science</dc:publisher>
-      <dc:contributor>Alex Kmoch</dc:contributor>
-      <dc:source>https://repo.gns.cri.nz/ngmp-sos/sos</dc:source>
-      <dc:rights>SERVICE IS IN TEST MODE, NOT RELIABLE, DATA QUALITY NOT YET VISIBLE</dc:rights>
+      <dct:references scheme="OGC:SOS">http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</dct:references>
+      <dct:references scheme="OGC:SOS-2.0.0-http-get-capabilities">http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
+      <dct:abstract>Historical groundwater  level  monitoring stations from Alberta, Ontario and Nova Scotia. This SOS web service delivers the data using OGC's WaterML 2.0. The SOS service federates data from various  provincial  sources and publishes  them as a single service.   Many monitoring stations also have water well characteristics available  through the  GIN WFS  web service.</dct:abstract>
+      <dc:creator>Boyan Brodaric</dc:creator>
+      <dc:publisher>Geological Survey of Canada, Earth Sciences Sector, Natural Resources Canada, Government of Canada</dc:publisher>
+      <dc:contributor>Boyan Brodaric</dc:contributor>
+      <dc:source>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</dc:source>
+      <dc:rights>NONE</dc:rights>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>-46.31 168.06</ows:LowerCorner>
-        <ows:UpperCorner>-34.85 177.98</ows:UpperCorner>
+        <ows:LowerCorner>41.0 -120.0</ows:LowerCorner>
+        <ows:UpperCorner>60.0 -60.0</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
     <csw:Record>
