@@ -68,9 +68,9 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         srs = Table(
             'spatial_ref_sys', mdata,
             Column('srid', Integer, nullable=False, primary_key=True),
-            Column('auth_name', String(256)),
+            Column('auth_name', Text),
             Column('auth_srid', Integer),
-            Column('srtext', String(2048))
+            Column('srtext', Text)
         )
         srs.create()
     
@@ -80,14 +80,14 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         LOGGER.info('Creating table geometry_columns')
         geom = Table(
             'geometry_columns', mdata,
-            Column('f_table_catalog', String(256), nullable=False),
-            Column('f_table_schema', String(256), nullable=False),
-            Column('f_table_name', String(256), nullable=False),
-            Column('f_geometry_column', String(256), nullable=False),
+            Column('f_table_catalog', Text, nullable=False),
+            Column('f_table_schema', Text, nullable=False),
+            Column('f_table_name', Text, nullable=False),
+            Column('f_geometry_column', Text, nullable=False),
             Column('geometry_type', Integer),
             Column('coord_dimension', Integer),
             Column('srid', Integer, nullable=False),
-            Column('geometry_format', String(5), nullable=False),
+            Column('geometry_format', Text, nullable=False),
         )
         geom.create()
     
@@ -103,80 +103,80 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
     records = Table(
         table, mdata,
         # core; nothing happens without these
-        Column('identifier', String(256), primary_key=True),
-        Column('typename', String(32),
+        Column('identifier', Text, primary_key=True),
+        Column('typename', Text,
                default='csw:Record', nullable=False, index=True),
-        Column('schema', String(256),
+        Column('schema', Text,
                default='http://www.opengis.net/cat/csw/2.0.2', nullable=False,
                index=True),
-        Column('mdsource', String(256), default='local', nullable=False,
+        Column('mdsource', Text, default='local', nullable=False,
                index=True),
-        Column('insert_date', String(20), nullable=False, index=True),
+        Column('insert_date', Text, nullable=False, index=True),
         Column('xml', Text, nullable=False),
         Column('anytext', Text, nullable=False),
-        Column('language', String(32), index=True),
+        Column('language', Text, index=True),
 
         # identification
-        Column('type', String(128), index=True),
-        Column('title', String(2048), index=True),
-        Column('title_alternate', String(2048), index=True),
-        Column('abstract', String(2048), index=True),
-        Column('keywords', String(2048), index=True),
-        Column('keywordstype', String(256), index=True),
-        Column('parentidentifier', String(256), index=True),
-        Column('relation', String(256), index=True),
-        Column('time_begin', String(20), index=True),
-        Column('time_end', String(20), index=True),
-        Column('topicategory', String(32), index=True),
-        Column('resourcelanguage', String(32), index=True),
+        Column('type', Text, index=True),
+        Column('title', Text, index=True),
+        Column('title_alternate', Text, index=True),
+        Column('abstract', Text, index=True),
+        Column('keywords', Text, index=True),
+        Column('keywordstype', Text, index=True),
+        Column('parentidentifier', Text, index=True),
+        Column('relation', Text, index=True),
+        Column('time_begin', Text, index=True),
+        Column('time_end', Text, index=True),
+        Column('topicategory', Text, index=True),
+        Column('resourcelanguage', Text, index=True),
 
         # attribution
-        Column('creator', String(256), index=True),
-        Column('publisher', String(256), index=True),
-        Column('contributor', String(256), index=True),
-        Column('organization', String(256), index=True),
+        Column('creator', Text, index=True),
+        Column('publisher', Text, index=True),
+        Column('contributor', Text, index=True),
+        Column('organization', Text, index=True),
 
         # security
-        Column('securityconstraints', String(256), index=True),
-        Column('accessconstraints', String(256), index=True),
-        Column('otherconstraints', String(256), index=True),
+        Column('securityconstraints', Text, index=True),
+        Column('accessconstraints', Text, index=True),
+        Column('otherconstraints', Text, index=True),
 
         # date
-        Column('date', String(20), index=True),
-        Column('date_revision', String(20), index=True),
-        Column('date_creation', String(20), index=True),
-        Column('date_publication', String(20), index=True),
-        Column('date_modified', String(20), index=True),
+        Column('date', Text, index=True),
+        Column('date_revision', Text, index=True),
+        Column('date_creation', Text, index=True),
+        Column('date_publication', Text, index=True),
+        Column('date_modified', Text, index=True),
 
-        Column('format', String(128), index=True),
-        Column('source', String(1024), index=True),
+        Column('format', Text, index=True),
+        Column('source', Text, index=True),
 
         # geospatial
-        Column('crs', String(256), index=True),
-        Column('geodescode', String(256), index=True),
+        Column('crs', Text, index=True),
+        Column('geodescode', Text, index=True),
         Column('denominator', Integer, index=True),
         Column('distancevalue', Integer, index=True),
-        Column('distanceuom', String(8), index=True),
+        Column('distanceuom', Text, index=True),
         Column('wkt_geometry', Text),
 
         # service
-        Column('servicetype', String(32), index=True),
-        Column('servicetypeversion', String(32), index=True),
-        Column('operation', String(512), index=True),
-        Column('couplingtype', String(8), index=True),
-        Column('operateson', String(2048), index=True),
-        Column('operatesonidentifier', String(512), index=True),
-        Column('operatesoname', String(512), index=True),
+        Column('servicetype', Text, index=True),
+        Column('servicetypeversion', Text, index=True),
+        Column('operation', Text, index=True),
+        Column('couplingtype', Text, index=True),
+        Column('operateson', Text, index=True),
+        Column('operatesonidentifier', Text, index=True),
+        Column('operatesoname', Text, index=True),
 
         # additional
-        Column('degree', String(8), index=True),
-        Column('classification', String(32), index=True),
-        Column('conditionapplyingtoaccessanduse', String(256), index=True),
-        Column('lineage', String(32), index=True),
-        Column('responsiblepartyrole', String(32), index=True),
-        Column('specificationtitle', String(32), index=True),
-        Column('specificationdate', String(20), index=True),
-        Column('specificationdatetype', String(20), index=True),
+        Column('degree', Text, index=True),
+        Column('classification', Text, index=True),
+        Column('conditionapplyingtoaccessanduse', Text, index=True),
+        Column('lineage', Text, index=True),
+        Column('responsiblepartyrole', Text, index=True),
+        Column('specificationtitle', Text, index=True),
+        Column('specificationdate', Text, index=True),
+        Column('specificationdatetype', Text, index=True),
 
         # distribution
         # links: format "name,description,protocol,url[^,,,[^,,,]]"
