@@ -120,7 +120,7 @@ INSTALL_REQUIRES = [
     'lxml==3.2.3',
     'Shapely==1.2.18',
     'pyproj==1.9.3',
-    'OWSLib==0.8.1'
+    'OWSLib==0.7.2'
 ]
 
 KEYWORDS = ('pycsw csw catalogue catalog metadata discovery search'
