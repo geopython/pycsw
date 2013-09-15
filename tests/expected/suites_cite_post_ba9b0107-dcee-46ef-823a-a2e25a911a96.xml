@@ -12,6 +12,14 @@
       <dct:abstract>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</dct:abstract>
     </csw:SummaryRecord>
     <csw:SummaryRecord>
+      <dc:identifier>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</dc:identifier>
+      <dc:title>Maecenas enim</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
+      <dc:subject>Marine sediments</dc:subject>
+      <dc:format>application/xhtml+xml</dc:format>
+      <dct:abstract>Pellentesque tempus magna non sapien fringilla blandit.</dct:abstract>
+    </csw:SummaryRecord>
+    <csw:SummaryRecord>
       <dc:identifier>urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e</dc:identifier>
       <dc:title>Vestibulum massa purus</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
@@ -23,14 +31,6 @@
       <dc:title>Lorem ipsum dolor sit amet</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
       <dc:format>image/jpeg</dc:format>
-    </csw:SummaryRecord>
-    <csw:SummaryRecord>
-      <dc:identifier>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</dc:identifier>
-      <dc:title>Maecenas enim</dc:title>
-      <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
-      <dc:subject>Marine sediments</dc:subject>
-      <dc:format>application/xhtml+xml</dc:format>
-      <dct:abstract>Pellentesque tempus magna non sapien fringilla blandit.</dct:abstract>
     </csw:SummaryRecord>
   </csw:SearchResults>
 </csw:GetRecordsResponse>

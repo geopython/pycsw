@@ -29,6 +29,15 @@
       <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
     </csw:BriefRecord>
     <csw:BriefRecord>
+      <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
+      <dc:title>&#209;un&#231; elementum</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>44.79 -6.17</ows:LowerCorner>
+        <ows:UpperCorner>51.13 -2.23</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
       <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
       <dc:title>Mauris sed neque</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
@@ -41,15 +50,6 @@
       <dc:identifier>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</dc:identifier>
       <dc:title>Ut facilisis justo ut lacus</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
-    </csw:BriefRecord>
-    <csw:BriefRecord>
-      <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
-      <dc:title>&#209;un&#231; elementum</dc:title>
-      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>44.79 -6.17</ows:LowerCorner>
-        <ows:UpperCorner>51.13 -2.23</ows:UpperCorner>
-      </ows:BoundingBox>
     </csw:BriefRecord>
   </csw:SearchResults>
 </csw:GetRecordsResponse>

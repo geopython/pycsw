@@ -4,15 +4,13 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="2" numberOfRecordsMatched="12" numberOfRecordsReturned="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
-    <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-    <dc:title>&#209;un&#231; elementum</dc:title>
-    <dc:subject scheme="http://www.digest.org/2.1">Hydrography-Oceanographic</dc:subject>
-    <dc:date>2005-10-24Z</dc:date>
-    <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
-      <ows:LowerCorner>44.792 -6.171</ows:LowerCorner>
-      <ows:UpperCorner>51.126 -2.228</ows:UpperCorner>
-    </ows:BoundingBox>
+    <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:title>Lorem ipsum</dc:title>
+    <dct:spatial>GR-22</dct:spatial>
+    <dc:subject>Tourism--Greece</dc:subject>
+    <dct:abstract>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</dct:abstract>
 </csw:Record>
   </csw:SearchResults>
 </csw:GetRecordsResponse>

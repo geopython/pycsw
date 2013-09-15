@@ -4,38 +4,6 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" recordSchema="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" elementSet="brief">
     <dif:DIF xsi:schemaLocation="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/ http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd">
-      <dif:Entry_ID>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dif:Entry_ID>
-      <dif:Entry_Title>&#209;un&#231; elementum</dif:Entry_Title>
-      <dif:Data_Set_Citation>
-        <dif:Dataset_Creator/>
-        <dif:Dataset_Release_Date/>
-        <dif:Dataset_Publisher/>
-        <dif:Data_Presentation_Form/>
-      </dif:Data_Set_Citation>
-      <dif:ISO_Topic_Category/>
-      <dif:Keyword>Hydrography-Oceanographic</dif:Keyword>
-      <dif:Temporal_Coverage>
-        <dif:Start_Date/>
-        <dif:End_Date/>
-      </dif:Temporal_Coverage>
-      <dif:Spatial_Coverage>
-        <dif:Southernmost_Latitude>44.79</dif:Southernmost_Latitude>
-        <dif:Northernmost_Latitude>51.13</dif:Northernmost_Latitude>
-        <dif:Westernmost_Longitude>-6.17</dif:Westernmost_Longitude>
-        <dif:Easternmost_Longitude>-2.23</dif:Easternmost_Longitude>
-      </dif:Spatial_Coverage>
-      <dif:Access_Constraints/>
-      <dif:Data_Set_Language/>
-      <dif:Originating_Center/>
-      <dif:Summary></dif:Summary>
-      <dif:DIF_Creation_Date/>
-      <dif:Related_URL>
-        <dif:URL/>
-      </dif:Related_URL>
-      <dif:Metadata_Name>CEOS IDN DIF</dif:Metadata_Name>
-      <dif:Metadata_Version>9.7</dif:Metadata_Version>
-    </dif:DIF>
-    <dif:DIF xsi:schemaLocation="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/ http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd">
       <dif:Entry_ID>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dif:Entry_ID>
       <dif:Entry_Title>Mauris sed neque</dif:Entry_Title>
       <dif:Data_Set_Citation>
@@ -60,6 +28,38 @@
       <dif:Data_Set_Language/>
       <dif:Originating_Center/>
       <dif:Summary>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</dif:Summary>
+      <dif:DIF_Creation_Date/>
+      <dif:Related_URL>
+        <dif:URL/>
+      </dif:Related_URL>
+      <dif:Metadata_Name>CEOS IDN DIF</dif:Metadata_Name>
+      <dif:Metadata_Version>9.7</dif:Metadata_Version>
+    </dif:DIF>
+    <dif:DIF xsi:schemaLocation="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/ http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd">
+      <dif:Entry_ID>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dif:Entry_ID>
+      <dif:Entry_Title>&#209;un&#231; elementum</dif:Entry_Title>
+      <dif:Data_Set_Citation>
+        <dif:Dataset_Creator/>
+        <dif:Dataset_Release_Date/>
+        <dif:Dataset_Publisher/>
+        <dif:Data_Presentation_Form/>
+      </dif:Data_Set_Citation>
+      <dif:ISO_Topic_Category/>
+      <dif:Keyword>Hydrography-Oceanographic</dif:Keyword>
+      <dif:Temporal_Coverage>
+        <dif:Start_Date/>
+        <dif:End_Date/>
+      </dif:Temporal_Coverage>
+      <dif:Spatial_Coverage>
+        <dif:Southernmost_Latitude>44.79</dif:Southernmost_Latitude>
+        <dif:Northernmost_Latitude>51.13</dif:Northernmost_Latitude>
+        <dif:Westernmost_Longitude>-6.17</dif:Westernmost_Longitude>
+        <dif:Easternmost_Longitude>-2.23</dif:Easternmost_Longitude>
+      </dif:Spatial_Coverage>
+      <dif:Access_Constraints/>
+      <dif:Data_Set_Language/>
+      <dif:Originating_Center/>
+      <dif:Summary></dif:Summary>
       <dif:DIF_Creation_Date/>
       <dif:Related_URL>
         <dif:URL/>

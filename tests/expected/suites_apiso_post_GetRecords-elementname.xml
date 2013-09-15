@@ -5,95 +5,22 @@
   <csw:SearchResults nextRecord="6" numberOfRecordsMatched="16" numberOfRecordsReturned="5" recordSchema="http://www.isotc211.org/2005/gmd">
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:CharacterString>ae200a05-2800-40b8-b85d-8f8d007b9e30</gco:CharacterString>
+        <gco:CharacterString>3e9a8c05</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="service" codeSpace="ISOTC211/19115">service</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification id="ae200a05-2800-40b8-b85d-8f8d007b9e30">
+        <srv:SV_ServiceIdentification id="3e9a8c05">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>Ortho</gco:CharacterString>
+                <gco:CharacterString>test Title</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
                   <gmd:date>
-                    <gco:Date>2000-01-01</gco:Date>
-                  </gmd:date>
-                  <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</gmd:CI_DateTypeCode>
-                  </gmd:dateType>
-                </gmd:CI_Date>
-              </gmd:date>
-            </gmd:CI_Citation>
-          </gmd:citation>
-          <gmd:extent>
-            <gmd:EX_Extent>
-              <gmd:geographicElement>
-                <gmd:EX_GeographicBoundingBox>
-                  <gmd:westBoundLongitude>
-                    <gco:Decimal>21.53</gco:Decimal>
-                  </gmd:westBoundLongitude>
-                  <gmd:eastBoundLongitude>
-                    <gco:Decimal>21.57</gco:Decimal>
-                  </gmd:eastBoundLongitude>
-                  <gmd:southBoundLatitude>
-                    <gco:Decimal>39.76</gco:Decimal>
-                  </gmd:southBoundLatitude>
-                  <gmd:northBoundLatitude>
-                    <gco:Decimal>39.79</gco:Decimal>
-                  </gmd:northBoundLatitude>
-                </gmd:EX_GeographicBoundingBox>
-              </gmd:geographicElement>
-            </gmd:EX_Extent>
-          </gmd:extent>
-        </gmd:MD_DataIdentification>
-      </gmd:identificationInfo>
-      <gmd:distributionInfo>
-        <gmd:MD_Distribution>
-          <gmd:transferOptions>
-            <gmd:MD_DigitalTransferOptions>
-              <gmd:onLine>
-                <gmd:CI_OnlineResource>
-                  <gmd:linkage>
-                    <gmd:URL>http://www.ypaat.gr</gmd:URL>
-                  </gmd:linkage>
-                  <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
-                  </gmd:protocol>
-                  <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
-                  </gmd:name>
-                  <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
-                  </gmd:description>
-                </gmd:CI_OnlineResource>
-              </gmd:onLine>
-            </gmd:MD_DigitalTransferOptions>
-          </gmd:transferOptions>
-        </gmd:MD_Distribution>
-      </gmd:distributionInfo>
-    </gmd:MD_Metadata>
-    <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
-      <gmd:fileIdentifier>
-        <gco:CharacterString>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</gco:CharacterString>
-      </gmd:fileIdentifier>
-      <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
-      </gmd:hierarchyLevel>
-      <gmd:identificationInfo>
-        <gmd:MD_DataIdentification id="c3bf29d4-d60a-4959-a415-2c03fb0d4aef">
-          <gmd:citation>
-            <gmd:CI_Citation>
-              <gmd:title>
-                <gco:CharacterString>DTM</gco:CharacterString>
-              </gmd:title>
-              <gmd:date>
-                <gmd:CI_Date>
-                  <gmd:date>
-                    <gco:Date>2009-10-07</gco:Date>
+                    <gco:Date>2011-04-19</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
                     <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
@@ -102,27 +29,40 @@
               </gmd:date>
             </gmd:CI_Citation>
           </gmd:citation>
-          <gmd:extent>
+          <srv:serviceType>
+            <gco:LocalName>view</gco:LocalName>
+          </srv:serviceType>
+          <srv:serviceTypeVersion>
+            <gco:CharacterString/>
+          </srv:serviceTypeVersion>
+          <srv:keywords>
+            <gmd:MD_Keywords>
+              <gmd:keyword>
+                <gco:CharacterString>Geographic viewer (humanGeographicViewer)</gco:CharacterString>
+              </gmd:keyword>
+            </gmd:MD_Keywords>
+          </srv:keywords>
+          <srv:extent>
             <gmd:EX_Extent>
               <gmd:geographicElement>
                 <gmd:EX_GeographicBoundingBox>
                   <gmd:westBoundLongitude>
-                    <gco:Decimal>19.0</gco:Decimal>
+                    <gco:Decimal>19.37</gco:Decimal>
                   </gmd:westBoundLongitude>
                   <gmd:eastBoundLongitude>
-                    <gco:Decimal>30.0</gco:Decimal>
+                    <gco:Decimal>29.61</gco:Decimal>
                   </gmd:eastBoundLongitude>
                   <gmd:southBoundLatitude>
-                    <gco:Decimal>34.0</gco:Decimal>
+                    <gco:Decimal>34.8</gco:Decimal>
                   </gmd:southBoundLatitude>
                   <gmd:northBoundLatitude>
-                    <gco:Decimal>42.0</gco:Decimal>
+                    <gco:Decimal>41.75</gco:Decimal>
                   </gmd:northBoundLatitude>
                 </gmd:EX_GeographicBoundingBox>
               </gmd:geographicElement>
             </gmd:EX_Extent>
-          </gmd:extent>
-        </gmd:MD_DataIdentification>
+          </srv:extent>
+        </srv:SV_ServiceIdentification>
       </gmd:identificationInfo>
       <gmd:distributionInfo>
         <gmd:MD_Distribution>
@@ -131,7 +71,7 @@
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>http://www.ypaat.gr</gmd:URL>
+                    <gmd:URL>http://aiolos.survey.ntua.gr/geoserver/wms</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
                     <gco:CharacterString>None</gco:CharacterString>
@@ -151,13 +91,13 @@
     </gmd:MD_Metadata>
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:CharacterString>437ae0a2-06e2-4015-b296-a66e7f407bf2</gco:CharacterString>
+        <gco:CharacterString>366f6257-19eb-4f20-ba78-0698ac4aae77</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel>
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification id="437ae0a2-06e2-4015-b296-a66e7f407bf2">
+        <gmd:MD_DataIdentification id="366f6257-19eb-4f20-ba78-0698ac4aae77">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
@@ -183,10 +123,10 @@
                     <gco:Decimal>20.0</gco:Decimal>
                   </gmd:westBoundLongitude>
                   <gmd:eastBoundLongitude>
-                    <gco:Decimal>38.0</gco:Decimal>
+                    <gco:Decimal>24.0</gco:Decimal>
                   </gmd:eastBoundLongitude>
                   <gmd:southBoundLatitude>
-                    <gco:Decimal>24.0</gco:Decimal>
+                    <gco:Decimal>38.0</gco:Decimal>
                   </gmd:southBoundLatitude>
                   <gmd:northBoundLatitude>
                     <gco:Decimal>40.0</gco:Decimal>
@@ -224,22 +164,22 @@
     </gmd:MD_Metadata>
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:CharacterString>a2744b0c-becd-426a-95a8-46e9850ccc6d</gco:CharacterString>
+        <gco:CharacterString>75a7eb5e-336e-453d-ab06-209b1070d396</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel>
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification id="a2744b0c-becd-426a-95a8-46e9850ccc6d">
+        <gmd:MD_DataIdentification id="75a7eb5e-336e-453d-ab06-209b1070d396">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>DTM</gco:CharacterString>
+                <gco:CharacterString>Aerial Photos</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
                   <gmd:date>
-                    <gco:Date>2009-10-07</gco:Date>
+                    <gco:Date>2009-10-09</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
                     <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
@@ -253,16 +193,16 @@
               <gmd:geographicElement>
                 <gmd:EX_GeographicBoundingBox>
                   <gmd:westBoundLongitude>
-                    <gco:Decimal>19.0</gco:Decimal>
+                    <gco:Decimal>20.0</gco:Decimal>
                   </gmd:westBoundLongitude>
                   <gmd:eastBoundLongitude>
-                    <gco:Decimal>30.0</gco:Decimal>
+                    <gco:Decimal>24.0</gco:Decimal>
                   </gmd:eastBoundLongitude>
                   <gmd:southBoundLatitude>
-                    <gco:Decimal>34.0</gco:Decimal>
+                    <gco:Decimal>38.0</gco:Decimal>
                   </gmd:southBoundLatitude>
                   <gmd:northBoundLatitude>
-                    <gco:Decimal>42.0</gco:Decimal>
+                    <gco:Decimal>40.0</gco:Decimal>
                   </gmd:northBoundLatitude>
                 </gmd:EX_GeographicBoundingBox>
               </gmd:geographicElement>
@@ -297,25 +237,25 @@
     </gmd:MD_Metadata>
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
-        <gco:CharacterString>5f37e0f8-4fb1-4637-b959-b415058bdb68</gco:CharacterString>
+        <gco:CharacterString>a7308c0a-b748-48e2-bab7-0a608a51d416</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel>
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
-        <gmd:MD_DataIdentification id="5f37e0f8-4fb1-4637-b959-b415058bdb68">
+        <gmd:MD_DataIdentification id="a7308c0a-b748-48e2-bab7-0a608a51d416">
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>Ortho</gco:CharacterString>
+                <gco:CharacterString>Aerial Photos</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
                   <gmd:date>
-                    <gco:Date>2000-01-01</gco:Date>
+                    <gco:Date>2009-10-09</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</gmd:CI_DateTypeCode>
+                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -326,16 +266,89 @@
               <gmd:geographicElement>
                 <gmd:EX_GeographicBoundingBox>
                   <gmd:westBoundLongitude>
-                    <gco:Decimal>21.53</gco:Decimal>
+                    <gco:Decimal>20.0</gco:Decimal>
                   </gmd:westBoundLongitude>
                   <gmd:eastBoundLongitude>
-                    <gco:Decimal>21.58</gco:Decimal>
+                    <gco:Decimal>24.0</gco:Decimal>
                   </gmd:eastBoundLongitude>
                   <gmd:southBoundLatitude>
-                    <gco:Decimal>39.71</gco:Decimal>
+                    <gco:Decimal>38.0</gco:Decimal>
                   </gmd:southBoundLatitude>
                   <gmd:northBoundLatitude>
-                    <gco:Decimal>39.74</gco:Decimal>
+                    <gco:Decimal>40.0</gco:Decimal>
+                  </gmd:northBoundLatitude>
+                </gmd:EX_GeographicBoundingBox>
+              </gmd:geographicElement>
+            </gmd:EX_Extent>
+          </gmd:extent>
+        </gmd:MD_DataIdentification>
+      </gmd:identificationInfo>
+      <gmd:distributionInfo>
+        <gmd:MD_Distribution>
+          <gmd:transferOptions>
+            <gmd:MD_DigitalTransferOptions>
+              <gmd:onLine>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>http://www.ypaat.gr</gmd:URL>
+                  </gmd:linkage>
+                  <gmd:protocol>
+                    <gco:CharacterString>None</gco:CharacterString>
+                  </gmd:protocol>
+                  <gmd:name>
+                    <gco:CharacterString>None</gco:CharacterString>
+                  </gmd:name>
+                  <gmd:description>
+                    <gco:CharacterString>None</gco:CharacterString>
+                  </gmd:description>
+                </gmd:CI_OnlineResource>
+              </gmd:onLine>
+            </gmd:MD_DigitalTransferOptions>
+          </gmd:transferOptions>
+        </gmd:MD_Distribution>
+      </gmd:distributionInfo>
+    </gmd:MD_Metadata>
+    <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+      <gmd:fileIdentifier>
+        <gco:CharacterString>0173e0d7-6ea9-4407-b846-f29d6bfa9903</gco:CharacterString>
+      </gmd:fileIdentifier>
+      <gmd:hierarchyLevel>
+        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+      </gmd:hierarchyLevel>
+      <gmd:identificationInfo>
+        <gmd:MD_DataIdentification id="0173e0d7-6ea9-4407-b846-f29d6bfa9903">
+          <gmd:citation>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>Aerial Photos</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2009-10-09</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+            </gmd:CI_Citation>
+          </gmd:citation>
+          <gmd:extent>
+            <gmd:EX_Extent>
+              <gmd:geographicElement>
+                <gmd:EX_GeographicBoundingBox>
+                  <gmd:westBoundLongitude>
+                    <gco:Decimal>20.0</gco:Decimal>
+                  </gmd:westBoundLongitude>
+                  <gmd:eastBoundLongitude>
+                    <gco:Decimal>24.0</gco:Decimal>
+                  </gmd:eastBoundLongitude>
+                  <gmd:southBoundLatitude>
+                    <gco:Decimal>38.0</gco:Decimal>
+                  </gmd:southBoundLatitude>
+                  <gmd:northBoundLatitude>
+                    <gco:Decimal>40.0</gco:Decimal>
                   </gmd:northBoundLatitude>
                 </gmd:EX_GeographicBoundingBox>
               </gmd:geographicElement>

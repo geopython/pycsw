@@ -4,17 +4,17 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="6" numberOfRecordsMatched="12" numberOfRecordsReturned="5" recordSchema="http://www.opengis.net/cat/csw/2.0.2">
     <csw:Record>
-      <dc:title>&#209;un&#231; elementum</dc:title>
+      <dc:title>Lorem ipsum</dc:title>
+    </csw:Record>
+    <csw:Record/>
+    <csw:Record>
+      <dc:title>Maecenas enim</dc:title>
     </csw:Record>
     <csw:Record>
       <dc:title>Ut facilisis justo ut lacus</dc:title>
     </csw:Record>
     <csw:Record>
-      <dc:title>Lorem ipsum</dc:title>
+      <dc:title>Aliquam fermentum purus quis arcu</dc:title>
     </csw:Record>
-    <csw:Record>
-      <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
-    </csw:Record>
-    <csw:Record/>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
