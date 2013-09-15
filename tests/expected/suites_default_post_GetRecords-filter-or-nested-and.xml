@@ -4,17 +4,6 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="0" numberOfRecordsMatched="6" numberOfRecordsReturned="6" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
-    <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-    <dc:title>&#209;un&#231; elementum</dc:title>
-    <dc:subject scheme="http://www.digest.org/2.1">Hydrography-Oceanographic</dc:subject>
-    <dc:date>2005-10-24Z</dc:date>
-    <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
-      <ows:LowerCorner>44.792 -6.171</ows:LowerCorner>
-      <ows:UpperCorner>51.126 -2.228</ows:UpperCorner>
-    </ows:BoundingBox>
-</csw:Record>
-    <csw:Record>
     <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
     <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
     <dc:format>image/svg+xml</dc:format>
@@ -24,18 +13,18 @@
     <dct:abstract>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</dct:abstract>
 </csw:Record>
     <csw:Record>
-    <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-    <dc:subject scheme="http://www.digest.org/2.1">Physiography-Landforms</dc:subject>
-    <dct:spatial>FI-ES</dct:spatial>
-    <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
-</csw:Record>
-    <csw:Record>
     <dc:identifier>urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e</dc:identifier>
     <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
     <dc:format>image/jp2</dc:format>
     <dc:title>Vestibulum massa purus</dc:title>
     <dc:relation>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:relation>
+</csw:Record>
+    <csw:Record>
+    <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+    <dc:subject scheme="http://www.digest.org/2.1">Physiography-Landforms</dc:subject>
+    <dct:spatial>FI-ES</dct:spatial>
+    <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
 </csw:Record>
     <csw:Record>
     <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
@@ -47,6 +36,17 @@
     <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
       <ows:LowerCorner>47.595 -4.097</ows:LowerCorner>
       <ows:UpperCorner>51.217 0.889</ows:UpperCorner>
+    </ows:BoundingBox>
+</csw:Record>
+    <csw:Record>
+    <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+    <dc:title>&#209;un&#231; elementum</dc:title>
+    <dc:subject scheme="http://www.digest.org/2.1">Hydrography-Oceanographic</dc:subject>
+    <dc:date>2005-10-24Z</dc:date>
+    <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
+      <ows:LowerCorner>44.792 -6.171</ows:LowerCorner>
+      <ows:UpperCorner>51.126 -2.228</ows:UpperCorner>
     </ows:BoundingBox>
 </csw:Record>
     <csw:Record>

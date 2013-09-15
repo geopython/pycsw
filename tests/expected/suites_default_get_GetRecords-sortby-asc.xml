@@ -4,13 +4,6 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="11" numberOfRecordsMatched="12" numberOfRecordsReturned="10" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
-    <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-    <dc:subject scheme="http://www.digest.org/2.1">Physiography-Landforms</dc:subject>
-    <dct:spatial>FI-ES</dct:spatial>
-    <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
-</csw:Record>
-    <csw:Record>
     <dc:identifier>urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd</dc:identifier>
     <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
     <dct:abstract>Proin sit amet justo. In justo. Aenean adipiscing nulla id tellus.</dct:abstract>
@@ -18,6 +11,13 @@
       <ows:LowerCorner>60.042 13.754</ows:LowerCorner>
       <ows:UpperCorner>68.410 17.920</ows:UpperCorner>
     </ows:BoundingBox>
+</csw:Record>
+    <csw:Record>
+    <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+    <dc:subject scheme="http://www.digest.org/2.1">Physiography-Landforms</dc:subject>
+    <dct:spatial>FI-ES</dct:spatial>
+    <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
 </csw:Record>
     <csw:Record>
     <dc:identifier>urn:uuid:ab42a8c4-95e8-4630-bf79-33e59241605a</dc:identifier>
