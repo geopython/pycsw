@@ -160,7 +160,7 @@ def setup_testdata():
         cfg = path('tests/suites/%s/default.cfg' % database)
         sh('pycsw-admin.py -c setup_db -f %s' % cfg)
         if has_testdata:
-            datapath = 'tests/suites/%s/data' % database
+            datapath = path('tests/suites/%s/data' % database)
             info('Loading test data from %s' % datapath)
             sh('pycsw-admin.py -c load_records -f %s -p %s' % (cfg, datapath))
 
