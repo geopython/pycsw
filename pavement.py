@@ -190,7 +190,8 @@ def test(options):
         # run against default server
         call_task('stop')
         call_task('reset')
-        call_task('setup_testdata')
+        if database == 'SQLite3':
+            call_task('setup_testdata')
         call_task('start')
         url = 'http://localhost:8000'
 
