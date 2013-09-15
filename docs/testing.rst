@@ -20,7 +20,7 @@ The pycsw tests framework (in ``tests``) is a collection of testsuites to perfor
 Running Locally
 ^^^^^^^^^^^^^^^
 
-The tests framework can be run from ``tests`` using Pavement (see ``pavement.py``) tasks for convenience:
+The tests framework can be run from ``tests`` using `Paver`_ (see ``pavement.py``) tasks for convenience:
 
 .. code-block:: bash
 
@@ -37,7 +37,7 @@ The tests perform HTTP GET and POST requests against ``http://localhost:8000``. 
 Failed Tests
 ^^^^^^^^^^^^
 
-If a given test has failed, the output is saved in ``results``.  The resulting failure can be analyzed by running ``diff tests/expected/name_of_test.xml tests/results/name_of_test.xml`` to find variances.  The Pavement task returns a status code which indicates the number of tests which have failed (i.e. ``echo $?``).
+If a given test has failed, the output is saved in ``results``.  The resulting failure can be analyzed by running ``diff tests/expected/name_of_test.xml tests/results/name_of_test.xml`` to find variances.  The Paver task returns a status code which indicates the number of tests which have failed (i.e. ``echo $?``).
 
 Test Suites
 ^^^^^^^^^^^
@@ -84,13 +84,14 @@ The new test suite database will be created automatically and used as part of te
 Web Testing
 ^^^^^^^^^^^
 
-You can also use the pycsw tests via your web browser to perform sample requests against your pycsw install.  The tests are is located in ``tests/``.  To generate the HTML page, run ``gen_html.py``:
+You can also use the pycsw tests via your web browser to perform sample requests against your pycsw install.  The tests are is located in ``tests/``.  To generate the HTML page:
 
 .. code-block:: bash
 
-  $ python ./gen_html.py > index.html
+  $ paver gen_tests_html
 
 Then navigate to ``http://host/path/to/pycsw/tests/index.html``.
 
 .. _`Compliance & Interoperability Testing & Evaluation Initiative`: http://cite.opengeospatial.org/
 .. _`Travis CI`: http://travis-ci.org/geopython/pycsw
+.. _`Paver`: http://paver.github.io/paver/
