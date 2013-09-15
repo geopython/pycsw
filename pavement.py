@@ -295,7 +295,7 @@ def stop():
 ])
 def reset(options):
     """Return codebase to pristine state"""
-    sh('rm -f tests/suites/*/data/records.db')
+    sh('git checkout tests/suites/cite/data/records.db')
 
     force = options.get('force')
     if force:
