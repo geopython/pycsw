@@ -5,24 +5,6 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="6" numberOfRecordsMatched="12" numberOfRecordsReturned="5" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
-    <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-    <dc:title>&#209;un&#231; elementum</dc:title>
-    <dc:subject scheme="http://www.digest.org/2.1">Hydrography-Oceanographic</dc:subject>
-    <dc:date>2005-10-24Z</dc:date>
-    <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
-      <ows:LowerCorner>44.792 -6.171</ows:LowerCorner>
-      <ows:UpperCorner>51.126 -2.228</ows:UpperCorner>
-    </ows:BoundingBox>
-</csw:Record>
-    <csw:Record>
-    <dc:identifier>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
-    <dc:title>Ut facilisis justo ut lacus</dc:title>
-    <dc:subject scheme="http://www.digest.org/2.1">Vegetation</dc:subject>
-    <dc:relation>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:relation>
-</csw:Record>
-    <csw:Record>
     <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
     <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
     <dc:format>image/svg+xml</dc:format>
@@ -32,20 +14,37 @@
     <dct:abstract>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</dct:abstract>
 </csw:Record>
     <csw:Record>
-    <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
-    <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
-    <dc:date>2003-05-09Z</dc:date>
-    <dc:subject>Land titles</dc:subject>
-    <dc:format>text/rtf</dc:format>
-    <dct:abstract>Morbi ultri&#231;es, dui suscipit vestibulum pr&#232;tium, velit ante pretium tortor, eg&#235;t tincidunt pede odio ac nulla.</dct:abstract>
+    <dc:identifier>urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
+    <dct:abstract>Proin sit amet justo. In justo. Aenean adipiscing nulla id tellus.</dct:abstract>
+    <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326">
+      <ows:LowerCorner>60.042 13.754</ows:LowerCorner>
+      <ows:UpperCorner>68.410 17.920</ows:UpperCorner>
+    </ows:BoundingBox>
 </csw:Record>
     <csw:Record>
-    <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
-    <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-    <dc:subject scheme="http://www.digest.org/2.1">Physiography-Landforms</dc:subject>
-    <dct:spatial>FI-ES</dct:spatial>
-    <dct:abstract>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</dct:abstract>
+    <dc:identifier>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</dc:identifier>
+    <dc:title>Maecenas enim</dc:title>
+    <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
+    <dc:format>application/xhtml+xml</dc:format>
+    <dc:subject>Marine sediments</dc:subject>
+    <dct:abstract>Pellentesque tempus magna non sapien fringilla blandit.</dct:abstract>
+</csw:Record>
+    <csw:Record>
+    <dc:identifier>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</dc:identifier>
+    <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
+    <dc:title>Ut facilisis justo ut lacus</dc:title>
+    <dc:subject scheme="http://www.digest.org/2.1">Vegetation</dc:subject>
+    <dc:relation>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:relation>
+</csw:Record>
+    <csw:Record>
+    <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
+    <dc:title>Aliquam fermentum purus quis arcu</dc:title>
+    <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
+    <dc:subject>Hydrography--Dictionaries</dc:subject>
+    <dc:format>application/pdf</dc:format>
+    <dc:date>2006-05-12Z</dc:date>
+    <dct:abstract>Vestibulum quis ipsum sit amet metus imperdiet vehicula. Nulla scelerisque cursus mi.</dct:abstract>
 </csw:Record>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
