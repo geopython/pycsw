@@ -143,6 +143,27 @@ def package_tar_gz(options):
         tar.add(package_name)
         tar.close()
 
+@task
+def setup_testdata():
+    """Create test databases and load test data"""
+
+    test_database_parameters = {
+        # suite: has_testdata
+        'apiso': True,
+        'cite': True,
+        'harvesting': False,
+        'manager': False
+    }
+
+    for database, has_testdata in test_database_parameters.iteritems():
+        info('Setting up test database %s' % database)
+        cfg = path('tests/suites/%s/default.cfg' % database)
+        sh('pycsw-admin.py -c setup_db -f %s' % cfg)
+        if has_testdata:
+            datapath = 'tests/suites/%s/data' % database
+            info('Loading test data from %s' % datapath)
+            sh('pycsw-admin.py -c load_records -f %s -p %s' % (cfg, datapath))
+
 
 @task
 @cmdopts([
@@ -169,6 +190,7 @@ def test(options):
         # run against default server
         call_task('stop')
         call_task('reset')
+        call_task('setup_testdata')
         call_task('start')
         url = 'http://localhost:8000'
 
@@ -272,8 +294,7 @@ def stop():
 ])
 def reset(options):
     """Return codebase to pristine state"""
-    sh('git checkout tests/suites/manager/data/records.db')
-    sh('git checkout tests/suites/harvesting/data/records.db')
+    sh('rm -f tests/suites/*/data/records.db')
 
     force = options.get('force')
     if force:
