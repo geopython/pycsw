@@ -4,48 +4,48 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="6" numberOfRecordsMatched="16" numberOfRecordsReturned="5" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
     <csw:BriefRecord>
-      <dc:identifier>ae200a05-2800-40b8-b85d-8f8d007b9e30</dc:identifier>
-      <dc:title>Ortho</dc:title>
-      <dc:type>dataset</dc:type>
+      <dc:identifier>3e9a8c05</dc:identifier>
+      <dc:title>test Title</dc:title>
+      <dc:type>service</dc:type>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>39.76 21.53</ows:LowerCorner>
-        <ows:UpperCorner>39.79 21.57</ows:UpperCorner>
+        <ows:LowerCorner>34.8 19.37</ows:LowerCorner>
+        <ows:UpperCorner>41.75 29.61</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:BriefRecord>
     <csw:BriefRecord>
-      <dc:identifier>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</dc:identifier>
-      <dc:title>DTM</dc:title>
-      <dc:type>dataset</dc:type>
-      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>34.0 19.0</ows:LowerCorner>
-        <ows:UpperCorner>42.0 30.0</ows:UpperCorner>
-      </ows:BoundingBox>
-    </csw:BriefRecord>
-    <csw:BriefRecord>
-      <dc:identifier>437ae0a2-06e2-4015-b296-a66e7f407bf2</dc:identifier>
+      <dc:identifier>366f6257-19eb-4f20-ba78-0698ac4aae77</dc:identifier>
       <dc:title>Aerial Photos</dc:title>
       <dc:type>dataset</dc:type>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>24.0 20.0</ows:LowerCorner>
-        <ows:UpperCorner>40.0 38.0</ows:UpperCorner>
+        <ows:LowerCorner>38.0 20.0</ows:LowerCorner>
+        <ows:UpperCorner>40.0 24.0</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:BriefRecord>
     <csw:BriefRecord>
-      <dc:identifier>a2744b0c-becd-426a-95a8-46e9850ccc6d</dc:identifier>
-      <dc:title>DTM</dc:title>
+      <dc:identifier>75a7eb5e-336e-453d-ab06-209b1070d396</dc:identifier>
+      <dc:title>Aerial Photos</dc:title>
       <dc:type>dataset</dc:type>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>34.0 19.0</ows:LowerCorner>
-        <ows:UpperCorner>42.0 30.0</ows:UpperCorner>
+        <ows:LowerCorner>38.0 20.0</ows:LowerCorner>
+        <ows:UpperCorner>40.0 24.0</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:BriefRecord>
     <csw:BriefRecord>
-      <dc:identifier>5f37e0f8-4fb1-4637-b959-b415058bdb68</dc:identifier>
-      <dc:title>Ortho</dc:title>
+      <dc:identifier>a7308c0a-b748-48e2-bab7-0a608a51d416</dc:identifier>
+      <dc:title>Aerial Photos</dc:title>
       <dc:type>dataset</dc:type>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>39.71 21.53</ows:LowerCorner>
-        <ows:UpperCorner>39.74 21.58</ows:UpperCorner>
+        <ows:LowerCorner>38.0 20.0</ows:LowerCorner>
+        <ows:UpperCorner>40.0 24.0</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
+      <dc:identifier>0173e0d7-6ea9-4407-b846-f29d6bfa9903</dc:identifier>
+      <dc:title>Aerial Photos</dc:title>
+      <dc:type>dataset</dc:type>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>38.0 20.0</ows:LowerCorner>
+        <ows:UpperCorner>40.0 24.0</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:BriefRecord>
   </csw:SearchResults>

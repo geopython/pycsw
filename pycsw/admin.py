@@ -300,7 +300,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False):
     total = len(file_list)
     counter = 0
 
-    for recfile in file_list:
+    for recfile in sorted(file_list):
         counter += 1
         LOGGER.info('Processing file %s (%d of %d)', recfile, counter, total)
         # read document

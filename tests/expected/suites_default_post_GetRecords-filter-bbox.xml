@@ -4,21 +4,21 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
     <csw:BriefRecord>
-      <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
-      <dc:title>&#209;un&#231; elementum</dc:title>
-      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>44.79 -6.17</ows:LowerCorner>
-        <ows:UpperCorner>51.13 -2.23</ows:UpperCorner>
-      </ows:BoundingBox>
-    </csw:BriefRecord>
-    <csw:BriefRecord>
       <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
       <dc:title>Mauris sed neque</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>47.59 -4.1</ows:LowerCorner>
         <ows:UpperCorner>51.22 0.89</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
+      <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
+      <dc:title>&#209;un&#231; elementum</dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>44.79 -6.17</ows:LowerCorner>
+        <ows:UpperCorner>51.13 -2.23</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:BriefRecord>
   </csw:SearchResults>
