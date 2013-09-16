@@ -155,6 +155,9 @@ def setup_testdata():
         'manager': False
     }
 
+    # remove CITE database so we can build fresh
+    sh('rm -f tests/suites/cite/data/records.db')
+
     for database, has_testdata in test_database_parameters.iteritems():
         info('Setting up test database %s' % database)
         cfg = path('tests/suites/%s/default.cfg' % database)
