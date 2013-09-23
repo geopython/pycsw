@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # =================================================================
 #
-# Authors: Tom Kralidis <tomkralidis@hotmail.com>
+# Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2011 Tom Kralidis
 #

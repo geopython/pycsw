@@ -31,7 +31,7 @@
           <ows:AdministrativeArea>Ontario</ows:AdministrativeArea>
           <ows:PostalCode>M9C 3Z9</ows:PostalCode>
           <ows:Country>Canada</ows:Country>
-          <ows:ElectronicMailAddress>tomkralidis@hotmail.com</ows:ElectronicMailAddress>
+          <ows:ElectronicMailAddress>tomkralidis@gmail.com</ows:ElectronicMailAddress>
         </ows:Address>
         <ows:OnlineResource xlink:type="simple" xlink:href="http://kralidis.ca/"/>
         <ows:HoursOfService>0800h - 1600h EST</ows:HoursOfService>
