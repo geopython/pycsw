@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 # =================================================================
 #
-# Authors: Tom Kralidis <tomkralidis@hotmail.com>
+# Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2012 Tom Kralidis
 #
@@ -137,9 +137,9 @@ setup(
     platforms='all',
     keywords=KEYWORDS,
     author='Tom Kralidis',
-    author_email='tomkralidis@hotmail.com',
+    author_email='tomkralidis@gmail.com',
     maintainer='Tom Kralidis',
-    maintainer_email='tomkralidis@hotmail.com',
+    maintainer_email='tomkralidis@gmail.com',
     url='http://pycsw.org/',
     install_requires=INSTALL_REQUIRES,
     packages=PACKAGES,

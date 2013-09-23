@@ -5,7 +5,7 @@ pycsw |release| Documentation
 =============================
 
 :Author: Tom Kralidis
-:Contact: tomkralidis at hotmail.com
+:Contact: tomkralidis at gmail.com
 :Release: |release|
 :Date: |today|
 
