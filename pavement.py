@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 # =================================================================
 #
-# Authors: Tom Kralidis <tomkralidis@hotmail.com>
+# Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2012 Tom Kralidis
 #
