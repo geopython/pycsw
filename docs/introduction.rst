@@ -22,6 +22,7 @@ Features
 - flexible repository configuration
 - `GeoNode`_ connectivity
 - `Open Data Catalog`_ connectivity
+- `CKAN`_ connectivity
 - federated catalogue distributed searching
 - realtime XML Schema validation
 - extensible profile plugin architecture
@@ -184,4 +185,5 @@ Functions
 .. _`A9 OpenSearch`: http://www.opensearch.org/Home
 .. _`GeoNode`: http://geonode.org/
 .. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
+.. _`CKAN`: http://ckan.org/
 .. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1104
