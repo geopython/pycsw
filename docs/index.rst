@@ -26,6 +26,7 @@ pycsw |release| Documentation
    outputschemas
    geonode
    odc
+   ckan
    testing
    tools
    development
