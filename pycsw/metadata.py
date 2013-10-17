@@ -190,7 +190,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     # get total number of records to loop against
 
     try:
-        md.getrecords(typenames=csw_typenames, resulttype='hits')
+        md.getrecords2(typenames=csw_typenames, resulttype='hits')
         matches = md.results['matches']
     except:  # this is a CSW, but server rejects query
         raise RuntimeError(md.response)
@@ -203,7 +203,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     # loop over all catalogue records incrementally
     for r in range(1, matches, pagesize):
         try:
-            md.getrecords(typenames=csw_typenames, startposition=r,
+            md.getrecords2(typenames=csw_typenames, startposition=r,
                           maxrecords=pagesize)
         except Exception, err:  # this is a CSW, but server rejects query
             raise RuntimeError(md.response)
