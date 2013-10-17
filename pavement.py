@@ -157,7 +157,9 @@ def setup_testdata():
 
     # remove CITE database so we can build fresh
     for suite in test_database_parameters.keys():
-        os.remove('tests/suites/%s/data/records.db' % suite)
+        dbfile = 'tests/suites/%s/data/records.db' % suite
+        if os.path.isfile(dbfile)
+            os.remove(dbfile)
 
     for database, has_testdata in test_database_parameters.iteritems():
         info('Setting up test database %s' % database)
