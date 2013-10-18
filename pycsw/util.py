@@ -398,3 +398,11 @@ def ipaddress_in_whitelist(ipaddress, whitelist):
                     if ipaddress.startswith(white.split('*')[0]):
                         return True
     return False
+
+def sniff_table(table):
+    """Checks whether repository.table is a schema namespaced"""
+    schema = None
+    table = table
+    if table.find('.') != - 1: 
+        schema, table = table.split('.')
+    return [schema, table]
