@@ -49,7 +49,9 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
     LOGGER.info('Creating database %s', database)
     dbase = create_engine(database)
 
-    mdata = MetaData(dbase)
+    schema, table = util.sniff_table(table)
+
+    mdata = MetaData(dbase, schema=schema)
 
     # If PostGIS 2.x detected, do not create sfsql tables.
     if dbase.name == 'postgresql':
