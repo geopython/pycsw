@@ -61,8 +61,11 @@ class Repository(object):
         
         self.postgis_geometry_column = None
 
+        schema, table = util.sniff_table(table)
+
         self.dataset = type('dataset', (base,),
-        dict(__tablename__=table,__table_args__={'autoload': True}))
+        dict(__tablename__=table,__table_args__={'autoload': True,
+                                                 'schema': schema}))
 
         self.dbtype = self.engine.name
 
