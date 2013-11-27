@@ -281,8 +281,12 @@ CREATE TRIGGER %(table)s_update_geometry BEFORE INSERT OR UPDATE ON %(table)s
 FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
     ''' % {'table': table, 'geometry': postgis_geometry_column}
 
+        create_spatial_index_sql = 'CREATE INDEX %(geometry)s_idx ON %(table)s USING GIST (%(geometry)s);' \
+        % {'table': table, 'geometry': postgis_geometry_column}
+
         conn.execute(create_column_sql)
         conn.execute(create_insert_update_trigger_sql)
+        conn.execute(create_spatial_index_sql)
 
 def load_records(context, database, table, xml_dirpath, recursive=False):
     """Load metadata records from directory of files to database"""
