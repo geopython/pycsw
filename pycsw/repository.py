@@ -164,28 +164,26 @@ class Repository(object):
         column = getattr(self.dataset, \
         self.context.md_core_model['mappings']['pycsw:Identifier'])
 
-        query = self.session.query(
-        self.dataset).filter(column.in_(ids))
+        query = self.session.query(self.dataset).filter(column.in_(ids))
         return query.all()
 
     def query_domain(self, domain, typenames, domainquerytype='list',
         count=False):
         ''' Query by property domain values '''
 
+        domain_value = getattr(self.dataset, domain)
+
         if domainquerytype == 'range':
             LOGGER.debug('Generating property name range values')
-            query = self.session.query(
-            func.min(getattr(self.dataset, domain)),
-            func.max(getattr(self.dataset, domain)))
+            query = self.session.query(func.min(domain_value),
+                                       func.max(domain_value))
         else:
             if count:
                 LOGGER.debug('Generating property name frequency counts')
                 query = self.session.query(getattr(self.dataset, domain),
-                func.count(getattr(self.dataset, domain))).group_by(
-                getattr(self.dataset, domain))
+                    func.count(domain_value)).group_by(domain_value)
             else:
-                query = self.session.query(
-                getattr(self.dataset, domain)).distinct()
+                query = self.session.query(domain_value).distinct()
         return query.all()
 
     def query_latest_insert(self):
@@ -193,16 +191,14 @@ class Repository(object):
         column = getattr(self.dataset, \
         self.context.md_core_model['mappings']['pycsw:InsertDate'])
 
-        return self.session.query(
-        func.max(column)).first()[0]
+        return self.session.query(func.max(column)).first()[0]
 
     def query_source(self, source):
         ''' Query by source '''
         column = getattr(self.dataset, \
         self.context.md_core_model['mappings']['pycsw:Source'])
 
-        query = self.session.query(self.dataset).filter(
-        column == source)
+        query = self.session.query(self.dataset).filter(column == source)
         return query.all() 
 
     def query(self, constraint, sortby=None, typenames=None,
