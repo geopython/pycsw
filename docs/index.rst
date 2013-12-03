@@ -22,6 +22,7 @@ pycsw |release| Documentation
    soap
    sitemaps
    transactions
+   repofilters
    profiles
    outputschemas
    geonode

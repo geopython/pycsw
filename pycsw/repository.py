@@ -41,10 +41,11 @@ LOGGER = logging.getLogger(__name__)
 
 class Repository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, database, context, app_root=None, table='records'):
+    def __init__(self, database, context, app_root=None, table='records', repo_filter=None):
         ''' Initialize repository '''
 
         self.context = context
+        self.filter = repo_filter
 
         # Don't use relative paths, this is hack to get around
         # most wsgi restriction...
@@ -165,7 +166,7 @@ class Repository(object):
         self.context.md_core_model['mappings']['pycsw:Identifier'])
 
         query = self.session.query(self.dataset).filter(column.in_(ids))
-        return query.all()
+        return self._get_repo_filter(query).all()
 
     def query_domain(self, domain, typenames, domainquerytype='list',
         count=False):
@@ -184,14 +185,14 @@ class Repository(object):
                     func.count(domain_value)).group_by(domain_value)
             else:
                 query = self.session.query(domain_value).distinct()
-        return query.all()
+        return self._get_repo_filter(query).all()
 
     def query_latest_insert(self):
         ''' Query to get latest update to repository '''
         column = getattr(self.dataset, \
         self.context.md_core_model['mappings']['pycsw:InsertDate'])
 
-        return self.session.query(func.max(column)).first()[0]
+        return self._get_repo_filter(self.session.query(func.max(column))).first()[0]
 
     def query_source(self, source):
         ''' Query by source '''
@@ -199,7 +200,7 @@ class Repository(object):
         self.context.md_core_model['mappings']['pycsw:Source'])
 
         query = self.session.query(self.dataset).filter(column == source)
-        return query.all() 
+        return self._get_repo_filter(query).all()
 
     def query(self, constraint, sortby=None, typenames=None,
         maxrecords=10, startposition=0):
@@ -214,7 +215,7 @@ class Repository(object):
             LOGGER.debug('No constraint detected')
             query = self.session.query(self.dataset)
 
-        total = query.count()
+        total = self._get_repo_filter(query).count()
         
         if util.ranking_pass:  #apply spatial ranking
             #TODO: Check here for dbtype so to extract wkt from postgis native to wkt
@@ -243,7 +244,7 @@ class Repository(object):
                     query = query.order_by(sortby_column)
 
         # always apply limit and offset
-        return [str(total), query.limit(
+        return [str(total), self._get_repo_filter(query).limit(
         maxrecords).offset(startposition).all()]
 
     def insert(self, record, source, insert_date):
@@ -276,7 +277,7 @@ class Repository(object):
 
             try:
                 self.session.begin()
-                self.session.query(self.dataset).filter_by(
+                self._get_repo_filter(self.session.query(self.dataset)).filter_by(
                 identifier=identifier).update(update_dict)
                 self.session.commit()
             except Exception, err:
@@ -295,7 +296,7 @@ class Repository(object):
                     if 'dbcol' not in rpu['rp']:
                         self.session.rollback()
                         raise RuntimeError('property not found for XPath %s' % rpu['rp']['name'])
-                    rows += self.session.query(self.dataset).filter(
+                    rows += self._get_repo_filter(self.session.query(self.dataset)).filter(
                         text(constraint['where'])).params(self._create_values(constraint['values'])).update({
                             getattr(self.dataset,
                             rpu['rp']['dbcol']): rpu['value'],
@@ -305,7 +306,7 @@ class Repository(object):
                                    str(rpu)),
                         }, synchronize_session='fetch')
                     # then update anytext tokens
-                    rows2 += self.session.query(self.dataset).filter(
+                    rows2 += self._get_repo_filter(self.session.query(self.dataset)).filter(
                         text(constraint['where'])).params(self._create_values(constraint['values'])).update({
                             'anytext': func.get_anytext(getattr(
                             self.dataset, self.context.md_core_model['mappings']['pycsw:XML']))
@@ -321,7 +322,7 @@ class Repository(object):
 
         try:
             self.session.begin()
-            rows = self.session.query(self.dataset).filter(
+            rows = self._get_repo_filter(self.session.query(self.dataset)).filter(
             text(constraint['where'])).params(self._create_values(constraint['values']))
 
             parentids = []
@@ -334,7 +335,7 @@ class Repository(object):
             if rows > 0:
                 LOGGER.debug('Deleting all child records')
                 # delete any child records which had this record as a parent
-                rows += self.session.query(self.dataset).filter(
+                rows += self._get_repo_filter(self.session.query(self.dataset)).filter(
                     getattr(self.dataset,
                     self.context.md_core_model['mappings']['pycsw:ParentIdentifier']).in_(parentids)).delete(
                     synchronize_session='fetch')
@@ -346,3 +347,8 @@ class Repository(object):
 
         return rows
 
+    def _get_repo_filter(self, query):
+        ''' Apply repository wide side filter / mask query '''
+        if self.filter is not None:
+            return query.filter(self.filter)
+        return query
