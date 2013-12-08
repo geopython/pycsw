@@ -40,10 +40,11 @@ from OpenDataCatalog.opendata.models import Resource
 
 class OpenDataCatalogRepository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, context):
+    def __init__(self, context, repo_filter=None):
         ''' Initialize repository '''
 
         self.context = context
+        self.filter = repo_filter
 
         self.dbtype = settings.DATABASES['default']['ENGINE'].split('.')[-1]
 
@@ -81,7 +82,7 @@ class OpenDataCatalogRepository(object):
         # is opendata.models.Resource.id (integer)
         # if ids are passed which are not int, silently return (does not exist)
         try:
-            return Resource.objects.filter(id__in=[s.split(':')[-1] for s in ids]).all()
+            return self._get_repo_filter(Resource.objects).filter(id__in=[s.split(':')[-1] for s in ids]).all()
         except Exception, err:
             return []
 
@@ -89,25 +90,27 @@ class OpenDataCatalogRepository(object):
         count=False):
         ''' Query by property domain values '''
 
+        objects = self._get_repo_filter(Resource.objects)
+
         if domainquerytype == 'range':
-            return [tuple(Resource.objects.aggregate(
+            return [tuple(objects.aggregate(
             Min(domain), Max(domain)).values())]
         else:
             if count:
                 return [(d[domain], d['%s__count' % domain]) \
-                for d in Resource.objects.values(domain).annotate(Count(domain))]
+                for d in objects.values(domain).annotate(Count(domain))]
             else:
-                return Resource.objects.values_list(domain).distinct()
+                return objects.values_list(domain).distinct()
 
     def query_latest_insert(self):
         ''' Query to get latest update to repository '''
         from datetime import datetime
-        return Resource.objects.aggregate(
+        return self._get_repo_filter(Resource.objects).aggregate(
             Max('last_updated'))['last_updated__max'].strftime('%Y-%m-%dT%H:%M:%SZ')
 
     def query_source(self, source):
         ''' Query by source '''
-        return Resource.objects.filter(source=source)
+        return self._get_repo_filter(Resource.objects).filter(source=source)
 
     def query(self, constraint, sortby=None, typenames=None,
         maxrecords=10, startposition=0):
@@ -115,10 +118,10 @@ class OpenDataCatalogRepository(object):
 
         # run the raw query and get total
         if 'where' in constraint:  # GetRecords with constraint
-            query = Resource.objects.extra(where=[constraint['where']], params=constraint['values'])
+            query = self._get_repo_filter(Resource.objects).extra(where=[constraint['where']], params=constraint['values'])
 
         else:  # GetRecords sans constraint
-            query = Resource.objects
+            query = self._get_repo_filter(Resource.objects)
 
         total = query.count()
 
@@ -138,3 +141,9 @@ class OpenDataCatalogRepository(object):
             query.order_by(pname)[startposition:maxrecords]]
         else:  # no sort
             return [str(total), query.all()[startposition:maxrecords]]
+
+    def _get_repo_filter(self, query):
+        ''' Apply repository wide side filter / mask query '''
+        if self.filter is not None:
+            return query.filter(self.filter)
+        return query

@@ -38,10 +38,11 @@ from geonode.base.models import ResourceBase
 
 class GeoNodeRepository(object):
     ''' Class to interact with underlying repository '''
-    def __init__(self, context):
+    def __init__(self, context, repo_filter=None):
         ''' Initialize repository '''
 
         self.context = context
+        self.filter = repo_filter
 
         self.dbtype = settings.DATABASES['default']['ENGINE'].split('.')[-1]
 
@@ -78,32 +79,34 @@ class GeoNodeRepository(object):
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
-        return ResourceBase.objects.filter(uuid__in=ids).all()
+        return self._get_repo_filter(ResourceBase.objects).filter(uuid__in=ids).all()
 
     def query_domain(self, domain, typenames, domainquerytype='list',
         count=False):
         ''' Query by property domain values '''
 
+        objects = self._get_repo_filter(ResourceBase.objects)
+
         if domainquerytype == 'range':
-            return [tuple(ResourceBase.objects.aggregate(
+            return [tuple(objects.aggregate(
             Min(domain), Max(domain)).values())]
         else:
             if count:
                 return [(d[domain], d['%s__count' % domain]) \
-                for d in ResourceBase.objects.values(domain).annotate(Count(domain))]
+                for d in objects.values(domain).annotate(Count(domain))]
             else:
-                return ResourceBase.objects.values_list(domain).distinct()
+                return objects.values_list(domain).distinct()
 
 
     def query_latest_insert(self):
         ''' Query to get latest update to repository '''
         from datetime import datetime
-        return ResourceBase.objects.aggregate(
+        return self._get_repo_filter(ResourceBase.objects).aggregate(
             Max('date'))['date__max'].strftime('%Y-%m-%dT%H:%M:%SZ')
 
     def query_source(self, source):
         ''' Query by source '''
-        return ResourceBase.objects.filter(source=source)
+        return self._get_repo_filter(ResourceBase.objects).filter(source=source)
 
     def query(self, constraint, sortby=None, typenames=None,
         maxrecords=10, startposition=0):
@@ -111,10 +114,10 @@ class GeoNodeRepository(object):
 
         # run the raw query and get total
         if 'where' in constraint:  # GetRecords with constraint
-            query = ResourceBase.objects.extra(where=[constraint['where']], params=constraint['values'])
+            query = self._get_repo_filter(ResourceBase.objects).extra(where=[constraint['where']], params=constraint['values'])
 
         else:  # GetRecords sans constraint
-            query = ResourceBase.objects
+            query = self._get_repo_filter(ResourceBase.objects)
 
         total = query.count()
 
@@ -135,3 +138,9 @@ class GeoNodeRepository(object):
                 query.order_by(pname)[startposition:maxrecords]]
         else:  # no sort
             return [str(total), query.all()[startposition:maxrecords]]
+
+    def _get_repo_filter(self, query):
+        ''' Apply repository wide side filter / mask query '''
+        if self.filter is not None:
+            return query.filter(self.filter)
+        return query
