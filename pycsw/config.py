@@ -44,6 +44,12 @@ class StaticContext(object):
 
         self.ogc_schemas_base = 'http://schemas.opengis.net'
 
+        self.languages = {
+            'en': 'english',
+            'fr': 'french',
+            'el': 'greek',
+        }
+
         self.namespaces = {
             'atom': 'http://www.w3.org/2005/Atom',
             'csw': 'http://www.opengis.net/cat/csw/2.0.2',

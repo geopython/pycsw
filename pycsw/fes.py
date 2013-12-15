@@ -69,10 +69,11 @@ MODEL = {
 }
 
 
-def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
+def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='english'):
     """OGC Filter object support"""
 
     boq = None
+    is_pg = dbtype.startswith('postgresql')
 
     tmp = element.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=nsmap)
     if len(tmp) > 0:  # this is binary logic query
@@ -131,17 +132,16 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
 
         if (elem.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
             pval = elem.find(util.nspath_eval('ogc:Literal', nsmap)).text
-            pvalue = pval.replace(wildcard, '%').replace(singlechar, '_')
 
         com_op = _get_comparison_operator(elem)
         LOGGER.debug('Comparison operator: %s' % com_op)
 
         # if this is a case insensitive search
         # then set the DB-specific LIKE comparison operator
+        anytext = queryables['csw:AnyText']['dbcol']
         if ((matchcase is not None and matchcase == 'false') or
-                pname == 'anytext'):
-            com_op = 'ilike' if dbtype in \
-                ['postgresql', 'postgresql+postgis+wkt', 'postgresql+postgis+native'] else 'like'
+                pname == anytext):
+            com_op = 'ilike' if is_pg else 'like'
 
         if (elem.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
             com_op = 'between'
@@ -156,11 +156,20 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
             values.append(lower_boundary)
             values.append(upper_boundary)
         else:
+            if pname == anytext and is_pg and self.fts:
+                pvalue = pval.replace(wildcard, '').replace(singlechar, '')
+            else:
+                pvalue = pval.replace(wildcard, '%').replace(singlechar, '_')
+
             values.append(pvalue)
+
             if boq == ' not ':
                 if fname is not None:
                     expression = "%s is null or not %s(%s) %s %s" % \
                                    (pname, fname, pname, com_op, assign_param())
+                elif pname == anytext and is_pg and self.fts:
+                    expression = ("%s is null or not plainto_tsquery('%s', %s) @@ to_tsvector('%s', %s)" %
+                                  (anytext, language, assign_param(), language, anytext))
                 else:
                     expression = "%s is null or not %s %s %s" % \
                                    (pname, pname, com_op, assign_param())
@@ -168,6 +177,9 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
                 if fname is not None:
                     expression = "%s(%s) %s %s" % \
                                    (fname, pname, com_op, assign_param())
+                elif pname == anytext and is_pg and self.fts:
+                    expression = ("plainto_tsquery('%s', %s) @@ to_tsvector('%s', %s)" %
+                                  (language, assign_param(), language, anytext))
                 else:
                     expression = "%s %s %s" % (pname, com_op, assign_param())
 

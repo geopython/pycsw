@@ -104,7 +104,8 @@ Database Specific Notes
 PostgreSQL
 ^^^^^^^^^^
 
-- pycsw makes uses of PL/Python functions.  To enable PostgreSQL support, the database user must be able to create functions within the database. In case of recent PostgreSQL versions (9.x), the PL/Python extension must be enabled prior to pycsw setup.
+- if PostGIS is not enabled, pycsw makes uses of PL/Python functions.  To enable PostgreSQL support, the database user must be able to create functions within the database. In case of recent PostgreSQL versions (9.x), the PL/Python extension must be enabled prior to pycsw setup
+- `PostgreSQL Full Text Search`_ is supported for ``csw:AnyText`` based queries.  pycsw manages a GIN index against the anytext column.  This is created automatically in ``pycsw.admin.setup_db``
 
 PostGIS
 ^^^^^^^
@@ -169,3 +170,4 @@ Further information is provided in ``pycsw/config.py:MD_CORE_MODEL``.
 .. _`OGC SFSQL`: http://www.opengeospatial.org/standards/sfs
 .. _`WKT`: http://en.wikipedia.org/wiki/Well-known_text
 .. _`EWKT`: http://en.wikipedia.org/wiki/Well-known_text#Variations
+.. _`PostgreSQL Full Text Search`: http://www.postgresql.org/docs/9.2/static/textsearch.html

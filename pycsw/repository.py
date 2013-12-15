@@ -101,6 +101,10 @@ class Repository(object):
             except:
                 pass
 
+            # check if a native PostgreSQL FTS GIN index exists
+            result = self.session.execute("select relname from pg_class where relname='fts_gin_idx'").scalar()
+            self.fts = bool(result)
+
         if temp_dbtype is not None:
             LOGGER.debug('%s support detected' % temp_dbtype)
             self.dbtype = temp_dbtype
