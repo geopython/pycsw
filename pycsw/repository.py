@@ -78,7 +78,7 @@ class Repository(object):
             try:
                 self.session.execute(select([func.postgis_version()]))
                 temp_dbtype = 'postgresql+postgis+wkt'
-                #LOGGER.debug('PostgreSQL+PostGIS1+WKT detected')
+                LOGGER.debug('PostgreSQL+PostGIS1+WKT detected')
             except:
                 pass
 
@@ -87,7 +87,7 @@ class Repository(object):
             try:
                 self.session.execute('select(postgis_version())')
                 temp_dbtype = 'postgresql+postgis+wkt'
-                #LOGGER.debug('PostgreSQL+PostGIS2+WKT detected')
+                LOGGER.debug('PostgreSQL+PostGIS2+WKT detected')
             except:
                 pass
 
@@ -98,7 +98,7 @@ class Repository(object):
                 row = result.fetchone()
                 self.postgis_geometry_column = str(row['f_geometry_column'])
                 temp_dbtype = 'postgresql+postgis+native'
-                #LOGGER.debug('PostgreSQL+PostGIS+Native detected')
+                LOGGER.debug('PostgreSQL+PostGIS+Native detected')
             except:
                 pass
 
