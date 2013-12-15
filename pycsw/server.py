@@ -152,6 +152,7 @@ class Csw(object):
         # set language default
         if (self.config.has_option('server', 'language')):
             try:
+                LOGGER.info('Setting language')
                 lang_code = self.config.get('server', 'language').split('-')[0]
                 self.language['639_code'] = lang_code
                 self.language['text'] = self.context.languages[lang_code]
