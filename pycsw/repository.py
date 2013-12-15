@@ -73,8 +73,9 @@ class Repository(object):
         self.session = create_session(self.engine)
 
         temp_dbtype = None
-        # check if PostgreSQL is enabled with PostGIS 1.x
+
         if self.dbtype == 'postgresql':
+            # check if PostgreSQL is enabled with PostGIS 1.x
             try:
                 self.session.execute(select([func.postgis_version()]))
                 temp_dbtype = 'postgresql+postgis+wkt'
@@ -82,8 +83,7 @@ class Repository(object):
             except:
                 pass
 
-        # check if PostgreSQL is enabled with PostGIS 2.x
-        if self.dbtype == 'postgresql':
+            # check if PostgreSQL is enabled with PostGIS 2.x
             try:
                 self.session.execute('select(postgis_version())')
                 temp_dbtype = 'postgresql+postgis+wkt'
@@ -91,8 +91,7 @@ class Repository(object):
             except:
                 pass
 
-        # check if a native PostGIS geometry column exists
-        if self.dbtype == 'postgresql':
+            # check if a native PostGIS geometry column exists
             try:
                 result = self.session.execute("select f_geometry_column from geometry_columns where f_table_name = '%s' and f_geometry_column != 'wkt_geometry' limit 1;" % table)
                 row = result.fetchone()
