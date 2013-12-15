@@ -14,6 +14,7 @@ Features
 - implements `ISO Metadata Application Profile 1.0.0`_
 - implements `FGDC CSDGM Application Profile for CSW 2.0`_
 - implements the Search/Retrieval via URL (`SRU`_) search protocol
+- implements Full Text Search capabilities
 - implements OpenSearch
 - supports ISO, Dublin Core, DIF, FGDC and Atom metadata models
 - CGI or WSGI deployment

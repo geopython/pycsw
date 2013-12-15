@@ -263,6 +263,10 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             conn.execute(function_get_geometry_area)
             conn.execute(function_get_spatial_overlay_rank)
 
+    if dbase.name == 'postgresql':
+        index_fts = "create index fts_gin_idx on %s using gin(to_tsvector('%s', 'anytext'))" % (table, language)
+        conn.execute(index_fts)
+
     if dbase.name == 'postgresql' and create_postgis_geometry:
         # create native geometry column within db
         LOGGER.info('Creating native PostGIS geometry column')
