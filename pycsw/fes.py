@@ -138,6 +138,9 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
 
         # if this is a case insensitive search
         # then set the DB-specific LIKE comparison operator
+
+        LOGGER.debug('Setting csw:AnyText property')
+
         anytext = queryables['csw:AnyText']['dbcol']
         if ((matchcase is not None and matchcase == 'false') or
                 pname == anytext):
@@ -157,8 +160,10 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             values.append(upper_boundary)
         else:
             if pname == anytext and is_pg and self.fts:
+                LOGGER.debug('PostgreSQL FTS specific search')
                 pvalue = pval.replace(wildcard, '').replace(singlechar, '')
             else:
+                LOGGER.debug('PostgreSQL non-FTS specific search')
                 pvalue = pval.replace(wildcard, '%').replace(singlechar, '_')
 
             values.append(pvalue)
@@ -168,9 +173,11 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                     expression = "%s is null or not %s(%s) %s %s" % \
                                    (pname, fname, pname, com_op, assign_param())
                 elif pname == anytext and is_pg and self.fts:
+                    LOGGER.debug('PostgreSQL FTS specific search')
                     expression = ("%s is null or not plainto_tsquery('%s', %s) @@ to_tsvector('%s', %s)" %
                                   (anytext, language, assign_param(), language, anytext))
                 else:
+                    LOGGER.debug('PostgreSQL non-FTS specific search')
                     expression = "%s is null or not %s %s %s" % \
                                    (pname, pname, com_op, assign_param())
             else:
@@ -178,9 +185,11 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                     expression = "%s(%s) %s %s" % \
                                    (fname, pname, com_op, assign_param())
                 elif pname == anytext and is_pg and self.fts:
+                    LOGGER.debug('PostgreSQL FTS specific search')
                     expression = ("plainto_tsquery('%s', %s) @@ to_tsvector('%s', %s)" %
                                   (language, assign_param(), language, anytext))
                 else:
+                    LOGGER.debug('PostgreSQL non-FTS specific search')
                     expression = "%s %s %s" % (pname, com_op, assign_param())
 
         return expression
