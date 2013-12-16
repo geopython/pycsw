@@ -40,7 +40,7 @@ from pycsw import metadata, repository, util
 LOGGER = logging.getLogger(__name__)
 
 
-def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, postgis_geometry_column='wkb_geometry', extra_columns=[]):
+def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, postgis_geometry_column='wkb_geometry', extra_columns=[], language='english'):
     """Setup database tables and indexes"""
     from sqlalchemy import Column, create_engine, Integer, MetaData, \
         Table, Text
@@ -203,7 +203,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
 
     conn = dbase.connect()
 
-    if create_plpythonu_functions:
+    if create_plpythonu_functions and not create_postgis_geometry:
         if dbase.name == 'postgresql':  # create plpythonu functions within db
             LOGGER.info('Setting plpythonu functions')
             pycsw_home = home

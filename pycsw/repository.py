@@ -46,6 +46,7 @@ class Repository(object):
 
         self.context = context
         self.filter = repo_filter
+        self.fts = False
 
         # Don't use relative paths, this is hack to get around
         # most wsgi restriction...
