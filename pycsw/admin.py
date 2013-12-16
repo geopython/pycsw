@@ -58,6 +58,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
     schema, table = util.sniff_table(table)
 
     mdata = MetaData(dbase, schema=schema)
+    create_postgis_geometry = False
 
     # If PostGIS 2.x detected, do not create sfsql tables.
     if dbase.name == 'postgresql':
@@ -69,7 +70,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             create_postgis_geometry = True
             LOGGER.info('PostGIS %s detected: Skipping SFSQL tables creation' % postgis_lib_version)
         except:
-            create_postgis_geometry = False
+            pass
     
     if create_sfsql_tables:
         LOGGER.info('Creating table spatial_ref_sys')
