@@ -46,6 +46,7 @@ class Repository(object):
 
         self.context = context
         self.filter = repo_filter
+        self.fts = False
 
         # Don't use relative paths, this is hack to get around
         # most wsgi restriction...
@@ -100,6 +101,10 @@ class Repository(object):
                 LOGGER.debug('PostgreSQL+PostGIS+Native detected')
             except:
                 pass
+
+            # check if a native PostgreSQL FTS GIN index exists
+            result = self.session.execute("select relname from pg_class where relname='fts_gin_idx'").scalar()
+            self.fts = bool(result)
 
         if temp_dbtype is not None:
             LOGGER.debug('%s support detected' % temp_dbtype)
