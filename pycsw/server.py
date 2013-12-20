@@ -78,6 +78,7 @@ class Csw(object):
         self.pretty_print = 0
         self.domainquerytype = 'list'
         self.orm = 'django'
+        self.language = {'639_code': 'en', 'text': 'english'}
 
         # load user configuration
         try:
@@ -147,6 +148,16 @@ class Csw(object):
         if (self.config.has_option('server', 'spatial_ranking') and
         self.config.get('server', 'spatial_ranking') == 'true'):
             util.ranking_enabled = True
+
+        # set language default
+        if (self.config.has_option('server', 'language')):
+            try:
+                LOGGER.info('Setting language')
+                lang_code = self.config.get('server', 'language').split('-')[0]
+                self.language['639_code'] = lang_code
+                self.language['text'] = self.context.languages[lang_code]
+            except:
+                pass
 
         # generate distributed search model, if specified in config
         if self.config.has_option('server', 'federatedcatalogues'):
@@ -1240,7 +1251,7 @@ class Csw(object):
                         fes.parse(doc,
                         self.repository.queryables['_all'].keys(),
                         self.repository.dbtype,
-                        self.context.namespaces, self.orm)
+                        self.context.namespaces, self.orm, self.language['text'], self.repository.fts)
                     except Exception, err:
                         errortext = \
                         'Exception: document not valid.\nError: %s.' % str(err)
@@ -2366,7 +2377,7 @@ class Csw(object):
                 query['type'] = 'filter'
                 query['where'], query['values'] = fes.parse(tmp,
                 self.repository.queryables['_all'], self.repository.dbtype,
-                self.context.namespaces, self.orm)
+                self.context.namespaces, self.orm, self.language['text'], self.repository.fts)
             except Exception, err:
                 return 'Invalid Filter request: %s' % err
         tmp = element.find(util.nspath_eval('csw:CqlText', self.context.namespaces))

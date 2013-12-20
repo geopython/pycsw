@@ -40,7 +40,7 @@ from pycsw import metadata, repository, util
 LOGGER = logging.getLogger(__name__)
 
 
-def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, postgis_geometry_column='wkb_geometry', extra_columns=[]):
+def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, postgis_geometry_column='wkb_geometry', extra_columns=[], language='english'):
     """Setup database tables and indexes"""
     from sqlalchemy import Column, create_engine, Integer, MetaData, \
         Table, Text
@@ -58,6 +58,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
     schema, table = util.sniff_table(table)
 
     mdata = MetaData(dbase, schema=schema)
+    create_postgis_geometry = False
 
     # If PostGIS 2.x detected, do not create sfsql tables.
     if dbase.name == 'postgresql':
@@ -69,7 +70,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             create_postgis_geometry = True
             LOGGER.info('PostGIS %s detected: Skipping SFSQL tables creation' % postgis_lib_version)
         except:
-            create_postgis_geometry = False
+            pass
     
     if create_sfsql_tables:
         LOGGER.info('Creating table spatial_ref_sys')
@@ -203,7 +204,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
 
     conn = dbase.connect()
 
-    if create_plpythonu_functions:
+    if create_plpythonu_functions and not create_postgis_geometry:
         if dbase.name == 'postgresql':  # create plpythonu functions within db
             LOGGER.info('Setting plpythonu functions')
             pycsw_home = home
@@ -262,6 +263,11 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             conn.execute(function_update_xpath)
             conn.execute(function_get_geometry_area)
             conn.execute(function_get_spatial_overlay_rank)
+
+    if dbase.name == 'postgresql':
+        LOGGER.info('Creating PostgreSQL Free Text Search (FTS) GIN index')
+        index_fts = "create index fts_gin_idx on %s using gin(to_tsvector('%s', 'anytext'))" % (table, language)
+        conn.execute(index_fts)
 
     if dbase.name == 'postgresql' and create_postgis_geometry:
         # create native geometry column within db
