@@ -144,7 +144,7 @@ setup(
     install_requires=INSTALL_REQUIRES,
     packages=PACKAGES,
     package_data=PACKAGE_DATA,
-    scripts=[os.path.join('sbin', 'pycsw-admin.py')],
+    scripts=[os.path.join('bin', 'pycsw-admin.py')],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
