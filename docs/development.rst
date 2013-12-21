@@ -43,7 +43,7 @@ Coding and Documentation Guidelines
 
 - pycsw instead of PyCSW, pyCSW, Pycsw
 - always code with `PEP 8`_ conventions
-- always run source code through ``pep8`` and `pylint`_, using all pylint defaults except for ``C0111``.  ``sbin/pycsw-pylint.sh`` is included for convenience
+- always run source code through ``pep8`` and `pylint`_, using all pylint defaults except for ``C0111``.  ``bin/pycsw-pylint.sh`` is included for convenience
 - for exceptions which make their way to OGC ``ExceptionReport`` XML, always specify the appropriate ``locator`` and ``code`` parameters
 - the pycsw wiki documents `developer tasks`_ for things like releasing documentation, testing, etc.
 

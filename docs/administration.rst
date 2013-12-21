@@ -3,10 +3,12 @@
 Administration
 ==============
 
-pycsw administration is handled by ``sbin/pycsw-admin.py``.
+pycsw administration is handled by the ``pycsw-admin.py`` utility.  ``pycsw-admin.py``
+is installed as part of the pycsw install process and should be available in your
+PATH.
 
 .. note::
-  Run ``sbin/pycsw-admin.py -h`` to see all administration operations and parameters
+  Run ``pycsw-admin.py -h`` to see all administration operations and parameters
 
 Metadata Repository Setup
 -------------------------
@@ -46,9 +48,7 @@ Setting up the Database
 
 .. code-block:: bash
 
-  $ cd /path/to/pycsw
-  $ export PYTHONPATH=`pwd` 
-  $ python ./sbin/pycsw-admin.py -c setup_db -f default.cfg
+  $ pycsw-admin.py -c setup_db -f default.cfg
 
 This will create the necessary tables and values for the repository.
 
@@ -72,7 +72,7 @@ Loading Records
 
 .. code-block:: bash
 
-  $ python ./sbin/pycsw-admin.py -c load_records -f default.cfg -p /path/to/records
+  $ pycsw-admin.py -c load_records -f default.cfg -p /path/to/records
 
 This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.cfg`` (``repository.database``).  Passing ``-r`` to the script will process ``/path/to/records`` recursively.
 
@@ -84,7 +84,7 @@ Exporting the Repository
 
 .. code-block:: bash
 
-  $ python ./sbin/pycsw-admin.py -c export_records -f default.cfg -p /path/to/output_dir
+  $ pycsw-admin.py -c export_records -f default.cfg -p /path/to/output_dir
 
 This will write each record in the database specified in ``default.cfg`` (``repository.database``) to an XML document on disk, in directory ``/path/to/output_dir``.
 
@@ -93,7 +93,7 @@ Optimizing the Database
 
 .. code-block:: bash
 
-  $ python ./sbin/pycsw-admin.py -c optimize_db -f default.cfg
+  $ pycsw-admin.py -c optimize_db -f default.cfg
 
 .. note::
   This feature is relevant only for PostgreSQL and MySQL
