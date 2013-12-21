@@ -1,7 +1,7 @@
 docs/*				/var/www/pycsw/docs/
 etc/harvest-all.cron		/var/www/pycsw/etc/
 etc/mappings.py			/var/www/pycsw/etc/
-sbin/*				/var/www/pycsw/sbin/
+bin/*				/var/www/pycsw/bin/
 tests/*				/var/www/pycsw/tests/
 etc/pycsw		       	/etc/apache2/conf.d/
 etc/pycsw.desktop	       	/usr/share/applications/
