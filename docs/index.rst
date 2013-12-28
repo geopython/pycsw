@@ -1,4 +1,4 @@
-.. _index:
+. _index:
 
 =============================
 pycsw |release| Documentation
@@ -30,7 +30,7 @@ pycsw |release| Documentation
    ckan
    testing
    tools
-   development
    support
+   contributing
    license
    committers
