@@ -174,8 +174,8 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                                    (pname, fname, pname, com_op, assign_param())
                 elif pname == anytext and is_pg and fts:
                     LOGGER.debug('PostgreSQL FTS specific search')
-                    expression = ("%s is null or not plainto_tsquery('%s', %s) @@ to_tsvector('%s', %s)" %
-                                  (anytext, language, assign_param(), language, anytext))
+                    expression = ("%s is null or not plainto_tsquery('%s', %s) @@ anytext_tsvector" %
+                                  (anytext, language, assign_param()))
                 else:
                     LOGGER.debug('PostgreSQL non-FTS specific search')
                     expression = "%s is null or not %s %s %s" % \
@@ -186,8 +186,8 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                                    (fname, pname, com_op, assign_param())
                 elif pname == anytext and is_pg and fts:
                     LOGGER.debug('PostgreSQL FTS specific search')
-                    expression = ("plainto_tsquery('%s', %s) @@ to_tsvector('%s', %s)" %
-                                  (language, assign_param(), language, anytext))
+                    expression = ("plainto_tsquery('%s', %s) @@ anytext_tsvector" %
+                                  (language, assign_param()))
                 else:
                     LOGGER.debug('PostgreSQL non-FTS specific search')
                     expression = "%s %s %s" % (pname, com_op, assign_param())
