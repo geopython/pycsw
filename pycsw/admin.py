@@ -5,6 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2012 Tom Kralidis
+# Copyright (c) 2014 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -266,8 +267,13 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
 
     if dbase.name == 'postgresql':
         LOGGER.info('Creating PostgreSQL Free Text Search (FTS) GIN index')
-        index_fts = "create index fts_gin_idx on %s using gin(to_tsvector('%s', 'anytext'))" % (table, language)
+	tsvector_fts = "alter table %s add column anytext_tsvector tsvector" % table
+	conn.execute(tsvector_fts)
+        index_fts = "create index fts_gin_idx on %s using gin(anytext_vector)" % table
         conn.execute(index_fts)
+	# This needs to run if records exist "UPDATE records SET anytext_tsvector = to_tsvector('english', anytext)"
+	trigger_fts = "create trigger ftsupdate before insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', 'anytext')" % (table, language)
+	conn.execute(trigger_fts)
 
     if dbase.name == 'postgresql' and create_postgis_geometry:
         # create native geometry column within db
