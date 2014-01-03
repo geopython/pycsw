@@ -272,7 +272,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         index_fts = "create index fts_gin_idx on %s using gin(anytext_vector)" % table
         conn.execute(index_fts)
 	# This needs to run if records exist "UPDATE records SET anytext_tsvector = to_tsvector('english', anytext)"
-	trigger_fts = "create trigger ftsupdate before insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', 'anytext')" % (table, language)
+	trigger_fts = "create trigger ftsupdate after insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', 'anytext')" % (table, language)
 	conn.execute(trigger_fts)
 
     if dbase.name == 'postgresql' and create_postgis_geometry:
