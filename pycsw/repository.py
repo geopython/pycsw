@@ -55,6 +55,7 @@ class Repository(object):
         Engines are memoized by url
         '''
         if url not in clazz._engines:
+            LOGGER.debug('creating new engine: %s', url)
             engine = create_engine('%s' % url, echo=False)
 
             # load SQLite query bindings
