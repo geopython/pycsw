@@ -32,7 +32,7 @@
 import logging
 import os
 from sqlalchemy import create_engine, asc, desc, func, __version__, select
-from sqlalchemy.sql import text 
+from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
 from pycsw import util
@@ -40,6 +40,45 @@ from pycsw import util
 LOGGER = logging.getLogger(__name__)
 
 class Repository(object):
+    _engines = {}
+
+    @classmethod
+    def create_engine(clazz, url):
+        '''
+        SQL Alchemy engines are thread-safe and simple wrappers for connection pools
+
+        https://groups.google.com/forum/#!topic/sqlalchemy/t8i3RSKZGb0
+
+        To reduce startup time we can cache the engine as a class variable in the
+        repository object and do database initialization once
+
+        Engines are memoized by url
+        '''
+        if url not in clazz._engines:
+            engine = create_engine('%s' % url, echo=False)
+
+            # load SQLite query bindings
+            # This can be directly bound via events
+            # for sqlite < 0.7, we need to to this on a per-connection basis
+            if engine.name in ['sqlite', 'sqlite3'] and __version__ >= '0.7':
+                from sqlalchemy import event
+                @event.listens_for(engine, "connect")
+                def connect(dbapi_connection, connection_rec):
+                    dbapi_connection.create_function(
+                    'query_spatial', 4, util.query_spatial)
+                    dbapi_connection.create_function(
+                    'update_xpath', 3, util.update_xpath)
+                    dbapi_connection.create_function('get_anytext', 1,
+                    util.get_anytext)
+                    dbapi_connection.create_function('get_geometry_area', 1,
+                    util.get_geometry_area)
+                    dbapi_connection.create_function('get_spatial_overlay_rank', 2,
+                    util.get_spatial_overlay_rank)
+
+            clazz._engines[url] = engine
+
+        return clazz._engines[url]
+
     ''' Class to interact with underlying repository '''
     def __init__(self, database, context, app_root=None, table='records', repo_filter=None):
         ''' Initialize repository '''
@@ -55,12 +94,12 @@ class Repository(object):
             database = database.replace('sqlite:///',
                        'sqlite:///%s%s' % (app_root, os.sep))
 
-        self.engine = create_engine('%s' % database, echo=False)
+        self.engine = Repository.create_engine('%s' % database)
 
         base = declarative_base(bind=self.engine)
 
         LOGGER.debug('binding ORM to existing database')
-        
+
         self.postgis_geometry_column = None
 
         schema, table = util.sniff_table(table)
@@ -111,21 +150,8 @@ class Repository(object):
             self.dbtype = temp_dbtype
 
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
-            if __version__ >= '0.7':
-                from sqlalchemy import event
-                @event.listens_for(self.engine, "connect")
-                def connect(dbapi_connection, connection_rec):
-                    dbapi_connection.create_function(
-                    'query_spatial', 4, util.query_spatial)
-                    dbapi_connection.create_function(
-                    'update_xpath', 3, util.update_xpath)
-                    dbapi_connection.create_function('get_anytext', 1,
-                    util.get_anytext)
-                    dbapi_connection.create_function('get_geometry_area', 1,
-                    util.get_geometry_area)
-                    dbapi_connection.create_function('get_spatial_overlay_rank', 2,
-                    util.get_spatial_overlay_rank)
-            else:  # <= 0.6 behaviour
+            # <= 0.6 behaviour
+            if not __version__ >= '0.7':
                 self.connection = self.engine.raw_connection()
                 self.connection.create_function(
                 'query_spatial', 4, util.query_spatial)
@@ -220,7 +246,7 @@ class Repository(object):
             query = self.session.query(self.dataset)
 
         total = self._get_repo_filter(query).count()
-        
+
         if util.ranking_pass:  #apply spatial ranking
             #TODO: Check here for dbtype so to extract wkt from postgis native to wkt
             LOGGER.debug('spatial ranking detected')
