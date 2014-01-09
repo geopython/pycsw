@@ -105,7 +105,7 @@ PostgreSQL
 ^^^^^^^^^^
 
 - if PostGIS is not enabled, pycsw makes uses of PL/Python functions.  To enable PostgreSQL support, the database user must be able to create functions within the database. In case of recent PostgreSQL versions (9.x), the PL/Python extension must be enabled prior to pycsw setup
-- `PostgreSQL Full Text Search`_ is supported for ``csw:AnyText`` based queries.  pycsw creates a tsvector column based on the text from anytext column. Then pycsw creates a GIN index against the anytext_tsvector column.  This is created automatically in ``pycsw.admin.setup_db``
+- `PostgreSQL Full Text Search`_ is supported for ``csw:AnyText`` based queries.  pycsw creates a tsvector column based on the text from anytext column. Then pycsw creates a GIN index against the anytext_tsvector column.  This is created automatically in ``pycsw.admin.setup_db``.  Any query against `csw:AnyText` or `apiso:AnyText` will process using PostgreSQL FTS handling
 
 PostGIS
 ^^^^^^^
