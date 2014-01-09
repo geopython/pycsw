@@ -162,7 +162,8 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
         else:
             if pname == anytext and is_pg and fts:
                 LOGGER.debug('PostgreSQL FTS specific search')
-                pvalue = pval.replace(wildcard, '').replace(singlechar, '')
+                # do nothing, let FTS do conversion (#212)
+                #pvalue = pval.replace(wildcard, '').replace(singlechar, '')
             else:
                 LOGGER.debug('PostgreSQL non-FTS specific search')
                 pvalue = pval.replace(wildcard, '%').replace(singlechar, '_')
