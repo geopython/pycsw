@@ -17,13 +17,13 @@
       <dc:subject>weather</dc:subject>
       <dc:subject>land</dc:subject>
       <dc:format>OGC:WMS</dc:format>
-      <dct:references scheme="OGC:WMS">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
-      <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
+      <dct:references scheme="OGC:WMS">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
+      <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
       <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
       <dc:creator>Dr. Sam Batzli</dc:creator>
       <dc:publisher>Space Science and Engineering Center, University of Wisconsin-Madison</dc:publisher>
       <dc:contributor>Dr. Sam Batzli</dc:contributor>
-      <dc:source>http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dc:source>
+      <dc:source>http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dc:source>
       <dc:rights>The following attribution is required if published or reproduced: Source: Space Science and Engineering Center, University of Wisconsin-Madison</dc:rights>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>42.41 -93.03</ows:LowerCorner>
