@@ -34,6 +34,10 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>Lorem ipsum dolor sit amet</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
         <dc:title>Mauris sed neque</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
@@ -42,11 +46,7 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title/>
+        <dc:title>Maecenas enim</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
@@ -54,11 +54,11 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Lorem ipsum dolor sit amet</dc:title>
+        <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Maecenas enim</dc:title>
+        <dc:title/>
       </csw:BriefRecord>
     </csw:InsertResult>
   </csw:TransactionResponse>
