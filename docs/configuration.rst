@@ -10,7 +10,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **home**: the full filesystem path to pycsw
 - **url**: the URL of the resulting service
 - **mimetype**: the MIME type when returning HTTP responses
-- **language**: the ISO 639-2 language and country code of the service (e.g. ``en-CA``)
+- **language**: the ISO 639-1 language and ISO 3166-1 alpha2 country code of the service (e.g. ``en-CA``, ``fr-CA``, ``en-US``)
 - **encoding**: the content type encoding (e.g. ``ISO-8859-1``)
 - **maxrecords**: the maximum number of records to return by default
 - **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels)
