@@ -16,7 +16,7 @@
       <gmd:contact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName>
-            <gco:CharacterString>Norman Guinasso</gco:CharacterString>
+            <gco:CharacterString>Eric Bridger</gco:CharacterString>
           </gmd:organisationName>
         </gmd:CI_ResponsibleParty>
       </gmd:contact>
@@ -34,15 +34,21 @@
           <gmd:citation>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>Texas Automated Buoy System SOS</gco:CharacterString>
+                <gco:CharacterString>Northeastern Regional Association of Coastal Ocean Observing Systems</gco:CharacterString>
               </gmd:title>
             </gmd:CI_Citation>
           </gmd:citation>
           <gmd:abstract>
-            <gco:CharacterString></gco:CharacterString>
+            <gco:CharacterString>NERACOOS supports data collected from buoys in the Gulf of Maine and Long Island Sound. The six Gulf of Maine buoys carry a comprehensive sensor suite that includes the full complement of meteorological sensors carried by the standard NDBC buoys, and in addition commonly include atmospheric visibility, surface currents, water-column current profiles, temperature and conductivity, and fluorescence (for chlorophyll a estimation) and backscatter at multiple depths.  In Long Island Sound, three buoys that measure wind speed and direction, circulation, salinity, temperature and dissolved oxygen. Two buoys will be located in western LIS (WLIS and EXRK stations) and the third will be in the Central Sound (CLIS). The buoys will be equipped with three YSI-SeaBird sensors to measure conductivity, temperature, pressure and dissolved oxygen concentration near the surface, bottom and mid-depth.  A buoy in Great Bay measures physical, optical, meteorological and wave data.</gco:CharacterString>
           </gmd:abstract>
           <gmd:descriptiveKeywords>
             <gmd:MD_Keywords>
+              <gmd:keyword>
+                <gco:CharacterString>NERACOOS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>SOS</gco:CharacterString>
+              </gmd:keyword>
               <gmd:keyword>
                 <gco:CharacterString>OCEANOGRAPHY</gco:CharacterString>
               </gmd:keyword>
@@ -50,13 +56,58 @@
                 <gco:CharacterString>Ocean Observations</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>TABS</gco:CharacterString>
+                <gco:CharacterString>Gulf of Maine</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>Gulf of Mexico</gco:CharacterString>
+                <gco:CharacterString>Long Island Sound</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>Oil Spill Response</gco:CharacterString>
+                <gco:CharacterString>Narragansett Bay</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Cape Cod</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Boston Harbor</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Buzzards Bay</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Weather</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Ocean Currents</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Water Temperature</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Salinity</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Winds</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Waves</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Ocean Color</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>GoMOOS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>LISICOS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Univ. of New Hampshire</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>MVCO</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Air Temperature</gco:CharacterString>
               </gmd:keyword>
             </gmd:MD_Keywords>
           </gmd:descriptiveKeywords>
@@ -72,19 +123,70 @@
           <srv:keywords>
             <gmd:MD_Keywords>
               <gmd:keyword>
+                <gco:CharacterString>NERACOOS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>SOS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
                 <gco:CharacterString>OCEANOGRAPHY</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
                 <gco:CharacterString>Ocean Observations</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>TABS</gco:CharacterString>
+                <gco:CharacterString>Gulf of Maine</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>Gulf of Mexico</gco:CharacterString>
+                <gco:CharacterString>Long Island Sound</gco:CharacterString>
               </gmd:keyword>
               <gmd:keyword>
-                <gco:CharacterString>Oil Spill Response</gco:CharacterString>
+                <gco:CharacterString>Narragansett Bay</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Cape Cod</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Boston Harbor</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Buzzards Bay</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Weather</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Ocean Currents</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Water Temperature</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Salinity</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Winds</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Waves</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Ocean Color</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>GoMOOS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>LISICOS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Univ. of New Hampshire</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>MVCO</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>Air Temperature</gco:CharacterString>
               </gmd:keyword>
             </gmd:MD_Keywords>
           </srv:keywords>
@@ -93,16 +195,16 @@
               <gmd:geographicElement>
                 <gmd:EX_GeographicBoundingBox>
                   <gmd:westBoundLongitude>
-                    <gco:Decimal>-97.05</gco:Decimal>
+                    <gco:Decimal>-73.73</gco:Decimal>
                   </gmd:westBoundLongitude>
                   <gmd:eastBoundLongitude>
-                    <gco:Decimal>-93.62</gco:Decimal>
+                    <gco:Decimal>-54.05</gco:Decimal>
                   </gmd:eastBoundLongitude>
                   <gmd:southBoundLatitude>
-                    <gco:Decimal>26.19</gco:Decimal>
+                    <gco:Decimal>40.88</gco:Decimal>
                   </gmd:southBoundLatitude>
                   <gmd:northBoundLatitude>
-                    <gco:Decimal>29.46</gco:Decimal>
+                    <gco:Decimal>47.79</gco:Decimal>
                   </gmd:northBoundLatitude>
                 </gmd:EX_GeographicBoundingBox>
               </gmd:geographicElement>
@@ -117,7 +219,7 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>B</gco:CharacterString>
+                <gco:CharacterString>CML</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -127,7 +229,7 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>D</gco:CharacterString>
+                <gco:CharacterString>F02</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -137,7 +239,7 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>F</gco:CharacterString>
+                <gco:CharacterString>F01</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -147,7 +249,7 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>K</gco:CharacterString>
+                <gco:CharacterString>ALL_PLATFORMS</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -157,7 +259,7 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>J</gco:CharacterString>
+                <gco:CharacterString>SMB-MO-04</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -167,7 +269,7 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>N</gco:CharacterString>
+                <gco:CharacterString>LDLC3</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -177,7 +279,7 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>R</gco:CharacterString>
+                <gco:CharacterString>CDIP154</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -187,7 +289,7 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>W</gco:CharacterString>
+                <gco:CharacterString>CDIP176</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -197,7 +299,187 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
-                <gco:CharacterString>V</gco:CharacterString>
+                <gco:CharacterString>ARTG</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>M01</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>N01</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>44039</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>SMB-MO-01</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>SMB-MO-05</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>D02</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>E02</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>E01</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>B01</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>EXRX</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>44098</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>WLIS</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>CO2</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>A01</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>MDS02</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>GREAT_BAY</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>I01</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>44060</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
           </srv:coupledResource>
@@ -215,7 +497,7 @@
               <srv:connectPoint>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</gmd:URL>
+                    <gmd:URL>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi</gmd:URL>
                   </gmd:linkage>
                 </gmd:CI_OnlineResource>
               </srv:connectPoint>
@@ -235,7 +517,7 @@
               <srv:connectPoint>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</gmd:URL>
+                    <gmd:URL>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi</gmd:URL>
                   </gmd:linkage>
                 </gmd:CI_OnlineResource>
               </srv:connectPoint>
@@ -255,21 +537,39 @@
               <srv:connectPoint>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</gmd:URL>
+                    <gmd:URL>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi</gmd:URL>
                   </gmd:linkage>
                 </gmd:CI_OnlineResource>
               </srv:connectPoint>
             </srv:SV_OperationMetadata>
           </srv:containsOperations>
-          <srv:operatesOn uuidref="B" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-B"/>
-          <srv:operatesOn uuidref="D" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-D"/>
-          <srv:operatesOn uuidref="F" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-F"/>
-          <srv:operatesOn uuidref="K" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-K"/>
-          <srv:operatesOn uuidref="J" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-J"/>
-          <srv:operatesOn uuidref="N" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-N"/>
-          <srv:operatesOn uuidref="R" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-R"/>
-          <srv:operatesOn uuidref="W" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-W"/>
-          <srv:operatesOn uuidref="V" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-V"/>
+          <srv:operatesOn uuidref="CML" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-CML"/>
+          <srv:operatesOn uuidref="F02" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-F02"/>
+          <srv:operatesOn uuidref="F01" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-F01"/>
+          <srv:operatesOn uuidref="ALL_PLATFORMS" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-ALL_PLATFORMS"/>
+          <srv:operatesOn uuidref="SMB-MO-04" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-SMB-MO-04"/>
+          <srv:operatesOn uuidref="LDLC3" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-LDLC3"/>
+          <srv:operatesOn uuidref="CDIP154" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-CDIP154"/>
+          <srv:operatesOn uuidref="CDIP176" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-CDIP176"/>
+          <srv:operatesOn uuidref="ARTG" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-ARTG"/>
+          <srv:operatesOn uuidref="M01" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-M01"/>
+          <srv:operatesOn uuidref="N01" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-N01"/>
+          <srv:operatesOn uuidref="44039" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-44039"/>
+          <srv:operatesOn uuidref="SMB-MO-01" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-SMB-MO-01"/>
+          <srv:operatesOn uuidref="SMB-MO-05" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-SMB-MO-05"/>
+          <srv:operatesOn uuidref="D02" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-D02"/>
+          <srv:operatesOn uuidref="E02" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-E02"/>
+          <srv:operatesOn uuidref="E01" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-E01"/>
+          <srv:operatesOn uuidref="B01" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-B01"/>
+          <srv:operatesOn uuidref="EXRX" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-EXRX"/>
+          <srv:operatesOn uuidref="44098" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-44098"/>
+          <srv:operatesOn uuidref="WLIS" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-WLIS"/>
+          <srv:operatesOn uuidref="CO2" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-CO2"/>
+          <srv:operatesOn uuidref="A01" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-A01"/>
+          <srv:operatesOn uuidref="MDS02" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-MDS02"/>
+          <srv:operatesOn uuidref="GREAT_BAY" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-GREAT_BAY"/>
+          <srv:operatesOn uuidref="I01" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-I01"/>
+          <srv:operatesOn uuidref="44060" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-44060"/>
         </srv:SV_ServiceIdentification>
       </gmd:identificationInfo>
       <gmd:distributionInfo>
@@ -279,7 +579,7 @@
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi</gmd:URL>
+                    <gmd:URL>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
                     <gco:CharacterString>OGC:SOS</gco:CharacterString>
@@ -295,7 +595,7 @@
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>http://tabs2.gerg.tamu.edu/cgi-bin/sos-102/oostethys_sos.cgi?version=1.0.0&amp;request=GetCapabilities&amp;service=SOS</gmd:URL>
+                    <gmd:URL>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi?version=1.0.0&amp;request=GetCapabilities&amp;service=SOS</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
                     <gco:CharacterString>OGC:SOS-1.0.0-http-get-capabilities</gco:CharacterString>
