@@ -139,7 +139,7 @@ class Repository(object):
                 self.postgis_geometry_column = str(row['f_geometry_column'])
                 temp_dbtype = 'postgresql+postgis+native'
                 LOGGER.debug('PostgreSQL+PostGIS+Native detected')
-            except:
+            except Exception, err:
                 LOGGER.debug('PostgreSQL+PostGIS+Native not picked up', str(err))
                 #pass
 
