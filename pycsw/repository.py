@@ -121,16 +121,16 @@ class Repository(object):
                 self.session.execute(select([func.postgis_version()]))
                 temp_dbtype = 'postgresql+postgis+wkt'
                 LOGGER.debug('PostgreSQL+PostGIS1+WKT detected')
-            except:
-                pass
+            except Exception, err:
+                LOGGER.debug('PostgreSQL+PostGIS1+WKT detection failed')
 
             # check if PostgreSQL is enabled with PostGIS 2.x
             try:
                 self.session.execute('select(postgis_version())')
                 temp_dbtype = 'postgresql+postgis+wkt'
                 LOGGER.debug('PostgreSQL+PostGIS2+WKT detected')
-            except:
-                pass
+            except Exception, err:
+                LOGGER.debug('PostgreSQL+PostGIS2+WKT detection failed')
 
             # check if a native PostGIS geometry column exists
             try:
@@ -141,11 +141,11 @@ class Repository(object):
                 LOGGER.debug('PostgreSQL+PostGIS+Native detected')
             except Exception, err:
                 LOGGER.debug('PostgreSQL+PostGIS+Native not picked up', str(err))
-                #pass
 
             # check if a native PostgreSQL FTS GIN index exists
             result = self.session.execute("select relname from pg_class where relname='fts_gin_idx'").scalar()
             self.fts = bool(result)
+            LOGGER.debug('PostgreSQL FTS enabled: %r', self.fts)
 
         if temp_dbtype is not None:
             LOGGER.debug('%s support detected' % temp_dbtype)
