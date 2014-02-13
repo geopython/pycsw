@@ -38,7 +38,7 @@ The 4 minute install:
 
   $ virtualenv pycsw && cd pycsw && . bin/activate
   $ git clone https://github.com/geopython/pycsw.git && cd pycsw
-  $ pip install -e . && pip install -r requirements.txt
+  $ pip install -e . && pip install -r requirements-dev.txt
   $ cp default-sample.cfg default.cfg
   $ vi default.cfg
   # adjust paths in
