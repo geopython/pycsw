@@ -164,8 +164,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         # geospatial
         Column('crs', Text, index=True),
         Column('geodescode', Text, index=True),
-        Column('denominator', Integer, index=True),
-        Column('distancevalue', Integer, index=True),
+        Column('denominator', Text, index=True),
+        Column('distancevalue', Text, index=True),
         Column('distanceuom', Text, index=True),
         Column('wkt_geometry', Text),
 
