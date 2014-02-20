@@ -212,11 +212,19 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
 
         if child.tag == util.nspath_eval('ogc:Not', nsmap):
             LOGGER.debug('ogc:Not query detected')
-            queries.append("%s = %s" %
-                           (_get_spatial_operator(
-                               queryables['pycsw:BoundingBox'],
-                               child.xpath('child::*')[0], dbtype, nsmap),
-                               boolean_false))
+            child_not = child.xpath('child::*')[0]
+            if child_not.tag in \
+                [util.nspath_eval('ogc:%s' % n, nsmap) for n in
+                    MODEL['SpatialOperators']['values']]:
+                LOGGER.debug('ogc:Not / spatial operator detected: %s' % child.tag)
+                queries.append("%s = %s" %
+                               (_get_spatial_operator(
+                                   queryables['pycsw:BoundingBox'],
+                                   child.xpath('child::*')[0], dbtype, nsmap),
+                                   boolean_false))
+            else:
+                LOGGER.debug('ogc:Not / comparison operator detected: %s' % child.tag)
+                queries.append('not %s' % _get_comparison_expression(child_not))
 
         elif child.tag in \
             [util.nspath_eval('ogc:%s' % n, nsmap) for n in
