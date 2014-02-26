@@ -33,7 +33,7 @@ import uuid
 from urlparse import urlparse
 from lxml import etree
 from owslib.util import build_get_url
-from pycsw import util
+from pycsw import links, util
 
 LOGGER = logging.getLogger(__name__)
 
@@ -848,11 +848,10 @@ def _parse_iso(context, repos, exml):
             bbox = None
 
         if (hasattr(md.identification, 'keywords') and
-        len(md.identification.keywords) > 0):
-            if None not in md.identification.keywords[0]['keywords']:
-                _set(context, recobj, 'pycsw:Keywords', ','.join(
-                md.identification.keywords[0]['keywords']))
-                _set(context, recobj, 'pycsw:KeywordType', md.identification.keywords[0]['type'])
+            len(md.identification.keywords) > 0):
+            all_keywords = [item for sublist in md.identification.keywords for item in sublist['keywords'] if item is not None]
+            _set(context, recobj, 'pycsw:Keywords', ','.join(all_keywords))
+            _set(context, recobj, 'pycsw:KeywordType', md.identification.keywords[0]['type'])
 
         if hasattr(md.identification, 'creator'):
             _set(context, recobj, 'pycsw:Creator', md.identification.creator)
@@ -930,8 +929,13 @@ def _parse_iso(context, repos, exml):
 
     if hasattr(md, 'distribution') and hasattr(md.distribution, 'online'):
         for link in md.distribution.online:
+            # if link.protocol is None, take a best guess and set
+            if link.protocol is None:
+                link_protocol = links.sniff_link(link)
+            else:
+                link_protocol = link.protocol
             linkstr = '%s,%s,%s,%s' % \
-            (link.name, link.description, link.protocol, link.url)
+            (link.name, link.description, link_protocol, link.url)
             links.append(linkstr)
 
     if len(links) > 0:
