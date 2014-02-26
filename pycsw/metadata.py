@@ -33,7 +33,7 @@ import uuid
 from urlparse import urlparse
 from lxml import etree
 from owslib.util import build_get_url
-from pycsw import links, util
+from pycsw import util
 
 LOGGER = logging.getLogger(__name__)
 
@@ -929,13 +929,8 @@ def _parse_iso(context, repos, exml):
 
     if hasattr(md, 'distribution') and hasattr(md.distribution, 'online'):
         for link in md.distribution.online:
-            # if link.protocol is None, take a best guess and set
-            if link.protocol is None:
-                link_protocol = links.sniff_link(link)
-            else:
-                link_protocol = link.protocol
             linkstr = '%s,%s,%s,%s' % \
-            (link.name, link.description, link_protocol, link.url)
+            (link.name, link.description, link.protocol, link.url)
             links.append(linkstr)
 
     if len(links) > 0:
