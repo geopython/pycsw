@@ -38,6 +38,9 @@
             <gmd:keyword>
               <gco:CharacterString>Geographic viewer (humanGeographicViewer)</gco:CharacterString>
             </gmd:keyword>
+            <gmd:keyword>
+              <gco:CharacterString>administration</gco:CharacterString>
+            </gmd:keyword>
           </gmd:MD_Keywords>
         </srv:keywords>
         <srv:extent>

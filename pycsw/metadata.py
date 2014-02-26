@@ -848,11 +848,10 @@ def _parse_iso(context, repos, exml):
             bbox = None
 
         if (hasattr(md.identification, 'keywords') and
-        len(md.identification.keywords) > 0):
-            if None not in md.identification.keywords[0]['keywords']:
-                _set(context, recobj, 'pycsw:Keywords', ','.join(
-                md.identification.keywords[0]['keywords']))
-                _set(context, recobj, 'pycsw:KeywordType', md.identification.keywords[0]['type'])
+            len(md.identification.keywords) > 0):
+            all_keywords = [item for sublist in md.identification.keywords for item in sublist['keywords'] if item is not None]
+            _set(context, recobj, 'pycsw:Keywords', ','.join(all_keywords))
+            _set(context, recobj, 'pycsw:KeywordType', md.identification.keywords[0]['type'])
 
         if hasattr(md.identification, 'creator'):
             _set(context, recobj, 'pycsw:Creator', md.identification.creator)
