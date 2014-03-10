@@ -592,22 +592,6 @@
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
-              <gmd:onLine>
-                <gmd:CI_OnlineResource>
-                  <gmd:linkage>
-                    <gmd:URL>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi?version=1.0.0&amp;request=GetCapabilities&amp;service=SOS</gmd:URL>
-                  </gmd:linkage>
-                  <gmd:protocol>
-                    <gco:CharacterString>OGC:SOS-1.0.0-http-get-capabilities</gco:CharacterString>
-                  </gmd:protocol>
-                  <gmd:name>
-                    <gco:CharacterString>PYCSW_IDENTIFIER</gco:CharacterString>
-                  </gmd:name>
-                  <gmd:description>
-                    <gco:CharacterString>OGC-SOS Capabilities service (ver 1.0.0)</gco:CharacterString>
-                  </gmd:description>
-                </gmd:CI_OnlineResource>
-              </gmd:onLine>
             </gmd:MD_DigitalTransferOptions>
           </gmd:transferOptions>
         </gmd:MD_Distribution>
@@ -837,22 +821,6 @@
                   </gmd:name>
                   <gmd:description>
                     <gco:CharacterString>OGC-SOS Sensor Observation Service</gco:CharacterString>
-                  </gmd:description>
-                </gmd:CI_OnlineResource>
-              </gmd:onLine>
-              <gmd:onLine>
-                <gmd:CI_OnlineResource>
-                  <gmd:linkage>
-                    <gmd:URL>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</gmd:URL>
-                  </gmd:linkage>
-                  <gmd:protocol>
-                    <gco:CharacterString>OGC:SOS-2.0.0-http-get-capabilities</gco:CharacterString>
-                  </gmd:protocol>
-                  <gmd:name>
-                    <gco:CharacterString>PYCSW_IDENTIFIER</gco:CharacterString>
-                  </gmd:name>
-                  <gmd:description>
-                    <gco:CharacterString>OGC-SOS Capabilities service (ver 2.0.0)</gco:CharacterString>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>

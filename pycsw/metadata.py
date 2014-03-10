@@ -173,8 +173,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
     links = [
-        '%s,OGC-CSW Catalogue Service for the Web,OGC:CSW,%s' % (identifier, md.url),
-        '%s,OGC-CSW Capabilities service (ver 2.0.2),OGC:CSW-2.0.2-http-get-capabilities,%s' % (identifier, md.url),
+        '%s,OGC-CSW Catalogue Service for the Web,OGC:CSW,%s' % (identifier, md.url)
     ]
 
     _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
@@ -307,7 +306,6 @@ def _parse_wms(context, repos, record, identifier):
 
     links = [
         '%s,OGC-WMS Web Map Service,OGC:WMS,%s' % (identifier, md.url),
-        '%s,OGC-WMS Capabilities service (ver 1.1.1),OGC:WMS-1.1.1-http-get-capabilities,%s' % (identifier, build_get_url(md.url, {'service': 'WMS', 'version': '1.1.1', 'request': 'GetCapabilities'})),
     ]
 
     _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
@@ -366,13 +364,9 @@ def _parse_wms(context, repos, record, identifier):
         }
 
         links = [
+            '%s,OGC-Web Map Service,OGC:WMS,%s' % (md.contents[layer].name, md.url),
             '%s,Web image thumbnail (URL),WWW:LINK-1.0-http--image-thumbnail,%s' % (md.contents[layer].name, build_get_url(md.url, params))
         ]
-
-        params['width'] = '500'
-        params['height'] = '300'
-
-        links.append('%s,OGC Web Map Service (ver 1.1.1),OGC:WMS-1.1.1-http-get-map,%s' % (md.contents[layer].name, build_get_url(md.url, params)))
 
         _set(context, recobj, 'pycsw:Links', '^'.join(links))
 
@@ -419,8 +413,7 @@ def _parse_wfs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
     links = [
-        '%s,OGC-WFS Web Feature Service,OGC:WFS,%s' % (identifier, md.url),
-        '%s,OGC-WFS Capabilities service (ver 1.1.0),OGC:WFS-1.1.0-http-get-capabilities,%s' % (identifier, build_get_url(md.url, {'service': 'WFS', 'version': '1.1.0', 'request': 'GetCapabilities'})),
+        '%s,OGC-WFS Web Feature Service,OGC:WFS,%s' % (identifier, md.url)
     ]
 
     _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
@@ -466,6 +459,7 @@ def _parse_wfs(context, repos, record, identifier):
         }
 
         links = [
+            '%s,OGC-Web Feature Service,OGC:WFS,%s' % (md.contents[featuretype].id, md.url),
             '%s,File for download,WWW:DOWNLOAD-1.0-http--download,%s' % (md.contents[featuretype].id, build_get_url(md.url, params))
         ]
 
@@ -523,8 +517,7 @@ def _parse_wcs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
     links = [
-        '%s,OGC-WCS Web Coverage Service,OGC:WCS,%s' % (identifier, md.url),
-        '%s,OGC-WCS Capabilities service (ver 1.0.0),OGC:WCS-1.1.0-http-get-capabilities,%s' % (identifier, build_get_url(md.url, {'service': 'WCS', 'version': '1.0.0', 'request': 'GetCapabilities'})),
+        '%s,OGC-WCS Web Coverage Service,OGC:WCS,%s' % (identifier, md.url)
     ]
 
     _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
@@ -561,6 +554,12 @@ def _parse_wcs(context, repos, record, identifier):
             _set(context, recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:4326')
             _set(context, recobj, 'pycsw:DistanceUOM', 'degrees')
             bboxs.append(wkt_polygon)
+
+        links = [
+            '%s,OGC-Web Coverage Service,OGC:WCS,%s' % (md.contents[coverage].id, md.url)
+        ]
+
+        _set(context, recobj, 'pycsw:Links', '^'.join(links))
 
         recobjs.append(recobj)
 
@@ -665,7 +664,6 @@ def _parse_sos(context, repos, record, identifier, version):
 
     links = [
         '%s,OGC-SOS Sensor Observation Service,OGC:SOS,%s' % (identifier, md.url),
-        '%s,OGC-SOS Capabilities service (ver %s),OGC:SOS-%s-http-get-capabilities,%s' % (identifier, version, version, build_get_url(md.url, {'service': 'SOS', 'version': version, 'request': 'GetCapabilities'})),
     ]
 
     _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
