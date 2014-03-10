@@ -14,7 +14,6 @@
       <dc:subject>reference implementation</dc:subject>
       <dc:format>CSW</dc:format>
       <dct:references scheme="OGC:CSW">http://demo.pycsw.org/cite/csw</dct:references>
-      <dct:references scheme="OGC:CSW-2.0.2-http-get-capabilities">http://demo.pycsw.org/cite/csw</dct:references>
       <dct:abstract>pycsw is an OGC CSW server implementation written in Python. pycsw fully implements the OpenGIS Catalogue Service Implementation Specification [Catalogue Service for the Web]. Initial development started in 2010 (more formally announced in 2011). The project is certified OGC Compliant, and is an OGC Reference Implementation. pycsw allows for the publishing and discovery of geospatial metadata. Existing repositories of geospatial metadata can also be exposed via OGC:CSW 2.0.2, providing a standards-based metadata and catalogue component of spatial data infrastructures. pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X)</dct:abstract>
       <dc:creator>Lastname, Firstname</dc:creator>
       <dc:publisher>Organization Name</dc:publisher>
@@ -50,7 +49,6 @@
       <dc:subject>Air Temperature</dc:subject>
       <dc:format>OGC:SOS</dc:format>
       <dct:references scheme="OGC:SOS">http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi</dct:references>
-      <dct:references scheme="OGC:SOS-1.0.0-http-get-capabilities">http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi?version=1.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
       <dct:abstract>NERACOOS supports data collected from buoys in the Gulf of Maine and Long Island Sound. The six Gulf of Maine buoys carry a comprehensive sensor suite that includes the full complement of meteorological sensors carried by the standard NDBC buoys, and in addition commonly include atmospheric visibility, surface currents, water-column current profiles, temperature and conductivity, and fluorescence (for chlorophyll a estimation) and backscatter at multiple depths.  In Long Island Sound, three buoys that measure wind speed and direction, circulation, salinity, temperature and dissolved oxygen. Two buoys will be located in western LIS (WLIS and EXRK stations) and the third will be in the Central Sound (CLIS). The buoys will be equipped with three YSI-SeaBird sensors to measure conductivity, temperature, pressure and dissolved oxygen concentration near the surface, bottom and mid-depth.  A buoy in Great Bay measures physical, optical, meteorological and wave data.</dct:abstract>
       <dc:creator>Eric Bridger</dc:creator>
       <dc:publisher>NERACOOS</dc:publisher>
@@ -74,7 +72,6 @@
       <dc:subject>Nova Scotia</dc:subject>
       <dc:format>OGC:SOS</dc:format>
       <dct:references scheme="OGC:SOS">http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</dct:references>
-      <dct:references scheme="OGC:SOS-2.0.0-http-get-capabilities">http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw?version=2.0.0&amp;request=GetCapabilities&amp;service=SOS</dct:references>
       <dct:abstract>Historical groundwater  level  monitoring stations from Alberta, Ontario and Nova Scotia. This SOS web service delivers the data using OGC's WaterML 2.0. The SOS service federates data from various  provincial  sources and publishes  them as a single service.   Many monitoring stations also have water well characteristics available  through the  GIN WFS  web service.</dct:abstract>
       <dc:creator>Boyan Brodaric</dc:creator>
       <dc:publisher>Geological Survey of Canada, Earth Sciences Sector, Natural Resources Canada, Government of Canada</dc:publisher>
@@ -106,7 +103,6 @@
       <dc:subject>Snow Water Equivalent</dc:subject>
       <dc:format>OGC:WCS</dc:format>
       <dct:references scheme="OGC:WCS">http://nsidc.org/cgi-bin/atlas_north</dct:references>
-      <dct:references scheme="OGC:WCS-1.1.0-http-get-capabilities">http://nsidc.org/cgi-bin/atlas_north?version=1.0.0&amp;request=GetCapabilities&amp;service=WCS</dct:references>
       <dct:abstract>The National Snow and Ice Data Center (NSIDC) Atlas of the Cryosphere is a map server that provides data and information pertinent to the frozen regions of Earth, including monthly climatologies of sea ice extent and concentration, snow cover extent, and snow water equivalent, in addition to glacier outlines, permafrost extent and classification, ice sheet elevation and accumulation, and more. In order to support polar projections, the Atlas is divided into two separate map servers: one for the Northern Hemisphere and one for the Southern Hemisphere. In addition to providing map images and source data through Open Geospatial Consortium, Inc. (OGC) protocols (WMS, WFS, and WCS), a dynamic web interface for exploring these data is also available at http://nsidc.org/data/atlas. If you have questions, comments or suggestions, please contact NSIDC User Services at +1.303.492.6199 or nsidc@nsidc.org. The development of this map server application was supported by NASA's Earth Observing System (EOS) Program under contract NAS5-03099 and was developed using MapServer, an Open Source development environment for building spatially-enabled internet applications. To cite the Atlas of the Cryosphere: Maurer, J. 2007. Atlas of the Cryosphere. Boulder, Colorado USA: National Snow and Ice Data Center. Digital media. Available at http://nsidc.org/data/atlas/.</dct:abstract>
       <dc:creator>NSIDC User Services</dc:creator>
       <dc:publisher>National Snow and Ice Data Center</dc:publisher>
@@ -135,7 +131,6 @@
       <dc:subject>land</dc:subject>
       <dc:format>OGC:WMS</dc:format>
       <dct:references scheme="OGC:WMS">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
-      <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
       <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
       <dc:creator>Dr. Sam Batzli</dc:creator>
       <dc:publisher>Space Science and Engineering Center, University of Wisconsin-Madison</dc:publisher>
