@@ -16,8 +16,8 @@
       <dc:subject>Madison</dc:subject>
       <dc:subject>weather</dc:subject>
       <dc:subject>land</dc:subject>
+      <dct:references scheme="OGC:WMS">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
       <dct:references scheme="WWW:LINK-1.0-http--image-thumbnail">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;layers=LakeClarity&amp;width=200&amp;version=1.1.1&amp;bbox=-93.0307%2C42.4104%2C-86.6404%2C47.1335&amp;service=WMS&amp;format=image%2Fpng&amp;styles=&amp;srs=EPSG%3A4326&amp;request=GetMap&amp;height=200</dct:references>
-      <dct:references scheme="OGC:WMS-1.1.1-http-get-map">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;layers=LakeClarity&amp;width=500&amp;version=1.1.1&amp;bbox=-93.0307%2C42.4104%2C-86.6404%2C47.1335&amp;service=WMS&amp;format=image%2Fpng&amp;styles=&amp;srs=EPSG%3A4326&amp;request=GetMap&amp;height=300</dct:references>
       <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
       <dc:source>http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dc:source>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">

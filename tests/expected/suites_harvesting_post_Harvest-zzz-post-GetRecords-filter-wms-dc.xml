@@ -18,7 +18,6 @@
       <dc:subject>land</dc:subject>
       <dc:format>OGC:WMS</dc:format>
       <dct:references scheme="OGC:WMS">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
-      <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
       <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
       <dc:creator>Dr. Sam Batzli</dc:creator>
       <dc:publisher>Space Science and Engineering Center, University of Wisconsin-Madison</dc:publisher>
