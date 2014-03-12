@@ -125,13 +125,13 @@ class GeoNodeRepository(object):
                 if sortby['order'] == 'DESC':
                     desc = True
                 query = query.all()
-                return [str(total), sorted(query, key=lambda x: float(util.get_geometry_area(getattr(x, sortby['propertyname']))), reverse=desc)[startposition:startposition+maxrecords]]
+                return [str(total), sorted(query, key=lambda x: float(util.get_geometry_area(getattr(x, sortby['propertyname']))), reverse=desc)[startposition:startposition+int(maxrecords)]]
             else:
                 if sortby['order'] == 'DESC':
                     pname = '-%s' % sortby['propertyname']
                 else:
                     pname = sortby['propertyname']
                 return [str(total), \
-                query.order_by(pname)[startposition:startposition+maxrecords]]
+                query.order_by(pname)[startposition:startposition+int(maxrecords)]]
         else:  # no sort
-            return [str(total), query.all()[startposition:startposition+maxrecords]]
+            return [str(total), query.all()[startposition:startposition+int(maxrecords)]]
