@@ -61,13 +61,15 @@ Ensure that CGI is enabled for the install directory.  For example, on Apache, i
 .. code-block:: none
 
   <Location /pycsw/>
-   Options FollowSymLinks +ExecCGI
+   Options +FollowSymLinks +ExecCGI
    Allow from all
    AddHandler cgi-script .py
   </Location>
 
 .. note::
   If pycsw is installed in ``cgi-bin``, this should work as expected.  In this case, the :ref:`tests <tests>` application must be moved to a different location to serve static HTML documents.
+
+Make shure, you have all the dependences from ``requirements-dev.txt``
 
 The Clean and Proper Way
 ^^^^^^^^^^^^^^^^^^^^^^^^
