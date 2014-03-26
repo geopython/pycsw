@@ -143,6 +143,11 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy'):
             com_op = 'ilike' if dbtype in \
                 ['postgresql', 'postgresql+postgis+wkt', 'postgresql+postgis+native'] else 'like'
 
+            LOGGER.debug('Padding anytext literal')
+            LOGGER.debug('old value: %s', pval)
+            pvalue = '%%%s%%' % pvalue.rstrip('%').lstrip('%')
+            LOGGER.debug('new value: %s', pvalue)
+
         if (elem.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
             com_op = 'between'
             lower_boundary = elem.find(
