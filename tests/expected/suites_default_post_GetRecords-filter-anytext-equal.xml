@@ -14,6 +14,11 @@
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
     </csw:BriefRecord>
     <csw:BriefRecord>
+      <dc:identifier>urn:uuid:ab42a8c4-95e8-4630-bf79-33e59241605a</dc:identifier>
+      <dc:title></dc:title>
+      <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
       <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
       <dc:title>Mauris sed neque</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
@@ -26,11 +31,6 @@
       <dc:identifier>urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</dc:identifier>
       <dc:title>Lorem ipsum dolor sit amet</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
-    </csw:BriefRecord>
-    <csw:BriefRecord>
-      <dc:identifier>urn:uuid:ab42a8c4-95e8-4630-bf79-33e59241605a</dc:identifier>
-      <dc:title></dc:title>
-      <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
     </csw:BriefRecord>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
