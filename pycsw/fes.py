@@ -168,6 +168,14 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                 LOGGER.debug('PostgreSQL non-FTS specific search')
                 pvalue = pval.replace(wildcard, '%').replace(singlechar, '_')
 
+                if pname == anytext:  # pad anytext with wildcards
+                    LOGGER.debug('PostgreSQL non-FTS specific anytext search')
+                    LOGGER.debug('old value: %s', pval)
+
+                    pvalue = '%%%s%%' % pvalue.rstrip('%').lstrip('%')
+
+                    LOGGER.debug('new value: %s', pvalue)
+
             values.append(pvalue)
 
             if boq == ' not ':
