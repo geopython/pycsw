@@ -465,7 +465,7 @@ class APISO(profile.Profile):
         if val is not None:
             tmp3.append(_write_date(val, 'publication', self.namespaces))
         # revision date
-        val = util.getqattr(result, queryables['apiso:RevisionDate']['dbcol']) or util.getqattr(result, queryables['apiso:Modified']['dbcol'])
+        val = util.getqattr(result, queryables['apiso:RevisionDate']['dbcol'])
         if val is not None:
             tmp3.append(_write_date(val, 'revision', self.namespaces))
 

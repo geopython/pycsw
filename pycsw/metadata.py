@@ -818,6 +818,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:Type', md.hierarchy)
     _set(context, recobj, 'pycsw:ParentIdentifier', md.parentidentifier)
     _set(context, recobj, 'pycsw:Date', md.datestamp)
+    _set(context, recobj, 'pycsw:Modified', md.datestamp)
     _set(context, recobj, 'pycsw:Source', md.dataseturi)
     if md.referencesystem is not None:
         _set(context, recobj, 'pycsw:CRS','urn:ogc:def:crs:EPSG:6.11:%s' %
