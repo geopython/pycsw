@@ -932,7 +932,7 @@ def _parse_iso(context, repos, exml):
         if hasattr(md.distribution, 'online'):
             LOGGER.debug('Scanning for gmd:transferOptions element(s)')
             dist_links.extend(md.distribution.online)
-        if md.distribution.distributor:
+        if hasattr(md.distribution, 'distributor'):
             LOGGER.debug('Scanning for gmd:distributorTransferOptions element(s)')
             for dist_member in md.distribution.distributor:
                 dist_links.extend(dist_member.online)

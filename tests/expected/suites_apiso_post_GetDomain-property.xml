@@ -4,6 +4,7 @@
   <csw:DomainValues type="csw:Record">
     <csw:PropertyName>apiso:TopicCategory</csw:PropertyName>
     <csw:ListOfValues>
+      <csw:Value>climatologyMeteorologyAtmosphere</csw:Value>
       <csw:Value>elevation</csw:Value>
       <csw:Value>geoscientificInformation</csw:Value>
     </csw:ListOfValues>
