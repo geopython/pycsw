@@ -926,11 +926,33 @@ def _parse_iso(context, repos, exml):
     if hasattr(md, 'contact') and len(md.contact) > 0:
         _set(context, recobj, 'pycsw:ResponsiblePartyRole', md.contact[0].role)
 
-    if hasattr(md, 'distribution') and hasattr(md.distribution, 'online'):
-        for link in md.distribution.online:
+    LOGGER.info('Scanning for links')
+    if hasattr(md, 'distribution'):
+        dist_links = []
+        if hasattr(md.distribution, 'online'):
+            LOGGER.debug('Scanning for gmd:transferOptions element(s)')
+            dist_links.extend(md.distribution.online)
+        if hasattr(md.distribution, 'distributor'):
+            LOGGER.debug('Scanning for gmd:distributorTransferOptions element(s)')
+            for dist_member in md.distribution.distributor:
+                dist_links.extend(dist_member.online)
+        for link in dist_links:
             linkstr = '%s,%s,%s,%s' % \
             (link.name, link.description, link.protocol, link.url)
             links.append(linkstr)
+
+    try:
+        LOGGER.debug('Scanning for srv:SV_ServiceIdentification links')
+        for sident in md.identificationinfo:
+            if hasattr(sident, 'operations'):
+                for sops in sident.operations:
+                    for scpt in sops['connectpoint']:
+                        LOGGER.debug('adding srv link %s', scpt.url)
+                        linkstr = '%s,%s,%s,%s' % \
+                        (scpt.name, scpt.description, scpt.protocol, scpt.url)
+                        links.append(linkstr)
+    except Exception, err:  # srv: identification does not exist
+        LOGGER.debug('no srv:SV_ServiceIdentification links found')
 
     if len(links) > 0:
         _set(context, recobj, 'pycsw:Links', '^'.join(links))
