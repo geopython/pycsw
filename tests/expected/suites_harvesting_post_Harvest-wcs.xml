@@ -10,7 +10,7 @@
     <csw:InsertResult>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>MapServer WCS</dc:title>
+        <dc:title>Atlas of the Cryosphere: Northern Hemisphere</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-snow_water_equivalent_09</dc:identifier>

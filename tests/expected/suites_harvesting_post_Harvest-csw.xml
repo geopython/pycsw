@@ -14,11 +14,15 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>Lorem ipsum</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
         <dc:title/>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Aliquam fermentum purus quis arcu</dc:title>
+        <dc:title>Maecenas enim</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
@@ -26,7 +30,19 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>Aliquam fermentum purus quis arcu</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>Vestibulum massa purus</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
         <dc:title/>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>Mauris sed neque</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
@@ -38,27 +54,11 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Mauris sed neque</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Vestibulum massa purus</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Maecenas enim</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Lorem ipsum</dc:title>
+        <dc:title/>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
         <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title/>
       </csw:BriefRecord>
     </csw:InsertResult>
   </csw:TransactionResponse>
