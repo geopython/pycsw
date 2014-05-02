@@ -73,7 +73,7 @@ This section will guide you through steps of working on pycsw.  This section ass
   # clone the repository locally
   $ git clone git@github.com:USERNAME/pycsw.git
   $ cd pycsw
-  $ pip install -e . && pip install -r requirements.txt
+  $ pip install -e . && pip install -r requirements-standalone.txt
   # add the main pycsw master branch to keep up to date with upstream changes
   $ git remote add upstream https://github.com/geopython/pycsw.git
   $ git pull upstream master
