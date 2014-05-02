@@ -1,0 +1,2 @@
+psycopg2
+SQLAlchemy>=0.6
