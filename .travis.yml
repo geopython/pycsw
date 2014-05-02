@@ -8,6 +8,7 @@ install:
   - sudo apt-get install -y libgeos-c1
   - pip install . --use-mirrors
   - pip install -r ./requirements-standalone.txt
+  - pip install -r ./requirements-dev.txt
   - python ./setup.py -q install
 
 #before_script:
