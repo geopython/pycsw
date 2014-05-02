@@ -38,7 +38,7 @@ The 4 minute install:
 
   $ virtualenv pycsw && cd pycsw && . bin/activate
   $ git clone https://github.com/geopython/pycsw.git && cd pycsw
-  $ pip install -e . && pip install -r requirements-dev.txt
+  $ pip install -e . && pip install -r requirements-standalone.txt
   $ cp default-sample.cfg default.cfg
   $ vi default.cfg
   # adjust paths in
@@ -68,6 +68,8 @@ Ensure that CGI is enabled for the install directory.  For example, on Apache, i
 
 .. note::
   If pycsw is installed in ``cgi-bin``, this should work as expected.  In this case, the :ref:`tests <tests>` application must be moved to a different location to serve static HTML documents.
+
+Make shure, you have all the dependences from ``requirements.txt and requirements-standalone.txt``
 
 The Clean and Proper Way
 ^^^^^^^^^^^^^^^^^^^^^^^^
