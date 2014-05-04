@@ -2,6 +2,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2012 Tom Kralidis
 #
@@ -31,6 +32,7 @@
 from lxml import etree
 from pycsw import util
 
+
 class OpenSearch(object):
     """OpenSearch wrapper class"""
 
@@ -50,20 +52,60 @@ class OpenSearch(object):
 
         if util.xmltag_split(element.tag) == 'GetRecordsResponse':
 
-            startindex = int(element.xpath('//@nextRecord')[0]) - int(element.xpath('//@numberOfRecordsReturned')[0])
+            startindex = int(element.xpath('//@nextRecord')[0]) - int(
+                        element.xpath('//@numberOfRecordsReturned')[0])
             if startindex < 1:
                 startindex = 1
 
-            node = etree.Element(util.nspath_eval('atom:feed', self.context.namespaces), nsmap=self.namespaces)
-            etree.SubElement(node, util.nspath_eval('atom:id', self.context.namespaces)).text = cfg.get('server', 'url')
-            etree.SubElement(node, util.nspath_eval('atom:title', self.context.namespaces)).text = cfg.get('metadata:main', 'identification_title')
-            #etree.SubElement(node, util.nspath_eval('atom:updated', self.context.namespaces)).text = element.xpath('//@timestamp')[0]
+            node = etree.Element(util.nspath_eval('atom:feed',
+                       self.context.namespaces), nsmap=self.namespaces)
+            etree.SubElement(node, util.nspath_eval('atom:id',
+                       self.context.namespaces)).text = cfg.get('server', 'url')
+            etree.SubElement(node, util.nspath_eval('atom:title',
+                       self.context.namespaces)).text = cfg.get('metadata:main',
+                       'identification_title')
+            #etree.SubElement(node, util.nspath_eval('atom:updated',
+            #  self.context.namespaces)).text = element.xpath('//@timestamp')[0]
 
-            etree.SubElement(node, util.nspath_eval('opensearch:totalResults', self.context.namespaces)).text = element.xpath('//@numberOfRecordsMatched')[0]
-            etree.SubElement(node, util.nspath_eval('opensearch:startIndex', self.context.namespaces)).text = str(startindex)
-            etree.SubElement(node, util.nspath_eval('opensearch:itemsPerPage', self.context.namespaces)).text = element.xpath('//@numberOfRecordsReturned')[0]
+            etree.SubElement(node, util.nspath_eval('opensearch:totalResults',
+                        self.context.namespaces)).text = element.xpath(
+                        '//@numberOfRecordsMatched')[0]
+            etree.SubElement(node, util.nspath_eval('opensearch:startIndex',
+                        self.context.namespaces)).text = str(startindex)
+            etree.SubElement(node, util.nspath_eval('opensearch:itemsPerPage',
+                        self.context.namespaces)).text = element.xpath(
+                        '//@numberOfRecordsReturned')[0]
 
-            for rec in element.xpath('//atom:entry', namespaces=self.context.namespaces):
+            for rec in element.xpath('//atom:entry',
+                        namespaces=self.context.namespaces):
                 node.append(rec)
 
         return node
+
+
+def kvp2filterxml(kvp, context):
+    filter_xml = ""
+    valid_xml = ""
+    # Parse KVP and detect which of the parameters exist 
+
+    # Create FilterXML
+
+    record = etree.Element(util.nspath_eval('ogc:Filter',
+                 context.namespaces))
+    filter_xml = etree.tostring(record, pretty_print=True)
+
+    # Validate the created XML
+    try:
+        schema = os.path.join(self.config.get('server', 'home'),
+                            'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
+                            self.kvp['constraint'])
+        schema = etree.XMLSchema(file=schema)
+        parser = etree.XMLParser(schema=schema)
+        doc = etree.fromstring(filter_xml, parser)
+        valid_xml = filter_xml #It is valid
+    except Exception, err:
+        errortext = 'Exception: OpenSearch Filter XML document not valid.\nError: %s.' % str(err)
+        LOGGER.debug(errortext)
+        newxml = ""
+        
+    return valid_xml
