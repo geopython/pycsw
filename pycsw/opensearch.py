@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2012 Tom Kralidis
+# Copyright (c) 2014 Tom Kralidis, Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -84,15 +84,81 @@ class OpenSearch(object):
 
 
 def kvp2filterxml(kvp, context):
+
     filter_xml = ""
     valid_xml = ""
-    # Parse KVP and detect which of the parameters exist 
 
-    # Create FilterXML
+    # Count parameters
+    par_count = 0
+    if 'q' in kvp:
+        par_count += 1
+    if 'time' in kvp:
+        par_count += 1
+    if 'bbox' in kvp:
+        par_count += 1
 
-    record = etree.Element(util.nspath_eval('ogc:Filter',
-                 context.namespaces))
-    filter_xml = etree.tostring(record, pretty_print=True)
+    # Create root element for FilterXML
+    root = etree.Element(util.nspath_eval('ogc:Filter',
+                context.namespaces))
+    # Parse BBOX
+    if 'bbox' in kvp:
+        bbox_element = etree.Element(util.nspath_eval('ogc:BBOX',
+                    context.namespaces))
+        el = etree.Element(util.nspath_eval('ogc:PropertyName',
+                    context.namespaces))
+        el.text = 'ows:BoundingBox'
+        bbox_element.append(el)
+        env = etree.Element(util.nspath_eval('gml:Envelope',
+                    context.namespaces))
+        el = etree.Element(util.nspath_eval('gml:lowerCorner',
+                    context.namespaces))
+        #el.text =
+        env.append(el)
+        el = etree.Element(util.nspath_eval('gml:upperCorner',
+                    context.namespaces))
+        #el.text =
+        env.append(el)
+        bbox_element.append(env)
+
+    # Parse q
+    if 'q' in kvp:
+        anytext_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo',
+                    context.namespaces))
+        el = etree.Element(util.nspath_eval('ogc:PropertyName',
+                    context.namespaces))
+        el.text = csw:AnyText
+        anytext_element.append(el)
+        el = etree.Element(util.nspath_eval('ogc:Literal',
+                    context.namespaces))
+        el.text = kvp['q']
+        anytext_element.append(el)
+
+    if 'time' in kvp:
+        time_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo',
+                    context.namespaces))
+
+    if (par_count == 1):
+        # Only one OpenSearch parameter exists
+        if 'bbox' in kvp:
+            root.append(bbox_element)
+        elif 'time' in kvp:
+            root.append(time_element)
+        elif 'q' in kvp:
+            root.append(anytext_element)
+    elif (par_count > 1):
+        # Since more than 1 parameter, append the AND logical operator
+        logical_and = etree.Element(util.nspath_eval('ogc:And',
+                context.namespaces))
+        if 'bbox' in kvp:
+            logical_and.append(bbox_element)
+        if 'time' in kvp:
+            logical_and.append(time_element)
+        if 'q' in kvp:
+            logical_and.append(anytext_element)
+        root.append(logical_and)
+
+    # Render etree to string XML
+    filter_xml = etree.tostring(root, pretty_print=True)
 
     # Validate the created XML
     try:
