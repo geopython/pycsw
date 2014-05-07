@@ -1223,8 +1223,10 @@ class Csw(object):
         if any(x in ['bbox', 'q', 'time'] for x in self.kvp):
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
             self.kvp['constraintlanguage'] = 'FILTER'
-            self.kvp['constraint'] = opensearch.kvp2filterxml(self.kvp, self.context)
-            LOGGER.debug('OpenSearch Geo/Time parameters to Filter: %s.' % self.kvp['constraint'])
+            tmp_filter = opensearch.kvp2filterxml(self.kvp, self.context)
+            if tmp_filter is not "":
+                self.kvp['constraint'] = tmp_filter
+                LOGGER.debug('OpenSearch Geo/Time parameters to Filter: %s.' % self.kvp['constraint'])
 
         if self.requesttype == 'GET':
             if 'constraint' in self.kvp:
