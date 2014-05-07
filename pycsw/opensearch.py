@@ -92,7 +92,9 @@ def kvp2filterxml(kvp, context):
     par_count = 0
     if 'q' in kvp:
         par_count += 1
-    if 'time' in kvp:
+    if 'timestart' in kvp:
+        par_count += 1
+    if 'timestop' in kvp:
         par_count += 1
     if 'bbox' in kvp:
         par_count += 1
@@ -100,8 +102,11 @@ def kvp2filterxml(kvp, context):
     # Create root element for FilterXML
     root = etree.Element(util.nspath_eval('ogc:Filter',
                 context.namespaces))
-    # Parse BBOX
+
+    # bbox to FilterXML
     if 'bbox' in kvp:
+        box_str = kvp['bbox']
+        bbox_list = [x.strip() for x in box_str.split(',')]
         bbox_element = etree.Element(util.nspath_eval('ogc:BBOX',
                     context.namespaces))
         el = etree.Element(util.nspath_eval('ogc:PropertyName',
@@ -112,15 +117,23 @@ def kvp2filterxml(kvp, context):
                     context.namespaces))
         el = etree.Element(util.nspath_eval('gml:lowerCorner',
                     context.namespaces))
-        #el.text =
+        try:
+            el.text = "%s %s" % (bbox_list[0], bbox_list[1])
+        except Exception, err:
+            errortext = 'Exception: OpenSearch bbox not valid.\nError: %s.' % str(err)
+            LOGGER.debug(errortext)
         env.append(el)
         el = etree.Element(util.nspath_eval('gml:upperCorner',
                     context.namespaces))
-        #el.text =
+        try:
+            el.text = "%s %s" % (bbox_list[2], bbox_list[3])
+        except Exception, err:
+            errortext = 'Exception: OpenSearch bbox not valid.\nError: %s.' % str(err)
+            LOGGER.debug(errortext)
         env.append(el)
         bbox_element.append(env)
 
-    # Parse q
+    # q to FilterXML
     if 'q' in kvp:
         anytext_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo',
                     context.namespaces))
@@ -133,16 +146,23 @@ def kvp2filterxml(kvp, context):
         el.text = kvp['q']
         anytext_element.append(el)
 
-    if 'time' in kvp:
-        time_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo',
+    # time to FilterXML
+    if 'timestart' in kvp:
+        timestart_element = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo',
+                    context.namespaces))
+
+    if 'timestop' in kvp:
+        timestop_element = etree.Element(util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo',
                     context.namespaces))
 
     if (par_count == 1):
         # Only one OpenSearch parameter exists
         if 'bbox' in kvp:
             root.append(bbox_element)
-        elif 'time' in kvp:
-            root.append(time_element)
+        elif 'timestart' in kvp:
+            root.append(timestart_element)
+        elif 'timestop' in kvp:
+            root.append(timestop_element)
         elif 'q' in kvp:
             root.append(anytext_element)
     elif (par_count > 1):
@@ -151,8 +171,10 @@ def kvp2filterxml(kvp, context):
                 context.namespaces))
         if 'bbox' in kvp:
             logical_and.append(bbox_element)
-        if 'time' in kvp:
-            logical_and.append(time_element)
+        if 'timestart' in kvp:
+            logical_and.append(timestart_element)
+        if 'timestop' in kvp:
+            logical_and.append(timestop_element)
         if 'q' in kvp:
             logical_and.append(anytext_element)
         root.append(logical_and)
@@ -172,6 +194,5 @@ def kvp2filterxml(kvp, context):
     except Exception, err:
         errortext = 'Exception: OpenSearch Filter XML document not valid.\nError: %s.' % str(err)
         LOGGER.debug(errortext)
-        newxml = ""
-        
+
     return valid_xml

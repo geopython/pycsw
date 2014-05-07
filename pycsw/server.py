@@ -429,7 +429,7 @@ class Csw(object):
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
         if (not isinstance(self.kvp, str) and
-        ('q' in self.kvp or 'time' in self.kvp or 'bbox' in self.kvp)):
+        ('q' in self.kvp or 'timestart' in self.kvp or 'timestop' in self.kvp or 'bbox' in self.kvp)):
             # Add mode parameter if missing (needs to be removed for CSW3)
             self.mode = 'opensearch'
             LOGGER.debug('OpenSearch Geo/Time mode detected; processing request.')
@@ -1221,9 +1221,8 @@ class Csw(object):
         if 'maxrecords' not in self.kvp:
             self.kvp['maxrecords'] = int(self.config.get('server', 'maxrecords'))
 
-        if 'bbox' in self.kvp or 'time' in self.kvp or 'q' in self.kvp:
+        if 'bbox' in self.kvp or 'timestart' in self.kvp or 'timestop' in self.kvp or 'q' in self.kvp:
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
-            #Parse kvp and make a Filter XML from OpenSearch module
             self.kvp['constraintlanguage'] = 'FILTER'
             self.kvp['constraint'] = opensearch.kvp2filterxml(self.kvp, self.context)
             LOGGER.debug('OpenSearch Geo/Time parameters to Filter: %s.' % self.kvp['constraint'])
