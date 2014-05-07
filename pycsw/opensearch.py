@@ -92,7 +92,7 @@ def kvp2filterxml(kvp, context):
 
     # Count parameters
     par_count = 0
-    for p in ['q','bbox','timestart','timestop']:
+    for p in ['q','bbox','time']:
         if p in kvp:
             par_count += 1
 
@@ -143,38 +143,24 @@ def kvp2filterxml(kvp, context):
         anytext_element.append(el)
 
     # time to FilterXML
-    if 'timestart' in kvp:
-        timestart_element = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo',
+    if 'time' in kvp:
+        time_element = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo',
                     context.namespaces))
         el = etree.Element(util.nspath_eval('ogc:PropertyName',
                     context.namespaces))
         el.text = 'dc:date'
-        timestart_element.append(el)
+        time_element.append(el)
         el = etree.Element(util.nspath_eval('ogc:Literal',
                     context.namespaces))
         el.text = kvp['timestart'] #TODO:Format validation
-        timestart_element.append(el)
-
-    if 'timestop' in kvp:
-        timestop_element = etree.Element(util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo',
-                    context.namespaces))
-        el = etree.Element(util.nspath_eval('ogc:PropertyName',
-                    context.namespaces))
-        el.text = 'dc:date'
-        timestop_element.append(el)
-        el = etree.Element(util.nspath_eval('ogc:Literal',
-                    context.namespaces))
-        el.text = kvp['timestop'] #TODO:Format validation
-        timestop_element.append(el)
+        time_element.append(el)
 
     if (par_count == 1):
         # Only one OpenSearch parameter exists
         if 'bbox' in kvp:
             root.append(bbox_element)
-        elif 'timestart' in kvp:
-            root.append(timestart_element)
-        elif 'timestop' in kvp:
-            root.append(timestop_element)
+        elif 'time' in kvp:
+            root.append(time_element)
         elif 'q' in kvp:
             root.append(anytext_element)
     elif (par_count > 1):
@@ -183,10 +169,8 @@ def kvp2filterxml(kvp, context):
                 context.namespaces))
         if 'bbox' in kvp:
             logical_and.append(bbox_element)
-        if 'timestart' in kvp:
-            logical_and.append(timestart_element)
-        if 'timestop' in kvp:
-            logical_and.append(timestop_element)
+        if 'time' in kvp:
+            logical_and.append(time_element)
         if 'q' in kvp:
             logical_and.append(anytext_element)
         root.append(logical_and)
