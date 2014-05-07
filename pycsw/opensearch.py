@@ -144,16 +144,72 @@ def kvp2filterxml(kvp, context):
 
     # time to FilterXML
     if 'time' in kvp:
-        time_element = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo',
-                    context.namespaces))
-        el = etree.Element(util.nspath_eval('ogc:PropertyName',
-                    context.namespaces))
-        el.text = 'dc:date'
-        time_element.append(el)
-        el = etree.Element(util.nspath_eval('ogc:Literal',
-                    context.namespaces))
-        el.text = kvp['timestart'] #TODO:Format validation
-        time_element.append(el)
+        time_list = kvp['time'].split("/")
+        time_element = None
+        if (len(time_list) == 2):
+            # This is a normal request
+            if '' not in time_list:
+                # Both dates are present
+                time_element = etree.Element(util.nspath_eval('ogc:PropertyIsBetween',
+                            context.namespaces))
+                el = etree.Element(util.nspath_eval('ogc:PropertyName',
+                            context.namespaces))
+                el.text = 'dc:date'
+                time_element.append(el)
+                el = etree.Element(util.nspath_eval('ogc:LowerBoundary',
+                            context.namespaces))
+                el2 = etree.Element(util.nspath_eval('ogc:Literal',
+                            context.namespaces))
+                el2.text = time_list[0]
+                el.append(el2)
+                time_element.append(el)
+                el = etree.Element(util.nspath_eval('ogc:UpperBoundary',
+                            context.namespaces))
+                el2 = etree.Element(util.nspath_eval('ogc:Literal',
+                            context.namespaces))
+                el2.text = time_list[1]
+                el.append(el2)
+                time_element.append(el)
+            else:
+                # One of two is empty
+                if time_list[1] is '':
+                    time_element = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo',
+                                context.namespaces))
+                    el = etree.Element(util.nspath_eval('ogc:PropertyName',
+                                context.namespaces))
+                    el.text = 'dc:date'
+                    time_element.append(el)
+                    el = etree.Element(util.nspath_eval('ogc:Literal',
+                                context.namespaces))
+                    el.text = time_list[0]
+                    time_element.append(el)
+                else:
+                    time_element = etree.Element(util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo',
+                                context.namespaces))
+                    el = etree.Element(util.nspath_eval('ogc:PropertyName',
+                                context.namespaces))
+                    el.text = 'dc:date'
+                    time_element.append(el)
+                    el = etree.Element(util.nspath_eval('ogc:Literal',
+                                context.namespaces))
+                    el.text = time_list[1]
+                    time_element.append(el)
+        elif ((len(time_list) == 1) and ('' not in time_list)):
+            # This is an equal request
+            time_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo',
+                        context.namespaces))
+            el = etree.Element(util.nspath_eval('ogc:PropertyName',
+                        context.namespaces))
+            el.text = 'dc:date'
+            time_element.append(el)
+            el = etree.Element(util.nspath_eval('ogc:Literal',
+                        context.namespaces))
+            el.text = time_list[0]
+            time_element.append(el)
+        else:
+            # Error
+            errortext = 'Exception: OpenSearch time not valid: %s.' % str(kvp['time'])
+            LOGGER.debug(errortext)
 
     if (par_count == 1):
         # Only one OpenSearch parameter exists
