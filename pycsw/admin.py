@@ -483,41 +483,6 @@ def gen_sitemap(context, database, table, url, output_file):
                     encoding='utf8', xml_declaration=1))
 
 
-def gen_opensearch_description(context, mdata, url, output_file):
-    """generate an OpenSearch Description document"""
-
-    node0 = etree.Element('OpenSearchDescription',
-                          nsmap={None: context.namespaces['os']})
-
-    etree.SubElement(node0, 'ShortName').text = 'pycsw'
-    etree.SubElement(node0, 'LongName').text = mdata['identification_title']
-    etree.SubElement(node0, 'Description').text = \
-        mdata['identification_abstract']
-    etree.SubElement(node0, 'Tags').text = \
-        ' '.join(mdata['identification_keywords'].split(','))
-
-    node1 = etree.SubElement(node0, 'Url')
-    node1.set('type', 'text/html')
-    node1.set('method', 'get')
-    node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=brief&typenames=csw:Record&resulttype=results&constraintlanguage=CQL_TEXT&constraint_language_version=1.1.0&constraint=csw:AnyText like "%%{searchTerms}%%" ' % url)
-
-    node1 = etree.SubElement(node0, 'Image')
-    node1.set('type', 'image/vnd.microsoft.icon')
-    node1.set('width', '16')
-    node1.set('height', '16')
-    node1.text = 'http://pycsw.org/_static/favicon.ico'
-
-    etree.SubElement(node0, 'Developer').text = mdata['contact_name']
-    etree.SubElement(node0, 'Contact').text = mdata['contact_email']
-    etree.SubElement(node0, 'Attribution').text = mdata['provider_name']
-
-    # write to file
-    LOGGER.info('Writing to %s', output_file)
-    with open(output_file, 'w') as ofile:
-        ofile.write(etree.tostring(node0, pretty_print=1,
-                    encoding='UTF-8', xml_declaration=1))
-
-
 def post_xml(url, xml, timeout=30):
     """Execute HTTP XML POST request and print response"""
 

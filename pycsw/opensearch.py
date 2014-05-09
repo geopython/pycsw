@@ -43,15 +43,18 @@ class OpenSearch(object):
 
         self.namespaces = {
             'atom': 'http://www.w3.org/2005/Atom',
-            'opensearch': 'http://a9.com/-/spec/opensearch/1.1/'
+            'geo': 'http://a9.com/-/opensearch/extensions/geo/1.0/',
+            'os': 'http://a9.com/-/spec/opensearch/1.1/',
+            'time': 'http://a9.com/-/opensearch/extensions/time/1.0/'
         }
 
         self.context = context
-        self.context.namespaces.update(self.namespaces)
+        #self.context.namespaces.update(self.namespaces)
 
     def response_csw2opensearch(self, element, cfg):
         """transform a CSW response into an OpenSearch response"""
 
+        LOGGER.debug('RESPONSE: %s', util.xmltag_split(element.tag))
         if util.xmltag_split(element.tag) == 'GetRecordsResponse':
 
             startindex = int(element.xpath('//@nextRecord')[0]) - int(
@@ -69,18 +72,43 @@ class OpenSearch(object):
             #etree.SubElement(node, util.nspath_eval('atom:updated',
             #  self.context.namespaces)).text = element.xpath('//@timestamp')[0]
 
-            etree.SubElement(node, util.nspath_eval('opensearch:totalResults',
+            etree.SubElement(node, util.nspath_eval('os:totalResults',
                         self.context.namespaces)).text = element.xpath(
                         '//@numberOfRecordsMatched')[0]
-            etree.SubElement(node, util.nspath_eval('opensearch:startIndex',
+            etree.SubElement(node, util.nspath_eval('os:startIndex',
                         self.context.namespaces)).text = str(startindex)
-            etree.SubElement(node, util.nspath_eval('opensearch:itemsPerPage',
+            etree.SubElement(node, util.nspath_eval('os:itemsPerPage',
                         self.context.namespaces)).text = element.xpath(
                         '//@numberOfRecordsReturned')[0]
 
             for rec in element.xpath('//atom:entry',
                         namespaces=self.context.namespaces):
                 node.append(rec)
+        elif util.xmltag_split(element.tag) == 'Capabilities':
+            node = etree.Element('OpenSearchDescription', nsmap={None: self.namespaces['os']})
+            etree.SubElement(node, 'ShortName').text = element.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'LongName').text = element.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Description').text = element.xpath('//ows:Abstract', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Tags').text = ' '.join(x.text for x in element.xpath('//ows:Keyword', namespaces=self.context.namespaces))
+
+            node1 = etree.SubElement(node, 'Url')
+            node1.set('type', 'application/atom+xml')
+            node1.set('method', 'get')
+            node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}' % element.xpath('//ows:Get/@xlink:href', namespaces=self.context.namespaces)[0])
+
+            node1 = etree.SubElement(node, 'Image')
+            node1.set('type', 'image/vnd.microsoft.icon')
+            node1.set('width', '16')
+            node1.set('height', '16')
+            node1.text = 'http://pycsw.org/_static/favicon.ico'
+
+            etree.SubElement(node, 'Developer').text = element.xpath('//ows:IndividualName', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Contact').text = element.xpath('//ows:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Attribution').text = element.xpath('//ows:ProviderName', namespaces=self.context.namespaces)[0].text
+        elif util.xmltag_split(element.tag) == 'ExceptionReport':
+            node = element
+        else:  # return Description document
+            node = etree.Element(util.nspath_eval('os:Description', self.context.namespaces))
 
         return node
 
