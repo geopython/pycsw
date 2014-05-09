@@ -31,7 +31,7 @@
 
 from lxml import etree
 from pycsw import util
-import logger
+import logging
 
 LOGGER = logging.getLogger(__name__)
 
@@ -232,18 +232,4 @@ def kvp2filterxml(kvp, context):
         root.append(logical_and)
 
     # Render etree to string XML
-    filter_xml = etree.tostring(root, pretty_print=True)
-    LOGGER.debug('FilterXML from OpenSearch before validation: %s.' % filter_xml)
-    # Validate the created XML
-    try:
-        schema = os.path.join(self.config.get('server', 'home'),
-                            'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
-        schema = etree.XMLSchema(file=schema)
-        parser = etree.XMLParser(schema=schema)
-        doc = etree.fromstring(filter_xml, parser)
-        valid_xml = filter_xml #It is valid
-    except Exception, err:
-        errortext = 'Exception: OpenSearch Filter XML document not valid.\nError: %s.' % str(err)
-        LOGGER.debug(errortext)
-
-    return valid_xml
+    return etree.tostring(root)
