@@ -2,9 +2,10 @@ opensearch,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&ser
 opensearch-description,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetCapabilities
 opensearch-ogc-q,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&q=greece
 opensearch-ogc-bbox,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&bbox=-180,-90,180,90
-opensearch-ogc-time,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&bbox=2001/2004
-opensearch-ogc-timestart,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&bbox=2004/
-opensearch-ogc-timeend,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&bbox=/2004
-opensearch-ogc-q-and-time,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&bbox=2001/2007&q=vitae
-opensearch-ogc-bbox-and-time,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&bbox=2001/2007&bbox=-180,90,180,90
+opensearch-ogc-time,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2001/2004
+opensearch-ogc-timestart,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2004/
+opensearch-ogc-timeend,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=/2004
+opensearch-ogc-q-and-time,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2001/2007&q=vitae
+opensearch-ogc-bbox-and-time,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2001/2007&bbox=-180,90,180,90
 opensearch-ogc-q-and-bbox,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&q=vegetation&bbox=-180,90,180,90
+
