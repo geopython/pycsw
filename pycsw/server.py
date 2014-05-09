@@ -428,15 +428,6 @@ class Csw(object):
             LOGGER.debug('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
-        if (not isinstance(self.kvp, str) and
-        any(x in ['bbox', 'q', 'time'] for x in self.kvp)):
-            # Add mode parameter if missing (needs to be removed for CSW3)
-            self.mode = 'opensearch'
-            LOGGER.debug('OpenSearch Geo/Time mode detected; processing request.')
-            self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
-            # Set KVP to GetRecords if missing
-            self.kvp['request'] = 'GetRecords'
-
         if error == 0:
             # test for the basic keyword values (service, version, request)
             for k in ['service', 'version', 'request']:
@@ -1220,6 +1211,7 @@ class Csw(object):
 
         if 'maxrecords' not in self.kvp:
             self.kvp['maxrecords'] = int(self.config.get('server', 'maxrecords'))
+
         if any(x in ['bbox', 'q', 'time'] for x in self.kvp):
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
             self.kvp['constraintlanguage'] = 'FILTER'
@@ -1265,7 +1257,7 @@ class Csw(object):
                         self.kvp['constraint']['type'] = 'filter'
                         self.kvp['constraint']['where'], self.kvp['constraint']['values'] = \
                         fes.parse(doc,
-                        self.repository.queryables['_all'].keys(),
+                        self.repository.queryables['_all'],
                         self.repository.dbtype,
                         self.context.namespaces, self.orm, self.language['text'], self.repository.fts)
                     except Exception, err:
