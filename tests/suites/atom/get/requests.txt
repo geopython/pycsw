@@ -8,4 +8,3 @@ opensearch-ogc-timeend,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=op
 opensearch-ogc-q-and-time,PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2001/2007&q=vitae
 opensearch-ogc-bbox-and-time,"PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2001/2007&bbox=-180,90,180,90"
 opensearch-ogc-q-and-bbox,"PYCSW_SERVER?config=tests/suites/atom/default.cfg&mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&q=vegetation&bbox=-180,90,180,90"
-
