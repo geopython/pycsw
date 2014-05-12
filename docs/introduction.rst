@@ -15,7 +15,7 @@ Features
 - implements `FGDC CSDGM Application Profile for CSW 2.0`_
 - implements the Search/Retrieval via URL (`SRU`_) search protocol
 - implements Full Text Search capabilities
-- implements OpenSearch
+- implements OGC OpenSearch Geo and Time Extensions
 - supports ISO, Dublin Core, DIF, FGDC and Atom metadata models
 - CGI or WSGI deployment
 - simple configuration
@@ -60,7 +60,7 @@ Standards Support
 +-------------------+------------+
 | `SRU`_            | 1.1        | 
 +-------------------+------------+
-| `A9 OpenSearch`_  | 1.1        | 
+| `OGC OpenSearch`_ | 1.0        | 
 +-------------------+------------+
 
 Supported Operations
@@ -183,7 +183,7 @@ Functions
 .. _`FGDC CSDGM`: http://www.fgdc.gov/metadata/csdgm
 .. _`FGDC CSDGM Application Profile for CSW 2.0`: http://portal.opengeospatial.org/files/?artifact_id=16936
 .. _`SRU`: http://www.loc.gov/standards/sru/
-.. _`A9 OpenSearch`: http://www.opensearch.org/Home
+.. _`OGC OpenSearch`: http://www.opengeospatial.org/standards/opensearchgeo
 .. _`GeoNode`: http://geonode.org/
 .. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
 .. _`CKAN`: http://ckan.org/
