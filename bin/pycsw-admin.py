@@ -61,7 +61,6 @@ SYNOPSIS
               - optimize_db
               - refresh_harvested_records
               - gen_sitemap
-              - gen_opensearch_description
               - post_xml
               - get_sysprof
               - validate_xml
@@ -118,10 +117,6 @@ EXAMPLES
     7.) gen_sitemap: Generate XML Sitemap
 
         pycsw-admin.py -c gen_sitemap -f default.cfg -o /path/to/sitemap.xml
-
-    8.) gen_opensearch_description: Generate OpenSearch Description document
-
-        pycsw-admin.py -c gen_opensearch_description -f default.cfg -o /path/to/opensearch.xml
 
     8.) post_xml: Execute a CSW request via HTTP POST
 
@@ -188,7 +183,7 @@ if COMMAND is None:
 if COMMAND not in ['setup_db', 'load_records', 'export_records',
                    'rebuild_db_indexes', 'optimize_db',
                    'refresh_harvested_records', 'gen_sitemap',
-                   'gen_opensearch_description', 'post_xml', 'get_sysprof',
+                   'post_xml', 'get_sysprof',
                    'validate_xml']:
     print 'ERROR: invalid command name: %s' % COMMAND
     sys.exit(5)
@@ -201,8 +196,7 @@ if COMMAND in ['load_records', 'export_records'] and XML_DIRPATH is None:
     print 'ERROR: -p </path/to/records> is a required argument'
     sys.exit(7)
 
-if (COMMAND in ['gen_sitemap', 'gen_opensearch_description'] and
-        OUTPUT_FILE is None):
+if COMMAND == 'gen_sitemap' and OUTPUT_FILE is None:
     print 'ERROR: -o </path/to/sitemap.xml> is a required argument'
     sys.exit(8)
 
@@ -248,8 +242,6 @@ elif COMMAND == 'refresh_harvested_records':
     admin.refresh_harvested_records(CONTEXT, DATABASE, TABLE, URL)
 elif COMMAND == 'gen_sitemap':
     admin.gen_sitemap(CONTEXT, DATABASE, TABLE, URL, OUTPUT_FILE)
-elif COMMAND == 'gen_opensearch_description':
-    admin.gen_opensearch_description(CONTEXT, METADATA, URL, OUTPUT_FILE)
 elif COMMAND == 'post_xml':
     print admin.post_xml(CSW_URL, XML, TIMEOUT)
 elif COMMAND == 'get_sysprof':

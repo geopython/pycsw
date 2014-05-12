@@ -1212,6 +1212,14 @@ class Csw(object):
         if 'maxrecords' not in self.kvp:
             self.kvp['maxrecords'] = int(self.config.get('server', 'maxrecords'))
 
+        if any(x in ['bbox', 'q', 'time'] for x in self.kvp):
+            LOGGER.debug('OpenSearch Geo/Time parameters detected.')
+            self.kvp['constraintlanguage'] = 'FILTER'
+            tmp_filter = opensearch.kvp2filterxml(self.kvp, self.context)
+            if tmp_filter is not "":
+                self.kvp['constraint'] = tmp_filter
+                LOGGER.debug('OpenSearch Geo/Time parameters to Filter: %s.' % self.kvp['constraint'])
+
         if self.requesttype == 'GET':
             if 'constraint' in self.kvp:
                 # GET request
@@ -1249,7 +1257,7 @@ class Csw(object):
                         self.kvp['constraint']['type'] = 'filter'
                         self.kvp['constraint']['where'], self.kvp['constraint']['values'] = \
                         fes.parse(doc,
-                        self.repository.queryables['_all'].keys(),
+                        self.repository.queryables['_all'],
                         self.repository.dbtype,
                         self.context.namespaces, self.orm, self.language['text'], self.repository.fts)
                     except Exception, err:
