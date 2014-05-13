@@ -45,6 +45,7 @@ class OpenDataCatalogRepository(object):
 
         self.context = context
         self.filter = repo_filter
+        self.fts = False
 
         self.dbtype = settings.DATABASES['default']['ENGINE'].split('.')[-1]
 
