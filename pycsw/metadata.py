@@ -146,6 +146,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     # if init raises error, this might not be a CSW
     md = CatalogueServiceWeb(record)
 
+    LOGGER.debug('Setting CSW service metadata')
     # generate record of service instance
     _set(context, serviceobj, 'pycsw:Identifier', identifier)
     _set(context, serviceobj, 'pycsw:Typename', 'csw:Record')
@@ -183,13 +184,24 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     # get all supported typenames of metadata
     # so we can harvest the entire CSW
 
+    # try for ISO, settle for Dublin Core
     csw_typenames = 'csw:Record'
+    csw_outputschema = 'http://www.opengis.net/cat/csw/2.0.2'
+
+    grop = md.get_operation_by_name('GetRecords')
+    if all(['gmd:MD_Metadata' in grop.parameters['typeNames']['values'],
+            'http://www.isotc211.org/2005/gmd' in grop.parameters['outputSchema']['values']]):
+        LOGGER.info('CSW supports ISO')
+        csw_typenames = 'gmd:MD_Metadata'
+        csw_outputschema = 'http://www.isotc211.org/2005/gmd'
+
 
     # now get all records
     # get total number of records to loop against
 
     try:
-        md.getrecords2(typenames=csw_typenames, resulttype='hits')
+        md.getrecords2(typenames=csw_typenames, resulttype='hits',
+                       outputschema=csw_outputschema)
         matches = md.results['matches']
     except:  # this is a CSW, but server rejects query
         raise RuntimeError(md.response)
@@ -203,11 +215,14 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     for r in range(1, matches, pagesize):
         try:
             md.getrecords2(typenames=csw_typenames, startposition=r,
-                          maxrecords=pagesize)
+                           maxrecords=pagesize, outputschema=csw_outputschema)
         except Exception, err:  # this is a CSW, but server rejects query
             raise RuntimeError(md.response)
         for k, v in md.records.iteritems():
-            recobjs.append(_parse_dc(context, repos, etree.fromstring(v.xml)))
+            if csw_typenames == 'gmd:MD_Metadata':
+                recobjs.append(_parse_iso(context, repos, etree.fromstring(v.xml)))
+            else:
+                recobjs.append(_parse_dc(context, repos, etree.fromstring(v.xml)))
 
     return recobjs
 
