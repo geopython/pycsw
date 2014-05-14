@@ -105,13 +105,12 @@ def write_record(result, esn, context, url=None):
 def write_extent(bbox, nsmap):
     ''' Generate BBOX extent '''
     
-    from shapely.wkt import loads
-    
     if bbox is not None:
-        if bbox.find('SRID') != -1:  # it's EWKT; chop off 'SRID=\d+;'
-            bbox2 = loads(bbox.split(';')[-1])
-        else:
-            bbox2 = loads(bbox)
+        try:
+            bbox2 = util.wkt2geom(bbox, bounds=False)
+        except:
+            return None
+
         where = etree.Element(util.nspath_eval('georss:where', NAMESPACES))
         polygon = etree.SubElement(where, util.nspath_eval('gml:Polygon', nsmap), srsName='urn:x-ogc:def:crs:EPSG:6.11:4326')
         exterior = etree.SubElement(polygon, util.nspath_eval('gml:exterior', nsmap))

@@ -167,10 +167,10 @@ def write_extent(bbox, nsmap):
     from shapely.wkt import loads
     
     if bbox is not None:
-        if bbox.find('SRID') != -1:  # it's EWKT; chop off 'SRID=\d+;'
-            bbox2 = loads(bbox.split(';')[-1]).envelope.bounds
-        else:
-            bbox2 = loads(bbox).envelope.bounds
+        try:
+            bbox2 = util.wkt2geom(bbox)
+        except:
+            return None
         extent = etree.Element(util.nspath_eval('dif:Spatial_Coverage', nsmap))
         etree.SubElement(extent, util.nspath_eval('dif:Southernmost_Latitude', nsmap)).text = str(bbox2[1])
         etree.SubElement(extent, util.nspath_eval('dif:Northernmost_Latitude', nsmap)).text = str(bbox2[3])
