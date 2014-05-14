@@ -164,8 +164,6 @@ def write_record(recobj, esn, context, url=None):
 def write_extent(bbox):
     ''' Generate BBOX extent '''
     
-    from shapely.wkt import loads
-    
     if bbox is not None:
         try:
             bbox2 = util.wkt2geom(bbox)
