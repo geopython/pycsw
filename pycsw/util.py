@@ -125,6 +125,22 @@ def xmltag_split2(tag, namespaces, colon=False):
         return ''
 
 
+def wkt2geom(wkt, bounds=True):
+    """return Shapely geometry object based on WKT/EWKT"""
+
+    geometry = None
+
+    if wkt.find('SRID') != -1:
+        wkt = wkt.split(';')[-1]
+
+    geometry = loads(wkt)
+
+    if bounds:
+        return geometry.envelope.bounds
+    else:
+        return geometry
+
+
 def bbox2wktpolygon(bbox):
     """Return OGC WKT Polygon of a simple bbox string"""
     tmp = bbox.split(',')

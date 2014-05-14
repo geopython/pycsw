@@ -614,9 +614,11 @@ def write_keywords(keywords, nsmap):
 def write_extent(bbox, nsmap):
     ''' Generate BBOX extent '''
 
-    from shapely.wkt import loads
-
     if bbox is not None:
+        try:
+            bbox2 = util.wkt2geom(bbox)
+        except:
+            return None
         extent = etree.Element(util.nspath_eval('gmd:extent', nsmap))
         ex_extent = etree.SubElement(extent, util.nspath_eval('gmd:EX_Extent', nsmap))
         ge = etree.SubElement(ex_extent, util.nspath_eval('gmd:geographicElement', nsmap))
@@ -625,11 +627,6 @@ def write_extent(bbox, nsmap):
         east = etree.SubElement(gbb, util.nspath_eval('gmd:eastBoundLongitude', nsmap))
         south = etree.SubElement(gbb, util.nspath_eval('gmd:southBoundLatitude', nsmap))
         north = etree.SubElement(gbb, util.nspath_eval('gmd:northBoundLatitude', nsmap))
-
-        if bbox.find('SRID') != -1:  # it's EWKT; chop off 'SRID=\d+;'
-            bbox2 = loads(bbox.split(';')[-1]).envelope.bounds
-        else:
-            bbox2 = loads(bbox).envelope.bounds
 
         etree.SubElement(west, util.nspath_eval('gco:Decimal', nsmap)).text = str(bbox2[0])
         etree.SubElement(south, util.nspath_eval('gco:Decimal', nsmap)).text = str(bbox2[1])
