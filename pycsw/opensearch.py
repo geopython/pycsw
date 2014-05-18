@@ -100,7 +100,7 @@ class OpenSearch(object):
             node1.set('type', 'image/vnd.microsoft.icon')
             node1.set('width', '16')
             node1.set('height', '16')
-            node1.text = 'http://pycsw.org/_static/favicon.ico'
+            node1.text = 'http://pycsw.org/img/favicon.ico'
 
             etree.SubElement(node, 'Developer').text = element.xpath('//ows:IndividualName', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, 'Contact').text = element.xpath('//ows:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
