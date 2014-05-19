@@ -6,7 +6,7 @@
   <Description>pycsw is an OGC CSW server implementation written in Python</Description>
   <Tags>catalogue discovery</Tags>
   <Url type="application/atom+xml" method="get" template="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?mode=opensearch&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecords&amp;elementsetname=full&amp;typenames=csw:Record&amp;resulttype=results&amp;q={searchTerms?}&amp;bbox={geo:box?}&amp;time={time:start?}/{time:end?}"/>
-  <Image type="image/vnd.microsoft.icon" width="16" height="16">http://pycsw.org/_static/favicon.ico</Image>
+  <Image type="image/vnd.microsoft.icon" width="16" height="16">http://pycsw.org/img/favicon.ico</Image>
   <Developer>Kralidis, Tom</Developer>
   <Contact>tomkralidis@gmail.com</Contact>
   <Attribution>pycsw</Attribution>
