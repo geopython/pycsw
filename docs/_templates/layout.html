@@ -30,3 +30,20 @@
 
 {{ super() }}
 {% endblock %}
+
+{% block footer %}
+
+<div class="footer">
+    <p>&copy; Copyright {{ copyright }}</p>
+    <p>
+        <a href="http://pycsw.org">Website</a> &mdash;
+        <a href="http://pycsw.org/community">Community</a> &mdash;
+        <a href="http://pycsw.org/blog">Blog</a> &mdash;
+        <a href="https://plus.google.com/communities/104084873011085696113">Google+</a> &mdash;
+        <a href="http://pycsw.org/download">Download</a> &mdash;
+        <a href="https://github.com/geopython/pycsw">Source</a> &mdash;
+        <a href="https://github.com/geopython/pycsw/issues">Issues</a> &mdash;
+        <a href="http://lists.osgeo.org/mailman/listinfo/pycsw-devel">Mailing List</a>
+    </p>
+</div>
+{% endblock %}
