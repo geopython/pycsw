@@ -34,6 +34,7 @@ from urlparse import urlparse
 from lxml import etree
 from owslib.util import build_get_url
 from pycsw import util
+from geolinks.link_types import sniff_link
 
 LOGGER = logging.getLogger(__name__)
 
@@ -952,8 +953,13 @@ def _parse_iso(context, repos, exml):
             for dist_member in md.distribution.distributor:
                 dist_links.extend(dist_member.online)
         for link in dist_links:
+            # if link.protocol is None, take a best guess and set
+            if link.protocol is None:
+                link_protocol = sniff_link(link)
+            else:
+                link_protocol = link.protocol
             linkstr = '%s,%s,%s,%s' % \
-            (link.name, link.description, link.protocol, link.url)
+            (link.name, link.description, link_protocol, link.url)
             links.append(linkstr)
 
     try:
