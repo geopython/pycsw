@@ -34,7 +34,7 @@ from urlparse import urlparse
 from lxml import etree
 from owslib.util import build_get_url
 from pycsw import util
-from geolinks.link_types import sniff_link
+from geolinks.links import sniff_link
 
 LOGGER = logging.getLogger(__name__)
 
