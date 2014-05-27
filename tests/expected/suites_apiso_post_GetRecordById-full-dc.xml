@@ -26,7 +26,7 @@
     <dc:subject>longitude</dc:subject>
     <dc:subject>time</dc:subject>
     <dct:references scheme="None">http://oos.soest.hawaii.edu/thredds/idd/nss_pacioos.html?dataset=NS06agg</dct:references>
-    <dct:references scheme="None">http://oos.soest.hawaii.edu/thredds/dodsC/pacioos/nss/ns06agg.html</dct:references>
+    <dct:references scheme="WWW:LINK">http://oos.soest.hawaii.edu/thredds/dodsC/pacioos/nss/ns06agg.html</dct:references>
     <dct:references scheme="None">http://pacioos.org/voyager/index.html?b=6.874279%2C158.077126%2C7.050468%2C158.369808&amp;tz=pont&amp;o=qual:2::p0NS06p1</dct:references>
     <dct:references scheme="None">http://oos.soest.hawaii.edu/dchart/index.html?dsetid=54cd0688ada08d86748b9c5762509f</dct:references>
     <dct:references scheme="None">http://oos.soest.hawaii.edu/erddap/tabledap/nss06_agg.graph?time%2Ctemperature&amp;.draw=lines</dct:references>
