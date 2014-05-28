@@ -85,7 +85,7 @@
     </csw:Record>
     <csw:Record>
       <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-      <dc:title>MapServer WCS</dc:title>
+      <dc:title>Atlas of the Cryosphere: Northern Hemisphere</dc:title>
       <dc:type>service</dc:type>
       <dc:subject>Arctic</dc:subject>
       <dc:subject>Cryosphere</dc:subject>
