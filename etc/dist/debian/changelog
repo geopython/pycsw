@@ -1,3 +1,9 @@
+pycsw (1.8.2-0~trusty1) trusty; urgency=low
+
+  * Update to 1.8.2.
+
+ -- Angelos Tzotsos <gcpp.kalxas@gmail.com>  Thu, 05 Jun 2014 02:16:00 +0200
+
 pycsw (1.6.1-0~precise1) precise; urgency=low
 
   * Update to 1.6.1.
