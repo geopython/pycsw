@@ -3,7 +3,7 @@ etc/harvest-all.cron		/var/www/html/pycsw/etc/
 etc/mappings.py			/var/www/html/pycsw/etc/
 bin/*				/var/www/html/pycsw/bin/
 tests/*				/var/www/html/pycsw/tests/
-etc/pycsw		       	/etc/apache2/conf.d/
+etc/pycsw.conf		       	/etc/apache2/conf-enabled/
 etc/pycsw.desktop	       	/usr/share/applications/
 csw.py				/var/www/html/pycsw/
 LICENSE.txt			/var/www/html/pycsw/
