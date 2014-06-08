@@ -22,7 +22,8 @@ install() {
     python ./gen_html.py > index.html
     cd /var/www/html/pycsw
     cp default-sample.cfg default.cfg
-    /etc/init.d/apache2 force-reload
+    a2enmod cgi
+    /etc/init.d/apache2 restart
 
 }
 

@@ -9,7 +9,7 @@ Homepage: http://pycsw.org
 
 Package: python-pycsw
 Architecture: all
-Depends: ${misc:Depends}, debconf, python (>=2.5), python-lxml, python-shapely, python-pyproj, python-owslib
+Depends: ${misc:Depends}, debconf, python (>=2.5), python-lxml, python-shapely, python-pyproj, python-owslib, python-tz
 Description: pycsw is an OGC CSW server implementation written in Python.
 
 Package: pycsw-cgi
