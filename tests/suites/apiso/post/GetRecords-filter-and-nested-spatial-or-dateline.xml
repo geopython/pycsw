@@ -1,0 +1,45 @@
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+xmlns:gml="http://www.opengis.net/gml"
+xmlns:ogc="http://www.opengis.net/ogc" service="CSW" version="2.0.2"
+resultType="results" startPosition="1" maxRecords="9999"
+outputFormat="application/xml"
+outputSchema="http://www.isotc211.org/2005/gmd"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2
+http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+ <csw:Query typeNames="csw:Record">
+   <csw:ElementSetName>full</csw:ElementSetName>
+   <csw:Constraint version="1.1.0">
+     <ogc:Filter>
+       <ogc:And>
+         <ogc:PropertyIsLike wildCard="*" escapeChar="" singleChar="?">
+           <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+           <ogc:Literal>*pacioos*</ogc:Literal>
+         </ogc:PropertyIsLike>
+         <ogc:Or>
+           <ogc:BBOX>
+             <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+             <gml:Envelope>
+               <gml:lowerCorner>5.0721 17.8247</gml:lowerCorner>
+               <gml:upperCorner>31.7842 180</gml:upperCorner>
+             </gml:Envelope>
+           </ogc:BBOX>
+           <ogc:BBOX>
+             <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+             <gml:Envelope>
+               <gml:lowerCorner>15.0721 -180</gml:lowerCorner>
+               <gml:upperCorner>31.7842 -151.2378</gml:upperCorner>
+             </gml:Envelope>
+           </ogc:BBOX>
+         </ogc:Or>
+       </ogc:And>
+     </ogc:Filter>
+   </csw:Constraint>
+   <ogc:SortBy>
+     <ogc:SortProperty>
+       <ogc:PropertyName>dc:title</ogc:PropertyName>
+       <ogc:SortOrder>ASC</ogc:SortOrder>
+     </ogc:SortProperty>
+   </ogc:SortBy>
+ </csw:Query>
+</csw:GetRecords>
