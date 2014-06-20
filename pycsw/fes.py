@@ -132,7 +132,17 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                                    nsmap)).text, str(err)))
 
         if (elem.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
-            pval = elem.find(util.nspath_eval('ogc:Literal', nsmap)).text
+            if elem.tag in [util.nspath_eval('ogc:%s' % n, nsmap) for n in
+                MODEL['SpatialOperators']['values']]:
+                boolean_true = '\'true\''
+                boolean_false = '\'false\''
+                if dbtype == 'mysql':
+                    boolean_true = 'true'
+                    boolean_false = 'false'
+
+                return "%s = %s" % (_get_spatial_operator(queryables['pycsw:BoundingBox'], elem, dbtype, nsmap), boolean_true)
+            else:
+                pval = elem.find(util.nspath_eval('ogc:Literal', nsmap)).text
 
         com_op = _get_comparison_operator(elem)
         LOGGER.debug('Comparison operator: %s' % com_op)
