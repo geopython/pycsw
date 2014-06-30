@@ -538,9 +538,11 @@ def get_sysprof():
     SQLAlchemy: %s
     Shapely: %s
     lxml: %s
+    libxml2: %s
     pyproj: %s
     OWSLib: %s''' % (sys.version_info, sys.platform, vsqlalchemy,
-                     vshapely, etree.__version__, vpyproj, vowslib)
+                     vshapely, etree.__version__, etree.LIBXML_VERSION,
+                     vpyproj, vowslib)
 
 
 def validate_xml(xml, xsd):
