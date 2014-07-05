@@ -216,7 +216,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     for r in range(1, matches, pagesize):
         try:
             md.getrecords2(typenames=csw_typenames, startposition=r,
-                           maxrecords=pagesize, outputschema=csw_outputschema)
+                           maxrecords=pagesize, outputschema=csw_outputschema, esn='full')
         except Exception, err:  # this is a CSW, but server rejects query
             raise RuntimeError(md.response)
         for k, v in md.records.iteritems():
