@@ -876,8 +876,9 @@ def _parse_iso(context, repos, exml):
             _set(context, recobj, 'pycsw:Contributor', md.identification.contributor)
 
         if (hasattr(md.identification, 'contact') and 
-        hasattr(md.identification.contact, 'organization')):
-            _set(context, recobj, 'pycsw:OrganizationName', md.identification.contact.organization)
+        hasattr(md.identification.contact, 'organization') and
+        len(md.identification.contact) > 0):
+            _set(context, recobj, 'pycsw:OrganizationName', md.identification.contact[0].organization)
 
         if len(md.identification.securityconstraints) > 0:
             _set(context, recobj, 'pycsw:SecurityConstraints', 
