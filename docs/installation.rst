@@ -69,7 +69,7 @@ Ensure that CGI is enabled for the install directory.  For example, on Apache, i
 .. note::
   If pycsw is installed in ``cgi-bin``, this should work as expected.  In this case, the :ref:`tests <tests>` application must be moved to a different location to serve static HTML documents.
 
-Make shure, you have all the dependences from ``requirements.txt and requirements-standalone.txt``
+Make sure, you have all the dependencies from ``requirements.txt and requirements-standalone.txt``
 
 The Clean and Proper Way
 ^^^^^^^^^^^^^^^^^^^^^^^^
