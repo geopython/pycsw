@@ -1,0 +1,14 @@
+empty,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh
+empty_with_amp,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&
+bad_verb,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=foo
+illegal_verb,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=foo&foo=bar
+Identify,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=Identify
+ListSets,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=ListSets
+ListMetadataFormats,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=ListMetadataFormats
+GetRecord_dc,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=GetRecord&identifier=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f&metadataPrefix=csw-record
+GetRecord_oai_dc,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=GetRecord&identifier=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f&metadataPrefix=oai_dc
+GetRecord_iso,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=GetRecord&identifier=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f&metadataPrefix=iso19139
+ListIdentifiers,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=ListIdentifiers
+ListRecords_dc,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=ListIdentifiers&metadataPrefix=csw-record
+ListRecords_oai_dc,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=ListIdentifiers&metadataPrefix=oai_dc
+ListRecords_iso19139,PYCSW_SERVER?config=tests/suites/sru/default.cfg&mode=oaipmh&verb=ListIdentifiers&metadataPrefix=iso19139
