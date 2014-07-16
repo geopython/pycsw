@@ -78,7 +78,7 @@ class GeoNodeRepository(object):
             self.queryables['_all'].update(self.queryables[qbl])
         self.queryables['_all'].update(self.context.md_core_model['mappings'])
 
-    def query_ids(self, ids):
+     query_ids(self, ids):
         ''' Query by list of identifiers '''
         return self._get_repo_filter(ResourceBase.objects).filter(uuid__in=ids).all()
 
@@ -99,9 +99,12 @@ class GeoNodeRepository(object):
                 return objects.values_list(domain).distinct()
 
 
-    def query_latest_insert(self):
-        ''' Query to get latest update to repository '''
+    def query_insert(self, direction='max'):
+        ''' Query to get latest (default) or earliest update to repository '''
         from datetime import datetime
+        if direction=='min':
+            return ResourceBase.objects.aggregate(
+                Min('date'))['date__min'].strftime('%Y-%m-%dT%H:%M:%SZ')
         return self._get_repo_filter(ResourceBase.objects).aggregate(
             Max('date'))['date__max'].strftime('%Y-%m-%dT%H:%M:%SZ')
 
