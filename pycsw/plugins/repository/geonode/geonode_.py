@@ -78,7 +78,7 @@ class GeoNodeRepository(object):
             self.queryables['_all'].update(self.queryables[qbl])
         self.queryables['_all'].update(self.context.md_core_model['mappings'])
 
-     query_ids(self, ids):
+    def query_ids(self, ids):
         ''' Query by list of identifiers '''
         return self._get_repo_filter(ResourceBase.objects).filter(uuid__in=ids).all()
 
