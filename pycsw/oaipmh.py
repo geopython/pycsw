@@ -48,8 +48,8 @@ class OAIPMH(object):
             'ListSets': ['resumptiontoken'],
             'ListMetadataFormats': ['identifier'],
             'GetRecord': ['identifier', 'metadataprefix'],
-            'ListRecords': ['from', 'until', 'set', 'resumptionToken', 'metadataprefix'],
-            'ListIdentifiers': ['from', 'until', 'set', 'resumptionToken', 'metadataprefix'],
+            'ListRecords': ['from', 'until', 'set', 'resumptiontoken', 'metadataprefix'],
+            'ListIdentifiers': ['from', 'until', 'set', 'resumptiontoken', 'metadataprefix'],
         }
         self.metadata_formats = {
             'iso19139': {
@@ -106,7 +106,7 @@ class OAIPMH(object):
                 self.metadata_prefix = kvp['metadataprefix']
                 kvpout['outputschema'] = self._get_metadata_prefix(kvp['metadataprefix'])
             else:
-                self.metadata_prefix = 'iso19139'
+                self.metadata_prefix = 'csw-record'
             if kvp['verb'] in ['ListRecords', 'ListIdentifiers', 'GetRecord']:
                 kvpout['request'] = 'GetRecords'
                 kvpout['resulttype'] = 'results'
@@ -119,6 +119,8 @@ class OAIPMH(object):
                 if 'identifier' in kvp:
                     kvpout['id'] = kvp['identifier']
             elif kvp['verb'] in ['ListRecords', 'ListIdentifiers']:
+                if 'resumptiontoken' in kvp:
+                    kvpout['startposition'] = kvp['resumptiontoken']
                 if 'outputschema' in kvpout and kvp['verb'] == 'ListIdentifiers':  # simple output only
                     del kvpout['outputschema'] 
 
@@ -208,6 +210,12 @@ class OAIPMH(object):
                     if verb in ['GetRecord', 'ListRecords']:
                         metadata = etree.SubElement(recnode, util.nspath_eval('oai:metadata', self.namespaces))
                         metadata.append(child)
+                complete_list_size = response.xpath('//@numberOfRecordsMatched')[0]
+                next_record = response.xpath('//@nextRecord')[0]
+                cursor = str(int(complete_list_size) - int(next_record) - 1)
+                
+                resumption_token = etree.SubElement(verbnode, util.nspath_eval('oai:resumptionToken', self.namespaces),
+                                                    completeListSize=complete_list_size, cursor=cursor).text = next_record
         return node
 
     def _get_metadata_prefix(self, prefix):
