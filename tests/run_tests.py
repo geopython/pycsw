@@ -83,6 +83,8 @@ def normalize(sresult, force_id_mask=False):
     updatesequence = re.search('updateSequence="(\S+)"', sresult)
     timestamp = re.search('timestamp="(.*)"', sresult)
     timestamp2 = re.search('timeStamp="(.*)"', sresult)
+    timestamp3 = re.search('<oai:responseDate>(.*)</oai:responseDate>', sresult)
+    timestamp4 = re.search('<oai:earlistDatestamp>(.*)</oai:earliestDatestamp>', sresult)
     zrhost = re.search('<zr:host>(.*)</zr:host>', sresult)
     zrport = re.search('<zr:port>(.*)</zr:port>', sresult)
 
@@ -97,6 +99,12 @@ def normalize(sresult, force_id_mask=False):
     if timestamp2:
         sresult = sresult.replace(timestamp2.group(0),
                                   'timeStamp="PYCSW_TIMESTAMP"')
+    if timestamp3:
+        sresult = sresult.replace(timestamp3.group(0),
+                                  '<oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>')
+    if timestamp4:
+        sresult = sresult.replace(timestamp4.group(0),
+                                  '<oai:earliestDatestamp>PYCSW_TIMESTAMP</oai:earliestDatestamp>')
     if zrport:
         sresult = sresult.replace(zrport.group(0),
                                   '<zr:port>PYCSW_PORT</zr:port>')
