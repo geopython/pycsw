@@ -41,6 +41,7 @@ class OAIPMH(object):
 
         self.namespaces = {
             'oai': 'http://www.openarchives.org/OAI/2.0/',
+            'oai_dc': 'http://www.openarchives.org/OAI/2.0/oai_dc/',
             'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
         }
         self.request_model = {
@@ -71,7 +72,7 @@ class OAIPMH(object):
                 'dateStamp': '//metainfo/metd'
             },
             'oai_dc': {
-                'namespace': self.namespaces['oai'],
+                'namespace': '%soai_dc/' % self.namespaces['oai'],
                 'schema': 'http://www.openarchives.org/OAI/2.0/oai_dc.xsd',
                 'identifier': '//dc:identifier',
                 'dateStamp': '//dct:modified'
@@ -96,6 +97,7 @@ class OAIPMH(object):
 
         self.context = context
         self.context.namespaces.update(self.namespaces)
+        self.context.namespaces.update({'gco': 'http://www.isotc211.org/2005/gco'})
         self.config = config
 
     def request(self, kvp):
@@ -104,7 +106,10 @@ class OAIPMH(object):
         if 'verb' in kvp:
             if 'metadataprefix' in kvp:
                 self.metadata_prefix = kvp['metadataprefix']
-                kvpout['outputschema'] = self._get_metadata_prefix(kvp['metadataprefix'])
+                try:
+                    kvpout['outputschema'] = self._get_metadata_prefix(kvp['metadataprefix'])
+                except KeyError:
+                    kvpout['outputschema'] = kvp['metadataprefix']
             else:
                 self.metadata_prefix = 'csw-record'
             if kvp['verb'] in ['ListRecords', 'ListIdentifiers', 'GetRecord']:
@@ -121,7 +126,11 @@ class OAIPMH(object):
             elif kvp['verb'] in ['ListRecords', 'ListIdentifiers']:
                 if 'resumptiontoken' in kvp:
                     kvpout['startposition'] = kvp['resumptiontoken']
-                if 'outputschema' in kvpout and kvp['verb'] == 'ListIdentifiers':  # simple output only
+                if ('outputschema' in kvpout and
+                   kvp['verb'] == 'ListIdentifiers'):  # simple output only
+                    del kvpout['outputschema'] 
+                if ('outputschema' in kvpout and
+                    kvp['metadataprefix'] == 'oai_dc'):  # just use default DC
                     del kvpout['outputschema'] 
 
                 start = end = None
@@ -147,7 +156,7 @@ class OAIPMH(object):
         url = '%smode=oaipmh' % util.bind_url(server_url)
 
         node = etree.Element(util.nspath_eval('oai:OAI-PMH', self.namespaces), nsmap=self.namespaces)
-        node.set(util.nspath_eval('xsi:schemaLocation', self.namespaces), 'http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')
+        node.set(util.nspath_eval('xsi:schemaLocation', self.namespaces), '%s http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd' % self.namespaces['oai'])
         LOGGER.info(etree.tostring(node))
 
         etree.SubElement(node, util.nspath_eval('oai:responseDate', self.namespaces)).text = util.get_today_and_now()
@@ -167,6 +176,16 @@ class OAIPMH(object):
             return node
 
         verb = kvp.pop('verb')
+        if 'config' in kvp:
+            config_val = kvp.pop('config')
+
+        if verb in ['GetRecord', 'ListIdentifiers', 'ListRecords']:
+            if 'metadataprefix' not in kvp:
+                etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Missing metadataPrefix parameter'
+                return node
+            elif kvp['metadataprefix'] not in self.metadata_formats.keys():
+                etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Invalid metadataPrefix parameter'
+                return node
 
         for key, value in kvp.iteritems():
             if key != 'mode' and key not in self.request_model[verb]:
@@ -209,13 +228,16 @@ class OAIPMH(object):
                     self._transform_element(header, response, 'oai:dateStamp')
                     if verb in ['GetRecord', 'ListRecords']:
                         metadata = etree.SubElement(recnode, util.nspath_eval('oai:metadata', self.namespaces))
+                        if 'metadataprefix' in kvp and kvp['metadataprefix'] == 'oai_dc':
+                            child.tag = util.nspath_eval('oai_dc:dc', self.namespaces)
                         metadata.append(child)
-                complete_list_size = response.xpath('//@numberOfRecordsMatched')[0]
-                next_record = response.xpath('//@nextRecord')[0]
-                cursor = str(int(complete_list_size) - int(next_record) - 1)
+                if verb != 'GetRecord':
+                    complete_list_size = response.xpath('//@numberOfRecordsMatched')[0]
+                    next_record = response.xpath('//@nextRecord')[0]
+                    cursor = str(int(complete_list_size) - int(next_record) - 1)
                 
-                resumption_token = etree.SubElement(verbnode, util.nspath_eval('oai:resumptionToken', self.namespaces),
-                                                    completeListSize=complete_list_size, cursor=cursor).text = next_record
+                    resumption_token = etree.SubElement(verbnode, util.nspath_eval('oai:resumptionToken', self.namespaces),
+                                                        completeListSize=complete_list_size, cursor=cursor).text = next_record
         return node
 
     def _get_metadata_prefix(self, prefix):
@@ -231,6 +253,6 @@ class OAIPMH(object):
 
         xpath = self.metadata_formats[self.metadata_prefix][elname.split(':')[1]]
         value = element.xpath(xpath, namespaces=self.context.namespaces)
-        el = etree.SubElement(parent, util.nspath_eval(elname, self.namespaces))
+        el = etree.SubElement(parent, util.nspath_eval(elname, self.context.namespaces))
         if value:
             el.text = value[0].text
