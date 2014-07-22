@@ -145,7 +145,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     serviceobj = repos.dataset()
 
     # if init raises error, this might not be a CSW
-    md = CatalogueServiceWeb(record)
+    md = CatalogueServiceWeb(record, timeout=60)
 
     LOGGER.debug('Setting CSW service metadata')
     # generate record of service instance
