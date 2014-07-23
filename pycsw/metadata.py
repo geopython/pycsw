@@ -868,12 +868,18 @@ def _parse_iso(context, repos, exml):
             _set(context, recobj, 'pycsw:Keywords', ','.join(all_keywords))
             _set(context, recobj, 'pycsw:KeywordType', md.identification.keywords[0]['type'])
 
-        if hasattr(md.identification, 'creator'):
-            _set(context, recobj, 'pycsw:Creator', md.identification.creator)
-        if hasattr(md.identification, 'publisher'):
-            _set(context, recobj, 'pycsw:Publisher', md.identification.publisher)
-        if hasattr(md.identification, 'contributor'):
-            _set(context, recobj, 'pycsw:Contributor', md.identification.contributor)
+        if (hasattr(md.identification, 'creator') and
+            len(md.identification.creator) > 0):
+            all_orgs = set([item.organization for item in md.identification.creator if hasattr(item, 'organization') and item.organization is not None])
+            _set(context, recobj, 'pycsw:Creator', ';'.join(all_orgs))
+        if (hasattr(md.identification, 'publisher') and
+            len(md.identification.publisher) > 0):
+            all_orgs = set([item.organization for item in md.identification.publisher if hasattr(item, 'organization') and item.organization is not None])
+            _set(context, recobj, 'pycsw:Publisher', ';'.join(all_orgs))
+        if (hasattr(md.identification, 'contributor') and
+            len(md.identification.contributor) > 0):
+            all_orgs = set([item.organization for item in md.identification.contributor if hasattr(item, 'organization') and item.organization is not None])
+            _set(context, recobj, 'pycsw:Contributor', ';'.join(all_orgs))
 
         if (hasattr(md.identification, 'contact') and 
             len(md.identification.contact) > 0):
