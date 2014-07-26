@@ -2,12 +2,13 @@
 <!-- PYCSW_VERSION -->
 <oai:OAI-PMH xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oai="http://www.openarchives.org/OAI/2.0/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
   <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
-  <oai:request config="tests/suites/oaipmh/default.cfg" identifier="urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f" metadataprefix="iso19139" verb="GetRecord">http://localhost/pycsw/csw.py?config=tests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
+  <oai:request identifier="urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f" metadataprefix="iso19139" verb="GetRecord">http://localhost/pycsw/csw.py?config=tests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
   <oai:GetRecord>
     <oai:record>
       <oai:header>
         <oai:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</oai:identifier>
         <oai:dateStamp/>
+        <oai:setSpec/>
       </oai:header>
       <oai:metadata>
         <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
