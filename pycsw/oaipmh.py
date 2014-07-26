@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2013 Tom Kralidis
+# Copyright (c) 2014 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -37,6 +37,7 @@ LOGGER = logging.getLogger(__name__)
 class OAIPMH(object):
     """OAI-PMH wrapper class"""
     def __init__(self, context, config):
+        LOGGER.debug('Initializing OAI-PMH constants')
         self.oaipmh_version = '2.0'
 
         self.namespaces = {
@@ -57,31 +58,36 @@ class OAIPMH(object):
                 'namespace': 'http://www.isotc211.org/2005/gmd',
                 'schema': 'http://www.isotc211.org/2005/gmd/gmd.xsd',
                 'identifier': '//gmd:fileIdentifier/gco:CharacterString',
-                'dateStamp': '//gmd:dateStamp/gco:DateTime'
+                'dateStamp': '//gmd:dateStamp/gco:DateTime|//gmd:dateStamp/gco:Date',
+                'setSpec': '//gmd:hierarchyLevel/gmd:MD_ScopeCode'
             },
             'csw-record': {
                 'namespace': 'http://www.opengis.net/cat/csw/2.0.2',
                 'schema': 'http://schemas.opengis.net/csw/2.0.2/record.xsd',
                 'identifier': '//dc:identifier',
-                'dateStamp': '//dct:modified'
+                'dateStamp': '//dct:modified',
+                'setSpec': '//dc:type'
             },
             'fgdc-std': {
                 'namespace': 'http://www.opengis.net/cat/csw/csdgm',
                 'schema': 'http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd',
                 'identifier': '//idinfo/datasetid',
-                'dateStamp': '//metainfo/metd'
+                'dateStamp': '//metainfo/metd',
+                'setSpec': '//dataset'
             },
             'oai_dc': {
                 'namespace': '%soai_dc/' % self.namespaces['oai'],
                 'schema': 'http://www.openarchives.org/OAI/2.0/oai_dc.xsd',
                 'identifier': '//dc:identifier',
-                'dateStamp': '//dct:modified'
+                'dateStamp': '//dct:modified',
+                'setSpec': '//dc:type'
             },
             'dif': {
                 'namespace': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
                 'schema': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd',
                 'identifier': '//dif:Entry_ID',
-                'dateStamp': '//dif:Last_DIF_Revision_Date'
+                'dateStamp': '//dif:Last_DIF_Revision_Date',
+                'setSpec': '//dataset'
             }
         }
         self.metadata_sets = {
@@ -103,6 +109,7 @@ class OAIPMH(object):
     def request(self, kvp):
         """process OAI-PMH request"""
         kvpout = {'service': 'CSW', 'version': '2.0.2', 'mode': 'oaipmh'}
+        LOGGER.debug('Incoming kvp: %s' % kvp)
         if 'verb' in kvp:
             if 'metadataprefix' in kvp:
                 self.metadata_prefix = kvp['metadataprefix']
@@ -112,6 +119,7 @@ class OAIPMH(object):
                     kvpout['outputschema'] = kvp['metadataprefix']
             else:
                 self.metadata_prefix = 'csw-record'
+            LOGGER.info('metadataPrefix: %s' % self.metadata_prefix)
             if kvp['verb'] in ['ListRecords', 'ListIdentifiers', 'GetRecord']:
                 kvpout['request'] = 'GetRecords'
                 kvpout['resulttype'] = 'results'
@@ -134,6 +142,7 @@ class OAIPMH(object):
                     del kvpout['outputschema'] 
 
                 start = end = None
+                LOGGER.info('Scanning temporal parameters')
                 if 'from' in kvp:
                     start = 'dc:date >= %s' % kvp['from']
                 if 'until' in kvp:
@@ -147,12 +156,15 @@ class OAIPMH(object):
                         time_query = end
                     kvpout['constraintlanguage'] = 'CQL_TEXT'
                     kvpout['constraint'] = time_query
+        LOGGER.debug('Resulting parameters: %s' % kvpout)
         return kvpout
 
     def response(self, response, kvp, repository, server_url):
         """process OAI-PMH request"""
 
         mode = kvp.pop('mode', None)
+        if 'config' in kvp:
+            config_val = kvp.pop('config')
         url = '%smode=oaipmh' % util.bind_url(server_url)
 
         node = etree.Element(util.nspath_eval('oai:OAI-PMH', self.namespaces), nsmap=self.namespaces)
@@ -161,7 +173,6 @@ class OAIPMH(object):
 
         etree.SubElement(node, util.nspath_eval('oai:responseDate', self.namespaces)).text = util.get_today_and_now()
         etree.SubElement(node, util.nspath_eval('oai:request', self.namespaces), attrib=kvp).text = url
-
 
         if 'verb' not in kvp:
             etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Missing \'verb\' parameter'
@@ -176,8 +187,6 @@ class OAIPMH(object):
             return node
 
         verb = kvp.pop('verb')
-        if 'config' in kvp:
-            config_val = kvp.pop('config')
 
         if verb in ['GetRecord', 'ListIdentifiers', 'ListRecords']:
             if 'metadataprefix' not in kvp:
@@ -226,6 +235,7 @@ class OAIPMH(object):
                     header = etree.SubElement(recnode, util.nspath_eval('oai:header', self.namespaces))
                     self._transform_element(header, response, 'oai:identifier')
                     self._transform_element(header, response, 'oai:dateStamp')
+                    self._transform_element(header, response, 'oai:setSpec')
                     if verb in ['GetRecord', 'ListRecords']:
                         metadata = etree.SubElement(recnode, util.nspath_eval('oai:metadata', self.namespaces))
                         if 'metadataprefix' in kvp and kvp['metadataprefix'] == 'oai_dc':
@@ -252,7 +262,18 @@ class OAIPMH(object):
         """tests for existence of a given xpath, writes out text if exists"""
 
         xpath = self.metadata_formats[self.metadata_prefix][elname.split(':')[1]]
-        value = element.xpath(xpath, namespaces=self.context.namespaces)
+        if xpath.startswith('//'):
+            value = element.xpath(xpath, namespaces=self.context.namespaces)
+            if value:
+                value = value[0].text
+        else:  # bare string literal
+            value = xpath
         el = etree.SubElement(parent, util.nspath_eval(elname, self.context.namespaces))
         if value:
-            el.text = value[0].text
+            if elname == 'oai:setSpec': 
+                value = None
+                for k, v in self.metadata_sets.iteritems():
+                    if v[1] == elname:
+                        value = k
+                        break
+            el.text = value
