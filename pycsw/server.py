@@ -438,7 +438,7 @@ class Csw(object):
         'mode' in self.kvp and self.kvp['mode'] == 'oaipmh'):
             self.mode = 'oaipmh'
             LOGGER.debug('OAI-PMH mode detected; processing request.')
-            self.oaiargs = {k: v for k, v in self.kvp.items() if k}
+            self.oaiargs =  dict((k, v) for k, v in self.kvp.items() if k)
             self.kvp = self.oaipmh().request(self.kvp)
 
         if error == 0:
