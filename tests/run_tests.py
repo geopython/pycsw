@@ -84,7 +84,7 @@ def normalize(sresult, force_id_mask=False):
     timestamp = re.search('timestamp="(.*)"', sresult)
     timestamp2 = re.search('timeStamp="(.*)"', sresult)
     timestamp3 = re.search('<oai:responseDate>(.*)</oai:responseDate>', sresult)
-    timestamp4 = re.search('<oai:earlistDatestamp>(.*)</oai:earliestDatestamp>', sresult)
+    timestamp4 = re.search('<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>', sresult)
     zrhost = re.search('<zr:host>(.*)</zr:host>', sresult)
     zrport = re.search('<zr:port>(.*)</zr:port>', sresult)
 
