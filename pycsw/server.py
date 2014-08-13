@@ -39,7 +39,7 @@ from ConfigParser import SafeConfigParser
 from lxml import etree
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
-from pycsw import config, fes, log, metadata, util, sru, opensearch
+from pycsw import config, fes, log, metadata, util, sru, oaipmh, opensearch
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -61,6 +61,7 @@ class Csw(object):
         # (it will permanently update global cfg namespaces)
         self.sruobj = None
         self.opensearchobj = None
+        self.oaipmhobj = None
 
         # init kvp
         self.kvp = {}
@@ -397,6 +398,12 @@ class Csw(object):
 
         return self.sruobj
 
+    def oaipmh(self):
+        ''' enable OAI-PMH '''
+        if not self.oaipmhobj:
+            self.oaipmhobj = oaipmh.OAIPMH(self.context, self.config)
+        return self.oaipmhobj
+
     def dispatch(self, writer=sys.stdout, write_headers=True):
         ''' Handle incoming HTTP request '''
 
@@ -426,6 +433,13 @@ class Csw(object):
             self.mode = 'opensearch'
             LOGGER.debug('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
+
+        if (not isinstance(self.kvp, str) and
+        'mode' in self.kvp and self.kvp['mode'] == 'oaipmh'):
+            self.mode = 'oaipmh'
+            LOGGER.debug('OAI-PMH mode detected; processing request.')
+            self.oaiargs =  dict((k, v) for k, v in self.kvp.items() if k)
+            self.kvp = self.oaipmh().request(self.kvp)
 
         if error == 0:
             # test for the basic keyword values (service, version, request)
@@ -542,6 +556,11 @@ class Csw(object):
             self.response = self.opensearch().response_csw2opensearch(
                             self.response, self.config)
 
+        elif self.mode == 'oaipmh':
+            LOGGER.debug('OAI-PMH mode detected; processing response.')
+            self.response = self.oaipmh().response(self.response,
+                            self.oaiargs, self.repository, self.config.get('server', 'url'))
+
         return self._write_response()
 
     def exceptionreport(self, code, locator, text):
@@ -603,7 +622,7 @@ class Csw(object):
         # @updateSequence: get latest update to repository
         try:
             updatesequence = \
-            util.get_time_iso2unix(self.repository.query_latest_insert())
+            util.get_time_iso2unix(self.repository.query_insert())
         except:
             updatesequence = None
 

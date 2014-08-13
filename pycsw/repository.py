@@ -219,11 +219,14 @@ class Repository(object):
                 query = self.session.query(domain_value).distinct()
         return self._get_repo_filter(query).all()
 
-    def query_latest_insert(self):
-        ''' Query to get latest update to repository '''
+    def query_insert(self, direction='max'):
+        ''' Query to get latest (default) or earliest update to repository '''
         column = getattr(self.dataset, \
         self.context.md_core_model['mappings']['pycsw:InsertDate'])
 
+        if direction == 'min':
+            return self._get_repo_filter(self.session.query(func.min(column))).first()[0]
+        # else default max
         return self._get_repo_filter(self.session.query(func.max(column))).first()[0]
 
     def query_source(self, source):
