@@ -16,6 +16,7 @@ Features
 - implements the Search/Retrieval via URL (`SRU`_) search protocol
 - implements Full Text Search capabilities
 - implements OGC OpenSearch Geo and Time Extensions
+- implements Open Archives Initiative Protocol for Metadata Harvesting
 - supports ISO, Dublin Core, DIF, FGDC and Atom metadata models
 - CGI or WSGI deployment
 - simple configuration
@@ -61,6 +62,8 @@ Standards Support
 | `SRU`_            | 1.1        | 
 +-------------------+------------+
 | `OGC OpenSearch`_ | 1.0        | 
++-------------------+------------+
+| `OAI-PMH`_        | 2.0        | 
 +-------------------+------------+
 
 Supported Operations
@@ -188,3 +191,4 @@ Functions
 .. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
 .. _`CKAN`: http://ckan.org/
 .. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1104
+.. _`OAI-PMH': http://www.openarchives.org/OAI/openarchivesprotocol.html
