@@ -131,15 +131,19 @@ class OAIPMH(object):
                 kvpout['request'] = 'GetRecordById'
                 if 'identifier' in kvp:
                     kvpout['id'] = kvp['identifier']
+                if ('outputschema' in kvpout and
+                    kvp['metadataprefix'] == 'oai_dc'):  # just use default DC
+                    del kvpout['outputschema'] 
             elif kvp['verb'] in ['ListRecords', 'ListIdentifiers']:
                 if 'resumptiontoken' in kvp:
                     kvpout['startposition'] = kvp['resumptiontoken']
                 if ('outputschema' in kvpout and
                    kvp['verb'] == 'ListIdentifiers'):  # simple output only
-                    del kvpout['outputschema'] 
+                    pass #del kvpout['outputschema'] 
                 if ('outputschema' in kvpout and
-                    kvp['metadataprefix'] == 'oai_dc'):  # just use default DC
+                    kvp['metadataprefix'] in ['dc', 'oai_dc']):  # just use default DC
                     del kvpout['outputschema'] 
+
 
                 start = end = None
                 LOGGER.info('Scanning temporal parameters')

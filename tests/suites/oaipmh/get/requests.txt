@@ -10,7 +10,7 @@ GetRecord_bad_metadata_prefix,PYCSW_SERVER?config=tests/suites/oaipmh/default.cf
 GetRecord_oai_dc,PYCSW_SERVER?config=tests/suites/oaipmh/default.cfg&mode=oaipmh&verb=GetRecord&identifier=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f&metadataPrefix=oai_dc
 GetRecord_iso,PYCSW_SERVER?config=tests/suites/oaipmh/default.cfg&mode=oaipmh&verb=GetRecord&identifier=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f&metadataPrefix=iso19139
 ListIdentifiers_missing_metadata_prefix,PYCSW_SERVER?config=tests/suites/oaipmh/default.cfg&mode=oaipmh&verb=ListIdentifiers
-ListIdentifiers_dc,PYCSW_SERVER?config=tests/suites/oaipmh/default.cfg&mode=oaipmh&verb=ListIdentifiers&metadataPrefix=dc
+ListIdentifiers_dc,PYCSW_SERVER?config=tests/suites/oaipmh/default.cfg&mode=oaipmh&verb=ListIdentifiers&metadataPrefix=csw-record
 ListIdentifiers_iso,PYCSW_SERVER?config=tests/suites/oaipmh/default.cfg&mode=oaipmh&verb=ListIdentifiers&metadataPrefix=iso19139
 ListIdentifiers_oai_dc,PYCSW_SERVER?config=tests/suites/oaipmh/default.cfg&mode=oaipmh&verb=ListIdentifiers&metadataPrefix=oai_dc
 ListIdentifiers_bad_metadata_prefix,PYCSW_SERVER?config=tests/suites/oaipmh/default.cfg&mode=oaipmh&verb=ListIdentifiers&metadataPrefix=foo
