@@ -171,6 +171,11 @@ class Csw(object):
                 self.context.model\
                 ['constraints']['FederatedCatalogues']['values'].append(fedcat)
 
+        LOGGER.debug('Setting MaxRecordDefault')
+        if self.config.has_option('server', 'maxrecords'):
+            self.context.model['constraints']['MaxRecordDefault']['values'] = \
+            [self.config.get('server', 'maxrecords')]
+
         LOGGER.debug('Configuration: %s.' % self.config)
         LOGGER.debug('Model: %s.' % self.context.model)
 
