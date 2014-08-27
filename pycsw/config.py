@@ -236,6 +236,9 @@ class StaticContext(object):
                 }
             },
             'constraints': {
+                'MaxRecordDefault': {
+                    'values': ['10']
+                },
                 'PostEncoding': {
                     'values': ['XML', 'SOAP']
                 },
