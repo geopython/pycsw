@@ -246,6 +246,9 @@
     <ows:Constraint name="XPathQueryables">
       <ows:Value>allowed</ows:Value>
     </ows:Constraint>
+    <ows:Constraint name="MaxRecordDefault">
+      <ows:Value>10</ows:Value>
+    </ows:Constraint>
     <ows:Constraint name="PostEncoding">
       <ows:Value>XML</ows:Value>
       <ows:Value>SOAP</ows:Value>

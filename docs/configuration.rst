@@ -12,7 +12,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **mimetype**: the MIME type when returning HTTP responses
 - **language**: the ISO 639-1 language and ISO 3166-1 alpha2 country code of the service (e.g. ``en-CA``, ``fr-CA``, ``en-US``)
 - **encoding**: the content type encoding (e.g. ``ISO-8859-1``)
-- **maxrecords**: the maximum number of records to return by default
+- **maxrecords**: the maximum number of records to return by default.  This value is enforced if a CSW's client's ``maxRecords`` parameter is greater than ``server.maxrecords`` to limit capacity
 - **loglevel**: the logging level (see http://docs.python.org/library/logging.html#logging-levels)
 - **logfile**: the full file path to the logfile
 - **ogc_schemas_base**: base URL of OGC XML schemas tree file structure (default is http://schemas.opengis.net)
