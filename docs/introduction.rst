@@ -191,4 +191,4 @@ Functions
 .. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
 .. _`CKAN`: http://ckan.org/
 .. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1104
-.. _`OAI-PMH': http://www.openarchives.org/OAI/openarchivesprotocol.html
+.. _`OAI-PMH`: http://www.openarchives.org/OAI/openarchivesprotocol.html
