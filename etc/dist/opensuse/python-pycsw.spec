@@ -34,7 +34,7 @@
 %define pyname pycsw
 
 Name:           python-%{pyname}
-Version:        1.6.0
+Version:        1.10.0
 Release:        1
 License:        MIT
 Summary:        An OGC CSW server implementation written in Python
