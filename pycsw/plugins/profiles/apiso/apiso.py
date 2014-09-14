@@ -405,6 +405,8 @@ class APISO(profile.Profile):
         mtype = util.getqattr(result, queryables['apiso:Type']['dbcol']) or None
 
         if mtype is not None: 
+            if mtype == 'http://purl.org/dc/dcmitype/Dataset':
+                mtype = 'dataset'
             hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel', self.namespaces))
             hierarchy.append(_write_codelist_element('gmd:MD_ScopeCode', mtype, self.namespaces))
 
