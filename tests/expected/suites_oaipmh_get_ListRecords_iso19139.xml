@@ -349,7 +349,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Dataset" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Dataset</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -403,7 +403,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Dataset" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Dataset</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -477,7 +477,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Dataset" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Dataset</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
