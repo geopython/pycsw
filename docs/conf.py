@@ -43,7 +43,7 @@ master_doc = 'index'
 project = u'pycsw'
 authors = u'Tom Kralidis'
 license = u'This work is licensed under a Creative Commons Attribution 4.0 International License'
-copyright = u'2010-2014, ' + authors + '<br/>' + license
+copyright = u'2010-2014, ' + authors + ' ' + license
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
