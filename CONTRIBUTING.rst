@@ -6,6 +6,16 @@ enhancements/features, etc.).  This document will outline some guidelines on
 contributing to pycsw.  As well, pycsw `community </community.html>`_ is a great place to
 get an idea of how to connect and participate in pycsw community and development.
 
+Contributions and Licensing
+---------------------------
+
+Contributors are asked to provide a Contributor License Agreement for working on the project:
+
+- `Corporate`_
+- `Individual`_
+
+This agreement can be printed, signed, scanned, and emailed to `info@osgeo.org`_ at the Open Source Geospatial Foundation (OSGeo). `OSGeo`_ is the non-profit which holds the pycsw codebase for the community.
+
 GitHub
 ------
 
@@ -106,6 +116,10 @@ GitHub Commit Access
 - removal of commit access shall be handled in the same manner
 - each committer shall be listed in https://github.com/geopython/pycsw/blob/master/COMMITTERS.txt
 
+.. _`Corporate`: http://www.osgeo.org/sites/osgeo.org/files/Page/corporate_contributor.txt
+.. _`Individual`: http://www.osgeo.org/sites/osgeo.org/files/Page/individual_contributor.txt
+.. _`info@osgeo.org`: mailto:info@osgeo.org
+.. _`OSGeo`: http://www.osgeo.org/content/foundation/legal/licenses.html
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 .. _`pep8`: http://pypi.python.org/pypi/pep8/
 .. _`pylint`: http://www.logilab.org/857
