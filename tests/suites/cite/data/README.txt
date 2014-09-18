@@ -42,7 +42,7 @@ modifications, that you make:
 
 1. The full text of this NOTICE in a location viewable to users of the redistributed or derivative
 work.
-g
+
 2. Any pre-existing intellectual property disclaimers, notices, or terms and conditions. If none exist,
 a short notice of the following form (hypertext is preferred, text is permitted) should be used
 within the body of any redistributed or derivative code: "Copyright © [$date-of-document] Open
@@ -63,5 +63,3 @@ ARISING OUT OF ANY USE OF THE SOFTWARE OR DOCUMENTATION.
 The name and trademarks of copyright holders may NOT be used in advertising or publicity pertaining
 to the software without specific, written prior permission. Title to copyright in this software and
 any associated documentation will at all times remain with copyright holders.
-
-
