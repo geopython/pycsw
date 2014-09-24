@@ -2,27 +2,31 @@
 <!-- PYCSW_VERSION -->
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="1" numberOfRecordsReturned="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
       <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-      <dc:title>Wisconsin Lake Clarity</dc:title>
+      <dc:title>NEXRAD BASE REFLECT</dc:title>
       <dc:type>dataset</dc:type>
-      <dc:subject>SSEC</dc:subject>
-      <dc:subject>PAW</dc:subject>
-      <dc:subject>remote sensing</dc:subject>
-      <dc:subject>meteorology</dc:subject>
-      <dc:subject>atmospheric science</dc:subject>
-      <dc:subject>University of Wisconsin</dc:subject>
-      <dc:subject>Madison</dc:subject>
-      <dc:subject>weather</dc:subject>
-      <dc:subject>land</dc:subject>
-      <dct:references scheme="OGC:WMS">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
-      <dct:references scheme="WWW:LINK-1.0-http--image-thumbnail">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;layers=LakeClarity&amp;width=200&amp;version=1.1.1&amp;bbox=-93.0307%2C42.4104%2C-86.6404%2C47.1335&amp;service=WMS&amp;format=image%2Fpng&amp;styles=&amp;srs=EPSG%3A4326&amp;request=GetMap&amp;height=200</dct:references>
-      <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
-      <dc:source>http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dc:source>
+      <dc:subject></dc:subject>
+      <dct:references scheme="OGC:WMS">http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi</dct:references>
+      <dct:references scheme="WWW:LINK-1.0-http--image-thumbnail">http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi?layers=time_idx&amp;width=200&amp;version=1.1.1&amp;bbox=-126.0%2C24.0%2C-66.0%2C50.0&amp;service=WMS&amp;format=image%2Fpng&amp;styles=&amp;srs=EPSG%3A4326&amp;request=GetMap&amp;height=200</dct:references>
+      <dc:source>http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi</dc:source>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>42.41 -93.03</ows:LowerCorner>
-        <ows:UpperCorner>47.13 -86.64</ows:UpperCorner>
+        <ows:LowerCorner>24.0 -126.0</ows:LowerCorner>
+        <ows:UpperCorner>50.0 -66.0</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+      <dc:title>NEXRAD BASE REFLECT</dc:title>
+      <dc:type>dataset</dc:type>
+      <dc:subject></dc:subject>
+      <dct:references scheme="OGC:WMS">http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi</dct:references>
+      <dct:references scheme="WWW:LINK-1.0-http--image-thumbnail">http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi?layers=nexrad-n0r-wmst&amp;width=200&amp;version=1.1.1&amp;bbox=-126.0%2C24.0%2C-66.0%2C50.0&amp;service=WMS&amp;format=image%2Fpng&amp;styles=&amp;srs=EPSG%3A4326&amp;request=GetMap&amp;height=200</dct:references>
+      <dc:source>http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi</dc:source>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>24.0 -126.0</ows:LowerCorner>
+        <ows:UpperCorner>50.0 -66.0</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
   </csw:SearchResults>
