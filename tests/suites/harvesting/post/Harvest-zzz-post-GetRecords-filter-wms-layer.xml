@@ -11,7 +11,7 @@
           </ogc:PropertyIsEqualTo>
           <ogc:PropertyIsEqualTo>
             <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
-            <ogc:Literal>%Lake Clarity%</ogc:Literal>
+            <ogc:Literal>%nexrad%</ogc:Literal>
           </ogc:PropertyIsEqualTo>
         </ogc:And>      
       </ogc:Filter>

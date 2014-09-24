@@ -5,28 +5,20 @@
   <csw:SearchResults nextRecord="0" numberOfRecordsMatched="1" numberOfRecordsReturned="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
       <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-      <dc:title>Wisconsin Lake Clarity</dc:title>
+      <dc:title>IEM WMS Service</dc:title>
       <dc:type>service</dc:type>
-      <dc:subject>SSEC</dc:subject>
-      <dc:subject>PAW</dc:subject>
-      <dc:subject>remote sensing</dc:subject>
-      <dc:subject>meteorology</dc:subject>
-      <dc:subject>atmospheric science</dc:subject>
-      <dc:subject>University of Wisconsin</dc:subject>
-      <dc:subject>Madison</dc:subject>
-      <dc:subject>weather</dc:subject>
-      <dc:subject>land</dc:subject>
+      <dc:subject></dc:subject>
       <dc:format>OGC:WMS</dc:format>
-      <dct:references scheme="OGC:WMS">http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
-      <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
-      <dc:creator>Dr. Sam Batzli</dc:creator>
-      <dc:publisher>Space Science and Engineering Center, University of Wisconsin-Madison</dc:publisher>
-      <dc:contributor>Dr. Sam Batzli</dc:contributor>
-      <dc:source>http://wmsserv2.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dc:source>
-      <dc:rights>The following attribution is required if published or reproduced: Source: Space Science and Engineering Center, University of Wisconsin-Madison</dc:rights>
+      <dct:references scheme="OGC:WMS">http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi</dct:references>
+      <dct:abstract>IEM generated CONUS composite of NWS WSR-88D level III base reflectivity.</dct:abstract>
+      <dc:creator>Daryl Herzmann</dc:creator>
+      <dc:publisher>Iowa State University</dc:publisher>
+      <dc:contributor>Daryl Herzmann</dc:contributor>
+      <dc:source>http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi</dc:source>
+      <dc:rights>None</dc:rights>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>42.41 -93.03</ows:LowerCorner>
-        <ows:UpperCorner>47.13 -86.64</ows:UpperCorner>
+        <ows:LowerCorner>24.0 -126.0</ows:LowerCorner>
+        <ows:UpperCorner>50.0 -66.0</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
   </csw:SearchResults>
