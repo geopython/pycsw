@@ -165,7 +165,13 @@ By default, ``default.cfg`` is at the root of the pycsw install.  If pycsw is se
 Running on WSGI
 ---------------
 
-pycsw supports the `Web Server Gateway Interface`_ (WSGI).  To run pycsw in WSGI mode, use ``csw.wsgi`` in your WSGI server environment.  Below is an example of configuring with Apache:
+pycsw supports the `Web Server Gateway Interface`_ (WSGI).  To run pycsw in WSGI mode, use ``csw.wsgi`` in your WSGI server environment.
+**NOTE:** mod_wsgi supports only the version of python it was compiled with. If the target server
+already supports one or more WSGI applications, pycsw will need to use the same python version. 
+WSGIDaemonProcess <https://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIDaemonProcess> provides a python-path directive
+that may allow a virtualenv created from the python version mod_wsgi uses.
+
+Below is an example of configuring with Apache:
 
 .. code-block:: none
 
