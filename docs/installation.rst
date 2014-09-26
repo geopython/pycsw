@@ -167,10 +167,11 @@ Running on WSGI
 
 pycsw supports the `Web Server Gateway Interface`_ (WSGI).  To run pycsw in WSGI mode, use ``csw.wsgi`` in your WSGI server environment.
 
-**NOTE:** mod_wsgi supports only the version of python it was compiled with. If the target server
-already supports WSGI applications, pycsw will need to use the same python version.
-WSGIDaemonProcess <https://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIDaemonProcess> provides a python-path directive
-that may allow a virtualenv created from the python version mod_wsgi uses.
+.. note::
+
+  ``mod_wsgi`` supports only the version of python it was compiled with. If the target server
+  already supports WSGI applications, pycsw will need to use the same python version.
+  `WSGIDaemonProcess`_ provides a ``python-path`` directive that may allow a virtualenv created from the python version ``mod_wsgi`` uses.
 
 Below is an example of configuring with Apache:
 
@@ -202,4 +203,5 @@ which will publish pycsw to ``http://localhost:8000/``
 .. _`easy_install`: http://packages.python.org/distribute/easy_install.html
 .. _`pip`: http://www.pip-installer.org
 .. _`Web Server Gateway Interface`: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
+.. _`WSGIDaemonProcess`: https://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIDaemonProcess
 .. _`WSGI reference implementation`: http://docs.python.org/library/wsgiref.html
