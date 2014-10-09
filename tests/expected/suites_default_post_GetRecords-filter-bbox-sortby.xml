@@ -5,7 +5,7 @@
   <csw:SearchResults nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
     <csw:BriefRecord>
       <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
-      <dc:title>&#209;un&#231; elementum</dc:title>
+      <dc:title>Ñunç elementum</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>44.79 -6.17</ows:LowerCorner>

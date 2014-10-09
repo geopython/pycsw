@@ -2323,7 +2323,7 @@ class Csw(object):
         else:  # it's XML
             self.contenttype = self.mimetype
             response = etree.tostring(self.response,
-            pretty_print=self.pretty_print)
+            pretty_print=self.pretty_print, encoding='unicode')
             xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' \
             % self.encoding
             appinfo = '<!-- pycsw %s -->\n' % self.context.version
@@ -2331,7 +2331,7 @@ class Csw(object):
         LOGGER.debug('Response:\n%s' % response)
 
         s = '%s%s%s' % (xmldecl, appinfo, response)
-        return s.encode()
+        return s.encode(self.encoding)
 
 
     def _gen_soap_wrapper(self):

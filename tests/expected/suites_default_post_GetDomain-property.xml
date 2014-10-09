@@ -5,14 +5,14 @@
     <csw:PropertyName>dc:title</csw:PropertyName>
     <csw:ListOfValues>
       <csw:Value>Aliquam fermentum purus quis arcu</csw:Value>
-      <csw:Value>Fusc&#233; vitae ligul&#228;</csw:Value>
+      <csw:Value>Fuscé vitae ligulä</csw:Value>
       <csw:Value>Lorem ipsum</csw:Value>
       <csw:Value>Lorem ipsum dolor sit amet</csw:Value>
       <csw:Value>Maecenas enim</csw:Value>
       <csw:Value>Mauris sed neque</csw:Value>
       <csw:Value>Ut facilisis justo ut lacus</csw:Value>
       <csw:Value>Vestibulum massa purus</csw:Value>
-      <csw:Value>&#209;un&#231; elementum</csw:Value>
+      <csw:Value>Ñunç elementum</csw:Value>
     </csw:ListOfValues>
   </csw:DomainValues>
 </csw:GetDomainResponse>
