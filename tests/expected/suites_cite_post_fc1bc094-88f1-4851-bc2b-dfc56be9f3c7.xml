@@ -5,7 +5,7 @@
   <csw:SearchResults nextRecord="0" numberOfRecordsMatched="1" numberOfRecordsReturned="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
     <csw:BriefRecord>
       <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
-      <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
+      <dc:title>Fuscé vitae ligulä</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
     </csw:BriefRecord>
   </csw:SearchResults>
