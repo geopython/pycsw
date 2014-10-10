@@ -46,7 +46,7 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>&#209;un&#231; elementum</dc:title>
+        <dc:title>Ñunç elementum</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
@@ -58,7 +58,7 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
+        <dc:title>Fuscé vitae ligulä</dc:title>
       </csw:BriefRecord>
     </csw:InsertResult>
   </csw:TransactionResponse>

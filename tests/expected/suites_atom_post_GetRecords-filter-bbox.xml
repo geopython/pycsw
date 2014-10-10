@@ -23,7 +23,7 @@
       <atom:category>Hydrography-Oceanographic</atom:category>
       <atom:id>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</atom:id>
       <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc"/>
-      <atom:title>&#209;un&#231; elementum</atom:title>
+      <atom:title>Ñunç elementum</atom:title>
       <georss:where>
         <gml:Polygon srsName="urn:x-ogc:def:crs:EPSG:6.11:4326">
           <gml:exterior>

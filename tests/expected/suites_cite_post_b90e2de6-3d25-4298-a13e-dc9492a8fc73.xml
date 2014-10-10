@@ -63,7 +63,7 @@
     </csw:SummaryRecord>
     <csw:SummaryRecord>
       <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
-      <dc:title>&#209;un&#231; elementum</dc:title>
+      <dc:title>Ñunç elementum</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
       <dc:subject>Hydrography-Oceanographic</dc:subject>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
@@ -81,11 +81,11 @@
     </csw:SummaryRecord>
     <csw:SummaryRecord>
       <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
-      <dc:title>Fusc&#233; vitae ligul&#228;</dc:title>
+      <dc:title>Fuscé vitae ligulä</dc:title>
       <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
       <dc:subject>Land titles</dc:subject>
       <dc:format>text/rtf</dc:format>
-      <dct:abstract>Morbi ultri&#231;es, dui suscipit vestibulum pr&#232;tium, velit ante pretium tortor, eg&#235;t tincidunt pede odio ac nulla.</dct:abstract>
+      <dct:abstract>Morbi ultriçes, dui suscipit vestibulum prètium, velit ante pretium tortor, egët tincidunt pede odio ac nulla.</dct:abstract>
     </csw:SummaryRecord>
   </csw:SearchResults>
 </csw:GetRecordsResponse>

@@ -10,7 +10,7 @@
     <csw:InsertResult>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title>Wasserk&#246;rper Linien</dc:title>
+        <dc:title>Wasserkörper Linien</dc:title>
       </csw:BriefRecord>
     </csw:InsertResult>
   </csw:TransactionResponse>
