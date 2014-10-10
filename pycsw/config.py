@@ -163,7 +163,8 @@ class StaticContext(object):
                     'parameters': {
                         'schemaLanguage': {
                             'values': ['http://www.w3.org/XML/Schema',
-                            'http://www.w3.org/TR/xmlschema-1/']
+                                       'http://www.w3.org/TR/xmlschema-1/',
+                                       'http://www.w3.org/2001/XMLSchema']
                         },
                         'typeName': {
                             'values': ['csw:Record']
