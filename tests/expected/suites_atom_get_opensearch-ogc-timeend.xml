@@ -10,7 +10,7 @@
     <atom:category>Land titles</atom:category>
     <atom:id>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</atom:id>
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db"/>
-    <atom:summary>Morbi ultri&#231;es, dui suscipit vestibulum pr&#232;tium, velit ante pretium tortor, eg&#235;t tincidunt pede odio ac nulla.</atom:summary>
-    <atom:title>Fusc&#233; vitae ligul&#228;</atom:title>
+    <atom:summary>Morbi ultriçes, dui suscipit vestibulum prètium, velit ante pretium tortor, egët tincidunt pede odio ac nulla.</atom:summary>
+    <atom:title>Fuscé vitae ligulä</atom:title>
   </atom:entry>
 </atom:feed>
