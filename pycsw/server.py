@@ -1790,6 +1790,7 @@ class Csw(object):
             content, self.repository, self.kvp['resourcetype'],
             pagesize=self.csw_harvest_pagesize)
         except Exception, err:
+            LOGGER.exception(err)
             return self.exceptionreport('NoApplicableCode', 'source',
             'Harvest failed: record parsing failed: %s' % str(err))
 
