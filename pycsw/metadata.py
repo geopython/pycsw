@@ -704,8 +704,15 @@ def _parse_sos(context, repos, record, identifier, version):
         _set(context, recobj, 'pycsw:TempExtent_begin', util.datetime2iso8601(md.contents[offering].begin_position))
         _set(context, recobj, 'pycsw:TempExtent_end', util.datetime2iso8601(md.contents[offering].end_position))
 
-        _set(context, recobj, 'pycsw:AnyText',
-             util.get_anytext([md.contents[offering].description]))
+        #For observed_properties that have mmi url, we simply want the observation name.
+        observed_properties = [obs.rsplit('/', 1)[-1] for obs in md.contents[offering].observed_properties]
+        #Build anytext from description and the observerd_properties.
+        anytext = []
+        anytext.append(md.contents[offering].description)
+        anytext.extend(observed_properties)
+        _set(context, recobj, 'pycsw:AnyText', util.get_anytext(anytext))
+
+        _set(context, recobj, 'pycsw:Keywords', ' '.join(observed_properties))
 
         bbox = md.contents[offering].bbox
         if bbox is not None:
