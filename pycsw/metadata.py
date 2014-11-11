@@ -720,7 +720,6 @@ def _parse_sos(context, repos, record, identifier, version):
         anytext.append(md.contents[offering].description)
         anytext.extend(observed_properties)
         _set(context, recobj, 'pycsw:AnyText', util.get_anytext(anytext))
-
         _set(context, recobj, 'pycsw:Keywords', ','.join(observed_properties))
 
         bbox = md.contents[offering].bbox
