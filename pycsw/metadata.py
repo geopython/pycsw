@@ -704,8 +704,23 @@ def _parse_sos(context, repos, record, identifier, version):
         _set(context, recobj, 'pycsw:TempExtent_begin', util.datetime2iso8601(md.contents[offering].begin_position))
         _set(context, recobj, 'pycsw:TempExtent_end', util.datetime2iso8601(md.contents[offering].end_position))
 
-        _set(context, recobj, 'pycsw:AnyText',
-             util.get_anytext([md.contents[offering].description]))
+        #For observed_properties that have mmi url or urn, we simply want the observation name.
+        observed_properties = []
+        for obs in md.contents[offering].observed_properties:
+          #Observation is stored as urn representation: urn:ogc:def:phenomenon:mmisw.org:cf:sea_water_salinity
+          if obs.lower().startswith(('urn:', 'x-urn')):
+            observed_properties.append(obs.rsplit(':', 1)[-1])
+          #Observation is stored as uri representation: http://mmisw.org/ont/cf/parameter/sea_floor_depth_below_sea_surface
+          elif obs.lower().startswith(('http://', 'https://')):
+            observed_properties.append(obs.rsplit('/', 1)[-1])
+          else:
+            observed_properties.append(obs)
+        #Build anytext from description and the observed_properties.
+        anytext = []
+        anytext.append(md.contents[offering].description)
+        anytext.extend(observed_properties)
+        _set(context, recobj, 'pycsw:AnyText', util.get_anytext(anytext))
+        _set(context, recobj, 'pycsw:Keywords', ','.join(observed_properties))
 
         bbox = md.contents[offering].bbox
         if bbox is not None:
