@@ -708,10 +708,10 @@ def _parse_sos(context, repos, record, identifier, version):
         observed_properties = []
         for obs in md.contents[offering].observed_properties:
           #Observation is stored as urn representation: urn:ogc:def:phenomenon:mmisw.org:cf:sea_water_salinity
-          if obs.lower().find('urn:') == 0:
+          if obs.lower().startswith(('urn:', 'x-urn')) == 0:
             observed_properties.append(obs.rsplit(':', 1)[-1])
           #Observation is stored as uri representation: http://mmisw.org/ont/cf/parameter/sea_floor_depth_below_sea_surface
-          elif obs.lower().find('http://mmisw.org') == 0:
+          elif obs.lower().startswith(('http://', 'https://')) == 0:
             observed_properties.append(obs.rsplit('/', 1)[-1])
           else:
             observed_properties.append(obs)
