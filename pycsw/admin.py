@@ -398,7 +398,7 @@ def refresh_harvested_records(context, database, table, url):
     repos = repository.Repository(database, context, table=table)
 
     # get all harvested records
-    count, records = repos.query(constraint={'where': 'source != "local"'})
+    count, records = repos.query(constraint={'where': 'mdsource != "local"', 'values': []})
 
     if int(count) > 0:
         LOGGER.info('Refreshing %s harvested records', count)
