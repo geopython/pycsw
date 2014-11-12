@@ -1739,6 +1739,8 @@ class Csw(object):
     def harvest(self):
         ''' Handle Harvest request '''
 
+        service_identifier = None
+
         try:
             self._test_manager()
         except Exception, err:
@@ -1780,9 +1782,10 @@ class Csw(object):
             LOGGER.debug('checking if service exists (%s)' % content)
             results = self.repository.query_source(content)
 
-            if len(results) > 0:  # exists, don't insert
-                return self.exceptionreport('NoApplicableCode', 'source',
-                'Insert failed: service %s already in repository' % content)
+            if len(results) > 0:  # exists, keep identifier for update
+                service_identifier = results[0].identifier
+            #    return self.exceptionreport('NoApplicableCode', 'source',
+            #    'Insert failed: service %s already in repository' % content)
 
         # parse resource into record
         try:
@@ -1825,6 +1828,10 @@ class Csw(object):
             # query repository to see if record already exists
             LOGGER.debug('checking if record exists (%s)' % identifier)
             results = self.repository.query_ids(ids=[identifier])
+
+            if len(results) == 0:  # check for service identifier
+                LOGGER.debug('checking if service id exists (%s)' % service_identifier)
+                results = self.repository.query_ids(ids=[service_identifier])
 
             LOGGER.debug(str(results))
 
