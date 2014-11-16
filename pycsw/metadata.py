@@ -213,7 +213,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     LOGGER.debug('Harvesting %d CSW records' % matches)
 
     # loop over all catalogue records incrementally
-    for r in range(1, matches, pagesize):
+    for r in range(1, matches+1, pagesize):
         try:
             md.getrecords2(typenames=csw_typenames, startposition=r,
                            maxrecords=pagesize, outputschema=csw_outputschema, esn='full')
