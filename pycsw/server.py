@@ -1740,6 +1740,8 @@ class Csw(object):
         ''' Handle Harvest request '''
 
         service_identifier = None
+        old_identifier = None
+        deleted = []
 
         try:
             self._test_manager()
@@ -1783,7 +1785,10 @@ class Csw(object):
             results = self.repository.query_source(content)
 
             if len(results) > 0:  # exists, keep identifier for update
+                LOGGER.debug('Service already exists, keeping identifier and results')
                 service_identifier = results[0].identifier
+                service_results = results
+                LOGGER.debug('Identifier is %s' % service_identifier)
             #    return self.exceptionreport('NoApplicableCode', 'source',
             #    'Insert failed: service %s already in repository' % content)
 
@@ -1801,6 +1806,7 @@ class Csw(object):
         updated = 0
         ir = []
 
+        LOGGER.debug('Total Records parsed: %d' % len(records_parsed))
         for record in records_parsed:
             if self.kvp['resourcetype'] == 'urn:geoss:waf':
                 src = record.source
@@ -1822,6 +1828,16 @@ class Csw(object):
             title = getattr(record,
             self.context.md_core_model['mappings']['pycsw:Title'])
 
+            if record.type == 'service' and service_identifier is not None:  # service endpoint
+                LOGGER.debug('Replacing service identifier from %s to %s' % (record.identifier, service_identifier))
+                old_identifier = record.identifier
+                identifier = record.identifier = service_identifier
+            if (record.type != 'service' and service_identifier is not None
+                and old_identifier is not None):  # service resource
+                if record.identifier.find(old_identifier) != -1:
+                    new_identifier = record.identifier.replace(old_identifier, service_identifier)
+                    LOGGER.debug('Replacing service resource identifier from %s to %s' % (record.identifier, new_identifier))
+                    identifier = record.identifier = new_identifier
 
             ir.append({'identifier': identifier, 'title': title})
 
@@ -1868,8 +1884,24 @@ class Csw(object):
         util.nspath_eval('csw:TransactionResponse',
         self.context.namespaces), version='2.0.2')
 
+        if service_identifier is not None:
+            fresh_records = [str(i['identifier']) for i in ir]
+            existing_records = [str(i.identifier) for i in service_results]
+
+            deleted = set(existing_records) - set(fresh_records)
+            LOGGER.debug('Records to delete: %s' % str(deleted))
+
+            for to_delete in deleted:
+                delete_constraint = {
+                    'type': 'filter',
+                    'values': [to_delete],
+                    'where': 'identifier = :pvalue0'
+                }
+                self.repository.delete(delete_constraint)
+
         node2.append(
-        self._write_transactionsummary(inserted=inserted, updated=updated))
+        self._write_transactionsummary(inserted=inserted, updated=updated,
+                                       deleted=len(deleted)))
 
         if inserted > 0:
             # show insert result identifiers
