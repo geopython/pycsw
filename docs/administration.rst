@@ -98,6 +98,15 @@ Optimizing the Database
 .. note::
   This feature is relevant only for PostgreSQL and MySQL
 
+Deleting Records from the Repository
+------------------------------------
+
+.. code-block:: bash
+
+  $ pycsw-admin.py -c delete_records -f default.cfg
+
+This will empty the repository of all records.
+
 Database Specific Notes
 -----------------------
 

@@ -64,6 +64,7 @@ SYNOPSIS
               - post_xml
               - get_sysprof
               - validate_xml
+              - delete_records
 
     -f    Filepath to pycsw configuration
 
@@ -82,7 +83,10 @@ SYNOPSIS
     -u    URL of CSW
 
     -x    XML document
-    
+
+    -y    force confirmation
+
+
 EXAMPLES
 
     1.) setup_db: Creates repository tables and indexes
@@ -134,6 +138,14 @@ EXAMPLES
 
         pycsw-admin.py -c validate_xml -x file.xml -s file.xsd
 
+   11.) delete_records: Deletes all records from repository
+
+        pycsw-admin.py -c delete_records -f default.cfg
+
+   12.) delete_records: Deletes all records from repository without prompting
+
+        pycsw-admin.py -c delete_records -f default.cfg -y
+
 '''
 
 COMMAND = None
@@ -145,6 +157,7 @@ CSW_URL = None
 XML = None
 XSD = None
 TIMEOUT = 30
+FORCE_CONFIRM = False
 
 if len(sys.argv) == 1:
     print usage()
@@ -179,6 +192,8 @@ for o, a in OPTS:
     if o == '-h':  # dump help and exit
         print usage()
         sys.exit(3)
+    if o == '-y':
+        FORCE_CONFIRM = True
 
 if COMMAND is None:
     print '-c <command> is a required argument'
@@ -188,7 +203,7 @@ if COMMAND not in ['setup_db', 'load_records', 'export_records',
                    'rebuild_db_indexes', 'optimize_db',
                    'refresh_harvested_records', 'gen_sitemap',
                    'post_xml', 'get_sysprof',
-                   'validate_xml']:
+                   'validate_xml', 'delete_records']:
     print 'ERROR: invalid command name: %s' % COMMAND
     sys.exit(5)
 
@@ -252,5 +267,11 @@ elif COMMAND == 'get_sysprof':
     print admin.get_sysprof()
 elif COMMAND == 'validate_xml':
     admin.validate_xml(XML, XSD)
+elif COMMAND == 'delete_records':
+    if not FORCE_CONFIRM:
+        if raw_input('This will delete all records! Continue? [Y/n] ') == 'Y':
+            FORCE_CONFIRM = True
+    if FORCE_CONFIRM:
+        admin.delete_records(CONTEXT, DATABASE, TABLE)
 
 print 'Done'

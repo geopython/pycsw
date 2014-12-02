@@ -563,3 +563,12 @@ def validate_xml(xml, xsd):
         return 'Valid'
     except Exception, err:
         raise RuntimeError('ERROR: %s' % str(err))
+
+
+def delete_records(context, database, table):
+    """Deletes all records from repository"""
+
+    LOGGER.info('Deleting all records')
+    
+    repo = repository.Repository(database, context, table=table)
+    repo.delete(constraint={'where': '', 'values': []})
