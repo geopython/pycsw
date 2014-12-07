@@ -344,6 +344,10 @@ def load_records(context, database, table, xml_dirpath, recursive=False):
             try:
                 repo.insert(rec, 'local', util.get_today_and_now())
                 LOGGER.info('Inserted')
+            except RuntimeError, err:
+                LOGGER.info('Record exists. Updating.')
+                repo.update(rec)
+                LOGGER.info('Updated') 
             except Exception, err:
                 LOGGER.warn('ERROR: not inserted %s', err)
 
