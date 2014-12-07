@@ -1356,6 +1356,7 @@ class Csw(object):
             self.kvp['hopcount'])
 
             from owslib.csw import CatalogueServiceWeb
+            from owslib.ows import ExceptionReport
             for fedcat in \
             self.config.get('server', 'federatedcatalogues').split(','):
                 LOGGER.debug('Performing distributed search on federated \
@@ -1377,11 +1378,15 @@ class Csw(object):
                             (remotecsw_matches, plural, fedcat)))
 
                             dsresults.append(remotecsw.records)
-
+                except ExceptionReport, err:
+                    error_string = 'remote CSW %s returned exception: ' % fedcat
+                    dsresults.append(etree.Comment(
+                    ' %s\n\n%s ' % (error_string, err)))
+                    LOGGER.debug(str(err))
                 except Exception, err:
                     error_string = 'remote CSW %s returned error: ' % fedcat
                     dsresults.append(etree.Comment(
-                    ' %s\n\n%s ' % (error_string, remotecsw.response)))
+                    ' %s\n\n%s ' % (error_string, err)))
                     LOGGER.debug(str(err))
 
         if int(matched) == 0:
