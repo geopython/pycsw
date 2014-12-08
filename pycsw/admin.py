@@ -306,7 +306,7 @@ FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
         conn.execute(create_insert_update_trigger_sql)
         conn.execute(create_spatial_index_sql)
 
-def load_records(context, database, table, xml_dirpath, recursive=False):
+def load_records(context, database, table, xml_dirpath, recursive=False, force_update=False):
     """Load metadata records from directory of files to database"""
     repo = repository.Repository(database, context, table=table)
 
@@ -345,11 +345,12 @@ def load_records(context, database, table, xml_dirpath, recursive=False):
                 repo.insert(rec, 'local', util.get_today_and_now())
                 LOGGER.info('Inserted')
             except RuntimeError, err:
-                LOGGER.info('Record exists. Updating.')
-                repo.update(rec)
-                LOGGER.info('Updated') 
-            except Exception, err:
-                LOGGER.warn('ERROR: not inserted %s', err)
+                if force_update:
+                    LOGGER.info('Record exists. Updating.')
+                    repo.update(rec)
+                    LOGGER.info('Updated')
+                else:
+                    LOGGER.warn('ERROR: not inserted %s', err)
 
 
 def export_records(context, database, table, xml_dirpath):

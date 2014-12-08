@@ -97,6 +97,10 @@ EXAMPLES
 
         pycsw-admin.py -c load_records -p /path/to/records -f default.cfg -r
 
+        Load records from directory and force updates
+
+        pycsw-admin.py -c load_records -p /path/to/records -f default.cfg -y
+
     3.) export_records: Dump metadata records from repository into directory
 
         pycsw-admin.py -c export_records -p /path/to/records -f default.cfg
@@ -147,7 +151,7 @@ if len(sys.argv) == 1:
     sys.exit(1)
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:y')
 except getopt.GetoptError, err:
     print '\nERROR: %s' % err
     print usage()
@@ -231,7 +235,7 @@ elif COMMAND == 'validate_xml':
 if COMMAND == 'setup_db':
     admin.setup_db(DATABASE, TABLE, HOME)
 elif COMMAND == 'load_records':
-    admin.load_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH, RECURSIVE)
+    admin.load_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH, RECURSIVE, FORCE_CONFIRM)
 elif COMMAND == 'export_records':
     admin.export_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH)
 elif COMMAND == 'rebuild_db_indexes':
