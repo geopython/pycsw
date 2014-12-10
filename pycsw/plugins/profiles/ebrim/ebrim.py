@@ -140,17 +140,17 @@ class EBRIM(profile.Profile):
 
         etree.SubElement(node, util.nspath_eval('rim:VersionInfo', self.namespaces), versionName='')
 
-        if esn == 'summary':
+        if esn in ['summary', 'full']:
             etree.SubElement(node, util.nspath_eval('rim:ExternalIdentifier', self.namespaces), value=identifier, identificationScheme='foo', registryObject=str(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Relation'])), id=identifier)
 
             name = etree.SubElement(node, util.nspath_eval('rim:Name', self.namespaces))
-            etree.SubElement(name, util.nspath_eval('rim:LocalizedString', self.namespaces), value=unicode(util.getqattr(result, queryables['pycsw:Title']['dbcol'])))
+            etree.SubElement(name, util.nspath_eval('rim:LocalizedString', self.namespaces), value=unicode(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Title'])))
 
             description = etree.SubElement(node, util.nspath_eval('rim:Description', self.namespaces))
-            etree.SubElement(description, util.nspath_eval('rim:LocalizedString', self.namespaces), value=unicode(util.getqattr(result, queryables['pycsw:Abstract']['dbcol'])))
+            etree.SubElement(description, util.nspath_eval('rim:LocalizedString', self.namespaces), value=unicode(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Abstract'])))
 
             val = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:BoundingBox'])
-            bboxel = server.write_boundingbox(val)
+            bboxel = server.write_boundingbox(val, self.context.namespaces)
 
             if bboxel is not None:
                 bboxslot = etree.SubElement(node, util.nspath_eval('rim:Slot', self.namespaces),
