@@ -1232,8 +1232,20 @@ class Csw(object):
         if self.kvp['resulttype'] == 'validate':
             return self._write_acknowledgement()
 
-        if 'maxrecords' not in self.kvp:
-            self.kvp['maxrecords'] = int(self.config.get('server', 'maxrecords'))
+        maxrecords_cfg = -1  # not set in config server.maxrecords
+
+        if self.config.has_option('server', 'maxrecords'):
+            maxrecords_cfg = int(self.config.get('server', 'maxrecords'))
+
+        if 'maxrecords' not in self.kvp:  # not specified by client
+            if maxrecords_cfg > -1:  # specified in config
+                self.kvp['maxrecords'] = maxrecords_cfg
+            else:  # spec default
+                self.kvp['maxrecords'] = 10
+        else:  # specified by client
+            if maxrecords_cfg > -1:  # set in config
+                if int(self.kvp['maxrecords']) > maxrecords_cfg:
+                    self.kvp['maxrecords'] = maxrecords_cfg
 
         if any(x in ['bbox', 'q', 'time'] for x in self.kvp):
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
@@ -2054,14 +2066,8 @@ class Csw(object):
             request['requestid'] = tmp if tmp is not None else None
 
             tmp = doc.find('.').attrib.get('maxRecords')
-            request['maxrecords'] = tmp if tmp is not None else \
-            self.config.get('server', 'maxrecords')
-
-            client_mr = int(request['maxrecords'])
-            server_mr = int(self.config.get('server', 'maxrecords'))
-
-            if client_mr < server_mr:
-                request['maxrecords'] = client_mr
+            if tmp is not None:
+                request['maxrecords'] = tmp
 
             tmp = doc.find(util.nspath_eval('csw:DistributedSearch',
                   self.context.namespaces))
