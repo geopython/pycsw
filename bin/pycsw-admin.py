@@ -248,7 +248,12 @@ elif COMMAND == 'validate_xml':
         sys.exit(12)
 
 if COMMAND == 'setup_db':
-    admin.setup_db(DATABASE, TABLE, HOME)
+    try:
+        admin.setup_db(DATABASE, TABLE, HOME)
+    except Exception, err:
+        print err
+        print 'ERROR: DB creation error.  Database tables already exist'
+        print 'Delete tables or database to reinitialize'
 elif COMMAND == 'load_records':
     admin.load_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH, RECURSIVE, FORCE_CONFIRM)
 elif COMMAND == 'export_records':
