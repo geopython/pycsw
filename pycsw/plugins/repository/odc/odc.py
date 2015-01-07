@@ -88,7 +88,7 @@ class OpenDataCatalogRepository(object):
         # if ids are passed which are not int, silently return (does not exist)
         try:
             return self._get_repo_filter(Resource.objects).filter(id__in=[s.split(':')[-1] for s in ids]).all()
-        except Exception, err:
+        except Exception as err:
             return []
 
     def query_domain(self, domain, typenames, domainquerytype='list',

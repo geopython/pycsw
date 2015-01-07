@@ -165,7 +165,7 @@ if len(sys.argv) == 1:
 
 try:
     OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:y')
-except getopt.GetoptError, err:
+except getopt.GetoptError as err:
     print '\nERROR: %s' % err
     print usage()
     sys.exit(2)
@@ -250,7 +250,7 @@ elif COMMAND == 'validate_xml':
 if COMMAND == 'setup_db':
     try:
         admin.setup_db(DATABASE, TABLE, HOME)
-    except Exception, err:
+    except Exception as err:
         print err
         print 'ERROR: DB creation error.  Database tables already exist'
         print 'Delete tables or database to reinitialize'
