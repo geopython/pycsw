@@ -313,7 +313,7 @@ class Repository(object):
             try:
                 self.session.begin()
                 self._get_repo_filter(self.session.query(self.dataset)).filter_by(
-                identifier=identifier).update(update_dict)
+                identifier=identifier).update(update_dict, synchronize_session='fetch')
                 self.session.commit()
             except Exception, err:
                 self.session.rollback()
