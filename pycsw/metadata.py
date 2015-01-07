@@ -53,7 +53,7 @@ def parse_record(context, record, repos=None,
         # CSW service, not csw:Record
         try:
             return _parse_csw(context, repos, record, identifier, pagesize)
-        except Exception, err:
+        except Exception as err:
             # TODO: implement better exception handling
             if str(err).find('ExceptionReport') != -1:
                 msg = 'CSW harvesting error: %s' % str(err)
@@ -62,7 +62,7 @@ def parse_record(context, record, repos=None,
             LOGGER.debug('Not a CSW, attempting to fetch Dublin Core')
             try:
                 content = util.http_request('GET', record)
-            except Exception, err:
+            except Exception as err:
                 raise RuntimeError('HTTP error: %s' % str(err))
             return [_parse_dc(context, repos, etree.fromstring(content))]
 
@@ -217,7 +217,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
         try:
             md.getrecords2(typenames=csw_typenames, startposition=r,
                            maxrecords=pagesize, outputschema=csw_outputschema, esn='full')
-        except Exception, err:  # this is a CSW, but server rejects query
+        except Exception as err:  # this is a CSW, but server rejects query
             raise RuntimeError(md.response)
         for k, v in md.records.iteritems():
             if csw_typenames == 'gmd:MD_Metadata':
@@ -238,7 +238,7 @@ def _parse_waf(context, repos, record, identifier):
     try:
         parser = etree.HTMLParser()
         tree = etree.fromstring(content, parser=parser)
-    except Exception, err:
+    except Exception as err:
         raise Exception('Could not parse WAF: %s' % str(err))
         
     up = urlparse(record)
@@ -991,7 +991,7 @@ def _parse_iso(context, repos, exml):
                         linkstr = '%s,%s,%s,%s' % \
                         (scpt.name, scpt.description, scpt.protocol, scpt.url)
                         links.append(linkstr)
-    except Exception, err:  # srv: identification does not exist
+    except Exception as err:  # srv: identification does not exist
         LOGGER.debug('no srv:SV_ServiceIdentification links found')
 
     if len(links) > 0:

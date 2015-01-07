@@ -207,7 +207,7 @@ REMOTE = False
 
 try:
     OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:rh')
-except getopt.GetoptError, err:
+except getopt.GetoptError as err:
     print '\nERROR: %s' % err
     print usage()
     sys.exit(2)

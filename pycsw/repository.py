@@ -121,7 +121,7 @@ class Repository(object):
                 self.session.execute(select([func.postgis_version()]))
                 temp_dbtype = 'postgresql+postgis+wkt'
                 LOGGER.debug('PostgreSQL+PostGIS1+WKT detected')
-            except Exception, err:
+            except Exception as err:
                 LOGGER.debug('PostgreSQL+PostGIS1+WKT detection failed')
 
             # check if PostgreSQL is enabled with PostGIS 2.x
@@ -129,7 +129,7 @@ class Repository(object):
                 self.session.execute('select(postgis_version())')
                 temp_dbtype = 'postgresql+postgis+wkt'
                 LOGGER.debug('PostgreSQL+PostGIS2+WKT detected')
-            except Exception, err:
+            except Exception as err:
                 LOGGER.debug('PostgreSQL+PostGIS2+WKT detection failed')
 
             # check if a native PostGIS geometry column exists
@@ -139,7 +139,7 @@ class Repository(object):
                 self.postgis_geometry_column = str(row['f_geometry_column'])
                 temp_dbtype = 'postgresql+postgis+native'
                 LOGGER.debug('PostgreSQL+PostGIS+Native detected')
-            except Exception, err:
+            except Exception as err:
                 LOGGER.debug('PostgreSQL+PostGIS+Native not picked up: %s', str(err))
 
             # check if a native PostgreSQL FTS GIN index exists
@@ -289,7 +289,7 @@ class Repository(object):
             self.session.begin()
             self.session.add(record)
             self.session.commit()
-        except Exception, err:
+        except Exception as err:
             self.session.rollback()
             raise RuntimeError('ERROR: %s' % str(err.orig))
 
@@ -315,7 +315,7 @@ class Repository(object):
                 self._get_repo_filter(self.session.query(self.dataset)).filter_by(
                 identifier=identifier).update(update_dict, synchronize_session='fetch')
                 self.session.commit()
-            except Exception, err:
+            except Exception as err:
                 self.session.rollback()
                 raise RuntimeError('ERROR: %s' % str(err.orig))
         else:  # update based on record properties
@@ -348,7 +348,7 @@ class Repository(object):
                         }, synchronize_session='fetch')
                 self.session.commit()
                 return rows
-            except Exception, err:
+            except Exception as err:
                 self.session.rollback()
                 raise RuntimeError('ERROR: %s' % str(err.orig))
 
@@ -376,7 +376,7 @@ class Repository(object):
                     synchronize_session='fetch')
 
             self.session.commit()
-        except Exception, err:
+        except Exception as err:
             self.session.rollback()
             raise RuntimeError('ERROR: %s' % str(err.orig))
 
