@@ -118,7 +118,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             try:
                 LOGGER.debug('Testing existence of ogc:PropertyName')
                 pname = queryables[elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text]['dbcol']
-            except Exception, err:
+            except Exception as err:
                 raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err)))
 
         else:
@@ -126,7 +126,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                 LOGGER.debug('Testing existence of ogc:PropertyName')
                 pname = queryables[elem.find(
                     util.nspath_eval('ogc:PropertyName', nsmap)).text]['dbcol']
-            except Exception, err:
+            except Exception as err:
                 raise RuntimeError('Invalid PropertyName: %s.  %s' %
                                    (elem.find(util.nspath_eval('ogc:PropertyName',
                                    nsmap)).text, str(err)))
