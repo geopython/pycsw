@@ -95,7 +95,7 @@ class Csw(object):
                     import codecs
                     with codecs.open(rtconfig, encoding='utf-8') as scp:
                         self.config.readfp(scp)
-        except Exception, err:
+        except Exception as err:
             self.response = self.exceptionreport(
             'NoApplicableCode', 'service',
             'Error opening configuration %s' % rtconfig)
@@ -192,7 +192,7 @@ class Csw(object):
                 mappings = imp.load_source(modulename, module)
                 self.context.md_core_model = mappings.MD_CORE_MODEL
                 self.context.refresh_dc(mappings.MD_CORE_MODEL)
-            except Exception, err:
+            except Exception as err:
                 self.response = self.exceptionreport(
                 'NoApplicableCode', 'service',
                 'Could not load repository.mappings %s' % str(err))
@@ -254,7 +254,7 @@ class Csw(object):
                 geonode_.GeoNodeRepository(self.context)
                 LOGGER.debug('GeoNode repository loaded (geonode): %s.' % \
                 self.repository.dbtype)
-            except Exception, err:
+            except Exception as err:
                 self.response = self.exceptionreport(
                 'NoApplicableCode', 'service',
                 'Could not load repository (geonode): %s' % str(err))
@@ -270,7 +270,7 @@ class Csw(object):
                 odc.OpenDataCatalogRepository(self.context)
                 LOGGER.debug('OpenDataCatalog repository loaded (geonode): %s.' % \
                 self.repository.dbtype)
-            except Exception, err:
+            except Exception as err:
                 self.response = self.exceptionreport(
                 'NoApplicableCode', 'service',
                 'Could not load repository (odc): %s' % str(err))
@@ -285,7 +285,7 @@ class Csw(object):
                 self.config.get('repository', 'table'), repo_filter)
                 LOGGER.debug('Repository loaded (local): %s.' \
                 % self.repository.dbtype)
-            except Exception, err:
+            except Exception as err:
                 self.response = self.exceptionreport(
                 'NoApplicableCode', 'service',
                 'Could not load repository (local): %s' % str(err))
@@ -1145,7 +1145,7 @@ class Csw(object):
                                 etree.SubElement(listofvalues,
                                 util.nspath_eval('csw:Value',
                                 self.context.namespaces)).text = val
-                except Exception, err:
+                except Exception as err:
                     LOGGER.debug('No results for propertyname %s: %s.' %
                     (pname2, str(err)))
         return node
@@ -1295,7 +1295,7 @@ class Csw(object):
                         self.repository.queryables['_all'],
                         self.repository.dbtype,
                         self.context.namespaces, self.orm, self.language['text'], self.repository.fts)
-                    except Exception, err:
+                    except Exception as err:
                         errortext = \
                         'Exception: document not valid.\nError: %s.' % str(err)
 
@@ -1325,7 +1325,7 @@ class Csw(object):
                 if name.find('BoundingBox') != -1 or name.find('Envelope') != -1:
                     # it's a spatial sort
                     self.kvp['sortby']['spatial'] = True
-            except Exception, err:
+            except Exception as err:
                 return self.exceptionreport('InvalidParameterValue',
                 'sortby', 'Invalid SortBy propertyname: %s' % name)
 
@@ -1353,7 +1353,7 @@ class Csw(object):
             sortby=self.kvp['sortby'], typenames=self.kvp['typenames'],
             maxrecords=self.kvp['maxrecords'],
             startposition=int(self.kvp['startposition'])-1)
-        except Exception, err:
+        except Exception as err:
             return self.exceptionreport('InvalidParameterValue', 'constraint',
             'Invalid query: %s' % err)
 
@@ -1390,12 +1390,12 @@ class Csw(object):
                             (remotecsw_matches, plural, fedcat)))
 
                             dsresults.append(remotecsw.records)
-                except ExceptionReport, err:
+                except ExceptionReport as err:
                     error_string = 'remote CSW %s returned exception: ' % fedcat
                     dsresults.append(etree.Comment(
                     ' %s\n\n%s ' % (error_string, err)))
                     LOGGER.debug(str(err))
-                except Exception, err:
+                except Exception as err:
                     error_string = 'remote CSW %s returned error: ' % fedcat
                     dsresults.append(etree.Comment(
                     ' %s\n\n%s ' % (error_string, err)))
@@ -1497,7 +1497,7 @@ class Csw(object):
                         write_record(res, self.kvp['elementsetname'],
                         self.kvp['outputschema'],
                         self.repository.queryables['_all']))
-                except Exception, err:
+                except Exception as err:
                     self.response = self.exceptionreport(
                     'NoApplicableCode', 'service',
                     'Record serialization failed: %s' % str(err))
@@ -1628,7 +1628,7 @@ class Csw(object):
 
         try:
             self._test_manager()
-        except Exception, err:
+        except Exception as err:
             return self.exceptionreport('NoApplicableCode', 'transaction',
             str(err))
 
@@ -1645,7 +1645,7 @@ class Csw(object):
                 try:
                     record = metadata.parse_record(self.context,
                     ttype['xml'], self.repository)[0]
-                except Exception, err:
+                except Exception as err:
                     return self.exceptionreport('NoApplicableCode', 'insert',
                     'Transaction (insert) failed: record parsing failed: %s' \
                     % str(err))
@@ -1668,7 +1668,7 @@ class Csw(object):
                     self.context.md_core_model['mappings']['pycsw:Identifier']),
                     'title': getattr(record,
                     self.context.md_core_model['mappings']['pycsw:Title'])})
-                except Exception, err:
+                except Exception as err:
                     return self.exceptionreport('NoApplicableCode',
                     'insert', 'Transaction (insert) failed: %s.' % str(err))
 
@@ -1680,7 +1680,7 @@ class Csw(object):
                         ttype['xml'], self.repository)[0]
                         identifier = getattr(record,
                         self.context.md_core_model['mappings']['pycsw:Identifier'])
-                    except Exception, err:
+                    except Exception as err:
                         return self.exceptionreport('NoApplicableCode', 'insert',
                         'Transaction (update) failed: record parsing failed: %s' \
                         % str(err))
@@ -1698,7 +1698,7 @@ class Csw(object):
                         try:
                             self.repository.update(record)
                             updated += 1
-                        except Exception, err:
+                        except Exception as err:
                             return self.exceptionreport('NoApplicableCode',
                             'update',
                             'Transaction (update) failed: %s.' % str(err))
@@ -1728,7 +1728,7 @@ class Csw(object):
                         updated += self.repository.update(record=None,
                         recprops=ttype['recordproperty'],
                         constraint=ttype['constraint'])
-                    except Exception, err:
+                    except Exception as err:
                         return self.exceptionreport('NoApplicableCode',
                         'update',
                         'Transaction (update) failed: %s.' % str(err))
@@ -1762,7 +1762,7 @@ class Csw(object):
 
         try:
             self._test_manager()
-        except Exception, err:
+        except Exception as err:
             return self.exceptionreport('NoApplicableCode', 'harvest', str(err))
 
         if self.requesttype == 'GET':
@@ -1789,7 +1789,7 @@ class Csw(object):
             LOGGER.debug('Fetching resource %s' % self.kvp['source'])
             try:
                 content = util.http_request('GET', self.kvp['source'])
-            except Exception, err:
+            except Exception as err:
                 errortext = 'Error fetching resource %s.\nError: %s.' % \
                 (self.kvp['source'], str(err))
                 LOGGER.debug(errortext)
@@ -1814,7 +1814,7 @@ class Csw(object):
             records_parsed = metadata.parse_record(self.context,
             content, self.repository, self.kvp['resourcetype'],
             pagesize=self.csw_harvest_pagesize)
-        except Exception, err:
+        except Exception as err:
             LOGGER.exception(err)
             return self.exceptionreport('NoApplicableCode', 'source',
             'Harvest failed: record parsing failed: %s' % str(err))
@@ -1872,7 +1872,7 @@ class Csw(object):
                 inserted += 1
                 try:
                     self.repository.insert(record, source, insert_date)
-                except Exception, err:
+                except Exception as err:
                     return self.exceptionreport('NoApplicableCode',
                     'source', 'Harvest (insert) failed: %s.' % str(err))
             else:  # existing record, it's an update
@@ -1884,7 +1884,7 @@ class Csw(object):
 
                 try:
                     self.repository.update(record)
-                except Exception, err:
+                except Exception as err:
                     return self.exceptionreport('NoApplicableCode',
                     'source', 'Harvest (update) failed: %s.' % str(err))
                 updated += 1
@@ -1937,7 +1937,7 @@ class Csw(object):
         try:
             LOGGER.debug('Parsing %s.' % postdata)
             doc = etree.fromstring(postdata)
-        except Exception, err:
+        except Exception as err:
             errortext = \
             'Exception: document not well-formed.\nError: %s.' % str(err)
 
@@ -1985,7 +1985,7 @@ class Csw(object):
                 LOGGER.debug('Request is valid XML.')
             else:  # parse Transaction without validation
                 doc = etree.fromstring(postdata)
-        except Exception, err:
+        except Exception as err:
             errortext = \
             'Exception: the document is not valid.\nError: %s' % str(err)
             LOGGER.debug(errortext)
@@ -2128,7 +2128,7 @@ class Csw(object):
                         elname.find('Envelope') != -1):
                         # it's a spatial sort
                         request['sortby']['spatial'] = True
-                except Exception, err:
+                except Exception as err:
                     errortext = \
                     'Invalid ogc:SortProperty/ogc:PropertyName: %s' % str(err)
                     LOGGER.debug(errortext)
@@ -2460,7 +2460,7 @@ class Csw(object):
                 query['where'], query['values'] = fes.parse(tmp,
                 self.repository.queryables['_all'], self.repository.dbtype,
                 self.context.namespaces, self.orm, self.language['text'], self.repository.fts)
-            except Exception, err:
+            except Exception as err:
                 return 'Invalid Filter request: %s' % err
         tmp = element.find(util.nspath_eval('csw:CqlText', self.context.namespaces))
         if tmp is not None:
@@ -2575,7 +2575,7 @@ class Csw(object):
                     uprh.path, body)
                     msg.quit()
                     LOGGER.debug('Email sent successfully.')
-                except Exception, err:
+                except Exception as err:
                     LOGGER.debug('Error processing email: %s.' % str(err))
 
             elif uprh.scheme == 'ftp':
@@ -2591,7 +2591,7 @@ class Csw(object):
                     ftp.storbinary('STOR %s' % uprh.path[1:], StringIO(xml))
                     ftp.quit()
                     LOGGER.debug('FTP sent successfully.')
-                except Exception, err:
+                except Exception as err:
                     LOGGER.debug('Error processing FTP: %s.' % str(err))
 
     def _write_verboseresponse(self, insertresults):
