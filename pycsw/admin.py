@@ -330,7 +330,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
         # read document
         try:
             exml = etree.parse(recfile)
-        except Exception, err:
+        except Exception as err:
             LOGGER.warn('XML document is not well-formed: %s', str(err))
             continue
 
@@ -344,7 +344,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
             try:
                 repo.insert(rec, 'local', util.get_today_and_now())
                 LOGGER.info('Inserted')
-            except RuntimeError, err:
+            except RuntimeError as err:
                 if force_update:
                     LOGGER.info('Record exists. Updating.')
                     repo.update(rec)
@@ -370,7 +370,7 @@ def export_records(context, database, table, xml_dirpath):
         LOGGER.info('Directory %s does not exist.  Creating...', dirpath)
         try:
             os.makedirs(dirpath)
-        except OSError, err:
+        except OSError as err:
             raise RuntimeError('Could not create %s %s' % (dirpath, err))
 
     for record in records.all():
@@ -391,7 +391,7 @@ def export_records(context, database, table, xml_dirpath):
             with open(filename, 'w') as xml:
                 xml.write('<?xml version="1.0" encoding="UTF-8"?>\n')
                 xml.write(record.xml)
-        except Exception, err:
+        except Exception as err:
             raise RuntimeError("Error writing to %s" % filename, err)
 
 
@@ -428,7 +428,7 @@ def refresh_harvested_records(context, database, table, url):
             try:
                 csw.harvest(source, schema)
                 LOGGER.info(csw.response)
-            except Exception, err:
+            except Exception as err:
                 LOGGER.warn(err)
     else:
         LOGGER.info('No harvested records')
@@ -496,7 +496,7 @@ def post_xml(url, xml, timeout=30):
     from owslib.util import http_post
     try:
         return http_post(url=url, request=open(xml).read(), timeout=timeout)
-    except Exception, err:
+    except Exception as err:
         raise RuntimeError(err)
 
 
@@ -561,7 +561,7 @@ def validate_xml(xml, xsd):
     try:
         valid = etree.parse(xml, parser)
         return 'Valid'
-    except Exception, err:
+    except Exception as err:
         raise RuntimeError('ERROR: %s' % str(err))
 
 
