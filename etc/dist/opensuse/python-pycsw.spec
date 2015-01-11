@@ -1,7 +1,8 @@
+# =================================================================
 #
-# spec file for package python-pycsw (1.6.0)
+# Authors: Angelos Tzotsos <tzotsos@opensuse.org>
 #
-# Copyright (c) 2013 Angelos Tzotsos <tzotsos@opensuse.org>
+# Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -23,7 +24,8 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
-
+#
+# =================================================================
 
 %define _webappconfdir /etc/apache2/conf.d/
 %define _htdocsdir /srv/www/htdocs/
