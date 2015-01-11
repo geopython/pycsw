@@ -2,7 +2,7 @@ CITE Data
 =========
 
 This directory provides data used to check conformance against the
-Open Geospatial Consortium Compliance and Intolerability Testing Initiative (CITE).
+Open Geospatial Consortium Compliance and Interoperability Testing Initiative (CITE).
 
 * http://cite.opengeospatial.org/teamengine/
 
