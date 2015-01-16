@@ -374,12 +374,18 @@ class APISO(profile.Profile):
         '''Perform extra profile specific checks in the GetDomain request'''
         return None
 
-    def write_record(self, result, esn, outputschema, queryables):
+    def write_record(self, result, esn, outputschema, queryables, caps=None):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
         typename = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Typename'])
-        if (esn == 'full' and typename == 'gmd:MD_Metadata'):
+        is_iso_anyway = False
+
+        xml_blob = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:XML'])
+        if caps is None and xml_blob is not None and xml_blob.startswith('<gmd:MD_Metadata'):
+            is_iso_anyway = True
+
+        if (esn == 'full' and (typename == 'gmd:MD_Metadata' or is_iso_anyway)):
             # dump record as is and exit
-            return etree.fromstring(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:XML']))
+            return etree.fromstring(xml_blob)
 
         if typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
             util.transform_mappings(queryables, self.repository['mappings']['csw:Record'])
@@ -412,12 +418,76 @@ class APISO(profile.Profile):
 
         if esn in ['summary', 'full']:
             # contact
-            val = util.getqattr(result, queryables['apiso:OrganisationName']['dbcol'])
             contact = etree.SubElement(node, util.nspath_eval('gmd:contact', self.namespaces))
-            if val:
-                CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty', self.namespaces))
-                org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName', self.namespaces))
-                etree.SubElement(org_name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val
+            if caps is not None:
+                CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty', self.namespaces)) 
+                if hasattr(caps.provider.contact, 'name'):
+                    ind_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:individualName', self.namespaces))
+                    etree.SubElement(ind_name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.name
+                if hasattr(caps.provider.contact, 'organization'):
+                    if caps.provider.contact.organization is not None:
+                        org_val = caps.provider.contact.organization
+                    else:
+                        org_val = caps.provider.name
+                    org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName', self.namespaces))
+                    etree.SubElement(org_name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = org_val
+                if hasattr(caps.provider.contact, 'position'):
+                    pos_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:positionName', self.namespaces))
+                    etree.SubElement(pos_name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.position
+                contact_info = etree.SubElement(CI_resp, util.nspath_eval('gmd:contactInfo', self.namespaces)) 
+                ci_contact = etree.SubElement(contact_info, util.nspath_eval('gmd:CI_Contact', self.namespaces)) 
+                if hasattr(caps.provider.contact, 'phone'):
+                    phone = etree.SubElement(ci_contact, util.nspath_eval('gmd:phone', self.namespaces)) 
+                    ci_phone = etree.SubElement(phone, util.nspath_eval('gmd:CI_Telephone', self.namespaces)) 
+                    voice = etree.SubElement(ci_phone, util.nspath_eval('gmd:voice', self.namespaces)) 
+                    etree.SubElement(voice, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.phone
+                    if hasattr(caps.provider.contact, 'fax'):
+                        fax = etree.SubElement(ci_phone, util.nspath_eval('gmd:facsimile', self.namespaces)) 
+                        etree.SubElement(fax, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.fax
+                address = etree.SubElement(ci_contact, util.nspath_eval('gmd:address', self.namespaces)) 
+                ci_address = etree.SubElement(address, util.nspath_eval('gmd:CI_Address', self.namespaces)) 
+                if hasattr(caps.provider.contact, 'address'):
+                    delivery_point = etree.SubElement(ci_address, util.nspath_eval('gmd:deliveryPoint', self.namespaces)) 
+                    etree.SubElement(delivery_point, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.address
+                if hasattr(caps.provider.contact, 'city'):
+                    city = etree.SubElement(ci_address, util.nspath_eval('gmd:city', self.namespaces)) 
+                    etree.SubElement(city, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.city
+                if hasattr(caps.provider.contact, 'region'):
+                    admin_area = etree.SubElement(ci_address, util.nspath_eval('gmd:administrativeArea', self.namespaces)) 
+                    etree.SubElement(admin_area, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.region
+                if hasattr(caps.provider.contact, 'postcode'):
+                    postal_code = etree.SubElement(ci_address, util.nspath_eval('gmd:postalCode', self.namespaces)) 
+                    etree.SubElement(postal_code, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.postcode
+                if hasattr(caps.provider.contact, 'country'):
+                    country = etree.SubElement(ci_address, util.nspath_eval('gmd:country', self.namespaces)) 
+                    etree.SubElement(country, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.country
+                if hasattr(caps.provider.contact, 'email'):
+                    email = etree.SubElement(ci_address, util.nspath_eval('gmd:electronicMailAddress', self.namespaces)) 
+                    etree.SubElement(email, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.email
+
+                contact_url = None
+                if hasattr(caps.provider, 'url'):
+                    contact_url = caps.provider.url
+                if hasattr(caps.provider.contact, 'url') and caps.provider.contact.url is not None:
+                    contact_url = caps.provider.contact.url
+
+                if contact_url is not None:
+                    online_resource = etree.SubElement(ci_contact, util.nspath_eval('gmd:onlineResource', self.namespaces)) 
+                    gmd_linkage = etree.SubElement(online_resource, util.nspath_eval('gmd:linkage', self.namespaces)) 
+                    etree.SubElement(gmd_linkage, util.nspath_eval('gmd:URL', self.namespaces)).text = contact_url
+
+                if hasattr(caps.provider.contact, 'role'):
+                    role = etree.SubElement(CI_resp, util.nspath_eval('gmd:role', self.namespaces)) 
+                    role_val = caps.provider.contact.role
+                    if role_val is None:
+                        role_val = 'pointOfContact'
+                    etree.SubElement(role, util.nspath_eval('gmd:CI_RoleCode', self.namespaces), codeListValue=role_val, codeList='%s#CI_RoleCode' % CODELIST).text = role_val
+            else:
+                val = util.getqattr(result, queryables['apiso:OrganisationName']['dbcol'])
+                if val:
+                    CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty', self.namespaces))
+                    org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName', self.namespaces))
+                    etree.SubElement(org_name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val
 
             # date
             val = util.getqattr(result, queryables['apiso:Modified']['dbcol'])
@@ -666,4 +736,3 @@ def _write_codelist_element(codelist_element, codelist_value, nsmap):
     element.text = codelist_value
 
     return element
-

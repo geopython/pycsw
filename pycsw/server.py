@@ -107,6 +107,7 @@ class Csw(object):
         os.path.join(os.path.dirname(__file__), '..')))
 
         self.context.pycsw_home = self.config.get('server', 'home')
+        self.context.url = self.config.get('server', 'url')
 
         # configure transaction support, if specified in config
         self._gen_manager()
