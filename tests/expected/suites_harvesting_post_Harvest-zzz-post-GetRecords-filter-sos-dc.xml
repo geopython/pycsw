@@ -38,7 +38,7 @@
       <dc:source>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi</dc:source>
       <dc:rights>NONE</dc:rights>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>40.88 -73.73</ows:LowerCorner>
+        <ows:LowerCorner>40.58 -73.73</ows:LowerCorner>
         <ows:UpperCorner>47.79 -54.05</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
