@@ -89,6 +89,30 @@
         <dc:title/>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title/>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title/>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title/>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title/>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title/>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title/>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER_gen0</dc:identifier>
         <dc:title/>
       </csw:BriefRecord>
@@ -122,30 +146,6 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER_gen1</dc:identifier>
-        <dc:title/>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title/>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title/>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title/>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title/>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-        <dc:title/>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
         <dc:title/>
       </csw:BriefRecord>
       <csw:BriefRecord>
