@@ -11,7 +11,7 @@
           </ogc:PropertyIsEqualTo>
           <ogc:PropertyIsEqualTo>
             <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName>
-            <ogc:Literal>WPS</ogc:Literal>
+            <ogc:Literal>OGC:WPS</ogc:Literal>
           </ogc:PropertyIsEqualTo>
           <ogc:PropertyIsEqualTo>
             <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName>
@@ -19,11 +19,11 @@
           </ogc:PropertyIsEqualTo>
           <ogc:PropertyIsEqualTo>
             <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName>
-            <ogc:Literal>WFS</ogc:Literal>
+            <ogc:Literal>OGC:WFS</ogc:Literal>
           </ogc:PropertyIsEqualTo>
           <ogc:PropertyIsEqualTo>
             <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName>
-            <ogc:Literal>CSW</ogc:Literal>
+            <ogc:Literal>OGC:CSW</ogc:Literal>
           </ogc:PropertyIsEqualTo>
           <ogc:PropertyIsEqualTo>
             <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName>

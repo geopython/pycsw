@@ -2,5 +2,369 @@
 <!-- PYCSW_VERSION -->
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="0" numberOfRecordsReturned="0" recordSchema="http://www.isotc211.org/2005/gmd" elementSet="full"/>
+  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="1" numberOfRecordsReturned="1" recordSchema="http://www.isotc211.org/2005/gmd" elementSet="full">
+    <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+      <gmd:fileIdentifier>
+        <gco:CharacterString>PYCSW_IDENTIFIER</gco:CharacterString>
+      </gmd:fileIdentifier>
+      <gmd:language>
+        <gco:CharacterString/>
+      </gmd:language>
+      <gmd:hierarchyLevel>
+        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="service" codeSpace="ISOTC211/19115">service</gmd:MD_ScopeCode>
+      </gmd:hierarchyLevel>
+      <gmd:contact>
+        <gmd:CI_ResponsibleParty>
+          <gmd:individualName>
+            <gco:CharacterString>Matt Austin</gco:CharacterString>
+          </gmd:individualName>
+          <gmd:organisationName>
+            <gco:CharacterString>National Oceanic and Atmospheric Administration</gco:CharacterString>
+          </gmd:organisationName>
+          <gmd:positionName>
+            <gco:CharacterString/>
+          </gmd:positionName>
+          <gmd:contactInfo>
+            <gmd:CI_Contact>
+              <gmd:phone>
+                <gmd:CI_Telephone>
+                  <gmd:voice>
+                    <gco:CharacterString/>
+                  </gmd:voice>
+                  <gmd:facsimile>
+                    <gco:CharacterString/>
+                  </gmd:facsimile>
+                </gmd:CI_Telephone>
+              </gmd:phone>
+              <gmd:address>
+                <gmd:CI_Address>
+                  <gmd:deliveryPoint>
+                    <gco:CharacterString/>
+                  </gmd:deliveryPoint>
+                  <gmd:city>
+                    <gco:CharacterString>Silver Spring</gco:CharacterString>
+                  </gmd:city>
+                  <gmd:administrativeArea>
+                    <gco:CharacterString>Maryland</gco:CharacterString>
+                  </gmd:administrativeArea>
+                  <gmd:postalCode>
+                    <gco:CharacterString>20910</gco:CharacterString>
+                  </gmd:postalCode>
+                  <gmd:country>
+                    <gco:CharacterString>USA</gco:CharacterString>
+                  </gmd:country>
+                  <gmd:electronicMailAddress>
+                    <gco:CharacterString/>
+                  </gmd:electronicMailAddress>
+                </gmd:CI_Address>
+              </gmd:address>
+            </gmd:CI_Contact>
+          </gmd:contactInfo>
+          <gmd:role>
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode>
+          </gmd:role>
+        </gmd:CI_ResponsibleParty>
+      </gmd:contact>
+      <gmd:dateStamp>
+        <gco:Date/>
+      </gmd:dateStamp>
+      <gmd:metadataStandardName>
+        <gco:CharacterString>ISO19119</gco:CharacterString>
+      </gmd:metadataStandardName>
+      <gmd:metadataStandardVersion>
+        <gco:CharacterString>2005/PDAM 1</gco:CharacterString>
+      </gmd:metadataStandardVersion>
+      <gmd:identificationInfo>
+        <srv:SV_ServiceIdentification id="PYCSW_IDENTIFIER">
+          <gmd:citation>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>GeoServer Web Feature Service</gco:CharacterString>
+              </gmd:title>
+            </gmd:CI_Citation>
+          </gmd:citation>
+          <gmd:abstract>
+            <gco:CharacterString>This is the reference implementation of WFS 1.0.0 and WFS 1.1.0, supports all WFS operations including Transaction.</gco:CharacterString>
+          </gmd:abstract>
+          <gmd:descriptiveKeywords>
+            <gmd:MD_Keywords>
+              <gmd:keyword>
+                <gco:CharacterString>WFS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>WMS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>GEOSERVER</gco:CharacterString>
+              </gmd:keyword>
+            </gmd:MD_Keywords>
+          </gmd:descriptiveKeywords>
+          <gmd:language>
+            <gco:CharacterString/>
+          </gmd:language>
+          <srv:serviceType>
+            <gco:LocalName>OGC:WFS</gco:LocalName>
+          </srv:serviceType>
+          <srv:serviceTypeVersion>
+            <gco:CharacterString>1.1.0</gco:CharacterString>
+          </srv:serviceTypeVersion>
+          <srv:keywords>
+            <gmd:MD_Keywords>
+              <gmd:keyword>
+                <gco:CharacterString>WFS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>WMS</gco:CharacterString>
+              </gmd:keyword>
+              <gmd:keyword>
+                <gco:CharacterString>GEOSERVER</gco:CharacterString>
+              </gmd:keyword>
+            </gmd:MD_Keywords>
+          </srv:keywords>
+          <srv:extent>
+            <gmd:EX_Extent>
+              <gmd:geographicElement>
+                <gmd:EX_GeographicBoundingBox>
+                  <gmd:westBoundLongitude>
+                    <gco:Decimal>-189.85</gco:Decimal>
+                  </gmd:westBoundLongitude>
+                  <gmd:eastBoundLongitude>
+                    <gco:Decimal>190.98</gco:Decimal>
+                  </gmd:eastBoundLongitude>
+                  <gmd:southBoundLatitude>
+                    <gco:Decimal>-176.73</gco:Decimal>
+                  </gmd:southBoundLatitude>
+                  <gmd:northBoundLatitude>
+                    <gco:Decimal>212.97</gco:Decimal>
+                  </gmd:northBoundLatitude>
+                </gmd:EX_GeographicBoundingBox>
+              </gmd:geographicElement>
+            </gmd:EX_Extent>
+          </srv:extent>
+          <srv:couplingType>
+            <srv:SV_CouplingType codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#SV_CouplingType" codeListValue="tight">tight</srv:SV_CouplingType>
+          </srv:couplingType>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetFeature</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>geoss_water_sba:Reservoir</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetFeature</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>geoss_water_sba:glwd_1</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetFeature</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>geoss_water_sba:Dams</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetFeature</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>geoss_water_sba:glwd_2</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetFeature</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
+                <gco:CharacterString>geoss_water_sba:Lakes</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:containsOperations>
+            <srv:SV_OperationMetadata>
+              <srv:operationName>
+                <gco:CharacterString>GetCapabilities</gco:CharacterString>
+              </srv:operationName>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPGet">HTTPGet</srv:DCPList>
+              </srv:DCP>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPPost">HTTPPost</srv:DCPList>
+              </srv:DCP>
+              <srv:connectPoint>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>http://services.ogc.noaa.gov/geoserver/geoss_water_sba/wfs</gmd:URL>
+                  </gmd:linkage>
+                </gmd:CI_OnlineResource>
+              </srv:connectPoint>
+            </srv:SV_OperationMetadata>
+          </srv:containsOperations>
+          <srv:containsOperations>
+            <srv:SV_OperationMetadata>
+              <srv:operationName>
+                <gco:CharacterString>DescribeFeatureType</gco:CharacterString>
+              </srv:operationName>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPGet">HTTPGet</srv:DCPList>
+              </srv:DCP>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPPost">HTTPPost</srv:DCPList>
+              </srv:DCP>
+              <srv:connectPoint>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>http://services.ogc.noaa.gov/geoserver/geoss_water_sba/wfs</gmd:URL>
+                  </gmd:linkage>
+                </gmd:CI_OnlineResource>
+              </srv:connectPoint>
+            </srv:SV_OperationMetadata>
+          </srv:containsOperations>
+          <srv:containsOperations>
+            <srv:SV_OperationMetadata>
+              <srv:operationName>
+                <gco:CharacterString>GetFeature</gco:CharacterString>
+              </srv:operationName>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPGet">HTTPGet</srv:DCPList>
+              </srv:DCP>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPPost">HTTPPost</srv:DCPList>
+              </srv:DCP>
+              <srv:connectPoint>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>http://services.ogc.noaa.gov/geoserver/geoss_water_sba/wfs</gmd:URL>
+                  </gmd:linkage>
+                </gmd:CI_OnlineResource>
+              </srv:connectPoint>
+            </srv:SV_OperationMetadata>
+          </srv:containsOperations>
+          <srv:containsOperations>
+            <srv:SV_OperationMetadata>
+              <srv:operationName>
+                <gco:CharacterString>GetGmlObject</gco:CharacterString>
+              </srv:operationName>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPGet">HTTPGet</srv:DCPList>
+              </srv:DCP>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPPost">HTTPPost</srv:DCPList>
+              </srv:DCP>
+              <srv:connectPoint>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>http://services.ogc.noaa.gov/geoserver/geoss_water_sba/wfs</gmd:URL>
+                  </gmd:linkage>
+                </gmd:CI_OnlineResource>
+              </srv:connectPoint>
+            </srv:SV_OperationMetadata>
+          </srv:containsOperations>
+          <srv:containsOperations>
+            <srv:SV_OperationMetadata>
+              <srv:operationName>
+                <gco:CharacterString>LockFeature</gco:CharacterString>
+              </srv:operationName>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPGet">HTTPGet</srv:DCPList>
+              </srv:DCP>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPPost">HTTPPost</srv:DCPList>
+              </srv:DCP>
+              <srv:connectPoint>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>http://services.ogc.noaa.gov/geoserver/geoss_water_sba/wfs</gmd:URL>
+                  </gmd:linkage>
+                </gmd:CI_OnlineResource>
+              </srv:connectPoint>
+            </srv:SV_OperationMetadata>
+          </srv:containsOperations>
+          <srv:containsOperations>
+            <srv:SV_OperationMetadata>
+              <srv:operationName>
+                <gco:CharacterString>GetFeatureWithLock</gco:CharacterString>
+              </srv:operationName>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPGet">HTTPGet</srv:DCPList>
+              </srv:DCP>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPPost">HTTPPost</srv:DCPList>
+              </srv:DCP>
+              <srv:connectPoint>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>http://services.ogc.noaa.gov/geoserver/geoss_water_sba/wfs</gmd:URL>
+                  </gmd:linkage>
+                </gmd:CI_OnlineResource>
+              </srv:connectPoint>
+            </srv:SV_OperationMetadata>
+          </srv:containsOperations>
+          <srv:containsOperations>
+            <srv:SV_OperationMetadata>
+              <srv:operationName>
+                <gco:CharacterString>Transaction</gco:CharacterString>
+              </srv:operationName>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPGet">HTTPGet</srv:DCPList>
+              </srv:DCP>
+              <srv:DCP>
+                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPPost">HTTPPost</srv:DCPList>
+              </srv:DCP>
+              <srv:connectPoint>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>http://services.ogc.noaa.gov/geoserver/geoss_water_sba/wfs</gmd:URL>
+                  </gmd:linkage>
+                </gmd:CI_OnlineResource>
+              </srv:connectPoint>
+            </srv:SV_OperationMetadata>
+          </srv:containsOperations>
+          <srv:operatesOn uuidref="geoss_water_sba:Reservoir" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-geoss_water_sba:Reservoir"/>
+          <srv:operatesOn uuidref="geoss_water_sba:glwd_1" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-geoss_water_sba:glwd_1"/>
+          <srv:operatesOn uuidref="geoss_water_sba:Dams" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-geoss_water_sba:Dams"/>
+          <srv:operatesOn uuidref="geoss_water_sba:glwd_2" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-geoss_water_sba:glwd_2"/>
+          <srv:operatesOn uuidref="geoss_water_sba:Lakes" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-geoss_water_sba:Lakes"/>
+        </srv:SV_ServiceIdentification>
+      </gmd:identificationInfo>
+      <gmd:distributionInfo>
+        <gmd:MD_Distribution>
+          <gmd:transferOptions>
+            <gmd:MD_DigitalTransferOptions>
+              <gmd:onLine>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>http://services.ogc.noaa.gov/geoserver/geoss_water_sba/wfs</gmd:URL>
+                  </gmd:linkage>
+                  <gmd:protocol>
+                    <gco:CharacterString>OGC:WFS</gco:CharacterString>
+                  </gmd:protocol>
+                  <gmd:name>
+                    <gco:CharacterString>PYCSW_IDENTIFIER</gco:CharacterString>
+                  </gmd:name>
+                  <gmd:description>
+                    <gco:CharacterString>OGC-WFS Web Feature Service</gco:CharacterString>
+                  </gmd:description>
+                </gmd:CI_OnlineResource>
+              </gmd:onLine>
+            </gmd:MD_DigitalTransferOptions>
+          </gmd:transferOptions>
+        </gmd:MD_Distribution>
+      </gmd:distributionInfo>
+    </gmd:MD_Metadata>
+  </csw:SearchResults>
 </csw:GetRecordsResponse>
