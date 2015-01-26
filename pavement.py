@@ -291,7 +291,7 @@ def start(options):
 def stop():
     """Stop local WSGI server instance"""
 
-    kill('python', 'csw.wsgi')
+    kill_process('python', 'csw.wsgi')
 
 
 @task
@@ -307,43 +307,16 @@ def reset(options):
         sh('git clean -dxf')
 
 
-def kill(arg1, arg2):
-    """Stops a proces that contains arg1 and is filtered by arg2"""
+def kill_process(procname, scriptname):
+    """kill WSGI processes that may be running in development"""
 
-    # from https://github.com/GeoNode/geonode/blob/dev/pavement.py#L443
-    from subprocess import Popen, PIPE
+    # from http://stackoverflow.com/a/2940878
+    import subprocess, signal
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
 
-    # Wait until ready
-    time0 = time.time()
-    # Wait no more than these many seconds
-    time_out = 30
-    running = True
-
-    while running and time.time() - time0 < time_out:
-        proc = Popen('ps aux | grep %s' % arg1, shell=True,
-                     stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
-
-        lines = proc.stdout.readlines()
-
-        running = False
-        for line in lines:
-
-            if '%s' % arg2 in line:
-                running = True
-
-                # Get pid
-                fields = line.strip().split()
-
-                info('Stopping %s (process number %s)' % (arg1, fields[1]))
-                kill2 = 'kill -9 %s 2> /dev/null' % fields[1]
-                os.system(kill2)
-
-        # Give it a little more time
-        time.sleep(1)
-    else:
-        pass
-
-    if running:
-        raise Exception('Could not stop %s: '
-                        'Running processes are\n%s'
-                        % (arg1, '\n'.join([l.strip() for l in lines])))
+    for line in out.splitlines():
+        if procname in line and scriptname in line:
+            pid = int(line.split()[1])
+            info('Stopping %s %s %d' % (procname, scriptname, pid))
+            os.kill(pid, signal.SIGKILL)
