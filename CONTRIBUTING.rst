@@ -30,6 +30,7 @@ GitHub Pull Requests
 - pull requests can provide agreement to license guidelines as text in the pull request or via email to the pycsw `mailing list`_  (see `Contributions and Licensing Agreement Template <#contributions-and-licensing-agreement-template>`_).  **This is only required for a contributor's first pull request.  Subsequent pull requests do not require this step**
 - pull requests may include copyright in the source code header by the contributor if the contribution is significant or the contributor wants to claim copyright on their contribution
 - all contributors shall be listed at https://github.com/geopython/pycsw/graphs/contributors
+- unclaimed copyright, by default, is assigned to the main copyright holders as specified in https://github.com/geopython/pycsw/blob/master/LICENSE.txt
 
 Contributions and Licensing Agreement Template
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
