@@ -6,6 +6,40 @@ enhancements/features, etc.).  This document will outline some guidelines on
 contributing to pycsw.  As well, pycsw `community </community.html>`_ is a great place to
 get an idea of how to connect and participate in pycsw community and development.
 
+pycsw has the following modes of contribution:
+
+- GitHub Commit Access
+- GitHub Pull Requests
+
+Contributions and Licensing
+---------------------------
+
+Contributors are asked to confirm that they comply with project `license <https://github.com/geopython/pycsw/blob/master/LICENSE.txt>`_ guidelines.
+
+GitHub Commit Access
+^^^^^^^^^^^^^^^^^^^^
+
+- proposals to provide developers with GitHub commit access shall be emailed to the pycsw-devel `mailing list`_.  Proposals shall be approved by the pycsw development team.  Committers shall be added by the project admin
+- removal of commit access shall be handled in the same manner
+- each committer must send an email to the pycsw mailing list agreeing to the license guidelines (see `Contributions and Licensing Agreement Template <#contributions-and-licensing-agreement-template>`_).  **This is only required once**
+- each committer shall be listed in https://github.com/geopython/pycsw/blob/master/COMMITTERS.txt
+
+GitHub Pull Requests
+^^^^^^^^^^^^^^^^^^^^
+
+- pull requests can provide agreement to license guidelines as text in the pull request or via email to the pycsw `mailing list`_  (see `Contributions and Licensing Agreement Template <#contributions-and-licensing-agreement-template>`_).  **This is only required for a contributor's first pull request.  Subsequent pull requests do not require this step**
+- pull requests may include copyright in the source code header by the contributor if the contribution is significant or the contributor wants to claim copyright on their contribution
+- all contributors shall be listed at https://github.com/geopython/pycsw/graphs/contributors
+- unclaimed copyright, by default, is assigned to the main copyright holders as specified in https://github.com/geopython/pycsw/blob/master/LICENSE.txt
+
+Contributions and Licensing Agreement Template
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``Hi all, I'd like to contribute <feature X|bugfix Y|docs|something else> to pycsw.
+I confirm that my contributions to pycsw will be compatible with the pycsw
+license guidelines at the time of contribution.``
+
+
 GitHub
 ------
 
@@ -27,7 +61,7 @@ Documentation
 Bugs
 ----
 
-pycsw’s `issue tracker <https://github.com/geopython/pycsw/issues>`_ is the place to report bugs or request enhancements. To submit a bug be sure to specify the pycsw version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform. For convenience, you can run ``pycsw-admin.py -c get_sysprof`` and copy/paste the output into your issue.
+pycsw's `issue tracker <https://github.com/geopython/pycsw/issues>`_ is the place to report bugs or request enhancements. To submit a bug be sure to specify the pycsw version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform. For convenience, you can run ``pycsw-admin.py -c get_sysprof`` and copy/paste the output into your issue.
 
 Forking pycsw
 -------------
@@ -99,15 +133,13 @@ your own repository to ensure your pycsw repository is up to date with pycsw mas
   $ git checkout master
   $ git pull upstream master
 
-GitHub Commit Access
---------------------
-
-- proposals to provide developers with GitHub commit access shall be emailed to the pycsw-devel `mailing list </community.html#mailing_list>`_.  Proposals shall be approved by the pycsw development team.  Committers shall be added by the project admin
-- removal of commit access shall be handled in the same manner
-- each committer shall be listed in https://github.com/geopython/pycsw/blob/master/COMMITTERS.txt
-
+.. _`Corporate`: http://www.osgeo.org/sites/osgeo.org/files/Page/corporate_contributor.txt
+.. _`Individual`: http://www.osgeo.org/sites/osgeo.org/files/Page/individual_contributor.txt
+.. _`info@osgeo.org`: mailto:info@osgeo.org
+.. _`OSGeo`: http://www.osgeo.org/content/foundation/legal/licenses.html
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 .. _`pep8`: http://pypi.python.org/pypi/pep8/
 .. _`pylint`: http://www.logilab.org/857
 .. _`Sphinx`: http://sphinx-doc.org/
 .. _`developer tasks`: https://github.com/geopython/pycsw/wiki/Developer-Tasks
+.. _`mailing list`: http://pycsw.org/community.html#mailing_list
