@@ -98,11 +98,11 @@ class Geometry(object):
                                % ','.join(TYPES))
 
         # reproject data if needed
-        if self.crs is not None and self.crs.code != 4326:
+        if self.crs is not None and self.crs.code not in [4326, 'CRS84']:
             LOGGER.debug('transforming geometry to 4326')
             try:
                 self.wkt = self.transform(self.crs.code, DEFAULT_SRS.code)
-            except Exception, err:
+            except Exception as err:
                 raise RuntimeError('Reprojection error: Invalid srsName '
                                    '"%s": %s' % (self.crs.id, str(err)))
 

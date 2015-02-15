@@ -64,6 +64,7 @@ SYNOPSIS
               - post_xml
               - get_sysprof
               - validate_xml
+              - delete_records
 
     -f    Filepath to pycsw configuration
 
@@ -82,7 +83,10 @@ SYNOPSIS
     -u    URL of CSW
 
     -x    XML document
-    
+
+    -y    force confirmation
+
+
 EXAMPLES
 
     1.) setup_db: Creates repository tables and indexes
@@ -96,6 +100,10 @@ EXAMPLES
         Load records from directory recursively
 
         pycsw-admin.py -c load_records -p /path/to/records -f default.cfg -r
+
+        Load records from directory and force updates
+
+        pycsw-admin.py -c load_records -p /path/to/records -f default.cfg -y
 
     3.) export_records: Dump metadata records from repository into directory
 
@@ -130,6 +138,14 @@ EXAMPLES
 
         pycsw-admin.py -c validate_xml -x file.xml -s file.xsd
 
+   11.) delete_records: Deletes all records from repository
+
+        pycsw-admin.py -c delete_records -f default.cfg
+
+   12.) delete_records: Deletes all records from repository without prompting
+
+        pycsw-admin.py -c delete_records -f default.cfg -y
+
 '''
 
 COMMAND = None
@@ -141,14 +157,15 @@ CSW_URL = None
 XML = None
 XSD = None
 TIMEOUT = 30
+FORCE_CONFIRM = False
 
 if len(sys.argv) == 1:
     print usage()
     sys.exit(1)
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:')
-except getopt.GetoptError, err:
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:y')
+except getopt.GetoptError as err:
     print '\nERROR: %s' % err
     print usage()
     sys.exit(2)
@@ -175,6 +192,8 @@ for o, a in OPTS:
     if o == '-h':  # dump help and exit
         print usage()
         sys.exit(3)
+    if o == '-y':
+        FORCE_CONFIRM = True
 
 if COMMAND is None:
     print '-c <command> is a required argument'
@@ -184,7 +203,7 @@ if COMMAND not in ['setup_db', 'load_records', 'export_records',
                    'rebuild_db_indexes', 'optimize_db',
                    'refresh_harvested_records', 'gen_sitemap',
                    'post_xml', 'get_sysprof',
-                   'validate_xml']:
+                   'validate_xml', 'delete_records']:
     print 'ERROR: invalid command name: %s' % COMMAND
     sys.exit(5)
 
@@ -229,9 +248,14 @@ elif COMMAND == 'validate_xml':
         sys.exit(12)
 
 if COMMAND == 'setup_db':
-    admin.setup_db(DATABASE, TABLE, HOME)
+    try:
+        admin.setup_db(DATABASE, TABLE, HOME)
+    except Exception as err:
+        print err
+        print 'ERROR: DB creation error.  Database tables already exist'
+        print 'Delete tables or database to reinitialize'
 elif COMMAND == 'load_records':
-    admin.load_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH, RECURSIVE)
+    admin.load_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH, RECURSIVE, FORCE_CONFIRM)
 elif COMMAND == 'export_records':
     admin.export_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH)
 elif COMMAND == 'rebuild_db_indexes':
@@ -248,5 +272,11 @@ elif COMMAND == 'get_sysprof':
     print admin.get_sysprof()
 elif COMMAND == 'validate_xml':
     admin.validate_xml(XML, XSD)
+elif COMMAND == 'delete_records':
+    if not FORCE_CONFIRM:
+        if raw_input('This will delete all records! Continue? [Y/n] ') == 'Y':
+            FORCE_CONFIRM = True
+    if FORCE_CONFIRM:
+        admin.delete_records(CONTEXT, DATABASE, TABLE)
 
 print 'Done'

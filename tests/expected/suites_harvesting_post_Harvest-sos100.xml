@@ -3,7 +3,7 @@
 <csw:HarvestResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
   <csw:TransactionResponse version="2.0.2">
     <csw:TransactionSummary>
-      <csw:totalInserted>28</csw:totalInserted>
+      <csw:totalInserted>29</csw:totalInserted>
       <csw:totalUpdated>0</csw:totalUpdated>
       <csw:totalDeleted>0</csw:totalDeleted>
     </csw:TransactionSummary>
@@ -17,16 +17,12 @@
         <dc:title>Mooring CML data from the COOA (UNH-COOA) located UNH Coastal Marine Lab Field Station</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-F02</dc:identifier>
-        <dc:title>Mooring F02 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located DeepCwind Castine Test Site</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-F01</dc:identifier>
         <dc:title>Mooring F01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Penobscot Bay</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-ALL_PLATFORMS</dc:identifier>
-        <dc:title>Mooring data for all buoys from the Northeastern Regional Association of Coastal Ocean Observing Systems (NERACOOS) located in the NERACOOS Region</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-F02</dc:identifier>
+        <dc:title>Mooring F02 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located DeepCwind Castine Test Site</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMB-MO-04</dc:identifier>
@@ -101,6 +97,10 @@
         <dc:title>Mooring CO2 data from the COOA (UNH-COOA) located Appledore Island</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ALL_PLATFORMS</dc:identifier>
+        <dc:title>Mooring data for all buoys from the Northeastern Regional Association of Coastal Ocean Observing Systems (NERACOOS) located in the NERACOOS Region</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-A01</dc:identifier>
         <dc:title>Mooring A01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Massachusetts Bay</dc:title>
       </csw:BriefRecord>
@@ -115,6 +115,10 @@
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-I01</dc:identifier>
         <dc:title>Mooring I01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Eastern Maine Shelf</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CDIP207</dc:identifier>
+        <dc:title>Mooring CDIP207 data from the COOA (UNH-COOA-CDIP) located Fire Island, NY</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-44060</dc:identifier>

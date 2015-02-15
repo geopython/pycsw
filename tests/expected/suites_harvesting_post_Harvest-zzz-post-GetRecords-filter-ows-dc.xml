@@ -2,22 +2,18 @@
 <!-- PYCSW_VERSION -->
 <csw:GetRecordsResponse xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults nextRecord="6" numberOfRecordsMatched="7" numberOfRecordsReturned="5" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+  <csw:SearchResults nextRecord="6" numberOfRecordsMatched="8" numberOfRecordsReturned="5" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
     <csw:Record>
       <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-      <dc:title>My GeoServer CSW</dc:title>
+      <dc:title></dc:title>
       <dc:type>service</dc:type>
-      <dc:subject>CSW</dc:subject>
-      <dc:subject>Catalog Services For The Web</dc:subject>
-      <dc:subject>GEOSERVER</dc:subject>
+      <dc:subject></dc:subject>
       <dc:format>CSW</dc:format>
-      <dct:references scheme="OGC:CSW">http://suite.opengeo.org/geoserver/ows</dct:references>
-      <dct:abstract>This is a description of your Catalog Services For The Web.</dct:abstract>
-      <dc:creator>Boundless</dc:creator>
-      <dc:publisher>Boundless</dc:publisher>
-      <dc:contributor>Boundless</dc:contributor>
-      <dc:source>http://suite.opengeo.org/geoserver/ows</dc:source>
-      <dc:rights>NONE</dc:rights>
+      <dct:references scheme="OGC:CSW">http://sdi.georchestra.org/geoserver/ows</dct:references>
+      <dc:creator>geOrchestra PSC</dc:creator>
+      <dc:publisher>geOrchestra</dc:publisher>
+      <dc:contributor>geOrchestra PSC</dc:contributor>
+      <dc:source>http://sdi.georchestra.org/geoserver/ows</dc:source>
     </csw:Record>
     <csw:Record>
       <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
@@ -72,7 +68,7 @@
       <dc:source>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi</dc:source>
       <dc:rights>NONE</dc:rights>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>40.88 -73.73</ows:LowerCorner>
+        <ows:LowerCorner>40.58 -73.73</ows:LowerCorner>
         <ows:UpperCorner>47.79 -54.05</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
@@ -101,35 +97,23 @@
     </csw:Record>
     <csw:Record>
       <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
-      <dc:title>Atlas of the Cryosphere: Northern Hemisphere</dc:title>
+      <dc:title>WCS Demo Server for MapServer</dc:title>
       <dc:type>service</dc:type>
-      <dc:subject>Arctic</dc:subject>
-      <dc:subject>Cryosphere</dc:subject>
-      <dc:subject>Earth Science</dc:subject>
-      <dc:subject>Ice Extent</dc:subject>
-      <dc:subject>Ice Sheets</dc:subject>
-      <dc:subject>Northern Hemisphere</dc:subject>
-      <dc:subject>Oceans</dc:subject>
-      <dc:subject>Polar</dc:subject>
-      <dc:subject>Sea Ice</dc:subject>
-      <dc:subject>Sea Ice Concentration</dc:subject>
-      <dc:subject>Snow/Ice</dc:subject>
-      <dc:subject>Snow Cover</dc:subject>
-      <dc:subject>Snow Melt</dc:subject>
-      <dc:subject>Snow Water Equivalent</dc:subject>
+      <dc:subject>WCS</dc:subject>
+      <dc:subject>MODIS</dc:subject>
+      <dc:subject>NDVI</dc:subject>
       <dc:format>OGC:WCS</dc:format>
-      <dct:references scheme="OGC:WCS">http://nsidc.org/cgi-bin/atlas_north</dct:references>
-      <dct:abstract>The National Snow and Ice Data Center (NSIDC) Atlas of the Cryosphere is a map server that provides data and information pertinent to the frozen regions of Earth, including monthly climatologies of sea ice extent and concentration, snow cover extent, and snow water equivalent, in addition to glacier outlines, permafrost extent and classification, ice sheet elevation and accumulation, and more. In order to support polar projections, the Atlas is divided into two separate map servers: one for the Northern Hemisphere and one for the Southern Hemisphere. In addition to providing map images and source data through Open Geospatial Consortium, Inc. (OGC) protocols (WMS, WFS, and WCS), a dynamic web interface for exploring these data is also available at http://nsidc.org/data/atlas. If you have questions, comments or suggestions, please contact NSIDC User Services at +1.303.492.6199 or nsidc@nsidc.org. The development of this map server application was supported by NASA's Earth Observing System (EOS) Program under contract NAS5-03099 and was developed using MapServer, an Open Source development environment for building spatially-enabled internet applications. To cite the Atlas of the Cryosphere: Maurer, J. 2007. Atlas of the Cryosphere. Boulder, Colorado USA: National Snow and Ice Data Center. Digital media. Available at http://nsidc.org/data/atlas/.</dct:abstract>
-      <dc:creator>NSIDC User Services</dc:creator>
-      <dc:publisher>National Snow and Ice Data Center</dc:publisher>
-      <dc:contributor>NSIDC User Services</dc:contributor>
-      <dc:source>http://nsidc.org/cgi-bin/atlas_north</dc:source>
+      <dct:references scheme="OGC:WCS">http://demo.mapserver.org/cgi-bin/wcs</dct:references>
+      <dc:creator>Steve Lime</dc:creator>
+      <dc:publisher>Minnesota DNR</dc:publisher>
+      <dc:contributor>Steve Lime</dc:contributor>
+      <dc:source>http://demo.mapserver.org/cgi-bin/wcs</dc:source>
       <dc:rights>
-    none
+    NONE
   </dc:rights>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
-        <ows:LowerCorner>-89.32 -180.0</ows:LowerCorner>
-        <ows:UpperCorner>89.59 179.98</ows:UpperCorner>
+        <ows:LowerCorner>41.03 -97.71</ows:LowerCorner>
+        <ows:UpperCorner>49.67 -80.68</ows:UpperCorner>
       </ows:BoundingBox>
     </csw:Record>
   </csw:SearchResults>

@@ -143,7 +143,7 @@ def kvp2filterxml(kvp, context):
                     context.namespaces))
         try:
             el.text = "%s %s" % (bbox_list[0], bbox_list[1])
-        except Exception, err:
+        except Exception as err:
             errortext = 'Exception: OpenSearch bbox not valid.\nError: %s.' % str(err)
             LOGGER.debug(errortext)
         env.append(el)
@@ -151,7 +151,7 @@ def kvp2filterxml(kvp, context):
                     context.namespaces))
         try:
             el.text = "%s %s" % (bbox_list[2], bbox_list[3])
-        except Exception, err:
+        except Exception as err:
             errortext = 'Exception: OpenSearch bbox not valid.\nError: %s.' % str(err)
             LOGGER.debug(errortext)
         env.append(el)

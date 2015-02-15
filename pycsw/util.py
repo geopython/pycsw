@@ -76,7 +76,7 @@ def get_version_integer(version):
             return -1
         try:
             return int(xyz[0]) * 10000 + int(xyz[1]) * 100 + int(xyz[2])
-        except Exception, err:
+        except Exception as err:
             raise RuntimeError('%s' % str(err))
     else:  # not a valid version string
         return -1
@@ -236,7 +236,7 @@ def get_spatial_overlay_rank(target_geometry, query_geometry):
             else:
                 LOGGER.debug('Spatial Rank: %s', str(((X/Q)**kq)*((X/T)**kt)))
                 return str(((X/Q)**kq)*((X/T)**kt))
-        except Exception, err:
+        except Exception as err:
                 LOGGER.warn('Cannot derive spatial overlay ranking %s', err)
                 return '0'
     return '0'
@@ -254,7 +254,7 @@ def bbox_from_polygons(bboxs):
         bbx = MultiPolygon(polys).bounds
         bstr = '%.2f,%.2f,%.2f,%.2f' % (bbx[0], bbx[1], bbx[2], bbx[3])
         return bbox2wktpolygon(bstr)
-    except Exception, err:
+    except Exception as err:
         raise RuntimeError('Cannot aggregate polygons: %s' % str(err))
 
 
@@ -272,7 +272,7 @@ def update_xpath(nsmap, xml, recprop):
             for node1 in nodes:
                 if node1.text != recprop['value']:  # values differ, update
                     node1.text = recprop['value']
-    except Exception, err:
+    except Exception as err:
         raise RuntimeError('ERROR: %s' % str(err))
 
     return etree.tostring(xml)
