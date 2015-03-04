@@ -2380,10 +2380,9 @@ class Csw(object):
             % self.encoding
             appinfo = '<!-- pycsw %s -->\n' % self.context.version
 
-        LOGGER.debug('Response:\n%s' % response)
-
-        s = '%s%s%s' % (xmldecl, appinfo, response)
-        return s.encode(self.encoding)
+        s = (u'%s%s%s' % (xmldecl, appinfo, response)).encode(self.encoding)
+        LOGGER.debug('Response:\n%s', s)
+        return s
 
 
     def _gen_soap_wrapper(self):
