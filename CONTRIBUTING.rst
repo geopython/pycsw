@@ -102,24 +102,24 @@ This section will guide you through steps of working on pycsw.  This section ass
 .. code-block:: bash
 
   # setup a virtualenv
-  $ virtualenv mypycsw && cd mypycsw
-  $ . ./bin/activate
+  virtualenv mypycsw && cd mypycsw
+  . ./bin/activate
   # clone the repository locally
-  $ git clone git@github.com:USERNAME/pycsw.git
-  $ cd pycsw
-  $ pip install -e . && pip install -r requirements-standalone.txt
+  git clone git@github.com:USERNAME/pycsw.git
+  cd pycsw
+  pip install -e . && pip install -r requirements-standalone.txt
   # add the main pycsw master branch to keep up to date with upstream changes
-  $ git remote add upstream https://github.com/geopython/pycsw.git
-  $ git pull upstream master
+  git remote add upstream https://github.com/geopython/pycsw.git
+  git pull upstream master
   # create a local branch off master
   # The name of the branch should include the issue number if it exists
-  $ git branch 72-foo
-  $ git checkout 72-foo
+  git branch 72-foo
+  git checkout 72-foo
   # 
   # make code/doc changes
   #
-  $ git commit -am 'fix xyz (#72-foo)'
-  $ git push origin 72-foo
+  git commit -am 'fix xyz (#72-foo)'
+  git push origin 72-foo
 
 Your changes are now visible on your pycsw repository on GitHub.  You are now ready to create a pull request.
 A member of the pycsw team will review the pull request and provide feedback / suggestions if required.  If changes are
@@ -130,8 +130,8 @@ your own repository to ensure your pycsw repository is up to date with pycsw mas
 
 .. code-block:: bash
 
-  $ git checkout master
-  $ git pull upstream master
+  git checkout master
+  git pull upstream master
 
 .. _`Corporate`: http://www.osgeo.org/sites/osgeo.org/files/Page/corporate_contributor.txt
 .. _`Individual`: http://www.osgeo.org/sites/osgeo.org/files/Page/individual_contributor.txt
