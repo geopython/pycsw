@@ -113,13 +113,13 @@ This section will guide you through steps of working on pycsw.  This section ass
   git pull upstream master
   # create a local branch off master
   # The name of the branch should include the issue number if it exists
-  git branch 72-foo
-  git checkout 72-foo
+  git branch issue-72
+  git checkout issue-72
   # 
   # make code/doc changes
   #
-  git commit -am 'fix xyz (#72-foo)'
-  git push origin 72-foo
+  git commit -am 'fix xyz (#72)'
+  git push origin issue-72
 
 Your changes are now visible on your pycsw repository on GitHub.  You are now ready to create a pull request.
 A member of the pycsw team will review the pull request and provide feedback / suggestions if required.  If changes are
