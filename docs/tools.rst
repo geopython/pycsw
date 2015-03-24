@@ -24,3 +24,4 @@ Metadata Editing Tools
 - `EUOSME <https://joinup.ec.europa.eu/software/euosme/description>`_
 - `GIMED <http://sourceforge.net/projects/gimed/>`_
 - `Metatools <http://hub.qgis.org/projects/metatools>`_ (`QGIS <http://qgis.org/>`_ plugin)
+- `QSphere <http://hub.qgis.org/plugins/qsphere>`_ (`QGIS <http://qgis.org/>`_ plugin)
