@@ -42,7 +42,7 @@ from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
 from pycsw.core import config, log, metadata, util
-from pycsw.ogc.fes.fes1 import fes
+from pycsw.ogc.fes import fes1
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -915,7 +915,7 @@ class Csw(object):
         util.nspath_eval('ogc:GeometryOperands', self.context.namespaces))
 
         for geomtype in \
-        fes.MODEL['GeometryOperands']['values']:
+        fes1.MODEL['GeometryOperands']['values']:
             etree.SubElement(geomops,
             util.nspath_eval('ogc:GeometryOperand',
             self.context.namespaces)).text = geomtype
@@ -924,7 +924,7 @@ class Csw(object):
         util.nspath_eval('ogc:SpatialOperators', self.context.namespaces))
 
         for spatial_comparison in \
-        fes.MODEL['SpatialOperators']['values']:
+        fes1.MODEL['SpatialOperators']['values']:
             etree.SubElement(spatialops,
             util.nspath_eval('ogc:SpatialOperator', self.context.namespaces),
             name=spatial_comparison)
@@ -938,11 +938,11 @@ class Csw(object):
         cmpops = etree.SubElement(scalarcaps,
         util.nspath_eval('ogc:ComparisonOperators', self.context.namespaces))
 
-        for cmpop in fes.MODEL['ComparisonOperators'].keys():
+        for cmpop in fes1.MODEL['ComparisonOperators'].keys():
             etree.SubElement(cmpops,
             util.nspath_eval('ogc:ComparisonOperator',
             self.context.namespaces)).text = \
-            fes.MODEL['ComparisonOperators'][cmpop]['opname']
+            fes1.MODEL['ComparisonOperators'][cmpop]['opname']
 
         arithops = etree.SubElement(scalarcaps,
         util.nspath_eval('ogc:ArithmeticOperators', self.context.namespaces))
@@ -953,15 +953,15 @@ class Csw(object):
         functionames = etree.SubElement(functions,
         util.nspath_eval('ogc:FunctionNames', self.context.namespaces))
 
-        for fnop in sorted(fes.MODEL['Functions'].keys()):
+        for fnop in sorted(fes1.MODEL['Functions'].keys()):
             etree.SubElement(functionames,
             util.nspath_eval('ogc:FunctionName', self.context.namespaces),
-            nArgs=fes.MODEL['Functions'][fnop]['args']).text = fnop
+            nArgs=fes1.MODEL['Functions'][fnop]['args']).text = fnop
 
         idcaps = etree.SubElement(fltcaps,
         util.nspath_eval('ogc:Id_Capabilities', self.context.namespaces))
 
-        for idcap in fes.MODEL['Ids']['values']:
+        for idcap in fes1.MODEL['Ids']['values']:
             etree.SubElement(idcaps, util.nspath_eval('ogc:%s' % idcap,
             self.context.namespaces))
 
@@ -1295,7 +1295,7 @@ class Csw(object):
                         self.kvp['constraint'] = {}
                         self.kvp['constraint']['type'] = 'filter'
                         self.kvp['constraint']['where'], self.kvp['constraint']['values'] = \
-                        fes.parse(doc,
+                        fes1.parse(doc,
                         self.repository.queryables['_all'],
                         self.repository.dbtype,
                         self.context.namespaces, self.orm, self.language['text'], self.repository.fts)
@@ -2460,7 +2460,7 @@ class Csw(object):
             LOGGER.debug('Filter constraint specified.')
             try:
                 query['type'] = 'filter'
-                query['where'], query['values'] = fes.parse(tmp,
+                query['where'], query['values'] = fes1.parse(tmp,
                 self.repository.queryables['_all'], self.repository.dbtype,
                 self.context.namespaces, self.orm, self.language['text'], self.repository.fts)
             except Exception as err:

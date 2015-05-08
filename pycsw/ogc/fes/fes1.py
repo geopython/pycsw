@@ -32,13 +32,13 @@
 
 import logging
 from pycsw.core import util
-from pycsw.ogc.gml.gml3 import gml
+from pycsw.ogc.gml import gml3
 
 LOGGER = logging.getLogger(__name__)
 
 MODEL = {
     'GeometryOperands': {
-        'values': gml.TYPES
+        'values': gml3.TYPES
     },
     'SpatialOperators': {
         'values': ['BBOX', 'Beyond', 'Contains', 'Crosses', 'Disjoint',
@@ -308,7 +308,7 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_col
         raise RuntimeError('Invalid ogc:PropertyName in spatial filter: %s' %
                            property_name.text)
 
-    geometry = gml.Geometry(element, nsmap)
+    geometry = gml3.Geometry(element, nsmap)
     
     #make decision to apply spatial ranking to results
     set_spatial_ranking(geometry)
