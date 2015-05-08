@@ -36,7 +36,7 @@ from sqlalchemy import create_engine, asc, desc, func, __version__, select
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
-from pycsw import util
+from pycsw.core import util
 
 LOGGER = logging.getLogger(__name__)
 

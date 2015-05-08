@@ -29,7 +29,8 @@
 # =================================================================
 
 from lxml import etree
-from pycsw import fes, util
+from pycsw.core import util
+from pycsw.ogc.fes.fes1 import fes
 
 
 class Sru(object):

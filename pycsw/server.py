@@ -38,9 +38,11 @@ import urlparse
 from cStringIO import StringIO
 from ConfigParser import SafeConfigParser
 from lxml import etree
-from pycsw.plugins.profiles import profile as pprofile
-import pycsw.plugins.outputschemas
-from pycsw import config, fes, log, metadata, util, sru, oaipmh, opensearch
+from pycsw import oaipmh, opensearch, sru
+from pycsw.core.plugins.profiles import profile as pprofile
+import pycsw.core.plugins.outputschemas
+from pycsw.core import config, log, metadata, util
+from pycsw.ogc.fes.fes1 import fes
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -204,7 +206,7 @@ class Csw(object):
 
         if self.config.has_option('server', 'profiles'):
             self.profiles = pprofile.load_profiles(
-            os.path.join('pycsw', 'plugins', 'profiles'),
+            os.path.join('pycsw', 'core', 'plugins', 'profiles'),
             pprofile.Profile,
             self.config.get('server', 'profiles'))
 
@@ -224,8 +226,8 @@ class Csw(object):
         # load profiles
         LOGGER.debug('Loading outputschemas.')
 
-        for osch in pycsw.plugins.outputschemas.__all__:
-            mod = getattr(__import__('pycsw.plugins.outputschemas.%s' % osch).plugins.outputschemas, osch)
+        for osch in pycsw.core.plugins.outputschemas.__all__:
+            mod = getattr(__import__('pycsw.core.plugins.outputschemas.%s' % osch).core.plugins.outputschemas, osch)
             self.context.model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(mod.NAMESPACE)
             self.context.model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(mod.NAMESPACE)
             if 'Harvest' in self.context.model['operations']:
@@ -249,7 +251,7 @@ class Csw(object):
             self.config.get('repository', 'source') == 'geonode'):
 
             # load geonode repository
-            from pycsw.plugins.repository.geonode import geonode_
+            from pycsw.core.plugins.repository.geonode import geonode_
 
             try:
                 self.repository = \
@@ -265,7 +267,7 @@ class Csw(object):
             self.config.get('repository', 'source') == 'odc'):
 
             # load odc repository
-            from pycsw.plugins.repository.odc import odc
+            from pycsw.core.plugins.repository.odc import odc
 
             try:
                 self.repository = \
@@ -279,7 +281,7 @@ class Csw(object):
 
         else:  # load default repository
             self.orm = 'sqlalchemy'
-            from pycsw import repository
+            from pycsw.core import repository
             try:
                 self.repository = \
                 repository.Repository(self.config.get('repository', 'database'),
@@ -1017,7 +1019,7 @@ class Csw(object):
                 targetNamespace=self.context.namespaces['csw'])
 
                 path = os.path.join(self.config.get('server', 'home'),
-                'schemas', 'ogc', 'csw', '2.0.2', 'record.xsd')
+                'core', 'schemas', 'ogc', 'csw', '2.0.2', 'record.xsd')
 
                 dublincore = etree.parse(path).getroot()
 
@@ -1283,7 +1285,7 @@ class Csw(object):
                     # validate filter XML
                     try:
                         schema = os.path.join(self.config.get('server', 'home'),
-                        'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
+                        'core', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
                         LOGGER.debug('Validating Filter %s.' %
                         self.kvp['constraint'])
                         schema = etree.XMLSchema(file=schema)
@@ -1961,10 +1963,10 @@ class Csw(object):
             self.context.namespaces), util.nspath_eval('csw:Harvest',
             self.context.namespaces)]):
             schema = os.path.join(self.config.get('server', 'home'),
-            'schemas', 'ogc', 'csw', '2.0.2', 'CSW-publication.xsd')
+            'core', 'schemas', 'ogc', 'csw', '2.0.2', 'CSW-publication.xsd')
         else:
             schema = os.path.join(self.config.get('server', 'home'),
-            'schemas', 'ogc', 'csw', '2.0.2', 'CSW-discovery.xsd')
+            'core', 'schemas', 'ogc', 'csw', '2.0.2', 'CSW-discovery.xsd')
 
         try:
             # it is virtually impossible to validate a csw:Transaction
@@ -2370,7 +2372,7 @@ class Csw(object):
         if (isinstance(self.kvp, dict) and 'outputformat' in self.kvp and
             self.kvp['outputformat'] == 'application/json'):
             self.contenttype = self.kvp['outputformat']
-            from pycsw.formats import fmt_json
+            from pycsw.core.formats import fmt_json
             response = fmt_json.exml2json(self.response,
             self.context.namespaces, self.pretty_print)
         else:  # it's XML
