@@ -37,7 +37,7 @@ import getopt
 import glob
 import filecmp
 import re
-from pycsw.util import http_request
+from pycsw.core.util import http_request
 
 
 def plural(num):

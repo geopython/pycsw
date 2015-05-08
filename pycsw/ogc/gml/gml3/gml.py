@@ -29,8 +29,8 @@
 # =================================================================
 
 import logging
-from pycsw import util
 from owslib import crs
+from pycsw.core import util
 
 LOGGER = logging.getLogger(__name__)
 

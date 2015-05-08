@@ -36,7 +36,7 @@ import sys
 from glob import glob
 
 from lxml import etree
-from pycsw import metadata, repository, util
+from pycsw.core import metadata, repository, util
 
 LOGGER = logging.getLogger(__name__)
 

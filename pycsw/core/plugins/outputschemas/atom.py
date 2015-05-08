@@ -30,7 +30,7 @@
 
 import os
 from lxml import etree
-from pycsw import util
+from pycsw.core import util
 
 NAMESPACE = 'http://www.w3.org/2005/Atom'
 NAMESPACES = {'atom': NAMESPACE, 'georss': 'http://www.georss.org/georss'}

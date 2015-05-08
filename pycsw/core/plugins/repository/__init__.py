@@ -27,13 +27,3 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
-
-import json
-from pycsw.util import exml2dict
-
-
-def exml2json(response, namespaces, pretty_print=False):
-    """Convert an lxml object to JSON"""
-    if pretty_print:
-        return json.dumps(exml2dict(response, namespaces), indent=4)
-    return json.dumps(exml2dict(response, namespaces))

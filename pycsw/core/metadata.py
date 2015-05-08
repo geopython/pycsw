@@ -33,8 +33,8 @@ import uuid
 from urlparse import urlparse
 from lxml import etree
 from owslib.util import build_get_url
-from pycsw import util
 from geolinks.links import sniff_link
+from pycsw.core import util
 
 LOGGER = logging.getLogger(__name__)
 
