@@ -30,7 +30,7 @@
 
 from lxml import etree
 from pycsw.core import util
-from pycsw.ogc.fes.fes1 import fes
+from pycsw.ogc.fes import fes1
 
 
 class Sru(object):
@@ -104,8 +104,8 @@ class Sru(object):
 
                 if 'query' in kvpin:
                     pname_in_query = False
-                    for coops in fes.MODEL['ComparisonOperators'].keys():
-                        if kvpin['query'].find(fes.MODEL['ComparisonOperators'][coops]['opvalue']) != -1:
+                    for coops in fes1.MODEL['ComparisonOperators'].keys():
+                        if kvpin['query'].find(fes1.MODEL['ComparisonOperators'][coops]['opvalue']) != -1:
                             pname_in_query = True
                             break
 
