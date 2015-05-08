@@ -7,7 +7,7 @@
 		2. Some XML types representing that do not follow the general encoding rules.</xs:documentation>
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
-	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../../pycsw/schemas/w3c/1999/xlink.xsd"/>
+	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../../pycsw/core/schemas/w3c/1999/xlink.xsd"/>
 	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="../gml/gml.xsd"/>
 	<!-- ########################################################################### -->
 	<!-- ########################################################################### -->
