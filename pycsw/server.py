@@ -499,7 +499,7 @@ class Csw(object):
                     code = 'InvalidParameterValue'
                     text = 'Invalid value for version: %s.\
                     Value MUST be 2.0.2' % self.kvp['version']
-                
+
                 # check for GetCapabilities acceptversions
                 if 'acceptversions' in self.kvp:
                     for vers in self.kvp['acceptversions'].split(','):
