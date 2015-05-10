@@ -31,7 +31,6 @@
 import os
 from lxml import etree
 from pycsw.core import config, util
-from pycsw.ogc.csw import csw2
 from pycsw.plugins.profiles import profile
 
 class EBRIM(profile.Profile):
@@ -151,7 +150,7 @@ class EBRIM(profile.Profile):
             etree.SubElement(description, util.nspath_eval('rim:LocalizedString', self.namespaces), value=unicode(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Abstract'])))
 
             val = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:BoundingBox'])
-            bboxel = csw2.write_boundingbox(val, self.context.namespaces)
+            bboxel = util.write_boundingbox(val, self.context.namespaces)
 
             if bboxel is not None:
                 bboxslot = etree.SubElement(node, util.nspath_eval('rim:Slot', self.namespaces),
