@@ -85,10 +85,10 @@ class Csw(object):
         self.language = {'639_code': 'en', 'text': 'english'}
 
         # define CSW implementation object (default CSW2)
-        self.child = csw2.Csw2(server_csw=self)
-        # self.child = None
+        self.iface = csw2.Csw2(server_csw=self)
+        # self.iface = None
         # if version:
-        #     self.child = Csw2(server_csw=self)
+        #     self.iface = Csw2(server_csw=self)
         
         # load user configuration
         try:
@@ -425,7 +425,7 @@ class Csw(object):
 
         # if ('version' in self.kvp):
         #     if (util.get_version_integer(self.kvp['version']) == util.get_version_integer('2.0.2')):
-        #         self.child = Csw2(server_csw=self)
+        #         self.iface = Csw2(server_csw=self)
         #     else:
         #         pass
         # else: # TODO: initialize CSW3 here if no version is present in kvp
@@ -543,29 +543,29 @@ class Csw(object):
                     self.kvp['requestid'] = str(uuid.uuid4())
 
             if self.kvp['request'] == 'GetCapabilities':
-                self.response = self.child.getcapabilities()
+                self.response = self.iface.getcapabilities()
             elif self.kvp['request'] == 'DescribeRecord':
-                self.response = self.child.describerecord()
+                self.response = self.iface.describerecord()
             elif self.kvp['request'] == 'GetDomain':
-                self.response = self.child.getdomain()
+                self.response = self.iface.getdomain()
             elif self.kvp['request'] == 'GetRecords':
                 if self.async:  # process asynchronously
-                    threading.Thread(target=self.child.getrecords).start()
+                    threading.Thread(target=self.iface.getrecords).start()
                     self.response = self._write_acknowledgement()
                 else:
-                    self.response = self.child.getrecords()
+                    self.response = self.iface.getrecords()
             elif self.kvp['request'] == 'GetRecordById':
-                self.response = self.child.getrecordbyid()
+                self.response = self.iface.getrecordbyid()
             elif self.kvp['request'] == 'GetRepositoryItem':
-                self.response = self.child.getrepositoryitem()
+                self.response = self.iface.getrepositoryitem()
             elif self.kvp['request'] == 'Transaction':
-                self.response = self.child.transaction()
+                self.response = self.iface.transaction()
             elif self.kvp['request'] == 'Harvest':
                 if self.async:  # process asynchronously
-                    threading.Thread(target=self.child.harvest).start()
+                    threading.Thread(target=self.iface.harvest).start()
                     self.response = self._write_acknowledgement()
                 else:
-                    self.response = self.child.harvest()
+                    self.response = self.iface.harvest()
             else:
                 self.response = self.exceptionreport('InvalidParameterValue',
                 'request', 'Invalid request parameter: %s' %
@@ -619,35 +619,35 @@ class Csw(object):
 
     def getcapabilities(self):
         ''' Handle GetCapabilities request '''
-        return child.getcapabilities
+        return iface.getcapabilities
 
     def describerecord(self):
         ''' Handle DescribeRecord request '''
-        return child.describerecord
+        return iface.describerecord
 
     def getdomain(self):
         ''' Handle GetDomain request '''
-        return child.getdomain
+        return iface.getdomain
 
     def getrecords(self):
         ''' Handle GetRecords request '''
-        return child.getrecords
+        return iface.getrecords
 
     def getrecordbyid(self, raw=False):
         ''' Handle GetRecordById request '''
-        return child.getrecordbyid
+        return iface.getrecordbyid
 
     def getrepositoryitem(self):
         ''' Handle GetRepositoryItem request '''
-        return child.getrepositoryitem
+        return iface.getrepositoryitem
 
     def transaction(self):
         ''' Handle Transaction request '''
-        return child.transaction
+        return iface.transaction
 
     def harvest(self):
         ''' Handle Harvest request '''
-        return child.harvest
+        return iface.harvest
 
     def parse_postdata(self, postdata):
         ''' Parse POST XML '''
