@@ -29,7 +29,7 @@
 # =================================================================
 
 import os
-from lxml import etree
+from pycsw.core.etree import etree
 from pycsw.core import config, util
 from pycsw.plugins.profiles import profile
 

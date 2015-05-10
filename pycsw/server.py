@@ -37,7 +37,7 @@ from urllib2 import quote, unquote
 import urlparse
 from cStringIO import StringIO
 from ConfigParser import SafeConfigParser
-from lxml import etree
+from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas

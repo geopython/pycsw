@@ -30,9 +30,9 @@
 #
 # =================================================================
 
-from lxml import etree
 import logging
 from pycsw.core import util
+from pycsw.core.etree import etree
 
 LOGGER = logging.getLogger(__name__)
 

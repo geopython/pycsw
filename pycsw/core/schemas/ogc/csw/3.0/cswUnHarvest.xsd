@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+   targetNamespace="http://www.opengis.net/cat/csw/3.0"
+   xmlns:csw30="http://www.opengis.net/cat/csw/3.0"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified"
+   version="3.0"
+   id="cswUnHarvest">
+   <xsd:annotation>
+      <xsd:appinfo>
+         <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">http://schemas.opengis.net/csw/3.0/cswUnHarvest.xsd</dc:identifier>
+      </xsd:appinfo>
+      <xsd:documentation xml:lang="en">
+         This schema defines the request and response messages for the
+         UnHarvest operation.
+      </xsd:documentation>
+   </xsd:annotation>
+   <xsd:include schemaLocation="cswCommon.xsd"/>
+   <!-- =================================================================== -->
+   <!-- REQUEST                                                             -->
+   <!-- =================================================================== -->
+   <xsd:element name="Source" type="csw30:SourceType" id="SourceType"/>
+   <xsd:complexType name="SourceType">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:anyURI">
+            <xsd:attribute name="resourceType"
+                           type="xsd:anyURI" use="required"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:element name="UnHarvest" type="csw30:UnHarvestType" id="UnHarvest"/>
+   <xsd:complexType name="UnHarvestType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            Requests that the CSW unharvest a resource from the catalogue.
+            The resource to unharvest is identified by its source URL
+            (which must match exactly) and its resource type.
+
+            Source          - URL of the resourse to unharvest (must
+                              match exactly; including case)
+            ResourceType    - normally a URI that specifies the type of
+                              the resource being unharvested.
+            ResponseHandler - a reference to some endpoint to which the 
+                              response shall be forwarded when the
+                              unharvest operation has been completed
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="csw30:RequestBaseType">
+            <xsd:sequence>
+               <xsd:element ref="csw30:Source" maxOccurs="unbounded"/>
+               <xsd:element name="ResponseHandler" type="xsd:anyURI"
+                            minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="outputFormat" type="xsd:string"
+                           default="text/xml"/>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <!-- =================================================================== -->
+   <!-- RESPONSE                                                            -->
+   <!-- =================================================================== -->
+   <xsd:element name="UnHarvestResponse" type="csw30:UnHarvestResponseType"
+      id="UnHarvestResponse">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            The response to an UnHarvest request is simply a list of
+            csw30:Source elements echoing what has been unharvested.
+         </xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:complexType name="UnHarvestResponseType" id="UnHarvestResponseType">
+      <xsd:sequence>
+         <xsd:element ref="csw30:Source" maxOccurs="unbounded"/>
+      </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>

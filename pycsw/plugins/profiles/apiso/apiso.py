@@ -31,8 +31,8 @@
 # =================================================================
 
 import os
-from lxml import etree
 from pycsw.core import config, util
+from pycsw.core.etree import etree
 from pycsw.plugins.profiles import profile
 
 CODELIST = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml'

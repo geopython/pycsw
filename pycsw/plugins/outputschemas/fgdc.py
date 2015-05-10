@@ -28,8 +28,8 @@
 #
 # =================================================================
 
-from lxml import etree
 from pycsw.core import util
+from pycsw.core.etree import etree
 
 #NAMESPACE = 'http://www.fgdc.gov/metadata/csdgm'
 NAMESPACE = 'http://www.opengis.net/cat/csw/csdgm'

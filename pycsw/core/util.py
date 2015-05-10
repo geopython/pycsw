@@ -34,9 +34,9 @@ import time
 import datetime
 import logging
 import urllib2
-from lxml import etree
 from shapely.wkt import loads
 from owslib.util import http_post
+from pycsw.core.etree import etree
 
 LOGGER = logging.getLogger(__name__)
 
