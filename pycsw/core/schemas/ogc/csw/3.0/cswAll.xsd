@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+   targetNamespace="http://www.opengis.net/cat/csw/3.0"
+   xmlns:csw30="http://www.opengis.net/cat/csw/3.0"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified"
+   version="3.0" id="cswAll">
+   <xsd:annotation>
+      <xsd:appinfo>cswAll.xsd 2012-06-04</xsd:appinfo>
+      <xsd:documentation>
+         This XML Schema Document includes and imports, directly or
+         indirectly, all the XML Schemas defined by the Catalogue Service
+         Specification.
+      
+         CSW is an OGC Standard.
+
+         Copyright (c) 2012 Open Geospatial Consortium, Inc.
+         All Rights Reserved.
+         To obtain additional rights see: http://www.opengeospatial.org/legal/.
+      </xsd:documentation>
+   </xsd:annotation>
+   <!-- =================================================================== -->
+   <!-- includes and imports                                                -->
+   <!-- =================================================================== -->
+   <xsd:include schemaLocation="cswCommon.xsd"/>
+   <xsd:include schemaLocation="cswGetCapabilities.xsd"/>
+   <xsd:include schemaLocation="cswGetDomain.xsd"/>
+   <xsd:include schemaLocation="cswGetRecords.xsd"/>
+   <xsd:include schemaLocation="cswGetRecordById.xsd"/>
+   <xsd:include schemaLocation="cswTransaction.xsd"/>
+   <xsd:include schemaLocation="cswHarvest.xsd"/>
+   <xsd:include schemaLocation="cswUnHarvest.xsd"/>
+</xsd:schema>

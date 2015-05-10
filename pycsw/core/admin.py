@@ -35,10 +35,11 @@ import os
 import sys
 from glob import glob
 
-from lxml import etree
 from pycsw.core import metadata, repository, util
+from pycsw.core.etree import etree
 
 LOGGER = logging.getLogger(__name__)
+
 
 
 def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, postgis_geometry_column='wkb_geometry', extra_columns=[], language='english'):

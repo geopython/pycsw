@@ -16,7 +16,7 @@ elementFormDefault="qualified" version="1.0.0 2010-01-30" xml:lang="en">
 	<!-- ==============================================================
 		includes and imports
 	============================================================== -->
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../w3c/1999/xlink.xsd"/>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.w3.org/1999/xlink.xsd"/>
 	<!-- ==============================================================
 		elements and types
 	============================================================== -->

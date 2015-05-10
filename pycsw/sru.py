@@ -28,8 +28,8 @@
 #
 # =================================================================
 
-from lxml import etree
 from pycsw.core import util
+from pycsw.core.etree import etree
 from pycsw.ogc.fes import fes1
 
 

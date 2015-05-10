@@ -25,7 +25,7 @@
        includes and imports
 	============================================================== -->
 	<include schemaLocation="basicTypes.xsd"/>
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../w3c/1999/xlink.xsd"/>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.w3.org/1999/xlink.xsd"/>
 	<!-- =========================================================== -->
 	<!-- ==================== Objects ================================ -->
 	<!-- =========================================================== -->
