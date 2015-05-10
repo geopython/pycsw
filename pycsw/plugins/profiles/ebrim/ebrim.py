@@ -31,7 +31,6 @@
 import os
 from lxml import etree
 from pycsw.core import config, util
-from pycsw.ogc.csw import csw2
 from pycsw.plugins.profiles import profile
 
 class EBRIM(profile.Profile):
