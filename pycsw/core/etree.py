@@ -31,5 +31,10 @@
 import os
 xml_catalog = os.path.join(os.path.dirname(__file__),
                            'schemas', 'catalog.xml')
+
+if not os.path.isfile(xml_catalog):
+    raise IOError('catalog.xml not found. Please check installation')
+
 os.environ['XML_CATALOG_FILES'] = xml_catalog
+
 from lxml import etree
