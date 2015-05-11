@@ -42,7 +42,6 @@ from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
 from pycsw.core import config, log, metadata, util
-from pycsw.ogc.fes import fes1
 from pycsw.ogc.csw import csw2
 import logging
 
@@ -87,8 +86,9 @@ class Csw(object):
         # define CSW implementation object (default CSW2)
         self.iface = csw2.Csw2(server_csw=self)
         self.request_version = version
-        # if self.request_version == '3.0.0':
-        #     self.iface = Csw3(server_csw=self)
+
+        #if self.request_version == '3.0.0':
+        #    self.iface = csw.Csw3(server_csw=self)
         
         # load user configuration
         try:
@@ -106,7 +106,7 @@ class Csw(object):
                     with codecs.open(rtconfig, encoding='utf-8') as scp:
                         self.config.readfp(scp)
         except Exception as err:
-            self.response = self.exceptionreport(
+            self.response = self.iface.exceptionreport(
             'NoApplicableCode', 'service',
             'Error opening configuration %s' % rtconfig)
             return
@@ -204,7 +204,7 @@ class Csw(object):
                 self.context.md_core_model = mappings.MD_CORE_MODEL
                 self.context.refresh_dc(mappings.MD_CORE_MODEL)
             except Exception as err:
-                self.response = self.exceptionreport(
+                self.response = self.iface.exceptionreport(
                 'NoApplicableCode', 'service',
                 'Could not load repository.mappings %s' % str(err))
 
@@ -266,7 +266,7 @@ class Csw(object):
                 LOGGER.debug('GeoNode repository loaded (geonode): %s.' % \
                 self.repository.dbtype)
             except Exception as err:
-                self.response = self.exceptionreport(
+                self.response = self.iface.exceptionreport(
                 'NoApplicableCode', 'service',
                 'Could not load repository (geonode): %s' % str(err))
 
@@ -282,7 +282,7 @@ class Csw(object):
                 LOGGER.debug('OpenDataCatalog repository loaded (geonode): %s.' % \
                 self.repository.dbtype)
             except Exception as err:
-                self.response = self.exceptionreport(
+                self.response = self.iface.exceptionreport(
                 'NoApplicableCode', 'service',
                 'Could not load repository (odc): %s' % str(err))
 
@@ -297,7 +297,7 @@ class Csw(object):
                 LOGGER.debug('Repository loaded (local): %s.' \
                 % self.repository.dbtype)
             except Exception as err:
-                self.response = self.exceptionreport(
+                self.response = self.iface.exceptionreport(
                 'NoApplicableCode', 'service',
                 'Could not load repository (local): %s' % str(err))
 
@@ -425,8 +425,8 @@ class Csw(object):
             if self.request.find('3.0.0') != -1:
                 self.request_version = '3.0.0'
 
-        # if self.request_version == '3.0.0':
-        #     self.iface = Csw3(server_csw=self)
+        #if self.request_version == '3.0.0':
+        #    self.iface = csw.Csw3(server_csw=self)
 
         if self.requesttype == 'POST':
             self.kvp = self.iface.parse_postdata(self.request)
@@ -529,7 +529,7 @@ class Csw(object):
                         self.kvp['request']
 
         if error == 1:  # return an ExceptionReport
-            self.response = self.exceptionreport(code, locator, text)
+            self.response = self.iface.exceptionreport(code, locator, text)
 
         else:  # process per the request value
 
@@ -567,7 +567,7 @@ class Csw(object):
                 else:
                     self.response = self.iface.harvest()
             else:
-                self.response = self.exceptionreport('InvalidParameterValue',
+                self.response = self.iface.exceptionreport('InvalidParameterValue',
                 'request', 'Invalid request parameter: %s' %
                 self.kvp['request'])
 
@@ -586,36 +586,6 @@ class Csw(object):
                             self.oaiargs, self.repository, self.config.get('server', 'url'))
 
         return self._write_response()
-
-    def exceptionreport(self, code, locator, text):
-        ''' Generate ExceptionReport '''
-        self.exception = True
-
-        try:
-            language = self.config.get('server', 'language')
-            ogc_schemas_base = self.config.get('server', 'ogc_schemas_base')
-        except:
-            language = 'en-US'
-            ogc_schemas_base = self.context.ogc_schemas_base
-
-        node = etree.Element(util.nspath_eval('ows:ExceptionReport',
-        self.context.namespaces), nsmap=self.context.namespaces,
-        version='1.2.0', language=language)
-
-        node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.context.namespaces)] = \
-        '%s %s/ows/1.0.0/owsExceptionReport.xsd' % \
-        (self.context.namespaces['ows'], ogc_schemas_base)
-
-        exception = etree.SubElement(node, util.nspath_eval('ows:Exception',
-        self.context.namespaces),
-        exceptionCode=code, locator=locator)
-
-        etree.SubElement(exception,
-        util.nspath_eval('ows:ExceptionText',
-        self.context.namespaces)).text = text
-
-        return node
 
     def getcapabilities(self):
         ''' Handle GetCapabilities request '''
