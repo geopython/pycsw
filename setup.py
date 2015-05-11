@@ -80,6 +80,9 @@ def get_package_data(location='.', forced_dir=None):
             if len(files) > 0:
                 # find all the XML Schema documents
                 xsds = filter(lambda x: x.find('.xsd') != -1, files)
+                catalog_xml = filter(lambda x: x.find('catalog.xml') != -1,
+                                     files)
+                xsds.extend(catalog_xml)
                 if len(xsds) > 0:
                     if ploc not in package_data:  # set key
                         package_data[ploc] = []
