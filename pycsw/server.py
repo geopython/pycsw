@@ -86,7 +86,8 @@ class Csw(object):
 
         # define CSW implementation object (default CSW2)
         self.iface = csw2.Csw2(server_csw=self)
-        # if version == '3.0.0':
+        self.request_version = version
+        # if self.request_version == '3.0.0':
         #     self.iface = Csw3(server_csw=self)
         
         # load user configuration
@@ -417,17 +418,19 @@ class Csw(object):
     def dispatch(self, writer=sys.stdout, write_headers=True):
         ''' Handle incoming HTTP request '''
 
+        if self.requesttype == 'GET':
+            if 'version' in self.kvp and self.kvp['version'] == '3.0.0':
+                self.request_version = '3.0.0'
+        elif self.requesttype == 'POST':
+            if self.request.find('3.0.0') != -1:
+                self.request_version = '3.0.0'
+
+        # if self.request_version == '3.0.0':
+        #     self.iface = Csw3(server_csw=self)
+
         if self.requesttype == 'POST':
             self.kvp = self.iface.parse_postdata(self.request)
 
-        # if ('version' in self.kvp):
-        #     if (util.get_version_integer(self.kvp['version']) == util.get_version_integer('2.0.2')):
-        #         self.iface = Csw2(server_csw=self)
-        #     else:
-        #         pass
-        # else: # TODO: initialize CSW3 here if no version is present in kvp
-        #     pass
-        
         error = 0
 
         if isinstance(self.kvp, str):  # it's an exception
