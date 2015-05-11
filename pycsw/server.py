@@ -619,35 +619,35 @@ class Csw(object):
 
     def getcapabilities(self):
         ''' Handle GetCapabilities request '''
-        return iface.getcapabilities()
+        return self.iface.getcapabilities()
 
     def describerecord(self):
         ''' Handle DescribeRecord request '''
-        return iface.describerecord()
+        return self.iface.describerecord()
 
     def getdomain(self):
         ''' Handle GetDomain request '''
-        return iface.getdomain()
+        return self.iface.getdomain()
 
     def getrecords(self):
         ''' Handle GetRecords request '''
-        return iface.getrecords()
+        return self.iface.getrecords()
 
     def getrecordbyid(self, raw=False):
         ''' Handle GetRecordById request '''
-        return iface.getrecordbyid()
+        return self.iface.getrecordbyid()
 
     def getrepositoryitem(self):
         ''' Handle GetRepositoryItem request '''
-        return iface.getrepositoryitem()
+        return self.iface.getrepositoryitem()
 
     def transaction(self):
         ''' Handle Transaction request '''
-        return iface.transaction()
+        return self.iface.transaction()
 
     def harvest(self):
         ''' Handle Harvest request '''
-        return iface.harvest()
+        return self.iface.harvest()
 
     def parse_postdata(self, postdata):
         ''' Parse POST XML '''
