@@ -79,7 +79,7 @@ class Csw2(object):
                 result = \
                 self.parent.profiles['loaded'][prof].check_parameters(self.parent.kvp)
                 if result is not None:
-                    return self.parent.exceptionreport(result['code'],
+                    return self.exceptionreport(result['code'],
                     result['locator'], result['text'])
 
         # @updateSequence: get latest update to repository
@@ -98,7 +98,7 @@ class Csw2(object):
             if int(self.parent.kvp['updatesequence']) == updatesequence:
                 return node
             elif int(self.parent.kvp['updatesequence']) > updatesequence:
-                return self.parent.exceptionreport('InvalidUpdateSequence',
+                return self.exceptionreport('InvalidUpdateSequence',
                 'updatesequence',
                 'outputsequence specified (%s) is higher than server\'s \
                 updatesequence (%s)' % (self.parent.kvp['updatesequence'],
@@ -441,7 +441,7 @@ class Csw2(object):
             self.parent.kvp['outputformat'] not in
             self.parent.context.model['operations']['DescribeRecord']
             ['parameters']['outputFormat']['values']):  # bad outputformat
-            return self.parent.exceptionreport('InvalidParameterValue',
+            return self.exceptionreport('InvalidParameterValue',
             'outputformat', 'Invalid value for outputformat: %s' %
             self.parent.kvp['outputformat'])
 
@@ -449,7 +449,7 @@ class Csw2(object):
             self.parent.kvp['schemalanguage'] not in
             self.parent.context.model['operations']['DescribeRecord']['parameters']
             ['schemaLanguage']['values']):  # bad schemalanguage
-            return self.parent.exceptionreport('InvalidParameterValue',
+            return self.exceptionreport('InvalidParameterValue',
             'schemalanguage', 'Invalid value for schemalanguage: %s' %
             self.parent.kvp['schemalanguage'])
 
@@ -463,7 +463,7 @@ class Csw2(object):
 
         for typename in self.parent.kvp['typename']:
             if typename.find(':') == -1:  # unqualified typename
-                return self.parent.exceptionreport('InvalidParameterValue',
+                return self.exceptionreport('InvalidParameterValue',
                 'typename', 'Typename not qualified: %s' % typename)
             if typename == 'csw:Record':   # load core schema
                 LOGGER.debug('Writing csw:Record schema.')
@@ -492,7 +492,7 @@ class Csw2(object):
         ''' Handle GetDomain request '''
         if ('parametername' not in self.parent.kvp and
             'propertyname' not in self.parent.kvp):
-            return self.parent.exceptionreport('MissingParameterValue',
+            return self.exceptionreport('MissingParameterValue',
             'parametername', 'Missing value. \
             One of propertyname or parametername must be specified')
 
@@ -616,7 +616,7 @@ class Csw2(object):
         if ('elementsetname' not in self.parent.kvp and
             'elementname' not in self.parent.kvp):
             # mutually exclusive required
-            return self.parent.exceptionreport('MissingParameterValue',
+            return self.exceptionreport('MissingParameterValue',
             'elementsetname',
             'Missing one of ElementSetName or ElementName parameter(s)')
 
@@ -625,7 +625,7 @@ class Csw2(object):
 
         if (self.parent.kvp['outputschema'] not in self.parent.context.model['operations']
             ['GetRecords']['parameters']['outputSchema']['values']):
-            return self.parent.exceptionreport('InvalidParameterValue',
+            return self.exceptionreport('InvalidParameterValue',
             'outputschema', 'Invalid outputSchema parameter value: %s' %
             self.parent.kvp['outputschema'])
 
@@ -634,7 +634,7 @@ class Csw2(object):
 
         if (self.parent.kvp['outputformat'] not in self.parent.context.model['operations']
             ['GetRecords']['parameters']['outputFormat']['values']):
-            return self.parent.exceptionreport('InvalidParameterValue',
+            return self.exceptionreport('InvalidParameterValue',
             'outputformat', 'Invalid outputFormat parameter value: %s' %
             self.parent.kvp['outputformat'])
 
@@ -644,7 +644,7 @@ class Csw2(object):
         if self.parent.kvp['resulttype'] is not None:
             if (self.parent.kvp['resulttype'] not in self.parent.context.model['operations']
             ['GetRecords']['parameters']['resultType']['values']):
-                return self.parent.exceptionreport('InvalidParameterValue',
+                return self.exceptionreport('InvalidParameterValue',
                 'resulttype', 'Invalid resultType parameter value: %s' %
                 self.parent.kvp['resulttype'])
 
@@ -653,7 +653,7 @@ class Csw2(object):
              self.parent.kvp['elementsetname'] not in
              self.parent.context.model['operations']['GetRecords']['parameters']
              ['ElementSetName']['values']):
-            return self.parent.exceptionreport('InvalidParameterValue',
+            return self.exceptionreport('InvalidParameterValue',
             'elementsetname', 'Invalid ElementSetName parameter value: %s' %
             self.parent.kvp['elementsetname'])
 
@@ -663,7 +663,7 @@ class Csw2(object):
             self.parent.kvp['elementsetname'] = 'summary'
 
         if 'typenames' not in self.parent.kvp:
-            return self.parent.exceptionreport('MissingParameterValue',
+            return self.exceptionreport('MissingParameterValue',
             'typenames', 'Missing typenames parameter')
 
         if ('typenames' in self.parent.kvp and
@@ -674,7 +674,7 @@ class Csw2(object):
             for tname in self.parent.kvp['typenames']:
                 if (tname not in self.parent.context.model['operations']['GetRecords']
                     ['parameters']['typeNames']['values']):
-                    return self.parent.exceptionreport('InvalidParameterValue',
+                    return self.exceptionreport('InvalidParameterValue',
                     'typenames', 'Invalid typeNames parameter value: %s' %
                     tname)
 
@@ -683,7 +683,7 @@ class Csw2(object):
             for ename in self.parent.kvp['elementname']:
                 enamelist = self.parent.repository.queryables['_all'].keys()
                 if ename not in enamelist:
-                    return self.parent.exceptionreport('InvalidParameterValue',
+                    return self.exceptionreport('InvalidParameterValue',
                     'elementname', 'Invalid ElementName parameter value: %s' %
                     ename)
 
@@ -718,13 +718,13 @@ class Csw2(object):
                 # GET request
                 LOGGER.debug('csw:Constraint passed over HTTP GET.')
                 if 'constraintlanguage' not in self.parent.kvp:
-                    return self.parent.exceptionreport('MissingParameterValue',
+                    return self.exceptionreport('MissingParameterValue',
                     'constraintlanguage',
                     'constraintlanguage required when constraint specified')
                 if (self.parent.kvp['constraintlanguage'] not in
                 self.parent.context.model['operations']['GetRecords']['parameters']
                 ['CONSTRAINTLANGUAGE']['values']):
-                    return self.parent.exceptionreport('InvalidParameterValue',
+                    return self.exceptionreport('InvalidParameterValue',
                     'constraintlanguage', 'Invalid constraintlanguage: %s'
                     % self.parent.kvp['constraintlanguage'])
                 if self.parent.kvp['constraintlanguage'] == 'CQL_TEXT':
@@ -758,7 +758,7 @@ class Csw2(object):
                         'Exception: document not valid.\nError: %s.' % str(err)
 
                         LOGGER.debug(errortext)
-                        return self.parent.exceptionreport('InvalidParameterValue',
+                        return self.exceptionreport('InvalidParameterValue',
                         'constraint', 'Invalid Filter query: %s' % errortext)
             else:
                 self.parent.kvp['constraint'] = {}
@@ -773,7 +773,7 @@ class Csw2(object):
             try:
                 name, order = tmp.rsplit(':', 1)
             except:
-                return self.parent.exceptionreport('InvalidParameterValue',
+                return self.exceptionreport('InvalidParameterValue',
                 'sortby', 'Invalid SortBy value: must be in the format\
                 propertyname:A or propertyname:D')
 
@@ -784,11 +784,11 @@ class Csw2(object):
                     # it's a spatial sort
                     self.parent.kvp['sortby']['spatial'] = True
             except Exception as err:
-                return self.parent.exceptionreport('InvalidParameterValue',
+                return self.exceptionreport('InvalidParameterValue',
                 'sortby', 'Invalid SortBy propertyname: %s' % name)
 
             if order not in ['A', 'D']:
-                return self.parent.exceptionreport('InvalidParameterValue',
+                return self.exceptionreport('InvalidParameterValue',
                 'sortby', 'Invalid SortBy value: sort order must be "A" or "D"')
 
             if order == 'D':
@@ -812,7 +812,7 @@ class Csw2(object):
             maxrecords=self.parent.kvp['maxrecords'],
             startposition=int(self.parent.kvp['startposition'])-1)
         except Exception as err:
-            return self.parent.exceptionreport('InvalidParameterValue', 'constraint',
+            return self.exceptionreport('InvalidParameterValue', 'constraint',
             'Invalid query: %s' % err)
 
         dsresults = []
@@ -956,7 +956,7 @@ class Csw2(object):
                         self.parent.kvp['outputschema'],
                         self.parent.repository.queryables['_all']))
                 except Exception as err:
-                    self.parent.response = self.parent.exceptionreport(
+                    self.parent.response = self.exceptionreport(
                     'NoApplicableCode', 'service',
                     'Record serialization failed: %s' % str(err))
                     return self.parent.response
@@ -978,10 +978,10 @@ class Csw2(object):
         ''' Handle GetRecordById request '''
 
         if 'id' not in self.parent.kvp:
-            return self.parent.exceptionreport('MissingParameterValue', 'id',
+            return self.exceptionreport('MissingParameterValue', 'id',
             'Missing id parameter')
         if len(self.parent.kvp['id']) < 1:
-            return self.parent.exceptionreport('InvalidParameterValue', 'id',
+            return self.exceptionreport('InvalidParameterValue', 'id',
             'Invalid id parameter')
         if 'outputschema' not in self.parent.kvp:
             self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw']
@@ -993,14 +993,14 @@ class Csw2(object):
             self.parent.kvp['outputformat'] not in
             self.parent.context.model['operations']['GetRecordById']['parameters']
             ['outputFormat']['values']):
-            return self.parent.exceptionreport('InvalidParameterValue',
+            return self.exceptionreport('InvalidParameterValue',
             'outputformat', 'Invalid outputformat parameter %s' %
             self.parent.kvp['outputformat'])
 
         if ('outputschema' in self.parent.kvp and self.parent.kvp['outputschema'] not in
             self.parent.context.model['operations']['GetRecordById']['parameters']
             ['outputSchema']['values']):
-            return self.parent.exceptionreport('InvalidParameterValue',
+            return self.exceptionreport('InvalidParameterValue',
             'outputschema', 'Invalid outputschema parameter %s' %
             self.parent.kvp['outputschema'])
 
@@ -1010,7 +1010,7 @@ class Csw2(object):
             if (self.parent.kvp['elementsetname'] not in
                 self.parent.context.model['operations']['GetRecordById']['parameters']
                 ['ElementSetName']['values']):
-                return self.parent.exceptionreport('InvalidParameterValue',
+                return self.exceptionreport('InvalidParameterValue',
                 'elementsetname', 'Invalid elementsetname parameter %s' %
                 self.parent.kvp['elementsetname'])
 
@@ -1076,7 +1076,7 @@ class Csw2(object):
         # similar to GetRecordById without csw:* wrapping
         node = self.parent.getrecordbyid(raw=True)
         if node is None:
-            return self.parent.exceptionreport('NotFound', 'id',
+            return self.exceptionreport('NotFound', 'id',
             'No repository item found for \'%s\'' % self.parent.kvp['id'])
         else:
             return node
@@ -1087,7 +1087,7 @@ class Csw2(object):
         try:
             self.parent._test_manager()
         except Exception as err:
-            return self.parent.exceptionreport('NoApplicableCode', 'transaction',
+            return self.exceptionreport('NoApplicableCode', 'transaction',
             str(err))
 
         inserted = 0
@@ -1104,7 +1104,7 @@ class Csw2(object):
                     record = metadata.parse_record(self.parent.context,
                     ttype['xml'], self.parent.repository)[0]
                 except Exception as err:
-                    return self.parent.exceptionreport('NoApplicableCode', 'insert',
+                    return self.exceptionreport('NoApplicableCode', 'insert',
                     'Transaction (insert) failed: record parsing failed: %s' \
                     % str(err))
 
@@ -1112,7 +1112,7 @@ class Csw2(object):
 
                 if not hasattr(record,
                 self.parent.context.md_core_model['mappings']['pycsw:Identifier']):
-                    return self.parent.exceptionreport('NoApplicableCode',
+                    return self.exceptionreport('NoApplicableCode',
                     'insert', 'Record requires an identifier')
 
                 # insert new record
@@ -1127,7 +1127,7 @@ class Csw2(object):
                     'title': getattr(record,
                     self.parent.context.md_core_model['mappings']['pycsw:Title'])})
                 except Exception as err:
-                    return self.parent.exceptionreport('NoApplicableCode',
+                    return self.exceptionreport('NoApplicableCode',
                     'insert', 'Transaction (insert) failed: %s.' % str(err))
 
             elif ttype['type'] == 'update':
@@ -1139,7 +1139,7 @@ class Csw2(object):
                         identifier = getattr(record,
                         self.parent.context.md_core_model['mappings']['pycsw:Identifier'])
                     except Exception as err:
-                        return self.parent.exceptionreport('NoApplicableCode', 'insert',
+                        return self.exceptionreport('NoApplicableCode', 'insert',
                         'Transaction (update) failed: record parsing failed: %s' \
                         % str(err))
 
@@ -1157,7 +1157,7 @@ class Csw2(object):
                             self.parent.repository.update(record)
                             updated += 1
                         except Exception as err:
-                            return self.parent.exceptionreport('NoApplicableCode',
+                            return self.exceptionreport('NoApplicableCode',
                             'update',
                             'Transaction (update) failed: %s.' % str(err))
                 else:  # update by record property and constraint
@@ -1174,7 +1174,7 @@ class Csw2(object):
                                             rp['rp']['dbcol'] = self.parent.repository.queryables['_all'][key]
                                             break
                             else:
-                                return self.parent.exceptionreport('NoApplicableCode',
+                                return self.exceptionreport('NoApplicableCode',
                                        'update', 'Transaction (update) failed: invalid property2: %s.' % str(rp['name']))
                         else:
                             rp['rp']= \
@@ -1187,7 +1187,7 @@ class Csw2(object):
                         recprops=ttype['recordproperty'],
                         constraint=ttype['constraint'])
                     except Exception as err:
-                        return self.parent.exceptionreport('NoApplicableCode',
+                        return self.exceptionreport('NoApplicableCode',
                         'update',
                         'Transaction (update) failed: %s.' % str(err))
 
@@ -1221,21 +1221,21 @@ class Csw2(object):
         try:
             self.parent._test_manager()
         except Exception as err:
-            return self.parent.exceptionreport('NoApplicableCode', 'harvest', str(err))
+            return self.exceptionreport('NoApplicableCode', 'harvest', str(err))
 
         if self.parent.requesttype == 'GET':
             if 'resourcetype' not in self.parent.kvp:
-                return self.parent.exceptionreport('MissingParameterValue',
+                return self.exceptionreport('MissingParameterValue',
                 'resourcetype', 'Missing resourcetype parameter')
             if 'source' not in self.parent.kvp:
-                return self.parent.exceptionreport('MissingParameterValue',
+                return self.exceptionreport('MissingParameterValue',
                 'source', 'Missing source parameter')
 
         # validate resourcetype
         if (self.parent.kvp['resourcetype'] not in
             self.parent.context.model['operations']['Harvest']['parameters']['ResourceType']
             ['values']):
-            return self.parent.exceptionreport('InvalidParameterValue',
+            return self.exceptionreport('InvalidParameterValue',
             'resourcetype', 'Invalid resource type parameter: %s.\
             Allowable resourcetype values: %s' % (self.parent.kvp['resourcetype'],
             ','.join(self.parent.context.model['operations']['Harvest']['parameters']
@@ -1251,7 +1251,7 @@ class Csw2(object):
                 errortext = 'Error fetching resource %s.\nError: %s.' % \
                 (self.parent.kvp['source'], str(err))
                 LOGGER.debug(errortext)
-                return self.parent.exceptionreport('InvalidParameterValue', 'source',
+                return self.exceptionreport('InvalidParameterValue', 'source',
                 errortext)
         else:  # it's a service URL
             content = self.parent.kvp['source']
@@ -1264,7 +1264,7 @@ class Csw2(object):
                 service_identifier = results[0].identifier
                 service_results = results
                 LOGGER.debug('Identifier is %s' % service_identifier)
-            #    return self.parent.exceptionreport('NoApplicableCode', 'source',
+            #    return self.exceptionreport('NoApplicableCode', 'source',
             #    'Insert failed: service %s already in repository' % content)
 
         # parse resource into record
@@ -1274,7 +1274,7 @@ class Csw2(object):
             pagesize=self.parent.csw_harvest_pagesize)
         except Exception as err:
             LOGGER.exception(err)
-            return self.parent.exceptionreport('NoApplicableCode', 'source',
+            return self.exceptionreport('NoApplicableCode', 'source',
             'Harvest failed: record parsing failed: %s' % str(err))
 
         inserted = 0
@@ -1331,19 +1331,19 @@ class Csw2(object):
                 try:
                     self.parent.repository.insert(record, source, insert_date)
                 except Exception as err:
-                    return self.parent.exceptionreport('NoApplicableCode',
+                    return self.exceptionreport('NoApplicableCode',
                     'source', 'Harvest (insert) failed: %s.' % str(err))
             else:  # existing record, it's an update
                 if source != results[0].source:
                     # same identifier, but different source
-                    return self.parent.exceptionreport('NoApplicableCode',
+                    return self.exceptionreport('NoApplicableCode',
                     'source', 'Insert failed: identifier %s in repository\
                     has source %s.' % (identifier, source))
 
                 try:
                     self.parent.repository.update(record)
                 except Exception as err:
-                    return self.parent.exceptionreport('NoApplicableCode',
+                    return self.exceptionreport('NoApplicableCode',
                     'source', 'Harvest (update) failed: %s.' % str(err))
                 updated += 1
 
@@ -1900,3 +1900,33 @@ class Csw2(object):
             self.parent.context.namespaces)).text = ir['title']
 
         return insertresult
+
+    def exceptionreport(self, code, locator, text):
+        ''' Generate ExceptionReport '''
+        self.parent.exception = True
+
+        try:
+            language = self.parent.config.get('server', 'language')
+            ogc_schemas_base = self.parent.config.get('server', 'ogc_schemas_base')
+        except:
+            language = 'en-US'
+            ogc_schemas_base = self.parent.context.ogc_schemas_base
+
+        node = etree.Element(util.nspath_eval('ows:ExceptionReport',
+        self.parent.context.namespaces), nsmap=self.parent.context.namespaces,
+        version='1.2.0', language=language)
+
+        node.attrib[util.nspath_eval('xsi:schemaLocation',
+        self.parent.context.namespaces)] = \
+        '%s %s/ows/1.0.0/owsExceptionReport.xsd' % \
+        (self.parent.context.namespaces['ows'], ogc_schemas_base)
+
+        exception = etree.SubElement(node, util.nspath_eval('ows:Exception',
+        self.parent.context.namespaces),
+        exceptionCode=code, locator=locator)
+
+        etree.SubElement(exception,
+        util.nspath_eval('ows:ExceptionText',
+        self.parent.context.namespaces)).text = text
+
+        return node
