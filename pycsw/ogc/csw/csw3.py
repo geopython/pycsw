@@ -422,86 +422,19 @@ class Csw3(object):
 
         return node
 
-    def describerecord(self):
-        ''' Handle DescribeRecord request '''
-
-        if 'typename' not in self.parent.kvp or \
-        len(self.parent.kvp['typename']) == 0:  # missing typename
-        # set to return all typenames
-            self.parent.kvp['typename'] = ['csw:Record']
-
-            if self.parent.profiles is not None:
-                for prof in self.parent.profiles['loaded'].keys():
-                    self.parent.kvp['typename'].append(
-                    self.parent.profiles['loaded'][prof].typename)
-
-        elif self.parent.requesttype == 'GET':  # pass via GET
-            self.parent.kvp['typename'] = self.parent.kvp['typename'].split(',')
-
-        if ('outputformat' in self.parent.kvp and
-            self.parent.kvp['outputformat'] not in
-            self.parent.context.model['operations']['DescribeRecord']
-            ['parameters']['outputFormat']['values']):  # bad outputformat
-            return self.exceptionreport('InvalidParameterValue',
-            'outputformat', 'Invalid value for outputformat: %s' %
-            self.parent.kvp['outputformat'])
-
-        if ('schemalanguage' in self.parent.kvp and
-            self.parent.kvp['schemalanguage'] not in
-            self.parent.context.model['operations']['DescribeRecord']['parameters']
-            ['schemaLanguage']['values']):  # bad schemalanguage
-            return self.exceptionreport('InvalidParameterValue',
-            'schemalanguage', 'Invalid value for schemalanguage: %s' %
-            self.parent.kvp['schemalanguage'])
-
-        node = etree.Element(util.nspath_eval('csw:DescribeRecordResponse',
-        self.parent.context.namespaces), nsmap=self.parent.context.namespaces)
-
-        node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = \
-        '%s %s/csw/2.0.2/CSW-discovery.xsd' % (self.parent.context.namespaces['csw'],
-        self.parent.config.get('server', 'ogc_schemas_base'))
-
-        for typename in self.parent.kvp['typename']:
-            if typename.find(':') == -1:  # unqualified typename
-                return self.exceptionreport('InvalidParameterValue',
-                'typename', 'Typename not qualified: %s' % typename)
-            if typename == 'csw:Record':   # load core schema
-                LOGGER.debug('Writing csw:Record schema.')
-                schemacomponent = etree.SubElement(node,
-                util.nspath_eval('csw:SchemaComponent', self.parent.context.namespaces),
-                schemaLanguage='XMLSCHEMA',
-                targetNamespace=self.parent.context.namespaces['csw'])
-
-                path = os.path.join(self.parent.config.get('server', 'home'),
-                'core', 'schemas', 'ogc', 'csw', '2.0.2', 'record.xsd')
-
-                dublincore = etree.parse(path).getroot()
-
-                schemacomponent.append(dublincore)
-
-            if self.parent.profiles is not None:
-                for prof in self.parent.profiles['loaded'].keys():
-                    if self.parent.profiles['loaded'][prof].typename == typename:
-                        scnodes = \
-                        self.parent.profiles['loaded'][prof].get_schemacomponents()
-                        if scnodes is not None:
-                            map(node.append, scnodes)
-        return node
-
     def getdomain(self):
         ''' Handle GetDomain request '''
         if ('parametername' not in self.parent.kvp and
-            'propertyname' not in self.parent.kvp):
+            'valuereference' not in self.parent.kvp):
             return self.exceptionreport('MissingParameterValue',
             'parametername', 'Missing value. \
-            One of propertyname or parametername must be specified')
+            One of valuereference or parametername must be specified')
 
-        node = etree.Element(util.nspath_eval('csw:GetDomainResponse',
+        node = etree.Element(util.nspath_eval('csw30:GetDomainResponse',
         self.parent.context.namespaces), nsmap=self.parent.context.namespaces)
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
+        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswAll.xsd' % \
         (self.parent.context.namespaces['csw'],
         self.parent.config.get('server', 'ogc_schemas_base'))
 
@@ -512,7 +445,7 @@ class Csw3(object):
                 util.nspath_eval('csw:DomainValues', self.parent.context.namespaces),
                 type='csw:Record')
                 etree.SubElement(domainvalue,
-                util.nspath_eval('csw:ParameterName',
+                util.nspath_eval('csw30:ParameterName',
                 self.parent.context.namespaces)).text = pname
                 try:
                     operation, parameter = pname.split('.')
@@ -522,17 +455,17 @@ class Csw3(object):
                     parameter in
                     self.parent.context.model['operations'][operation]['parameters'].keys()):
                     listofvalues = etree.SubElement(domainvalue,
-                    util.nspath_eval('csw:ListOfValues', self.parent.context.namespaces))
+                    util.nspath_eval('csw30:ListOfValues', self.parent.context.namespaces))
                     for val in \
                     self.parent.context.model['operations'][operation]\
                     ['parameters'][parameter]['values']:
                         etree.SubElement(listofvalues,
-                        util.nspath_eval('csw:Value',
+                        util.nspath_eval('csw30:Value',
                         self.parent.context.namespaces)).text = val
 
-        if 'propertyname' in self.parent.kvp:
-            for pname in self.parent.kvp['propertyname'].split(','):
-                LOGGER.debug('Parsing propertyname %s.' % pname)
+        if 'valuereference' in self.parent.kvp:
+            for pname in self.parent.kvp['valuereference'].split(','):
+                LOGGER.debug('Parsing valuereference %s.' % pname)
 
                 if pname.find('/') == 0:  # it's an XPath
                     pname2 = pname
@@ -551,13 +484,13 @@ class Csw3(object):
                                 dvtype = self.parent.profiles['loaded'][prof].typename
                                 break
                 if not dvtype:
-                    dvtype = 'csw:Record'
+                    dvtype = 'csw30:Record'
 
                 domainvalue = etree.SubElement(node,
-                util.nspath_eval('csw:DomainValues', self.parent.context.namespaces),
-                type=dvtype)
+                util.nspath_eval('csw30:DomainValues', self.parent.context.namespaces),
+                resyltType=dvtype)
                 etree.SubElement(domainvalue,
-                util.nspath_eval('csw:PropertyName',
+                util.nspath_eval('csw:ValueReference',
                 self.parent.context.namespaces)).text = pname
 
                 try:
@@ -566,44 +499,35 @@ class Csw3(object):
                     domainquerytype %s.' % \
                     (pname2, dvtype, self.parent.domainquerytype))
 
-                    count = False
-
-                    if (self.parent.config.has_option('server', 'domaincounts') and
-                        self.parent.config.get('server', 'domaincounts') == 'true'):
-                        count = True
-
                     results = self.parent.repository.query_domain(
-                    pname2, dvtype, self.parent.domainquerytype, count)
+                    pname2, dvtype, self.parent.domainquerytype, True)
 
                     LOGGER.debug('Results: %s' % str(len(results)))
 
                     if self.parent.domainquerytype == 'range':
                         rangeofvalues = etree.SubElement(domainvalue,
-                        util.nspath_eval('csw:RangeOfValues',
+                        util.nspath_eval('csw30:RangeOfValues',
                         self.parent.context.namespaces))
 
                         etree.SubElement(rangeofvalues,
-                        util.nspath_eval('csw:MinValue',
+                        util.nspath_eval('csw30:MinValue',
                         self.parent.context.namespaces)).text = results[0][0]
 
                         etree.SubElement(rangeofvalues,
-                        util.nspath_eval('csw:MaxValue',
+                        util.nspath_eval('csw30:MaxValue',
                         self.parent.context.namespaces)).text = results[0][1]
                     else:
                         listofvalues = etree.SubElement(domainvalue,
-                        util.nspath_eval('csw:ListOfValues',
+                        util.nspath_eval('csw30:ListOfValues',
                         self.parent.context.namespaces))
                         for result in results:
                             LOGGER.debug(str(result))
                             if (result is not None and
                                 result[0] is not None):  # drop null values
-                                if count:  # show counts
-                                    val = '%s (%s)' % (result[0], result[1])
-                                else:
-                                    val = result[0]
                                 etree.SubElement(listofvalues,
-                                util.nspath_eval('csw:Value',
-                                self.parent.context.namespaces)).text = val
+                                util.nspath_eval('csw30:Value',
+                                self.parent.context.namespaces),
+                                count=str(result[1])).text = result[0]
                 except Exception as err:
                     LOGGER.debug('No results for propertyname %s: %s.' %
                     (pname2, str(err)))
@@ -987,9 +911,6 @@ class Csw3(object):
         if 'outputschema' not in self.parent.kvp:
             self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw']
 
-        if self.parent.requesttype == 'GET':
-            self.parent.kvp['id'] = self.parent.kvp['id'].split(',')
-
         if ('outputformat' in self.parent.kvp and
             self.parent.kvp['outputformat'] not in
             self.parent.context.model['operations']['GetRecordById']['parameters']
@@ -1015,16 +936,9 @@ class Csw3(object):
                 'elementsetname', 'Invalid elementsetname parameter %s' %
                 self.parent.kvp['elementsetname'])
 
-        node = etree.Element(util.nspath_eval('csw:GetRecordByIdResponse',
-        self.parent.context.namespaces), nsmap=self.parent.context.namespaces)
-
-        node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
-        (self.parent.context.namespaces['csw'], self.parent.config.get('server', 'ogc_schemas_base'))
-
         # query repository
-        LOGGER.debug('Querying repository with ids: %s.' % self.parent.kvp['id'][0])
-        results = self.parent.repository.query_ids(self.parent.kvp['id'])
+        LOGGER.debug('Querying repository with ids: %s.' % self.parent.kvp['id'])
+        results = self.parent.repository.query_ids([self.parent.kvp['id']])
 
         if raw:  # GetRepositoryItem request
             LOGGER.debug('GetRepositoryItem request.')
@@ -1038,8 +952,8 @@ class Csw3(object):
             and self.parent.kvp['outputschema'] ==
             'http://www.opengis.net/cat/csw/2.0.2'):
                 # serialize record inline
-                node.append(self._write_record(
-                result, self.parent.repository.queryables['_all']))
+                node = self._write_record(
+                result, self.parent.repository.queryables['_all'])
             elif (self.parent.kvp['outputschema'] ==
                 'http://www.opengis.net/cat/csw/2.0.2'):
                 # serialize into csw:Record model
@@ -1056,18 +970,20 @@ class Csw3(object):
                     self.parent.context.model['typenames'][typename]\
                     ['mappings']['csw:Record'], reverse=True)
 
-                node.append(self._write_record(
-                result, self.parent.repository.queryables['_all']))
+                node = self._write_record( result, self.parent.repository.queryables['_all'])
             elif self.parent.kvp['outputschema'] in self.parent.outputschemas.keys():  # use outputschema serializer
-                node.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url')))
+                node = self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url'))
             else:  # it's a profile output
-                node.append(
-                self.parent.profiles['loaded'][self.parent.kvp['outputschema']].write_record(
+                node = self.parent.profiles['loaded'][self.parent.kvp['outputschema']].write_record(
                 result, self.parent.kvp['elementsetname'],
-                self.parent.kvp['outputschema'], self.parent.repository.queryables['_all']))
+                self.parent.kvp['outputschema'], self.parent.repository.queryables['_all'])
 
         if raw and len(results) == 0:
             return None
+
+        if len(results) == 0:
+            return self.exceptionreport('InvalidParameterValue', 'id',
+            'No repository item found for \'%s\'' % self.parent.kvp['id'])
 
         return node
 
@@ -1542,23 +1458,17 @@ class Csw3(object):
             util.nspath_eval('soapenv:Body',
             self.parent.context.namespaces)).xpath('child::*')[0]
 
-        if (doc.tag in [util.nspath_eval('csw:Transaction',
-            self.parent.context.namespaces), util.nspath_eval('csw:Harvest',
-            self.parent.context.namespaces)]):
-            schema = os.path.join(self.parent.config.get('server', 'home'),
-            'core', 'schemas', 'ogc', 'csw', '2.0.2', 'CSW-publication.xsd')
-        else:
-            schema = os.path.join(self.parent.config.get('server', 'home'),
-            'core', 'schemas', 'ogc', 'csw', '2.0.2', 'CSW-discovery.xsd')
+        schema = os.path.join(self.parent.config.get('server', 'home'),
+        'core', 'schemas', 'ogc', 'csw', '3.0', 'cswAll.xsd')
 
         try:
             # it is virtually impossible to validate a csw:Transaction
             # csw:Insert|csw:Update (with single child) XML document.
             # Only validate non csw:Transaction XML
 
-            if doc.find('.//%s' % util.nspath_eval('csw:Insert',
+            if doc.find('.//%s' % util.nspath_eval('csw30:Insert',
             self.parent.context.namespaces)) is None and \
-            len(doc.xpath('//csw:Update/child::*',
+            len(doc.xpath('//csw30:Update/child::*',
             namespaces=self.parent.context.namespaces)) == 0:
 
                 LOGGER.debug('Validating %s.' % postdata)
@@ -1588,7 +1498,7 @@ class Csw3(object):
         if tmp is not None:
             request['version'] = tmp
 
-        tmp = doc.find('.//%s' % util.nspath_eval('ows:Version',
+        tmp = doc.find('.//%s' % util.nspath_eval('ows20:Version',
         self.parent.context.namespaces))
 
         if tmp is not None:
@@ -1600,38 +1510,24 @@ class Csw3(object):
 
         # GetCapabilities
         if request['request'] == 'GetCapabilities':
-            tmp = doc.find(util.nspath_eval('ows:Sections',
+            tmp = doc.find(util.nspath_eval('ows20:Sections',
                   self.parent.context.namespaces))
             if tmp is not None:
                 request['sections'] = ','.join([section.text for section in \
-                doc.findall(util.nspath_eval('ows:Sections/ows:Section',
+                doc.findall(util.nspath_eval('ows20:Sections/ows20:Section',
                 self.parent.context.namespaces))])
-
-        # DescribeRecord
-        if request['request'] == 'DescribeRecord':
-            request['typename'] = [typename.text for typename in \
-            doc.findall(util.nspath_eval('csw:TypeName',
-            self.parent.context.namespaces))]
-
-            tmp = doc.find('.').attrib.get('schemaLanguage')
-            if tmp is not None:
-                request['schemalanguage'] = tmp
-
-            tmp = doc.find('.').attrib.get('outputFormat')
-            if tmp is not None:
-                request['outputformat'] = tmp
 
         # GetDomain
         if request['request'] == 'GetDomain':
-            tmp = doc.find(util.nspath_eval('csw:ParameterName',
+            tmp = doc.find(util.nspath_eval('csw30:ParameterName',
                   self.parent.context.namespaces))
             if tmp is not None:
                 request['parametername'] = tmp.text
 
-            tmp = doc.find(util.nspath_eval('csw:PropertyName',
+            tmp = doc.find(util.nspath_eval('csw30:ValueReference',
                   self.parent.context.namespaces))
             if tmp is not None:
-                request['propertyname'] = tmp.text
+                request['valuereference'] = tmp.text
 
         # GetRecords
         if request['request'] == 'GetRecords':
@@ -1730,8 +1626,10 @@ class Csw3(object):
 
         # GetRecordById
         if request['request'] == 'GetRecordById':
-            request['id'] = [id1.text for id1 in \
-            doc.findall(util.nspath_eval('csw:Id', self.parent.context.namespaces))]
+            request['id'] = None
+            tmp = doc.find(util.nspath_eval('csw30:Id'))
+            if tmp is not None:
+                request['id'] = tmp.text
 
             tmp = doc.find(util.nspath_eval('csw:ElementSetName',
                   self.parent.context.namespaces))
@@ -1879,7 +1777,7 @@ class Csw3(object):
 
         if self.parent.async:
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
-            self.parent.context.namespaces)).text = self.kvp['requestid']
+            self.parent.context.namespaces)).text = self.parent.kvp['requestid']
 
         return node
 
