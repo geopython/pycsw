@@ -549,7 +549,7 @@ class Csw(object):
             elif self.kvp['request'] == 'GetRecords':
                 if self.async:  # process asynchronously
                     threading.Thread(target=self.iface.getrecords).start()
-                    self.response = self._write_acknowledgement()
+                    self.response = self.iface._write_acknowledgement()
                 else:
                     self.response = self.iface.getrecords()
             elif self.kvp['request'] == 'GetRecordById':
@@ -561,7 +561,7 @@ class Csw(object):
             elif self.kvp['request'] == 'Harvest':
                 if self.async:  # process asynchronously
                     threading.Thread(target=self.iface.harvest).start()
-                    self.response = self._write_acknowledgement()
+                    self.response = self.iface._write_acknowledgement()
                 else:
                     self.response = self.iface.harvest()
             else:
@@ -646,110 +646,6 @@ class Csw(object):
     def harvest(self):
         ''' Handle Harvest request '''
         return self.iface.harvest()
-
-    def _write_record(self, recobj, queryables):
-        ''' Generate csw:Record '''
-        if self.kvp['elementsetname'] == 'brief':
-            elname = 'BriefRecord'
-        elif self.kvp['elementsetname'] == 'summary':
-            elname = 'SummaryRecord'
-        else:
-            elname = 'Record'
-
-        record = etree.Element(util.nspath_eval('csw:%s' % elname,
-                 self.context.namespaces))
-
-        if ('elementname' in self.kvp and
-            len(self.kvp['elementname']) > 0):
-            for elemname in self.kvp['elementname']:
-                if (elemname.find('BoundingBox') != -1 or
-                    elemname.find('Envelope') != -1):
-                    bboxel = util.write_boundingbox(util.getqattr(recobj,
-                    self.context.md_core_model['mappings']['pycsw:BoundingBox']),
-                    self.context.namespaces)
-                    if bboxel is not None:
-                        record.append(bboxel)
-                else:
-                    value = util.getqattr(recobj, queryables[elemname]['dbcol'])
-                    if value:
-                        etree.SubElement(record,
-                        util.nspath_eval(elemname,
-                        self.context.namespaces)).text = value
-        elif 'elementsetname' in self.kvp:
-            if (self.kvp['elementsetname'] == 'full' and
-            util.getqattr(recobj, self.context.md_core_model['mappings']\
-            ['pycsw:Typename']) == 'csw:Record' and
-            util.getqattr(recobj, self.context.md_core_model['mappings']\
-            ['pycsw:Schema']) == 'http://www.opengis.net/cat/csw/2.0.2' and
-            util.getqattr(recobj, self.context.md_core_model['mappings']\
-            ['pycsw:Type']) != 'service'):
-                # dump record as is and exit
-                return etree.fromstring(util.getqattr(recobj,
-                self.context.md_core_model['mappings']['pycsw:XML']))
-
-            etree.SubElement(record,
-            util.nspath_eval('dc:identifier', self.context.namespaces)).text = \
-            util.getqattr(recobj,
-            self.context.md_core_model['mappings']['pycsw:Identifier'])
-
-            for i in ['dc:title', 'dc:type']:
-                val = util.getqattr(recobj, queryables[i]['dbcol'])
-                if not val:
-                    val = ''
-                etree.SubElement(record, util.nspath_eval(i,
-                self.context.namespaces)).text = val
-
-            if self.kvp['elementsetname'] in ['summary', 'full']:
-                # add summary elements
-                keywords = util.getqattr(recobj, queryables['dc:subject']['dbcol'])
-                if keywords is not None:
-                    for keyword in keywords.split(','):
-                        etree.SubElement(record,
-                        util.nspath_eval('dc:subject',
-                        self.context.namespaces)).text = keyword
-
-                val = util.getqattr(recobj, queryables['dc:format']['dbcol'])
-                if val:
-                    etree.SubElement(record,
-                    util.nspath_eval('dc:format',
-                    self.context.namespaces)).text = val
-
-                # links
-                rlinks = util.getqattr(recobj,
-                self.context.md_core_model['mappings']['pycsw:Links'])
-
-                if rlinks:
-                    links = rlinks.split('^')
-                    for link in links:
-                        linkset = link.split(',')
-                        etree.SubElement(record,
-                        util.nspath_eval('dct:references',
-                        self.context.namespaces),
-                        scheme=linkset[2]).text = linkset[-1]
-
-                for i in ['dc:relation', 'dct:modified', 'dct:abstract']:
-                    val = util.getqattr(recobj, queryables[i]['dbcol'])
-                    if val is not None:
-                        etree.SubElement(record,
-                        util.nspath_eval(i, self.context.namespaces)).text = val
-
-            if self.kvp['elementsetname'] == 'full':  # add full elements
-                for i in ['dc:date', 'dc:creator', \
-                'dc:publisher', 'dc:contributor', 'dc:source', \
-                'dc:language', 'dc:rights']:
-                    val = util.getqattr(recobj, queryables[i]['dbcol'])
-                    if val:
-                        etree.SubElement(record,
-                        util.nspath_eval(i, self.context.namespaces)).text = val
-
-            # always write out ows:BoundingBox
-            bboxel = util.write_boundingbox(getattr(recobj,
-            self.context.md_core_model['mappings']['pycsw:BoundingBox']),
-            self.context.namespaces)
-
-            if bboxel is not None:
-                record.append(bboxel)
-        return record
 
     def _write_response(self):
         ''' Generate response '''
@@ -844,30 +740,6 @@ class Csw(object):
                 self.csw_harvest_pagesize = int(self.config.get('manager',
                 'csw_harvest_pagesize'))
 
-    def _parse_constraint(self, element):
-        ''' Parse csw:Constraint '''
-
-        query = {}
-
-        tmp = element.find(util.nspath_eval('ogc:Filter', self.context.namespaces))
-        if tmp is not None:
-            LOGGER.debug('Filter constraint specified.')
-            try:
-                query['type'] = 'filter'
-                query['where'], query['values'] = fes1.parse(tmp,
-                self.repository.queryables['_all'], self.repository.dbtype,
-                self.context.namespaces, self.orm, self.language['text'], self.repository.fts)
-            except Exception as err:
-                return 'Invalid Filter request: %s' % err
-        tmp = element.find(util.nspath_eval('csw:CqlText', self.context.namespaces))
-        if tmp is not None:
-            LOGGER.debug('CQL specified: %s.' % tmp.text)
-            query['type'] = 'cql'
-            query['where'] = self._cql_update_queryables_mappings(tmp.text,
-            self.repository.queryables['_all'])
-            query['values'] = {}
-        return query
-
     def _test_manager(self):
         ''' Verify that transactions are allowed '''
 
@@ -895,53 +767,6 @@ class Csw(object):
                     cql = cql.replace(key, mappings[key])
             LOGGER.debug('Interpolated CQL text = %s.' % cql)
             return cql
-
-    def _write_transactionsummary(self, inserted=0, updated=0, deleted=0):
-        ''' Write csw:TransactionSummary construct '''
-        node = etree.Element(util.nspath_eval('csw:TransactionSummary',
-               self.context.namespaces))
-
-        if 'requestid' in self.kvp and self.kvp['requestid'] is not None:
-            node.attrib['requestId'] = self.kvp['requestid']
-
-        etree.SubElement(node, util.nspath_eval('csw:totalInserted',
-        self.context.namespaces)).text = str(inserted)
-
-        etree.SubElement(node, util.nspath_eval('csw:totalUpdated',
-        self.context.namespaces)).text = str(updated)
-
-        etree.SubElement(node, util.nspath_eval('csw:totalDeleted',
-        self.context.namespaces)).text = str(deleted)
-
-        return node
-
-    def _write_acknowledgement(self, root=True):
-        ''' Generate csw:Acknowledgement '''
-        node = etree.Element(util.nspath_eval('csw:Acknowledgement',
-               self.context.namespaces),
-        nsmap = self.context.namespaces, timeStamp=util.get_today_and_now())
-
-        if root:
-            node.attrib[util.nspath_eval('xsi:schemaLocation',
-            self.context.namespaces)] = \
-            '%s %s/csw/2.0.2/CSW-discovery.xsd' % (self.context.namespaces['csw'], \
-            self.config.get('server', 'ogc_schemas_base'))
-
-        node1 = etree.SubElement(node, util.nspath_eval('csw:EchoedRequest',
-                self.context.namespaces))
-        if self.requesttype == 'POST':
-            node1.append(etree.fromstring(self.request))
-        else:  # GET
-            node2 = etree.SubElement(node1, util.nspath_eval('ows:Get',
-                    self.context.namespaces))
-
-            node2.text = self.request
-
-        if self.async:
-            etree.SubElement(node, util.nspath_eval('csw:RequestId',
-            self.context.namespaces)).text = self.kvp['requestid']
-
-        return node
 
     def _process_responsehandler(self, xml):
         ''' Process response handler '''
@@ -990,22 +815,3 @@ class Csw(object):
                     LOGGER.debug('FTP sent successfully.')
                 except Exception as err:
                     LOGGER.debug('Error processing FTP: %s.' % str(err))
-
-    def _write_verboseresponse(self, insertresults):
-        ''' show insert result identifiers '''
-        insertresult = etree.Element(util.nspath_eval('csw:InsertResult',
-        self.context.namespaces))
-        for ir in insertresults:
-            briefrec = etree.SubElement(insertresult,
-                       util.nspath_eval('csw:BriefRecord',
-                       self.context.namespaces))
-
-            etree.SubElement(briefrec,
-            util.nspath_eval('dc:identifier',
-            self.context.namespaces)).text = ir['identifier']
-
-            etree.SubElement(briefrec,
-            util.nspath_eval('dc:title',
-            self.context.namespaces)).text = ir['title']
-
-        return insertresult
