@@ -1929,11 +1929,13 @@ class Csw3(object):
 
         node = etree.Element(util.nspath_eval('ows:ExceptionReport',
         self.parent.context.namespaces), nsmap=self.parent.context.namespaces,
-        version='1.2.0', language=language)
+        version='3.0.0')
+
+        node.attrib['{http://www.w3.org/XML/1998/namespace}lang'] = language
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/ows/1.0.0/owsExceptionReport.xsd' % \
+        '%s %s/ows/2.0/owsAll.xsd' % \
         (self.parent.context.namespaces['ows'], ogc_schemas_base)
 
         exception = etree.SubElement(node, util.nspath_eval('ows:Exception',
