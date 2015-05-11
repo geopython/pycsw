@@ -51,7 +51,7 @@ LOGGER = logging.getLogger(__name__)
 
 class Csw(object):
     ''' Base CSW server '''
-    def __init__(self, rtconfig=None, env=None):
+    def __init__(self, rtconfig=None, env=None, version='2.0.2'):
         ''' Initialize CSW '''
 
         if not env:
@@ -86,9 +86,8 @@ class Csw(object):
 
         # define CSW implementation object (default CSW2)
         self.iface = csw2.Csw2(server_csw=self)
-        # self.iface = None
-        # if version:
-        #     self.iface = Csw2(server_csw=self)
+        # if version == '3.0.0':
+        #     self.iface = Csw3(server_csw=self)
         
         # load user configuration
         try:
