@@ -366,6 +366,27 @@ class Csw3(object):
             etree.SubElement(constraint,
                              util.nspath_eval('ows11:DefaultValue', self.parent.context.namespaces)).text = 'TRUE'
 
+        idcaps = etree.SubElement(fltcaps,
+        util.nspath_eval('fes20:Id_Capabilities', self.parent.context.namespaces))
+
+        for idcap in fes2.MODEL['Ids']['values']:
+            etree.SubElement(idcaps, util.nspath_eval('fes20:ResourceIdentifier',
+            self.parent.context.namespaces), name=idcap)
+
+        scalarcaps = etree.SubElement(fltcaps,
+        util.nspath_eval('fes20:Scalar_Capabilities', self.parent.context.namespaces))
+
+        etree.SubElement(scalarcaps, util.nspath_eval('fes20:LogicalOperators',
+        self.parent.context.namespaces))
+
+        cmpops = etree.SubElement(scalarcaps,
+        util.nspath_eval('fes20:ComparisonOperators', self.parent.context.namespaces))
+
+        for cmpop in fes2.MODEL['ComparisonOperators'].keys():
+            etree.SubElement(cmpops,
+            util.nspath_eval('fes20:ComparisonOperator',
+            self.parent.context.namespaces), name=fes2.MODEL['ComparisonOperators'][cmpop]['opname'])
+
         spatialcaps = etree.SubElement(fltcaps,
         util.nspath_eval('fes20:Spatial_Capabilities', self.parent.context.namespaces))
 
@@ -387,41 +408,17 @@ class Csw3(object):
             util.nspath_eval('fes20:SpatialOperator', self.parent.context.namespaces),
             name=spatial_comparison)
 
-        scalarcaps = etree.SubElement(fltcaps,
-        util.nspath_eval('fes20:Scalar_Capabilities', self.parent.context.namespaces))
-
-        etree.SubElement(scalarcaps, util.nspath_eval('fes20:LogicalOperators',
-        self.parent.context.namespaces))
-
-        cmpops = etree.SubElement(scalarcaps,
-        util.nspath_eval('fes20:ComparisonOperators', self.parent.context.namespaces))
-
-        for cmpop in fes2.MODEL['ComparisonOperators'].keys():
-            etree.SubElement(cmpops,
-            util.nspath_eval('fes20:ComparisonOperator',
-            self.parent.context.namespaces)).text = \
-            fes2.MODEL['ComparisonOperators'][cmpop]['opname']
-
-        arithops = etree.SubElement(scalarcaps,
-        util.nspath_eval('fes20:ArithmeticOperators', self.parent.context.namespaces))
-
-        functions = etree.SubElement(arithops,
+        functions = etree.SubElement(fltcaps,
         util.nspath_eval('fes20:Functions', self.parent.context.namespaces))
 
-        functionames = etree.SubElement(functions,
-        util.nspath_eval('fes20:FunctionNames', self.parent.context.namespaces))
-
         for fnop in sorted(fes2.MODEL['Functions'].keys()):
-            etree.SubElement(functionames,
-            util.nspath_eval('fes20:FunctionName', self.parent.context.namespaces),
-            nArgs=fes2.MODEL['Functions'][fnop]['args']).text = fnop
+            fn = etree.SubElement(functions,
+            util.nspath_eval('fes20:Function', self.parent.context.namespaces),
+            name=fnop)
 
-        idcaps = etree.SubElement(fltcaps,
-        util.nspath_eval('fes20:Id_Capabilities', self.parent.context.namespaces))
-
-        for idcap in fes2.MODEL['Ids']['values']:
-            etree.SubElement(idcaps, util.nspath_eval('fes20:%s' % idcap,
-            self.parent.context.namespaces))
+            etree.SubElement(fn, util.nspath_eval('fes20:Returns',
+                             self.parent.context.namespaces)).text = \
+                             fes2.MODEL['Functions'][fnop]['returns']
 
         return node
 
