@@ -1387,3 +1387,322 @@ class Csw2(object):
             pretty_print=self.parent.pretty_print))
         else:
             return node
+
+    def parse_postdata(self, postdata):
+        ''' Parse POST XML '''
+
+        request = {}
+        try:
+            LOGGER.debug('Parsing %s.' % postdata)
+            doc = etree.fromstring(postdata)
+        except Exception as err:
+            errortext = \
+            'Exception: document not well-formed.\nError: %s.' % str(err)
+
+            LOGGER.debug(errortext)
+            return errortext
+
+        # if this is a SOAP request, get to SOAP-ENV:Body/csw:*
+        if (doc.tag == util.nspath_eval('soapenv:Envelope',
+            self.parent.context.namespaces)):
+
+            LOGGER.debug('SOAP request specified.')
+            self.parent.soap = True
+
+            doc = doc.find(
+            util.nspath_eval('soapenv:Body',
+            self.parent.context.namespaces)).xpath('child::*')[0]
+
+        if (doc.tag in [util.nspath_eval('csw:Transaction',
+            self.parent.context.namespaces), util.nspath_eval('csw:Harvest',
+            self.parent.context.namespaces)]):
+            schema = os.path.join(self.parent.config.get('server', 'home'),
+            'core', 'schemas', 'ogc', 'csw', '2.0.2', 'CSW-publication.xsd')
+        else:
+            schema = os.path.join(self.parent.config.get('server', 'home'),
+            'core', 'schemas', 'ogc', 'csw', '2.0.2', 'CSW-discovery.xsd')
+
+        try:
+            # it is virtually impossible to validate a csw:Transaction
+            # csw:Insert|csw:Update (with single child) XML document.
+            # Only validate non csw:Transaction XML
+
+            if doc.find('.//%s' % util.nspath_eval('csw:Insert',
+            self.parent.context.namespaces)) is None and \
+            len(doc.xpath('//csw:Update/child::*',
+            namespaces=self.parent.context.namespaces)) == 0:
+
+                LOGGER.debug('Validating %s.' % postdata)
+                schema = etree.XMLSchema(file=schema)
+                parser = etree.XMLParser(schema=schema)
+                if hasattr(self.parent, 'soap') and self.parent.soap:
+                # validate the body of the SOAP request
+                    doc = etree.fromstring(etree.tostring(doc), parser)
+                else:  # validate the request normally
+                    doc = etree.fromstring(postdata, parser)
+                LOGGER.debug('Request is valid XML.')
+            else:  # parse Transaction without validation
+                doc = etree.fromstring(postdata)
+        except Exception as err:
+            errortext = \
+            'Exception: the document is not valid.\nError: %s' % str(err)
+            LOGGER.debug(errortext)
+            return errortext
+
+        request['request'] = util.xmltag_split(doc.tag)
+        LOGGER.debug('Request operation %s specified.' % request['request'])
+        tmp = doc.find('.').attrib.get('service')
+        if tmp is not None:
+            request['service'] = tmp
+
+        tmp = doc.find('.').attrib.get('version')
+        if tmp is not None:
+            request['version'] = tmp
+
+        tmp = doc.find('.//%s' % util.nspath_eval('ows:Version',
+        self.parent.context.namespaces))
+
+        if tmp is not None:
+            request['version'] = tmp.text
+
+        tmp = doc.find('.').attrib.get('updateSequence')
+        if tmp is not None:
+            request['updatesequence'] = tmp
+
+        # GetCapabilities
+        if request['request'] == 'GetCapabilities':
+            tmp = doc.find(util.nspath_eval('ows:Sections',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['sections'] = ','.join([section.text for section in \
+                doc.findall(util.nspath_eval('ows:Sections/ows:Section',
+                self.parent.context.namespaces))])
+
+        # DescribeRecord
+        if request['request'] == 'DescribeRecord':
+            request['typename'] = [typename.text for typename in \
+            doc.findall(util.nspath_eval('csw:TypeName',
+            self.parent.context.namespaces))]
+
+            tmp = doc.find('.').attrib.get('schemaLanguage')
+            if tmp is not None:
+                request['schemalanguage'] = tmp
+
+            tmp = doc.find('.').attrib.get('outputFormat')
+            if tmp is not None:
+                request['outputformat'] = tmp
+
+        # GetDomain
+        if request['request'] == 'GetDomain':
+            tmp = doc.find(util.nspath_eval('csw:ParameterName',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['parametername'] = tmp.text
+
+            tmp = doc.find(util.nspath_eval('csw:PropertyName',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['propertyname'] = tmp.text
+
+        # GetRecords
+        if request['request'] == 'GetRecords':
+            tmp = doc.find('.').attrib.get('outputSchema')
+            request['outputschema'] = tmp if tmp is not None \
+            else self.parent.context.namespaces['csw']
+
+            tmp = doc.find('.').attrib.get('resultType')
+            request['resulttype'] = tmp if tmp is not None else None
+
+            tmp = doc.find('.').attrib.get('outputFormat')
+            request['outputformat'] = tmp if tmp is not None \
+            else 'application/xml'
+
+            tmp = doc.find('.').attrib.get('startPosition')
+            request['startposition'] = tmp if tmp is not None else 1
+
+            tmp = doc.find('.').attrib.get('requestId')
+            request['requestid'] = tmp if tmp is not None else None
+
+            tmp = doc.find('.').attrib.get('maxRecords')
+            if tmp is not None:
+                request['maxrecords'] = tmp
+
+            tmp = doc.find(util.nspath_eval('csw:DistributedSearch',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['distributedsearch'] = True
+                hopcount = tmp.attrib.get('hopCount')
+                request['hopcount'] = int(hopcount)-1 if hopcount is not None \
+                else 1
+            else:
+                request['distributedsearch'] = False
+
+            tmp = doc.find(util.nspath_eval('csw:ResponseHandler',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['responsehandler'] = tmp.text
+
+            tmp = doc.find(util.nspath_eval('csw:Query/csw:ElementSetName',
+                  self.parent.context.namespaces))
+            request['elementsetname'] = tmp.text if tmp is not None else None
+
+            tmp = doc.find(util.nspath_eval(
+            'csw:Query', self.parent.context.namespaces)).attrib.get('typeNames')
+            request['typenames'] = tmp.split() if tmp is not None \
+            else 'csw:Record'
+
+            request['elementname'] = [elname.text for elname in \
+            doc.findall(util.nspath_eval('csw:Query/csw:ElementName',
+            self.parent.context.namespaces))]
+
+            request['constraint'] = {}
+            tmp = doc.find(util.nspath_eval('csw:Query/csw:Constraint',
+            self.parent.context.namespaces))
+
+            if tmp is not None:
+                request['constraint'] = self.parent._parse_constraint(tmp)
+                if isinstance(request['constraint'], str):  # parse error
+                    return 'Invalid Constraint: %s' % request['constraint']
+            else:
+                LOGGER.debug('No csw:Constraint (ogc:Filter or csw:CqlText) \
+                specified.')
+
+            tmp = doc.find(util.nspath_eval('csw:Query/ogc:SortBy',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                LOGGER.debug('Sorted query specified.')
+                request['sortby'] = {}
+
+
+                try:
+                    elname = tmp.find(util.nspath_eval(
+                    'ogc:SortProperty/ogc:PropertyName',
+                    self.parent.context.namespaces)).text
+
+                    request['sortby']['propertyname'] = \
+                    self.parent.repository.queryables['_all'][elname]['dbcol']
+
+                    if (elname.find('BoundingBox') != -1 or
+                        elname.find('Envelope') != -1):
+                        # it's a spatial sort
+                        request['sortby']['spatial'] = True
+                except Exception as err:
+                    errortext = \
+                    'Invalid ogc:SortProperty/ogc:PropertyName: %s' % str(err)
+                    LOGGER.debug(errortext)
+                    return errortext
+
+                tmp2 =  tmp.find(util.nspath_eval(
+                'ogc:SortProperty/ogc:SortOrder', self.parent.context.namespaces))
+                request['sortby']['order'] = tmp2.text if tmp2 is not None \
+                else 'ASC'
+            else:
+                request['sortby'] = None
+
+        # GetRecordById
+        if request['request'] == 'GetRecordById':
+            request['id'] = [id1.text for id1 in \
+            doc.findall(util.nspath_eval('csw:Id', self.parent.context.namespaces))]
+
+            tmp = doc.find(util.nspath_eval('csw:ElementSetName',
+                  self.parent.context.namespaces))
+            request['elementsetname'] = tmp.text if tmp is not None \
+            else 'summary'
+
+            tmp = doc.find('.').attrib.get('outputSchema')
+            request['outputschema'] = tmp if tmp is not None \
+            else self.parent.context.namespaces['csw']
+
+            tmp = doc.find('.').attrib.get('outputFormat')
+            if tmp is not None:
+                request['outputformat'] = tmp
+
+        # Transaction
+        if request['request'] == 'Transaction':
+            request['verboseresponse'] = True
+            tmp = doc.find('.').attrib.get('verboseResponse')
+            if tmp is not None:
+                if tmp in ['false', '0']:
+                    request['verboseresponse'] = False
+
+            tmp = doc.find('.').attrib.get('requestId')
+            request['requestid'] = tmp if tmp is not None else None
+
+            request['transactions'] = []
+
+            for ttype in \
+            doc.xpath('//csw:Insert', namespaces=self.parent.context.namespaces):
+                tname = ttype.attrib.get('typeName')
+
+                for mdrec in ttype.xpath('child::*'):
+                    xml = mdrec
+                    request['transactions'].append(
+                    {'type': 'insert', 'typename': tname, 'xml': xml})
+
+            for ttype in \
+            doc.xpath('//csw:Update', namespaces=self.parent.context.namespaces):
+                child = ttype.xpath('child::*')
+                update = {'type': 'update'}
+
+                if len(child) == 1:  # it's a wholesale update
+                    update['xml'] = child[0]
+                else:  # it's a RecordProperty with Constraint Update
+                    update['recordproperty'] = []
+
+                    for recprop in ttype.findall(
+                    util.nspath_eval('csw:RecordProperty',
+                        self.parent.context.namespaces)):
+                        rpname = recprop.find(util.nspath_eval('csw:Name',
+                        self.parent.context.namespaces)).text
+                        rpvalue = recprop.find(
+                        util.nspath_eval('csw:Value',
+                        self.parent.context.namespaces)).text
+
+                        update['recordproperty'].append(
+                        {'name': rpname, 'value': rpvalue})
+
+                    update['constraint'] = self.parent._parse_constraint(
+                    ttype.find(util.nspath_eval('csw:Constraint',
+                    self.parent.context.namespaces)))
+
+                request['transactions'].append(update)
+
+            for ttype in \
+            doc.xpath('//csw:Delete', namespaces=self.parent.context.namespaces):
+                tname = ttype.attrib.get('typeName')
+                constraint = self.parent._parse_constraint(
+                ttype.find(util.nspath_eval('csw:Constraint',
+                self.parent.context.namespaces)))
+
+                if isinstance(constraint, str):  # parse error
+                    return 'Invalid Constraint: %s' % constraint
+
+                request['transactions'].append(
+                {'type': 'delete', 'typename': tname, 'constraint': constraint})
+
+        # Harvest
+        if request['request'] == 'Harvest':
+            request['source'] = doc.find(util.nspath_eval('csw:Source',
+            self.parent.context.namespaces)).text
+
+            request['resourcetype'] = \
+            doc.find(util.nspath_eval('csw:ResourceType',
+            self.parent.context.namespaces)).text
+
+            tmp = doc.find(util.nspath_eval('csw:ResourceFormat',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['resourceformat'] = tmp.text
+            else:
+                request['resourceformat'] = 'application/xml'
+
+            tmp = doc.find(util.nspath_eval('csw:HarvestInterval',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['harvestinterval'] = tmp.text
+
+            tmp = doc.find(util.nspath_eval('csw:ResponseHandler',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['responsehandler'] = tmp.text
+        return request
