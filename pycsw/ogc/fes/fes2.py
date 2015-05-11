@@ -64,28 +64,28 @@ MODEL = {
         'DWithin', 'Equals', 'Intersects', 'Overlaps', 'Touches', 'Within']
     },
     'ComparisonOperators': {
-        'ogc:PropertyIsBetween': {'opname': 'Between', 'opvalue': 'and'},
-        'ogc:PropertyIsEqualTo': {'opname': 'EqualTo', 'opvalue': '='},
-        'ogc:PropertyIsGreaterThan': {'opname': 'GreaterThan', 'opvalue': '>'},
+        'ogc:PropertyIsBetween': {'opname': 'PropertyIsBetween', 'opvalue': 'and'},
+        'ogc:PropertyIsEqualTo': {'opname': 'PropertyIsEqualTo', 'opvalue': '='},
+        'ogc:PropertyIsGreaterThan': {'opname': 'PropertyIsGreaterThan', 'opvalue': '>'},
         'ogc:PropertyIsGreaterThanOrEqualTo': {
-            'opname': 'GreaterThanEqualTo', 'opvalue': '>='},
-        'ogc:PropertyIsLessThan': {'opname': 'LessThan', 'opvalue': '<'},
+            'opname': 'PropertyIsGreaterThanOrEqualTo', 'opvalue': '>='},
+        'ogc:PropertyIsLessThan': {'opname': 'PropertyIsLessThan', 'opvalue': '<'},
         'ogc:PropertyIsLessThanOrEqualTo': {
-            'opname': 'LessThanEqualTo', 'opvalue': '<='},
-        'ogc:PropertyIsLike': {'opname': 'Like', 'opvalue': 'like'},
-        'ogc:PropertyIsNotEqualTo': {'opname': 'NotEqualTo', 'opvalue': '!='},
-        'ogc:PropertyIsNull': {'opname': 'NullCheck', 'opvalue': 'is null'},
+            'opname': 'PropertyIsLessThanOrEqualTo', 'opvalue': '<='},
+        'ogc:PropertyIsLike': {'opname': 'PropertyIsLike', 'opvalue': 'like'},
+        'ogc:PropertyIsNotEqualTo': {'opname': 'PropertyIsNotEqualTo', 'opvalue': '!='},
+        'ogc:PropertyIsNull': {'opname': 'PropertyIsNull', 'opvalue': 'is null'},
     },
     'Functions': {
-        'length': {'args': '1'},
-        'lower': {'args': '1'},
-        'ltrim': {'args': '1'},
-        'rtrim': {'args': '1'},
-        'trim': {'args': '1'},
-        'upper': {'args': '1'},
+        'length': {'returns': 'xs:string'},
+        'lower': {'returns': 'xs:string'},
+        'ltrim': {'returns': 'xs:string'},
+        'rtrim': {'returns': 'xs:string'},
+        'trim': {'returns': 'xs:string'},
+        'upper': {'returns': 'xs:string'},
     },
     'Ids': {
-        'values': ['EID', 'FID']
+        'values': ['csw30:id']
     }
 }
 
