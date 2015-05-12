@@ -488,7 +488,7 @@ class Csw3(object):
 
                 domainvalue = etree.SubElement(node,
                 util.nspath_eval('csw30:DomainValues', self.parent.context.namespaces),
-                resyltType=dvtype)
+                resultType=dvtype)
                 etree.SubElement(domainvalue,
                 util.nspath_eval('csw:ValueReference',
                 self.parent.context.namespaces)).text = pname
