@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw30:Capabilities xmlns:fes20="http://www.opengis.net/fes/2.0" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" updateSequence="PYCSW_UPDATESEQUENCE" version="3.0.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/csw/3.0/cswAll.xsd">
+<csw30:Capabilities xmlns:fes20="http://www.opengis.net/fes/2.0" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" updateSequence="PYCSW_UPDATESEQUENCE" version="3.0.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/csw/3.0/cswGetCapabilities.xsd">
   <ows20:ServiceIdentification>
     <ows20:Title>pycsw Geospatial Catalogue</ows20:Title>
     <ows20:Abstract>pycsw is an OGC CSW server implementation written in Python</ows20:Abstract>

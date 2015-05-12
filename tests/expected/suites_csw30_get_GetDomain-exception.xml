@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<ows:ExceptionReport xmlns:ows="http://www.opengis.net/ows" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" xml:lang="en-US" xsi:schemaLocation="http://www.opengis.net/ows http://schemas.opengis.net/ows/2.0/owsAll.xsd">
+<ows:ExceptionReport xmlns:ows="http://www.opengis.net/ows" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" xml:lang="en-US" xsi:schemaLocation="http://www.opengis.net/ows/2.0 http://schemas.opengis.net/ows/2.0/owsExceptionReport.xsd">
   <ows:Exception exceptionCode="MissingParameterValue" locator="parametername">
     <ows:ExceptionText>Missing value.             One of valuereference or parametername must be specified</ows:ExceptionText>
   </ows:Exception>
