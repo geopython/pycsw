@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw30:GetDomainResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/3.0/cswAll.xsd">
+  <csw:DomainValues type="csw:Record">
+    <csw30:ParameterName>GetRecords.outputFormat-something</csw30:ParameterName>
+  </csw:DomainValues>
+</csw30:GetDomainResponse>
