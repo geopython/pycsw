@@ -491,9 +491,8 @@ class Csw(object):
 
                 # test version
                 if ('version' in self.kvp and
-                    util.get_version_integer(self.kvp['version']) not in
-                    [util.get_version_integer('2.0.2'),
-                     util.get_version_integer('3.0.0')] and
+                    util.get_version_integer(self.kvp['version']) !=
+                    util.get_version_integer(self.request_version) and
                     self.kvp['request'] != 'GetCapabilities'):
                     error = 1
                     locator = 'version'
@@ -504,8 +503,8 @@ class Csw(object):
                 # check for GetCapabilities acceptversions
                 if 'acceptversions' in self.kvp:
                     for vers in self.kvp['acceptversions'].split(','):
-                        if (util.get_version_integer(vers) in
-                            [util.get_version_integer('2.0.2'), util.get_version_integer('3.0.0')]):
+                        if (util.get_version_integer(vers) ==
+                            util.get_version_integer(self.request_version)):
                             break
                         else:
                             error = 1
