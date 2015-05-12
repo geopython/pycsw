@@ -13,6 +13,7 @@
         </ows:Keywords>
         <ows:ServiceType codeSpace="OGC">CSW</ows:ServiceType>
         <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
+        <ows:ServiceTypeVersion>3.0.0</ows:ServiceTypeVersion>
         <ows:Fees>None</ows:Fees>
         <ows:AccessConstraints>None</ows:AccessConstraints>
       </ows:ServiceIdentification>

@@ -10,6 +10,7 @@
       <ows20:Type codeSpace="ISOTC211/19115">theme</ows20:Type>
     </ows20:Keywords>
     <ows20:ServiceType codeSpace="OGC">CSW</ows20:ServiceType>
+    <ows20:ServiceTypeVersion>2.0.2</ows20:ServiceTypeVersion>
     <ows20:ServiceTypeVersion>3.0.0</ows20:ServiceTypeVersion>
     <ows20:Fees>None</ows20:Fees>
     <ows20:AccessConstraints>None</ows20:AccessConstraints>

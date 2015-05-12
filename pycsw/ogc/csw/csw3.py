@@ -142,9 +142,10 @@ class Csw3(object):
             util.nspath_eval('ows20:ServiceType', self.parent.context.namespaces),
             codeSpace='OGC').text = 'CSW'
 
-            etree.SubElement(serviceidentification,
-            util.nspath_eval('ows20:ServiceTypeVersion',
-            self.parent.context.namespaces)).text = '3.0.0'
+            for stv in self.parent.context.model['parameters']['version']['values']:
+                etree.SubElement(serviceidentification,
+                util.nspath_eval('ows20:ServiceTypeVersion',
+                self.parent.context.namespaces)).text = stv
 
             if self.parent.profiles is not None:
                 for prof in self.parent.profiles['loaded'].keys():
