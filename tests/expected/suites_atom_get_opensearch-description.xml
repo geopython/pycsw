@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+<OpenSearchDescription>
   <ShortName>pycsw Geospatial Catalogue</ShortName>
   <LongName>pycsw Geospatial Catalogue</LongName>
   <Description>pycsw is an OGC CSW server implementation written in Python</Description>
