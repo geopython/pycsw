@@ -443,8 +443,8 @@ class Csw3(object):
             for pname in self.parent.kvp['parametername'].split(','):
                 LOGGER.debug('Parsing parametername %s.' % pname)
                 domainvalue = etree.SubElement(node,
-                util.nspath_eval('csw:DomainValues', self.parent.context.namespaces),
-                type='csw:Record')
+                util.nspath_eval('csw30:DomainValues', self.parent.context.namespaces),
+                type='csw30:Record')
                 etree.SubElement(domainvalue,
                 util.nspath_eval('csw30:ParameterName',
                 self.parent.context.namespaces)).text = pname
