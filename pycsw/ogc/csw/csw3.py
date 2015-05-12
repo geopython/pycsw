@@ -1459,8 +1459,9 @@ class Csw3(object):
             util.nspath_eval('soapenv:Body',
             self.parent.context.namespaces)).xpath('child::*')[0]
 
+        xsd_filename = 'csw%s.xsd' % util.xmltag_split(doc.tag)
         schema = os.path.join(self.parent.config.get('server', 'home'),
-        'core', 'schemas', 'ogc', 'csw', '3.0', 'cswAll.xsd')
+        'core', 'schemas', 'ogc', 'csw', '3.0', xsd_filename)
 
         try:
             # it is virtually impossible to validate a csw:Transaction
