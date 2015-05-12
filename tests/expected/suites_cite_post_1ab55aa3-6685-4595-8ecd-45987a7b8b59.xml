@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:Acknowledgement xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" timeStamp="PYCSW_TIMESTAMP">
+<csw:Acknowledgement xmlns:fes20="http://www.opengis.net/fes/2.0" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:dct="http://purl.org/dc/terms/" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ows="http://www.opengis.net/ows" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:ogc="http://www.opengis.net/ogc" timeStamp="PYCSW_TIMESTAMP">
   <csw:EchoedRequest>
-    <csw:GetRecords resultType="validate" service="CSW" version="2.0.2">
+    <csw:GetRecords xmlns="http://www.occamlab.com/ctl" xmlns:ctl="http://www.occamlab.com/ctl" xmlns:p="http://teamengine.sourceforge.net/parsers" xmlns:parsers="http://www.occamlab.com/te/parsers" xmlns:saxon="http://saxon.sf.net/" xmlns:te="http://www.occamlab.com/te" xmlns:tec="java:com.occamlab.te.TECore" xmlns:tems="java:com.occamlab.te.web.MonitorServlet" xmlns:xi="http://www.w3.org/2001/XInclude" resultType="validate" service="CSW" version="2.0.2">
   <csw:Query typeNames="csw:Record">
     <csw:ElementSetName>full</csw:ElementSetName>
     <csw:Constraint version="1.1.0">
