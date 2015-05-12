@@ -103,7 +103,7 @@ class Csw3(object):
                 updatesequence))
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswAll.xsd' % \
+        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswGetCapabilities.xsd' % \
         (self.parent.context.namespaces['csw30'],
          self.parent.config.get('server', 'ogc_schemas_base'))
 
@@ -142,9 +142,10 @@ class Csw3(object):
             util.nspath_eval('ows20:ServiceType', self.parent.context.namespaces),
             codeSpace='OGC').text = 'CSW'
 
-            etree.SubElement(serviceidentification,
-            util.nspath_eval('ows20:ServiceTypeVersion',
-            self.parent.context.namespaces)).text = '3.0.0'
+            for stv in self.parent.context.model['parameters']['version']['values']:
+                etree.SubElement(serviceidentification,
+                util.nspath_eval('ows20:ServiceTypeVersion',
+                self.parent.context.namespaces)).text = stv
 
             if self.parent.profiles is not None:
                 for prof in self.parent.profiles['loaded'].keys():
@@ -434,16 +435,16 @@ class Csw3(object):
         self.parent.context.namespaces), nsmap=self.parent.context.namespaces)
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswAll.xsd' % \
-        (self.parent.context.namespaces['csw'],
+        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswGetDomain.xsd' % \
+        (self.parent.context.namespaces['csw30'],
         self.parent.config.get('server', 'ogc_schemas_base'))
 
         if 'parametername' in self.parent.kvp:
             for pname in self.parent.kvp['parametername'].split(','):
                 LOGGER.debug('Parsing parametername %s.' % pname)
                 domainvalue = etree.SubElement(node,
-                util.nspath_eval('csw:DomainValues', self.parent.context.namespaces),
-                type='csw:Record')
+                util.nspath_eval('csw30:DomainValues', self.parent.context.namespaces),
+                type='csw30:Record')
                 etree.SubElement(domainvalue,
                 util.nspath_eval('csw30:ParameterName',
                 self.parent.context.namespaces)).text = pname
@@ -488,9 +489,9 @@ class Csw3(object):
 
                 domainvalue = etree.SubElement(node,
                 util.nspath_eval('csw30:DomainValues', self.parent.context.namespaces),
-                resyltType=dvtype)
+                resultType=dvtype)
                 etree.SubElement(domainvalue,
-                util.nspath_eval('csw:ValueReference',
+                util.nspath_eval('csw30:ValueReference',
                 self.parent.context.namespaces)).text = pname
 
                 try:
@@ -801,13 +802,13 @@ class Csw3(object):
         LOGGER.debug('Results: matched: %s, returned: %s, next: %s.' % \
         (matched, returned, nextrecord))
 
-        node = etree.Element(util.nspath_eval('csw:GetRecordsResponse',
+        node = etree.Element(util.nspath_eval('csw30:GetRecordsResponse',
         self.parent.context.namespaces),
-        nsmap=self.parent.context.namespaces, version='2.0.2')
+        nsmap=self.parent.context.namespaces, version='3.0.0')
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
+        '%s %s/csw/3.0/cswGetRecordsResponse.xsd' % \
         (self.parent.context.namespaces['csw'], self.parent.config.get('server', 'ogc_schemas_base'))
 
         if 'requestid' in self.parent.kvp and self.parent.kvp['requestid'] is not None:
@@ -1111,12 +1112,12 @@ class Csw3(object):
             elif ttype['type'] == 'delete':
                 deleted += self.parent.repository.delete(ttype['constraint'])
 
-        node = etree.Element(util.nspath_eval('csw:TransactionResponse',
-        self.parent.context.namespaces), nsmap=self.parent.context.namespaces, version='2.0.2')
+        node = etree.Element(util.nspath_eval('csw30:TransactionResponse',
+        self.parent.context.namespaces), nsmap=self.parent.context.namespaces, version='3.0.0')
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = '%s %s/csw/2.0.2/CSW-publication.xsd' % \
-        (self.parent.context.namespaces['csw'], self.parent.config.get('server', 'ogc_schemas_base'))
+        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswTransaction.xsd' % \
+        (self.parent.context.namespaces['csw30'], self.parent.config.get('server', 'ogc_schemas_base'))
 
         node.append(
         self._write_transactionsummary(
@@ -1264,17 +1265,17 @@ class Csw3(object):
                     'source', 'Harvest (update) failed: %s.' % str(err))
                 updated += 1
 
-        node = etree.Element(util.nspath_eval('csw:HarvestResponse',
+        node = etree.Element(util.nspath_eval('csw30:HarvestResponse',
         self.parent.context.namespaces), nsmap=self.parent.context.namespaces)
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/csw/2.0.2/CSW-publication.xsd' % (self.parent.context.namespaces['csw'],
+        '%s %s/csw/3.0/cswHarvest.xsd' % (self.parent.context.namespaces['csw30'],
         self.parent.config.get('server', 'ogc_schemas_base'))
 
         node2 = etree.SubElement(node,
-        util.nspath_eval('csw:TransactionResponse',
-        self.parent.context.namespaces), version='2.0.2')
+        util.nspath_eval('csw30:TransactionResponse',
+        self.parent.context.namespaces), version='3.0.0')
 
         if service_identifier is not None:
             fresh_records = [str(i['identifier']) for i in ir]
@@ -1458,8 +1459,9 @@ class Csw3(object):
             util.nspath_eval('soapenv:Body',
             self.parent.context.namespaces)).xpath('child::*')[0]
 
+        xsd_filename = 'csw%s.xsd' % util.xmltag_split(doc.tag)
         schema = os.path.join(self.parent.config.get('server', 'home'),
-        'core', 'schemas', 'ogc', 'csw', '3.0', 'cswAll.xsd')
+        'core', 'schemas', 'ogc', 'csw', '3.0', xsd_filename)
 
         try:
             # it is virtually impossible to validate a csw:Transaction
@@ -1762,7 +1764,7 @@ class Csw3(object):
         if root:
             node.attrib[util.nspath_eval('xsi:schemaLocation',
             self.parent.context.namespaces)] = \
-            '%s %s/csw/2.0.2/CSW-discovery.xsd' % (self.parent.context.namespaces['csw'], \
+            '%s %s/csw/3.0/cswAll.xsd' % (self.parent.context.namespaces['csw30'], \
             self.parent.config.get('server', 'ogc_schemas_base'))
 
         node1 = etree.SubElement(node, util.nspath_eval('csw:EchoedRequest',
@@ -1833,8 +1835,8 @@ class Csw3(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/ows/2.0/owsAll.xsd' % \
-        (self.parent.context.namespaces['ows'], ogc_schemas_base)
+        '%s %s/ows/2.0/owsExceptionReport.xsd' % \
+        (self.parent.context.namespaces['ows20'], ogc_schemas_base)
 
         exception = etree.SubElement(node, util.nspath_eval('ows:Exception',
         self.parent.context.namespaces),
