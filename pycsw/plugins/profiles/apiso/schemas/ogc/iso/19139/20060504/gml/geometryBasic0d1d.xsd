@@ -73,7 +73,7 @@ The elements are always contained inline in the array property, referencing geom
 if no srsName attribute is given, the CRS shall be specified as part of the larger context this geometry element is part of, typically a geometric object like a point, curve, etc.</documentation>
 		</annotation>
 		<simpleContent>
-			<extension base="gml:doubleList">
+			<extension base="string">
 				<attributeGroup ref="gml:SRSReferenceGroup"/>
 			</extension>
 		</simpleContent>
@@ -100,7 +100,7 @@ The optional attribute count specifies the number of direct positions in the lis
 The number of entries in the list is equal to the product of the dimensionality of the coordinate reference system (i.e. it is a derived value of the coordinate reference system definition) and the number of direct positions.</documentation>
 		</annotation>
 		<simpleContent>
-			<extension base="gml:doubleList">
+			<extension base="string">
 				<attributeGroup ref="gml:SRSReferenceGroup"/>
 				<attribute name="count" type="positiveInteger"/>
 			</extension>
