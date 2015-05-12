@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw30:GetDomainResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/csw/3.0/cswGetDomain.xsd">
-  <csw:DomainValues type="csw:Record">
+<csw30:GetDomainResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/csw/3.0/cswGetDomain.xsd">
+  <csw30:DomainValues type="csw30:Record">
     <csw30:ParameterName>GetRecords.ElementSetName</csw30:ParameterName>
     <csw30:ListOfValues>
       <csw30:Value>brief</csw30:Value>
       <csw30:Value>summary</csw30:Value>
       <csw30:Value>full</csw30:Value>
     </csw30:ListOfValues>
-  </csw:DomainValues>
+  </csw30:DomainValues>
 </csw30:GetDomainResponse>
