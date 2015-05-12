@@ -144,9 +144,10 @@ class Csw2(object):
             util.nspath_eval('ows:ServiceType', self.parent.context.namespaces),
             codeSpace='OGC').text = 'CSW'
 
-            etree.SubElement(serviceidentification,
-            util.nspath_eval('ows:ServiceTypeVersion',
-            self.parent.context.namespaces)).text = '2.0.2'
+            for stv in self.parent.context.model['parameters']['version']['values']:
+                etree.SubElement(serviceidentification,
+                util.nspath_eval('ows:ServiceTypeVersion',
+                self.parent.context.namespaces)).text = stv
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Fees', self.parent.context.namespaces)).text = \

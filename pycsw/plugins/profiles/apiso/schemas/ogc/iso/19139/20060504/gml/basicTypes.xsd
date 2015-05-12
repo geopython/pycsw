@@ -239,7 +239,7 @@ Since it is based on the XML Schema string type, CoordinatesType may be used in 
 			<documentation>gml:CodeOrNilReasonListType provides for lists of terms. The values in an instance element shall all be valid according to the rules of the dictionary, classification scheme, or authority identified by the value of its codeSpace attribute. An instance element may also include embedded values from NilReasonType. It is intended to be used in situations where a term or classification is expected, but the value may be absent for some reason.</documentation>
 		</annotation>
 		<simpleContent>
-			<extension base="gml:NameOrNilReasonList">
+			<extension base="string">
 				<attribute name="codeSpace" type="anyURI"/>
 			</extension>
 		</simpleContent>
@@ -249,7 +249,7 @@ Since it is based on the XML Schema string type, CoordinatesType may be used in 
 			<documentation>gml:MeasureListType provides for a list of quantities.</documentation>
 		</annotation>
 		<simpleContent>
-			<extension base="gml:doubleList">
+			<extension base="string">
 				<attribute name="uom" type="gml:UomIdentifier" use="required"/>
 			</extension>
 		</simpleContent>
@@ -259,7 +259,7 @@ Since it is based on the XML Schema string type, CoordinatesType may be used in 
 			<documentation>gml:MeasureOrNilReasonListType provides for a list of quantities. An instance element may also include embedded values from NilReasonType. It is intended to be used in situations where a value is expected, but the value may be absent for some reason.</documentation>
 		</annotation>
 		<simpleContent>
-			<extension base="gml:doubleOrNilReasonList">
+			<extension base="string">
 				<attribute name="uom" type="gml:UomIdentifier" use="required"/>
 			</extension>
 		</simpleContent>
