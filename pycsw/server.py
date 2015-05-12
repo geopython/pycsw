@@ -639,6 +639,7 @@ class Csw(object):
             self.context.namespaces, self.pretty_print)
         else:  # it's XML
             self.contenttype = self.mimetype
+            etree.cleanup_namespaces(self.response)
             response = etree.tostring(self.response,
             pretty_print=self.pretty_print, encoding='unicode')
             xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' \
