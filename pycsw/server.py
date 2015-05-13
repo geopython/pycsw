@@ -89,6 +89,7 @@ class Csw(object):
 
         if self.request_version == '3.0.0':
             self.iface = csw3.Csw3(server_csw=self)
+            self.context.set_model('csw30')
         
         # load user configuration
         try:
@@ -127,12 +128,6 @@ class Csw(object):
         LOGGER.debug('running configuration %s' % rtconfig)
         LOGGER.debug(str(self.environ['QUERY_STRING']))
 
-        # generate domain model
-        # NOTE: We should probably avoid this sort of mutable state for WSGI
-        if 'GetDomain' not in self.context.model['operations']:
-            self.context.model['operations']['GetDomain'] = \
-            self.context.gen_domains()
-
         # set OGC schemas location
         if not self.config.has_option('server', 'ogc_schemas_base'):
             self.config.set('server', 'ogc_schemas_base',
@@ -170,23 +165,6 @@ class Csw(object):
             except:
                 pass
 
-        # generate distributed search model, if specified in config
-        if self.config.has_option('server', 'federatedcatalogues'):
-            LOGGER.debug('Configuring distributed search.')
-
-            self.context.model['constraints']['FederatedCatalogues'] = \
-            {'values': []}
-
-            for fedcat in \
-            self.config.get('server', 'federatedcatalogues').split(','):
-                self.context.model\
-                ['constraints']['FederatedCatalogues']['values'].append(fedcat)
-
-        LOGGER.debug('Setting MaxRecordDefault')
-        if self.config.has_option('server', 'maxrecords'):
-            self.context.model['constraints']['MaxRecordDefault']['values'] = \
-            [self.config.get('server', 'maxrecords')]
-
         LOGGER.debug('Configuration: %s.' % self.config)
         LOGGER.debug('Model: %s.' % self.context.model)
 
@@ -208,98 +186,16 @@ class Csw(object):
                 'NoApplicableCode', 'service',
                 'Could not load repository.mappings %s' % str(err))
 
-        # load profiles
-        LOGGER.debug('Loading profiles.')
-
-        if self.config.has_option('server', 'profiles'):
-            self.profiles = pprofile.load_profiles(
-            os.path.join('pycsw', 'plugins', 'profiles'),
-            pprofile.Profile,
-            self.config.get('server', 'profiles'))
-
-            for prof in self.profiles['plugins'].keys():
-                tmp = self.profiles['plugins'][prof](self.context.model,
-                self.context.namespaces, self.context)
-
-                key = tmp.outputschema  # to ref by outputschema
-                self.profiles['loaded'][key] = tmp
-                self.profiles['loaded'][key].extend_core(
-                self.context.model, self.context.namespaces,
-                self.config)
-
-            LOGGER.debug('Profiles loaded: %s.' %
-            self.profiles['loaded'].keys())
-
-        # load profiles
+        # load outputschemas
         LOGGER.debug('Loading outputschemas.')
 
         for osch in pycsw.plugins.outputschemas.__all__:
             mod = getattr(__import__('pycsw.plugins.outputschemas.%s' % osch).plugins.outputschemas, osch)
-            self.context.model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(mod.NAMESPACE)
-            self.context.model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(mod.NAMESPACE)
-            if 'Harvest' in self.context.model['operations']:
-                self.context.model['operations']['Harvest']['parameters']['ResourceType']['values'].append(mod.NAMESPACE)
             self.outputschemas[mod.NAMESPACE] = mod
 
         LOGGER.debug('Outputschemas loaded: %s.' % self.outputschemas)
 
         LOGGER.debug('Namespaces: %s' % self.context.namespaces)
-
-        # init repository
-        # look for tablename, set 'records' as default
-        if not self.config.has_option('repository', 'table'):
-            self.config.set('repository', 'table', 'records')
-
-        repo_filter = None
-        if self.config.has_option('repository', 'filter'):
-            repo_filter = self.config.get('repository', 'filter')
-
-        if (self.config.has_option('repository', 'source') and
-            self.config.get('repository', 'source') == 'geonode'):
-
-            # load geonode repository
-            from pycsw.plugins.repository.geonode import geonode_
-
-            try:
-                self.repository = \
-                geonode_.GeoNodeRepository(self.context)
-                LOGGER.debug('GeoNode repository loaded (geonode): %s.' % \
-                self.repository.dbtype)
-            except Exception as err:
-                self.response = self.iface.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Could not load repository (geonode): %s' % str(err))
-
-        elif (self.config.has_option('repository', 'source') and
-            self.config.get('repository', 'source') == 'odc'):
-
-            # load odc repository
-            from pycsw.plugins.repository.odc import odc
-
-            try:
-                self.repository = \
-                odc.OpenDataCatalogRepository(self.context)
-                LOGGER.debug('OpenDataCatalog repository loaded (geonode): %s.' % \
-                self.repository.dbtype)
-            except Exception as err:
-                self.response = self.iface.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Could not load repository (odc): %s' % str(err))
-
-        else:  # load default repository
-            self.orm = 'sqlalchemy'
-            from pycsw.core import repository
-            try:
-                self.repository = \
-                repository.Repository(self.config.get('repository', 'database'),
-                self.context, self.environ.get('local.app_root', None),
-                self.config.get('repository', 'table'), repo_filter)
-                LOGGER.debug('Repository loaded (local): %s.' \
-                % self.repository.dbtype)
-            except Exception as err:
-                self.response = self.iface.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Could not load repository (local): %s' % str(err))
 
     def expand_path(self, path):
         ''' return safe path for WSGI environments '''
@@ -427,6 +323,112 @@ class Csw(object):
 
         if self.request_version == '3.0.0':
             self.iface = csw3.Csw3(server_csw=self)
+            self.context.set_model('csw30')
+
+        # generate domain model
+        # NOTE: We should probably avoid this sort of mutable state for WSGI
+        if 'GetDomain' not in self.context.model['operations']:
+            self.context.model['operations']['GetDomain'] = \
+            self.context.gen_domains()
+
+        # generate distributed search model, if specified in config
+        if self.config.has_option('server', 'federatedcatalogues'):
+            LOGGER.debug('Configuring distributed search.')
+
+            self.context.model['constraints']['FederatedCatalogues'] = \
+            {'values': []}
+
+            for fedcat in \
+            self.config.get('server', 'federatedcatalogues').split(','):
+                self.context.model\
+                ['constraints']['FederatedCatalogues']['values'].append(fedcat)
+
+        for key, value in self.outputschemas.iteritems():
+            self.context.model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(value.NAMESPACE)
+            self.context.model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(value.NAMESPACE)
+            if 'Harvest' in self.context.model['operations']:
+                self.context.model['operations']['Harvest']['parameters']['ResourceType']['values'].append(value.NAMESPACE)
+
+        LOGGER.debug('Setting MaxRecordDefault')
+        if self.config.has_option('server', 'maxrecords'):
+            self.context.model['constraints']['MaxRecordDefault']['values'] = \
+            [self.config.get('server', 'maxrecords')]
+
+        # load profiles
+        if self.config.has_option('server', 'profiles'):
+            self.profiles = pprofile.load_profiles(
+            os.path.join('pycsw', 'plugins', 'profiles'),
+            pprofile.Profile,
+            self.config.get('server', 'profiles'))
+
+            for prof in self.profiles['plugins'].keys():
+                tmp = self.profiles['plugins'][prof](self.context.model,
+                self.context.namespaces, self.context)
+
+                key = tmp.outputschema  # to ref by outputschema
+                self.profiles['loaded'][key] = tmp
+                self.profiles['loaded'][key].extend_core(
+                self.context.model, self.context.namespaces,
+                self.config)
+
+            LOGGER.debug('Profiles loaded: %s.' %
+            self.profiles['loaded'].keys())
+
+        # init repository
+        # look for tablename, set 'records' as default
+        if not self.config.has_option('repository', 'table'):
+            self.config.set('repository', 'table', 'records')
+
+        repo_filter = None
+        if self.config.has_option('repository', 'filter'):
+            repo_filter = self.config.get('repository', 'filter')
+
+        if (self.config.has_option('repository', 'source') and
+            self.config.get('repository', 'source') == 'geonode'):
+
+            # load geonode repository
+            from pycsw.plugins.repository.geonode import geonode_
+
+            try:
+                self.repository = \
+                geonode_.GeoNodeRepository(self.context)
+                LOGGER.debug('GeoNode repository loaded (geonode): %s.' % \
+                self.repository.dbtype)
+            except Exception as err:
+                self.response = self.iface.exceptionreport(
+                'NoApplicableCode', 'service',
+                'Could not load repository (geonode): %s' % str(err))
+
+        elif (self.config.has_option('repository', 'source') and
+            self.config.get('repository', 'source') == 'odc'):
+
+            # load odc repository
+            from pycsw.plugins.repository.odc import odc
+
+            try:
+                self.repository = \
+                odc.OpenDataCatalogRepository(self.context)
+                LOGGER.debug('OpenDataCatalog repository loaded (geonode): %s.' % \
+                self.repository.dbtype)
+            except Exception as err:
+                self.response = self.iface.exceptionreport(
+                'NoApplicableCode', 'service',
+                'Could not load repository (odc): %s' % str(err))
+
+        else:  # load default repository
+            self.orm = 'sqlalchemy'
+            from pycsw.core import repository
+            try:
+                self.repository = \
+                repository.Repository(self.config.get('repository', 'database'),
+                self.context, self.environ.get('local.app_root', None),
+                self.config.get('repository', 'table'), repo_filter)
+                LOGGER.debug('Repository loaded (local): %s.' \
+                % self.repository.dbtype)
+            except Exception as err:
+                self.response = self.iface.exceptionreport(
+                'NoApplicableCode', 'service',
+                'Could not load repository (local): %s' % str(err))
 
         if self.requesttype == 'POST':
             self.kvp = self.iface.parse_postdata(self.request)

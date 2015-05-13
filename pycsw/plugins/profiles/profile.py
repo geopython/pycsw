@@ -50,8 +50,9 @@ class Profile(object):
         self.prefixes = prefixes
         self.repository = repository
 
-        model['operations']['DescribeRecord']['parameters']\
-        ['typeName']['values'].append(self.typename)
+        if 'DescribeRecord' in model['operations']:
+            model['operations']['DescribeRecord']['parameters']\
+            ['typeName']['values'].append(self.typename)
 
         model['operations']['GetRecords']['parameters']['outputSchema']\
         ['values'].append(self.outputschema)
