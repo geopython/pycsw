@@ -173,6 +173,7 @@
       </ows:DCP>
       <ows:Parameter name="ResourceType">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/3.0</ows:Value>
         <ows:Value>http://www.opengis.net/wms</ows:Value>
         <ows:Value>http://www.opengis.net/wfs</ows:Value>
         <ows:Value>http://www.opengis.net/wcs</ows:Value>
