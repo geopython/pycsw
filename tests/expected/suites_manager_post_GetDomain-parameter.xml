@@ -5,6 +5,7 @@
     <csw:ParameterName>Harvest.ResourceType</csw:ParameterName>
     <csw:ListOfValues>
       <csw:Value>http://www.opengis.net/cat/csw/2.0.2</csw:Value>
+      <csw:Value>http://www.opengis.net/cat/csw/3.0</csw:Value>
       <csw:Value>http://www.opengis.net/wms</csw:Value>
       <csw:Value>http://www.opengis.net/wfs</csw:Value>
       <csw:Value>http://www.opengis.net/wcs</csw:Value>
