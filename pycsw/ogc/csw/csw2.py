@@ -1406,7 +1406,7 @@ class Csw2(object):
             for elemname in self.parent.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
                     elemname.find('Envelope') != -1):
-                    bboxel = util.write_boundingbox(util.getqattr(recobj,
+                    bboxel = write_boundingbox(util.getqattr(recobj,
                     self.parent.context.md_core_model['mappings']['pycsw:BoundingBox']),
                     self.parent.context.namespaces)
                     if bboxel is not None:
@@ -1485,7 +1485,7 @@ class Csw2(object):
                         util.nspath_eval(i, self.parent.context.namespaces)).text = val
 
             # always write out ows:BoundingBox
-            bboxel = util.write_boundingbox(getattr(recobj,
+            bboxel = write_boundingbox(getattr(recobj,
             self.parent.context.md_core_model['mappings']['pycsw:BoundingBox']),
             self.parent.context.namespaces)
 
@@ -1931,3 +1931,29 @@ class Csw2(object):
         self.parent.context.namespaces)).text = text
 
         return node
+
+def write_boundingbox(bbox, nsmap):
+    ''' Generate ows:BoundingBox '''
+
+    if bbox is not None:
+        try:
+            bbox2 = util.wkt2geom(bbox)
+        except:
+            return None
+
+        if len(bbox2) == 4:
+            boundingbox = etree.Element(util.nspath_eval('ows:BoundingBox',
+            nsmap), crs='urn:x-ogc:def:crs:EPSG:6.11:4326',
+            dimensions='2')
+
+            etree.SubElement(boundingbox, util.nspath_eval('ows:LowerCorner',
+            nsmap)).text = '%s %s' % (bbox2[1], bbox2[0])
+
+            etree.SubElement(boundingbox, util.nspath_eval('ows:UpperCorner',
+            nsmap)).text = '%s %s' % (bbox2[3], bbox2[2])
+
+            return boundingbox
+        else:
+            return None
+    else:
+        return None
