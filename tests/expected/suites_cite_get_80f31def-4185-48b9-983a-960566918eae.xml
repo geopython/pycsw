@@ -127,9 +127,9 @@
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
-        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
-        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
+        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="ElementSetName">
         <ows:Value>brief</ows:Value>
@@ -150,9 +150,9 @@
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
-        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
-        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
+        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="CONSTRAINTLANGUAGE">
         <ows:Value>FILTER</ows:Value>
@@ -207,9 +207,9 @@
         <ows:Value>http://www.opengis.net/sos/2.0</ows:Value>
         <ows:Value>http://www.isotc211.org/2005/gmi</ows:Value>
         <ows:Value>urn:geoss:waf</ows:Value>
-        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
-        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
+        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Parameter name="version">

@@ -42,109 +42,6 @@
     </ows20:ServiceContact>
   </ows20:ServiceProvider>
   <ows20:OperationsMetadata>
-    <ows20:Operation name="GetCapabilities">
-      <ows20:DCP>
-        <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
-        </ows20:HTTP>
-      </ows20:DCP>
-      <ows20:Parameter name="sections">
-        <ows20:AllowedValues>
-          <ows20:Value>ServiceIdentification</ows20:Value>
-          <ows20:Value>ServiceProvider</ows20:Value>
-          <ows20:Value>OperationsMetadata</ows20:Value>
-          <ows20:Value>Filter_Capabilities</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-    </ows20:Operation>
-    <ows20:Operation name="GetRepositoryItem">
-      <ows20:DCP>
-        <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
-        </ows20:HTTP>
-      </ows20:DCP>
-    </ows20:Operation>
-    <ows20:Operation name="DescribeRecord">
-      <ows20:DCP>
-        <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
-        </ows20:HTTP>
-      </ows20:DCP>
-      <ows20:Parameter name="schemaLanguage">
-        <ows20:AllowedValues>
-          <ows20:Value>http://www.w3.org/XML/Schema</ows20:Value>
-          <ows20:Value>http://www.w3.org/TR/xmlschema-1/</ows20:Value>
-          <ows20:Value>http://www.w3.org/2001/XMLSchema</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-      <ows20:Parameter name="outputFormat">
-        <ows20:AllowedValues>
-          <ows20:Value>application/xml</ows20:Value>
-          <ows20:Value>application/json</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-      <ows20:Parameter name="typeName">
-        <ows20:AllowedValues>
-          <ows20:Value>csw:Record</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-    </ows20:Operation>
-    <ows20:Operation name="GetDomain">
-      <ows20:DCP>
-        <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
-        </ows20:HTTP>
-      </ows20:DCP>
-      <ows20:Parameter name="ParameterName">
-        <ows20:AllowedValues>
-          <ows20:Value>GetRecords.outputFormat</ows20:Value>
-          <ows20:Value>GetRecords.outputSchema</ows20:Value>
-          <ows20:Value>GetRecords.CONSTRAINTLANGUAGE</ows20:Value>
-          <ows20:Value>GetRecords.resultType</ows20:Value>
-          <ows20:Value>GetRecords.typeNames</ows20:Value>
-          <ows20:Value>GetRecords.ElementSetName</ows20:Value>
-          <ows20:Value>GetCapabilities.sections</ows20:Value>
-          <ows20:Value>GetRecordById.outputFormat</ows20:Value>
-          <ows20:Value>GetRecordById.outputSchema</ows20:Value>
-          <ows20:Value>GetRecordById.ElementSetName</ows20:Value>
-          <ows20:Value>DescribeRecord.schemaLanguage</ows20:Value>
-          <ows20:Value>DescribeRecord.outputFormat</ows20:Value>
-          <ows20:Value>DescribeRecord.typeName</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-    </ows20:Operation>
-    <ows20:Operation name="GetRecordById">
-      <ows20:DCP>
-        <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
-        </ows20:HTTP>
-      </ows20:DCP>
-      <ows20:Parameter name="outputFormat">
-        <ows20:AllowedValues>
-          <ows20:Value>application/xml</ows20:Value>
-          <ows20:Value>application/json</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-      <ows20:Parameter name="outputSchema">
-        <ows20:AllowedValues>
-          <ows20:Value>http://www.opengis.net/cat/csw/2.0.2</ows20:Value>
-          <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
-          <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
-          <ows20:Value>http://www.opengis.net/cat/csw/csdgm</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-      <ows20:Parameter name="ElementSetName">
-        <ows20:AllowedValues>
-          <ows20:Value>brief</ows20:Value>
-          <ows20:Value>summary</ows20:Value>
-          <ows20:Value>full</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-    </ows20:Operation>
     <ows20:Operation name="GetRecords">
       <ows20:DCP>
         <ows20:HTTP>
@@ -160,10 +57,10 @@
       </ows20:Parameter>
       <ows20:Parameter name="outputSchema">
         <ows20:AllowedValues>
-          <ows20:Value>http://www.opengis.net/cat/csw/2.0.2</ows20:Value>
-          <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
-          <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
+          <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
           <ows20:Value>http://www.opengis.net/cat/csw/csdgm</ows20:Value>
+          <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
+          <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
         </ows20:AllowedValues>
       </ows20:Parameter>
       <ows20:Parameter name="CONSTRAINTLANGUAGE">
@@ -212,6 +109,80 @@
           <ows20:Value>dc:rights</ows20:Value>
         </ows20:AllowedValues>
       </ows20:Constraint>
+    </ows20:Operation>
+    <ows20:Operation name="GetCapabilities">
+      <ows20:DCP>
+        <ows20:HTTP>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
+        </ows20:HTTP>
+      </ows20:DCP>
+      <ows20:Parameter name="sections">
+        <ows20:AllowedValues>
+          <ows20:Value>ServiceIdentification</ows20:Value>
+          <ows20:Value>ServiceProvider</ows20:Value>
+          <ows20:Value>OperationsMetadata</ows20:Value>
+          <ows20:Value>Filter_Capabilities</ows20:Value>
+        </ows20:AllowedValues>
+      </ows20:Parameter>
+    </ows20:Operation>
+    <ows20:Operation name="GetRecordById">
+      <ows20:DCP>
+        <ows20:HTTP>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
+        </ows20:HTTP>
+      </ows20:DCP>
+      <ows20:Parameter name="outputFormat">
+        <ows20:AllowedValues>
+          <ows20:Value>application/xml</ows20:Value>
+          <ows20:Value>application/json</ows20:Value>
+        </ows20:AllowedValues>
+      </ows20:Parameter>
+      <ows20:Parameter name="outputSchema">
+        <ows20:AllowedValues>
+          <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
+          <ows20:Value>http://www.opengis.net/cat/csw/csdgm</ows20:Value>
+          <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
+          <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
+        </ows20:AllowedValues>
+      </ows20:Parameter>
+      <ows20:Parameter name="ElementSetName">
+        <ows20:AllowedValues>
+          <ows20:Value>brief</ows20:Value>
+          <ows20:Value>summary</ows20:Value>
+          <ows20:Value>full</ows20:Value>
+        </ows20:AllowedValues>
+      </ows20:Parameter>
+    </ows20:Operation>
+    <ows20:Operation name="GetRepositoryItem">
+      <ows20:DCP>
+        <ows20:HTTP>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
+        </ows20:HTTP>
+      </ows20:DCP>
+    </ows20:Operation>
+    <ows20:Operation name="GetDomain">
+      <ows20:DCP>
+        <ows20:HTTP>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
+        </ows20:HTTP>
+      </ows20:DCP>
+      <ows20:Parameter name="ParameterName">
+        <ows20:AllowedValues>
+          <ows20:Value>GetRecords.outputFormat</ows20:Value>
+          <ows20:Value>GetRecords.outputSchema</ows20:Value>
+          <ows20:Value>GetRecords.CONSTRAINTLANGUAGE</ows20:Value>
+          <ows20:Value>GetRecords.resultType</ows20:Value>
+          <ows20:Value>GetRecords.typeNames</ows20:Value>
+          <ows20:Value>GetRecords.ElementSetName</ows20:Value>
+          <ows20:Value>GetCapabilities.sections</ows20:Value>
+          <ows20:Value>GetRecordById.outputFormat</ows20:Value>
+          <ows20:Value>GetRecordById.outputSchema</ows20:Value>
+          <ows20:Value>GetRecordById.ElementSetName</ows20:Value>
+        </ows20:AllowedValues>
+      </ows20:Parameter>
     </ows20:Operation>
     <ows20:Parameter name="version">
       <ows20:AllowedValues>
