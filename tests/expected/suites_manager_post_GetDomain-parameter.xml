@@ -13,11 +13,11 @@
       <csw:Value>http://www.opengis.net/sos/2.0</csw:Value>
       <csw:Value>http://www.isotc211.org/2005/gmi</csw:Value>
       <csw:Value>urn:geoss:waf</csw:Value>
+      <csw:Value>http://www.opengis.net/cat/csw/csdgm</csw:Value>
+      <csw:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</csw:Value>
+      <csw:Value>http://www.w3.org/2005/Atom</csw:Value>
       <csw:Value>http://www.isotc211.org/2005/gmd</csw:Value>
       <csw:Value>http://www.isotc211.org/schemas/2005/gmd/</csw:Value>
-      <csw:Value>http://www.w3.org/2005/Atom</csw:Value>
-      <csw:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</csw:Value>
-      <csw:Value>http://www.opengis.net/cat/csw/csdgm</csw:Value>
     </csw:ListOfValues>
   </csw:DomainValues>
 </csw:GetDomainResponse>
