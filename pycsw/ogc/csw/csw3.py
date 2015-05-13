@@ -444,7 +444,7 @@ class Csw3(object):
                 LOGGER.debug('Parsing parametername %s.' % pname)
                 domainvalue = etree.SubElement(node,
                 util.nspath_eval('csw30:DomainValues', self.parent.context.namespaces),
-                type='csw30:Record')
+                type='csw30:Record', resultType='available')
                 etree.SubElement(domainvalue,
                 util.nspath_eval('csw30:ParameterName',
                 self.parent.context.namespaces)).text = pname
@@ -489,7 +489,7 @@ class Csw3(object):
 
                 domainvalue = etree.SubElement(node,
                 util.nspath_eval('csw30:DomainValues', self.parent.context.namespaces),
-                resultType=dvtype)
+                type=dvtype, resultType='available')
                 etree.SubElement(domainvalue,
                 util.nspath_eval('csw30:ValueReference',
                 self.parent.context.namespaces)).text = pname
@@ -1827,7 +1827,7 @@ class Csw3(object):
             language = 'en-US'
             ogc_schemas_base = self.parent.context.ogc_schemas_base
 
-        node = etree.Element(util.nspath_eval('ows:ExceptionReport',
+        node = etree.Element(util.nspath_eval('ows20:ExceptionReport',
         self.parent.context.namespaces), nsmap=self.parent.context.namespaces,
         version='3.0.0')
 
@@ -1838,12 +1838,12 @@ class Csw3(object):
         '%s %s/ows/2.0/owsExceptionReport.xsd' % \
         (self.parent.context.namespaces['ows20'], ogc_schemas_base)
 
-        exception = etree.SubElement(node, util.nspath_eval('ows:Exception',
+        exception = etree.SubElement(node, util.nspath_eval('ows20:Exception',
         self.parent.context.namespaces),
         exceptionCode=code, locator=locator)
 
         etree.SubElement(exception,
-        util.nspath_eval('ows:ExceptionText',
+        util.nspath_eval('ows20:ExceptionText',
         self.parent.context.namespaces)).text = text
 
         return node
