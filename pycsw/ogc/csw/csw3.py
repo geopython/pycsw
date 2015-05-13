@@ -547,7 +547,7 @@ class Csw3(object):
             'Missing one of ElementSetName or ElementName parameter(s)')
 
         if 'outputschema' not in self.parent.kvp:
-            self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw']
+            self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw30']
 
         if (self.parent.kvp['outputschema'] not in self.parent.context.model['operations']
             ['GetRecords']['parameters']['outputSchema']['values']):
@@ -809,7 +809,7 @@ class Csw3(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
         '%s %s/csw/3.0/cswGetRecordsResponse.xsd' % \
-        (self.parent.context.namespaces['csw'], self.parent.config.get('server', 'ogc_schemas_base'))
+        (self.parent.context.namespaces['csw30'], self.parent.config.get('server', 'ogc_schemas_base'))
 
         if 'requestid' in self.parent.kvp and self.parent.kvp['requestid'] is not None:
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
@@ -850,13 +850,13 @@ class Csw3(object):
             for res in results:
                 try:
                     if (self.parent.kvp['outputschema'] ==
-                        'http://www.opengis.net/cat/csw/2.0.2' and
+                        'http://www.opengis.net/cat/csw/3.0' and
                         'csw:Record' in self.parent.kvp['typenames']):
                         # serialize csw:Record inline
                         searchresults.append(self._write_record(
                         res, self.parent.repository.queryables['_all']))
                     elif (self.parent.kvp['outputschema'] ==
-                        'http://www.opengis.net/cat/csw/2.0.2' and
+                        'http://www.opengis.net/cat/csw/3.0' and
                         'csw:Record' not in self.parent.kvp['typenames']):
                         # serialize into csw:Record model
 
@@ -910,7 +910,7 @@ class Csw3(object):
             return self.exceptionreport('InvalidParameterValue', 'id',
             'Invalid id parameter')
         if 'outputschema' not in self.parent.kvp:
-            self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw']
+            self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw30']
 
         if ('outputformat' in self.parent.kvp and
             self.parent.kvp['outputformat'] not in
@@ -951,12 +951,12 @@ class Csw3(object):
             if (util.getqattr(result,
             self.parent.context.md_core_model['mappings']['pycsw:Typename']) == 'csw:Record'
             and self.parent.kvp['outputschema'] ==
-            'http://www.opengis.net/cat/csw/2.0.2'):
+            'http://www.opengis.net/cat/csw/3.0'):
                 # serialize record inline
                 node = self._write_record(
                 result, self.parent.repository.queryables['_all'])
             elif (self.parent.kvp['outputschema'] ==
-                'http://www.opengis.net/cat/csw/2.0.2'):
+                'http://www.opengis.net/cat/csw/3.0'):
                 # serialize into csw:Record model
                 typename = None
 
@@ -1339,7 +1339,7 @@ class Csw3(object):
             util.getqattr(recobj, self.parent.context.md_core_model['mappings']\
             ['pycsw:Typename']) == 'csw:Record' and
             util.getqattr(recobj, self.parent.context.md_core_model['mappings']\
-            ['pycsw:Schema']) == 'http://www.opengis.net/cat/csw/2.0.2' and
+            ['pycsw:Schema']) == 'http://www.opengis.net/cat/csw/3.0' and
             util.getqattr(recobj, self.parent.context.md_core_model['mappings']\
             ['pycsw:Type']) != 'service'):
                 # dump record as is and exit
@@ -1535,7 +1535,7 @@ class Csw3(object):
         if request['request'] == 'GetRecords':
             tmp = doc.find('.').attrib.get('outputSchema')
             request['outputschema'] = tmp if tmp is not None \
-            else self.parent.context.namespaces['csw']
+            else self.parent.context.namespaces['csw30']
 
             tmp = doc.find('.').attrib.get('resultType')
             request['resulttype'] = tmp if tmp is not None else None
@@ -1640,7 +1640,7 @@ class Csw3(object):
 
             tmp = doc.find('.').attrib.get('outputSchema')
             request['outputschema'] = tmp if tmp is not None \
-            else self.parent.context.namespaces['csw']
+            else self.parent.context.namespaces['csw30']
 
             tmp = doc.find('.').attrib.get('outputFormat')
             if tmp is not None:
