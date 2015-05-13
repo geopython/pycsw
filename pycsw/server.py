@@ -120,9 +120,6 @@ class Csw(object):
         self.context.pycsw_home = self.config.get('server', 'home')
         self.context.url = self.config.get('server', 'url')
 
-        # configure transaction support, if specified in config
-        self._gen_manager()
-
         log.setup_logger(self.config)
 
         LOGGER.debug('running configuration %s' % rtconfig)
@@ -324,6 +321,9 @@ class Csw(object):
         if self.request_version == '3.0.0':
             self.iface = csw3.Csw3(server_csw=self)
             self.context.set_model('csw30')
+
+        # configure transaction support, if specified in config
+        self._gen_manager()
 
         # generate domain model
         # NOTE: We should probably avoid this sort of mutable state for WSGI
@@ -699,6 +699,7 @@ class Csw(object):
             {'methods': {'get': False, 'post': True}, 'parameters': \
             {'ResourceType': {'values': \
             ['http://www.opengis.net/cat/csw/2.0.2',
+             'http://www.opengis.net/cat/csw/3.0',
              'http://www.opengis.net/wms',
              'http://www.opengis.net/wfs',
              'http://www.opengis.net/wcs',
