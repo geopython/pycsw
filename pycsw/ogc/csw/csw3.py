@@ -1307,7 +1307,7 @@ class Csw3(object):
             return node
 
     def _write_record(self, recobj, queryables):
-        ''' Generate csw:Record '''
+        ''' Generate csw30:Record '''
         if self.parent.kvp['elementsetname'] == 'brief':
             elname = 'BriefRecord'
         elif self.parent.kvp['elementsetname'] == 'summary':
@@ -1315,15 +1315,15 @@ class Csw3(object):
         else:
             elname = 'Record'
 
-        record = etree.Element(util.nspath_eval('csw:%s' % elname,
-                 self.parent.context.namespaces))
+        record = etree.Element(util.nspath_eval('csw30:%s' % elname,
+                 self.parent.context.namespaces), nsmap=self.parent.context.namespaces)
 
         if ('elementname' in self.parent.kvp and
             len(self.parent.kvp['elementname']) > 0):
             for elemname in self.parent.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
                     elemname.find('Envelope') != -1):
-                    bboxel = util.write_boundingbox(util.getqattr(recobj,
+                    bboxel = write_boundingbox(util.getqattr(recobj,
                     self.parent.context.md_core_model['mappings']['pycsw:BoundingBox']),
                     self.parent.context.namespaces)
                     if bboxel is not None:
@@ -1402,7 +1402,7 @@ class Csw3(object):
                         util.nspath_eval(i, self.parent.context.namespaces)).text = val
 
             # always write out ows:BoundingBox
-            bboxel = util.write_boundingbox(getattr(recobj,
+            bboxel = write_boundingbox(getattr(recobj,
             self.parent.context.md_core_model['mappings']['pycsw:BoundingBox']),
             self.parent.context.namespaces)
 
@@ -1629,11 +1629,11 @@ class Csw3(object):
         # GetRecordById
         if request['request'] == 'GetRecordById':
             request['id'] = None
-            tmp = doc.find(util.nspath_eval('csw30:Id'))
+            tmp = doc.find(util.nspath_eval('csw30:Id', self.parent.context.namespaces))
             if tmp is not None:
                 request['id'] = tmp.text
 
-            tmp = doc.find(util.nspath_eval('csw:ElementSetName',
+            tmp = doc.find(util.nspath_eval('csw30:ElementSetName',
                   self.parent.context.namespaces))
             request['elementsetname'] = tmp.text if tmp is not None \
             else 'summary'
@@ -1847,3 +1847,29 @@ class Csw3(object):
         self.parent.context.namespaces)).text = text
 
         return node
+
+def write_boundingbox(bbox, nsmap):
+    ''' Generate ows20:BoundingBox '''
+
+    if bbox is not None:
+        try:
+            bbox2 = util.wkt2geom(bbox)
+        except:
+            return None
+
+        if len(bbox2) == 4:
+            boundingbox = etree.Element(util.nspath_eval('ows20:BoundingBox',
+            nsmap), crs='urn:x-ogc:def:crs:EPSG:6.11:4326',
+            dimensions='2')
+
+            etree.SubElement(boundingbox, util.nspath_eval('ows20:LowerCorner',
+            nsmap)).text = '%s %s' % (bbox2[1], bbox2[0])
+
+            etree.SubElement(boundingbox, util.nspath_eval('ows20:UpperCorner',
+            nsmap)).text = '%s %s' % (bbox2[3], bbox2[2])
+
+            return boundingbox
+        else:
+            return None
+    else:
+        return None
