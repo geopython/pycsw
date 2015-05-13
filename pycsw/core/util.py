@@ -423,29 +423,3 @@ def sniff_table(table):
     if table.find('.') != - 1: 
         schema, table = table.split('.')
     return [schema, table]
-
-def write_boundingbox(bbox, nsmap):
-    ''' Generate ows:BoundingBox '''
-
-    if bbox is not None:
-        try:
-            bbox2 = wkt2geom(bbox)
-        except:
-            return None
-
-        if len(bbox2) == 4:
-            boundingbox = etree.Element(nspath_eval('ows:BoundingBox',
-            nsmap), crs='urn:x-ogc:def:crs:EPSG:6.11:4326',
-            dimensions='2')
-
-            etree.SubElement(boundingbox, nspath_eval('ows:LowerCorner',
-            nsmap)).text = '%s %s' % (bbox2[1], bbox2[0])
-
-            etree.SubElement(boundingbox, nspath_eval('ows:UpperCorner',
-            nsmap)).text = '%s %s' % (bbox2[3], bbox2[2])
-
-            return boundingbox
-        else:
-            return None
-    else:
-        return None
