@@ -88,27 +88,6 @@
           <ows20:Value>full</ows20:Value>
         </ows20:AllowedValues>
       </ows20:Parameter>
-      <ows20:Constraint name="SupportedDublinCoreQueryables">
-        <ows20:AllowedValues>
-          <ows20:Value>dc:contributor</ows20:Value>
-          <ows20:Value>dc:source</ows20:Value>
-          <ows20:Value>dc:language</ows20:Value>
-          <ows20:Value>dc:title</ows20:Value>
-          <ows20:Value>dc:subject</ows20:Value>
-          <ows20:Value>dc:creator</ows20:Value>
-          <ows20:Value>dc:type</ows20:Value>
-          <ows20:Value>ows:BoundingBox</ows20:Value>
-          <ows20:Value>dct:modified</ows20:Value>
-          <ows20:Value>dct:abstract</ows20:Value>
-          <ows20:Value>dc:relation</ows20:Value>
-          <ows20:Value>dc:date</ows20:Value>
-          <ows20:Value>dc:identifier</ows20:Value>
-          <ows20:Value>dc:publisher</ows20:Value>
-          <ows20:Value>dc:format</ows20:Value>
-          <ows20:Value>csw:AnyText</ows20:Value>
-          <ows20:Value>dc:rights</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Constraint>
     </ows20:Operation>
     <ows20:Operation name="GetCapabilities">
       <ows20:DCP>
@@ -117,6 +96,12 @@
           <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
         </ows20:HTTP>
       </ows20:DCP>
+      <ows20:Parameter name="acceptVersions">
+        <ows20:AllowedValues>
+          <ows20:Value>2.0.2</ows20:Value>
+          <ows20:Value>3.0.0</ows20:Value>
+        </ows20:AllowedValues>
+      </ows20:Parameter>
       <ows20:Parameter name="sections">
         <ows20:AllowedValues>
           <ows20:Value>ServiceIdentification</ows20:Value>
@@ -177,6 +162,7 @@
           <ows20:Value>GetRecords.resultType</ows20:Value>
           <ows20:Value>GetRecords.typeNames</ows20:Value>
           <ows20:Value>GetRecords.ElementSetName</ows20:Value>
+          <ows20:Value>GetCapabilities.acceptVersions</ows20:Value>
           <ows20:Value>GetCapabilities.sections</ows20:Value>
           <ows20:Value>GetRecordById.outputFormat</ows20:Value>
           <ows20:Value>GetRecordById.outputSchema</ows20:Value>
@@ -195,14 +181,155 @@
         <ows20:Value>CSW</ows20:Value>
       </ows20:AllowedValues>
     </ows20:Parameter>
-    <ows20:Constraint name="XPathQueryables">
+    <ows20:Constraint name="CoreQueryables">
       <ows20:AllowedValues>
-        <ows20:Value>allowed</ows20:Value>
+        <ows20:Value>dc:contributor</ows20:Value>
+        <ows20:Value>dc:source</ows20:Value>
+        <ows20:Value>dc:language</ows20:Value>
+        <ows20:Value>dc:title</ows20:Value>
+        <ows20:Value>dc:subject</ows20:Value>
+        <ows20:Value>dc:creator</ows20:Value>
+        <ows20:Value>dc:type</ows20:Value>
+        <ows20:Value>ows:BoundingBox</ows20:Value>
+        <ows20:Value>dct:modified</ows20:Value>
+        <ows20:Value>dct:abstract</ows20:Value>
+        <ows20:Value>dc:relation</ows20:Value>
+        <ows20:Value>dc:date</ows20:Value>
+        <ows20:Value>dc:identifier</ows20:Value>
+        <ows20:Value>dc:publisher</ows20:Value>
+        <ows20:Value>dc:format</ows20:Value>
+        <ows20:Value>csw:AnyText</ows20:Value>
+        <ows20:Value>dc:rights</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="OpenSearch">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Harvest-Periodic-KVP">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="CoreQueryables">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="GetDomain-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="GetRecords-Async-KVP">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Harvest-Basic-KVP">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="GetRecords-Async-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="GetRecords-Basic-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Filter-FES-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="GetRecords-Distributed-KVP">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="DefaultSortingAlgorithm">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
       </ows20:AllowedValues>
     </ows20:Constraint>
     <ows20:Constraint name="MaxRecordDefault">
       <ows20:AllowedValues>
         <ows20:Value>10</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="XPathQueryables">
+      <ows20:AllowedValues>
+        <ows20:Value>allowed</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="GetRecordById-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Harvest-Periodic-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="GetRecords-Distributed-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Harvest-Async-KVP">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="GetCapabilities-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Transaction">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Constraint">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="SupportedGMLVersions">
+      <ows20:AllowedValues>
+        <ows20:Value>http://www.opengis.net/gml</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Harvest-Basic-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Harvest-Async-XML">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="CoreSortables">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="FederatedCatalogues">
+      <ows20:AllowedValues>
+        <ows20:Value>http://demo.pycsw.org/gisdata/csw</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="GetDomain-KVP">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
       </ows20:AllowedValues>
     </ows20:Constraint>
     <ows20:Constraint name="PostEncoding">
@@ -211,12 +338,20 @@
         <ows20:Value>SOAP</ows20:Value>
       </ows20:AllowedValues>
     </ows20:Constraint>
-    <ows20:Constraint name="FederatedCatalogues">
+    <ows20:Constraint name="Filter-FES-KVP-Advanced">
       <ows20:AllowedValues>
-        <ows20:Value>http://demo.pycsw.org/gisdata/csw</ows20:Value>
+        <ows20:Value>TRUE</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Constraint>
+    <ows20:Constraint name="Filter-CQL">
+      <ows20:AllowedValues>
+        <ows20:Value>TRUE</ows20:Value>
       </ows20:AllowedValues>
     </ows20:Constraint>
   </ows20:OperationsMetadata>
+  <ows20:Languages>
+    <ows20:Language>en</ows20:Language>
+  </ows20:Languages>
   <fes20:Filter_Capabilities>
     <fes20:Conformance>
       <fes20:Constraint name="ImplementsQuery">

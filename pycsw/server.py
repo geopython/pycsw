@@ -82,6 +82,7 @@ class Csw(object):
         self.domainquerytype = 'list'
         self.orm = 'django'
         self.language = {'639_code': 'en', 'text': 'english'}
+        self.http_status_code = 200
 
         # define CSW implementation object (default CSW2)
         self.iface = csw2.Csw2(server_csw=self)

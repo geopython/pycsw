@@ -309,6 +309,9 @@ class StaticContext(object):
                             'post': True,
                         },
                         'parameters': {
+                            'acceptVersions': {
+                                'values': ['2.0.2', '3.0.0']
+                            },
                             'sections': {
                                 'values': ['ServiceIdentification', 'ServiceProvider',
                                 'OperationsMetadata', 'Filter_Capabilities']
@@ -386,6 +389,81 @@ class StaticContext(object):
                     },
                     'XPathQueryables': {
                         'values': ['allowed']
+                    },
+                    'Constraint': {
+                        'values': ['TRUE']
+                    },
+                    'OpenSearch': {
+                        'values': ['TRUE']
+                    },
+                    'GetCapabilities-XML': {
+                        'values': ['TRUE']
+                    },
+                    'GetRecordById-XML': {
+                        'values': ['TRUE']
+                    },
+                    'GetRecords-Basic-XML': {
+                        'values': ['TRUE']
+                    },
+                    'GetRecords-Distributed-XML': {
+                        'values': ['TRUE']
+                    },
+                    'GetRecords-Distributed-KVP': {
+                        'values': ['TRUE']
+                    },
+                    'GetRecords-Async-XML': {
+                        'values': ['TRUE']
+                    },
+                    'GetRecords-Async-KVP': {
+                        'values': ['TRUE']
+                    },
+                    'GetDomain-XML': {
+                        'values': ['TRUE']
+                    },
+                    'GetDomain-KVP': {
+                        'values': ['TRUE']
+                    },
+                    'Transaction': {
+                        'values': ['TRUE']
+                    },
+                    'Harvest-Basic-XML': {
+                        'values': ['TRUE']
+                    },
+                    'Harvest-Basic-KVP': {
+                        'values': ['TRUE']
+                    },
+                    'Harvest-Async-XML': {
+                        'values': ['TRUE']
+                    },
+                    'Harvest-Async-KVP': {
+                        'values': ['TRUE']
+                    },
+                    'Harvest-Periodic-XML': {
+                        'values': ['TRUE']
+                    },
+                    'Harvest-Periodic-KVP': {
+                        'values': ['TRUE']
+                    },
+                    'Filter-CQL': {
+                        'values': ['TRUE']
+                    },
+                    'Filter-FES-XML': {
+                        'values': ['TRUE']
+                    },
+                    'Filter-FES-KVP-Advanced': {
+                        'values': ['TRUE']
+                    },
+                    'SupportedGMLVersions': {
+                        'values': ['http://www.opengis.net/gml']
+                    },
+                    'DefaultSortingAlgorithm': {
+                        'values': ['TRUE']
+                    },
+                    'CoreQueryables': {
+                        'values': ['TRUE']
+                    },
+                    'CoreSortables': {
+                        'values': ['TRUE']
                     }
                 },
                 'typenames': {
