@@ -324,9 +324,6 @@ class StaticContext(object):
                             'post': True,
                         },
                         'parameters': {
-                            'resultType': {
-                                'values': ['hits', 'results', 'validate']
-                            },
                             'typeNames': {
                                 'values': ['csw:Record']
                             },
