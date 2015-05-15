@@ -33,10 +33,17 @@
 import os
 import sys
 import cgi
+from time import time
 from urllib2 import quote, unquote
 import urlparse
 from cStringIO import StringIO
 from ConfigParser import SafeConfigParser
+
+xml_catalog = os.path.join(os.path.dirname(__file__), 'core',
+                               'schemas', 'catalog.xml')
+os.environ['XML_CATALOG_FILES'] = xml_catalog
+
+
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
@@ -83,6 +90,7 @@ class Csw(object):
         self.orm = 'django'
         self.language = {'639_code': 'en', 'text': 'english'}
         self.http_status_code = 200
+        self.process_time_start = time()
 
         # define CSW implementation object (default CSW2)
         self.iface = csw2.Csw2(server_csw=self)
@@ -191,9 +199,15 @@ class Csw(object):
             mod = getattr(__import__('pycsw.plugins.outputschemas.%s' % osch).plugins.outputschemas, osch)
             self.outputschemas[mod.NAMESPACE] = mod
 
-        LOGGER.debug('Outputschemas loaded: %s.' % self.outputschemas)
+        if not os.path.isfile(xml_catalog):
+            self.response = self.iface.exceptionreport(
+            'NoApplicableCode', 'service',
+            'catalog.xml not found. Please check installation')
 
+        LOGGER.debug('XML_CATALOG_FILES: %s' % os.environ['XML_CATALOG_FILES'])
+        LOGGER.debug('Outputschemas loaded: %s.' % self.outputschemas)
         LOGGER.debug('Namespaces: %s' % self.context.namespaces)
+
 
     def expand_path(self, path):
         ''' return safe path for WSGI environments '''

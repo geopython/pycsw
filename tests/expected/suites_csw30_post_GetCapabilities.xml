@@ -49,10 +49,22 @@
           <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg"/>
         </ows20:HTTP>
       </ows20:DCP>
+      <ows20:Parameter name="typeNames">
+        <ows20:AllowedValues>
+          <ows20:Value>csw:Record</ows20:Value>
+        </ows20:AllowedValues>
+      </ows20:Parameter>
       <ows20:Parameter name="outputFormat">
         <ows20:AllowedValues>
           <ows20:Value>application/xml</ows20:Value>
           <ows20:Value>application/json</ows20:Value>
+        </ows20:AllowedValues>
+      </ows20:Parameter>
+      <ows20:Parameter name="ElementSetName">
+        <ows20:AllowedValues>
+          <ows20:Value>brief</ows20:Value>
+          <ows20:Value>summary</ows20:Value>
+          <ows20:Value>full</ows20:Value>
         </ows20:AllowedValues>
       </ows20:Parameter>
       <ows20:Parameter name="outputSchema">
@@ -67,25 +79,6 @@
         <ows20:AllowedValues>
           <ows20:Value>FILTER</ows20:Value>
           <ows20:Value>CQL_TEXT</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-      <ows20:Parameter name="resultType">
-        <ows20:AllowedValues>
-          <ows20:Value>hits</ows20:Value>
-          <ows20:Value>results</ows20:Value>
-          <ows20:Value>validate</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-      <ows20:Parameter name="typeNames">
-        <ows20:AllowedValues>
-          <ows20:Value>csw:Record</ows20:Value>
-        </ows20:AllowedValues>
-      </ows20:Parameter>
-      <ows20:Parameter name="ElementSetName">
-        <ows20:AllowedValues>
-          <ows20:Value>brief</ows20:Value>
-          <ows20:Value>summary</ows20:Value>
-          <ows20:Value>full</ows20:Value>
         </ows20:AllowedValues>
       </ows20:Parameter>
     </ows20:Operation>
@@ -156,12 +149,11 @@
       </ows20:DCP>
       <ows20:Parameter name="ParameterName">
         <ows20:AllowedValues>
+          <ows20:Value>GetRecords.typeNames</ows20:Value>
           <ows20:Value>GetRecords.outputFormat</ows20:Value>
+          <ows20:Value>GetRecords.ElementSetName</ows20:Value>
           <ows20:Value>GetRecords.outputSchema</ows20:Value>
           <ows20:Value>GetRecords.CONSTRAINTLANGUAGE</ows20:Value>
-          <ows20:Value>GetRecords.resultType</ows20:Value>
-          <ows20:Value>GetRecords.typeNames</ows20:Value>
-          <ows20:Value>GetRecords.ElementSetName</ows20:Value>
           <ows20:Value>GetCapabilities.acceptVersions</ows20:Value>
           <ows20:Value>GetCapabilities.sections</ows20:Value>
           <ows20:Value>GetRecordById.outputFormat</ows20:Value>
