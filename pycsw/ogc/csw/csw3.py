@@ -313,7 +313,7 @@ class Csw3(object):
 
                 if operation == 'GetRecords':  # advertise queryables
                     for qbl in self.parent.repository.queryables.keys():
-                        if qbl != '_all':
+                        if qbl not in ['_all', 'SupportedDublinCoreQueryables']:
                             param = etree.SubElement(oper,
                             util.nspath_eval('ows20:Constraint',
                             self.parent.context.namespaces), name=qbl)
@@ -336,6 +336,13 @@ class Csw3(object):
 
                 param.append(self._write_allowed_values(self.parent.context.model['parameters'][parameter]['values']))
 
+            for qbl in self.parent.repository.queryables.keys():
+                if qbl == 'SupportedDublinCoreQueryables':
+                    param = etree.SubElement(operationsmetadata,
+                    util.nspath_eval('ows20:Constraint',
+                    self.parent.context.namespaces), name='CoreQueryables')
+                    param.append(self._write_allowed_values(self.parent.repository.queryables[qbl]))
+
             for constraint in self.parent.context.model['constraints'].keys():
                 param = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows20:Constraint', self.parent.context.namespaces),
@@ -349,6 +356,12 @@ class Csw3(object):
                     self.parent.profiles['loaded'][prof].get_extendedcapabilities()
                     if ecnode is not None:
                         operationsmetadata.append(ecnode)
+
+        LOGGER.debug('Writing section ows:Languages')
+        langs = etree.SubElement(node,
+        util.nspath_eval('ows20:Languages', self.parent.context.namespaces))
+        etree.SubElement(langs,
+        util.nspath_eval('ows20:Language', self.parent.context.namespaces)).text = self.parent.language['639_code']
 
         # always write out Filter_Capabilities
         LOGGER.debug('Writing section Filter_Capabilities.')
