@@ -600,10 +600,12 @@ class Csw3(object):
             self.parent.requesttype == 'GET'):  # passed via GET
             self.parent.kvp['typenames'] = self.parent.kvp['typenames'].split(',')
 
+        self.parent.kvp['typenames'] = ['csw:Record' if x=='Record' else x for x in self.parent.kvp['typenames']]
+
         if 'typenames' in self.parent.kvp:
             for tname in self.parent.kvp['typenames']:
-                if tname == 'Record':
-                    tname = 'csw:Record'
+                #if tname == 'Record':
+                #    tname = 'csw:Record'
                 if (tname not in self.parent.context.model['operations']['GetRecords']
                     ['parameters']['typeNames']['values']):
                     return self.exceptionreport('InvalidParameterValue',
@@ -774,7 +776,7 @@ class Csw3(object):
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
             self.parent.context.namespaces)).text = self.parent.kvp['requestid']
 
-        etree.SubElement(node, util.nspath_eval('csw:SearchStatus',
+        etree.SubElement(node, util.nspath_eval('csw30:SearchStatus',
         self.parent.context.namespaces), timestamp=timestamp)
 
         #if 'where' not in self.parent.kvp['constraint'] and \
@@ -782,7 +784,7 @@ class Csw3(object):
         #    returned = '0'
 
         searchresults = etree.SubElement(node,
-        util.nspath_eval('csw:SearchResults', self.parent.context.namespaces),
+        util.nspath_eval('csw30:SearchResults', self.parent.context.namespaces),
         numberOfRecordsMatched=matched, numberOfRecordsReturned=returned,
         nextRecord=nextrecord, recordSchema=self.parent.kvp['outputschema'],
         expires=timestamp, status=get_resultset_status(matched, nextrecord))
