@@ -56,46 +56,58 @@ class OpenSearch(object):
         """transform a CSW response into an OpenSearch response"""
 
         LOGGER.debug('RESPONSE: %s', util.xmltag_split(element.tag))
-        if util.xmltag_split(element.tag) == 'GetRecordsResponse':
+        version = element.xpath('//@version')[0]
+        self.exml = element
+        self.cfg = cfg
 
-            startindex = int(element.xpath('//@nextRecord')[0]) - int(
-                        element.xpath('//@numberOfRecordsReturned')[0])
+        if version == '2.0.2':
+            return self._csw2_2_os()
+        elif version == '3.0.0':
+            return self._csw3_2_os()
+
+    def _csw2_2_os(self):
+        """CSW 2.0.2 Capabilities to OpenSearch Description"""
+
+        if util.xmltag_split(self.exml.tag) == 'GetRecordsResponse':
+
+            startindex = int(self.exml.xpath('//@nextRecord')[0]) - int(
+                        self.exml.xpath('//@numberOfRecordsReturned')[0])
             if startindex < 1:
                 startindex = 1
 
             node = etree.Element(util.nspath_eval('atom:feed',
                        self.context.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('atom:id',
-                       self.context.namespaces)).text = cfg.get('server', 'url')
+                       self.context.namespaces)).text = self.cfg.get('server', 'url')
             etree.SubElement(node, util.nspath_eval('atom:title',
-                       self.context.namespaces)).text = cfg.get('metadata:main',
+                       self.context.namespaces)).text = self.cfg.get('metadata:main',
                        'identification_title')
             #etree.SubElement(node, util.nspath_eval('atom:updated',
-            #  self.context.namespaces)).text = element.xpath('//@timestamp')[0]
+            #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
 
             etree.SubElement(node, util.nspath_eval('os:totalResults',
-                        self.context.namespaces)).text = element.xpath(
+                        self.context.namespaces)).text = self.exml.xpath(
                         '//@numberOfRecordsMatched')[0]
             etree.SubElement(node, util.nspath_eval('os:startIndex',
                         self.context.namespaces)).text = str(startindex)
             etree.SubElement(node, util.nspath_eval('os:itemsPerPage',
-                        self.context.namespaces)).text = element.xpath(
+                        self.context.namespaces)).text = self.exml.xpath(
                         '//@numberOfRecordsReturned')[0]
 
-            for rec in element.xpath('//atom:entry',
+            for rec in self.exml.xpath('//atom:entry',
                         namespaces=self.context.namespaces):
                 node.append(rec)
-        elif util.xmltag_split(element.tag) == 'Capabilities':
+        elif util.xmltag_split(self.exml.tag) == 'Capabilities':
             node = etree.Element('OpenSearchDescription', nsmap={None: self.namespaces['os']})
-            etree.SubElement(node, 'ShortName').text = element.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'LongName').text = element.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Description').text = element.xpath('//ows:Abstract', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Tags').text = ' '.join(x.text for x in element.xpath('//ows:Keyword', namespaces=self.context.namespaces))
+            etree.SubElement(node, 'ShortName').text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'LongName').text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Description').text = self.exml.xpath('//ows:Abstract', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Tags').text = ' '.join(x.text for x in self.exml.xpath('//ows:Keyword', namespaces=self.context.namespaces))
 
             node1 = etree.SubElement(node, 'Url')
             node1.set('type', 'application/atom+xml')
             node1.set('method', 'get')
-            node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}' % element.xpath('//ows:Get/@xlink:href', namespaces=self.context.namespaces)[0])
+            node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}' % self.exml.xpath('//ows:Get/@xlink:href', namespaces=self.context.namespaces)[0])
 
             node1 = etree.SubElement(node, 'Image')
             node1.set('type', 'image/vnd.microsoft.icon')
@@ -103,11 +115,78 @@ class OpenSearch(object):
             node1.set('height', '16')
             node1.text = 'http://pycsw.org/img/favicon.ico'
 
-            etree.SubElement(node, 'Developer').text = element.xpath('//ows:IndividualName', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Contact').text = element.xpath('//ows:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Attribution').text = element.xpath('//ows:ProviderName', namespaces=self.context.namespaces)[0].text
-        elif util.xmltag_split(element.tag) == 'ExceptionReport':
-            node = element
+            etree.SubElement(node, 'Developer').text = self.exml.xpath('//ows:IndividualName', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Contact').text = self.exml.xpath('//ows:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Attribution').text = self.exml.xpath('//ows:ProviderName', namespaces=self.context.namespaces)[0].text
+        elif util.xmltag_split(self.exml.tag) == 'ExceptionReport':
+            node = self.exml
+        else:  # return Description document
+            node = etree.Element(util.nspath_eval('os:Description', self.context.namespaces))
+
+        return node
+
+    def _csw3_2_os(self):
+        """CSW 3.0.0 Capabilities to OpenSearch Description"""
+
+        if util.xmltag_split(self.exml.tag) == 'GetRecordsResponse':
+
+            startindex = int(self.exml.xpath('//@nextRecord')[0]) - int(
+                        self.exml.xpath('//@numberOfRecordsReturned')[0])
+            if startindex < 1:
+                startindex = 1
+
+            node = etree.Element(util.nspath_eval('atom:feed',
+                       self.context.namespaces), nsmap=self.namespaces)
+            etree.SubElement(node, util.nspath_eval('atom:id',
+                       self.context.namespaces)).text = self.cfg.get('server', 'url')
+            etree.SubElement(node, util.nspath_eval('atom:title',
+                       self.context.namespaces)).text = self.cfg.get('metadata:main',
+                       'identification_title')
+            #etree.SubElement(node, util.nspath_eval('atom:updated',
+            #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
+
+            etree.SubElement(node, util.nspath_eval('os:totalResults',
+                        self.context.namespaces)).text = self.exml.xpath(
+                        '//@numberOfRecordsMatched')[0]
+            etree.SubElement(node, util.nspath_eval('os:startIndex',
+                        self.context.namespaces)).text = str(startindex)
+            etree.SubElement(node, util.nspath_eval('os:itemsPerPage',
+                        self.context.namespaces)).text = self.exml.xpath(
+                        '//@numberOfRecordsReturned')[0]
+
+            for rec in self.exml.xpath('//atom:entry',
+                        namespaces=self.context.namespaces):
+                node.append(rec)
+        elif util.xmltag_split(self.exml.tag) == 'Capabilities':
+            node = etree.Element('OpenSearchDescription', nsmap={None: self.namespaces['os']})
+            etree.SubElement(node, 'ShortName').text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text[:16]
+            etree.SubElement(node, 'LongName').text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Description').text = self.exml.xpath('//ows20:Abstract', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Tags').text = ' '.join(x.text for x in self.exml.xpath('//ows20:Keyword', namespaces=self.context.namespaces))
+
+            # Requirement-022
+            node1 = etree.SubElement(node, 'Url')
+            node1.set('type', 'application/xml')
+            node1.set('method', 'get')
+            node1.set('template', '%s?mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}' % self.exml.xpath('//ows20:Get/@xlink:href', namespaces=self.context.namespaces)[0])
+
+            # Requirement-023
+            node1 = etree.SubElement(node, 'Url')
+            node1.set('type', 'application/atom+xml')
+            node1.set('method', 'get')
+            node1.set('template', '%s?mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom+xml&&startposition={startIndex?}&maxrecords={count?}' % self.exml.xpath('//ows20:Get/@xlink:href', namespaces=self.context.namespaces)[0])
+
+            node1 = etree.SubElement(node, 'Image')
+            node1.set('type', 'image/vnd.microsoft.icon')
+            node1.set('width', '16')
+            node1.set('height', '16')
+            node1.text = 'http://pycsw.org/img/favicon.ico'
+
+            etree.SubElement(node, 'Developer').text = self.exml.xpath('//ows20:IndividualName', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Contact').text = self.exml.xpath('//ows20:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, 'Attribution').text = self.exml.xpath('//ows20:ProviderName', namespaces=self.context.namespaces)[0].text
+        elif util.xmltag_split(self.exml.tag) == 'ExceptionReport':
+            node = self.exml
         else:  # return Description document
             node = etree.Element(util.nspath_eval('os:Description', self.context.namespaces))
 
