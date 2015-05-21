@@ -6,6 +6,7 @@
     <csw30:ListOfValues>
       <csw30:Value>application/xml</csw30:Value>
       <csw30:Value>application/json</csw30:Value>
+      <csw30:Value>application/atom+xml</csw30:Value>
     </csw30:ListOfValues>
   </csw30:DomainValues>
 </csw30:GetDomainResponse>
