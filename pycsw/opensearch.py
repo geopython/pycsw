@@ -52,6 +52,7 @@ class OpenSearch(object):
         self.context = context
         #self.context.namespaces.update(self.namespaces)
 
+
     def response_csw2opensearch(self, element, cfg):
         """transform a CSW response into an OpenSearch response"""
 
@@ -59,6 +60,7 @@ class OpenSearch(object):
         version = element.xpath('//@version')[0]
         self.exml = element
         self.cfg = cfg
+        self.bind_url = util.bind_url(self.cfg.get('server', 'url'))
 
         if version == '2.0.2':
             return self._csw2_2_os()
@@ -107,7 +109,7 @@ class OpenSearch(object):
             node1 = etree.SubElement(node, 'Url')
             node1.set('type', 'application/atom+xml')
             node1.set('method', 'get')
-            node1.set('template', '%s?mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}' % self.exml.xpath('//ows:Get/@xlink:href', namespaces=self.context.namespaces)[0])
+            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}' % self.bind_url)
 
             node1 = etree.SubElement(node, 'Image')
             node1.set('type', 'image/vnd.microsoft.icon')
@@ -167,14 +169,12 @@ class OpenSearch(object):
             # Requirement-022
             node1 = etree.SubElement(node, 'Url')
             node1.set('type', 'application/xml')
-            node1.set('method', 'get')
-            node1.set('template', '%s?mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}' % self.exml.xpath('//ows20:Get/@xlink:href', namespaces=self.context.namespaces)[0])
+            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
 
             # Requirement-023
             node1 = etree.SubElement(node, 'Url')
             node1.set('type', 'application/atom+xml')
-            node1.set('method', 'get')
-            node1.set('template', '%s?mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom+xml&&startposition={startIndex?}&maxrecords={count?}' % self.exml.xpath('//ows20:Get/@xlink:href', namespaces=self.context.namespaces)[0])
+            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom+xml&&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
 
             node1 = etree.SubElement(node, 'Image')
             node1.set('type', 'image/vnd.microsoft.icon')

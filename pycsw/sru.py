@@ -145,8 +145,8 @@ class Sru(object):
 
             databaseinfo = etree.SubElement(explain, util.nspath_eval('zr:databaseInfo', self.namespaces))
 
-            etree.SubElement(databaseinfo, util.nspath_eval('zr:title', self.namespaces), lang='en', primary='true').text = element.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(databaseinfo, util.nspath_eval('zr:description', self.namespaces), lang='en', primary='true').text = element.xpath('//ows:Abstract', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(databaseinfo, util.nspath_eval('zr:title', self.namespaces), lang='en', primary='true').text = element.xpath('//ows:Title|//ows20:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(databaseinfo, util.nspath_eval('zr:description', self.namespaces), lang='en', primary='true').text = element.xpath('//ows:Abstract|//ows20:Abstract', namespaces=self.context.namespaces)[0].text
 
             indexinfo = etree.SubElement(explain, util.nspath_eval('zr:indexInfo', self.namespaces))
             etree.SubElement(indexinfo, util.nspath_eval('zr:set', self.namespaces), name='dc', identifier='info:srw/cql-context-set/1/dc-v1.1')
@@ -208,9 +208,9 @@ class Sru(object):
             'info:srw/diagnostic/1/7'
 
         etree.SubElement(diagnostic, util.nspath_eval('zd:message', self.namespaces)).text = \
-            element.find(util.nspath_eval('ows:Exception/ows:ExceptionText', self.context.namespaces)).text
+            element.xpath('//ows:Exception/ows:ExceptionText|//ows20:Exception/ows20:ExceptionText', namespaces=self.context.namespaces)[0].text
 
         etree.SubElement(diagnostic, util.nspath_eval('zd:details', self.namespaces)).text = \
-            element.find(util.nspath_eval('ows:Exception', self.context.namespaces)).attrib.get('exceptionCode')
+            element.xpath('//ows:Exception|//ows20:Exception', namespaces=self.context.namespaces)[0].attrib.get('exceptionCode')
 
         return node

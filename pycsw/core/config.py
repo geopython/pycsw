@@ -36,7 +36,7 @@ LOGGER = logging.getLogger(__name__)
 
 class StaticContext(object):
     """core configuration"""
-    def __init__(self, prefix='csw'):
+    def __init__(self, prefix='csw30'):
         """initializer"""
 
         LOGGER.debug('Initializing static context')
@@ -312,9 +312,12 @@ class StaticContext(object):
                             'acceptVersions': {
                                 'values': ['2.0.2', '3.0.0']
                             },
+                            'acceptFormats': {
+                                'values': ['text/xml', 'application/xml']
+                            },
                             'sections': {
                                 'values': ['ServiceIdentification', 'ServiceProvider',
-                                'OperationsMetadata', 'Filter_Capabilities']
+                                'OperationsMetadata', 'Filter_Capabilities', 'All']
                             }
                         }
                     },
@@ -328,10 +331,10 @@ class StaticContext(object):
                                 'values': ['csw:Record']
                             },
                             'outputSchema': {
-                                'values': ['http://www.opengis.net/cat/csw/3.0']
+                                'values': ['http://www.opengis.net/cat/csw/3.0', 'http://www.w3.org/2005/Atom']
                             },
                             'outputFormat': {
-                                'values': ['application/xml', 'application/json']
+                                'values': ['application/xml', 'application/json', 'application/atom+xml']
                             },
                             'CONSTRAINTLANGUAGE': {
                                 'values': ['FILTER', 'CQL_TEXT']
@@ -350,10 +353,10 @@ class StaticContext(object):
                         },
                         'parameters': {
                             'outputSchema': {
-                                'values': ['http://www.opengis.net/cat/csw/3.0']
+                                'values': ['http://www.opengis.net/cat/csw/3.0', 'http://www.w3.org/2005/Atom']
                             },
                             'outputFormat': {
-                                'values': ['application/xml', 'application/json']
+                                'values': ['application/xml', 'application/json', 'application/atom+xml']
                             },
                             'ElementSetName': {
                                 'values': ['brief', 'summary', 'full']
@@ -387,79 +390,76 @@ class StaticContext(object):
                     'XPathQueryables': {
                         'values': ['allowed']
                     },
-                    'Constraint': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/OpenSearch': {
                         'values': ['TRUE']
                     },
-                    'OpenSearch': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/GetCapabilities-XML': {
                         'values': ['TRUE']
                     },
-                    'GetCapabilities-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/GetRecordById-XML': {
                         'values': ['TRUE']
                     },
-                    'GetRecordById-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/GetRecords-Basic-XML': {
                         'values': ['TRUE']
                     },
-                    'GetRecords-Basic-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/GetRecords-Distributed-XML': {
                         'values': ['TRUE']
                     },
-                    'GetRecords-Distributed-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/GetRecords-Distributed-KVP': {
                         'values': ['TRUE']
                     },
-                    'GetRecords-Distributed-KVP': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/GetRecords-Async-XML': {
                         'values': ['TRUE']
                     },
-                    'GetRecords-Async-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/GetRecords-Async-KVP': {
                         'values': ['TRUE']
                     },
-                    'GetRecords-Async-KVP': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/GetDomain-XML': {
                         'values': ['TRUE']
                     },
-                    'GetDomain-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/GetDomain-KVP': {
                         'values': ['TRUE']
                     },
-                    'GetDomain-KVP': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Transaction': {
                         'values': ['TRUE']
                     },
-                    'Transaction': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Harvest-Basic-XML': {
                         'values': ['TRUE']
                     },
-                    'Harvest-Basic-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Harvest-Basic-KVP': {
                         'values': ['TRUE']
                     },
-                    'Harvest-Basic-KVP': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Harvest-Async-XML': {
                         'values': ['TRUE']
                     },
-                    'Harvest-Async-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Harvest-Async-KVP': {
                         'values': ['TRUE']
                     },
-                    'Harvest-Async-KVP': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Harvest-Periodic-XML': {
                         'values': ['TRUE']
                     },
-                    'Harvest-Periodic-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Harvest-Periodic-KVP': {
                         'values': ['TRUE']
                     },
-                    'Harvest-Periodic-KVP': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Filter-CQL': {
                         'values': ['TRUE']
                     },
-                    'Filter-CQL': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Filter-FES-XML': {
                         'values': ['TRUE']
                     },
-                    'Filter-FES-XML': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/Filter-FES-KVP-Advanced': {
                         'values': ['TRUE']
                     },
-                    'Filter-FES-KVP-Advanced': {
-                        'values': ['TRUE']
-                    },
-                    'SupportedGMLVersions': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/SupportedGMLVersions': {
                         'values': ['http://www.opengis.net/gml']
                     },
-                    'DefaultSortingAlgorithm': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/DefaultSortingAlgorithm': {
                         'values': ['TRUE']
                     },
-                    'CoreQueryables': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/CoreQueryables': {
                         'values': ['TRUE']
                     },
-                    'CoreSortables': {
+                    'http://www.opengis.net/spec/csw/3.0/conf/CoreSortables': {
                         'values': ['TRUE']
                     }
                 },
