@@ -188,7 +188,7 @@ class OAIPMH(object):
             return node
 
         if util.xmltag_split(response.tag) == 'ExceptionReport':
-            etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = response.xpath('//ows:ExceptionText', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = response.xpath('//ows:ExceptionText|//ows20:ExceptionText', namespaces=self.context.namespaces)[0].text
             return node
 
         verb = kvp.pop('verb')
