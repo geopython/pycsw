@@ -92,7 +92,7 @@ class Csw(object):
         self.http_status_code = 200
         self.process_time_start = time()
 
-        # define CSW implementation object (default CSW2)
+        # define CSW implementation object (default CSW3)
         self.iface = csw3.Csw3(server_csw=self)
         self.request_version = version
 
