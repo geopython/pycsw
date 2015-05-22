@@ -1,57 +1,129 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:Capabilities xmlns:fes20="http://www.opengis.net/fes/2.0" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:dct="http://purl.org/dc/terms/" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ows="http://www.opengis.net/ows" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:ogc="http://www.opengis.net/ogc" updateSequence="PYCSW_UPDATESEQUENCE" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
-  <ogc:Filter_Capabilities>
-    <ogc:Spatial_Capabilities>
-      <ogc:GeometryOperands>
-        <ogc:GeometryOperand>gml:Point</ogc:GeometryOperand>
-        <ogc:GeometryOperand>gml:LineString</ogc:GeometryOperand>
-        <ogc:GeometryOperand>gml:Polygon</ogc:GeometryOperand>
-        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
-      </ogc:GeometryOperands>
-      <ogc:SpatialOperators>
-        <ogc:SpatialOperator name="BBOX"/>
-        <ogc:SpatialOperator name="Beyond"/>
-        <ogc:SpatialOperator name="Contains"/>
-        <ogc:SpatialOperator name="Crosses"/>
-        <ogc:SpatialOperator name="Disjoint"/>
-        <ogc:SpatialOperator name="DWithin"/>
-        <ogc:SpatialOperator name="Equals"/>
-        <ogc:SpatialOperator name="Intersects"/>
-        <ogc:SpatialOperator name="Overlaps"/>
-        <ogc:SpatialOperator name="Touches"/>
-        <ogc:SpatialOperator name="Within"/>
-      </ogc:SpatialOperators>
-    </ogc:Spatial_Capabilities>
-    <ogc:Scalar_Capabilities>
-      <ogc:LogicalOperators/>
-      <ogc:ComparisonOperators>
-        <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>
-      </ogc:ComparisonOperators>
-      <ogc:ArithmeticOperators>
-        <ogc:Functions>
-          <ogc:FunctionNames>
-            <ogc:FunctionName nArgs="1">length</ogc:FunctionName>
-            <ogc:FunctionName nArgs="1">lower</ogc:FunctionName>
-            <ogc:FunctionName nArgs="1">ltrim</ogc:FunctionName>
-            <ogc:FunctionName nArgs="1">rtrim</ogc:FunctionName>
-            <ogc:FunctionName nArgs="1">trim</ogc:FunctionName>
-            <ogc:FunctionName nArgs="1">upper</ogc:FunctionName>
-          </ogc:FunctionNames>
-        </ogc:Functions>
-      </ogc:ArithmeticOperators>
-    </ogc:Scalar_Capabilities>
-    <ogc:Id_Capabilities>
-      <ogc:EID/>
-      <ogc:FID/>
-    </ogc:Id_Capabilities>
-  </ogc:Filter_Capabilities>
-</csw:Capabilities>
+<csw30:Capabilities xmlns:fes20="http://www.opengis.net/fes/2.0" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:dct="http://purl.org/dc/terms/" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ows="http://www.opengis.net/ows" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:ogc="http://www.opengis.net/ogc" updateSequence="PYCSW_UPDATESEQUENCE" version="3.0.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/csw/3.0/cswGetCapabilities.xsd">
+  <ows20:Languages>
+    <ows20:Language>en</ows20:Language>
+  </ows20:Languages>
+  <fes20:Filter_Capabilities>
+    <fes20:Conformance>
+      <fes20:Constraint name="ImplementsQuery">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsAdHocQuery">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsFunctions">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsResourceld">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsMinStandardFilter">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsStandardFilter">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsMinSpatialFilter">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsSpatialFilter">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsMinTemporalFilter">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsTemporalFilter">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsVersionNav">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsSorting">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsExtendedOperators">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsMinimumXPath">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+      <fes20:Constraint name="ImplementsSchemaElementFunc">
+        <ows11:NoValues/>
+        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
+      </fes20:Constraint>
+    </fes20:Conformance>
+    <fes20:Id_Capabilities>
+      <fes20:ResourceIdentifier name="csw30:id"/>
+    </fes20:Id_Capabilities>
+    <fes20:Scalar_Capabilities>
+      <fes20:LogicalOperators/>
+      <fes20:ComparisonOperators>
+        <fes20:ComparisonOperator name="PropertyIsBetween"/>
+        <fes20:ComparisonOperator name="PropertyIsEqualTo"/>
+        <fes20:ComparisonOperator name="PropertyIsLessThanOrEqualTo"/>
+        <fes20:ComparisonOperator name="PropertyIsGreaterThan"/>
+        <fes20:ComparisonOperator name="PropertyIsLike"/>
+        <fes20:ComparisonOperator name="PropertyIsLessThan"/>
+        <fes20:ComparisonOperator name="PropertyIsGreaterThanOrEqualTo"/>
+        <fes20:ComparisonOperator name="PropertyIsNotEqualTo"/>
+        <fes20:ComparisonOperator name="PropertyIsNull"/>
+      </fes20:ComparisonOperators>
+    </fes20:Scalar_Capabilities>
+    <fes20:Spatial_Capabilities>
+      <fes20:GeometryOperands>
+        <fes20:GeometryOperand name="gml:Point"/>
+        <fes20:GeometryOperand name="gml:LineString"/>
+        <fes20:GeometryOperand name="gml:Polygon"/>
+        <fes20:GeometryOperand name="gml:Envelope"/>
+      </fes20:GeometryOperands>
+      <fes20:SpatialOperators>
+        <fes20:SpatialOperator name="BBOX"/>
+        <fes20:SpatialOperator name="Beyond"/>
+        <fes20:SpatialOperator name="Contains"/>
+        <fes20:SpatialOperator name="Crosses"/>
+        <fes20:SpatialOperator name="Disjoint"/>
+        <fes20:SpatialOperator name="DWithin"/>
+        <fes20:SpatialOperator name="Equals"/>
+        <fes20:SpatialOperator name="Intersects"/>
+        <fes20:SpatialOperator name="Overlaps"/>
+        <fes20:SpatialOperator name="Touches"/>
+        <fes20:SpatialOperator name="Within"/>
+      </fes20:SpatialOperators>
+    </fes20:Spatial_Capabilities>
+    <fes20:Functions>
+      <fes20:Function name="length">
+        <fes20:Returns>xs:string</fes20:Returns>
+      </fes20:Function>
+      <fes20:Function name="lower">
+        <fes20:Returns>xs:string</fes20:Returns>
+      </fes20:Function>
+      <fes20:Function name="ltrim">
+        <fes20:Returns>xs:string</fes20:Returns>
+      </fes20:Function>
+      <fes20:Function name="rtrim">
+        <fes20:Returns>xs:string</fes20:Returns>
+      </fes20:Function>
+      <fes20:Function name="trim">
+        <fes20:Returns>xs:string</fes20:Returns>
+      </fes20:Function>
+      <fes20:Function name="upper">
+        <fes20:Returns>xs:string</fes20:Returns>
+      </fes20:Function>
+    </fes20:Functions>
+  </fes20:Filter_Capabilities>
+</csw30:Capabilities>

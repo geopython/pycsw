@@ -71,6 +71,10 @@ class Csw3(object):
                     serviceprovider = True
                 if section == 'OperationsMetadata':
                     operationsmetadata = True
+                if section == 'All':
+                    serviceidentification = True
+                    serviceprovider = True
+                    operationsmetadata = True
 
         # check extra parameters that may be def'd by profiles
         if self.parent.profiles is not None:
@@ -312,7 +316,7 @@ class Csw3(object):
 
                     param.append(self._write_allowed_values(self.parent.context.model['operations'][operation]['parameters'][parameter]['values']))
 
-                if operation == 'GetRecords':  # advertise queryables
+                if operation == 'GetRecords':  # advertise queryables, MaxRecordDefault
                     for qbl in self.parent.repository.queryables.keys():
                         if qbl not in ['_all', 'SupportedDublinCoreQueryables']:
                             param = etree.SubElement(oper,
@@ -326,9 +330,26 @@ class Csw3(object):
                         'operations']['GetRecords']['constraints'].keys():
                             param = etree.SubElement(oper,
                             util.nspath_eval('ows20:Constraint',
-                            self.parent.context.namespaces), name = con)
+                            self.parent.context.namespaces), name=con)
 
                             param.append(self._write_allowed_values(self.parent.context.model['operations']['GetRecords']['constraints'][con]['values']))
+
+                    extra_constraints = {
+                        'OpenSearchDescriptionDocument': ['%s?mode=opensearch&service=CSW&version=3.0.0&request=GetCapabilities' % self.parent.config.get('server', 'url')],
+                        'MaxRecordDefault': self.parent.context.model['constraints']['MaxRecordDefault']['values'],
+                    }
+
+                    for key, value in extra_constraints.iteritems():
+                        param = etree.SubElement(oper,
+                        util.nspath_eval('ows20:Constraint',
+                        self.parent.context.namespaces), name=key)
+                        param.append(self._write_allowed_values(value))
+
+                    if 'FederatedCatalogues' in self.parent.context.model['constraints']:
+                        param = etree.SubElement(oper,
+                        util.nspath_eval('ows20:Constraint',
+                        self.parent.context.namespaces), name='FederatedCatalogues')
+                        param.append(self._write_allowed_values(self.parent.context.model['constraints']['FederatedCatalogues']['values']))
 
             for parameter in self.parent.context.model['parameters'].keys():
                 param = etree.SubElement(operationsmetadata,
@@ -563,6 +584,7 @@ class Csw3(object):
         if 'outputschema' not in self.parent.kvp:
             self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw30']
 
+        LOGGER.debug(self.parent.context.model['operations']['GetRecords']['parameters']['outputSchema']['values'])
         if (self.parent.kvp['outputschema'] not in self.parent.context.model['operations']
             ['GetRecords']['parameters']['outputSchema']['values']):
             return self.exceptionreport('InvalidParameterValue',
@@ -600,10 +622,12 @@ class Csw3(object):
             self.parent.requesttype == 'GET'):  # passed via GET
             self.parent.kvp['typenames'] = self.parent.kvp['typenames'].split(',')
 
+        self.parent.kvp['typenames'] = ['csw:Record' if x=='Record' else x for x in self.parent.kvp['typenames']]
+
         if 'typenames' in self.parent.kvp:
             for tname in self.parent.kvp['typenames']:
-                if tname == 'Record':
-                    tname = 'csw:Record'
+                #if tname == 'Record':
+                #    tname = 'csw:Record'
                 if (tname not in self.parent.context.model['operations']['GetRecords']
                     ['parameters']['typeNames']['values']):
                     return self.exceptionreport('InvalidParameterValue',
@@ -774,7 +798,7 @@ class Csw3(object):
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
             self.parent.context.namespaces)).text = self.parent.kvp['requestid']
 
-        etree.SubElement(node, util.nspath_eval('csw:SearchStatus',
+        etree.SubElement(node, util.nspath_eval('csw30:SearchStatus',
         self.parent.context.namespaces), timestamp=timestamp)
 
         #if 'where' not in self.parent.kvp['constraint'] and \
@@ -782,7 +806,7 @@ class Csw3(object):
         #    returned = '0'
 
         searchresults = etree.SubElement(node,
-        util.nspath_eval('csw:SearchResults', self.parent.context.namespaces),
+        util.nspath_eval('csw30:SearchResults', self.parent.context.namespaces),
         numberOfRecordsMatched=matched, numberOfRecordsReturned=returned,
         nextRecord=nextrecord, recordSchema=self.parent.kvp['outputschema'],
         expires=timestamp, status=get_resultset_status(matched, nextrecord))

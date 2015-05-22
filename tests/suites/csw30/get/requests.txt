@@ -1,3 +1,5 @@
+GetCapabilities-base-url,PYCSW_SERVER?config=tests/suites/csw30/default.cfg
+GetCapabilities-no-version,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&request=GetCapabilities
 GetCapabilities,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetCapabilities
 Exception-invalid-request,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetCapabilities-foo
 Exception-GetDomain,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetDomain
@@ -6,3 +8,4 @@ GetDomain-value-reference,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&ser
 Exception-GetDomain-value-reference,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetDomain&valuereference=dc:title2
 Exception-GetRecordById-dc.xml,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetRecordById&id=urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e
 Exception-GetRecordById-404,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetRecordById&id=does_not_exist2
+OpenSearch-description,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&mode=opensearch&service=CSW&version=3.0.0&request=GetCapabilities

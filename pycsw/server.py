@@ -57,7 +57,7 @@ LOGGER = logging.getLogger(__name__)
 
 class Csw(object):
     ''' Base CSW server '''
-    def __init__(self, rtconfig=None, env=None, version='2.0.2'):
+    def __init__(self, rtconfig=None, env=None, version='3.0.0'):
         ''' Initialize CSW '''
 
         if not env:
@@ -93,12 +93,12 @@ class Csw(object):
         self.process_time_start = time()
 
         # define CSW implementation object (default CSW2)
-        self.iface = csw2.Csw2(server_csw=self)
+        self.iface = csw3.Csw3(server_csw=self)
         self.request_version = version
 
-        if self.request_version == '3.0.0':
-            self.iface = csw3.Csw3(server_csw=self)
-            self.context.set_model('csw30')
+        if self.request_version == '2.0.2':
+            self.iface = csw2.Csw2(server_csw=self)
+            self.context.set_model('csw')
         
         # load user configuration
         try:
@@ -327,15 +327,31 @@ class Csw(object):
         ''' Handle incoming HTTP request '''
 
         if self.requesttype == 'GET':
-            if 'version' in self.kvp and self.kvp['version'] == '3.0.0':
-                self.request_version = '3.0.0'
+            if (('version' in self.kvp and self.kvp['version'] == '2.0.2') or
+                ('acceptversions' in self.kvp and '2.0.2' in self.kvp['acceptversions'])):
+                self.request_version = '2.0.2'
         elif self.requesttype == 'POST':
-            if self.request.find('3.0.0') != -1:
-                self.request_version = '3.0.0'
+            if self.request.find('2.0.2') != -1:
+                self.request_version = '2.0.2'
 
-        if self.request_version == '3.0.0':
-            self.iface = csw3.Csw3(server_csw=self)
-            self.context.set_model('csw30')
+        if (not isinstance(self.kvp, str) and
+        'mode' in self.kvp and self.kvp['mode'] == 'sru'):
+            self.mode = 'sru'
+            self.request_version = '2.0.2'
+            LOGGER.debug('SRU mode detected; processing request.')
+            self.kvp = self.sru().request_sru2csw(self.kvp)
+
+        if (not isinstance(self.kvp, str) and
+        'mode' in self.kvp and self.kvp['mode'] == 'oaipmh'):
+            self.mode = 'oaipmh'
+            self.request_version = '2.0.2'
+            LOGGER.debug('OAI-PMH mode detected; processing request.')
+            self.oaiargs =  dict((k, v) for k, v in self.kvp.items() if k)
+            self.kvp = self.oaipmh().request(self.kvp)
+
+        if self.request_version == '2.0.2':
+            self.iface = csw2.Csw2(server_csw=self)
+            self.context.set_model('csw')
 
         # configure transaction support, if specified in config
         self._gen_manager()
@@ -464,23 +480,22 @@ class Csw(object):
         LOGGER.debug('Parsed request parameters: %s' % self.kvp)
 
         if (not isinstance(self.kvp, str) and
-        'mode' in self.kvp and self.kvp['mode'] == 'sru'):
-            self.mode = 'sru'
-            LOGGER.debug('SRU mode detected; processing request.')
-            self.kvp = self.sru().request_sru2csw(self.kvp)
-
-        if (not isinstance(self.kvp, str) and
         'mode' in self.kvp and self.kvp['mode'] == 'opensearch'):
             self.mode = 'opensearch'
             LOGGER.debug('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
-        if (not isinstance(self.kvp, str) and
-        'mode' in self.kvp and self.kvp['mode'] == 'oaipmh'):
-            self.mode = 'oaipmh'
-            LOGGER.debug('OAI-PMH mode detected; processing request.')
-            self.oaiargs =  dict((k, v) for k, v in self.kvp.items() if k)
-            self.kvp = self.oaipmh().request(self.kvp)
+        if ((self.kvp == {'': ''} and self.request_version == '3.0.0') or
+            (len(self.kvp) == 1 and 'config' in self.kvp)):
+            LOGGER.debug('Turning on default csw30:Capabilities for base URL')
+            self.kvp = {
+                'service': 'CSW',
+                'version': '3.0.0',
+                'request': 'GetCapabilities'
+            }
+            if 'HTTP_ACCEPT' in self.environ and 'application/opensearchdescription+xml' in self.environ['HTTP_ACCEPT']:
+                self.mode = 'opensearch'
+                self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
         if error == 0:
             # test for the basic keyword values (service, version, request)
@@ -710,20 +725,26 @@ class Csw(object):
             self.context.model['operations']['Transaction'] = \
             {'methods': {'get': False, 'post': True}, 'parameters': {}}
 
+            schema_values = [
+                'http://www.opengis.net/cat/csw/2.0.2',
+                'http://www.opengis.net/cat/csw/3.0',
+                'http://www.opengis.net/wms',
+                'http://www.opengis.net/wfs',
+                'http://www.opengis.net/wcs',
+                'http://www.opengis.net/wps/1.0.0',
+                'http://www.opengis.net/sos/1.0',
+                'http://www.opengis.net/sos/2.0',
+                'http://www.isotc211.org/2005/gmi',
+                'urn:geoss:waf',
+            ]
+
             self.context.model['operations']['Harvest'] = \
             {'methods': {'get': False, 'post': True}, 'parameters': \
-            {'ResourceType': {'values': \
-            ['http://www.opengis.net/cat/csw/2.0.2',
-             'http://www.opengis.net/cat/csw/3.0',
-             'http://www.opengis.net/wms',
-             'http://www.opengis.net/wfs',
-             'http://www.opengis.net/wcs',
-             'http://www.opengis.net/wps/1.0.0',
-             'http://www.opengis.net/sos/1.0',
-             'http://www.opengis.net/sos/2.0',
-             'http://www.isotc211.org/2005/gmi',
-             'urn:geoss:waf',
-            ]}}}
+            {'ResourceType': {'values': schema_values}}}
+
+            self.context.model['operations']['Transaction'] = \
+            {'methods': {'get': False, 'post': True}, 'parameters': \
+            {'TransactionSchemas': {'values': schema_values}}}
 
             self.csw_harvest_pagesize = 10
             if self.config.has_option('manager', 'csw_harvest_pagesize'):
