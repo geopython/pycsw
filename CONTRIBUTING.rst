@@ -3,13 +3,18 @@ Contributing to pycsw
 
 The pycsw project openly welcomes contributions (bug reports, bug fixes, code
 enhancements/features, etc.).  This document will outline some guidelines on
-contributing to pycsw.  As well, pycsw `community </community.html>`_ is a great place to
+contributing to pycsw.  As well, the pycsw `community </community.html>`_ is a great place to
 get an idea of how to connect and participate in pycsw community and development.
 
 pycsw has the following modes of contribution:
 
 - GitHub Commit Access
 - GitHub Pull Requests
+
+Code of Conduct
+---------------
+
+Contributors to this project are expected to act respectfully toward others in accordance with the `OSGeo Code of Conduct <http://www.osgeo.org/code_of_conduct>`_.
 
 Contributions and Licensing
 ---------------------------
