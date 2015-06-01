@@ -61,6 +61,7 @@ class Csw3(object):
         serviceprovider = True
         operationsmetadata = True
         filtercaps = False
+        languages = False
 
         # validate acceptformats
         LOGGER.debug('Validating ows20:AcceptFormats')
@@ -93,8 +94,10 @@ class Csw3(object):
                     serviceprovider = True
                     operationsmetadata = True
                     filtercaps = True
+                    languages = True
         else:
             filtercaps = True
+            languages = True
 
         # check extra parameters that may be def'd by profiles
         if self.parent.profiles is not None:
@@ -399,11 +402,12 @@ class Csw3(object):
                     if ecnode is not None:
                         operationsmetadata.append(ecnode)
 
-        LOGGER.debug('Writing section ows:Languages')
-        langs = etree.SubElement(node,
-        util.nspath_eval('ows20:Languages', self.parent.context.namespaces))
-        etree.SubElement(langs,
-        util.nspath_eval('ows20:Language', self.parent.context.namespaces)).text = self.parent.language['639_code']
+        if languages:
+            LOGGER.debug('Writing section ows:Languages')
+            langs = etree.SubElement(node,
+            util.nspath_eval('ows20:Languages', self.parent.context.namespaces))
+            etree.SubElement(langs,
+            util.nspath_eval('ows20:Language', self.parent.context.namespaces)).text = self.parent.language['639_code']
 
         if not filtercaps:
             return node

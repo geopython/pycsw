@@ -385,7 +385,4 @@
       </ows20:AllowedValues>
     </ows20:Constraint>
   </ows20:OperationsMetadata>
-  <ows20:Languages>
-    <ows20:Language>en</ows20:Language>
-  </ows20:Languages>
 </csw30:Capabilities>
