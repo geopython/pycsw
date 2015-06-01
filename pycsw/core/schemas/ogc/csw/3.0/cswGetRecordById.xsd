@@ -20,7 +20,7 @@
    <xsd:include schemaLocation="cswCommon.xsd"/>
    <xsd:include schemaLocation="cswGetRecords.xsd"/>
    <xsd:import namespace="http://www.opengis.net/ows/2.0"
-               schemaLocation="http://schemas.opengis.net/ows/2.0/owsAll.xsd"/>
+               schemaLocation="../../ows/2.0/owsAll.xsd"/>
    <!-- =================================================================== -->
    <!-- REQUEST                                                             -->
    <!-- =================================================================== -->

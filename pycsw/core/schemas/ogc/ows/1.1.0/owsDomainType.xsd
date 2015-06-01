@@ -18,7 +18,7 @@ elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
 	============================================================== -->
 	<include schemaLocation="owsAll.xsd"/>
 	<include schemaLocation="owsCommon.xsd"></include>
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.w3.org/1999/xlink.xsd"></import>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../w3c/1999/xlink.xsd"></import>
 	<!-- ==============================================================
 		elements and types
 	============================================================== -->

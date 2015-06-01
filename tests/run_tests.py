@@ -281,7 +281,10 @@ for testsuite in TESTSUITES_LIST:
                             expected = 'expected%s%s' % (os.sep, outfile)
                             print '\n test %s:%s' % (testfile, row[0])
 
-                            result = http_request('GET', request)
+                            try:
+                                result = http_request('GET', request)
+                            except Exception as err:
+                                result = err.read()
 
                             status = get_validity(expected, result, outfile,
                                                   force_id_mask)
@@ -321,7 +324,10 @@ for testsuite in TESTSUITES_LIST:
                         url2 = '%s?%s' % (URL, configkvp)
 
                         # invoke request
-                        result = http_request('POST', url2, request)
+                        try:
+                            result = http_request('POST', url2, request)
+                        except Exception as err:
+                            result = err.read()
 
                         status = get_validity(expected, result, outfile,
                                               force_id_mask)

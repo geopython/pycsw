@@ -56,7 +56,7 @@
                         }, 
                         {
                             "attributes": {
-                                "schemaLocation": "http://schemas.opengis.org/ows/1.0.0/owsAll.xsd", 
+                                "schemaLocation": "../../ows/1.0.0/owsAll.xsd", 
                                 "namespace": "http://www.opengis.net/ows"
                             }, 
                             "tag": "xs:import"

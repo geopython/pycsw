@@ -38,12 +38,6 @@ from urllib2 import quote, unquote
 import urlparse
 from cStringIO import StringIO
 from ConfigParser import SafeConfigParser
-
-xml_catalog = os.path.join(os.path.dirname(__file__), 'core',
-                               'schemas', 'catalog.xml')
-os.environ['XML_CATALOG_FILES'] = xml_catalog
-
-
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
@@ -81,7 +75,9 @@ class Csw(object):
         self.soap = False
         self.request = None
         self.exception = False
+        self.status = 'OK'
         self.profiles = None
+        self.manager = False
         self.outputschemas = {}
         self.mimetype = 'application/xml; charset=UTF-8'
         self.encoding = 'UTF-8'
@@ -89,7 +85,6 @@ class Csw(object):
         self.domainquerytype = 'list'
         self.orm = 'django'
         self.language = {'639_code': 'en', 'text': 'english'}
-        self.http_status_code = 200
         self.process_time_start = time()
 
         # define CSW implementation object (default CSW3)
@@ -199,12 +194,6 @@ class Csw(object):
             mod = getattr(__import__('pycsw.plugins.outputschemas.%s' % osch).plugins.outputschemas, osch)
             self.outputschemas[mod.NAMESPACE] = mod
 
-        if not os.path.isfile(xml_catalog):
-            self.response = self.iface.exceptionreport(
-            'NoApplicableCode', 'service',
-            'catalog.xml not found. Please check installation')
-
-        LOGGER.debug('XML_CATALOG_FILES: %s' % os.environ['XML_CATALOG_FILES'])
         LOGGER.debug('Outputschemas loaded: %s.' % self.outputschemas)
         LOGGER.debug('Namespaces: %s' % self.context.namespaces)
 
@@ -462,6 +451,7 @@ class Csw(object):
                 'Could not load repository (local): %s' % str(err))
 
         if self.requesttype == 'POST':
+            LOGGER.debug(self.iface.version)
             self.kvp = self.iface.parse_postdata(self.request)
 
         error = 0
@@ -490,7 +480,7 @@ class Csw(object):
             LOGGER.debug('Turning on default csw30:Capabilities for base URL')
             self.kvp = {
                 'service': 'CSW',
-                'version': '3.0.0',
+                'acceptversions': '3.0.0',
                 'request': 'GetCapabilities'
             }
             if 'HTTP_ACCEPT' in self.environ and 'application/opensearchdescription+xml' in self.environ['HTTP_ACCEPT']:
@@ -499,9 +489,13 @@ class Csw(object):
 
         if error == 0:
             # test for the basic keyword values (service, version, request)
-            for k in ['service', 'version', 'request']:
+            basic_options = ['service', 'request']
+            if self.request_version == '2.0.2':
+                basic_options.append('version')
+
+            for k in basic_options:
                 if k not in self.kvp:
-                    if (k == 'version' and 'request' in self.kvp and
+                    if (k in ['version', 'acceptversion'] and 'request' in self.kvp and
                     self.kvp['request'] == 'GetCapabilities'):
                         pass
                     else:
@@ -670,7 +664,10 @@ class Csw(object):
             response = fmt_json.exml2json(self.response,
             self.context.namespaces, self.pretty_print)
         else:  # it's XML
-            self.contenttype = self.mimetype
+            if 'outputformat' in self.kvp:
+                self.contenttype = self.kvp['outputformat']
+            else:
+                self.contenttype = self.mimetype
             response = etree.tostring(self.response,
             pretty_print=self.pretty_print, encoding='unicode')
             xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' \
@@ -678,9 +675,9 @@ class Csw(object):
             appinfo = '<!-- pycsw %s -->\n' % self.context.version
 
         s = (u'%s%s%s' % (xmldecl, appinfo, response)).encode(self.encoding)
+        LOGGER.debug('Response code: %s', self.context.response_codes[self.status])
         LOGGER.debug('Response:\n%s', s)
-        return s
-
+        return [self.context.response_codes[self.status], s]
 
     def _gen_soap_wrapper(self):
         ''' Generate SOAP wrapper '''
@@ -695,7 +692,7 @@ class Csw(object):
         node2 = etree.SubElement(node, util.nspath_eval('soapenv:Body',
         self.context.namespaces))
 
-        if hasattr(self, 'exception') and self.exception:
+        if self.exception:
             node3 = etree.SubElement(node2, util.nspath_eval('soapenv:Fault',
                     self.context.namespaces))
             node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Code',
@@ -722,6 +719,9 @@ class Csw(object):
         ''' Update self.context.model with CSW-T advertising '''
         if (self.config.has_option('manager', 'transactions') and
             self.config.get('manager', 'transactions') == 'true'):
+
+            self.manager = True
+
             self.context.model['operations']['Transaction'] = \
             {'methods': {'get': False, 'post': True}, 'parameters': {}}
 

@@ -23,7 +23,7 @@
 
    <xsd:import namespace="http://purl.org/dc/terms/" schemaLocation="rec-dcterms.xsd"/>
    <xsd:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="rec-dcmes.xsd"/>
-   <xsd:import namespace="http://www.opengis.net/ows" schemaLocation="http://schemas.opengis.org/ows/1.0.0/owsAll.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/ows" schemaLocation="../../ows/1.0.0/owsAll.xsd"/>
 
    <xsd:element name="AbstractRecord" id="AbstractRecord"
                 type="csw:AbstractRecordType" abstract="true" />
