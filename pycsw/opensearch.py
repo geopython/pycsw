@@ -101,7 +101,7 @@ class OpenSearch(object):
                         namespaces=self.context.namespaces):
                 node.append(rec)
         elif util.xmltag_split(self.exml.tag) == 'Capabilities':
-            node = etree.Element('OpenSearchDescription', nsmap={None: self.namespaces['os']})
+            node = etree.Element('OpenSearchDescription', nsmap=self.namespaces)
             etree.SubElement(node, 'ShortName').text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, 'LongName').text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, 'Description').text = self.exml.xpath('//ows:Abstract', namespaces=self.context.namespaces)[0].text
