@@ -24,9 +24,9 @@
 
    <xsd:include schemaLocation="record.xsd"/>
 
-   <xsd:import namespace="http://www.opengis.net/ows" schemaLocation="http://schemas.opengis.net/ows/1.0.0/owsAll.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/ows" schemaLocation="../../ows/1.0.0/owsAll.xsd"/>
 
-   <xsd:import namespace="http://www.opengis.net/ogc" schemaLocation="http://schemas.opengis.net/filter/1.1.0/filter.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/ogc" schemaLocation="../../filter/1.1.0/filter.xsd"/>
 
    <xsd:complexType name="RequestBaseType" id="RequestBaseType" abstract="true">
       <xsd:annotation>

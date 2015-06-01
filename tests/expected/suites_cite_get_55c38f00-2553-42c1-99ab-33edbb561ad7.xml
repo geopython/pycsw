@@ -118,7 +118,6 @@
       <ows20:Parameter name="outputSchema">
         <ows20:AllowedValues>
           <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
-          <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
           <ows20:Value>http://www.opengis.net/cat/csw/csdgm</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
@@ -161,7 +160,6 @@
       <ows20:Parameter name="outputSchema">
         <ows20:AllowedValues>
           <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
-          <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
           <ows20:Value>http://www.opengis.net/cat/csw/csdgm</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
@@ -390,126 +388,4 @@
   <ows20:Languages>
     <ows20:Language>en</ows20:Language>
   </ows20:Languages>
-  <fes20:Filter_Capabilities>
-    <fes20:Conformance>
-      <fes20:Constraint name="ImplementsQuery">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsAdHocQuery">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsFunctions">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsResourceld">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsMinStandardFilter">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsStandardFilter">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsMinSpatialFilter">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsSpatialFilter">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsMinTemporalFilter">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsTemporalFilter">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsVersionNav">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsSorting">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsExtendedOperators">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsMinimumXPath">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-      <fes20:Constraint name="ImplementsSchemaElementFunc">
-        <ows11:NoValues/>
-        <ows11:DefaultValue>TRUE</ows11:DefaultValue>
-      </fes20:Constraint>
-    </fes20:Conformance>
-    <fes20:Id_Capabilities>
-      <fes20:ResourceIdentifier name="csw30:id"/>
-    </fes20:Id_Capabilities>
-    <fes20:Scalar_Capabilities>
-      <fes20:LogicalOperators/>
-      <fes20:ComparisonOperators>
-        <fes20:ComparisonOperator name="PropertyIsBetween"/>
-        <fes20:ComparisonOperator name="PropertyIsEqualTo"/>
-        <fes20:ComparisonOperator name="PropertyIsLessThanOrEqualTo"/>
-        <fes20:ComparisonOperator name="PropertyIsGreaterThan"/>
-        <fes20:ComparisonOperator name="PropertyIsLike"/>
-        <fes20:ComparisonOperator name="PropertyIsLessThan"/>
-        <fes20:ComparisonOperator name="PropertyIsGreaterThanOrEqualTo"/>
-        <fes20:ComparisonOperator name="PropertyIsNotEqualTo"/>
-        <fes20:ComparisonOperator name="PropertyIsNull"/>
-      </fes20:ComparisonOperators>
-    </fes20:Scalar_Capabilities>
-    <fes20:Spatial_Capabilities>
-      <fes20:GeometryOperands>
-        <fes20:GeometryOperand name="gml:Point"/>
-        <fes20:GeometryOperand name="gml:LineString"/>
-        <fes20:GeometryOperand name="gml:Polygon"/>
-        <fes20:GeometryOperand name="gml:Envelope"/>
-      </fes20:GeometryOperands>
-      <fes20:SpatialOperators>
-        <fes20:SpatialOperator name="BBOX"/>
-        <fes20:SpatialOperator name="Beyond"/>
-        <fes20:SpatialOperator name="Contains"/>
-        <fes20:SpatialOperator name="Crosses"/>
-        <fes20:SpatialOperator name="Disjoint"/>
-        <fes20:SpatialOperator name="DWithin"/>
-        <fes20:SpatialOperator name="Equals"/>
-        <fes20:SpatialOperator name="Intersects"/>
-        <fes20:SpatialOperator name="Overlaps"/>
-        <fes20:SpatialOperator name="Touches"/>
-        <fes20:SpatialOperator name="Within"/>
-      </fes20:SpatialOperators>
-    </fes20:Spatial_Capabilities>
-    <fes20:Functions>
-      <fes20:Function name="length">
-        <fes20:Returns>xs:string</fes20:Returns>
-      </fes20:Function>
-      <fes20:Function name="lower">
-        <fes20:Returns>xs:string</fes20:Returns>
-      </fes20:Function>
-      <fes20:Function name="ltrim">
-        <fes20:Returns>xs:string</fes20:Returns>
-      </fes20:Function>
-      <fes20:Function name="rtrim">
-        <fes20:Returns>xs:string</fes20:Returns>
-      </fes20:Function>
-      <fes20:Function name="trim">
-        <fes20:Returns>xs:string</fes20:Returns>
-      </fes20:Function>
-      <fes20:Function name="upper">
-        <fes20:Returns>xs:string</fes20:Returns>
-      </fes20:Function>
-    </fes20:Functions>
-  </fes20:Filter_Capabilities>
 </csw30:Capabilities>

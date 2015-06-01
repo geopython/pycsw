@@ -79,6 +79,8 @@ def write_record(result, esn, context, url=None):
         val = util.getqattr(result, context.md_core_model['mappings'][qval])
         if val:
             etree.SubElement(node, util.nspath_eval(XPATH_MAPPINGS[qval], NAMESPACES)).text = val
+            if qval == 'pycsw:Identifier':
+                etree.SubElement(node, util.nspath_eval('dc:identifier', context.namespaces)).text = val
 
     rlinks = util.getqattr(result, context.md_core_model['mappings']['pycsw:Links'])
     if rlinks:
@@ -112,7 +114,7 @@ def write_extent(bbox, nsmap):
             return None
 
         where = etree.Element(util.nspath_eval('georss:where', NAMESPACES))
-        polygon = etree.SubElement(where, util.nspath_eval('gml:Polygon', nsmap), srsName='urn:x-ogc:def:crs:EPSG:6.11:4326')
+        polygon = etree.SubElement(where, util.nspath_eval('gml:Polygon', nsmap), srsName='http://www.opengis.net/def/crs/EPSG/0/4326')
         exterior = etree.SubElement(polygon, util.nspath_eval('gml:exterior', nsmap))
         lring = etree.SubElement(exterior, util.nspath_eval('gml:LinearRing', nsmap))
         poslist = etree.SubElement(lring, util.nspath_eval('gml:posList', nsmap)).text = \

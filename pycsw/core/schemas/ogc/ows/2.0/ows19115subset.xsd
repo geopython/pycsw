@@ -28,9 +28,9 @@
         ============================================================== -->
   <include schemaLocation="owsAll.xsd"/>
   <import namespace="http://www.w3.org/1999/xlink"
-          schemaLocation="http://www.w3.org/1999/xlink.xsd" />
+          schemaLocation="../../../w3c/1999/xlink.xsd" />
   <import namespace="http://www.w3.org/XML/1998/namespace"
-          schemaLocation="http://www.w3.org/2001/xml.xsd" />
+          schemaLocation="../../../w3c/2001/xml.xsd" />
   <!-- ==============================================================
                 elements and types
         ============================================================== -->

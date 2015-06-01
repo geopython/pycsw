@@ -24,7 +24,7 @@
    <xsd:import namespace="http://purl.org/dc/elements/1.1/"
       schemaLocation="rec-dcmes.xsd"/>
    <xsd:import namespace="http://www.opengis.net/ows/2.0"
-      schemaLocation="http://schemas.opengis.net/ows/2.0/owsAll.xsd"/>
+      schemaLocation="../../ows/2.0/owsAll.xsd"/>
    <xsd:element name="AbstractRecord" type="csw30:AbstractRecordType"
       abstract="true" id="AbstractRecord"/>
    <xsd:complexType name="AbstractRecordType" abstract="true"

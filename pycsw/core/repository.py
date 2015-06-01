@@ -195,6 +195,7 @@ class Repository(object):
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
+
         column = getattr(self.dataset, \
         self.context.md_core_model['mappings']['pycsw:Identifier'])
 
