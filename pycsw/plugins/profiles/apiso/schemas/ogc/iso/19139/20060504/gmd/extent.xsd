@@ -5,10 +5,10 @@
 		<xs:documentation>This file was generated from ISO TC/211 UML class diagrams == 01-26-2005 12:40:04 ====== </xs:documentation>
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
-	<xs:import namespace="http://www.isotc211.org/2005/gss" schemaLocation="http://schemas.opengis.net/iso/19139/20060504/gss/gss.xsd"/>
-	<xs:import namespace="http://www.isotc211.org/2005/gts" schemaLocation="http://schemas.opengis.net/iso/19139/20060504/gts/gts.xsd"/>
-	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://schemas.opengis.net/iso/19139/20060504/gco/gco.xsd"/>
-	<xs:import namespace="http://www.isotc211.org/2005/gsr" schemaLocation="http://schemas.opengis.net/iso/19139/20060504/gsr/gsr.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gss" schemaLocation="../gss/gss.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gts" schemaLocation="../gts/gts.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../gco/gco.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gsr" schemaLocation="../gsr/gsr.xsd"/>
 	<xs:include schemaLocation="../gmd/referenceSystem.xsd"/>
 	<!-- ########################################################################### -->
 	<!-- ########################################################################### -->
