@@ -43,6 +43,7 @@ class OpenSearch(object):
         """initialize"""
 
         self.namespaces = {
+            None: 'http://a9.com/-/spec/opensearch/1.1/',
             'atom': 'http://www.w3.org/2005/Atom',
             'geo': 'http://a9.com/-/opensearch/extensions/geo/1.0/',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
@@ -160,7 +161,7 @@ class OpenSearch(object):
                         namespaces=self.context.namespaces):
                 node.append(rec)
         elif util.xmltag_split(self.exml.tag) == 'Capabilities':
-            node = etree.Element('OpenSearchDescription', nsmap={None: self.namespaces['os']})
+            node = etree.Element('OpenSearchDescription', nsmap=self.namespaces)
             etree.SubElement(node, 'ShortName').text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text[:16]
             etree.SubElement(node, 'LongName').text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, 'Description').text = self.exml.xpath('//ows20:Abstract', namespaces=self.context.namespaces)[0].text
@@ -227,6 +228,12 @@ def kvp2filterxml(kvp, context):
         if len(bbox_list) == 5:  # add srsName
             LOGGER.debug('Found CRS')
             env.attrib['srsName'] = bbox_list[4]
+        else:
+            LOGGER.debug('Assuming 4326')
+            if not util.validate_4326(bbox_list):
+                msg = '4326 coordinates out of range: %s' % bbox_list
+                LOGGER.debug(msg)
+                raise RuntimeError(msg)
 
         try:
             el.text = "%s %s" % (bbox_list[0], bbox_list[1])
