@@ -423,3 +423,17 @@ def sniff_table(table):
     if table.find('.') != - 1: 
         schema, table = table.split('.')
     return [schema, table]
+
+
+def validate_4326(bbox_list):
+    ''' Helper function to validate 4326 '''
+
+    is_valid = False
+
+    if ((-180.0 <= float(bbox_list[0]) <= 180.0) and
+        (-90.0 <= float(bbox_list[1]) <= 90.0) and
+        (-180.0 <= float(bbox_list[2]) <= 180.0) and
+        (-90.0 <= float(bbox_list[3]) <= 90.0)):
+        is_valid = True
+
+    return is_valid
