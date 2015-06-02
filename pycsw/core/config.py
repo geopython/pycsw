@@ -50,6 +50,21 @@ class StaticContext(object):
             'el': 'greek',
         }
 
+        self.response_codes = {
+            'OK': '200 OK',
+            'NotFound': '404 Not Found',
+            'InvalidValue': '400 Invalid property value',
+            'OperationParsingFailed': '400 Bad Request',
+            'OperationProcessingFailed': '403 Server Processing Failed',
+            'OperationNotSupported': '400 Not Implemented',
+            'MissingParameterValue': '400 Bad Request',
+            'InvalidParameterValue': '400 Bad Request',
+            'VersionNegotiationFailed': '400 Bad Request',
+            'InvalidUpdateSequence': '400 Bad Request',
+            'OptionNotSupported': '400 Not Implemented',
+            'NoApplicableCode': '400 Internal Server Error'
+        }
+
         self.namespaces = {
             'atom': 'http://www.w3.org/2005/Atom',
             'csw': 'http://www.opengis.net/cat/csw/2.0.2',
@@ -331,7 +346,7 @@ class StaticContext(object):
                                 'values': ['csw:Record']
                             },
                             'outputSchema': {
-                                'values': ['http://www.opengis.net/cat/csw/3.0', 'http://www.w3.org/2005/Atom']
+                                'values': ['http://www.opengis.net/cat/csw/3.0']
                             },
                             'outputFormat': {
                                 'values': ['application/xml', 'application/json', 'application/atom+xml']
@@ -353,7 +368,7 @@ class StaticContext(object):
                         },
                         'parameters': {
                             'outputSchema': {
-                                'values': ['http://www.opengis.net/cat/csw/3.0', 'http://www.w3.org/2005/Atom']
+                                'values': ['http://www.opengis.net/cat/csw/3.0']
                             },
                             'outputFormat': {
                                 'values': ['application/xml', 'application/json', 'application/atom+xml']

@@ -702,6 +702,8 @@ class Csw2(object):
             else:  # spec default
                 self.parent.kvp['maxrecords'] = 10
         else:  # specified by client
+            if self.parent.kvp['maxrecords'] == '':
+                self.parent.kvp['maxrecords'] = 10
             if maxrecords_cfg > -1:  # set in config
                 if int(self.parent.kvp['maxrecords']) > maxrecords_cfg:
                     self.parent.kvp['maxrecords'] = maxrecords_cfg
@@ -1905,6 +1907,7 @@ class Csw2(object):
     def exceptionreport(self, code, locator, text):
         ''' Generate ExceptionReport '''
         self.parent.exception = True
+        self.parent.status = 'OK'
 
         try:
             language = self.parent.config.get('server', 'language')

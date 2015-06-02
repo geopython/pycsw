@@ -20,10 +20,10 @@
 
    <xsd:include schemaLocation="filterAll.xsd"/>
    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"
-               schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+               schemaLocation="../../../w3c/2001/xml.xsd"/>
 
    <xsd:import namespace="http://www.opengis.net/ows/1.1"
-        schemaLocation="http://schemas.opengis.net/ows/1.1.0/owsAll.xsd"/>
+        schemaLocation="../../ows/1.1.0/owsAll.xsd"/>
 
    <xsd:element name="Filter_Capabilities">
       <xsd:complexType>

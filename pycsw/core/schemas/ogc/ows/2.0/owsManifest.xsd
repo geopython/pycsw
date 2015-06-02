@@ -25,7 +25,7 @@
   <include schemaLocation="owsAll.xsd"/>
   <include schemaLocation="owsDataIdentification.xsd" />
   <import namespace="http://www.w3.org/1999/xlink"
-          schemaLocation="http://www.w3.org/1999/xlink.xsd" />
+          schemaLocation="../../../w3c/1999/xlink.xsd" />
 
   <!-- ==========================================================
                 Types and elements

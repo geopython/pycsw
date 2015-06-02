@@ -60,7 +60,25 @@ class Csw3(object):
         serviceidentification = True
         serviceprovider = True
         operationsmetadata = True
-        if 'sections' in self.parent.kvp:
+        filtercaps = False
+        languages = False
+
+        # validate acceptformats
+        LOGGER.debug('Validating ows20:AcceptFormats')
+        LOGGER.debug(self.parent.context.model['operations']['GetCapabilities']['parameters']['acceptFormats']['values'])
+        if 'acceptformats' in self.parent.kvp:
+            bfound = False
+            for fmt in self.parent.kvp['acceptformats'].split(','):
+                if fmt in self.parent.context.model['operations']['GetCapabilities']['parameters']['acceptFormats']['values']:
+                    self.parent.mimetype = fmt
+                    bfound = True
+                    break
+            if not bfound:
+                return self.exceptionreport('InvalidParameterValue',
+                'acceptformats', 'Invalid acceptFormats parameter value: %s' %
+                self.parent.kvp['acceptformats'])
+
+        if 'sections' in self.parent.kvp and self.parent.kvp['sections'] != '':
             serviceidentification = False
             serviceprovider = False
             operationsmetadata = False
@@ -75,6 +93,11 @@ class Csw3(object):
                     serviceidentification = True
                     serviceprovider = True
                     operationsmetadata = True
+                    filtercaps = True
+                    languages = True
+        else:
+            filtercaps = True
+            languages = True
 
         # check extra parameters that may be def'd by profiles
         if self.parent.profiles is not None:
@@ -379,11 +402,15 @@ class Csw3(object):
                     if ecnode is not None:
                         operationsmetadata.append(ecnode)
 
-        LOGGER.debug('Writing section ows:Languages')
-        langs = etree.SubElement(node,
-        util.nspath_eval('ows20:Languages', self.parent.context.namespaces))
-        etree.SubElement(langs,
-        util.nspath_eval('ows20:Language', self.parent.context.namespaces)).text = self.parent.language['639_code']
+        if languages:
+            LOGGER.debug('Writing section ows:Languages')
+            langs = etree.SubElement(node,
+            util.nspath_eval('ows20:Languages', self.parent.context.namespaces))
+            etree.SubElement(langs,
+            util.nspath_eval('ows20:Language', self.parent.context.namespaces)).text = self.parent.language['639_code']
+
+        if not filtercaps:
+            return node
 
         # always write out Filter_Capabilities
         LOGGER.debug('Writing section Filter_Capabilities.')
@@ -576,10 +603,23 @@ class Csw3(object):
 
         if ('elementsetname' not in self.parent.kvp and
             'elementname' not in self.parent.kvp):
+            if self.parent.requesttype == 'GET':
+                LOGGER.debug(self.parent.requesttype)
+                self.parent.kvp['elementsetname'] = 'summary'
+            else:
+                # mutually exclusive required
+                return self.exceptionreport('MissingParameterValue',
+                'elementsetname',
+                'Missing one of ElementSetName or ElementName parameter(s)')
+
+        if 'elementsetname' in self.parent.kvp and 'elementname' in self.parent.kvp:
             # mutually exclusive required
-            return self.exceptionreport('MissingParameterValue',
+            return self.exceptionreport('NoApplicableCode',
             'elementsetname',
-            'Missing one of ElementSetName or ElementName parameter(s)')
+            'Only ONE of ElementSetName or ElementName parameter(s) is permitted')
+
+        if 'elementsetname' not in self.parent.kvp:
+                self.parent.kvp['elementsetname'] = 'summary'
 
         if 'outputschema' not in self.parent.kvp:
             self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw30']
@@ -594,11 +634,37 @@ class Csw3(object):
         if 'outputformat' not in self.parent.kvp:
             self.parent.kvp['outputformat'] = 'application/xml'
 
+        if 'HTTP_ACCEPT' in self.parent.environ:
+            formats_match = False
+            if 'outputformat' in self.parent.kvp:
+                LOGGER.debug(self.parent.kvp['outputformat'])
+                for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
+                    LOGGER.debug('Comparing %s and %s', ofmt, self.parent.kvp['outputformat'])
+                    if ofmt.split(';')[0] == self.parent.kvp['outputformat']:
+                        LOGGER.debug('FOUND OUTPUT MATCH')
+                        formats_match = True
+                if not formats_match:
+                    return self.exceptionreport('InvalidParameterValue',
+                    'outputformat', 'HTTP Accept header (%s) and outputformat (%s) must be identical' %
+                    (self.parent.environ['HTTP_ACCEPT'], self.parent.kvp['outputformat']))
+            else:
+                for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
+                    if ofmt in self.parent.context.model['operations']['GetRecords']['parameters']['outputFormat']['values']:
+                        self.parent.kvp['outputformat'] = ofmt
+                        break
+
+
         if (self.parent.kvp['outputformat'] not in self.parent.context.model['operations']
             ['GetRecords']['parameters']['outputFormat']['values']):
             return self.exceptionreport('InvalidParameterValue',
             'outputformat', 'Invalid outputFormat parameter value: %s' %
             self.parent.kvp['outputformat'])
+
+        if 'outputformat' in self.parent.kvp:
+            LOGGER.debug('Setting content type')
+            self.parent.contenttype = self.parent.kvp['outputformat']
+            if self.parent.kvp['outputformat'] == 'application/atom+xml':
+                self.parent.kvp['outputschema'] = self.parent.context.namespaces['atom']
 
         if (('elementname' not in self.parent.kvp or
              len(self.parent.kvp['elementname']) == 0) and
@@ -609,20 +675,22 @@ class Csw3(object):
             'elementsetname', 'Invalid ElementSetName parameter value: %s' %
             self.parent.kvp['elementsetname'])
 
-        if ('elementname' in self.parent.kvp and
-            self.parent.requesttype == 'GET'):  # passed via GET
-            self.parent.kvp['elementname'] = self.parent.kvp['elementname'].split(',')
-            self.parent.kvp['elementsetname'] = 'summary'
-
         if 'typenames' not in self.parent.kvp:
             return self.exceptionreport('MissingParameterValue',
             'typenames', 'Missing typenames parameter')
 
         if ('typenames' in self.parent.kvp and
             self.parent.requesttype == 'GET'):  # passed via GET
-            self.parent.kvp['typenames'] = self.parent.kvp['typenames'].split(',')
+            #self.parent.kvp['typenames'] = self.parent.kvp['typenames'].split(',')
+            self.parent.kvp['typenames'] = ['csw:Record' if x=='Record' else x for x in self.parent.kvp['typenames'].split(',')]
 
-        self.parent.kvp['typenames'] = ['csw:Record' if x=='Record' else x for x in self.parent.kvp['typenames']]
+        if 'namespace' in self.parent.kvp:
+            LOGGER.debug('resolving KVP namespace bindings')
+            LOGGER.debug(self.parent.kvp['typenames'])
+            self.parent.kvp['typenames'] = self.resolve_nsmap(self.parent.kvp['typenames'])
+            if 'elementname' in self.parent.kvp:
+                LOGGER.debug(self.parent.kvp['elementname'])
+                self.parent.kvp['elementname'] = self.resolve_nsmap(self.parent.kvp['elementname'].split(','))
 
         if 'typenames' in self.parent.kvp:
             for tname in self.parent.kvp['typenames']:
@@ -654,6 +722,8 @@ class Csw3(object):
             else:  # spec default
                 self.parent.kvp['maxrecords'] = 10
         else:  # specified by client
+            if self.parent.kvp['maxrecords'] == '':
+                self.parent.kvp['maxrecords'] = 10
             if maxrecords_cfg > -1:  # set in config
                 if int(self.parent.kvp['maxrecords']) > maxrecords_cfg:
                     self.parent.kvp['maxrecords'] = maxrecords_cfg
@@ -661,7 +731,11 @@ class Csw3(object):
         if any(x in ['bbox', 'q', 'time'] for x in self.parent.kvp):
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
             self.parent.kvp['constraintlanguage'] = 'FILTER'
-            tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context)
+            try:
+                tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context)
+            except Exception as err:
+                return self.exceptionreport('InvalidParameterValue', 'bbox', str(err))
+
             if tmp_filter is not "":
                 self.parent.kvp['constraint'] = tmp_filter
                 LOGGER.debug('OpenSearch Geo/Time parameters to Filter: %s.' % self.parent.kvp['constraint'])
@@ -712,7 +786,7 @@ class Csw3(object):
 
                         LOGGER.debug(errortext)
                         return self.exceptionreport('InvalidParameterValue',
-                        'constraint', 'Invalid Filter query: %s' % errortext)
+                        'bbox', 'Invalid Filter query: %s' % errortext)
             else:
                 self.parent.kvp['constraint'] = {}
 
@@ -752,21 +826,27 @@ class Csw3(object):
         if 'startposition' not in self.parent.kvp:
             self.parent.kvp['startposition'] = 1
 
-        # query repository
-        LOGGER.debug('Querying repository with constraint: %s,\
-        sortby: %s, typenames: %s, maxrecords: %s, startposition: %s.' %
-        (self.parent.kvp['constraint'], self.parent.kvp['sortby'], self.parent.kvp['typenames'],
-        self.parent.kvp['maxrecords'], self.parent.kvp['startposition']))
+        if 'recordids' in self.parent.kvp:
+            # query repository
+            LOGGER.debug('Querying repository with RECORD ids: %s.' % self.parent.kvp['recordids'])
+            results = self.parent.repository.query_ids(self.parent.kvp['recordids'].split(','))
+            matched = str(len(results))
+        else:
+            # query repository
+            LOGGER.debug('Querying repository with constraint: %s,\
+            sortby: %s, typenames: %s, maxrecords: %s, startposition: %s.' %
+            (self.parent.kvp['constraint'], self.parent.kvp['sortby'], self.parent.kvp['typenames'],
+            self.parent.kvp['maxrecords'], self.parent.kvp['startposition']))
 
-        try:
-            matched, results = self.parent.repository.query(
-            constraint=self.parent.kvp['constraint'],
-            sortby=self.parent.kvp['sortby'], typenames=self.parent.kvp['typenames'],
-            maxrecords=self.parent.kvp['maxrecords'],
-            startposition=int(self.parent.kvp['startposition'])-1)
-        except Exception as err:
-            return self.exceptionreport('InvalidParameterValue', 'constraint',
-            'Invalid query: %s' % err)
+            try:
+                matched, results = self.parent.repository.query(
+                constraint=self.parent.kvp['constraint'],
+                sortby=self.parent.kvp['sortby'], typenames=self.parent.kvp['typenames'],
+                maxrecords=self.parent.kvp['maxrecords'],
+                startposition=int(self.parent.kvp['startposition'])-1)
+            except Exception as err:
+                return self.exceptionreport('InvalidParameterValue', 'constraint',
+                'Invalid query: %s' % err)
 
         if int(matched) == 0:
             returned = nextrecord = '0'
@@ -902,7 +982,7 @@ class Csw3(object):
                         numberOfRecordsMatched=fedcat.results['matches'],
                         numberOfRecordsReturned=fedcat.results['returned'],
                         nextRecord=fedcat.results['nextrecord'],
-                        elapsedTime=time()-start_time,
+                        elapsedTime=get_elapsed_time(start_time, time()),
                         status=get_resultset_status(
                             fedcat.results['matches'],
                             fedcat.results['nextrecord']))
@@ -926,7 +1006,7 @@ class Csw3(object):
 #                for rec in resultset:
 #                    searchresults.append(etree.fromstring(resultset[rec].xml))
 
-        searchresults.attrib['elapsedTime'] = str(time() - self.parent.process_time_start)
+        searchresults.attrib['elapsedTime'] = get_elapsed_time(self.parent.process_time_start, time())
 
         if 'responsehandler' in self.parent.kvp:  # process the handler
             self.parent._process_responsehandler(etree.tostring(node,
@@ -960,6 +1040,11 @@ class Csw3(object):
             return self.exceptionreport('InvalidParameterValue',
             'outputschema', 'Invalid outputschema parameter %s' %
             self.parent.kvp['outputschema'])
+
+        if 'outputformat' in self.parent.kvp:
+            self.parent.contenttype = self.parent.kvp['outputformat']
+            if self.parent.kvp['outputformat'] == 'application/atom+xml':
+                self.parent.kvp['outputschema'] = self.parent.context.namespaces['atom']
 
         if 'elementsetname' not in self.parent.kvp:
             self.parent.kvp['elementsetname'] = 'summary'
@@ -1017,7 +1102,7 @@ class Csw3(object):
             return None
 
         if len(results) == 0:
-            return self.exceptionreport('InvalidParameterValue', 'id',
+            return self.exceptionreport('NotFound', 'id',
             'No repository item found for \'%s\'' % self.parent.kvp['id'])
 
         return node
@@ -1354,6 +1439,12 @@ class Csw3(object):
 
         if ('elementname' in self.parent.kvp and
             len(self.parent.kvp['elementname']) > 0):
+            for req_term in ['dc:identifier', 'dc:title']:
+                if req_term not in self.parent.kvp['elementname']:
+                    value = util.getqattr(recobj, queryables[req_term]['dbcol'])
+                    etree.SubElement(record,
+                    util.nspath_eval(req_term,
+                    self.parent.context.namespaces)).text = value
             for elemname in self.parent.kvp['elementname']:
                 if (elemname.find('BoundingBox') != -1 or
                     elemname.find('Envelope') != -1):
@@ -1364,10 +1455,11 @@ class Csw3(object):
                         record.append(bboxel)
                 else:
                     value = util.getqattr(recobj, queryables[elemname]['dbcol'])
+                    elem = etree.SubElement(record,
+                           util.nspath_eval(elemname,
+                           self.parent.context.namespaces))
                     if value:
-                        etree.SubElement(record,
-                        util.nspath_eval(elemname,
-                        self.parent.context.namespaces)).text = value
+                        elem.text = value
         elif 'elementsetname' in self.parent.kvp:
             if (self.parent.kvp['elementsetname'] == 'full' and
             util.getqattr(recobj, self.parent.context.md_core_model['mappings']\
@@ -1551,6 +1643,20 @@ class Csw3(object):
             if tmp is not None:
                 request['sections'] = ','.join([section.text for section in \
                 doc.findall(util.nspath_eval('ows20:Sections/ows20:Section',
+                self.parent.context.namespaces))])
+
+            tmp = doc.find(util.nspath_eval('ows20:AcceptFormats',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['acceptformats'] = ','.join([aformat.text for aformat in \
+                doc.findall(util.nspath_eval('ows20:AcceptFormats/ows20:OutputFormat',
+                self.parent.context.namespaces))])
+
+            tmp = doc.find(util.nspath_eval('ows20:AcceptVersions',
+                  self.parent.context.namespaces))
+            if tmp is not None:
+                request['acceptversions'] = ','.join([version.text for version in \
+                doc.findall(util.nspath_eval('ows20:AcceptVersions/ows20:Version',
                 self.parent.context.namespaces))])
 
         # GetDomain
@@ -1843,13 +1949,12 @@ class Csw3(object):
             etree.SubElement(allowed_values,
                              util.nspath_eval('ows20:Value',
                              self.parent.context.namespaces)).text = value
-
         return allowed_values
-
 
     def exceptionreport(self, code, locator, text):
         ''' Generate ExceptionReport '''
         self.parent.exception = True
+        self.parent.status = code
 
         try:
             language = self.parent.config.get('server', 'language')
@@ -1879,6 +1984,48 @@ class Csw3(object):
 
         return node
 
+    def resolve_nsmap(self, list_):
+        '''' Resolve typename bindings based on default and KVP namespaces '''
+
+        nsmap = {}
+
+        tns = []
+
+        LOGGER.debug('Namespace list pairs: %s', list_)
+
+        # bind KVP namespaces into typenames
+        for ns in self.parent.kvp['namespace'].split(','):
+            nspair = ns.split('(')[1].split(')')[0].split('=')
+            if len(nspair) == 1:  # default namespace
+                nsmap['csw'] = nspair[1]
+            else:
+                nsmap[nspair[0]] = nspair[1]
+
+        LOGGER.debug('Namespace pairs: %s', nsmap)
+
+        for tn in list_:
+            LOGGER.debug(tn)
+            if tn.find(':') != -1:  # resolve prefix
+                prefix = tn.split(':')[0]
+                if prefix in nsmap.keys():  # get uri
+                    uri = nsmap[prefix]
+                    newprefix = self.parent.context.namespaces.keys()[self.parent.context.namespaces.values().index(uri)]
+                    LOGGER.debug(uri)
+                    LOGGER.debug(prefix)
+                    LOGGER.debug(newprefix)
+                    #if prefix == 'csw30': newprefix = 'csw'
+                    newvalue = tn.replace(prefix, newprefix).replace('csw30', 'csw')
+                else:
+                    newvalue = tn
+            else:  # default namespace
+                newvalue = tn
+
+            tns.append(newvalue)
+
+
+        LOGGER.debug(tns)
+        return tns
+
 def write_boundingbox(bbox, nsmap):
     ''' Generate ows20:BoundingBox '''
 
@@ -1890,7 +2037,7 @@ def write_boundingbox(bbox, nsmap):
 
         if len(bbox2) == 4:
             boundingbox = etree.Element(util.nspath_eval('ows20:BoundingBox',
-            nsmap), crs='urn:x-ogc:def:crs:EPSG:6.11:4326',
+            nsmap), crs='http://www.opengis.net/def/crs/EPSG/0/4326',
             dimensions='2')
 
             etree.SubElement(boundingbox, util.nspath_eval('ows20:LowerCorner',
@@ -1922,3 +2069,8 @@ def get_resultset_status(matched, nextrecord):
        status = 'none'
 
     return status
+
+def get_elapsed_time(begin, end):
+    ''' Helper function to calculate elapsed time '''
+
+    return str(int((end - begin) * 1000))

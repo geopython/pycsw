@@ -22,7 +22,7 @@ The gmlBase schema components establish the GML model and syntax, in particular
 -	components for constructing definitions and dictionaries.</documentation>
 	</annotation>
 	<include schemaLocation="basicTypes.xsd"/>
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.w3.org/1999/xlink.xsd"/>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../../../../../../../core/schemas/w3c/1999/xlink.xsd"/>
 	<element name="AbstractObject" abstract="true">
 		<annotation>
 			<documentation>This element has no type defined, and is therefore implicitly (according to the rules of W3C XML Schema) an XML Schema anyType. It is used as the head of an XML Schema substitution group which unifies complex content and certain simple content elements used for datatypes in GML, including the gml:AbstractGML substitution group.</documentation>
