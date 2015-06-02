@@ -71,7 +71,6 @@
       <ows20:Parameter name="outputSchema">
         <ows20:AllowedValues>
           <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
-          <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
           <ows20:Value>http://www.opengis.net/cat/csw/csdgm</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
@@ -145,7 +144,6 @@
       <ows20:Parameter name="outputSchema">
         <ows20:AllowedValues>
           <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
-          <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>
           <ows20:Value>http://www.opengis.net/cat/csw/csdgm</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.w3.org/2005/Atom</ows20:Value>

@@ -43,6 +43,7 @@ class OpenSearch(object):
         """initialize"""
 
         self.namespaces = {
+            None: 'http://a9.com/-/spec/opensearch/1.1/',
             'atom': 'http://www.w3.org/2005/Atom',
             'geo': 'http://a9.com/-/opensearch/extensions/geo/1.0/',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
@@ -100,7 +101,7 @@ class OpenSearch(object):
                         namespaces=self.context.namespaces):
                 node.append(rec)
         elif util.xmltag_split(self.exml.tag) == 'Capabilities':
-            node = etree.Element('OpenSearchDescription', nsmap={None: self.namespaces['os']})
+            node = etree.Element('OpenSearchDescription', nsmap=self.namespaces)
             etree.SubElement(node, 'ShortName').text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, 'LongName').text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, 'Description').text = self.exml.xpath('//ows:Abstract', namespaces=self.context.namespaces)[0].text
@@ -160,7 +161,7 @@ class OpenSearch(object):
                         namespaces=self.context.namespaces):
                 node.append(rec)
         elif util.xmltag_split(self.exml.tag) == 'Capabilities':
-            node = etree.Element('OpenSearchDescription', nsmap={None: self.namespaces['os']})
+            node = etree.Element('OpenSearchDescription', nsmap=self.namespaces)
             etree.SubElement(node, 'ShortName').text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text[:16]
             etree.SubElement(node, 'LongName').text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, 'Description').text = self.exml.xpath('//ows20:Abstract', namespaces=self.context.namespaces)[0].text
@@ -194,22 +195,24 @@ class OpenSearch(object):
 
 
 def kvp2filterxml(kvp, context):
+    ''' transform kvp to filter XML string '''
 
-    filter_xml = ""
-    valid_xml = ""
+    bbox_element = None
+    time_element = None
+    anytext_elements = []
 
     # Count parameters
     par_count = 0
     for p in ['q','bbox','time']:
-        if p in kvp:
+        if p in kvp and kvp[p] != '':
             par_count += 1
 
     # Create root element for FilterXML
-    root = etree.Element(util.nspath_eval('ogc:Filter',
-                context.namespaces))
+    root = etree.Element(util.nspath_eval('ogc:Filter', context.namespaces))
 
     # bbox to FilterXML
-    if 'bbox' in kvp:
+    if 'bbox' in kvp and kvp['bbox'] != '':
+        LOGGER.debug('Detected bbox parameter')
         bbox_list = [x.strip() for x in kvp['bbox'].split(',')]
         bbox_element = etree.Element(util.nspath_eval('ogc:BBOX',
                     context.namespaces))
@@ -221,6 +224,17 @@ def kvp2filterxml(kvp, context):
                     context.namespaces))
         el = etree.Element(util.nspath_eval('gml:lowerCorner',
                     context.namespaces))
+
+        if len(bbox_list) == 5:  # add srsName
+            LOGGER.debug('Found CRS')
+            env.attrib['srsName'] = bbox_list[4]
+        else:
+            LOGGER.debug('Assuming 4326')
+            if not util.validate_4326(bbox_list):
+                msg = '4326 coordinates out of range: %s' % bbox_list
+                LOGGER.debug(msg)
+                raise RuntimeError(msg)
+
         try:
             el.text = "%s %s" % (bbox_list[0], bbox_list[1])
         except Exception as err:
@@ -238,25 +252,35 @@ def kvp2filterxml(kvp, context):
         bbox_element.append(env)
 
     # q to FilterXML
-    if 'q' in kvp:
-        anytext_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo',
-                    context.namespaces))
-        el = etree.Element(util.nspath_eval('ogc:PropertyName',
-                    context.namespaces))
-        el.text = 'csw:AnyText'
-        anytext_element.append(el)
-        el = etree.Element(util.nspath_eval('ogc:Literal',
-                    context.namespaces))
-        el.text = kvp['q']
-        anytext_element.append(el)
+    if 'q' in kvp and kvp['q'] != '':
+        LOGGER.debug('Detected q parameter')
+        qvals = kvp['q'].split()
+        LOGGER.debug(qvals)
+        if len(qvals) > 1:
+            par_count += 1
+        for qval in qvals:
+            LOGGER.debug('processing q token')
+            anytext_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo',
+                        context.namespaces))
+            el = etree.Element(util.nspath_eval('ogc:PropertyName',
+                        context.namespaces))
+            el.text = 'csw:AnyText'
+            anytext_element.append(el)
+            el = etree.Element(util.nspath_eval('ogc:Literal',
+                        context.namespaces))
+            el.text = qval.decode('utf8')
+            anytext_element.append(el)
+            anytext_elements.append(anytext_element)
 
     # time to FilterXML
-    if 'time' in kvp:
+    if 'time' in kvp and kvp['time'] != '':
+        LOGGER.debug('Detected time parameter %s', kvp['time'])
         time_list = kvp['time'].split("/")
-        time_element = None
         if (len(time_list) == 2):
+            LOGGER.debug('TIMELIST: %s', time_list)
             # This is a normal request
             if '' not in time_list:
+                LOGGER.debug('Both dates present')
                 # Both dates are present
                 time_element = etree.Element(util.nspath_eval('ogc:PropertyIsBetween',
                             context.namespaces))
@@ -279,8 +303,10 @@ def kvp2filterxml(kvp, context):
                 el.append(el2)
                 time_element.append(el)
             else:
+                if time_list == ['', '']:
+                    par_count -= 1
                 # One of two is empty
-                if time_list[1] is '':
+                elif time_list[1] is '':
                     time_element = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo',
                                 context.namespaces))
                     el = etree.Element(util.nspath_eval('ogc:PropertyName',
@@ -319,25 +345,33 @@ def kvp2filterxml(kvp, context):
             errortext = 'Exception: OpenSearch time not valid: %s.' % str(kvp['time'])
             LOGGER.debug(errortext)
 
-    if (par_count == 1):
+    if par_count == 0:
+        return ''
+    elif par_count == 1:
+        LOGGER.debug('Single predicate filter')
         # Only one OpenSearch parameter exists
-        if 'bbox' in kvp:
+        if 'bbox' in kvp and kvp['bbox'] != '':
+            LOGGER.debug('Adding bbox')
             root.append(bbox_element)
-        elif 'time' in kvp:
+        elif time_element:
+            LOGGER.debug('Adding time')
             root.append(time_element)
-        elif 'q' in kvp:
-            root.append(anytext_element)
+        elif anytext_elements:
+            LOGGER.debug('Adding anytext')
+            root.extend(anytext_elements)
     elif (par_count > 1):
+        LOGGER.debug('ogc:And query (%d predicates)', par_count)
         # Since more than 1 parameter, append the AND logical operator
         logical_and = etree.Element(util.nspath_eval('ogc:And',
                 context.namespaces))
-        if 'bbox' in kvp:
+        if bbox_element is not None:
             logical_and.append(bbox_element)
-        if 'time' in kvp:
+        if time_element is not None:
             logical_and.append(time_element)
-        if 'q' in kvp:
-            logical_and.append(anytext_element)
+        if anytext_elements is not None:
+            logical_and.extend(anytext_elements)
         root.append(logical_and)
 
     # Render etree to string XML
-    return etree.tostring(root)
+    LOGGER.debug(etree.tostring(root, encoding='unicode'))
+    return etree.tostring(root, encoding='unicode')

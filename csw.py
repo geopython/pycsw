@@ -62,7 +62,7 @@ else:
     GZIP_COMPRESSLEVEL = 0
 
 # go!
-OUTP = CSW.dispatch_cgi()
+STATUS, OUTP = CSW.dispatch_cgi()
 
 sys.stdout.write("Content-Type:%s\r\n" % CSW.contenttype)
 

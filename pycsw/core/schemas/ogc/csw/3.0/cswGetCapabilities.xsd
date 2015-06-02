@@ -19,9 +19,9 @@
    </xsd:annotation>
    <xsd:include schemaLocation="cswCommon.xsd"/>
    <xsd:import namespace="http://www.opengis.net/ows/2.0"
-      schemaLocation="http://schemas.opengis.net/ows/2.0/owsAll.xsd"/>
+      schemaLocation="../../ows/2.0/owsAll.xsd"/>
    <xsd:import namespace="http://www.opengis.net/fes/2.0"
-      schemaLocation="http://schemas.opengis.net/filter/2.0/filterAll.xsd"/>
+      schemaLocation="../../filter/2.0/filterAll.xsd"/>
    <!-- =================================================================== -->
    <!-- REQUEST                                                             -->
    <!-- =================================================================== -->

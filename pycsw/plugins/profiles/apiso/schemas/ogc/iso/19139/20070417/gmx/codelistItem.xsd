@@ -5,9 +5,9 @@
 		<xs:documentation>Geographic Metadata XML (GMX) Schema is a component of the XML Schema Implementation of Geographic Information Metadata documented in ISO/TS 19139:2007. GMX includes all the definitions of http://www.isotc211.org/2005/gmx namespace. The root document of this namespace is the file gmx.xsd. This codelistItem.xsd schema implements the UML conceptual schema defined in 7.4.4.4 of ISO/TS 19139:2007. It contains the implementation of CT_Codelist and CT_CodelistValue.</xs:documentation>
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
-	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gco/gco.xsd"/>
-	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
-	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../gco/gco.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../../../../../../../../../core/schemas/ogc/gml/3.2.1/gml.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="../gmd/gmd.xsd"/>
 	<xs:include schemaLocation="gmx.xsd"/>
 	<!-- ########################################################################### -->
 	<!-- ########################################################################### -->

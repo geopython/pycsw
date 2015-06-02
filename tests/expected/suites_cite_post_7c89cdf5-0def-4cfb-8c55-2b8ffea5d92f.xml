@@ -6,16 +6,18 @@
     <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
       <atom:category>Tourism--Greece</atom:category>
       <atom:id>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</atom:id>
+      <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
       <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/cite/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f"/>
       <atom:summary>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</atom:summary>
       <atom:title>Lorem ipsum</atom:title>
     </atom:entry>
     <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
       <atom:id>urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd</atom:id>
+      <dc:identifier>urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd</dc:identifier>
       <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/cite/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd"/>
       <atom:summary>Proin sit amet justo. In justo. Aenean adipiscing nulla id tellus.</atom:summary>
       <georss:where>
-        <gml:Polygon srsName="urn:x-ogc:def:crs:EPSG:6.11:4326">
+        <gml:Polygon srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
           <gml:exterior>
             <gml:LinearRing>
               <gml:posList>60.04 13.75 68.41 13.75 68.41 17.92 60.04 17.92 60.04 13.75</gml:posList>
@@ -27,6 +29,7 @@
     <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
       <atom:category>Marine sediments</atom:category>
       <atom:id>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</atom:id>
+      <dc:identifier>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</dc:identifier>
       <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/cite/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493"/>
       <atom:summary>Pellentesque tempus magna non sapien fringilla blandit.</atom:summary>
       <atom:title>Maecenas enim</atom:title>
@@ -34,12 +37,14 @@
     <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
       <atom:category>Vegetation</atom:category>
       <atom:id>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</atom:id>
+      <dc:identifier>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</dc:identifier>
       <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/cite/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4"/>
       <atom:title>Ut facilisis justo ut lacus</atom:title>
     </atom:entry>
     <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
       <atom:category>Hydrography--Dictionaries</atom:category>
       <atom:id>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</atom:id>
+      <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
       <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/cite/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec"/>
       <atom:summary>Vestibulum quis ipsum sit amet metus imperdiet vehicula. Nulla scelerisque cursus mi.</atom:summary>
       <atom:title>Aliquam fermentum purus quis arcu</atom:title>
