@@ -716,6 +716,10 @@ class Csw3(object):
         if self.parent.config.has_option('server', 'maxrecords'):
             maxrecords_cfg = int(self.parent.config.get('server', 'maxrecords'))
 
+        if 'maxrecords' in self.parent.kvp and self.parent.kvp['maxrecords'] == 'unlimited':
+            LOGGER.debug('Detected maxrecords=unlimited')
+            self.parent.kvp.pop('maxrecords')
+
         if 'maxrecords' not in self.parent.kvp:  # not specified by client
             if maxrecords_cfg > -1:  # specified in config
                 self.parent.kvp['maxrecords'] = maxrecords_cfg
