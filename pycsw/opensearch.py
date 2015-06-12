@@ -58,7 +58,11 @@ class OpenSearch(object):
         """transform a CSW response into an OpenSearch response"""
 
         LOGGER.debug('RESPONSE: %s', util.xmltag_split(element.tag))
-        version = element.xpath('//@version')[0]
+        try:
+            version = element.xpath('//@version')[0]
+        except Exception as err:
+            version = '3.0.0'
+
         self.exml = element
         self.cfg = cfg
         self.bind_url = util.bind_url(self.cfg.get('server', 'url'))
@@ -170,12 +174,12 @@ class OpenSearch(object):
             # Requirement-022
             node1 = etree.SubElement(node, 'Url')
             node1.set('type', 'application/xml')
-            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
+            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
 
             # Requirement-023
             node1 = etree.SubElement(node, 'Url')
             node1.set('type', 'application/atom+xml')
-            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom+xml&&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
+            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom+xml&&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
 
             node1 = etree.SubElement(node, 'Image')
             node1.set('type', 'image/vnd.microsoft.icon')
@@ -188,9 +192,27 @@ class OpenSearch(object):
             etree.SubElement(node, 'Attribution').text = self.exml.xpath('//ows20:ProviderName', namespaces=self.context.namespaces)[0].text
         elif util.xmltag_split(self.exml.tag) == 'ExceptionReport':
             node = self.exml
-        else:  # return Description document
-            node = etree.Element(util.nspath_eval('os:Description', self.context.namespaces))
+        else:  # GetRecordById output
+            node = etree.Element(util.nspath_eval('atom:feed',
+                       self.context.namespaces), nsmap=self.namespaces)
+            etree.SubElement(node, util.nspath_eval('atom:id',
+                       self.context.namespaces)).text = self.cfg.get('server', 'url')
+            etree.SubElement(node, util.nspath_eval('atom:title',
+                       self.context.namespaces)).text = self.cfg.get('metadata:main',
+                       'identification_title')
+            #etree.SubElement(node, util.nspath_eval('atom:updated',
+            #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
 
+            etree.SubElement(node, util.nspath_eval('os:totalResults',
+                        self.context.namespaces)).text = '1'
+            etree.SubElement(node, util.nspath_eval('os:startIndex',
+                        self.context.namespaces)).text = '1'
+            etree.SubElement(node, util.nspath_eval('os:itemsPerPage',
+                        self.context.namespaces)).text = '1'
+
+            for rec in self.exml.xpath('//atom:entry', namespaces=self.context.namespaces):
+                #node.append(rec)
+                node = rec
         return node
 
 
@@ -230,6 +252,7 @@ def kvp2filterxml(kvp, context):
             env.attrib['srsName'] = bbox_list[4]
         else:
             LOGGER.debug('Assuming 4326')
+            env.attrib['srsName'] = 'urn:ogc:def:crs:OGC:1.3:CRS84'
             if not util.validate_4326(bbox_list):
                 msg = '4326 coordinates out of range: %s' % bbox_list
                 LOGGER.debug(msg)
