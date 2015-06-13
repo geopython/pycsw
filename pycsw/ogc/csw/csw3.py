@@ -635,17 +635,18 @@ class Csw3(object):
             self.parent.kvp['outputformat'] = 'application/xml'
 
         if 'HTTP_ACCEPT' in self.parent.environ:
+            LOGGER.debug('Detected HTTP Accept header: %s', self.parent.environ['HTTP_ACCEPT'])
             formats_match = False
             if 'outputformat' in self.parent.kvp:
                 LOGGER.debug(self.parent.kvp['outputformat'])
                 for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
                     LOGGER.debug('Comparing %s and %s', ofmt, self.parent.kvp['outputformat'])
-                    if ofmt.split(';')[0] == self.parent.kvp['outputformat']:
+                    if ofmt.split('/')[0] in self.parent.kvp['outputformat']:
                         LOGGER.debug('FOUND OUTPUT MATCH')
                         formats_match = True
                 if not formats_match:
                     return self.exceptionreport('InvalidParameterValue',
-                    'outputformat', 'HTTP Accept header (%s) and outputformat (%s) must be identical' %
+                    'outputformat', 'HTTP Accept header (%s) and outputformat (%s) must agree' %
                     (self.parent.environ['HTTP_ACCEPT'], self.parent.kvp['outputformat']))
             else:
                 for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
@@ -665,6 +666,7 @@ class Csw3(object):
             self.parent.contenttype = self.parent.kvp['outputformat']
             if self.parent.kvp['outputformat'] == 'application/atom+xml':
                 self.parent.kvp['outputschema'] = self.parent.context.namespaces['atom']
+                self.parent.mode = 'opensearch'
 
         if (('elementname' not in self.parent.kvp or
              len(self.parent.kvp['elementname']) == 0) and
@@ -1030,6 +1032,26 @@ class Csw3(object):
         if 'outputschema' not in self.parent.kvp:
             self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw30']
 
+        if 'HTTP_ACCEPT' in self.parent.environ:
+            LOGGER.debug('Detected HTTP Accept header: %s', self.parent.environ['HTTP_ACCEPT'])
+            formats_match = False
+            if 'outputformat' in self.parent.kvp:
+                LOGGER.debug(self.parent.kvp['outputformat'])
+                for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
+                    LOGGER.debug('Comparing %s and %s', ofmt, self.parent.kvp['outputformat'])
+                    if ofmt.split('/')[0] in self.parent.kvp['outputformat']:
+                        LOGGER.debug('FOUND OUTPUT MATCH')
+                        formats_match = True
+                if not formats_match:
+                    return self.exceptionreport('InvalidParameterValue',
+                    'outputformat', 'HTTP Accept header (%s) and outputformat (%s) must agree' %
+                    (self.parent.environ['HTTP_ACCEPT'], self.parent.kvp['outputformat']))
+            else:
+                for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
+                    if ofmt in self.parent.context.model['operations']['GetRecords']['parameters']['outputFormat']['values']:
+                        self.parent.kvp['outputformat'] = ofmt
+                        break
+
         if ('outputformat' in self.parent.kvp and
             self.parent.kvp['outputformat'] not in
             self.parent.context.model['operations']['GetRecordById']['parameters']
@@ -1049,6 +1071,7 @@ class Csw3(object):
             self.parent.contenttype = self.parent.kvp['outputformat']
             if self.parent.kvp['outputformat'] == 'application/atom+xml':
                 self.parent.kvp['outputschema'] = self.parent.context.namespaces['atom']
+                self.parent.mode = 'opensearch'
 
         if 'elementsetname' not in self.parent.kvp:
             self.parent.kvp['elementsetname'] = 'summary'
@@ -1538,6 +1561,18 @@ class Csw3(object):
 
             if bboxel is not None:
                 record.append(bboxel)
+
+            if self.parent.kvp['elementsetname'] != 'brief':  # add temporal extent
+                begin = util.getqattr(record, self.parent.context.md_core_model['mappings']['pycsw:TempExtent_begin'])
+                end = util.getqattr(record, self.parent.context.md_core_model['mappings']['pycsw:TempExtent_end'])
+
+                if begin or end:
+                    tempext = etree.SubElement(record, util.nspath_eval('csw30:TemporalExtent', self.parent.context.namespaces))
+                    if begin:
+                        etree.SubElement(record, util.nspath_eval('csw30:begin', self.parent.context.namespaces)).text = begin
+                    if end:
+                        etree.SubElement(record, util.nspath_eval('csw30:end', self.parent.context.namespaces)).text = end
+
         return record
 
     def _parse_constraint(self, element):
