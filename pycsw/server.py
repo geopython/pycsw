@@ -1287,7 +1287,7 @@ class Csw(object):
                         LOGGER.debug('Validating Filter %s.' %
                         self.kvp['constraint'])
                         schema = etree.XMLSchema(file=schema)
-                        parser = etree.XMLParser(schema=schema)
+                        parser = etree.XMLParser(schema=schema, resolve_entities=False)
                         doc = etree.fromstring(self.kvp['constraint'], parser)
                         LOGGER.debug('Filter is valid XML.')
                         self.kvp['constraint'] = {}
@@ -1978,7 +1978,7 @@ class Csw(object):
 
                 LOGGER.debug('Validating %s.' % postdata)
                 schema = etree.XMLSchema(file=schema)
-                parser = etree.XMLParser(schema=schema)
+                parser = etree.XMLParser(schema=schema, resolve_entities=False)
                 if hasattr(self, 'soap') and self.soap:
                 # validate the body of the SOAP request
                     doc = etree.fromstring(etree.tostring(doc), parser)

@@ -556,7 +556,7 @@ def validate_xml(xml, xsd):
     LOGGER.info('Validating %s against schema %s', xml, xsd)
 
     schema = etree.XMLSchema(file=xsd)
-    parser = etree.XMLParser(schema=schema)
+    parser = etree.XMLParser(schema=schema, resolve_entities=False)
 
     try:
         valid = etree.parse(xml, parser)
