@@ -33,7 +33,7 @@
 	</gmd:identificationInfo>
 <gmd:distributionInfo><gmd:MD_Distribution><gmd:distributionFormat><gmd:MD_Format><gmd:name gco:nilReason="inapplicable"/><gmd:version gco:nilReason="inapplicable"/></gmd:MD_Format></gmd:distributionFormat><gmd:transferOptions><gmd:MD_DigitalTransferOptions><gmd:onLine><gmd:CI_OnlineResource><gmd:linkage><gmd:URL>http://www.ypaat.gr</gmd:URL></gmd:linkage></gmd:CI_OnlineResource></gmd:onLine></gmd:MD_DigitalTransferOptions></gmd:transferOptions></gmd:MD_Distribution></gmd:distributionInfo>
 <gmd:dataQualityInfo><gmd:DQ_DataQuality>
-<gmd:scope><gmd:DQ_Scope><gmd:level><gmd:MD_ScopeCode codeListValue="dataset" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode">dataset</gmd:MD_ScopeCode></gmd:level></gmd:DQ_Scope></gmd:scope>
+<gmd:scope><gmd:DQ_Scope><gmd:level><gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode></gmd:level></gmd:DQ_Scope></gmd:scope>
 <gmd:lineage><gmd:LI_Lineage><gmd:statement><gco:CharacterString>test</gco:CharacterString></gmd:statement></gmd:LI_Lineage></gmd:lineage>
 </gmd:DQ_DataQuality></gmd:dataQualityInfo>
 </gmd:MD_Metadata>
