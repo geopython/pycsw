@@ -1,2 +1,2 @@
 psycopg2
-SQLAlchemy>=0.6
+SQLAlchemy==1.0.4
