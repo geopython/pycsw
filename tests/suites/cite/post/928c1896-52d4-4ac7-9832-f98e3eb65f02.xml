@@ -8,7 +8,7 @@
       <ogc:Filter>
         <ogc:PropertyIsLessThanOrEqualTo>
           <ogc:PropertyName>dc:date</ogc:PropertyName>
-          <ogc:Literal>2005-10-24Z</ogc:Literal>
+          <ogc:Literal>2005-10-24</ogc:Literal>
         </ogc:PropertyIsLessThanOrEqualTo>
       </ogc:Filter>
     </csw:Constraint>
