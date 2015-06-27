@@ -6,12 +6,12 @@
     <csw:Record>
       <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
       <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
-      <dc:date>2003-05-09Z</dc:date>
+      <dc:date>2003-05-09</dc:date>
     </csw:Record>
     <csw:Record>
       <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-      <dc:date>2005-10-24Z</dc:date>
+      <dc:date>2005-10-24</dc:date>
     </csw:Record>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
