@@ -6,17 +6,17 @@
     <csw:Record>
       <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-      <dc:date>2005-10-24Z</dc:date>
+      <dc:date>2005-10-24</dc:date>
     </csw:Record>
     <csw:Record>
       <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
       <dc:type>http://purl.org/dc/dcmitype/Dataset</dc:type>
-      <dc:date>2006-03-26Z</dc:date>
+      <dc:date>2006-03-26</dc:date>
     </csw:Record>
     <csw:Record>
       <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
       <dc:type>http://purl.org/dc/dcmitype/Text</dc:type>
-      <dc:date>2006-05-12Z</dc:date>
+      <dc:date>2006-05-12</dc:date>
     </csw:Record>
   </csw:SearchResults>
 </csw:GetRecordsResponse>
