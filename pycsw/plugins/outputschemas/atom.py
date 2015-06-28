@@ -72,7 +72,7 @@ def write_record(result, esn, context, url=None):
 
     if val:
         for kw in val.split(','):
-            etree.SubElement(node, util.nspath_eval('atom:category', NAMESPACES)).text = kw
+            etree.SubElement(node, util.nspath_eval('atom:category', NAMESPACES), term=kw)
 
 
     for qval in ['pycsw:Contributor', 'pycsw:Identifier']:
@@ -109,16 +109,13 @@ def write_extent(bbox, nsmap):
     
     if bbox is not None:
         try:
-            bbox2 = util.wkt2geom(bbox, bounds=False)
+            bbox2 = util.wkt2geom(bbox)
         except:
             return None
-
         where = etree.Element(util.nspath_eval('georss:where', NAMESPACES))
-        polygon = etree.SubElement(where, util.nspath_eval('gml:Polygon', nsmap), srsName='http://www.opengis.net/def/crs/EPSG/0/4326')
-        exterior = etree.SubElement(polygon, util.nspath_eval('gml:exterior', nsmap))
-        lring = etree.SubElement(exterior, util.nspath_eval('gml:LinearRing', nsmap))
-        poslist = etree.SubElement(lring, util.nspath_eval('gml:posList', nsmap)).text = \
-        ' '.join(['%s %s' % (str(i[1]), str(i[0])) for i in list(bbox2.exterior.coords)])
-    
+        envelope = etree.SubElement(where, util.nspath_eval('gml:Envelope', nsmap), srsName='http://www.opengis.net/def/crs/EPSG/0/4326')
+        etree.SubElement(envelope, util.nspath_eval('gml:lowerCorner', nsmap)).text = '%s %s' % (bbox2[1], bbox2[0])
+        etree.SubElement(envelope, util.nspath_eval('gml:upperCorner', nsmap)).text = '%s %s' % (bbox2[3], bbox2[2])
+
         return where
     return None
