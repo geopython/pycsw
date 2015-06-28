@@ -89,6 +89,7 @@ def normalize(sresult, force_id_mask=False):
     zrport = re.search('<zr:port>(.*)</zr:port>', sresult)
     elapsed_time = re.search('elapsedTime="(.*)"', sresult)
     expires = re.search('expires="(.*?)"', sresult)
+    atom_updated = re.findall('<atom:updated>(.*)</atom:updated>', sresult)
 
     if version:
         sresult = sresult.replace(version.group(0), '<!-- PYCSW_VERSION -->')
@@ -119,6 +120,8 @@ def normalize(sresult, force_id_mask=False):
     if expires:
         sresult = sresult.replace(expires.group(0),
                                   'expires="PYCSW_EXPIRES"')
+    for au in atom_updated:
+        sresult = sresult.replace(au, 'PYCSW_TIMESTAMP')
 
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints
