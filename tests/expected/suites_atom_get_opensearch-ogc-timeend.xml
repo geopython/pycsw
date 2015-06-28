@@ -12,7 +12,7 @@
     <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db"/>
     <atom:title>Fuscé vitae ligulä</atom:title>
-    <atom:updated>2015-06-28T16:01:23Z</atom:updated>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:summary>Morbi ultriçes, dui suscipit vestibulum prètium, velit ante pretium tortor, egët tincidunt pede odio ac nulla.</atom:summary>
   </atom:entry>
 </atom:feed>
