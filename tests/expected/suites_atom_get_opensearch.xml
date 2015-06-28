@@ -7,7 +7,7 @@
   <os:startIndex>1</os:startIndex>
   <os:itemsPerPage>10</os:itemsPerPage>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category>Tourism--Greece</atom:category>
+    <atom:category term="Tourism--Greece"/>
     <atom:id>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</atom:id>
     <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f"/>
@@ -20,17 +20,14 @@
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd"/>
     <atom:summary>Proin sit amet justo. In justo. Aenean adipiscing nulla id tellus.</atom:summary>
     <georss:where>
-      <gml:Polygon srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-        <gml:exterior>
-          <gml:LinearRing>
-            <gml:posList>60.04 13.75 68.41 13.75 68.41 17.92 60.04 17.92 60.04 13.75</gml:posList>
-          </gml:LinearRing>
-        </gml:exterior>
-      </gml:Polygon>
+      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <gml:lowerCorner>60.04 13.75</gml:lowerCorner>
+        <gml:upperCorner>68.41 17.92</gml:upperCorner>
+      </gml:Envelope>
     </georss:where>
   </atom:entry>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category>Marine sediments</atom:category>
+    <atom:category term="Marine sediments"/>
     <atom:id>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</atom:id>
     <dc:identifier>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</dc:identifier>
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493"/>
@@ -38,14 +35,14 @@
     <atom:title>Maecenas enim</atom:title>
   </atom:entry>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category>Vegetation</atom:category>
+    <atom:category term="Vegetation"/>
     <atom:id>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</atom:id>
     <dc:identifier>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</dc:identifier>
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4"/>
     <atom:title>Ut facilisis justo ut lacus</atom:title>
   </atom:entry>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category>Hydrography--Dictionaries</atom:category>
+    <atom:category term="Hydrography--Dictionaries"/>
     <atom:id>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</atom:id>
     <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec"/>
@@ -59,43 +56,37 @@
     <atom:title>Vestibulum massa purus</atom:title>
   </atom:entry>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category>Physiography-Landforms</atom:category>
+    <atom:category term="Physiography-Landforms"/>
     <atom:id>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</atom:id>
     <dc:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</dc:identifier>
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357"/>
     <atom:summary>Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</atom:summary>
   </atom:entry>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category>Vegetation-Cropland</atom:category>
+    <atom:category term="Vegetation-Cropland"/>
     <atom:id>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</atom:id>
     <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63"/>
     <atom:summary>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</atom:summary>
     <atom:title>Mauris sed neque</atom:title>
     <georss:where>
-      <gml:Polygon srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-        <gml:exterior>
-          <gml:LinearRing>
-            <gml:posList>47.59 -4.1 51.22 -4.1 51.22 0.89 47.59 0.89 47.59 -4.1</gml:posList>
-          </gml:LinearRing>
-        </gml:exterior>
-      </gml:Polygon>
+      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <gml:lowerCorner>47.59 -4.1</gml:lowerCorner>
+        <gml:upperCorner>51.22 0.89</gml:upperCorner>
+      </gml:Envelope>
     </georss:where>
   </atom:entry>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category>Hydrography-Oceanographic</atom:category>
+    <atom:category term="Hydrography-Oceanographic"/>
     <atom:id>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</atom:id>
     <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
     <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc"/>
     <atom:title>Ñunç elementum</atom:title>
     <georss:where>
-      <gml:Polygon srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-        <gml:exterior>
-          <gml:LinearRing>
-            <gml:posList>44.79 -6.17 51.13 -6.17 51.13 -2.23 44.79 -2.23 44.79 -6.17</gml:posList>
-          </gml:LinearRing>
-        </gml:exterior>
-      </gml:Polygon>
+      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <gml:lowerCorner>44.79 -6.17</gml:lowerCorner>
+        <gml:upperCorner>51.13 -2.23</gml:upperCorner>
+      </gml:Envelope>
     </georss:where>
   </atom:entry>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">

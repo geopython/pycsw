@@ -149,8 +149,18 @@ class OpenSearch(object):
             etree.SubElement(node, util.nspath_eval('atom:title',
                        self.context.namespaces)).text = self.cfg.get('metadata:main',
                        'identification_title')
+            etree.SubElement(node, util.nspath_eval('atom:author',
+                       self.context.namespaces)).text = self.cfg.get('metadata:main',
+                       'provider_name')
+            etree.SubElement(node, util.nspath_eval('atom:link',
+                       self.context.namespaces), rel='search',
+                           type='application/opensearchdescription+xml',
+                           href='%smode=opensearch&service=CSW&version=3.0.0&request=GetCapabilities' % self.bind_url)
+
             #etree.SubElement(node, util.nspath_eval('atom:updated',
             #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
+
+            etree.SubElement(node, util.nspath_eval('os:Query', self.context.namespaces), role='request')
 
             etree.SubElement(node, util.nspath_eval('os:totalResults',
                         self.context.namespaces)).text = self.exml.xpath(
@@ -174,7 +184,7 @@ class OpenSearch(object):
             # Requirement-022
             node1 = etree.SubElement(node, 'Url')
             node1.set('type', 'application/xml')
-            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
+            node1.set('template', '%sservice=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
 
             # Requirement-023
             node1 = etree.SubElement(node, 'Url')
