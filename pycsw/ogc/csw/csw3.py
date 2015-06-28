@@ -832,11 +832,14 @@ class Csw3(object):
         if 'startposition' not in self.parent.kvp:
             self.parent.kvp['startposition'] = 1
 
-        if 'recordids' in self.parent.kvp:
+        if 'recordids' in self.parent.kvp and self.parent.kvp['recordids'] != '':
             # query repository
             LOGGER.debug('Querying repository with RECORD ids: %s.' % self.parent.kvp['recordids'])
             results = self.parent.repository.query_ids(self.parent.kvp['recordids'].split(','))
             matched = str(len(results))
+            if len(results) == 0:
+                return self.exceptionreport('NotFound', 'recordids',
+                'No records found for \'%s\'' % self.parent.kvp['recordids'])
         else:
             # query repository
             LOGGER.debug('Querying repository with constraint: %s,\
