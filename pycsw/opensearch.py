@@ -197,6 +197,9 @@ class OpenSearch(object):
             node1.set('height', '16')
             node1.text = 'http://pycsw.org/img/favicon.ico'
 
+            os_query = etree.SubElement(node, 'Query', role='example')
+            os_query.attrib[util.nspath_eval('geo:box', self.namespaces)] = '-180,-90,180,90'
+
             etree.SubElement(node, 'Developer').text = self.exml.xpath('//ows20:IndividualName', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, 'Contact').text = self.exml.xpath('//ows20:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, 'Attribution').text = self.exml.xpath('//ows20:ProviderName', namespaces=self.context.namespaces)[0].text
