@@ -63,9 +63,9 @@ def write_record(result, esn, context, url=None):
 
     # author
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Creator'])
-     
     if val:
-        etree.SubElement(node, util.nspath_eval('atom:author', NAMESPACES)).text = val
+        author = etree.SubElement(node, util.nspath_eval('atom:author', NAMESPACES))
+        etree.SubElement(author, util.nspath_eval('atom:name', NAMESPACES)).text = val
 
     # category
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Keywords'])
@@ -91,7 +91,22 @@ def write_record(result, esn, context, url=None):
 
     etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (url, util.getqattr(result, context.md_core_model['mappings']['pycsw:Identifier'])))
 
-    for qval in ['pycsw:PublicationDate', 'pycsw:AccessConstraints', 'pycsw:Source', 'pycsw:Abstract', 'pycsw:Title', 'pycsw:Modified']:
+    # atom:title
+    el = etree.SubElement(node, util.nspath_eval(XPATH_MAPPINGS['pycsw:Title'], NAMESPACES))
+    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Title'])
+    if val:
+        el.text =val
+
+    # atom:updated
+    el = etree.SubElement(node, util.nspath_eval(XPATH_MAPPINGS['pycsw:Modified'], NAMESPACES))
+    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Modified'])
+    if val:
+        el.text =val
+    else:
+        val = util.getqattr(result, context.md_core_model['mappings']['pycsw:InsertDate'])
+        el.text = val
+
+    for qval in ['pycsw:PublicationDate', 'pycsw:AccessConstraints', 'pycsw:Source', 'pycsw:Abstract']:
         val = util.getqattr(result, context.md_core_model['mappings'][qval])
         if val:
             etree.SubElement(node, util.nspath_eval(XPATH_MAPPINGS[qval], NAMESPACES)).text = val
