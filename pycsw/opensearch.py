@@ -149,16 +149,16 @@ class OpenSearch(object):
             etree.SubElement(node, util.nspath_eval('atom:title',
                        self.context.namespaces)).text = self.cfg.get('metadata:main',
                        'identification_title')
-            etree.SubElement(node, util.nspath_eval('atom:author',
-                       self.context.namespaces)).text = self.cfg.get('metadata:main',
+            author = etree.SubElement(node, util.nspath_eval('atom:author', self.context.namespaces))
+            etree.SubElement(author, util.nspath_eval('atom:name', self.context.namespaces)).text = self.cfg.get('metadata:main',
                        'provider_name')
             etree.SubElement(node, util.nspath_eval('atom:link',
                        self.context.namespaces), rel='search',
                            type='application/opensearchdescription+xml',
                            href='%smode=opensearch&service=CSW&version=3.0.0&request=GetCapabilities' % self.bind_url)
 
-            #etree.SubElement(node, util.nspath_eval('atom:updated',
-            #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
+            etree.SubElement(node, util.nspath_eval('atom:updated',
+                self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
 
             etree.SubElement(node, util.nspath_eval('os:Query', self.context.namespaces), role='request')
 
