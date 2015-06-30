@@ -28,8 +28,8 @@
 #
 # =================================================================
 
-from lxml import etree
-from pycsw import util
+from pycsw.core import util
+from pycsw.core.etree import etree
 
 NAMESPACE = 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/'
 NAMESPACES = {'dif': NAMESPACE}

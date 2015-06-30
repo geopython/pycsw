@@ -37,7 +37,7 @@ import getopt
 import glob
 import filecmp
 import re
-from pycsw.util import http_request
+from pycsw.core.util import http_request
 
 
 def plural(num):
@@ -87,6 +87,9 @@ def normalize(sresult, force_id_mask=False):
     timestamp4 = re.search('<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>', sresult)
     zrhost = re.search('<zr:host>(.*)</zr:host>', sresult)
     zrport = re.search('<zr:port>(.*)</zr:port>', sresult)
+    elapsed_time = re.search('elapsedTime="(.*)"', sresult)
+    expires = re.search('expires="(.*?)"', sresult)
+    atom_updated = re.findall('<atom:updated>(.*)</atom:updated>', sresult)
 
     if version:
         sresult = sresult.replace(version.group(0), '<!-- PYCSW_VERSION -->')
@@ -111,6 +114,14 @@ def normalize(sresult, force_id_mask=False):
     if zrhost:
         sresult = sresult.replace(zrhost.group(0),
                                   '<zr:host>PYCSW_HOST</zr:host>')
+    if elapsed_time:
+        sresult = sresult.replace(elapsed_time.group(0),
+                                  'elapsedTime="PYCSW_ELAPSED_TIME"')
+    if expires:
+        sresult = sresult.replace(expires.group(0),
+                                  'expires="PYCSW_EXPIRES"')
+    for au in atom_updated:
+        sresult = sresult.replace(au, 'PYCSW_TIMESTAMP')
 
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints
@@ -273,7 +284,10 @@ for testsuite in TESTSUITES_LIST:
                             expected = 'expected%s%s' % (os.sep, outfile)
                             print '\n test %s:%s' % (testfile, row[0])
 
-                            result = http_request('GET', request)
+                            try:
+                                result = http_request('GET', request)
+                            except Exception as err:
+                                result = err.read()
 
                             status = get_validity(expected, result, outfile,
                                                   force_id_mask)
@@ -313,7 +327,10 @@ for testsuite in TESTSUITES_LIST:
                         url2 = '%s?%s' % (URL, configkvp)
 
                         # invoke request
-                        result = http_request('POST', url2, request)
+                        try:
+                            result = http_request('POST', url2, request)
+                        except Exception as err:
+                            result = err.read()
 
                         status = get_validity(expected, result, outfile,
                                               force_id_mask)

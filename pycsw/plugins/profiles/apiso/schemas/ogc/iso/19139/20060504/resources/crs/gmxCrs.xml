@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CT_CrsCatalogue xmlns="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmx ../../gmx/gmx.xsd http://www.isotc211.org/2005/gmd ../../gmd/gmd.xsd http://www.isotc211.org/2005/gco ../../gco/gco.xsd http://www.w3.org/1999/xlink ../../../../../../../../pycsw/schemas/w3c/1999/xlink.xsd">
+<CT_CrsCatalogue xmlns="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmx ../../gmx/gmx.xsd http://www.isotc211.org/2005/gmd ../../gmd/gmd.xsd http://www.isotc211.org/2005/gco ../../gco/gco.xsd http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd">
 	<!--=====Catalogue description=====-->
 	<name><gco:CharacterString>gmxCrs</gco:CharacterString></name>
 	<scope><gco:CharacterString>CRS parameters dictionary</gco:CharacterString></scope>

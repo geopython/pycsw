@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+   targetNamespace="http://www.opengis.net/cat/csw/3.0"
+   xmlns:csw30="http://www.opengis.net/cat/csw/3.0"
+   xmlns:fes="http://www.opengis.net/fes/2.0"
+   xmlns:ows="http://www.opengis.net/ows/2.0"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified"
+   version="3.0"
+   id="cswGetRecordById">
+   <xsd:annotation>
+      <xsd:appinfo>
+         <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">http://schemas.opengis.net/csw/3.0/cswGetRecordsById.xsd</dc:identifier>
+      </xsd:appinfo>
+      <xsd:documentation xml:lang="en">
+         This schema defines the request messages for the CSW 3.0
+         GetRecordById  operation.
+      </xsd:documentation>
+   </xsd:annotation>
+   <xsd:include schemaLocation="cswCommon.xsd"/>
+   <xsd:include schemaLocation="cswGetRecords.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/ows/2.0"
+               schemaLocation="../../ows/2.0/owsAll.xsd"/>
+   <!-- =================================================================== -->
+   <!-- REQUEST                                                             -->
+   <!-- =================================================================== -->
+   <xsd:element name="GetRecordById"
+                type="csw30:GetRecordByIdType" id="GetRecordById"/>
+   <xsd:complexType name="GetRecordByIdType" id="GetRecordByIdType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            Convenience operation to retrieve default record representations 
+            by identifier.
+            Id - object identifier (a URI) that provides a reference to a 
+                 catalogue item (or a result set if the catalogue supports 
+                 persistent result sets).
+            ElementSetName - one of "brief, "summary", or "full"
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="csw30:RequestBaseType">
+            <xsd:sequence>
+               <xsd:element name="Id" type="xsd:anyURI"/>
+               <xsd:element ref="csw30:ElementSetName" minOccurs="0"/>
+            </xsd:sequence>
+            <xsd:attribute name="outputFormat" type="xsd:string"
+                           use="optional" default="application/xml"/>
+            <xsd:attribute name="outputSchema" type="xsd:anyURI"
+                           use="optional"/>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <!-- =================================================================== -->
+   <!-- RESPONSE                                                            -->
+   <!-- The response depends on the values of the outputFormat and output   -->
+   <!-- schema parameters.                                                  -->
+   <!-- =================================================================== -->
+</xsd:schema>

@@ -33,7 +33,7 @@ from django.db import connection
 from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
-from pycsw import util
+from pycsw.core import util
 from geonode.base.models import ResourceBase
 
 class GeoNodeRepository(object):

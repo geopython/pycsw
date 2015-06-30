@@ -31,8 +31,8 @@
 # =================================================================
 
 import os
-from lxml import etree
-from pycsw import config, util
+from pycsw.core import config, util
+from pycsw.core.etree import etree
 from pycsw.plugins.profiles import profile
 
 CODELIST = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml'
@@ -362,9 +362,10 @@ class APISO(profile.Profile):
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace,
         parentSchema='gmd.xsd')
 
-        schema = etree.parse(os.path.join(self.context.pycsw_home, 'plugins',
-                 'profiles', 'apiso', 'schemas', 'ogc', 'iso', '19139',
-                 '20060504', 'srv', 'serviceMetadata.xsd')).getroot()
+        schema = etree.parse(os.path.join(self.context.pycsw_home,
+                 'plugins', 'profiles', 'apiso', 'schemas', 'ogc',
+                 'iso', '19139', '20060504', 'srv',
+                 'serviceMetadata.xsd')).getroot()
 
         node2.append(schema)
 
