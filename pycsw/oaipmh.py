@@ -29,8 +29,9 @@
 # =================================================================
 
 import logging
-from lxml import etree
-from pycsw import fes, util
+from pycsw.core import util
+from pycsw.core.etree import etree
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -187,7 +188,7 @@ class OAIPMH(object):
             return node
 
         if util.xmltag_split(response.tag) == 'ExceptionReport':
-            etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = response.xpath('//ows:ExceptionText', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = response.xpath('//ows:ExceptionText|//ows20:ExceptionText', namespaces=self.context.namespaces)[0].text
             return node
 
         verb = kvp.pop('verb')

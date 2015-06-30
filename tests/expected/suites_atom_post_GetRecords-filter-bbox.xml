@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:GetRecordsResponse xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:gml="http://www.opengis.net/gml" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ows="http://www.opengis.net/ows" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:ogc="http://www.opengis.net/ogc" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+<csw:GetRecordsResponse xmlns:fes20="http://www.opengis.net/fes/2.0" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:dct="http://purl.org/dc/terms/" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ows="http://www.opengis.net/ows" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:ogc="http://www.opengis.net/ogc" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" recordSchema="http://www.w3.org/2005/Atom" elementSet="brief">
     <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-      <atom:category>Vegetation-Cropland</atom:category>
+      <atom:category term="Vegetation-Cropland"/>
       <atom:id>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</atom:id>
+      <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
       <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63"/>
-      <atom:summary>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</atom:summary>
       <atom:title>Mauris sed neque</atom:title>
+      <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+      <atom:summary>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</atom:summary>
       <georss:where>
-        <gml:Polygon srsName="urn:x-ogc:def:crs:EPSG:6.11:4326">
-          <gml:exterior>
-            <gml:LinearRing>
-              <gml:posList>47.59 -4.1 51.22 -4.1 51.22 0.89 47.59 0.89 47.59 -4.1</gml:posList>
-            </gml:LinearRing>
-          </gml:exterior>
-        </gml:Polygon>
+        <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:lowerCorner>47.59 -4.1</gml:lowerCorner>
+          <gml:upperCorner>51.22 0.89</gml:upperCorner>
+        </gml:Envelope>
       </georss:where>
     </atom:entry>
     <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-      <atom:category>Hydrography-Oceanographic</atom:category>
+      <atom:category term="Hydrography-Oceanographic"/>
       <atom:id>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</atom:id>
+      <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
       <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc"/>
       <atom:title>Ñunç elementum</atom:title>
+      <atom:updated>PYCSW_TIMESTAMP</atom:updated>
       <georss:where>
-        <gml:Polygon srsName="urn:x-ogc:def:crs:EPSG:6.11:4326">
-          <gml:exterior>
-            <gml:LinearRing>
-              <gml:posList>44.79 -6.17 51.13 -6.17 51.13 -2.23 44.79 -2.23 44.79 -6.17</gml:posList>
-            </gml:LinearRing>
-          </gml:exterior>
-        </gml:Polygon>
+        <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:lowerCorner>44.79 -6.17</gml:lowerCorner>
+          <gml:upperCorner>51.13 -2.23</gml:upperCorner>
+        </gml:Envelope>
       </georss:where>
     </atom:entry>
   </csw:SearchResults>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+   targetNamespace="http://www.opengis.net/cat/csw/3.0"
+   xmlns:csw30="http://www.opengis.net/cat/csw/3.0"
+   xmlns:fes="http://www.opengis.net/fes/2.0"
+   xmlns:ows="http://www.opengis.net/ows/2.0"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified"
+   version="3.0"
+   id="cswGetCapabilities">
+   <xsd:annotation>
+      <xsd:appinfo>
+         <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">http://schemas.opengis.net/csw/3.0/cswGetCapabilities.xsd</dc:identifier>
+      </xsd:appinfo>
+      <xsd:documentation xml:lang="en">
+         This schema defines the request and response messages
+         for the CSW 3.0 GetCapabilities operation.
+      </xsd:documentation>
+   </xsd:annotation>
+   <xsd:include schemaLocation="cswCommon.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/ows/2.0"
+      schemaLocation="../../ows/2.0/owsAll.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/fes/2.0"
+      schemaLocation="../../filter/2.0/filterAll.xsd"/>
+   <!-- =================================================================== -->
+   <!-- REQUEST                                                             -->
+   <!-- =================================================================== -->
+   <xsd:element name="GetCapabilities"
+                type="csw30:GetCapabilitiesType" id="GetCapabilities"/>
+   <xsd:complexType name="GetCapabilitiesType" id="GetCapabilitiesType">
+      <xsd:annotation>
+         <xsd:documentation>
+            Request for a description of service capabilities. See
+            OGC 06-121r9 for more information.
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="ows:GetCapabilitiesType">
+            <xsd:attribute name="service" type="ows:ServiceType"
+                           use="optional" default="CSW">
+               <xsd:annotation>
+                  <xsd:documentation>
+                     OGC service type identifier (CSW).
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <!-- =================================================================== -->
+   <!-- RESPONSE                                                            -->
+   <!-- =================================================================== -->
+   <xsd:element name="Capabilities"
+                type="csw30:CapabilitiesType" id="Capabilities"/>
+   <xsd:complexType name="CapabilitiesType" id="CapabilitiesType">
+      <xsd:annotation>
+         <xsd:documentation>
+            This type extends ows:CapabilitiesBaseType defined in OGC 06-121r9
+            to include information about supported OGC filter components. A
+            profile may extend this type to describe additional capabilities.
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="ows:CapabilitiesBaseType">
+            <xsd:sequence>
+               <xsd:annotation>
+                  <xsd:documentation>
+                     If sections parameter not specified, then
+                     Filter_Capabilities is mandatory. On full
+                     getCapabilities request, then all capabilities
+                     should be present. Document this in the specification,
+                     use annotation on minOccurs to make this point.
+                  </xsd:documentation>
+               </xsd:annotation>
+               <xsd:element ref="fes:Filter_Capabilities" minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+</xsd:schema>

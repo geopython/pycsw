@@ -35,7 +35,7 @@ import getopt
 import logging
 import sys
 
-from pycsw import admin, config
+from pycsw.core import admin, config
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 

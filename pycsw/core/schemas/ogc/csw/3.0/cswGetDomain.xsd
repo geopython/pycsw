@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+   targetNamespace="http://www.opengis.net/cat/csw/3.0"
+   xmlns:csw30="http://www.opengis.net/cat/csw/3.0"
+   xmlns:gml="http://www.opengis.net/gml/3.2"
+   xmlns:fes="http://www.opengis.net/fes/2.0"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified"
+   version="3.0"
+   id="cswGetDomain">
+   <xsd:annotation>
+      <xsd:appinfo>
+         <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">http://schemas.opengis.net/csw/3.0/cswGetDomain.xsd</dc:identifier>
+      </xsd:appinfo>
+      <xsd:documentation xml:lang="en">
+         This schema defines the request and response messages for the CSW 3.0
+         GetDomain operation.
+      </xsd:documentation>
+   </xsd:annotation>
+   <xsd:include schemaLocation="cswCommon.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/gml/3.2"
+      schemaLocation="../../gml/3.2.1/gml.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/fes/2.0"
+      schemaLocation="../../filter/2.0/filterAll.xsd"/>
+   <!-- =================================================================== -->
+   <!-- REQUEST                                                             -->
+   <!-- =================================================================== -->
+   <xsd:element name="GetDomain" type="csw30:GetDomainType" id="GetDomain"/>
+   <xsd:complexType name="GetDomainType" id="GetDomainType">
+      <xsd:complexContent>
+         <xsd:extension base="csw30:RequestBaseType">
+            <xsd:sequence maxOccurs="unbounded">
+               <xsd:choice>
+                  <xsd:sequence>
+                     <xsd:element name="ValueReference">
+                        <xsd:complexType>
+                           <xsd:simpleContent>
+                              <xsd:extension base="xsd:string">
+                                 <xsd:attribute name="resultType"
+                                                type="csw30:ResultTypeType"
+                                                use="optional"
+                                                default="available"/>
+                              </xsd:extension>
+                           </xsd:simpleContent>
+                        </xsd:complexType>
+                     </xsd:element>
+                     <xsd:element ref="fes:Filter" minOccurs="0"/>
+                  </xsd:sequence>
+                  <xsd:element name="ParameterName" type="xsd:string"/>
+               </xsd:choice>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:simpleType name="ResultTypeType">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="possible">
+            <xsd:annotation>
+               <xsd:documentation>
+                  Returns the set of supported possible values
+                  for the specified data component.
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="available">
+            <xsd:annotation>
+               <xsd:documentation>
+                  Returns the set of available values for the
+                  specified data component.  This is typically
+                  a subset of the list of possible values.
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <!-- =================================================================== -->
+   <!-- RESPONSE                                                            -->
+   <!-- =================================================================== -->
+   <xsd:element name="GetDomainResponse"
+                type="csw30:GetDomainResponseType" id="GetDomainResponse"/>
+   <xsd:complexType name="GetDomainResponseType" id="GetDomainResponseType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            Returns the actual values for some property. In general this is
+            a subset of the value domain (that is, set of permissible values),
+            although in some cases these may be the same.
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="DomainValues"
+                      type="csw30:DomainValuesType" maxOccurs="unbounded"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="DomainValuesType" id="DomainValuesType">
+      <xsd:sequence>
+         <xsd:choice>
+            <xsd:element name="ValueReference" type="xsd:string"/>
+            <xsd:element name="ParameterName" type="xsd:anyURI"/>
+         </xsd:choice>
+         <xsd:choice minOccurs="0">
+            <xsd:element name="ListOfValues"
+                         type="csw30:ListOfValuesType"/>
+            <xsd:element name="ConceptualScheme"
+                         type="csw30:ConceptualSchemeType"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="RangeOfValues"
+                         type="csw30:RangeOfValuesType"/>
+         </xsd:choice>
+      </xsd:sequence>
+      <xsd:attribute name="type" type="xsd:QName" use="required"/>
+      <xsd:attribute name="resultType"
+                     type="csw30:ResultTypeType" use="required"/>
+        
+   </xsd:complexType>
+   <xsd:complexType name="ListOfValuesType" id="ListOfValuesType">
+      <xsd:sequence>
+         <xsd:element name="Value" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="xsd:anyType">
+                     <xsd:attribute name="isDefault" type="xsd:boolean"
+                                    use="optional" default="false"/>
+                     <xsd:attribute name="count" type="xsd:nonNegativeInteger"
+                                    use="optional"/>
+                     <xsd:attribute name="uom" type="gml:UomIdentifier"
+                                    use="optional"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ConceptualSchemeType" id="ConceptualSchemeType">
+      <xsd:sequence>
+         <xsd:element name="Name" type="xsd:string"/>
+         <xsd:element name="Document" type="xsd:anyURI"/>
+         <xsd:element name="Authority" type="xsd:anyURI"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RangeOfValuesType" id="RangeOfValuesType">
+      <xsd:sequence>
+         <xsd:element name="MinValue" type="xsd:anyType" minOccurs="0"/>
+         <xsd:element name="MaxValue" type="xsd:anyType" minOccurs="0"/>
+      </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>

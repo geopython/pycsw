@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+   targetNamespace="http://www.opengis.net/cat/csw/3.0"
+   xmlns:csw30="http://www.opengis.net/cat/csw/3.0"
+   xmlns:fes="http://www.opengis.net/fes/2.0"
+   xmlns:ows="http://www.opengis.net/ows/2.0"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified"
+   version="3.0"
+   id="cswCommon">
+   <xsd:annotation>
+      <xsd:appinfo>
+         <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">http://schemas.opengis.net/csw/3.0/cswCommons.xsd</dc:identifier>
+      </xsd:appinfo>
+      <xsd:documentation xml:lang="en">
+         This schema defines commen elements used in the CSW schemas.
+      </xsd:documentation>
+   </xsd:annotation>
+   <xsd:include schemaLocation="record.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/ows/2.0"
+        schemaLocation="../../ows/2.0/owsAll.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/fes/2.0"
+        schemaLocation="../../filter/2.0/filterAll.xsd"/>
+   <!-- ==================================================================== -->
+   <!-- REQUEST BASE TYPE                                                  -->
+   <!-- ==================================================================== -->
+   <xsd:complexType name="RequestBaseType" abstract="true" id="RequestBaseType">
+      <xsd:annotation>
+         <xsd:documentation>
+            Base type for all request messages except GetCapabilities.
+            The attributes identify the relevant service type and version.
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:attribute name="service" type="ows:ServiceType"
+                     use="optional" default="CSW"/>
+      <xsd:attribute name="version" type="ows:VersionType"
+                     use="optional" default="3.0.0"/>
+   </xsd:complexType>
+   <!-- ==================================================================== -->
+   <!-- ACKNOWLEDGEMENT                                                    -->
+   <!-- ==================================================================== -->
+   <xsd:element name="Acknowledgement"
+                type="csw30:AcknowledgementType" id="Acknowledgement"/>
+   <xsd:complexType name="AcknowledgementType" id="AcknowledgementType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            This is a general acknowledgement response message for all requests 
+            that may be processed in an asynchronous manner.
+            EchoedRequest - Echoes the submitted request message
+            RequestId     - identifier for polling purposes (if no response 
+                            handler is available, or the URL scheme is
+                            unsupported)
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="EchoedRequest" type="csw30:EchoedRequestType"/>
+         <xsd:element name="RequestId" type="xsd:anyURI" minOccurs="0"/>
+      </xsd:sequence>
+      <xsd:attribute name="timeStamp" type="xsd:dateTime" use="required"/>
+   </xsd:complexType>
+   <xsd:complexType name="EchoedRequestType" id="EchoedRequestType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            Includes a copy of the request message body.
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:any namespace="##any" processContents="lax"/>
+      </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>

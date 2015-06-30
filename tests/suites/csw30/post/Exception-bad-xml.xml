@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw30:GetCapabilities service="CSW" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/csw/3.0/cswAll.xsd"> 
+   <ows20:AcceptVersions>
+      <ows20:Version>3.0.0</ows20:Version>
+   </ows20:AcceptVersions>
+   <ows20:AcceptFormats>
+      <ows20:OutputFormat>application/xml</ows20:OutputFormat>
+   </ows20:AcceptFormats>
+</csw30:GetCapabilities-bad>
