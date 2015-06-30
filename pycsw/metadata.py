@@ -220,10 +220,17 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
         except Exception as err:  # this is a CSW, but server rejects query
             raise RuntimeError(md.response)
         for k, v in md.records.iteritems():
-            if csw_typenames == 'gmd:MD_Metadata':
-                recobjs.append(_parse_iso(context, repos, etree.fromstring(v.xml)))
-            else:
-                recobjs.append(_parse_dc(context, repos, etree.fromstring(v.xml)))
+            # try to parse metadata
+            try:
+                LOGGER.debug('Parsing metadata record: %s', v.xml)
+                if csw_typenames == 'gmd:MD_Metadata':
+                    recobjs.append(_parse_iso(context, repos,
+                                              etree.fromstring(v.xml)))
+                else:
+                    recobjs.append(_parse_dc(context, repos,
+                                             etree.fromstring(v.xml)))
+            except Exception as err:  # parsing failed for some reason
+                LOGGER.warning('Metadata parsing failed %s', err)
 
     return recobjs
 
