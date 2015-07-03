@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<OpenSearchDescription xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:time="http://a9.com/-/opensearch/extensions/time/1.0/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns="http://a9.com/-/spec/opensearch/1.1/">
+<OpenSearchDescription xmlns:time="http://a9.com/-/opensearch/extensions/time/1.0/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <ShortName>pycsw Geospatial Catalogue</ShortName>
   <LongName>pycsw Geospatial Catalogue</LongName>
   <Description>pycsw is an OGC CSW server implementation written in Python</Description>
