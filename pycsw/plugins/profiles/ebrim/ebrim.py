@@ -41,6 +41,7 @@ class EBRIM(profile.Profile):
         self.context = context
 
         self.namespaces = {
+            'ebrim': 'http://www.opengis.net/cat/wrs/1.0',
             'rim': 'urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0',
             'wrs': 'http://www.opengis.net/cat/wrs/1.0'
         }
