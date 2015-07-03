@@ -11,10 +11,10 @@ install:
   - pip install -r ./requirements-dev.txt
   - python ./setup.py -q install
 
-before_script:
-  - sudo add-apt-repository ppa:gcpp-kalxas/ppa-tzotsos -y
-  - sudo apt-get update -q
-  - sudo apt-get install -y libxml2-dev
+#before_script:
+#  - sudo add-apt-repository ppa:gcpp-kalxas/ppa-tzotsos -y
+#  - sudo apt-get update -q
+#  - sudo apt-get install -y libxml2-dev
 #  - paver start
 
 script:
