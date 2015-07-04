@@ -18,6 +18,7 @@ before_script:
 #  - paver start
 
 script:
+  - python -c 'from lxml import etree;print etree.__version__;print etree.LIBXML_VERSION'
   - paver test
 
 after_script:
