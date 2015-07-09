@@ -226,7 +226,7 @@ class Csw(object):
             (self.environ['HTTP_HOST'], self.environ['REQUEST_URI'])
             LOGGER.debug('Request type: GET.  Request:\n%s\n', self.request)
             for key in cgifs.keys():
-                self.kvp[key.lower()] = cgifs[key].value
+                self.kvp[key] = cgifs[key].value
 
         return self.dispatch()
 
@@ -279,15 +279,8 @@ class Csw(object):
             kvp = {}
 
             for pairstr in pairs:
-                pair = pairstr.split("=")
-                pair[0] = pair[0].lower()
-                pair = [unquote(a) for a in pair]
-
-                if len(pair) is 1:
-                    kvp[pair[0]] = ""
-                else:
-                    kvp[pair[0]] = pair[1]
-
+                pair = [unquote(a) for a in pairstr.split("=")]
+                kvp[pair[0]] = pair[1] if len(pair) > 1 else ""
             self.kvp = kvp
 
         return self.dispatch()
@@ -316,6 +309,7 @@ class Csw(object):
         ''' Handle incoming HTTP request '''
 
         if self.requesttype == 'GET':
+            self.kvp = self.normalize_kvp(self.kvp)
             if (('version' in self.kvp and self.kvp['version'] == '2.0.2') or
                 ('acceptversions' in self.kvp and '2.0.2' in self.kvp['acceptversions'])):
                 self.request_version = '2.0.2'
@@ -826,3 +820,22 @@ class Csw(object):
                     LOGGER.debug('FTP sent successfully.')
                 except Exception as err:
                     LOGGER.debug('Error processing FTP: %s.' % str(err))
+
+    @staticmethod
+    def normalize_kvp(kvp):
+        """Normalize Key Value Pairs.
+
+        This method will transform all keys to lowercase and leave values
+        unchanged, as specified in the CSW standard (see for example note
+        C on Table 62 - KVP Encoding for DescribeRecord operation request
+        of the CSW standard version 2.0.2)
+
+        :arg kvp: a mapping with Key Value Pairs
+        :type kvp: dict
+        :returns: A new dictionary with normalized parameters
+        """
+
+        result = dict()
+        for name, value in kvp.iteritems():
+            result[name.lower()] = value
+        return result
