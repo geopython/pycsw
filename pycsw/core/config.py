@@ -570,5 +570,8 @@ class StaticContext(object):
         }
 
         for k, val in defaults.iteritems():
-            self.model['csw']['typenames']['csw:Record']['queryables']['SupportedDublinCoreQueryables'][k] = \
-                {'dbcol': mappings['mappings'][val]}
+            for model, params in self.models.iteritems():
+                queryables = params['typenames']['csw:Record']['queryables']
+                queryables['SupportedDublinCoreQueryables'][k] = {
+                    'dbcol': mappings['mappings'][val]
+                }
