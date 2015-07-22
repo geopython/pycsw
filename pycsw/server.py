@@ -489,7 +489,7 @@ class Csw(object):
 
             for k in basic_options:
                 if k not in self.kvp:
-                    if (k in ['version', 'acceptversion'] and 'request' in self.kvp and
+                    if (k in ['version', 'acceptversions'] and 'request' in self.kvp and
                     self.kvp['request'] == 'GetCapabilities'):
                         pass
                     else:
