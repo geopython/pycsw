@@ -36,7 +36,7 @@
 # WSGIDaemonProcess host1 home=/var/www/pycsw processes=2
 # WSGIProcessGroup host1
 #
-# WSGIScriptAlias /pycsw-wsgi /var/www/pycsw/csw.wsgi
+# WSGIScriptAlias /pycsw-wsgi /var/www/pycsw/wsgi.py
 #
 # <Directory /var/www/pycsw>
 #  Order deny,allow
@@ -45,7 +45,7 @@
 #
 # or invoke this script from the command line:
 #
-# $ python ./csw.wsgi
+# $ python ./pycsw/wsgi.py
 #
 # which will publish pycsw to:
 #
@@ -55,11 +55,12 @@
 from StringIO import StringIO
 import os
 import sys
-
-app_path = os.path.dirname(__file__)
-sys.path.append(app_path)
+import urlparse
 
 from pycsw import server
+
+
+PYCSW_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def application(env, start_response):
@@ -72,15 +73,15 @@ def application(env, start_response):
     if env['QUERY_STRING'].lower().find('config') != -1:
         for kvp in env['QUERY_STRING'].split('&'):
             if kvp.lower().find('config') != -1:
-                config = kvp.split('=')[1]
+                config = urlparse.unquote(kvp.split('=')[1])
 
     if not os.path.isabs(config):
-        config = os.path.join(app_path, config)
+        config = os.path.join(PYCSW_ROOT, config)
 
     if 'HTTP_HOST' in env and ':' in env['HTTP_HOST']:
         env['HTTP_HOST'] = env['HTTP_HOST'].split(':')[0]
 
-    env['local.app_root'] = app_path
+    env['local.app_root'] = PYCSW_ROOT
 
     csw = server.Csw(config, env)
 
