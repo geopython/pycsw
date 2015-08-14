@@ -205,31 +205,6 @@ class Csw(object):
         else:
             return path
 
-    def dispatch_cgi(self):
-        ''' CGI handler '''
-
-        if hasattr(self,'response'):
-            return self._write_response()
-
-        LOGGER.debug('CGI mode detected')
-
-        cgifs = cgi.FieldStorage(keep_blank_values=1)
-
-        if cgifs.file:  # it's a POST request
-            self.request = cgifs.file.read()
-            self.requesttype = 'POST'
-            LOGGER.debug('Request type: POST.  Request:\n%s\n', self.request)
-
-        else:  # it's a GET request
-            self.requesttype = 'GET'
-            self.request = 'http://%s%s' % \
-            (self.environ['HTTP_HOST'], self.environ['REQUEST_URI'])
-            LOGGER.debug('Request type: GET.  Request:\n%s\n', self.request)
-            for key in cgifs.keys():
-                self.kvp[key] = cgifs[key].value
-
-        return self.dispatch()
-
     def dispatch_wsgi(self):
         ''' WSGI handler '''
 
