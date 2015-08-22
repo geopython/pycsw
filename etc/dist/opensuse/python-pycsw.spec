@@ -154,7 +154,7 @@ contact_role=pointOfContact
 
 [repository]
 # sqlite
-database=sqlite:////srv/www/htdocs/pycsw/tests/suites/cite/data/records.db
+database=sqlite:////srv/www/htdocs/pycsw/tests/suites/cite/data/cite.db
 # postgres
 #database=postgresql://username:password@localhost/pycsw
 # mysql
