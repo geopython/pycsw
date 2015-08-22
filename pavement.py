@@ -34,7 +34,7 @@ import os
 import sys
 import time
 from paver.easy import task, cmdopts, needs, \
-    pushd, sh, call_task, path, info
+    pushd, sh, call_task, path, info, BuildFailure
 
 DOCS = 'docs'
 STAGE_DIR = '/tmp'
@@ -154,7 +154,6 @@ def setup_testdata():
         'manager': False
     }
 
-    # remove CITE database so we can build fresh
     for suite in test_database_parameters.keys():
         dbfile = 'tests/suites/%s/data/records.db' % suite
         if os.path.isfile(dbfile):
@@ -185,6 +184,7 @@ def test(options):
     db_setup = False
     db_conn = None
     cfg_files = []
+    status = 0
 
     url = options.get('url', None)
     suites = options.get('suites', None)
@@ -269,7 +269,12 @@ def test(options):
             raise Exception('Invalid database specified')
 
     with pushd('tests'):
-        sh(cmd)
+        try:
+            sh(cmd)
+        except BuildFailure as err:
+            status = 1
+            # stop pycsw instance
+            call_task('stop')
 
     if db_setup:  # tearDown
         for cfg in cfg_files:
@@ -278,6 +283,8 @@ def test(options):
             sh("psql -c \"select pg_terminate_backend(procpid) from pg_stat_activity where datname='%s';\" -U %s" % (temp_db, user))
             sh('dropdb %s -U %s' % (temp_db, user))
             sh('unset PGPASSWORD')
+
+    sys.exit(status)
 
 
 @task
@@ -300,7 +307,6 @@ def stop():
 ])
 def reset(options):
     """Return codebase to pristine state"""
-    sh('git checkout tests/suites/cite/data/records.db')
 
     force = options.get('force')
     if force:
