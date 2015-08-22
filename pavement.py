@@ -273,8 +273,8 @@ def test(options):
             sh(cmd)
         except BuildFailure as err:
             status = 1
-            # stop pycsw instance
-            call_task('stop')
+        # stop pycsw instance
+        call_task('stop')
 
     if db_setup:  # tearDown
         for cfg in cfg_files:
