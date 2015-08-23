@@ -89,7 +89,7 @@ mkdir -p %{buildroot}%{_sysconfdir}/apache2/conf.d
 #mv data %{buildroot}/srv/www/htdocs/pycsw/
 mv tests %{buildroot}/srv/www/htdocs/pycsw/
 mv csw.py %{buildroot}/srv/www/htdocs/pycsw/
-mv csw.wsgi %{buildroot}/srv/www/htdocs/pycsw/
+mv pycsw/wsgi.py %{buildroot}/srv/www/htdocs/pycsw/
 mv COMMITTERS.txt %{buildroot}/srv/www/htdocs/pycsw/
 mv default-sample.cfg %{buildroot}/srv/www/htdocs/pycsw/
 mv HISTORY.txt %{buildroot}/srv/www/htdocs/pycsw/

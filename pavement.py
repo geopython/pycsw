@@ -290,7 +290,7 @@ def test(options):
 @task
 def start(options):
     """Start local WSGI server instance"""
-    sh('python csw.wsgi 8000 &')
+    sh('python pycsw/wsgi.py 8000 &')
     time.sleep(10)
 
 
@@ -298,7 +298,7 @@ def start(options):
 def stop():
     """Stop local WSGI server instance"""
 
-    kill_process('python', 'csw.wsgi')
+    kill_process('python', 'pycsw/wsgi.py')
 
 
 @task
