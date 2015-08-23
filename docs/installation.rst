@@ -45,7 +45,7 @@ The 4 minute install:
   # - server.home
   # - repository.database
   # set server.url to http://localhost:8000/
-  $ python csw.wsgi
+  $ python pycsw/wsgi.py
   $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
 
 
@@ -80,7 +80,9 @@ The Clean and Proper Way
   $ python setup.py build
   $ python setup.py install
 
-At this point, pycsw is installed as a library and requires a CGI ``csw.py`` or WSGI ``csw.wsgi`` script to be served into your web server environment (see below for WSGI configuration/deployment).
+At this point, pycsw is installed as a library and requires a CGI ``csw.py``
+or WSGI ``pycsw/wsgi.py`` script to be served into your web server environment
+(see below for WSGI configuration/deployment).
 
 .. _pypi:
 
@@ -165,7 +167,8 @@ By default, ``default.cfg`` is at the root of the pycsw install.  If pycsw is se
 Running on WSGI
 ---------------
 
-pycsw supports the `Web Server Gateway Interface`_ (WSGI).  To run pycsw in WSGI mode, use ``csw.wsgi`` in your WSGI server environment.
+pycsw supports the `Web Server Gateway Interface`_ (WSGI).  To run pycsw in
+WSGI mode, use ``pycsw/wsgi.py`` in your WSGI server environment.
 
 .. note::
 
@@ -179,7 +182,7 @@ Below is an example of configuring with Apache:
 
   WSGIDaemonProcess host1 home=/var/www/pycsw processes=2
   WSGIProcessGroup host1
-  WSGIScriptAlias /pycsw-wsgi /var/www/pycsw/csw.wsgi
+  WSGIScriptAlias /pycsw-wsgi /var/www/pycsw/wsgi.py
   <Directory /var/www/pycsw>
     Order deny,allow
     Allow from all
@@ -190,7 +193,7 @@ or use the `WSGI reference implementation`_:
 
 .. code-block:: bash
 
-  $ python ./csw.wsgi
+  $ python ./pycsw/wsgi.py
   Serving on port 8000...
 
 which will publish pycsw to ``http://localhost:8000/``
