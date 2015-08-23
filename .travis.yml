@@ -18,7 +18,8 @@ before_script:
 #  - paver start
 
 script:
-  - paver test
+  - paver test --mode=wsgi
+  - paver test --mode=cgi
 
 after_script:
   - paver stop
