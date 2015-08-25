@@ -11,7 +11,7 @@ tests/index.html
 tests/results
 
 # test configurations
-./default.cfg
+default.cfg
 
 # test repositories
 data
