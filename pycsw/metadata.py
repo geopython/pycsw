@@ -945,6 +945,13 @@ def _parse_iso(context, repos, exml):
 
         _set(context, recobj, 'pycsw:CouplingType', md.serviceidentification.couplingtype)
    
+    service_types = []
+    for smd in md.identificationinfo:
+        if smd.identtype == 'service' and smd.type is not None:
+            service_types.append(smd.type)
+
+    _set(context, recobj, 'pycsw:ServiceType', ','.join(service_types))
+
         #if len(md.serviceidentification.operateson) > 0: 
         #    _set(context, recobj, 'pycsw:operateson = VARCHAR(32), 
         #_set(context, recobj, 'pycsw:operation VARCHAR(32), 
