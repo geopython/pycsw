@@ -51,24 +51,22 @@ def plural(num):
 def get_validity(sexpected, sresult, soutfile, force_id_mask=False):
     """Decipher whether the output passes, fails, or initializes"""
     if not os.path.exists(sexpected):  # create expected file
-        expectedfile = open(sexpected, 'w')
-        expectedfile.write(normalize(sresult, force_id_mask))
-        expectedfile.close()
+        with open(sexpected, 'w') as f:
+            f.write(normalize(sresult, force_id_mask))
         sstatus = 0
     else:  # compare result with expected
         if not os.path.exists('results'):
             os.mkdir('results')
-        resultfile = open('results%s%s' % (os.sep, soutfile), 'wb')
-        resultfile.write(normalize(sresult, force_id_mask))
-        resultfile.close()
+        with open('results%s%s' % (os.sep, soutfile), 'wb') as f:
+            f.write(normalize(sresult, force_id_mask))
         if filecmp.cmp(sexpected, 'results%s%s' % (os.sep, soutfile)):  # pass
             os.remove('results%s%s' % (os.sep, soutfile))
             sstatus = 1
         else:  # fail
             import difflib
-            diff = difflib.unified_diff(
-                open(sexpected).readlines(),
-                open('results%s%s' % (os.sep, soutfile)).readlines())
+            with open(sexpected) as a:
+                with open('results%s%s' % (os.sep, soutfile)) as b:
+                    diff = difflib.unified_diff(a.readlines(), b.readlines())
             print '\n'.join(list(diff))
             sstatus = -1
     return sstatus
@@ -274,40 +272,41 @@ for testsuite in TESTSUITES_LIST:
 
                     if sfile == 'requests.txt':  # GET requests
                         filename = '%s%s%s' % (root, os.sep, sfile)
-                        gets = csv.reader(open(filename))
-                        for row in gets:
-                            testfile = '%s%s%s' % (root, os.sep, sfile)
-                            request = ','.join(row[1:]).replace('PYCSW_SERVER',
-                                                                URL)
-                            outfile = '%s%s' % (root.replace(os.sep, '_'),
-                                                '_%s.xml' % row[0])
-                            expected = 'expected%s%s' % (os.sep, outfile)
-                            print '\n test %s:%s' % (testfile, row[0])
+                        with open(filename) as f:
+                            gets = csv.reader(f)
+                            for row in gets:
+                                testfile = '%s%s%s' % (root, os.sep, sfile)
+                                request = ','.join(row[1:]).replace('PYCSW_SERVER',
+                                                                    URL)
+                                outfile = '%s%s' % (root.replace(os.sep, '_'),
+                                                    '_%s.xml' % row[0])
+                                expected = 'expected%s%s' % (os.sep, outfile)
+                                print '\n test %s:%s' % (testfile, row[0])
 
-                            try:
-                                result = http_request('GET', request)
-                            except Exception as err:
-                                result = err.read()
+                                try:
+                                    result = http_request('GET', request)
+                                except Exception as err:
+                                    result = err.read()
 
-                            status = get_validity(expected, result, outfile,
-                                                  force_id_mask)
+                                status = get_validity(expected, result, outfile,
+                                                      force_id_mask)
 
-                            if status == 1:
-                                print '  passed'
-                                PASSED += 1
-                            elif status == 0:
-                                print '  initialized'
-                                INITED += 1
-                            elif status == -1 and DATABASE == 'PostgreSQL':
-                                print '  warning: possible collation issue'
-                                WARNING += 1
-                            else:
-                                print '  FAILED'
-                                FAILED += 1
+                                if status == 1:
+                                    print '  passed'
+                                    PASSED += 1
+                                elif status == 0:
+                                    print '  initialized'
+                                    INITED += 1
+                                elif status == -1 and DATABASE == 'PostgreSQL':
+                                    print '  warning: possible collation issue'
+                                    WARNING += 1
+                                else:
+                                    print '  FAILED'
+                                    FAILED += 1
 
-                            if LOGWRITER is not None:
-                                LOGWRITER.writerow([URL, cfg,
-                                                    testfile, status])
+                                if LOGWRITER is not None:
+                                    LOGWRITER.writerow([URL, cfg,
+                                                        testfile, status])
 
                     else:  # POST requests
                         testfile = '%s%s%s' % (root, os.sep, sfile)
@@ -319,9 +318,8 @@ for testsuite in TESTSUITES_LIST:
                         print '\n test %s' % testfile
 
                         # read test
-                        f = open(testfile)
-                        request = f.read()
-                        f.close()
+                        with open(testfile) as f:
+                            request = f.read()
 
                         configkvp = 'config=tests%s%s' % (os.sep, cfg)
                         url2 = '%s?%s' % (URL, configkvp)
@@ -350,6 +348,9 @@ for testsuite in TESTSUITES_LIST:
 
                         if LOGWRITER is not None:
                             LOGWRITER.writerow([URL, cfg, testfile, status])
+
+if LOGWRITER is not None:
+    LOGWRITER.close()
 
 print '\nResults (%d/%d - %.2f%%)' % \
     (PASSED, PASSED + FAILED, float(PASSED) / float(PASSED + FAILED) * 100)
