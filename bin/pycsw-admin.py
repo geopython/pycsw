@@ -221,7 +221,8 @@ if COMMAND == 'gen_sitemap' and OUTPUT_FILE is None:
 
 if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
     SCP = ConfigParser.SafeConfigParser()
-    SCP.readfp(open(CFG))
+    with open(CFG) as f:
+        SCP.readfp(f)
 
     DATABASE = SCP.get('repository', 'database')
     URL = SCP.get('server', 'url')
