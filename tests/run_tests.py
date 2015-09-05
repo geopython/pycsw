@@ -67,7 +67,6 @@ def get_validity(sexpected, sresult, soutfile, force_id_mask=False):
             with open(sexpected) as a:
                 with open('results%s%s' % (os.sep, soutfile)) as b:
                     diff = difflib.unified_diff(a.readlines(), b.readlines())
-        resultfile.close()
             print '\n'.join(list(diff))
             sstatus = -1
     return sstatus
