@@ -274,39 +274,39 @@ for testsuite in TESTSUITES_LIST:
                         filename = '%s%s%s' % (root, os.sep, sfile)
                         with open(filename) as f:
                             gets = csv.reader(f)
-                        for row in gets:
-                            testfile = '%s%s%s' % (root, os.sep, sfile)
-                            request = ','.join(row[1:]).replace('PYCSW_SERVER',
-                                                                URL)
-                            outfile = '%s%s' % (root.replace(os.sep, '_'),
-                                                '_%s.xml' % row[0])
-                            expected = 'expected%s%s' % (os.sep, outfile)
-                            print '\n test %s:%s' % (testfile, row[0])
+                            for row in gets:
+                                testfile = '%s%s%s' % (root, os.sep, sfile)
+                                request = ','.join(row[1:]).replace('PYCSW_SERVER',
+                                                                    URL)
+                                outfile = '%s%s' % (root.replace(os.sep, '_'),
+                                                    '_%s.xml' % row[0])
+                                expected = 'expected%s%s' % (os.sep, outfile)
+                                print '\n test %s:%s' % (testfile, row[0])
 
-                            try:
-                                result = http_request('GET', request)
-                            except Exception as err:
-                                result = err.read()
+                                try:
+                                    result = http_request('GET', request)
+                                except Exception as err:
+                                    result = err.read()
 
-                            status = get_validity(expected, result, outfile,
-                                                  force_id_mask)
+                                status = get_validity(expected, result, outfile,
+                                                      force_id_mask)
 
-                            if status == 1:
-                                print '  passed'
-                                PASSED += 1
-                            elif status == 0:
-                                print '  initialized'
-                                INITED += 1
-                            elif status == -1 and DATABASE == 'PostgreSQL':
-                                print '  warning: possible collation issue'
-                                WARNING += 1
-                            else:
-                                print '  FAILED'
-                                FAILED += 1
+                                if status == 1:
+                                    print '  passed'
+                                    PASSED += 1
+                                elif status == 0:
+                                    print '  initialized'
+                                    INITED += 1
+                                elif status == -1 and DATABASE == 'PostgreSQL':
+                                    print '  warning: possible collation issue'
+                                    WARNING += 1
+                                else:
+                                    print '  FAILED'
+                                    FAILED += 1
 
-                            if LOGWRITER is not None:
-                                LOGWRITER.writerow([URL, cfg,
-                                                    testfile, status])
+                                if LOGWRITER is not None:
+                                    LOGWRITER.writerow([URL, cfg,
+                                                        testfile, status])
 
                     else:  # POST requests
                         testfile = '%s%s%s' % (root, os.sep, sfile)
