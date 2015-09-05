@@ -32,7 +32,7 @@ import logging
 import uuid
 from urlparse import urlparse
 from owslib.util import build_get_url
-from geolinks.links import sniff_link
+from geolinks import sniff_link
 from pycsw.core import util
 from pycsw.core.etree import etree
 
