@@ -119,18 +119,22 @@ PACKAGE_DATA.update(get_package_data([ROOT_PACKAGE], 'schemas'))
 
 # set the dependencies
 # GeoNode and OpenDataCatalog do not require SQLAlchemy
-INSTALL_REQUIRES = [line.strip() for line in open('requirements.txt')]
+with open('requirements.txt') as f:
+    INSTALL_REQUIRES = f.read().splitlines()
 
 KEYWORDS = ('pycsw csw catalogue catalog metadata discovery search'
             ' ogc iso fgdc dif ebrim inspire')
 
 DESCRIPTION = 'pycsw is an OGC CSW server implementation written in Python'
 
+with open('README.md') as f:
+    LONG_DESCRIPTION = f.read()
+
 setup(
     name='pycsw',
     version=pycsw.__version__,
     description=DESCRIPTION,
-    long_description=open('README.txt').read(),
+    long_description=LONG_DESCRIPTION,
     license='MIT',
     platforms='all',
     keywords=KEYWORDS,
