@@ -496,7 +496,8 @@ def post_xml(url, xml, timeout=30):
 
     from owslib.util import http_post
     try:
-        return http_post(url=url, request=open(xml).read(), timeout=timeout)
+        with open(xml) as f:
+            return http_post(url=url, request=f.read(), timeout=timeout)
     except Exception as err:
         raise RuntimeError(err)
 
