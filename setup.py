@@ -127,7 +127,7 @@ KEYWORDS = ('pycsw csw catalogue catalog metadata discovery search'
 
 DESCRIPTION = 'pycsw is an OGC CSW server implementation written in Python'
 
-with open('README.md') as f:
+with open('README.txt') as f:
     LONG_DESCRIPTION = f.read()
 
 setup(
