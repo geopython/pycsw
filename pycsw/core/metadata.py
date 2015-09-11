@@ -28,9 +28,11 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import logging
 import uuid
-from urlparse import urlparse
+from six.moves.urllib.parse import urlparse
 from owslib.util import build_get_url
 from geolinks import sniff_link
 from pycsw.core import util
@@ -44,7 +46,7 @@ def parse_record(context, record, repos=None,
     ''' parse metadata '''
 
     if identifier is None:
-        identifier = uuid.uuid4().get_urn()
+        identifier = uuid.uuid4().urn
 
     # parse web services
     if (mtype == 'http://www.opengis.net/cat/csw/2.0.2' and
@@ -73,7 +75,7 @@ def parse_record(context, record, repos=None,
     elif mtype == 'http://www.opengis.net/wms':  # WMS
         LOGGER.debug('WMS detected, fetching via OWSLib')
         return _parse_wms(context, repos, record, identifier)
-     
+
     elif mtype == 'http://www.opengis.net/wps/1.0.0':  # WPS
         LOGGER.debug('WPS detected, fetching via OWSLib')
         return [_parse_wps(context, repos, record, identifier)]
@@ -219,7 +221,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
                            maxrecords=pagesize, outputschema=csw_outputschema, esn='full')
         except Exception as err:  # this is a CSW, but server rejects query
             raise RuntimeError(md.response)
-        for k, v in md.records.iteritems():
+        for k, v in md.records.items():
             # try to parse metadata
             try:
                 LOGGER.debug('Parsing metadata record: %s', v.xml)
@@ -247,7 +249,7 @@ def _parse_waf(context, repos, record, identifier):
         tree = etree.fromstring(content, parser=parser)
     except Exception as err:
         raise Exception('Could not parse WAF: %s' % str(err))
-        
+
     up = urlparse(record)
     links = []
 
@@ -333,8 +335,8 @@ def _parse_wms(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
 
-    recobjs.append(serviceobj) 
-         
+    recobjs.append(serviceobj)
+
     # generate record foreach layer
 
     LOGGER.debug('Harvesting %d WMS layers' % len(md.contents))
@@ -765,7 +767,7 @@ def _parse_fgdc(context, repos, exml):
     if md.idinfo.datasetid is not None:  # we need an identifier
         _set(context, recobj, 'pycsw:Identifier', md.idinfo.datasetid)
     else:  # generate one ourselves
-        _set(context, recobj, 'pycsw:Identifier', uuid.uuid1().get_urn())
+        _set(context, recobj, 'pycsw:Identifier', uuid.uuid1().urn)
 
     _set(context, recobj, 'pycsw:Typename', 'fgdc:metadata')
     _set(context, recobj, 'pycsw:Schema', context.namespaces['fgdc'])
@@ -879,7 +881,7 @@ def _parse_iso(context, repos, exml):
 
         if len(md.identification.resourcelanguage) > 0:
             _set(context, recobj, 'pycsw:ResourceLanguage', md.identification.resourcelanguage[0])
- 
+
         if hasattr(md.identification, 'bbox'):
             bbox = md.identification.bbox
         else:
@@ -904,16 +906,16 @@ def _parse_iso(context, repos, exml):
             all_orgs = set([item.organization for item in md.identification.contributor if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Contributor', ';'.join(all_orgs))
 
-        if (hasattr(md.identification, 'contact') and 
+        if (hasattr(md.identification, 'contact') and
             len(md.identification.contact) > 0):
             all_orgs = set([item.organization for item in md.identification.contact if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:OrganizationName', ';'.join(all_orgs))
 
         if len(md.identification.securityconstraints) > 0:
-            _set(context, recobj, 'pycsw:SecurityConstraints', 
+            _set(context, recobj, 'pycsw:SecurityConstraints',
             md.identification.securityconstraints[0])
         if len(md.identification.accessconstraints) > 0:
-            _set(context, recobj, 'pycsw:AccessConstraints', 
+            _set(context, recobj, 'pycsw:AccessConstraints',
             md.identification.accessconstraints[0])
         if len(md.identification.otherconstraints) > 0:
             _set(context, recobj, 'pycsw:OtherConstraints', md.identification.otherconstraints[0])
@@ -951,7 +953,7 @@ def _parse_iso(context, repos, exml):
         _set(context, recobj, 'pycsw:ServiceTypeVersion', md.serviceidentification.version)
 
         _set(context, recobj, 'pycsw:CouplingType', md.serviceidentification.couplingtype)
-   
+
     service_types = []
     for smd in md.identificationinfo:
         if smd.identtype == 'service' and smd.type is not None:
@@ -959,14 +961,14 @@ def _parse_iso(context, repos, exml):
 
     _set(context, recobj, 'pycsw:ServiceType', ','.join(service_types))
 
-        #if len(md.serviceidentification.operateson) > 0: 
-        #    _set(context, recobj, 'pycsw:operateson = VARCHAR(32), 
-        #_set(context, recobj, 'pycsw:operation VARCHAR(32), 
-        #_set(context, recobj, 'pycsw:operatesonidentifier VARCHAR(32), 
-        #_set(context, recobj, 'pycsw:operatesoname VARCHAR(32), 
+        #if len(md.serviceidentification.operateson) > 0:
+        #    _set(context, recobj, 'pycsw:operateson = VARCHAR(32),
+        #_set(context, recobj, 'pycsw:operation VARCHAR(32),
+        #_set(context, recobj, 'pycsw:operatesonidentifier VARCHAR(32),
+        #_set(context, recobj, 'pycsw:operatesoname VARCHAR(32),
 
 
-    if hasattr(md.identification, 'dataquality'):     
+    if hasattr(md.identification, 'dataquality'):
         _set(context, recobj, 'pycsw:Degree', md.dataquality.conformancedegree)
         _set(context, recobj, 'pycsw:Lineage', md.dataquality.lineage)
         _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
@@ -1102,6 +1104,6 @@ def caps2iso(record, caps, context):
     apiso_obj = APISO(context.model, context.namespaces, context)
     apiso_obj.ogc_schemas_base = 'http://schemas.opengis.net'
     apiso_obj.url = context.url
-    queryables = dict(apiso_obj.repository['queryables']['SupportedISOQueryables'].items() + apiso_obj.repository['queryables']['SupportedISOQueryables'].items())
+    queryables = dict(apiso_obj.repository['queryables']['SupportedISOQueryables'].items())
     iso_xml = apiso_obj.write_record(record, 'full', 'http://www.isotc211.org/2005/gmd', queryables, caps)
     return etree.tostring(iso_xml)
