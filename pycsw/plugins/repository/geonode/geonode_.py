@@ -28,6 +28,8 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 from django.db import models
 from django.db import connection
 from django.db.models import Avg, Max, Min, Count
@@ -68,7 +70,7 @@ class GeoNodeRepository(object):
                 self.queryables[qname] = {}
 
                 for qkey, qvalue in \
-                self.context.model['typenames'][tname]['queryables'][qname].iteritems():
+                self.context.model['typenames'][tname]['queryables'][qname].items():
                     self.queryables[qname][qkey] = qvalue
 
         # flatten all queryables
