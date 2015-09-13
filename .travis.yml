@@ -1,21 +1,22 @@
 language: python
 
+sudo: false
+
 python:
-  - "2.7"
   - "2.6"
+  - "2.7"
+
+addons:
+  apt:
+    packages:
+      - libgeos-c1
+      - libxml2-dev
 
 install:
-  - sudo apt-get install -y libgeos-c1
-  - pip install . --use-mirrors
-  - pip install -r ./requirements-standalone.txt
-  - pip install -r ./requirements-dev.txt
-  - python ./setup.py -q install
-
-before_script:
-  - sudo add-apt-repository ppa:gcpp-kalxas/ppa-tzotsos -y
-  - sudo apt-get update -q
-  - sudo apt-get install -y libxml2-dev
-#  - paver start
+  - pip install -r requirements.txt
+  - pip install -r requirements-dev.txt
+  - pip install -r requirements-standalone.txt
+  - python setup.py -q install
 
 script:
   - paver test
@@ -26,6 +27,5 @@ after_script:
 notifications:
   irc:
     channels:
-      #- "irc.freenode.org#geopython"
       - "irc.freenode.org#pycsw"
     use_notice: true
