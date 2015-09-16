@@ -36,6 +36,8 @@
 # - update the 'mappings' dict to the column names of your existing database
 # - set repository.mappings to the location of this file
 
+from __future__ import (absolute_import, division, print_function)
+
 MD_CORE_MODEL = {
     'typename': 'pycsw:CoreMetadata',
     'outputschema': 'http://pycsw.org/metadata',

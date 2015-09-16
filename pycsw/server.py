@@ -30,14 +30,16 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import os
 import sys
 import cgi
 from time import time
-from urllib2 import quote, unquote
-import urlparse
-from cStringIO import StringIO
-from ConfigParser import SafeConfigParser
+from six.moves.urllib.parse import quote, unquote
+from six.moves.urllib.parse import urlparse
+from six import StringIO
+from six.moves.configparser import SafeConfigParser
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
@@ -94,7 +96,7 @@ class Csw(object):
         if self.request_version == '2.0.2':
             self.iface = csw2.Csw2(server_csw=self)
             self.context.set_model('csw')
-        
+
         # load user configuration
         try:
             if isinstance(rtconfig, SafeConfigParser):  # serialized already
@@ -102,9 +104,9 @@ class Csw(object):
             else:
                 self.config = SafeConfigParser()
                 if isinstance(rtconfig, dict):  # dictionary
-                    for section, options in rtconfig.iteritems():
+                    for section, options in rtconfig.items():
                         self.config.add_section(section)
-                        for k, v in options.iteritems():
+                        for k, v in options.items():
                             self.config.set(section, k, v)
                 else:  # configuration file
                     import codecs
@@ -150,7 +152,7 @@ class Csw(object):
         if (self.config.has_option('server', 'pretty_print') and
         self.config.get('server', 'pretty_print') == 'true'):
             self.pretty_print = 1
-        
+
         # set Spatial Ranking option
         if (self.config.has_option('server', 'spatial_ranking') and
         self.config.get('server', 'spatial_ranking') == 'true'):
@@ -289,7 +291,7 @@ class Csw(object):
                 ('acceptversions' in self.kvp and '2.0.2' in self.kvp['acceptversions'])):
                 self.request_version = '2.0.2'
         elif self.requesttype == 'POST':
-            if self.request.find('2.0.2') != -1:
+            if self.request.find(b'2.0.2') != -1:
                 self.request_version = '2.0.2'
 
         if (not isinstance(self.kvp, str) and
@@ -332,7 +334,7 @@ class Csw(object):
                 self.context.model\
                 ['constraints']['FederatedCatalogues']['values'].append(fedcat)
 
-        for key, value in self.outputschemas.iteritems():
+        for key, value in self.outputschemas.items():
             self.context.model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(value.NAMESPACE)
             self.context.model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(value.NAMESPACE)
             if 'Harvest' in self.context.model['operations']:
@@ -361,7 +363,7 @@ class Csw(object):
                 self.config)
 
             LOGGER.debug('Profiles loaded: %s.' %
-            self.profiles['loaded'].keys())
+            list(self.profiles['loaded'].keys()))
 
         # init repository
         # look for tablename, set 'records' as default
@@ -511,7 +513,7 @@ class Csw(object):
 
                 # test request
                 if self.kvp['request'] not in \
-                    self.context.model['operations'].keys():
+                    self.context.model['operations']:
                     error = 1
                     locator = 'request'
                     if self.kvp['request'] in ['Transaction','Harvest']:
@@ -729,7 +731,7 @@ class Csw(object):
         ipaddress = self.environ['REMOTE_ADDR']
 
         if not self.config.has_option('manager', 'allowed_ips') or \
-        (self.config.has_option('manager', 'allowed_ips') and not 
+        (self.config.has_option('manager', 'allowed_ips') and not
          util.ipaddress_in_whitelist(ipaddress,
                         self.config.get('manager', 'allowed_ips').split(','))):
             raise RuntimeError(
@@ -738,7 +740,7 @@ class Csw(object):
     def _cql_update_queryables_mappings(self, cql, mappings):
         ''' Transform CQL query's properties to underlying DB columns '''
         LOGGER.debug('Raw CQL text = %s.' % cql)
-        LOGGER.debug(str(mappings.keys()))
+        LOGGER.debug(str(list(mappings.keys())))
         if cql is not None:
             for key in mappings.keys():
                 try:
@@ -755,7 +757,7 @@ class Csw(object):
             LOGGER.debug('Processing responsehandler %s.' %
             self.kvp['responsehandler'])
 
-            uprh = urlparse.urlparse(self.kvp['responsehandler'])
+            uprh = urlparse(self.kvp['responsehandler'])
 
             if uprh.scheme == 'mailto':  # email
                 import smtplib
@@ -811,6 +813,6 @@ class Csw(object):
         """
 
         result = dict()
-        for name, value in kvp.iteritems():
+        for name, value in kvp.items():
             result[name.lower()] = value
         return result

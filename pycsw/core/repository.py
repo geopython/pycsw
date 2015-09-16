@@ -30,6 +30,8 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import logging
 import os
 from sqlalchemy import create_engine, asc, desc, func, __version__, select
@@ -176,7 +178,7 @@ class Repository(object):
                 self.queryables[qname] = {}
 
                 for qkey, qvalue in \
-                self.context.model['typenames'][tname]['queryables'][qname].iteritems():
+                self.context.model['typenames'][tname]['queryables'][qname].items():
                     self.queryables[qname][qkey] = qvalue
 
         # flatten all queryables

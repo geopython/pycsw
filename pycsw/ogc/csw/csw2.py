@@ -30,13 +30,14 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import os
 import sys
 import cgi
-from urllib2 import quote, unquote
-import urlparse
-from cStringIO import StringIO
-from ConfigParser import SafeConfigParser
+from six.moves.urllib.parse import quote, unquote
+from six import StringIO
+from six.moves.configparser import SafeConfigParser
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
@@ -917,7 +918,7 @@ class Csw2(object):
 
 
         if results is not None:
-            if len(results) < self.parent.kvp['maxrecords']:
+            if len(results) < int(self.parent.kvp['maxrecords']):
                 max1 = len(results)
             else:
                 max1 = int(self.parent.kvp['startposition']) + (int(self.parent.kvp['maxrecords'])-1)
@@ -1171,7 +1172,7 @@ class Csw2(object):
                             if rp['name'].find('/') != -1:
                                 # scan outputschemas; if match, bind
                                 for osch in self.parent.outputschemas.values():
-                                    for key, value in osch.XPATH_MAPPINGS.iteritems():
+                                    for key, value in osch.XPATH_MAPPINGS.items():
                                         if value == rp['name']:  # match
                                             rp['rp'] = {'xpath': value, 'name': key}
                                             rp['rp']['dbcol'] = self.parent.repository.queryables['_all'][key]

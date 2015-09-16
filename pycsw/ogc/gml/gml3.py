@@ -28,6 +28,8 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import logging
 from owslib import crs
 from pycsw.core import util
