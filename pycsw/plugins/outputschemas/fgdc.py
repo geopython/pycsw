@@ -59,7 +59,7 @@ def write_record(recobj, esn, context, url=None):
     typename = util.getqattr(recobj, context.md_core_model['mappings']['pycsw:Typename'])
     if esn == 'full' and typename == 'fgdc:metadata':
         # dump record as is and exit
-        return etree.fromstring(util.getqattr(recobj, context.md_core_model['mappings']['pycsw:XML']))
+        return etree.fromstring(util.getqattr(recobj, context.md_core_model['mappings']['pycsw:XML']), context.parser)
 
     node = etree.Element('metadata')
     node.attrib[util.nspath_eval('xsi:noNamespaceSchemaLocation', context.namespaces)] = \

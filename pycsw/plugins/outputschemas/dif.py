@@ -58,7 +58,7 @@ def write_record(result, esn, context, url=None):
 
     if esn == 'full' and typename == 'dif:DIF':
         # dump record as is and exit
-        return etree.fromstring(util.getqattr(result, context.md_core_model['mappings']['pycsw:XML']))
+        return etree.fromstring(util.getqattr(result, context.md_core_model['mappings']['pycsw:XML']), context.parser)
 
     node = etree.Element(util.nspath_eval('dif:DIF', NAMESPACES))
     node.attrib[util.nspath_eval('xsi:schemaLocation', context.namespaces)] = \
