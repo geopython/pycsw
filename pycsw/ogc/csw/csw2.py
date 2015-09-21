@@ -969,7 +969,7 @@ class Csw2(object):
                 if isinstance(resultset, etree._Comment):
                     searchresults.append(resultset)
                 for rec in resultset:
-                    searchresults.append(etree.fromstring(resultset[rec].xml), self.parent.context.parser)
+                    searchresults.append(etree.fromstring(resultset[rec].xml, self.parent.context.parser))
 
         if 'responsehandler' in self.parent.kvp:  # process the handler
             self.parent._process_responsehandler(etree.tostring(node,
