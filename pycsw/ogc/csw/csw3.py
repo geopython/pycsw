@@ -1013,7 +1013,7 @@ class Csw3(object):
 #                if isinstance(resultset, etree._Comment):
 #                    searchresults.append(resultset)
 #                for rec in resultset:
-#                    searchresults.append(etree.fromstring(resultset[rec].xml))
+#                    searchresults.append(etree.fromstring(resultset[rec].xml, self.parent.context.parser))
 
         searchresults.attrib['elapsedTime'] = get_elapsed_time(self.parent.process_time_start, time())
 
@@ -1094,7 +1094,7 @@ class Csw3(object):
             LOGGER.debug('GetRepositoryItem request.')
             if len(results) > 0:
                 return etree.fromstring(util.getqattr(results[0],
-                self.parent.context.md_core_model['mappings']['pycsw:XML']))
+                self.parent.context.md_core_model['mappings']['pycsw:XML']), self.parent.context.parser)
 
         for result in results:
             if (util.getqattr(result,
@@ -1500,7 +1500,7 @@ class Csw3(object):
             ['pycsw:Type']) != 'service'):
                 # dump record as is and exit
                 return etree.fromstring(util.getqattr(recobj,
-                self.parent.context.md_core_model['mappings']['pycsw:XML']))
+                self.parent.context.md_core_model['mappings']['pycsw:XML']), self.parent.context.parser)
 
             etree.SubElement(record,
             util.nspath_eval('dc:identifier', self.parent.context.namespaces)).text = \
@@ -1608,7 +1608,7 @@ class Csw3(object):
         request = {}
         try:
             LOGGER.debug('Parsing %s.' % postdata)
-            doc = etree.fromstring(postdata)
+            doc = etree.fromstring(postdata, self.parent.context.parser)
         except Exception as err:
             errortext = \
             'Exception: document not well-formed.\nError: %s.' % str(err)
@@ -1651,7 +1651,7 @@ class Csw3(object):
                     doc = etree.fromstring(postdata, parser)
                 LOGGER.debug('Request is valid XML.')
             else:  # parse Transaction without validation
-                doc = etree.fromstring(postdata)
+                doc = etree.fromstring(postdata, self.parent.context.parser)
         except Exception as err:
             errortext = \
             'Exception: the document is not valid.\nError: %s' % str(err)
@@ -1949,7 +1949,7 @@ class Csw3(object):
         node1 = etree.SubElement(node, util.nspath_eval('csw30:EchoedRequest',
                 self.parent.context.namespaces))
         if self.parent.requesttype == 'POST':
-            node1.append(etree.fromstring(self.parent.request))
+            node1.append(etree.fromstring(self.parent.request, self.parent.context.parser))
         else:  # GET
             node2 = etree.SubElement(node1, util.nspath_eval('ows:Get',
                     self.parent.context.namespaces))

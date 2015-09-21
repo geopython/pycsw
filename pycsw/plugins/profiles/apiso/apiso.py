@@ -351,9 +351,12 @@ class APISO(profile.Profile):
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace,
         parentSchema='gmd.xsd')
 
-        schema = etree.parse(os.path.join(self.context.pycsw_home,
-                 'plugins', 'profiles', 'apiso', 'schemas', 'ogc', 'iso',
-                 '19139', '20060504', 'gmd', 'identification.xsd')).getroot()
+        schema_file = os.path.join(self.context.pycsw_home, 'plugins',
+                                   'profiles', 'apiso', 'schemas', 'ogc',
+                                   'iso', '19139', '20060504', 'gmd',
+                                   'identification.xsd')
+
+        schema = etree.parse(schema_file, self.context.parser).getroot()
 
         node1.append(schema)
 
@@ -362,10 +365,12 @@ class APISO(profile.Profile):
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace,
         parentSchema='gmd.xsd')
 
-        schema = etree.parse(os.path.join(self.context.pycsw_home,
-                 'plugins', 'profiles', 'apiso', 'schemas', 'ogc',
-                 'iso', '19139', '20060504', 'srv',
-                 'serviceMetadata.xsd')).getroot()
+        schema_file = os.path.join(self.context.pycsw_home, 'plugins',
+                                   'profiles', 'apiso', 'schemas', 'ogc',
+                                   'iso', '19139', '20060504', 'srv',
+                                   'serviceMetadata.xsd')
+
+        schema = etree.parse(schema_file, self.context.parser).getroot()
 
         node2.append(schema)
 
@@ -386,7 +391,7 @@ class APISO(profile.Profile):
 
         if (esn == 'full' and (typename == 'gmd:MD_Metadata' or is_iso_anyway)):
             # dump record as is and exit
-            return etree.fromstring(xml_blob)
+            return etree.fromstring(xml_blob, self.context.parser)
 
         if typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
             util.transform_mappings(queryables, self.repository['mappings']['csw:Record'])
