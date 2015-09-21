@@ -48,6 +48,7 @@ ranking_enabled = False
 ranking_pass = False
 ranking_query_geometry = ''
 
+
 PARSER = etree.XMLParser(resolve_entities=False)
 
 def get_today_and_now():
