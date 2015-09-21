@@ -246,7 +246,7 @@ def _parse_waf(context, repos, record, identifier):
 
     try:
         parser = etree.HTMLParser()
-        tree = etree.fromstring(content, parser=parser)
+        tree = etree.fromstring(content, parser)
     except Exception as err:
         raise Exception('Could not parse WAF: %s' % str(err))
 
