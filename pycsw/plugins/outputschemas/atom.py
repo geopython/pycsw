@@ -55,7 +55,7 @@ def write_record(result, esn, context, url=None):
 
     if esn == 'full' and typename == 'atom:entry':
         # dump record as is and exit
-        return etree.fromstring(util.getqattr(result, context.md_core_model['mappings']['pycsw:XML']))
+        return etree.fromstring(util.getqattr(result, context.md_core_model['mappings']['pycsw:XML']), context.parser)
 
     node = etree.Element(util.nspath_eval('atom:entry', NAMESPACES), nsmap=NAMESPACES)
     node.attrib[util.nspath_eval('xsi:schemaLocation', context.namespaces)] = \

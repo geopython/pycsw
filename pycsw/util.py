@@ -44,6 +44,8 @@ ranking_enabled = False
 ranking_pass = False
 ranking_query_geometry = ''
 
+PARSER = etree.XMLParser(resolve_entities=False)
+
 def get_today_and_now():
     """Get the date, right now, in ISO8601"""
     return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime())
@@ -262,7 +264,7 @@ def update_xpath(nsmap, xml, recprop):
     """Update XML document XPath values"""
 
     if isinstance(xml, unicode):  # not lxml serialized yet
-        xml = etree.fromstring(xml)
+        xml = etree.fromstring(xml, PARSER)
 
     recprop = eval(recprop)
     nsmap = eval(nsmap)
@@ -304,7 +306,7 @@ def get_anytext(bag):
         return ' '.join(filter(None, bag)).strip()
     else:  # xml
         if isinstance(bag, unicode) or isinstance(bag, str):  # not serialized yet
-            bag = etree.fromstring(bag)
+            bag = etree.fromstring(bag, PARSER)
             # get all XML element content
         return ' '.join([value.strip() for value in bag.xpath('//text()')])
 
