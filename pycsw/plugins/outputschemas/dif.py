@@ -28,6 +28,8 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 from pycsw.core import util
 from pycsw.core.etree import etree
 
@@ -35,20 +37,20 @@ NAMESPACE = 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/'
 NAMESPACES = {'dif': NAMESPACE}
 
 XPATH_MAPPINGS = {
-    'pycsw:Title': 'dif:Entry_Title', 
-    'pycsw:Creator': 'dif:Data_Set_Citation/dif:Dataset_Creator', 
-    'pycsw:TopicCategory': 'dif:ISO_Topic_Category', 
+    'pycsw:Title': 'dif:Entry_Title',
+    'pycsw:Creator': 'dif:Data_Set_Citation/dif:Dataset_Creator',
+    'pycsw:TopicCategory': 'dif:ISO_Topic_Category',
     'pycsw:Keywords': 'dif:Keyword',
-    'pycsw:Abstract': 'dif:Summary', 
-    'pycsw:Publisher': 'dif:Data_Set_Citation/dif:Dataset_Publisher', 
+    'pycsw:Abstract': 'dif:Summary',
+    'pycsw:Publisher': 'dif:Data_Set_Citation/dif:Dataset_Publisher',
     'pycsw:OrganizationName': 'dif:Originating_Center',
-    'pycsw:CreationDate': 'dif:DIF_Creation_Date','pycsw:PublicationDate': 'dif:Data_Set_Citation/dif:Dataset_Release_Date', 
-    'pycsw:Format': 'dif:Data_Set_Citation/dif:Data_Presentation_Form', 
+    'pycsw:CreationDate': 'dif:DIF_Creation_Date','pycsw:PublicationDate': 'dif:Data_Set_Citation/dif:Dataset_Release_Date',
+    'pycsw:Format': 'dif:Data_Set_Citation/dif:Data_Presentation_Form',
     'pycsw:ResourceLanguage': 'dif:Data_Set_Language',
-    'pycsw:Relation': 'dif:Related_URL/dif:URL', 
+    'pycsw:Relation': 'dif:Related_URL/dif:URL',
     'pycsw:AccessConstraints': 'dif:Access_Constraints',
-    'pycsw:TempExtent_begin': 'dif:Temporal_Coverage/dif:Start_Date', 
-    'pycsw:TempExtent_end': 'dif:Temporal_Coverage/dif:Stop_Date', 
+    'pycsw:TempExtent_begin': 'dif:Temporal_Coverage/dif:Start_Date',
+    'pycsw:TempExtent_end': 'dif:Temporal_Coverage/dif:Stop_Date',
 }
 
 def write_record(result, esn, context, url=None):
@@ -107,7 +109,7 @@ def write_record(result, esn, context, url=None):
     temporal = etree.SubElement(node, util.nspath_eval('dif:Temporal_Coverage', NAMESPACES))
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TempExtent_begin'])
     val2 = util.getqattr(result, context.md_core_model['mappings']['pycsw:TempExtent_end'])
-    etree.SubElement(temporal, util.nspath_eval('dif:Start_Date', NAMESPACES)).text = val 
+    etree.SubElement(temporal, util.nspath_eval('dif:Start_Date', NAMESPACES)).text = val
     etree.SubElement(temporal, util.nspath_eval('dif:End_Date', NAMESPACES)).text = val2
 
     # bbox extent
@@ -134,7 +136,7 @@ def write_record(result, esn, context, url=None):
         val = ''
     etree.SubElement(node, util.nspath_eval('dif:Summary', NAMESPACES)).text = val
 
-    # date 
+    # date
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:CreationDate'])
     etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date', NAMESPACES)).text = val
 
@@ -147,7 +149,7 @@ def write_record(result, esn, context, url=None):
     if rlinks:
         for link in rlinks.split('^'):
             linkset = link.split(',')
-       
+
             url2 = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
 
             urltype = etree.SubElement(url2, util.nspath_eval('dif:URL_Content_Type', NAMESPACES))
@@ -163,9 +165,9 @@ def write_record(result, esn, context, url=None):
 
 def write_extent(bbox, nsmap):
     ''' Generate BBOX extent '''
-    
+
     from shapely.wkt import loads
-    
+
     if bbox is not None:
         try:
             bbox2 = util.wkt2geom(bbox)
