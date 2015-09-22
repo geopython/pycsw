@@ -63,7 +63,7 @@ def parse_record(context, record, repos=None,
                 content = util.http_request('GET', record)
             except Exception, err:
                 raise RuntimeError('HTTP error: %s' % str(err))
-            return [_parse_dc(context, repos, etree.fromstring(content))]
+            return [_parse_dc(context, repos, etree.fromstring(content, context.parser))]
 
     elif mtype == 'urn:geoss:waf':  # WAF
         LOGGER.debug('WAF detected, fetching via HTTP')
@@ -108,7 +108,7 @@ def _parse_metadata(context, repos, record):
     """parse metadata formats"""
 
     if isinstance(record, str):
-        exml = etree.fromstring(record)
+        exml = etree.fromstring(record, context.parser)
     else:  # already serialized to lxml
         if hasattr(record, 'getroot'):  # standalone document
             exml = record.getroot()
@@ -207,7 +207,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
         except Exception, err:  # this is a CSW, but server rejects query
             raise RuntimeError(md.response)
         for k, v in md.records.iteritems():
-            recobjs.append(_parse_dc(context, repos, etree.fromstring(v.xml)))
+            recobjs.append(_parse_dc(context, repos, etree.fromstring(v.xml, context.parser)))
 
     return recobjs
 
