@@ -329,7 +329,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
         LOGGER.info('Processing file %s (%d of %d)', recfile, counter, total)
         # read document
         try:
-            exml = etree.parse(recfile)
+            exml = etree.parse(recfile, context.parser)
         except Exception as err:
             LOGGER.warn('XML document is not well-formed: %s', str(err))
             continue
