@@ -30,7 +30,10 @@
 #
 # =================================================================
 
-import ConfigParser
+from __future__ import (absolute_import, division, print_function)
+
+from six.moves import configparser
+from six.moves import input
 import getopt
 import logging
 import sys
@@ -92,7 +95,7 @@ EXAMPLES
     1.) setup_db: Creates repository tables and indexes
 
         pycsw-admin.py -c setup_db -f default.cfg
-        
+
     2.) load_records: Loads metadata records from directory into repository
 
         pycsw-admin.py -c load_records -p /path/to/records -f default.cfg
@@ -160,14 +163,14 @@ TIMEOUT = 30
 FORCE_CONFIRM = False
 
 if len(sys.argv) == 1:
-    print usage()
+    print(usage())
     sys.exit(1)
 
 try:
     OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:y')
 except getopt.GetoptError as err:
-    print '\nERROR: %s' % err
-    print usage()
+    print('\nERROR: %s' % err)
+    print(usage())
     sys.exit(2)
 
 for o, a in OPTS:
@@ -190,13 +193,13 @@ for o, a in OPTS:
     if o == '-t':
         TIMEOUT = int(a)
     if o == '-h':  # dump help and exit
-        print usage()
+        print(usage())
         sys.exit(3)
     if o == '-y':
         FORCE_CONFIRM = True
 
 if COMMAND is None:
-    print '-c <command> is a required argument'
+    print('-c <command> is a required argument')
     sys.exit(4)
 
 if COMMAND not in ['setup_db', 'load_records', 'export_records',
@@ -204,23 +207,23 @@ if COMMAND not in ['setup_db', 'load_records', 'export_records',
                    'refresh_harvested_records', 'gen_sitemap',
                    'post_xml', 'get_sysprof',
                    'validate_xml', 'delete_records']:
-    print 'ERROR: invalid command name: %s' % COMMAND
+    print('ERROR: invalid command name: %s' % COMMAND)
     sys.exit(5)
 
 if CFG is None and COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
-    print 'ERROR: -f <cfg> is a required argument'
+    print('ERROR: -f <cfg> is a required argument')
     sys.exit(6)
 
 if COMMAND in ['load_records', 'export_records'] and XML_DIRPATH is None:
-    print 'ERROR: -p </path/to/records> is a required argument'
+    print('ERROR: -p </path/to/records> is a required argument')
     sys.exit(7)
 
 if COMMAND == 'gen_sitemap' and OUTPUT_FILE is None:
-    print 'ERROR: -o </path/to/sitemap.xml> is a required argument'
+    print('ERROR: -o </path/to/sitemap.xml> is a required argument')
     sys.exit(8)
 
 if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
-    SCP = ConfigParser.SafeConfigParser()
+    SCP = configparser.SafeConfigParser()
     with open(CFG) as f:
         SCP.readfp(f)
 
@@ -230,31 +233,31 @@ if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
     METADATA = dict(SCP.items('metadata:main'))
     try:
         TABLE = SCP.get('repository', 'table')
-    except ConfigParser.NoOptionError:
+    except configparser.NoOptionError:
         TABLE = 'records'
 
 elif COMMAND not in ['get_sysprof', 'validate_xml']:
     if CSW_URL is None:
-        print 'ERROR: -u <http://host/csw> is a required argument'
+        print('ERROR: -u <http://host/csw> is a required argument')
         sys.exit(9)
     if XML is None:
-        print 'ERROR: -x /path/to/request.xml is a required argument'
+        print('ERROR: -x /path/to/request.xml is a required argument')
         sys.exit(10)
 elif COMMAND == 'validate_xml':
     if XML is None:
-        print 'ERROR: -x /path/to/file.xml is a required argument'
+        print('ERROR: -x /path/to/file.xml is a required argument')
         sys.exit(11)
     if XSD is None:
-        print 'ERROR: -s /path/to/file.xsd is a required argument'
+        print('ERROR: -s /path/to/file.xsd is a required argument')
         sys.exit(12)
 
 if COMMAND == 'setup_db':
     try:
         admin.setup_db(DATABASE, TABLE, HOME)
     except Exception as err:
-        print err
-        print 'ERROR: DB creation error.  Database tables already exist'
-        print 'Delete tables or database to reinitialize'
+        print(err)
+        print('ERROR: DB creation error.  Database tables already exist')
+        print('Delete tables or database to reinitialize')
 elif COMMAND == 'load_records':
     admin.load_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH, RECURSIVE, FORCE_CONFIRM)
 elif COMMAND == 'export_records':
@@ -268,16 +271,16 @@ elif COMMAND == 'refresh_harvested_records':
 elif COMMAND == 'gen_sitemap':
     admin.gen_sitemap(CONTEXT, DATABASE, TABLE, URL, OUTPUT_FILE)
 elif COMMAND == 'post_xml':
-    print admin.post_xml(CSW_URL, XML, TIMEOUT)
+    print(admin.post_xml(CSW_URL, XML, TIMEOUT))
 elif COMMAND == 'get_sysprof':
-    print admin.get_sysprof()
+    print(admin.get_sysprof())
 elif COMMAND == 'validate_xml':
     admin.validate_xml(XML, XSD)
 elif COMMAND == 'delete_records':
     if not FORCE_CONFIRM:
-        if raw_input('This will delete all records! Continue? [Y/n] ') == 'Y':
+        if input('This will delete all records! Continue? [Y/n] ') == 'Y':
             FORCE_CONFIRM = True
     if FORCE_CONFIRM:
         admin.delete_records(CONTEXT, DATABASE, TABLE)
 
-print 'Done'
+print('Done')

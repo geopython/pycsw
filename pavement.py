@@ -28,7 +28,12 @@
 #
 # =================================================================
 
-from ConfigParser import SafeConfigParser
+from __future__ import (absolute_import, division, print_function)
+
+try:
+    from configparser import SafeConfigParser
+except ImportError:
+    from ConfigParser import SafeConfigParser
 import glob
 import os
 import sys
@@ -74,9 +79,9 @@ def publish_docs(options):
         # change privs to be group writeable
         for root, dirs, files in os.walk(local_path):
             for dfile in files:
-                os.chmod(os.path.join(root, dfile), 0664)
+                os.chmod(os.path.join(root, dfile), 0o664)
             for ddir in dirs:
-                os.chmod(os.path.join(root, ddir), 0775)
+                os.chmod(os.path.join(root, ddir), 0o775)
 
         # copy documentation
         sh('scp -r %s%s* %s@%s:%s' % (local_path, os.sep, user, remote_host,
@@ -88,7 +93,7 @@ def gen_tests_html():
     """Generate tests/index.html for online testing"""
     with pushd('tests'):
         # ensure manager testsuite is writeable
-        os.chmod(os.path.join('suites', 'manager', 'data'), 0777)
+        os.chmod(os.path.join('suites', 'manager', 'data'), 0o777)
         sh('python gen_html.py > index.html')
 
 
@@ -159,7 +164,7 @@ def setup_testdata():
         if os.path.isfile(dbfile):
             os.remove(dbfile)
 
-    for database, has_testdata in test_database_parameters.iteritems():
+    for database, has_testdata in test_database_parameters.items():
         info('Setting up test database %s' % database)
         cfg = path('tests/suites/%s/default.cfg' % database)
         sh('pycsw-admin.py -c setup_db -f %s' % cfg)
@@ -321,7 +326,7 @@ def kill_process(procname, scriptname):
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
 
-    for line in out.splitlines():
+    for line in out.decode().splitlines():
         if procname in line and scriptname in line:
             pid = int(line.split()[1])
             info('Stopping %s %s %d' % (procname, scriptname, pid))

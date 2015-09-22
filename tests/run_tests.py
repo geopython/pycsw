@@ -30,6 +30,8 @@
 
 # simple testing framework inspired by MapServer msautotest
 
+from __future__ import (absolute_import, division, print_function)
+
 import csv
 import sys
 import os
@@ -67,7 +69,7 @@ def get_validity(sexpected, sresult, soutfile, force_id_mask=False):
             with open(sexpected) as a:
                 with open('results%s%s' % (os.sep, soutfile)) as b:
                     diff = difflib.unified_diff(a.readlines(), b.readlines())
-            print '\n'.join(list(diff))
+            print('\n'.join(list(diff)))
             sstatus = -1
     return sstatus
 
@@ -77,77 +79,77 @@ def normalize(sresult, force_id_mask=False):
     values"""
 
     # XML responses
-    version = re.search('<!-- (.*) -->', sresult)
-    updatesequence = re.search('updateSequence="(\S+)"', sresult)
-    timestamp = re.search('timestamp="(.*)"', sresult)
-    timestamp2 = re.search('timeStamp="(.*)"', sresult)
-    timestamp3 = re.search('<oai:responseDate>(.*)</oai:responseDate>', sresult)
-    timestamp4 = re.search('<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>', sresult)
-    zrhost = re.search('<zr:host>(.*)</zr:host>', sresult)
-    zrport = re.search('<zr:port>(.*)</zr:port>', sresult)
-    elapsed_time = re.search('elapsedTime="(.*)"', sresult)
-    expires = re.search('expires="(.*?)"', sresult)
-    atom_updated = re.findall('<atom:updated>(.*)</atom:updated>', sresult)
+    version = re.search(b'<!-- (.*) -->', sresult)
+    updatesequence = re.search(b'updateSequence="(\S+)"', sresult)
+    timestamp = re.search(b'timestamp="(.*)"', sresult)
+    timestamp2 = re.search(b'timeStamp="(.*)"', sresult)
+    timestamp3 = re.search(b'<oai:responseDate>(.*)</oai:responseDate>', sresult)
+    timestamp4 = re.search(b'<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>', sresult)
+    zrhost = re.search(b'<zr:host>(.*)</zr:host>', sresult)
+    zrport = re.search(b'<zr:port>(.*)</zr:port>', sresult)
+    elapsed_time = re.search(b'elapsedTime="(.*)"', sresult)
+    expires = re.search(b'expires="(.*?)"', sresult)
+    atom_updated = re.findall(b'<atom:updated>(.*)</atom:updated>', sresult)
 
     if version:
-        sresult = sresult.replace(version.group(0), '<!-- PYCSW_VERSION -->')
+        sresult = sresult.replace(version.group(0), b'<!-- PYCSW_VERSION -->')
     if updatesequence:
         sresult = sresult.replace(updatesequence.group(0),
-                                  'updateSequence="PYCSW_UPDATESEQUENCE"')
+                                  b'updateSequence="PYCSW_UPDATESEQUENCE"')
     if timestamp:
         sresult = sresult.replace(timestamp.group(0),
-                                  'timestamp="PYCSW_TIMESTAMP"')
+                                  b'timestamp="PYCSW_TIMESTAMP"')
     if timestamp2:
         sresult = sresult.replace(timestamp2.group(0),
-                                  'timeStamp="PYCSW_TIMESTAMP"')
+                                  b'timeStamp="PYCSW_TIMESTAMP"')
     if timestamp3:
         sresult = sresult.replace(timestamp3.group(0),
-                                  '<oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>')
+                                  b'<oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>')
     if timestamp4:
         sresult = sresult.replace(timestamp4.group(0),
-                                  '<oai:earliestDatestamp>PYCSW_TIMESTAMP</oai:earliestDatestamp>')
+                                  b'<oai:earliestDatestamp>PYCSW_TIMESTAMP</oai:earliestDatestamp>')
     if zrport:
         sresult = sresult.replace(zrport.group(0),
-                                  '<zr:port>PYCSW_PORT</zr:port>')
+                                  b'<zr:port>PYCSW_PORT</zr:port>')
     if zrhost:
         sresult = sresult.replace(zrhost.group(0),
-                                  '<zr:host>PYCSW_HOST</zr:host>')
+                                  b'<zr:host>PYCSW_HOST</zr:host>')
     if elapsed_time:
         sresult = sresult.replace(elapsed_time.group(0),
-                                  'elapsedTime="PYCSW_ELAPSED_TIME"')
+                                  b'elapsedTime="PYCSW_ELAPSED_TIME"')
     if expires:
         sresult = sresult.replace(expires.group(0),
-                                  'expires="PYCSW_EXPIRES"')
+                                  b'expires="PYCSW_EXPIRES"')
     for au in atom_updated:
-        sresult = sresult.replace(au, 'PYCSW_TIMESTAMP')
+        sresult = sresult.replace(au, b'PYCSW_TIMESTAMP')
 
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints
-    if sresult.find('HarvestResponse') != -1:
-        identifier = re.findall('<dc:identifier>(\S+)</dc:identifier>',
+    if sresult.find(b'HarvestResponse') != -1:
+        identifier = re.findall(b'<dc:identifier>(\S+)</dc:identifier>',
                                 sresult)
         for i in identifier:
-            sresult = sresult.replace(i, 'PYCSW_IDENTIFIER')
+            sresult = sresult.replace(i, b'PYCSW_IDENTIFIER')
 
     # JSON responses
-    timestamp = re.search('"timestamp": "(.*?)"', sresult)
+    timestamp = re.search(b'"timestamp": "(.*?)"', sresult)
 
     if timestamp:
         sresult = sresult.replace(timestamp.group(0),
-                                  '"timestamp": "PYCSW_TIMESTAMP"')
+                                  b'"timestamp": "PYCSW_TIMESTAMP"')
 
     # harvesting-based GetRecords/GetRecordById responses
     if force_id_mask:
-        dcid = re.findall('<dc:identifier>(urn:uuid.*)</dc:identifier>', sresult)
-        isoid = re.findall('id="(urn:uuid.*)"', sresult)
-        isoid2 = re.findall('<gco:CharacterString>(urn:uuid.*)</gco', sresult)
-    
+        dcid = re.findall(b'<dc:identifier>(urn:uuid.*)</dc:identifier>', sresult)
+        isoid = re.findall(b'id="(urn:uuid.*)"', sresult)
+        isoid2 = re.findall(b'<gco:CharacterString>(urn:uuid.*)</gco', sresult)
+
         for d in dcid:
-            sresult = sresult.replace(d, 'PYCSW_IDENTIFIER')
+            sresult = sresult.replace(d, b'PYCSW_IDENTIFIER')
         for i in isoid:
-            sresult = sresult.replace(i, 'PYCSW_IDENTIFIER')
+            sresult = sresult.replace(i, b'PYCSW_IDENTIFIER')
         for i2 in isoid2:
-            sresult = sresult.replace(i2, 'PYCSW_IDENTIFIER')
+            sresult = sresult.replace(i2, b'PYCSW_IDENTIFIER')
 
     return sresult
 
@@ -196,7 +198,7 @@ EXAMPLES
 # main
 
 if len(sys.argv) < 2:
-    print usage()
+    print(usage())
     sys.exit(1)
 
 URL = sys.argv[1]
@@ -217,8 +219,8 @@ REMOTE = False
 try:
     OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:rh')
 except getopt.GetoptError as err:
-    print '\nERROR: %s' % err
-    print usage()
+    print('\nERROR: %s' % err)
+    print(usage())
     sys.exit(2)
 
 for o, a in OPTS:
@@ -233,10 +235,10 @@ for o, a in OPTS:
     if o == '-s':
         TESTSUITES = a.split(',')
     if o == '-h':  # dump help and exit
-        print usage()
+        print(usage())
         sys.exit(3)
 
-print '\nRunning tests against %s' % URL
+print('\nRunning tests against %s' % URL)
 
 if LOGFILE is not None:  # write detailed output to CSV
     LOGWRITER = csv.writer(open(LOGFILE, 'wb'))
@@ -259,10 +261,10 @@ for testsuite in TESTSUITES_LIST:
     force_id_mask = False
     if testsuite in ['suites%smanager' % os.sep, 'suites%sharvesting' % os.sep]:
         force_id_mask = True
-   
+
     # get configuration
     for cfg in glob.glob('%s%s*.cfg' % (testsuite, os.sep)):
-        print '\nTesting configuration %s' % cfg
+        print('\nTesting configuration %s' % cfg)
 
         for root, dirs, files in os.walk(testsuite):
             if files:
@@ -281,7 +283,7 @@ for testsuite in TESTSUITES_LIST:
                                 outfile = '%s%s' % (root.replace(os.sep, '_'),
                                                     '_%s.xml' % row[0])
                                 expected = 'expected%s%s' % (os.sep, outfile)
-                                print '\n test %s:%s' % (testfile, row[0])
+                                print('\n test %s:%s' % (testfile, row[0]))
 
                                 try:
                                     result = http_request('GET', request)
@@ -292,16 +294,16 @@ for testsuite in TESTSUITES_LIST:
                                                       force_id_mask)
 
                                 if status == 1:
-                                    print '  passed'
+                                    print('  passed')
                                     PASSED += 1
                                 elif status == 0:
-                                    print '  initialized'
+                                    print('  initialized')
                                     INITED += 1
                                 elif status == -1 and DATABASE == 'PostgreSQL':
-                                    print '  warning: possible collation issue'
+                                    print('  warning: possible collation issue')
                                     WARNING += 1
                                 else:
-                                    print '  FAILED'
+                                    print('  FAILED')
                                     FAILED += 1
 
                                 if LOGWRITER is not None:
@@ -315,7 +317,7 @@ for testsuite in TESTSUITES_LIST:
                         outfile = '%s%s' % (os.sep,
                                             testfile.replace(os.sep, '_'))
                         expected = 'expected%s%s' % (os.sep, outfile)
-                        print '\n test %s' % testfile
+                        print('\n test %s' % testfile)
 
                         # read test
                         with open(testfile) as f:
@@ -334,16 +336,16 @@ for testsuite in TESTSUITES_LIST:
                                               force_id_mask)
 
                         if status == 1:
-                            print '  passed'
+                            print('  passed')
                             PASSED += 1
                         elif status == 0:
-                            print '  initialized'
+                            print('  initialized')
                             INITED += 1
                         elif status == -1 and DATABASE == 'PostgreSQL':
-                            print '  warning: possible sorting collation issue'
+                            print('  warning: possible sorting collation issue')
                             WARNING += 1
                         else:
-                            print '  FAILED'
+                            print('  FAILED')
                             FAILED += 1
 
                         if LOGWRITER is not None:
@@ -352,11 +354,11 @@ for testsuite in TESTSUITES_LIST:
 if LOGWRITER is not None:
     LOGWRITER.close()
 
-print '\nResults (%d/%d - %.2f%%)' % \
-    (PASSED, PASSED + FAILED, float(PASSED) / float(PASSED + FAILED) * 100)
-print '   %d test%s passed' % (PASSED, plural(PASSED))
-print '   %d test%s warnings' % (WARNING, plural(WARNING))
-print '   %d test%s failed' % (FAILED, plural(FAILED))
-print '   %d test%s initialized' % (INITED, plural(INITED))
+print('\nResults (%d/%d - %.2f%%)' %
+      (PASSED, PASSED + FAILED, float(PASSED) / float(PASSED + FAILED) * 100))
+print('   %d test%s passed' % (PASSED, plural(PASSED)))
+print('   %d test%s warnings' % (WARNING, plural(WARNING)))
+print('   %d test%s failed' % (FAILED, plural(FAILED)))
+print('   %d test%s initialized' % (INITED, plural(INITED)))
 
 sys.exit(FAILED)

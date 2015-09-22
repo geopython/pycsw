@@ -30,6 +30,8 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import logging
 from pycsw.core import util
 from pycsw.ogc.gml import gml3
@@ -309,7 +311,7 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_col
                            property_name.text)
 
     geometry = gml3.Geometry(element, nsmap)
-    
+
     #make decision to apply spatial ranking to results
     set_spatial_ranking(geometry)
 
@@ -352,7 +354,7 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_col
             spatial_query = "st_%s(st_geomfromtext(%s), \
             st_geomfromtext('%s'))" % \
                 (spatial_predicate, geomattr, geometry.wkt)
-                
+
     elif dbtype == 'postgresql+postgis+native':  # adjust spatial query for PostGIS with native geometry
         LOGGER.debug('Adjusting spatial query for PostgreSQL+PostGIS+native')
         if spatial_predicate == 'bbox':
@@ -370,7 +372,7 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_col
             spatial_query = "st_%s(%s, \
             st_geomfromtext('%s',4326))" % \
                 (spatial_predicate, postgis_geometry_column, geometry.wkt)
-                
+
     else:
         LOGGER.debug('Adjusting spatial query')
         spatial_query = "query_spatial(%s,'%s','%s','%s')" % \
@@ -385,9 +387,9 @@ def _get_comparison_operator(element):
     return MODEL['ComparisonOperators']['ogc:%s' % util.xmltag_split(element.tag)]['opvalue']
 
 def set_spatial_ranking(geometry):
-    """Given that we have a spatial query in ogc:Filter we check the type of geometry 
+    """Given that we have a spatial query in ogc:Filter we check the type of geometry
     and set the ranking variables"""
-    
+
     if util.ranking_enabled:
         if geometry.type in ['Polygon', 'Envelope']:
             util.ranking_pass = True
