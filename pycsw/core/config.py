@@ -29,6 +29,7 @@
 # =================================================================
 
 import logging
+from pycsw.core.etree import etree
 from pycsw import __version__
 
 LOGGER = logging.getLogger(__name__)
@@ -43,6 +44,8 @@ class StaticContext(object):
         self.version = __version__
 
         self.ogc_schemas_base = 'http://schemas.opengis.net'
+
+        self.parser = etree.XMLParser(resolve_entities=False)
 
         self.languages = {
             'en': 'english',

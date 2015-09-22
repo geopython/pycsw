@@ -105,10 +105,12 @@ class EBRIM(profile.Profile):
         util.nspath_eval('csw:SchemaComponent', self.context.namespaces),
         schemaLanguage='XMLSCHEMA', targetNamespace=self.namespace)
 
-        schema = etree.parse(os.path.join(self.context.pycsw_home,
-                 'plugins', 'profiles', 'ebrim',
-                 'schemas', 'ogc', 'csw', '2.0.2',
-                 'profiles', 'ebrim', '1.0', 'csw-ebrim.xsd')).getroot()
+        schema_file = os.path.join(self.context.pycsw_home, 'plugins',
+                                   'profiles', 'ebrim', 'schemas', 'ogc',
+                                   'csw', '2.0.2', 'profiles', 'ebrim',
+                                   '1.0', 'csw-ebrim.xsd')
+
+        schema = etree.parse(schema_file, self.context.parser).getroot()
 
         node.append(schema)
 
@@ -126,7 +128,7 @@ class EBRIM(profile.Profile):
 
         if esn == 'full' and typename == 'rim:RegistryObject':
             # dump record as is and exit
-            return etree.fromstring(util.getqattr(result, queryables['pycsw:XML']['dbcol']))
+            return etree.fromstring(util.getqattr(result, queryables['pycsw:XML']['dbcol']), self.context.parser)
 
         if typename == 'csw:Record':  # transform csw:Record -> rim:RegistryObject model mappings
             util.transform_mappings(queryables, self.repository['mappings']['csw:Record'])
