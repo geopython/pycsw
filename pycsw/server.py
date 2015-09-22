@@ -993,7 +993,7 @@ class Csw(object):
                 path = os.path.join(self.config.get('server', 'home'),
                 'schemas', 'ogc', 'csw', '2.0.2', 'record.xsd')
 
-                dublincore = etree.parse(path).getroot()
+                dublincore = etree.parse(path, self.context.parser).getroot()
 
                 schemacomponent.append(dublincore)
 
@@ -1459,7 +1459,7 @@ class Csw(object):
                 if isinstance(resultset, etree._Comment):
                     searchresults.append(resultset)
                 for rec in resultset:
-                    searchresults.append(etree.fromstring(resultset[rec].xml))
+                    searchresults.append(etree.fromstring(resultset[rec].xml, self.context.parser))
 
         if 'responsehandler' in self.kvp:  # process the handler
             self._process_responsehandler(etree.tostring(node,
@@ -1522,7 +1522,7 @@ class Csw(object):
             LOGGER.debug('GetRepositoryItem request.')
             if len(results) > 0:
                 return etree.fromstring(util.getqattr(results[0],
-                self.context.md_core_model['mappings']['pycsw:XML']))
+                self.context.md_core_model['mappings']['pycsw:XML']), self.context.parser)
 
         for result in results:
             if (util.getqattr(result,
@@ -1847,7 +1847,7 @@ class Csw(object):
         request = {}
         try:
             LOGGER.debug('Parsing %s.' % postdata)
-            doc = etree.fromstring(postdata)
+            doc = etree.fromstring(postdata, self.context.parser)
         except Exception, err:
             errortext = \
             'Exception: document not well-formed.\nError: %s.' % str(err)
@@ -1895,7 +1895,7 @@ class Csw(object):
                     doc = etree.fromstring(postdata, parser)
                 LOGGER.debug('Request is valid XML.')
             else:  # parse Transaction without validation
-                doc = etree.fromstring(postdata)
+                doc = etree.fromstring(postdata, self.context.parser)
         except Exception, err:
             errortext = \
             'Exception: the document is not valid.\nError: %s' % str(err)
@@ -2204,7 +2204,7 @@ class Csw(object):
             ['pycsw:Type']) != 'service'):
                 # dump record as is and exit
                 return etree.fromstring(util.getqattr(recobj,
-                self.context.md_core_model['mappings']['pycsw:XML']))
+                self.context.md_core_model['mappings']['pycsw:XML']), self.context.parser)
 
             etree.SubElement(record,
             util.nspath_eval('dc:identifier', self.context.namespaces)).text = \
@@ -2450,7 +2450,7 @@ class Csw(object):
         node1 = etree.SubElement(node, util.nspath_eval('csw:EchoedRequest',
                 self.context.namespaces))
         if self.requesttype == 'POST':
-            node1.append(etree.fromstring(self.request))
+            node1.append(etree.fromstring(self.request, self.context.parser))
         else:  # GET
             node2 = etree.SubElement(node1, util.nspath_eval('ows:Get',
                     self.context.namespaces))
