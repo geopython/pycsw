@@ -72,7 +72,7 @@ SYNOPSIS
 
     -o    path to output file
 
-    -p    path to input/output directory to read/write metadata records
+    -p    path to input/output directory or file to read/write metadata records
 
     -r    load records from directory recursively
 
@@ -93,7 +93,7 @@ EXAMPLES
 
         pycsw-admin.py -c setup_db -f default.cfg
         
-    2.) load_records: Loads metadata records from directory into repository
+    2.) load_records: Loads metadata records from directory or file into repository
 
         pycsw-admin.py -c load_records -p /path/to/records -f default.cfg
 
@@ -104,6 +104,10 @@ EXAMPLES
         Load records from directory and force updates
 
         pycsw-admin.py -c load_records -p /path/to/records -f default.cfg -y
+
+        Load metadata record from file into repository
+
+        pycsw-admin.py -c load_records -p /path/to/file.xml -f default.cfg
 
     3.) export_records: Dump metadata records from repository into directory
 
