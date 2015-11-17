@@ -127,7 +127,7 @@ def _parse_metadata(context, repos, record):
         return [_parse_iso(context, repos, exml)]
     elif root == 'metadata':  # FGDC
         return [_parse_fgdc(context, repos, exml)]
-    elif root == 'TRANSFER':  # GM03
+    elif root == '{%s}TRANSFER' % context.namespaces['gm03']: # GM03
         return [_parse_gm03(context, repos, exml)]
     elif root == '{%s}Record' % context.namespaces['csw']:  # Dublin Core CSW
         return [_parse_dc(context, repos, exml)]
