@@ -77,6 +77,7 @@ class StaticContext(object):
             'dif': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
             'fes20': 'http://www.opengis.net/fes/2.0',
             'fgdc': 'http://www.opengis.net/cat/csw/csdgm',
+            'gm03': 'http://www.interlis.ch/INTERLIS2.3',
             'gmd': 'http://www.isotc211.org/2005/gmd',
             'gml': 'http://www.opengis.net/gml',
             'ogc': 'http://www.opengis.net/ogc',
