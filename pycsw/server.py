@@ -380,7 +380,7 @@ class Csw(object):
 
             try:
                 self.repository = \
-                geonode_.GeoNodeRepository(self.context)
+                geonode_.GeoNodeRepository(self.context, repo_filter)
                 LOGGER.debug('GeoNode repository loaded (geonode): %s.' % \
                 self.repository.dbtype)
             except Exception as err:
@@ -396,7 +396,7 @@ class Csw(object):
 
             try:
                 self.repository = \
-                odc.OpenDataCatalogRepository(self.context)
+                odc.OpenDataCatalogRepository(self.context, repo_filter)
                 LOGGER.debug('OpenDataCatalog repository loaded (geonode): %s.' % \
                 self.repository.dbtype)
             except Exception as err:
