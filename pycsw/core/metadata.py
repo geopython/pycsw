@@ -902,6 +902,7 @@ def _parse_gm03(context, repos, exml):
     if hasattr(data, 'format'):
         _set(context, recobj, 'pycsw:Format', data.format.name)
 
+    # bbox
     if hasattr(data, 'geographic_bounding_box'):
         try:
             tmp = '%s,%s,%s,%s' % (data.geographic_bounding_box.west_bound_longitude,
@@ -913,6 +914,11 @@ def _parse_gm03(context, repos, exml):
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
+
+    # temporal extent
+    if data.temporal_extent.extent['begin'] is not None and data.temporal_extent.extent['end'] is not None:
+        _set(context, recobj, 'pycsw:TempExtent_begin', data.temporal_extent.extent['begin'])
+        _set(context, recobj, 'pycsw:TempExtent_end', data.temporal_extent.extent['end'])
 
     # online linkages
     name = description = protocol = ''
