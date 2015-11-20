@@ -127,7 +127,7 @@ def _parse_metadata(context, repos, record):
         return [_parse_iso(context, repos, exml)]
     elif root == 'metadata':  # FGDC
         return [_parse_fgdc(context, repos, exml)]
-    elif root == '{%s}TRANSFER' % context.namespaces['gm03']: # GM03
+    elif root == '{%s}TRANSFER' % context.namespaces['gm03']:  # GM03
         return [_parse_gm03(context, repos, exml)]
     elif root == '{%s}Record' % context.namespaces['csw']:  # Dublin Core CSW
         return [_parse_dc(context, repos, exml)]
@@ -872,8 +872,7 @@ def _parse_gm03(context, repos, exml):
     _set(context, recobj, 'pycsw:XML', md.xml)
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', data.metadata.language)
-    _set(context, recobj, 'pycsw:Type', data.metadata.hierarchy_level)
-    _set(context, recobj, 'pycsw:ParentIdentifier', data.metadata.parent_identifier)
+    _set(context, recobj, 'pycsw:Type', data.metadata.hierarchy_level[0])
     _set(context, recobj, 'pycsw:Date', data.metadata.date_stamp)
 
     for dt in data.date:
@@ -886,42 +885,55 @@ def _parse_gm03(context, repos, exml):
         elif dt.date_type == 'revision':
             _set(context, recobj, 'pycsw:RevisionDate', data.date.date)
 
+    if hasattr(data, 'metadata_point_of_contact'):
+        _set(context, recobj, 'pycsw:ResponsiblePartyRole', data.metadata_point_of_contact.role)
+
     _set(context, recobj, 'pycsw:Source', data.metadata.dataset_uri)
     _set(context, recobj, 'pycsw:CRS','urn:ogc:def:crs:EPSG:6.11:4326')
 
-    _set(context, recobj, 'pycsw:Title', get_value_by_language(data.citation.title.pt_group, language))
-    _set(context, recobj, 'pycsw:Abstract', get_value_by_language(data.data_identification.abstract.pt_group, language))
-    _set(context, recobj, 'pycsw:TopicCategory', data.data_identification.topic_category)
-    _set(context, recobj, 'pycsw:ResourceLanguage', data.data_identification.language)
+    if hasattr(data, 'citation'):
+        _set(context, recobj, 'pycsw:Title', get_value_by_language(data.citation.title.pt_group, language))
 
-    _set(context, recobj, 'pycsw:Format', data.format.name)
+    if hasattr(data, 'data_identification'):
+        _set(context, recobj, 'pycsw:Abstract', get_value_by_language(data.data_identification.abstract.pt_group, language))
+        _set(context, recobj, 'pycsw:TopicCategory', data.data_identification.topic_category)
+        _set(context, recobj, 'pycsw:ResourceLanguage', data.data_identification.language)
+
+    if hasattr(data, 'format'):
+        _set(context, recobj, 'pycsw:Format', data.format.name)
 
     if hasattr(data, 'geographic_bounding_box'):
         try:
-            tmp = '%s,%s,%s,%s' % (data.comprehensive.geographic_bounding_box.west_bound_longitude,
-                                   data.comprehensive.geographic_bounding_box.south_bound_latitude,
-                                   data.comprehensive.geographic_bounding_box.east_bound_longitude,
-                                   data.comprehensive.geographic_bounding_box.north_bound_latitude)
+            tmp = '%s,%s,%s,%s' % (data.geographic_bounding_box.west_bound_longitude,
+                                   data.geographic_bounding_box.south_bound_latitude,
+                                   data.geographic_bounding_box.east_bound_longitude,
+                                   data.geographic_bounding_box.north_bound_latitude)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
         except:  # coordinates are corrupted, do not include
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
 
-    # online linkage
-    name = get_value_by_language(data.online_resource.name.pt_group, language)
-    description = get_value_by_language(data.online_resource.description.pt_group, language)
-    protocol = data.online_resource.protocol
-    linkage = get_value_by_language(data.online_resource.linkage.pt_group, language)
+    # online linkages
+    name = description = protocol = ''
 
-    tmp = '%s,%s,%s,%s' % (name, description, protocol, linkage)
+    if hasattr(data.online_resource, 'name'):
+        name = get_value_by_language(data.online_resource.name.pt_group, language)
+    if hasattr(data.online_resource, 'description'):
+        description = get_value_by_language(data.online_resource.description.pt_group, language)
+    linkage = get_value_by_language(data.online_resource.linkage.pt_group, language, 'url')
+
+    tmp = '%s,"%s",%s,%s' % (name, description, protocol, linkage)
     links.append(tmp)
 
     if len(links) > 0:
         _set(context, recobj, 'pycsw:Links', '^'.join(links))
 
-    # TODO:
-    # KEYWORDS
+    keywords = []
+    for kw in data.keywords:
+        keywords.append(get_value_by_language(kw.keyword.pt_group, language))
+        _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
+
     # contacts
     return recobj
 
