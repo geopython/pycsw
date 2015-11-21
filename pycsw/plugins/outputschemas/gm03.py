@@ -193,12 +193,12 @@ def write_record(result, esn, context, url=None):
             if protocol:
                 etree.SubElement(online_resource, util.nspath_eval('gm03:protocol', NAMESPACES)).text = protocol
             if description:
-                desc = etree.SubElement(online_resource, util.nspath_eval('gm03:description', NAMESPACES)).text = protocol
+                desc = etree.SubElement(online_resource, util.nspath_eval('gm03:description', NAMESPACES))
                 desc.append(_get_pt_freetext(description, language))
             if name:
-                name_el = etree.SubElement(online_resource, util.nspath_eval('gm03:name', NAMESPACES)).text = protocol
+                name_el = etree.SubElement(online_resource, util.nspath_eval('gm03:name', NAMESPACES))
                 name_el.append(_get_pt_freetext(name, language))
-            linkage = etree.SubElement(online_resource, util.nspath_eval('gm03:linkage', NAMESPACES)).text = protocol
+            linkage = etree.SubElement(online_resource, util.nspath_eval('gm03:linkage', NAMESPACES))
             linkage.append(_get_pt_freeurl(url, language))
 
     return node
