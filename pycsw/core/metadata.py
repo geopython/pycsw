@@ -916,9 +916,10 @@ def _parse_gm03(context, repos, exml):
         _set(context, recobj, 'pycsw:BoundingBox', None)
 
     # temporal extent
-    if data.temporal_extent.extent['begin'] is not None and data.temporal_extent.extent['end'] is not None:
-        _set(context, recobj, 'pycsw:TempExtent_begin', data.temporal_extent.extent['begin'])
-        _set(context, recobj, 'pycsw:TempExtent_end', data.temporal_extent.extent['end'])
+    if hasattr(data, 'temporal_extent'):
+        if data.temporal_extent.extent['begin'] is not None and data.temporal_extent.extent['end'] is not None:
+            _set(context, recobj, 'pycsw:TempExtent_begin', data.temporal_extent.extent['begin'])
+            _set(context, recobj, 'pycsw:TempExtent_end', data.temporal_extent.extent['end'])
 
     # online linkages
     name = description = protocol = ''
