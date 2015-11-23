@@ -102,9 +102,9 @@ class Csw(object):
             else:
                 self.config = SafeConfigParser()
                 if isinstance(rtconfig, dict):  # dictionary
-                    for section, options in rtconfig.iteritems():
+                    for section, options in rtconfig.items():
                         self.config.add_section(section)
-                        for k, v in options.iteritems():
+                        for k, v in options.items():
                             self.config.set(section, k, v)
                 else:  # configuration file
                     import codecs
@@ -332,7 +332,7 @@ class Csw(object):
                 self.context.model\
                 ['constraints']['FederatedCatalogues']['values'].append(fedcat)
 
-        for key, value in self.outputschemas.iteritems():
+        for key, value in self.outputschemas.items():
             self.context.model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(value.NAMESPACE)
             self.context.model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(value.NAMESPACE)
             if 'Harvest' in self.context.model['operations']:
@@ -811,6 +811,6 @@ class Csw(object):
         """
 
         result = dict()
-        for name, value in kvp.iteritems():
+        for name, value in kvp.items():
             result[name.lower()] = value
         return result
