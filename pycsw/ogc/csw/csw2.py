@@ -1171,7 +1171,7 @@ class Csw2(object):
                             if rp['name'].find('/') != -1:
                                 # scan outputschemas; if match, bind
                                 for osch in self.parent.outputschemas.values():
-                                    for key, value in osch.XPATH_MAPPINGS.iteritems():
+                                    for key, value in osch.XPATH_MAPPINGS.items():
                                         if value == rp['name']:  # match
                                             rp['rp'] = {'xpath': value, 'name': key}
                                             rp['rp']['dbcol'] = self.parent.repository.queryables['_all'][key]

@@ -159,7 +159,7 @@ def setup_testdata():
         if os.path.isfile(dbfile):
             os.remove(dbfile)
 
-    for database, has_testdata in test_database_parameters.iteritems():
+    for database, has_testdata in test_database_parameters.items():
         info('Setting up test database %s' % database)
         cfg = path('tests/suites/%s/default.cfg' % database)
         sh('pycsw-admin.py -c setup_db -f %s' % cfg)
