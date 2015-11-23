@@ -573,8 +573,8 @@ class StaticContext(object):
             'csw:AnyText': 'pycsw:AnyText',
         }
 
-        for k, val in defaults.iteritems():
-            for model, params in self.models.iteritems():
+        for k, val in defaults.items():
+            for model, params in self.models.items():
                 queryables = params['typenames']['csw:Record']['queryables']
                 queryables['SupportedDublinCoreQueryables'][k] = {
                     'dbcol': mappings['mappings'][val]

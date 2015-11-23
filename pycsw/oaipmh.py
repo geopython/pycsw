@@ -208,7 +208,7 @@ class OAIPMH(object):
                 etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Invalid metadataPrefix parameter'
                 return node
 
-        for key, value in kvp.iteritems():
+        for key, value in kvp.items():
             if key != 'mode' and key not in self.request_model[verb]:
                 etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Illegal parameter \'%s\'' % key
                 return node
@@ -225,13 +225,13 @@ class OAIPMH(object):
                 etree.SubElement(verbnode, util.nspath_eval('oai:granularity', self.namespaces)).text = 'YYYY-MM-DDThh:mm:ssZ'
 
         elif verb == 'ListSets':
-            for key, value in self.metadata_sets.iteritems():
+            for key, value in self.metadata_sets.items():
                 setnode = etree.SubElement(verbnode, util.nspath_eval('oai:set', self.namespaces))
                 etree.SubElement(setnode, util.nspath_eval('oai:setSpec', self.namespaces)).text = key
                 etree.SubElement(setnode, util.nspath_eval('oai:setName', self.namespaces)).text = value[0]
 
         elif verb == 'ListMetadataFormats':
-            for key, value in self.metadata_formats.iteritems():
+            for key, value in self.metadata_formats.items():
                 mdfnode = etree.SubElement(verbnode, util.nspath_eval('oai:metadataFormat', self.namespaces))
                 etree.SubElement(mdfnode, util.nspath_eval('oai:metadataPrefix', self.namespaces)).text = key
                 etree.SubElement(mdfnode, util.nspath_eval('oai:schema', self.namespaces)).text = value['schema']
@@ -284,7 +284,7 @@ class OAIPMH(object):
         if value:
             if elname == 'oai:setSpec': 
                 value = None
-                for k, v in self.metadata_sets.iteritems():
+                for k, v in self.metadata_sets.items():
                     if v[1] == elname:
                         value = k
                         break
