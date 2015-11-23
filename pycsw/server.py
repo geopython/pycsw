@@ -637,6 +637,8 @@ class Csw(object):
                 self.contenttype = self.kvp['outputformat']
             else:
                 self.contenttype = self.mimetype
+            etree.cleanup_namespaces(self.response,
+                                     keep_ns_prefixes=self.context.keep_ns_prefixes)
             response = etree.tostring(self.response,
             pretty_print=self.pretty_print, encoding='unicode')
             xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' \
