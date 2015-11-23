@@ -1,0 +1,80 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../tools.rst:4
+msgid "Cataloguing and Metadata Tools"
+msgstr ""
+
+#: ../../tools.rst:7
+msgid "CSW Clients"
+msgstr ""
+
+#: ../../tools.rst:9
+msgid ""
+"`Geoportal CSW Clients "
+"<http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_"
+msgstr ""
+
+#: ../../tools.rst:10
+msgid "`OWSLib <http://geopython.github.io/OWSLib>`_"
+msgstr ""
+
+#: ../../tools.rst:11
+msgid ""
+"`MetaSearch <https://hub.qgis.org/wiki/quantum-gis/MetaSearch>`_ (`QGIS "
+"<http://qgis.org/>`_ plugin)"
+msgstr ""
+
+#: ../../tools.rst:14
+msgid "CSW Servers"
+msgstr ""
+
+#: ../../tools.rst:16
+msgid "`deegree <http://deegree.org/>`_"
+msgstr ""
+
+#: ../../tools.rst:17
+msgid "`eXcat <http://gdsc.nlr.nl/gdsc/en/tools/excat>`_"
+msgstr ""
+
+#: ../../tools.rst:18
+msgid "`GeoNetwork opensource <http://geonetwork-opensource.org/>`_"
+msgstr ""
+
+#: ../../tools.rst:21
+msgid "Metadata Editing Tools"
+msgstr ""
+
+#: ../../tools.rst:23
+msgid "`CatMDEdit <http://catmdedit.sourceforge.net/>`_"
+msgstr ""
+
+#: ../../tools.rst:24
+msgid "`EUOSME <https://joinup.ec.europa.eu/software/euosme/description>`_"
+msgstr ""
+
+#: ../../tools.rst:25
+msgid "`GIMED <http://sourceforge.net/projects/gimed/>`_"
+msgstr ""
+
+#: ../../tools.rst:26
+msgid ""
+"`Metatools <http://hub.qgis.org/projects/metatools>`_ (`QGIS "
+"<http://qgis.org/>`_ plugin)"
+msgstr ""
+
+#: ../../tools.rst:27
+msgid ""
+"`QSphere <http://hub.qgis.org/plugins/qsphere>`_ (`QGIS <http://qgis.org/>`_"
+" plugin)"
+msgstr ""
