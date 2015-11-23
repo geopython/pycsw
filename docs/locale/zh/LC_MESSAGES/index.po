@@ -1,0 +1,32 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../index.rst:5
+msgid "pycsw |release| Documentation"
+msgstr "pycsw 发布 文档"
+
+#: ../../index.rst:7
+msgid "Tom Kralidis"
+msgstr ""
+
+#: ../../index.rst:8
+msgid "tomkralidis at gmail.com"
+msgstr ""
+
+#: ../../index.rst:9
+msgid "|release|"
+msgstr "发布"
+
+#: ../../index.rst:10
+msgid "|today|"
+msgstr ""
