@@ -67,7 +67,7 @@ def get_validity(sexpected, sresult, soutfile, force_id_mask=False):
             with open(sexpected) as a:
                 with open('results%s%s' % (os.sep, soutfile)) as b:
                     diff = difflib.unified_diff(a.readlines(), b.readlines())
-            print '\n'.join(list(diff))
+            print('\n'.join(list(diff)))
             sstatus = -1
     return sstatus
 
@@ -196,7 +196,7 @@ EXAMPLES
 # main
 
 if len(sys.argv) < 2:
-    print usage()
+    print(usage())
     sys.exit(1)
 
 URL = sys.argv[1]
@@ -217,8 +217,8 @@ REMOTE = False
 try:
     OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:rh')
 except getopt.GetoptError as err:
-    print '\nERROR: %s' % err
-    print usage()
+    print('\nERROR: %s' % err)
+    print(usage())
     sys.exit(2)
 
 for o, a in OPTS:
@@ -233,10 +233,10 @@ for o, a in OPTS:
     if o == '-s':
         TESTSUITES = a.split(',')
     if o == '-h':  # dump help and exit
-        print usage()
+        print(usage())
         sys.exit(3)
 
-print '\nRunning tests against %s' % URL
+print('\nRunning tests against %s' % URL)
 
 if LOGFILE is not None:  # write detailed output to CSV
     LOGWRITER = csv.writer(open(LOGFILE, 'wb'))
@@ -262,7 +262,7 @@ for testsuite in TESTSUITES_LIST:
    
     # get configuration
     for cfg in glob.glob('%s%s*.cfg' % (testsuite, os.sep)):
-        print '\nTesting configuration %s' % cfg
+        print('\nTesting configuration %s' % cfg)
 
         for root, dirs, files in os.walk(testsuite):
             if files:
@@ -281,7 +281,7 @@ for testsuite in TESTSUITES_LIST:
                                 outfile = '%s%s' % (root.replace(os.sep, '_'),
                                                     '_%s.xml' % row[0])
                                 expected = 'expected%s%s' % (os.sep, outfile)
-                                print '\n test %s:%s' % (testfile, row[0])
+                                print('\n test %s:%s' % (testfile, row[0]))
 
                                 try:
                                     result = http_request('GET', request)
@@ -292,16 +292,16 @@ for testsuite in TESTSUITES_LIST:
                                                       force_id_mask)
 
                                 if status == 1:
-                                    print '  passed'
+                                    print('  passed')
                                     PASSED += 1
                                 elif status == 0:
-                                    print '  initialized'
+                                    print('  initialized')
                                     INITED += 1
                                 elif status == -1 and DATABASE == 'PostgreSQL':
-                                    print '  warning: possible collation issue'
+                                    print('  warning: possible collation issue')
                                     WARNING += 1
                                 else:
-                                    print '  FAILED'
+                                    print('  FAILED')
                                     FAILED += 1
 
                                 if LOGWRITER is not None:
@@ -315,7 +315,7 @@ for testsuite in TESTSUITES_LIST:
                         outfile = '%s%s' % (os.sep,
                                             testfile.replace(os.sep, '_'))
                         expected = 'expected%s%s' % (os.sep, outfile)
-                        print '\n test %s' % testfile
+                        print('\n test %s' % testfile)
 
                         # read test
                         with open(testfile) as f:
@@ -334,16 +334,16 @@ for testsuite in TESTSUITES_LIST:
                                               force_id_mask)
 
                         if status == 1:
-                            print '  passed'
+                            print('  passed')
                             PASSED += 1
                         elif status == 0:
-                            print '  initialized'
+                            print('  initialized')
                             INITED += 1
                         elif status == -1 and DATABASE == 'PostgreSQL':
-                            print '  warning: possible sorting collation issue'
+                            print('  warning: possible sorting collation issue')
                             WARNING += 1
                         else:
-                            print '  FAILED'
+                            print('  FAILED')
                             FAILED += 1
 
                         if LOGWRITER is not None:
@@ -352,11 +352,11 @@ for testsuite in TESTSUITES_LIST:
 if LOGWRITER is not None:
     LOGWRITER.close()
 
-print '\nResults (%d/%d - %.2f%%)' % \
-    (PASSED, PASSED + FAILED, float(PASSED) / float(PASSED + FAILED) * 100)
-print '   %d test%s passed' % (PASSED, plural(PASSED))
-print '   %d test%s warnings' % (WARNING, plural(WARNING))
-print '   %d test%s failed' % (FAILED, plural(FAILED))
-print '   %d test%s initialized' % (INITED, plural(INITED))
+print('\nResults (%d/%d - %.2f%%)' % \
+    (PASSED, PASSED + FAILED, float(PASSED) / float(PASSED + FAILED) * 100))
+print('   %d test%s passed' % (PASSED, plural(PASSED)))
+print('   %d test%s warnings' % (WARNING, plural(WARNING)))
+print('   %d test%s failed' % (FAILED, plural(FAILED)))
+print('   %d test%s initialized' % (INITED, plural(INITED)))
 
 sys.exit(FAILED)

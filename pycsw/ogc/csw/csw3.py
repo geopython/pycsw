@@ -362,7 +362,7 @@ class Csw3(object):
                         'MaxRecordDefault': self.parent.context.model['constraints']['MaxRecordDefault']['values'],
                     }
 
-                    for key, value in extra_constraints.iteritems():
+                    for key, value in extra_constraints.items():
                         param = etree.SubElement(oper,
                         util.nspath_eval('ows20:Constraint',
                         self.parent.context.namespaces), name=key)
@@ -1235,7 +1235,7 @@ class Csw3(object):
                             if rp['name'].find('/') != -1:
                                 # scan outputschemas; if match, bind
                                 for osch in self.parent.outputschemas.values():
-                                    for key, value in osch.XPATH_MAPPINGS.iteritems():
+                                    for key, value in osch.XPATH_MAPPINGS.items():
                                         if value == rp['name']:  # match
                                             rp['rp'] = {'xpath': value, 'name': key}
                                             rp['rp']['dbcol'] = self.parent.repository.queryables['_all'][key]

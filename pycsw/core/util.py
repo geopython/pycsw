@@ -118,7 +118,7 @@ def xmltag_split2(tag, namespaces, colon=False):
     """Return XML namespace prefix of element"""
     try:
         nsuri = tag.split('}')[0].split('{')[1]
-        nsprefix = [key for key, value in namespaces.iteritems()
+        nsprefix = [key for key, value in namespaces.items()
                     if value == nsuri]
         value = nsprefix[0]
         if colon:
@@ -287,7 +287,7 @@ def transform_mappings(queryables, typename, reverse=False):
     if reverse:  # from csw:Record
         for qbl in queryables.keys():
             if qbl in typename.values():
-                tmp = [k for k, v in typename.iteritems() if v == qbl][0]
+                tmp = [k for k, v in typename.items() if v == qbl][0]
                 val = queryables[tmp]
                 queryables[qbl] = {}
                 queryables[qbl]['xpath'] = val['xpath']

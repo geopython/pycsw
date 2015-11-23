@@ -34,7 +34,7 @@ from urllib2 import quote
 
 JQUERY_VERSION = '1.9.0'
 
-print '''
+print('''
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -86,9 +86,9 @@ print '''
             });
         </script>
     </head>
-''' % JQUERY_VERSION
+''' % JQUERY_VERSION)
 
-print '''
+print('''
     <body>
         <h2 class="header">pycsw Tester</h2>
         <hr/>
@@ -109,8 +109,8 @@ for root, dirs, files in os.walk('suites'):
         for sfile in files:
             if os.path.splitext(sfile)[1] in ['.xml']:  # it's a POST request
                 query = '%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)
-                print '                            <option value="tests/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[1], query, query)
-print '''
+                print('                            <option value="tests/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[1], query, query))
+print('''
                         </select>
                         <input type="button" class="send" value="Send"/>
                     </td>
@@ -131,7 +131,7 @@ print '''
         <hr/>
         <h3 class="header">HTTP GET</h3>
             <ul>
-'''
+''')
 for root, dirs, files in os.walk('suites'):
     if files:
         for sfile in files:
@@ -141,8 +141,8 @@ for root, dirs, files in os.walk('suites'):
                 for row in gets:
                     baseurl, query_string = row[1].split('?')
                     query = '%s?%s' % (baseurl.replace('PYCSW_SERVER', '../csw.py'), query_string.replace('&', '&amp;'))
-                    print '<li><a href="%s">%s</a></li>' % (query, row[0])
-print '''
+                    print('<li><a href="%s">%s</a></li>' % (query, row[0]))
+print('''
             </ul>
         <hr/>
         <footer>
@@ -151,4 +151,4 @@ print '''
         </footer>
     </body>
 </html>
-'''
+''')

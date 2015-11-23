@@ -221,7 +221,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
                            maxrecords=pagesize, outputschema=csw_outputschema, esn='full')
         except Exception as err:  # this is a CSW, but server rejects query
             raise RuntimeError(md.response)
-        for k, v in md.records.iteritems():
+        for k, v in md.records.items():
             # try to parse metadata
             try:
                 LOGGER.debug('Parsing metadata record: %s', v.xml)

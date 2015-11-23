@@ -128,5 +128,5 @@ if __name__ == '__main__':  # run inline using WSGI reference implementation
     if len(sys.argv) > 1:
         port = int(sys.argv[1])
     httpd = make_server('', port, application)
-    print "Serving on port %d..." % port
+    print('Serving on port %d...' % port)
     httpd.serve_forever()
