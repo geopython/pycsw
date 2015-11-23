@@ -13,7 +13,7 @@ msgstr ""
 
 #: ../../sru.rst:4
 msgid "Search/Retrieval via URL (SRU) Support"
-msgstr ""
+msgstr "通过URL的支持来查找与取回（SRU）"
 
 #: ../../sru.rst:6
 msgid ""
@@ -32,3 +32,4 @@ msgstr ""
 msgid ""
 "See http://www.loc.gov/standards/sru/simple.html for example SRU requests."
 msgstr ""
+"通过页面 http://www.loc.gov/standards/sru/simple.html 来查看 SRU 请求的示例。"
