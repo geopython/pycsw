@@ -32,27 +32,27 @@
 
 import os
 import sys
-import cgi
 from time import time
 from urllib2 import quote, unquote
 import urlparse
 from cStringIO import StringIO
 from ConfigParser import SafeConfigParser
+import logging
+
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
-from pycsw.core import config, log, metadata, util
+from pycsw.core import config, log, util
 from pycsw.ogc.csw import csw2, csw3
-import logging
 
 LOGGER = logging.getLogger(__name__)
 
 
 class Csw(object):
-    ''' Base CSW server '''
+    """ Base CSW server """
     def __init__(self, rtconfig=None, env=None, version='3.0.0'):
-        ''' Initialize CSW '''
+        """ Initialize CSW """
 
         if not env:
             self.environ = os.environ
@@ -94,7 +94,7 @@ class Csw(object):
         if self.request_version == '2.0.2':
             self.iface = csw2.Csw2(server_csw=self)
             self.context.set_model('csw')
-        
+
         # load user configuration
         try:
             if isinstance(rtconfig, SafeConfigParser):  # serialized already
@@ -110,16 +110,19 @@ class Csw(object):
                     import codecs
                     with codecs.open(rtconfig, encoding='utf-8') as scp:
                         self.config.readfp(scp)
-        except Exception as err:
+        except Exception:
             self.response = self.iface.exceptionreport(
-            'NoApplicableCode', 'service',
-            'Error opening configuration %s' % rtconfig)
+                'NoApplicableCode', 'service',
+                'Error opening configuration %s' % rtconfig
+            )
             return
 
         # set server.home safely
         # TODO: make this more abstract
-        self.config.set('server', 'home', os.path.dirname(
-        os.path.join(os.path.dirname(__file__), '..')))
+        self.config.set(
+            'server', 'home',
+            os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
+        )
 
         self.context.pycsw_home = self.config.get('server', 'home')
         self.context.url = self.config.get('server', 'url')
@@ -132,7 +135,7 @@ class Csw(object):
         # set OGC schemas location
         if not self.config.has_option('server', 'ogc_schemas_base'):
             self.config.set('server', 'ogc_schemas_base',
-            self.context.ogc_schemas_base)
+                            self.context.ogc_schemas_base)
 
         # set mimetype
         if self.config.has_option('server', 'mimetype'):
@@ -148,16 +151,16 @@ class Csw(object):
 
         # set XML pretty print
         if (self.config.has_option('server', 'pretty_print') and
-        self.config.get('server', 'pretty_print') == 'true'):
+                self.config.get('server', 'pretty_print') == 'true'):
             self.pretty_print = 1
-        
+
         # set Spatial Ranking option
         if (self.config.has_option('server', 'spatial_ranking') and
-        self.config.get('server', 'spatial_ranking') == 'true'):
+                self.config.get('server', 'spatial_ranking') == 'true'):
             util.ranking_enabled = True
 
         # set language default
-        if (self.config.has_option('server', 'language')):
+        if self.config.has_option('server', 'language'):
             try:
                 LOGGER.info('Setting language')
                 lang_code = self.config.get('server', 'language').split('-')[0]
@@ -174,41 +177,43 @@ class Csw(object):
             # override default repository mappings
             try:
                 import imp
-                module = self.config.get('repository','mappings')
-                modulename = '%s' % \
-                os.path.splitext(module)[0].replace(os.sep, '.')
-                LOGGER.debug(
-                'Loading custom repository mappings from %s.' % module)
+                module = self.config.get('repository', 'mappings')
+                modulename = '%s' % os.path.splitext(module)[0].replace(
+                    os.sep, '.')
+                LOGGER.debug('Loading custom repository mappings '
+                             'from %s.' % module)
                 mappings = imp.load_source(modulename, module)
                 self.context.md_core_model = mappings.MD_CORE_MODEL
                 self.context.refresh_dc(mappings.MD_CORE_MODEL)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Could not load repository.mappings %s' % str(err))
+                    'NoApplicableCode', 'service',
+                    'Could not load repository.mappings %s' % str(err)
+                )
 
         # load outputschemas
         LOGGER.debug('Loading outputschemas.')
 
         for osch in pycsw.plugins.outputschemas.__all__:
-            mod = getattr(__import__('pycsw.plugins.outputschemas.%s' % osch).plugins.outputschemas, osch)
+            output_schema_module = __import__(
+                'pycsw.plugins.outputschemas.%s' % osch)
+            mod = getattr(output_schema_module.plugins.outputschemas, osch)
             self.outputschemas[mod.NAMESPACE] = mod
 
         LOGGER.debug('Outputschemas loaded: %s.' % self.outputschemas)
         LOGGER.debug('Namespaces: %s' % self.context.namespaces)
 
-
     def expand_path(self, path):
-        ''' return safe path for WSGI environments '''
+        """ return safe path for WSGI environments """
         if 'local.app_root' in self.environ and not os.path.isabs(path):
             return os.path.join(self.environ['local.app_root'], path)
         else:
             return path
 
     def dispatch_wsgi(self):
-        ''' WSGI handler '''
+        """ WSGI handler """
 
-        if hasattr(self,'response'):
+        if hasattr(self, 'response'):
             return self._write_response()
 
         LOGGER.debug('WSGI mode detected')
@@ -261,50 +266,53 @@ class Csw(object):
         return self.dispatch()
 
     def opensearch(self):
-        ''' enable OpenSearch '''
+        """ enable OpenSearch """
         if not self.opensearchobj:
             self.opensearchobj = opensearch.OpenSearch(self.context)
 
         return self.opensearchobj
 
     def sru(self):
-        ''' enable SRU '''
+        """ enable SRU """
         if not self.sruobj:
             self.sruobj = sru.Sru(self.context)
 
         return self.sruobj
 
     def oaipmh(self):
-        ''' enable OAI-PMH '''
+        """ enable OAI-PMH """
         if not self.oaipmhobj:
             self.oaipmhobj = oaipmh.OAIPMH(self.context, self.config)
         return self.oaipmhobj
 
     def dispatch(self, writer=sys.stdout, write_headers=True):
-        ''' Handle incoming HTTP request '''
+        """ Handle incoming HTTP request """
 
         if self.requesttype == 'GET':
             self.kvp = self.normalize_kvp(self.kvp)
-            if (('version' in self.kvp and self.kvp['version'] == '2.0.2') or
-                ('acceptversions' in self.kvp and '2.0.2' in self.kvp['acceptversions'])):
+            version_202 = ('version' in self.kvp and
+                           self.kvp['version'] == '2.0.2')
+            accept_version_202 = ('acceptversions' in self.kvp and
+                                  '2.0.2' in self.kvp['acceptversions'])
+            if version_202 or accept_version_202:
                 self.request_version = '2.0.2'
         elif self.requesttype == 'POST':
             if self.request.find('2.0.2') != -1:
                 self.request_version = '2.0.2'
 
-        if (not isinstance(self.kvp, str) and
-        'mode' in self.kvp and self.kvp['mode'] == 'sru'):
+        if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
+                self.kvp['mode'] == 'sru'):
             self.mode = 'sru'
             self.request_version = '2.0.2'
             LOGGER.debug('SRU mode detected; processing request.')
             self.kvp = self.sru().request_sru2csw(self.kvp)
 
-        if (not isinstance(self.kvp, str) and
-        'mode' in self.kvp and self.kvp['mode'] == 'oaipmh'):
+        if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
+                self.kvp['mode'] == 'oaipmh'):
             self.mode = 'oaipmh'
             self.request_version = '2.0.2'
             LOGGER.debug('OAI-PMH mode detected; processing request.')
-            self.oaiargs =  dict((k, v) for k, v in self.kvp.items() if k)
+            self.oaiargs = dict((k, v) for k, v in self.kvp.items() if k)
             self.kvp = self.oaipmh().request(self.kvp)
 
         if self.request_version == '2.0.2':
@@ -314,54 +322,61 @@ class Csw(object):
         # configure transaction support, if specified in config
         self._gen_manager()
 
+        namespaces = self.context.namespaces
+        ops = self.context.model['operations']
+        constraints = self.context.model['constraints']
         # generate domain model
         # NOTE: We should probably avoid this sort of mutable state for WSGI
-        if 'GetDomain' not in self.context.model['operations']:
-            self.context.model['operations']['GetDomain'] = \
-            self.context.gen_domains()
+        if 'GetDomain' not in ops:
+            ops['GetDomain'] = self.context.gen_domains()
 
         # generate distributed search model, if specified in config
         if self.config.has_option('server', 'federatedcatalogues'):
             LOGGER.debug('Configuring distributed search.')
+            constraints['FederatedCatalogues'] = {'values': []}
 
-            self.context.model['constraints']['FederatedCatalogues'] = \
-            {'values': []}
-
-            for fedcat in \
-            self.config.get('server', 'federatedcatalogues').split(','):
-                self.context.model\
-                ['constraints']['FederatedCatalogues']['values'].append(fedcat)
+            for fedcat in self.config.get('server',
+                                          'federatedcatalogues').split(','):
+                constraints['FederatedCatalogues']['values'].append(fedcat)
 
         for key, value in self.outputschemas.items():
-            self.context.model['operations']['GetRecords']['parameters']['outputSchema']['values'].append(value.NAMESPACE)
-            self.context.model['operations']['GetRecordById']['parameters']['outputSchema']['values'].append(value.NAMESPACE)
-            if 'Harvest' in self.context.model['operations']:
-                self.context.model['operations']['Harvest']['parameters']['ResourceType']['values'].append(value.NAMESPACE)
+            get_records_params = ops['GetRecords']['parameters']
+            get_records_params['outputSchema']['values'].append(
+                value.NAMESPACE)
+            get_records_by_id_params = ops['GetRecordById']['parameters']
+            get_records_by_id_params['outputSchema']['values'].append(
+                value.NAMESPACE)
+            if 'Harvest' in ops:
+                harvest_params = ops['Harvest']['parameters']
+                harvest_params['ResourceType']['values'].append(
+                    value.NAMESPACE)
 
         LOGGER.debug('Setting MaxRecordDefault')
         if self.config.has_option('server', 'maxrecords'):
-            self.context.model['constraints']['MaxRecordDefault']['values'] = \
-            [self.config.get('server', 'maxrecords')]
+            constraints['MaxRecordDefault']['values'] = [
+                self.config.get('server', 'maxrecords')]
 
         # load profiles
         if self.config.has_option('server', 'profiles'):
             self.profiles = pprofile.load_profiles(
-            os.path.join('pycsw', 'plugins', 'profiles'),
-            pprofile.Profile,
-            self.config.get('server', 'profiles'))
+                os.path.join('pycsw', 'plugins', 'profiles'),
+                pprofile.Profile,
+                self.config.get('server', 'profiles')
+            )
 
             for prof in self.profiles['plugins'].keys():
                 tmp = self.profiles['plugins'][prof](self.context.model,
-                self.context.namespaces, self.context)
+                                                     namespaces,
+                                                     self.context)
 
                 key = tmp.outputschema  # to ref by outputschema
                 self.profiles['loaded'][key] = tmp
-                self.profiles['loaded'][key].extend_core(
-                self.context.model, self.context.namespaces,
-                self.config)
+                self.profiles['loaded'][key].extend_core(self.context.model,
+                                                         namespaces,
+                                                         self.config)
 
-            LOGGER.debug('Profiles loaded: %s.' %
-            self.profiles['loaded'].keys())
+            LOGGER.debug(
+                'Profiles loaded: %s.' % self.profiles['loaded'].keys())
 
         # init repository
         # look for tablename, set 'records' as default
@@ -373,51 +388,57 @@ class Csw(object):
             repo_filter = self.config.get('repository', 'filter')
 
         if (self.config.has_option('repository', 'source') and
-            self.config.get('repository', 'source') == 'geonode'):
+                self.config.get('repository', 'source') == 'geonode'):
 
             # load geonode repository
             from pycsw.plugins.repository.geonode import geonode_
 
             try:
-                self.repository = \
-                geonode_.GeoNodeRepository(self.context, repo_filter)
-                LOGGER.debug('GeoNode repository loaded (geonode): %s.' % \
-                self.repository.dbtype)
+                self.repository = geonode_.GeoNodeRepository(self.context,
+                                                             repo_filter)
+                LOGGER.debug('GeoNode repository loaded '
+                             '(geonode): %s.' % self.repository.dbtype)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Could not load repository (geonode): %s' % str(err))
+                    'NoApplicableCode', 'service',
+                    'Could not load repository (geonode): %s' % str(err)
+                )
 
         elif (self.config.has_option('repository', 'source') and
-            self.config.get('repository', 'source') == 'odc'):
+                self.config.get('repository', 'source') == 'odc'):
 
             # load odc repository
             from pycsw.plugins.repository.odc import odc
 
             try:
-                self.repository = \
-                odc.OpenDataCatalogRepository(self.context, repo_filter)
-                LOGGER.debug('OpenDataCatalog repository loaded (geonode): %s.' % \
-                self.repository.dbtype)
+                self.repository = odc.OpenDataCatalogRepository(self.context,
+                                                                repo_filter)
+                LOGGER.debug('OpenDataCatalog repository loaded '
+                             '(geonode): %s.' % self.repository.dbtype)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Could not load repository (odc): %s' % str(err))
+                    'NoApplicableCode', 'service',
+                    'Could not load repository (odc): %s' % str(err)
+                )
 
         else:  # load default repository
             self.orm = 'sqlalchemy'
             from pycsw.core import repository
             try:
-                self.repository = \
-                repository.Repository(self.config.get('repository', 'database'),
-                self.context, self.environ.get('local.app_root', None),
-                self.config.get('repository', 'table'), repo_filter)
-                LOGGER.debug('Repository loaded (local): %s.' \
-                % self.repository.dbtype)
+                self.repository = repository.Repository(
+                    self.config.get('repository', 'database'),
+                    self.context,
+                    self.environ.get('local.app_root', None),
+                    self.config.get('repository', 'table'),
+                    repo_filter
+                )
+                LOGGER.debug(
+                    'Repository loaded (local): %s.' % self.repository.dbtype)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Could not load repository (local): %s' % str(err))
+                    'NoApplicableCode', 'service',
+                    'Could not load repository (local): %s' % str(err)
+                )
 
         if self.requesttype == 'POST':
             LOGGER.debug(self.iface.version)
@@ -430,7 +451,7 @@ class Csw(object):
             locator = 'service'
             text = self.kvp
             if (self.kvp.find('the document is not valid') != -1 or
-                self.kvp.find('document not well-formed') != -1):
+                    self.kvp.find('document not well-formed') != -1):
                 code = 'NoApplicableCode'
             else:
                 code = 'InvalidParameterValue'
@@ -438,37 +459,41 @@ class Csw(object):
         LOGGER.debug('HTTP Headers:\n%s.' % self.environ)
         LOGGER.debug('Parsed request parameters: %s' % self.kvp)
 
-        if (not isinstance(self.kvp, str) and
-        'mode' in self.kvp and self.kvp['mode'] == 'opensearch'):
+        if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
+                self.kvp['mode'] == 'opensearch'):
             self.mode = 'opensearch'
             LOGGER.debug('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
         if ((self.kvp == {'': ''} and self.request_version == '3.0.0') or
-            (len(self.kvp) == 1 and 'config' in self.kvp)):
+                (len(self.kvp) == 1 and 'config' in self.kvp)):
             LOGGER.debug('Turning on default csw30:Capabilities for base URL')
             self.kvp = {
                 'service': 'CSW',
                 'acceptversions': '3.0.0',
                 'request': 'GetCapabilities'
             }
-            if 'HTTP_ACCEPT' in self.environ and 'application/opensearchdescription+xml' in self.environ['HTTP_ACCEPT']:
+            http_accept = self.environ.get('HTTP_ACCEPT', '')
+            if 'application/opensearchdescription+xml' in http_accept:
                 self.mode = 'opensearch'
                 self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
         if error == 0:
             # test for the basic keyword values (service, version, request)
             basic_options = ['service', 'request']
+            request = self.kvp.get('request', '')
+            own_version_integer = util.get_version_integer(
+                self.request_version)
             if self.request_version == '2.0.2':
                 basic_options.append('version')
 
             for k in basic_options:
                 if k not in self.kvp:
-                    if (k in ['version', 'acceptversions'] and 'request' in self.kvp and
-                    self.kvp['request'] == 'GetCapabilities'):
+                    if (k in ['version', 'acceptversions'] and
+                            request == 'GetCapabilities'):
                         pass
                     else:
-                        error   = 1
+                        error = 1
                         locator = k
                         code = 'MissingParameterValue'
                         text = 'Missing keyword: %s' % k
@@ -485,43 +510,41 @@ class Csw(object):
                     Value MUST be CSW' % self.kvp['service']
 
                 # test version
-                if ('version' in self.kvp and
-                    util.get_version_integer(self.kvp['version']) !=
-                    util.get_version_integer(self.request_version) and
-                    self.kvp['request'] != 'GetCapabilities'):
+                kvp_version = self.kvp.get('version', '')
+                kvp_version_integer = util.get_version_integer(kvp_version)
+                if (request != 'GetCapabilities' and
+                        kvp_version_integer != own_version_integer):
                     error = 1
                     locator = 'version'
                     code = 'InvalidParameterValue'
-                    text = 'Invalid value for version: %s.\
-                    Value MUST be 2.0.2 or 3.0.0' % self.kvp['version']
+                    text = ('Invalid value for version: %s. Value MUST be '
+                            '2.0.2 or 3.0.0' % self.kvp['version'])
 
                 # check for GetCapabilities acceptversions
                 if 'acceptversions' in self.kvp:
                     for vers in self.kvp['acceptversions'].split(','):
-                        if (util.get_version_integer(vers) ==
-                            util.get_version_integer(self.request_version)):
+                        vers_integer = util.get_version_integer(vers)
+                        if vers_integer == own_version_integer:
                             break
                         else:
                             error = 1
                             locator = 'acceptversions'
                             code = 'VersionNegotiationFailed'
-                            text = 'Invalid parameter value in acceptversions:\
-                            %s. Value MUST be 2.0.2 or 3.0.0' % \
-                            self.kvp['acceptversions']
+                            text = ('Invalid parameter value in '
+                                    'acceptversions: %s. Value MUST be '
+                                    '2.0.2 or 3.0.0' %
+                                    self.kvp['acceptversions'])
 
                 # test request
-                if self.kvp['request'] not in \
-                    self.context.model['operations'].keys():
+                if request not in ops.keys():
                     error = 1
                     locator = 'request'
-                    if self.kvp['request'] in ['Transaction','Harvest']:
+                    if request in ['Transaction', 'Harvest']:
                         code = 'OperationNotSupported'
-                        text = '%s operations are not supported' % \
-                        self.kvp['request']
+                        text = '%s operations are not supported' % request
                     else:
                         code = 'InvalidParameterValue'
-                        text = 'Invalid value for request: %s' % \
-                        self.kvp['request']
+                        text = 'Invalid value for request: %s' % request
 
         if error == 1:  # return an ExceptionReport
             self.response = self.iface.exceptionreport(code, locator, text)
@@ -532,8 +555,8 @@ class Csw(object):
                 # set flag to process asynchronously
                 import threading
                 self.async = True
-                if ('requestid' not in self.kvp
-                or self.kvp['requestid'] is None):
+                request_id = self.kvp.get('requestid', None)
+                if request_id is None:
                     import uuid
                     self.kvp['requestid'] = str(uuid.uuid4())
 
@@ -562,64 +585,67 @@ class Csw(object):
                 else:
                     self.response = self.iface.harvest()
             else:
-                self.response = self.iface.exceptionreport('InvalidParameterValue',
-                'request', 'Invalid request parameter: %s' %
-                self.kvp['request'])
+                self.response = self.iface.exceptionreport(
+                    'InvalidParameterValue', 'request',
+                    'Invalid request parameter: %s' % self.kvp['request']
+                )
 
         if self.mode == 'sru':
             LOGGER.debug('SRU mode detected; processing response.')
             self.response = self.sru().response_csw2sru(self.response,
-                            self.environ)
+                                                        self.environ)
         elif self.mode == 'opensearch':
             LOGGER.debug('OpenSearch mode detected; processing response.')
             self.response = self.opensearch().response_csw2opensearch(
-                            self.response, self.config)
+                self.response, self.config)
 
         elif self.mode == 'oaipmh':
             LOGGER.debug('OAI-PMH mode detected; processing response.')
-            self.response = self.oaipmh().response(self.response,
-                            self.oaiargs, self.repository, self.config.get('server', 'url'))
+            self.response = self.oaipmh().response(
+                self.response, self.oaiargs, self.repository,
+                self.config.get('server', 'url')
+            )
 
         return self._write_response()
 
     def getcapabilities(self):
-        ''' Handle GetCapabilities request '''
+        """ Handle GetCapabilities request """
         return self.iface.getcapabilities()
 
     def describerecord(self):
-        ''' Handle DescribeRecord request '''
+        """ Handle DescribeRecord request """
         return self.iface.describerecord()
 
     def getdomain(self):
-        ''' Handle GetDomain request '''
+        """ Handle GetDomain request """
         return self.iface.getdomain()
 
     def getrecords(self):
-        ''' Handle GetRecords request '''
+        """ Handle GetRecords request """
         return self.iface.getrecords()
 
     def getrecordbyid(self, raw=False):
-        ''' Handle GetRecordById request '''
+        """ Handle GetRecordById request """
         return self.iface.getrecordbyid()
 
     def getrepositoryitem(self):
-        ''' Handle GetRepositoryItem request '''
+        """ Handle GetRepositoryItem request """
         return self.iface.getrepositoryitem()
 
     def transaction(self):
-        ''' Handle Transaction request '''
+        """ Handle Transaction request """
         return self.iface.transaction()
 
     def harvest(self):
-        ''' Handle Harvest request '''
+        """ Handle Harvest request """
         return self.iface.harvest()
 
     def _write_response(self):
-        ''' Generate response '''
+        """ Generate response """
         # set HTTP response headers and XML declaration
 
-        xmldecl=''
-        appinfo=''
+        xmldecl = ''
+        appinfo = ''
 
         LOGGER.debug('Writing response.')
 
@@ -627,57 +653,77 @@ class Csw(object):
             self._gen_soap_wrapper()
 
         if (isinstance(self.kvp, dict) and 'outputformat' in self.kvp and
-            self.kvp['outputformat'] == 'application/json'):
+                self.kvp['outputformat'] == 'application/json'):
             self.contenttype = self.kvp['outputformat']
             from pycsw.core.formats import fmt_json
             response = fmt_json.exml2json(self.response,
-            self.context.namespaces, self.pretty_print)
+                                          self.context.namespaces,
+                                          self.pretty_print)
         else:  # it's XML
             if 'outputformat' in self.kvp:
                 self.contenttype = self.kvp['outputformat']
             else:
                 self.contenttype = self.mimetype
             response = etree.tostring(self.response,
-            pretty_print=self.pretty_print, encoding='unicode')
-            xmldecl = '<?xml version="1.0" encoding="%s" standalone="no"?>\n' \
-            % self.encoding
+                                      pretty_print=self.pretty_print,
+                                      encoding='unicode')
+            xmldecl = ('<?xml version="1.0" encoding="%s" standalone="no"?>'
+                       '\n' % self.encoding)
             appinfo = '<!-- pycsw %s -->\n' % self.context.version
 
         s = (u'%s%s%s' % (xmldecl, appinfo, response)).encode(self.encoding)
-        LOGGER.debug('Response code: %s', self.context.response_codes[self.status])
+        LOGGER.debug('Response code: %s',
+                     self.context.response_codes[self.status])
         LOGGER.debug('Response:\n%s', s)
         return [self.context.response_codes[self.status], s]
 
     def _gen_soap_wrapper(self):
-        ''' Generate SOAP wrapper '''
+        """ Generate SOAP wrapper """
         LOGGER.debug('Writing SOAP wrapper.')
-        node = etree.Element(util.nspath_eval('soapenv:Envelope',
-        self.context.namespaces), nsmap=self.context.namespaces)
+        node = etree.Element(
+            util.nspath_eval('soapenv:Envelope', self.context.namespaces),
+            nsmap=self.context.namespaces
+        )
 
-        node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.context.namespaces)] = '%s %s' % \
-        (self.context.namespaces['soapenv'], self.context.namespaces['soapenv'])
+        schema_location_ns = util.nspath_eval('xsi:schemaLocation',
+                                              self.context.namespaces)
+        node.attrib[schema_location_ns] = '%s %s' % (
+            self.context.namespaces['soapenv'],
+            self.context.namespaces['soapenv']
+        )
 
-        node2 = etree.SubElement(node, util.nspath_eval('soapenv:Body',
-        self.context.namespaces))
+        node2 = etree.SubElement(
+            node, util.nspath_eval('soapenv:Body', self.context.namespaces))
 
         if self.exception:
-            node3 = etree.SubElement(node2, util.nspath_eval('soapenv:Fault',
-                    self.context.namespaces))
-            node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Code',
-                    self.context.namespaces))
+            node3 = etree.SubElement(
+                node2,
+                util.nspath_eval('soapenv:Fault', self.context.namespaces)
+            )
+            node4 = etree.SubElement(
+                node3,
+                util.nspath_eval('soapenv:Code', self.context.namespaces)
+            )
 
-            etree.SubElement(node4, util.nspath_eval('soapenv:Value',
-            self.context.namespaces)).text = 'soap:Server'
+            etree.SubElement(
+                node4,
+                util.nspath_eval('soapenv:Value', self.context.namespaces)
+            ).text = 'soap:Server'
 
-            node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Reason',
-                    self.context.namespaces))
+            node4 = etree.SubElement(
+                node3,
+                util.nspath_eval('soapenv:Reason', self.context.namespaces)
+            )
 
-            etree.SubElement(node4, util.nspath_eval('soapenv:Text',
-            self.context.namespaces)).text = 'A server exception was encountered.'
+            etree.SubElement(
+                node4,
+                util.nspath_eval('soapenv:Text', self.context.namespaces)
+            ).text = 'A server exception was encountered.'
 
-            node4 = etree.SubElement(node3, util.nspath_eval('soapenv:Detail',
-                    self.context.namespaces))
+            node4 = etree.SubElement(
+                node3,
+                util.nspath_eval('soapenv:Detail', self.context.namespaces)
+            )
             node4.append(self.response)
         else:
             node2.append(self.response)
@@ -685,14 +731,16 @@ class Csw(object):
         self.response = node
 
     def _gen_manager(self):
-        ''' Update self.context.model with CSW-T advertising '''
+        """ Update self.context.model with CSW-T advertising """
         if (self.config.has_option('manager', 'transactions') and
-            self.config.get('manager', 'transactions') == 'true'):
+                self.config.get('manager', 'transactions') == 'true'):
 
             self.manager = True
 
-            self.context.model['operations']['Transaction'] = \
-            {'methods': {'get': False, 'post': True}, 'parameters': {}}
+            self.context.model['operations']['Transaction'] = {
+                'methods': {'get': False, 'post': True},
+                'parameters': {}
+            }
 
             schema_values = [
                 'http://www.opengis.net/cat/csw/2.0.2',
@@ -707,36 +755,44 @@ class Csw(object):
                 'urn:geoss:waf',
             ]
 
-            self.context.model['operations']['Harvest'] = \
-            {'methods': {'get': False, 'post': True}, 'parameters': \
-            {'ResourceType': {'values': schema_values}}}
+            self.context.model['operations']['Harvest'] = {
+                'methods': {'get': False, 'post': True},
+                'parameters': {
+                    'ResourceType': {'values': schema_values}
+                }
+            }
 
-            self.context.model['operations']['Transaction'] = \
-            {'methods': {'get': False, 'post': True}, 'parameters': \
-            {'TransactionSchemas': {'values': schema_values}}}
+            self.context.model['operations']['Transaction'] = {
+                'methods': {'get': False, 'post': True},
+                'parameters': {
+                    'TransactionSchemas': {'values': schema_values}
+                }
+            }
 
             self.csw_harvest_pagesize = 10
             if self.config.has_option('manager', 'csw_harvest_pagesize'):
-                self.csw_harvest_pagesize = int(self.config.get('manager',
-                'csw_harvest_pagesize'))
+                self.csw_harvest_pagesize = int(
+                    self.config.get('manager', 'csw_harvest_pagesize'))
 
     def _test_manager(self):
-        ''' Verify that transactions are allowed '''
+        """ Verify that transactions are allowed """
 
         if self.config.get('manager', 'transactions') != 'true':
             raise RuntimeError('CSW-T interface is disabled')
 
         ipaddress = self.environ['REMOTE_ADDR']
 
-        if not self.config.has_option('manager', 'allowed_ips') or \
-        (self.config.has_option('manager', 'allowed_ips') and not 
-         util.ipaddress_in_whitelist(ipaddress,
-                        self.config.get('manager', 'allowed_ips').split(','))):
-            raise RuntimeError(
-            'CSW-T operations not allowed for this IP address: %s' % ipaddress)
+        if self.config.has_option('manager', 'allowed_ips'):
+            allowed_ips = self.config.get('manager', 'allowed_ips').split(',')
+        else:
+            allowed_ips = []
+        ip_in_whitelist = util.ipaddress_in_whitelist(ipaddress, allowed_ips)
+        if len(allowed_ips) > 0 and not ip_in_whitelist:
+            raise RuntimeError('CSW-T operations not allowed for this '
+                               'IP address: %s' % ipaddress)
 
     def _cql_update_queryables_mappings(self, cql, mappings):
-        ''' Transform CQL query's properties to underlying DB columns '''
+        """ Transform CQL query's properties to underlying DB columns """
         LOGGER.debug('Raw CQL text = %s.' % cql)
         LOGGER.debug(str(mappings.keys()))
         if cql is not None:
@@ -749,11 +805,11 @@ class Csw(object):
             return cql
 
     def _process_responsehandler(self, xml):
-        ''' Process response handler '''
+        """ Process response handler """
 
         if self.kvp['responsehandler'] is not None:
             LOGGER.debug('Processing responsehandler %s.' %
-            self.kvp['responsehandler'])
+                         self.kvp['responsehandler'])
 
             uprh = urlparse.urlparse(self.kvp['responsehandler'])
 
@@ -766,15 +822,16 @@ class Csw(object):
                 if self.config.has_option('server', 'smtp_host'):
                     smtp_host = self.config.get('server', 'smtp_host')
 
-                body = 'Subject: pycsw %s results\n\n%s' % \
-                (self.kvp['request'], xml)
+                body = ('Subject: pycsw %s results\n\n%s' %
+                        (self.kvp['request'], xml))
 
                 try:
                     LOGGER.debug('Sending email.')
                     msg = smtplib.SMTP(smtp_host)
                     msg.sendmail(
-                    self.config.get('metadata:main', 'contact_email'),
-                    uprh.path, body)
+                        self.config.get('metadata:main', 'contact_email'),
+                        uprh.path, body
+                    )
                     msg.quit()
                     LOGGER.debug('Email sent successfully.')
                 except Exception as err:
