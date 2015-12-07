@@ -13,15 +13,15 @@ msgstr ""
 
 #: ../../introduction.rst:4
 msgid "Introduction"
-msgstr ""
+msgstr "引言"
 
 #: ../../introduction.rst:6
 msgid "pycsw is an OGC CSW server implementation written in Python."
-msgstr ""
+msgstr "pycsw是使用 Python 语言实现的 OGC CSW 服务。"
 
 #: ../../introduction.rst:9
 msgid "Features"
-msgstr ""
+msgstr "功能"
 
 #: ../../introduction.rst:11
 msgid "certified OGC `Compliant`_ and OGC Reference Implementation"
@@ -29,91 +29,91 @@ msgstr ""
 
 #: ../../introduction.rst:12
 msgid "harvesting support for WMS, WFS, WCS, WPS, WAF, CSW, SOS"
-msgstr ""
+msgstr "支持 WMS、WFS、WCS、WPS、WAF、CSW、SOS数据收割"
 
 #: ../../introduction.rst:13
 msgid "implements `INSPIRE Discovery Services 3.0`_"
-msgstr ""
+msgstr "实现了 `INSPIRE Discovery Services 3.0`_"
 
 #: ../../introduction.rst:14
 msgid "implements `ISO Metadata Application Profile 1.0.0`_"
-msgstr ""
+msgstr "实现了 `ISO Metadata Application Profile 1.0.0`_"
 
 #: ../../introduction.rst:15
 msgid "implements `FGDC CSDGM Application Profile for CSW 2.0`_"
-msgstr ""
+msgstr "实现了 `FGDC CSDGM Application Profile for CSW 2.0`_"
 
 #: ../../introduction.rst:16
 msgid "implements the Search/Retrieval via URL (`SRU`_) search protocol"
-msgstr ""
+msgstr "实现了通过URL进行查找/抓取的查找接口（ `SRU`_ ）"
 
 #: ../../introduction.rst:17
 msgid "implements Full Text Search capabilities"
-msgstr ""
+msgstr "实现了全文件检索的功能"
 
 #: ../../introduction.rst:18
 msgid "implements OGC OpenSearch Geo and Time Extensions"
-msgstr ""
+msgstr "实现了 OGC 开放搜索时空扩展（OpenSearch Geo and Time Extensions））"
 
 #: ../../introduction.rst:19
 msgid "implements Open Archives Initiative Protocol for Metadata Harvesting"
-msgstr ""
+msgstr "实现了Open Archives Initiative Protocol for Metadata Harvesting"
 
 #: ../../introduction.rst:20
 msgid "supports ISO, Dublin Core, DIF, FGDC and Atom metadata models"
-msgstr ""
+msgstr "支持 ISO、 Dublin Core、DIF、FGDC与Atom 元数据模型"
 
 #: ../../introduction.rst:21
 msgid "CGI or WSGI deployment"
-msgstr ""
+msgstr "基于CGI或WSCI部署"
 
 #: ../../introduction.rst:22
 msgid "simple configuration"
-msgstr ""
+msgstr "简单配置"
 
 #: ../../introduction.rst:23
 msgid "transactional capabilities (CSW-T)"
-msgstr ""
+msgstr "事务功能（CSW-T））"
 
 #: ../../introduction.rst:24
 msgid "flexible repository configuration"
-msgstr ""
+msgstr "灵活的存储库配置"
 
 #: ../../introduction.rst:25
 msgid "`GeoNode`_ connectivity"
-msgstr ""
+msgstr "可以连接 `GeoNode`_ "
 
 #: ../../introduction.rst:26
 msgid "`Open Data Catalog`_ connectivity"
-msgstr ""
+msgstr "可以连接开放数据目录 `Open Data Catalog`_ "
 
 #: ../../introduction.rst:27
 msgid "`CKAN`_ connectivity"
-msgstr ""
+msgstr "可以连接 `CKAN`_  "
 
 #: ../../introduction.rst:28
 msgid "federated catalogue distributed searching"
-msgstr ""
+msgstr "联合目录分布式搜索"
 
 #: ../../introduction.rst:29
 msgid "realtime XML Schema validation"
-msgstr ""
+msgstr "实时XML Schema验证"
 
 #: ../../introduction.rst:30
 msgid "extensible profile plugin architecture"
-msgstr ""
+msgstr "可扩展的配置文件的插件架构"
 
 #: ../../introduction.rst:33
 msgid "Standards Support"
-msgstr ""
+msgstr "支持的标准"
 
 #: ../../introduction.rst:36
 msgid "Standard"
-msgstr ""
+msgstr "标准"
 
 #: ../../introduction.rst:36
 msgid "Version(s)"
-msgstr ""
+msgstr "版本"
 
 #: ../../introduction.rst:38
 msgid "`OGC CSW`_"
@@ -233,7 +233,7 @@ msgstr ""
 
 #: ../../introduction.rst:70
 msgid "Supported Operations"
-msgstr ""
+msgstr "支持的操作"
 
 #: ../../introduction.rst:1
 msgid "Request"
