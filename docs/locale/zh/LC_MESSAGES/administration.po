@@ -21,12 +21,14 @@ msgid ""
 "admin.py`` is installed as part of the pycsw install process and should be "
 "available in your PATH."
 msgstr ""
+"pycsw 通过 ``pycsw-admin.py`` 工具进行管理。 ``pycsw-admin.py`` 作为 pycsw 安装的一部分安装到系统，应该在你的路径中可用。"
 
 #: ../../administration.rst:11
 msgid ""
 "Run ``pycsw-admin.py -h`` to see all administration operations and "
 "parameters"
 msgstr ""
+"运行 ``pycsw-admin.py -h`` 来查看所有的管理操作与参数。 "
 
 #: ../../administration.rst:14
 msgid "Metadata Repository Setup"
@@ -57,6 +59,7 @@ msgid ""
 "The easiest and fastest way to deploy pycsw is to use SQLite3 as the "
 "backend."
 msgstr ""
+"最简单快速部署 pycws 的方式是使用 SQLite3 作为数据存储。"
 
 #: ../../administration.rst:27
 msgid "PostgreSQL support includes support for PostGIS functions if enabled"
@@ -72,6 +75,7 @@ msgstr ""
 msgid ""
 "To expose your geospatial metadata via pycsw, perform the following actions:"
 msgstr ""
+"通过 pycsw 发布你的地理空间元数据，执行下面的一些操作："
 
 #: ../../administration.rst:34
 msgid "setup the database"
@@ -87,11 +91,12 @@ msgstr "发布数据仓库"
 
 #: ../../administration.rst:39
 msgid "Supported Information Models"
-msgstr ""
+msgstr "支持的信息模型"
 
 #: ../../administration.rst:41
 msgid "By default, pycsw supports the ``csw:Record`` information model."
-msgstr ""
+msgstr "缺省地，pycsw 支持 ``csw:Record`` 信息模型。"
+
 
 #: ../../administration.rst:44
 msgid "See :ref:`profiles` for information on enabling profiles"
@@ -110,12 +115,14 @@ msgid ""
 "The database created is an `OGC SFSQL`_ compliant database, and can be used "
 "with any implementing software.  For example, to use with `OGR`_:"
 msgstr ""
+"数据库会创建一个标准的 `OGC SFSQL`_ 数据库，并且可以应用于任何实现相关标准的软件。例如，要使用 `OGR`_ "
 
 #: ../../administration.rst:67
 msgid ""
 "If PostGIS is detected, the pycsw-admin.py script does not create the SFSQL "
 "tables as they are already in the database."
 msgstr ""
+"如何检测到PostGIS， pycsw-admin.py脚本不会创建 SFSQL 表，因为它们在数据库中已经有了。"
 
 #: ../../administration.rst:71
 msgid "Loading Records"
@@ -132,7 +139,7 @@ msgstr ""
 
 #: ../../administration.rst:80
 msgid "Records can also be imported using CSW-T (see :ref:`transactions`)."
-msgstr ""
+msgstr "记录也可以使用 CSW-T （查看 :ref:`transactions` ）来导入。"
 
 #: ../../administration.rst:83
 msgid "Exporting the Repository"
