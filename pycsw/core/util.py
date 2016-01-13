@@ -313,25 +313,15 @@ def get_anytext(bag):
         return ' '.join([value.strip() for value in bag.xpath('//text()')])
 
 
-def exml2dict(element, namespaces):
-    """Convert an lxml object to JSON
-        From:
-        http://bitbucket.org/smulloni/pesterfish/src/1578db946d74/pesterfish.py
-    """
+def xml2dict(xml_string, namespaces):
+    """Convert an lxml object to a dictionary"""
 
-    jdict = dict(tag='%s%s' % (xmltag_split2(element.tag, namespaces, True),
-                               xmltag_split(element.tag)))
-    if element.text:
-        if element.text.find('\n') == -1:
-            jdict['text'] = element.text
-    if element.attrib:
-        jdict['attributes'] = dict(('%s%s' % (xmltag_split2(k, namespaces, True),
-                                   xmltag_split(k)), f(v) if hasattr(v, 'keys') else v)
-                                   for k, v in element.attrib.items())
-    children = element.getchildren()
-    if children:
-        jdict['children'] = map(lambda x: exml2dict(x, namespaces), children)
-    return jdict
+    import xmltodict
+
+    namespaces_reverse = dict((v, k) for k, v in namespaces.items())
+
+    return xmltodict.parse(xml_string, process_namespaces=True,
+                           namespaces=namespaces_reverse)
 
 
 def getqattr(obj, name):

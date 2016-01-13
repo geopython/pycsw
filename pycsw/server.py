@@ -652,21 +652,23 @@ class Csw(object):
         if hasattr(self, 'soap') and self.soap:
             self._gen_soap_wrapper()
 
+        response = etree.tostring(self.response,
+                                  pretty_print=self.pretty_print,
+                                  encoding='unicode')
+
         if (isinstance(self.kvp, dict) and 'outputformat' in self.kvp and
                 self.kvp['outputformat'] == 'application/json'):
             self.contenttype = self.kvp['outputformat']
             from pycsw.core.formats import fmt_json
-            response = fmt_json.exml2json(self.response,
-                                          self.context.namespaces,
-                                          self.pretty_print)
+            response = fmt_json.xml2json(response,
+                                         self.context.namespaces,
+                                         self.pretty_print)
         else:  # it's XML
             if 'outputformat' in self.kvp:
                 self.contenttype = self.kvp['outputformat']
             else:
                 self.contenttype = self.mimetype
-            response = etree.tostring(self.response,
-                                      pretty_print=self.pretty_print,
-                                      encoding='unicode')
+
             xmldecl = ('<?xml version="1.0" encoding="%s" standalone="no"?>'
                        '\n' % self.encoding)
             appinfo = '<!-- pycsw %s -->\n' % self.context.version
