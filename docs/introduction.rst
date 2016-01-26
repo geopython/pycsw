@@ -193,6 +193,6 @@ Functions
 .. _`GeoNode`: http://geonode.org/
 .. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
 .. _`CKAN`: http://ckan.org/
-.. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1104
+.. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1325
 .. _`OAI-PMH`: http://www.openarchives.org/OAI/openarchivesprotocol.html
 .. _`GM03`: http://www.geocat.ch/internet/geocat/en/home/documentation/gm03.html
