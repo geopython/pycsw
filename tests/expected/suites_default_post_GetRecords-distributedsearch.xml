@@ -4,7 +4,7 @@
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
   <csw:SearchResults nextRecord="0" numberOfRecordsMatched="1" numberOfRecordsReturned="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
     <!-- 1 result from http://demo.pycsw.org/gisdata/csw -->
-    <csw:BriefRecord xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:ebrim="http://www.opengis.net/cat/wrs/1.0" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0">
+    <csw:BriefRecord xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:ebrim="http://www.opengis.net/cat/wrs/1.0" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:srv="http://www.isotc211.org/2005/srv">
       <dc:identifier>urn:uuid:b0a1c48a-f765-11e1-bf69-aa0000ae6bfc</dc:identifier>
       <dc:title>Aquifers</dc:title>
       <dc:type>vector digital data</dc:type>
