@@ -178,7 +178,7 @@ def write_record(result, esn, context, url=None):
     time_end = util.getqattr(result, context.md_core_model['mappings']['pycsw:TempExtent_end'])
     if time_begin:
         temp_ext = etree.SubElement(core, util.nspath_eval('gm03:GM03_2_1Core.Core.EX_TemporalExtent', NAMESPACES))
-        extent = etree.SubElement(temp_ext, util.nspath_eval('gm03:extent', NAMESPACES)).text = val
+        extent = etree.SubElement(temp_ext, util.nspath_eval('gm03:extent', NAMESPACES))
         tm_primitive = etree.SubElement(extent, util.nspath_eval('gm03:GM03_2_1Core.Core.TM_Primitive', NAMESPACES))
         etree.SubElement(tm_primitive, util.nspath_eval('gm03:begin', NAMESPACES)).text = time_begin
         if time_end:
