@@ -54,7 +54,12 @@ class OpenSearch(object):
     def response_csw2opensearch(self, element, cfg):
         """transform a CSW response into an OpenSearch response"""
 
-        LOGGER.debug('RESPONSE: %s', util.xmltag_split(element.tag))
+        root_tag = util.xmltag_split(element.tag)
+        if root_tag == 'ExceptionReport':
+            return element
+
+        LOGGER.debug('RESPONSE: %s', root_tag)
+
         if util.xmltag_split(element.tag) == 'GetRecordsResponse':
 
             startindex = int(element.xpath('//@nextRecord')[0]) - int(
