@@ -118,7 +118,7 @@ class OpenSearch(object):
             node1 = etree.SubElement(node, 'Url')
             node1.set('type', 'application/atom+xml')
             node1.set('method', 'get')
-            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}' % self.bind_url)
+            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
 
             node1 = etree.SubElement(node, 'Image')
             node1.set('type', 'image/vnd.microsoft.icon')
