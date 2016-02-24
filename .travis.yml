@@ -24,6 +24,7 @@ script:
 
 after_script:
   - paver stop
+  - pycsw-admin.py -c get_sysprof
 
 notifications:
   irc:
