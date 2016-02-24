@@ -12,6 +12,11 @@ addons:
       - libgeos-c1
       - libxml2-dev
 
+before_script:
+  - sudo add-apt-repository ppa:gcpp-kalxas/ppa-tzotsos -y
+  - sudo apt-get update -q
+  - sudo apt-get install -y libxml2-dev
+
 install:
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
