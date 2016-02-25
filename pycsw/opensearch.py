@@ -43,7 +43,6 @@ class OpenSearch(object):
         """initialize"""
 
         self.namespaces = {
-            None: 'http://a9.com/-/spec/opensearch/1.1/',
             'atom': 'http://www.w3.org/2005/Atom',
             'geo': 'http://a9.com/-/opensearch/extensions/geo/1.0/',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
@@ -51,8 +50,7 @@ class OpenSearch(object):
         }
 
         self.context = context
-        #self.context.namespaces.update(self.namespaces)
-
+        self.context.namespaces.update(self.namespaces)
 
     def response_csw2opensearch(self, element, cfg):
         """transform a CSW response into an OpenSearch response"""
