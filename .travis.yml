@@ -13,6 +13,9 @@ addons:
       - libgeos-c1
       - libxml2-dev
 
+before_script:
+  - pycsw-admin.py -c get_sysprof
+
 install:
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
@@ -24,7 +27,6 @@ script:
 
 after_script:
   - paver stop
-  - pycsw-admin.py -c get_sysprof
 
 notifications:
   irc:
