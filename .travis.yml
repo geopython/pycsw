@@ -1,6 +1,7 @@
 language: python
 
-sudo: false
+sudo: required
+dist: trusty
 
 python:
   - "2.6"
@@ -23,6 +24,7 @@ script:
 
 after_script:
   - paver stop
+  - pycsw-admin.py -c get_sysprof
 
 notifications:
   irc:
