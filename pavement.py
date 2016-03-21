@@ -172,6 +172,7 @@ def setup_testdata():
 @task
 @cmdopts([
     ('url=', 'u', 'pycsw endpoint'),
+    ('mode=', 'm', 'mode (wsgi or cgi [default is wsgi])'),
     ('suites=', 's', 'comma-separated list of testsuites'),
     ('database=', 'd', 'database (SQLite3 [default], PostgreSQL, MySQL)'),
     ('user=', 'U', 'database username'),
@@ -187,6 +188,7 @@ def test(options):
     status = 0
 
     url = options.get('url', None)
+    mode = options.get('mode', 'wsgi')
     suites = options.get('suites', None)
     database = options.get('database', 'SQLite3')
     remote = options.get('remote')
@@ -197,8 +199,12 @@ def test(options):
         call_task('reset')
         if database == 'SQLite3':
             call_task('setup_testdata')
-        call_task('start')
-        url = 'http://localhost:8000'
+        if mode == 'cgi':
+            call_task('start', options={'mode': mode})
+            url = 'http://localhost:8000/cgi-bin/csw.py'
+        else:
+            call_task('start')
+            url = 'http://localhost:8000'
 
     if suites is not None:
         cmd = 'python run_tests.py -u %s -s %s' % (url, suites)
@@ -274,7 +280,7 @@ def test(options):
         except BuildFailure as err:
             status = 1
         # stop pycsw instance
-        call_task('stop')
+    call_task('stop')
 
     if db_setup:  # tearDown
         for cfg in cfg_files:
@@ -288,17 +294,31 @@ def test(options):
 
 
 @task
+@cmdopts([
+    ('mode=', 'm', 'mode (wsgi or cgi [default is wsgi])')
+])
 def start(options):
     """Start local WSGI server instance"""
-    sh('python pycsw/wsgi.py 8000 &')
+
+    mode = options.get('mode', 'wsgi')
+
+    if mode == 'cgi':
+        sh('mkdir cgi-bin')
+        sh('ln -s ../csw.py cgi-bin/csw.py')
+        sh('python -m CGIHTTPServer 8000 &')
+    else:
+        sh('python pycsw/wsgi.py 8000 &')
+
     time.sleep(10)
 
 
 @task
 def stop():
-    """Stop local WSGI server instance"""
+    """Stop local WSGI / CGI server instances"""
 
     kill_process('python', 'pycsw/wsgi.py')
+    kill_process('python', 'CGIHTTPServer')
+    sh('rm -fr cgi-bin')
 
 
 @task
