@@ -836,7 +836,9 @@ class Csw2(object):
                 catalogue: %s.' % fedcat)
                 remotecsw = CatalogueServiceWeb(fedcat, skip_caps=True)
                 try:
-                    remotecsw.getrecords2(xml=self.parent.request)
+                    remotecsw.getrecords2(xml=self.parent.request,
+                                          esn=self.parent.kvp['elementsetname'],
+                                          outputschema=self.parent.kvp['outputschema'])
                     if hasattr(remotecsw, 'results'):
                         LOGGER.debug(
                         'Distributed search results from catalogue \
