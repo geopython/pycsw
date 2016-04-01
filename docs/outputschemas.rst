@@ -6,7 +6,7 @@ Output Schema Plugins
 Overview
 --------
 
-pycsw allows for extending the implementation of output schemas to the core standard.  outputschemas allow for a client to request metadata in a specific format (ISO, Dublin Core, FGDC, NASA DIF and Atom are default).
+pycsw allows for extending the implementation of output schemas to the core standard.  outputschemas allow for a client to request metadata in a specific format (ISO, Dublin Core, FGDC, NASA DIF Atom and GM03 are default).
 
 All outputschemas must be placed in the ``pycsw/plugins/outputschemas`` directory.
 
@@ -23,6 +23,7 @@ Requirements
        atom.py # default
        dif.py # default
        fgdc.py # default
+       gm03.py # default
 
 Implementing a new outputschema
 -------------------------------

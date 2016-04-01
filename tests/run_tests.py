@@ -132,11 +132,11 @@ def normalize(sresult, force_id_mask=False):
             sresult = sresult.replace(i, b'PYCSW_IDENTIFIER')
 
     # JSON responses
-    timestamp = re.search(b'"timestamp": "(.*?)"', sresult)
+    timestamp = re.search(b'"@timestamp": "(.*?)"', sresult)
 
     if timestamp:
         sresult = sresult.replace(timestamp.group(0),
-                                  b'"timestamp": "PYCSW_TIMESTAMP"')
+                                  b'"@timestamp": "PYCSW_TIMESTAMP"')
 
     # harvesting-based GetRecords/GetRecordById responses
     if force_id_mask:

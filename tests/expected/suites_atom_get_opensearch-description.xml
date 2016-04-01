@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<OpenSearchDescription xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:time="http://a9.com/-/opensearch/extensions/time/1.0/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns="http://a9.com/-/spec/opensearch/1.1/">
+<OpenSearchDescription xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:time="http://a9.com/-/opensearch/extensions/time/1.0/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:atom="http://www.w3.org/2005/Atom">
   <ShortName>pycsw Geospatial Catalogue</ShortName>
   <LongName>pycsw Geospatial Catalogue</LongName>
   <Description>pycsw is an OGC CSW server implementation written in Python</Description>
   <Tags>catalogue discovery</Tags>
-  <Url type="application/atom+xml" method="get" template="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecords&amp;elementsetname=full&amp;typenames=csw:Record&amp;resulttype=results&amp;q={searchTerms?}&amp;bbox={geo:box?}&amp;time={time:start?}/{time:end?}"/>
+  <Url type="application/atom+xml" method="get" template="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecords&amp;elementsetname=full&amp;typenames=csw:Record&amp;resulttype=results&amp;q={searchTerms?}&amp;bbox={geo:box?}&amp;time={time:start?}/{time:end?}&amp;startposition={startIndex?}&amp;maxrecords={count?}"/>
   <Image type="image/vnd.microsoft.icon" width="16" height="16">http://pycsw.org/img/favicon.ico</Image>
   <Developer>Kralidis, Tom</Developer>
   <Contact>tomkralidis@gmail.com</Contact>

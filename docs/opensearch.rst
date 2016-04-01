@@ -5,7 +5,7 @@ OpenSearch Support
 
 pycsw supports the `OGC OpenSearch Geo and Time Extensions 1.0`_ standard via the following conformance classes:
 
-- Core (GeoSpatial Service) ``{searchTerms}``, ``{geo:box}``
+- Core (GeoSpatial Service) ``{searchTerms}``, ``{geo:box}``, ``{startIndex}``, ``{count}``
 - Temporal Search core ``{time:start}``, ``{time:end}``
 
 OpenSearch support is enabled by default.  HTTP requests must be specified with ``mode=opensearch`` in the base URL for OpenSearch requests, e.g.:

@@ -30,4 +30,4 @@
 
 from __future__ import (absolute_import, division, print_function)
 
-__all__ = ['atom', 'dif', 'fgdc']
+__all__ = ['atom', 'dif', 'fgdc', 'gm03']

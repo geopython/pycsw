@@ -17,7 +17,7 @@ Features
 - implements Full Text Search capabilities
 - implements OGC OpenSearch Geo and Time Extensions
 - implements Open Archives Initiative Protocol for Metadata Harvesting
-- supports ISO, Dublin Core, DIF, FGDC and Atom metadata models
+- supports ISO, Dublin Core, DIF, FGDC, Atom and GM03 metadata models
 - CGI or WSGI deployment
 - simple configuration
 - transactional capabilities (CSW-T)
@@ -58,6 +58,8 @@ Standards Support
 | `NASA DIF`_       | 9.7        | 
 +-------------------+------------+
 | `FGDC CSDGM`_     | 1998       | 
++-------------------+------------+
+| `GM03`_           | 2.1        |
 +-------------------+------------+
 | `SRU`_            | 1.1        | 
 +-------------------+------------+
@@ -103,6 +105,7 @@ Supported Output Schemas
 - FGDC CSDGM
 - NASA DIF
 - Atom
+- GM03
 
 Supported Sorting Functionality
 -------------------------------
@@ -190,5 +193,6 @@ Functions
 .. _`GeoNode`: http://geonode.org/
 .. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
 .. _`CKAN`: http://ckan.org/
-.. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1104
+.. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1325
 .. _`OAI-PMH`: http://www.openarchives.org/OAI/openarchivesprotocol.html
+.. _`GM03`: http://www.geocat.ch/internet/geocat/en/home/documentation/gm03.html

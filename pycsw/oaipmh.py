@@ -91,6 +91,13 @@ class OAIPMH(object):
                 'identifier': '//dif:Entry_ID',
                 'dateStamp': '//dif:Last_DIF_Revision_Date',
                 'setSpec': '//dataset'
+            },
+            'gm03': {
+                'namespace': 'http://www.interlis.ch/INTERLIS2.3',
+                'schema': 'http://www.geocat.ch/internet/geocat/en/home/documentation/gm03.parsys.50316.downloadList.86742.DownloadFile.tmp/gm0321.zip',
+                'identifier': '//gm03:DATASECTION//gm03:fileIdentifer',
+                'dateStamp': '//gm03:DATASECTION//gm03:dateStamp',
+                'setSpec': '//dataset'
             }
         }
         self.metadata_sets = {

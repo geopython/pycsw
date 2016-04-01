@@ -31,11 +31,16 @@
 from __future__ import (absolute_import, division, print_function)
 
 import json
-from pycsw.core.util import exml2dict
+from pycsw.core.util import xml2dict
 
 
-def exml2json(response, namespaces, pretty_print=False):
-    """Convert an lxml object to JSON"""
+def xml2json(xml_string, namespaces, pretty_print=False):
+    """Convert an xml string to JSON"""
+
+    separators = (',', ': ')
+
     if pretty_print:
-        return json.dumps(exml2dict(response, namespaces), indent=4)
-    return json.dumps(exml2dict(response, namespaces))
+        return json.dumps(xml2dict(xml_string, namespaces),
+                          indent=4, separators=separators)
+
+    return json.dumps(xml2dict(xml_string, namespaces), separators=separators)
