@@ -972,7 +972,9 @@ class Csw3(object):
                 try:
                     start_time = time()
                     remotecsw = CatalogueServiceWeb(fedcat, skip_caps=True)
-                    remotecsw.getrecords2(xml=self.parent.request)
+                    remotecsw.getrecords2(xml=self.parent.request,
+                                          esn=self.parent.kvp['elementsetname'],
+                                          outputschema=self.parent.kvp['outputschema'])
 
                     fsr = etree.SubElement(searchresults, util.nspath_eval(
                         'csw30:FederatedSearchResult',

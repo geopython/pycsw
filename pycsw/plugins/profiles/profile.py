@@ -129,11 +129,11 @@ def load_profiles(path, cls, profiles):
     aps['loaded'] = {}
 
     for prof in profiles.split(','):
-        # fgdc, atom, dif are supported in core
+        # fgdc, atom, dif, gm03 are supported in core
         # no need to specify them explicitly anymore
         # provide deprecation warning
         # https://github.com/geopython/pycsw/issues/118
-        if prof in ['fgdc', 'atom', 'dif']:
+        if prof in ['fgdc', 'atom', 'dif', 'gm03']:
             warnings.warn('%s is now a core module, and does not need to be'
                           ' specified explicitly.  So you can remove %s from '
                           'server.profiles' % (prof, prof))

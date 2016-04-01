@@ -15,6 +15,7 @@ For transactions and harvesting, pycsw supports the following metadata resource 
 
   Dublin Core,``http://www.opengis.net/cat/csw/2.0.2``,yes,yes
   FGDC,``http://www.opengis.net/cat/csw/csdgm``,yes,yes
+  GM03,``http://www.interlis.ch/INTERLIS2.3``,yes,yes
   ISO 19139,``http://www.isotc211.org/2005/gmd``,yes,yes
   ISO GMI,``http://www.isotc211.org/2005/gmi``,yes,yes
   OGC:CSW 2.0.2,``http://www.opengis.net/cat/csw/2.0.2``,,yes

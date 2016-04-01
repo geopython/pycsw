@@ -46,7 +46,6 @@ class OpenSearch(object):
         """initialize"""
 
         self.namespaces = {
-            None: 'http://a9.com/-/spec/opensearch/1.1/',
             'atom': 'http://www.w3.org/2005/Atom',
             'geo': 'http://a9.com/-/opensearch/extensions/geo/1.0/',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
@@ -54,13 +53,16 @@ class OpenSearch(object):
         }
 
         self.context = context
-        #self.context.namespaces.update(self.namespaces)
-
+        self.context.namespaces.update(self.namespaces)
 
     def response_csw2opensearch(self, element, cfg):
         """transform a CSW response into an OpenSearch response"""
 
-        LOGGER.debug('RESPONSE: %s', util.xmltag_split(element.tag))
+        root_tag = util.xmltag_split(element.tag)
+        if root_tag == 'ExceptionReport':
+            return element
+
+        LOGGER.debug('RESPONSE: %s', root_tag)
         try:
             version = element.xpath('//@version')[0]
         except Exception as err:
@@ -117,7 +119,7 @@ class OpenSearch(object):
             node1 = etree.SubElement(node, 'Url')
             node1.set('type', 'application/atom+xml')
             node1.set('method', 'get')
-            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}' % self.bind_url)
+            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
 
             node1 = etree.SubElement(node, 'Image')
             node1.set('type', 'image/vnd.microsoft.icon')

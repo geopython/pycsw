@@ -74,7 +74,7 @@ Loading Records
 
   $ pycsw-admin.py -c load_records -f default.cfg -p /path/to/records
 
-This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.cfg`` (``repository.database``).  Passing ``-r`` to the script will process ``/path/to/records`` recursively.  Passing ``-y`` to the script will force overwrite existing metadata with the same identifier.
+This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.cfg`` (``repository.database``).  Passing ``-r`` to the script will process ``/path/to/records`` recursively.  Passing ``-y`` to the script will force overwrite existing metadata with the same identifier.  Note that ``-p`` accepts either a directory path or single file.
 
 .. note::
   Records can also be imported using CSW-T (see :ref:`transactions`).

@@ -20,6 +20,7 @@ pycsw |release| Documentation
    sru
    opensearch
    oaipmh
+   json
    soap
    sitemaps
    transactions
