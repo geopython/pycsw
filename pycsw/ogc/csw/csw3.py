@@ -2052,7 +2052,7 @@ class Csw3(object):
                 prefix = tn.split(':')[0]
                 if prefix in nsmap.keys():  # get uri
                     uri = nsmap[prefix]
-                    newprefix = list(self.parent.context.namespaces.keys())[list(self.parent.context.namespaces.values()).index(uri)]
+                    newprefix = next(k for k, v in self.parent.context.namespaces.items() if v == uri)
                     LOGGER.debug(uri)
                     LOGGER.debug(prefix)
                     LOGGER.debug(newprefix)
