@@ -30,10 +30,8 @@
 
 from __future__ import (absolute_import, division, print_function)
 
-try:
-    from configparser import SafeConfigParser
-except ImportError:
-    from ConfigParser import SafeConfigParser
+from six.moves.configparser import SafeConfigParser
+
 import glob
 import os
 import sys
