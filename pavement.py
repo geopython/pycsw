@@ -30,14 +30,13 @@
 
 from __future__ import (absolute_import, division, print_function)
 
-try:
-    from configparser import SafeConfigParser
-except ImportError:
-    from ConfigParser import SafeConfigParser
 import glob
 import os
 import sys
 import time
+
+from six.moves import configparser
+
 from paver.easy import task, cmdopts, needs, \
     pushd, sh, call_task, path, info, BuildFailure
 
@@ -254,7 +253,7 @@ def test(options):
                 elif suite == 'apiso':
                     tablename = 'records_apiso'
 
-                config = SafeConfigParser()
+                config = configparser.SafeConfigParser()
                 with open(cfg) as read_data:
                     config.readfp(read_data)
                 config.set('repository', 'database', db_conn)

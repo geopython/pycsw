@@ -486,8 +486,9 @@ class Csw2(object):
                     if self.parent.profiles['loaded'][prof].typename == typename:
                         scnodes = \
                         self.parent.profiles['loaded'][prof].get_schemacomponents()
-                        if scnodes is not None:
-                            map(node.append, scnodes)
+                        if scnodes:
+                            for scn in scnodes:
+                                node.append(scn)
         return node
 
     def getdomain(self):
