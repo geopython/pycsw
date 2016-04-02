@@ -40,7 +40,7 @@ from shapely.wkt import loads
 from owslib.util import http_post
 from pycsw.core.etree import etree
 
-from six import text_type
+from six import binary_type, text_type
 LOGGER = logging.getLogger(__name__)
 
 #Global variables for spatial ranking algorithm
@@ -268,7 +268,8 @@ def bbox_from_polygons(bboxs):
 def update_xpath(nsmap, xml, recprop):
     """Update XML document XPath values"""
 
-    if isinstance(xml, text_type):  # not lxml serialized yet
+    if isinstance(xml, binary_type) or isinstance(xml, text_type):
+        # serialize to lxml
         xml = etree.fromstring(xml, PARSER)
 
     recprop = eval(recprop)
@@ -280,6 +281,7 @@ def update_xpath(nsmap, xml, recprop):
                 if node1.text != recprop['value']:  # values differ, update
                     node1.text = recprop['value']
     except Exception as err:
+        print(err)
         raise RuntimeError('ERROR: %s' % str(err))
 
     return etree.tostring(xml)
@@ -310,9 +312,10 @@ def get_anytext(bag):
     if isinstance(bag, list):  # list of words
         return ' '.join([_f for _f in bag if _f]).strip()
     else:  # xml
-        if isinstance(bag, text_type):  # not serialized yet
+        if isinstance(bag, binary_type) or isinstance(bag, text_type):
+            # serialize to lxml
             bag = etree.fromstring(bag, PARSER)
-            # get all XML element content
+        # get all XML element content
         return ' '.join([value.strip() for value in bag.xpath('//text()')])
 
 
