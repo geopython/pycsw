@@ -32,6 +32,7 @@ from __future__ import (absolute_import, division, print_function)
 
 import logging
 import uuid
+from six.moves import range
 from six.moves.urllib.parse import urlparse
 from owslib.util import build_get_url
 from geolinks import sniff_link
