@@ -95,6 +95,10 @@ class StaticContext(object):
             'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
         }
 
+        self.keep_ns_prefixes = [
+            'csw', 'dc', 'dct', 'gmd', 'gml', 'ows', 'xs'
+        ]
+
         self.md_core_model = {
             'typename': 'pycsw:CoreMetadata',
             'outputschema': 'http://pycsw.org/metadata',
