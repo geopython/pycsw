@@ -656,6 +656,10 @@ class Csw(object):
         if hasattr(self, 'soap') and self.soap:
             self._gen_soap_wrapper()
 
+        if etree.__version__ >= '3.5.0':  # remove superfluous namespaces
+            etree.cleanup_namespaces(self.response,
+                                     keep_ns_prefixes=self.context.keep_ns_prefixes)
+
         response = etree.tostring(self.response,
                                   pretty_print=self.pretty_print,
                                   encoding='unicode')
