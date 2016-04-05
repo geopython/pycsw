@@ -30,8 +30,6 @@
 #
 # =================================================================
 
-from __future__ import (absolute_import, division, print_function)
-
 import logging
 from pycsw.core import util
 from pycsw.ogc.gml import gml3

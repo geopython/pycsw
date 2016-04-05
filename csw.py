@@ -33,8 +33,6 @@
 A CGI wrapper for pycsw that reuses code from the wsgi wrapper.
 """
 
-from __future__ import (absolute_import, division, print_function)
-
 from wsgiref.handlers import CGIHandler
 
 from pycsw.wsgi import application
