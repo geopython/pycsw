@@ -28,6 +28,8 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 from django.db import models
 from django.db import connection
 from django.db.models import Avg, Max, Min, Count

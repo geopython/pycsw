@@ -30,6 +30,9 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
+import six
 import logging
 from pycsw.core import util
 from pycsw.core.etree import etree
@@ -306,7 +309,10 @@ def kvp2filterxml(kvp, context):
             anytext_element.append(el)
             el = etree.Element(util.nspath_eval('ogc:Literal',
                         context.namespaces))
-            el.text = qval.decode('utf8')
+            if six.PY2:
+                el.text = qval.decode('utf8')
+            else:
+                el.text = qval
             anytext_element.append(el)
             anytext_elements.append(anytext_element)
 

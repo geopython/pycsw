@@ -28,6 +28,8 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import logging
 from pycsw.core.etree import etree
 from pycsw import __version__

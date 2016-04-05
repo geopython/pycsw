@@ -30,6 +30,8 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import logging
 import os
 import sys
@@ -73,7 +75,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             LOGGER.info('PostGIS %s detected: Skipping SFSQL tables creation' % postgis_lib_version)
         except:
             pass
-    
+
     if create_sfsql_tables:
         LOGGER.info('Creating table spatial_ref_sys')
         srs = Table(
@@ -84,10 +86,10 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             Column('srtext', Text)
         )
         srs.create()
-    
+
         i = srs.insert()
         i.execute(srid=4326, auth_name='EPSG', auth_srid=4326, srtext='GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
-    
+
         LOGGER.info('Creating table geometry_columns')
         geom = Table(
             'geometry_columns', mdata,
@@ -101,7 +103,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             Column('geometry_format', Text, nullable=False),
         )
         geom.create()
-    
+
         i = geom.insert()
         i.execute(f_table_catalog='public', f_table_schema='public',
                   f_table_name=table, f_geometry_column='wkt_geometry',
@@ -259,7 +261,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             from pycsw import util
             return util.get_spatial_overlay_rank(target_geom, query_geom)
             $$ LANGUAGE plpythonu;
-        ''' % pycsw_home 
+        ''' % pycsw_home
             conn.execute(function_get_anytext)
             conn.execute(function_query_spatial)
             conn.execute(function_update_xpath)
@@ -268,13 +270,13 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
 
     if dbase.name == 'postgresql':
         LOGGER.info('Creating PostgreSQL Free Text Search (FTS) GIN index')
-	tsvector_fts = "alter table %s add column anytext_tsvector tsvector" % table
-	conn.execute(tsvector_fts)
+        tsvector_fts = "alter table %s add column anytext_tsvector tsvector" % table
+        conn.execute(tsvector_fts)
         index_fts = "create index fts_gin_idx on %s using gin(anytext_tsvector)" % table
         conn.execute(index_fts)
-	# This needs to run if records exist "UPDATE records SET anytext_tsvector = to_tsvector('english', anytext)"
-	trigger_fts = "create trigger ftsupdate before insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', 'anytext')" % (table, language)
-	conn.execute(trigger_fts)
+        # This needs to run if records exist "UPDATE records SET anytext_tsvector = to_tsvector('english', anytext)"
+        trigger_fts = "create trigger ftsupdate before insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', 'anytext')" % (table, language)
+        conn.execute(trigger_fts)
 
     if dbase.name == 'postgresql' and create_postgis_geometry:
         # create native geometry column within db
@@ -573,6 +575,6 @@ def delete_records(context, database, table):
     """Deletes all records from repository"""
 
     LOGGER.info('Deleting all records')
-    
+
     repo = repository.Repository(database, context, table=table)
     repo.delete(constraint={'where': '', 'values': []})

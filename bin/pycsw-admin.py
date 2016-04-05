@@ -30,7 +30,10 @@
 #
 # =================================================================
 
-import ConfigParser
+from __future__ import (absolute_import, division, print_function)
+
+from six.moves import configparser
+from six.moves import input
 import getopt
 import logging
 import sys
@@ -224,7 +227,7 @@ if COMMAND == 'gen_sitemap' and OUTPUT_FILE is None:
     sys.exit(8)
 
 if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
-    SCP = ConfigParser.SafeConfigParser()
+    SCP = configparser.SafeConfigParser()
     with open(CFG) as f:
         SCP.readfp(f)
 
@@ -234,7 +237,7 @@ if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
     METADATA = dict(SCP.items('metadata:main'))
     try:
         TABLE = SCP.get('repository', 'table')
-    except ConfigParser.NoOptionError:
+    except configparser.NoOptionError:
         TABLE = 'records'
 
 elif COMMAND not in ['get_sysprof', 'validate_xml']:
@@ -279,7 +282,7 @@ elif COMMAND == 'validate_xml':
     admin.validate_xml(XML, XSD)
 elif COMMAND == 'delete_records':
     if not FORCE_CONFIRM:
-        if raw_input('This will delete all records! Continue? [Y/n] ') == 'Y':
+        if input('This will delete all records! Continue? [Y/n] ') == 'Y':
             FORCE_CONFIRM = True
     if FORCE_CONFIRM:
         admin.delete_records(CONTEXT, DATABASE, TABLE)

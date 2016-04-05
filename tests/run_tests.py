@@ -30,6 +30,8 @@
 
 # simple testing framework inspired by MapServer msautotest
 
+from __future__ import (absolute_import, division, print_function)
+
 import csv
 import sys
 import os
@@ -77,77 +79,77 @@ def normalize(sresult, force_id_mask=False):
     values"""
 
     # XML responses
-    version = re.search('<!-- (.*) -->', sresult)
-    updatesequence = re.search('updateSequence="(\S+)"', sresult)
-    timestamp = re.search('timestamp="(.*)"', sresult)
-    timestamp2 = re.search('timeStamp="(.*)"', sresult)
-    timestamp3 = re.search('<oai:responseDate>(.*)</oai:responseDate>', sresult)
-    timestamp4 = re.search('<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>', sresult)
-    zrhost = re.search('<zr:host>(.*)</zr:host>', sresult)
-    zrport = re.search('<zr:port>(.*)</zr:port>', sresult)
-    elapsed_time = re.search('elapsedTime="(.*)"', sresult)
-    expires = re.search('expires="(.*?)"', sresult)
-    atom_updated = re.findall('<atom:updated>(.*)</atom:updated>', sresult)
+    version = re.search(b'<!-- (.*) -->', sresult)
+    updatesequence = re.search(b'updateSequence="(\S+)"', sresult)
+    timestamp = re.search(b'timestamp="(.*)"', sresult)
+    timestamp2 = re.search(b'timeStamp="(.*)"', sresult)
+    timestamp3 = re.search(b'<oai:responseDate>(.*)</oai:responseDate>', sresult)
+    timestamp4 = re.search(b'<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>', sresult)
+    zrhost = re.search(b'<zr:host>(.*)</zr:host>', sresult)
+    zrport = re.search(b'<zr:port>(.*)</zr:port>', sresult)
+    elapsed_time = re.search(b'elapsedTime="(.*)"', sresult)
+    expires = re.search(b'expires="(.*?)"', sresult)
+    atom_updated = re.findall(b'<atom:updated>(.*)</atom:updated>', sresult)
 
     if version:
-        sresult = sresult.replace(version.group(0), '<!-- PYCSW_VERSION -->')
+        sresult = sresult.replace(version.group(0), b'<!-- PYCSW_VERSION -->')
     if updatesequence:
         sresult = sresult.replace(updatesequence.group(0),
-                                  'updateSequence="PYCSW_UPDATESEQUENCE"')
+                                  b'updateSequence="PYCSW_UPDATESEQUENCE"')
     if timestamp:
         sresult = sresult.replace(timestamp.group(0),
-                                  'timestamp="PYCSW_TIMESTAMP"')
+                                  b'timestamp="PYCSW_TIMESTAMP"')
     if timestamp2:
         sresult = sresult.replace(timestamp2.group(0),
-                                  'timeStamp="PYCSW_TIMESTAMP"')
+                                  b'timeStamp="PYCSW_TIMESTAMP"')
     if timestamp3:
         sresult = sresult.replace(timestamp3.group(0),
-                                  '<oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>')
+                                  b'<oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>')
     if timestamp4:
         sresult = sresult.replace(timestamp4.group(0),
-                                  '<oai:earliestDatestamp>PYCSW_TIMESTAMP</oai:earliestDatestamp>')
+                                  b'<oai:earliestDatestamp>PYCSW_TIMESTAMP</oai:earliestDatestamp>')
     if zrport:
         sresult = sresult.replace(zrport.group(0),
-                                  '<zr:port>PYCSW_PORT</zr:port>')
+                                  b'<zr:port>PYCSW_PORT</zr:port>')
     if zrhost:
         sresult = sresult.replace(zrhost.group(0),
-                                  '<zr:host>PYCSW_HOST</zr:host>')
+                                  b'<zr:host>PYCSW_HOST</zr:host>')
     if elapsed_time:
         sresult = sresult.replace(elapsed_time.group(0),
-                                  'elapsedTime="PYCSW_ELAPSED_TIME"')
+                                  b'elapsedTime="PYCSW_ELAPSED_TIME"')
     if expires:
         sresult = sresult.replace(expires.group(0),
-                                  'expires="PYCSW_EXPIRES"')
+                                  b'expires="PYCSW_EXPIRES"')
     for au in atom_updated:
-        sresult = sresult.replace(au, 'PYCSW_TIMESTAMP')
+        sresult = sresult.replace(au, b'PYCSW_TIMESTAMP')
 
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints
-    if sresult.find('HarvestResponse') != -1:
-        identifier = re.findall('<dc:identifier>(\S+)</dc:identifier>',
+    if sresult.find(b'HarvestResponse') != -1:
+        identifier = re.findall(b'<dc:identifier>(\S+)</dc:identifier>',
                                 sresult)
         for i in identifier:
-            sresult = sresult.replace(i, 'PYCSW_IDENTIFIER')
+            sresult = sresult.replace(i, b'PYCSW_IDENTIFIER')
 
     # JSON responses
-    timestamp = re.search('"@timestamp": "(.*?)"', sresult)
+    timestamp = re.search(b'"@timestamp": "(.*?)"', sresult)
 
     if timestamp:
         sresult = sresult.replace(timestamp.group(0),
-                                  '"@timestamp": "PYCSW_TIMESTAMP"')
+                                  b'"@timestamp": "PYCSW_TIMESTAMP"')
 
     # harvesting-based GetRecords/GetRecordById responses
     if force_id_mask:
-        dcid = re.findall('<dc:identifier>(urn:uuid.*)</dc:identifier>', sresult)
-        isoid = re.findall('id="(urn:uuid.*)"', sresult)
-        isoid2 = re.findall('<gco:CharacterString>(urn:uuid.*)</gco', sresult)
-    
+        dcid = re.findall(b'<dc:identifier>(urn:uuid.*)</dc:identifier>', sresult)
+        isoid = re.findall(b'id="(urn:uuid.*)"', sresult)
+        isoid2 = re.findall(b'<gco:CharacterString>(urn:uuid.*)</gco', sresult)
+
         for d in dcid:
-            sresult = sresult.replace(d, 'PYCSW_IDENTIFIER')
+            sresult = sresult.replace(d, b'PYCSW_IDENTIFIER')
         for i in isoid:
-            sresult = sresult.replace(i, 'PYCSW_IDENTIFIER')
+            sresult = sresult.replace(i, b'PYCSW_IDENTIFIER')
         for i2 in isoid2:
-            sresult = sresult.replace(i2, 'PYCSW_IDENTIFIER')
+            sresult = sresult.replace(i2, b'PYCSW_IDENTIFIER')
 
     return sresult
 
@@ -259,7 +261,7 @@ for testsuite in TESTSUITES_LIST:
     force_id_mask = False
     if testsuite in ['suites%smanager' % os.sep, 'suites%sharvesting' % os.sep]:
         force_id_mask = True
-   
+
     # get configuration
     for cfg in glob.glob('%s%s*.cfg' % (testsuite, os.sep)):
         print('\nTesting configuration %s' % cfg)
@@ -352,8 +354,8 @@ for testsuite in TESTSUITES_LIST:
 if LOGWRITER is not None:
     LOGWRITER.close()
 
-print('\nResults (%d/%d - %.2f%%)' % \
-    (PASSED, PASSED + FAILED, float(PASSED) / float(PASSED + FAILED) * 100))
+print('\nResults (%d/%d - %.2f%%)' %
+      (PASSED, PASSED + FAILED, float(PASSED) / float(PASSED + FAILED) * 100))
 print('   %d test%s passed' % (PASSED, plural(PASSED)))
 print('   %d test%s warnings' % (WARNING, plural(WARNING)))
 print('   %d test%s failed' % (FAILED, plural(FAILED)))

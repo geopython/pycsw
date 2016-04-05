@@ -30,14 +30,17 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import time
 import datetime
 import logging
-import urllib2
+from six.moves.urllib.request import Request, urlopen
 from shapely.wkt import loads
 from owslib.util import http_post
 from pycsw.core.etree import etree
 
+from six import binary_type, text_type
 LOGGER = logging.getLogger(__name__)
 
 #Global variables for spatial ranking algorithm
@@ -219,7 +222,7 @@ def get_geometry_area(geometry):
 def get_spatial_overlay_rank(target_geometry, query_geometry):
     """Derive spatial overlay rank for geospatial search as per Lanfear (2006)
     http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf"""
-    
+
     from shapely.geometry.base import BaseGeometry
     #TODO: Add those parameters to config file
     kt = 1.0
@@ -265,7 +268,8 @@ def bbox_from_polygons(bboxs):
 def update_xpath(nsmap, xml, recprop):
     """Update XML document XPath values"""
 
-    if isinstance(xml, unicode):  # not lxml serialized yet
+    if isinstance(xml, binary_type) or isinstance(xml, text_type):
+        # serialize to lxml
         xml = etree.fromstring(xml, PARSER)
 
     recprop = eval(recprop)
@@ -277,6 +281,7 @@ def update_xpath(nsmap, xml, recprop):
                 if node1.text != recprop['value']:  # values differ, update
                     node1.text = recprop['value']
     except Exception as err:
+        print(err)
         raise RuntimeError('ERROR: %s' % str(err))
 
     return etree.tostring(xml)
@@ -287,7 +292,7 @@ def transform_mappings(queryables, typename, reverse=False):
     if reverse:  # from csw:Record
         for qbl in queryables.keys():
             if qbl in typename.values():
-                tmp = [k for k, v in typename.items() if v == qbl][0]
+                tmp = next(k for k, v in typename.items() if v == qbl)
                 val = queryables[tmp]
                 queryables[qbl] = {}
                 queryables[qbl]['xpath'] = val['xpath']
@@ -305,11 +310,12 @@ def get_anytext(bag):
     """
 
     if isinstance(bag, list):  # list of words
-        return ' '.join(filter(None, bag)).strip()
+        return ' '.join([_f for _f in bag if _f]).strip()
     else:  # xml
-        if isinstance(bag, unicode) or isinstance(bag, str):  # not serialized yet
+        if isinstance(bag, binary_type) or isinstance(bag, text_type):
+            # serialize to lxml
             bag = etree.fromstring(bag, PARSER)
-            # get all XML element content
+        # get all XML element content
         return ' '.join([value.strip() for value in bag.xpath('//text()')])
 
 
@@ -356,12 +362,12 @@ def http_request(method, url, request=None, timeout=30):
     if method == 'POST':
         return http_post(url, request, timeout=timeout)
     else:  # GET
-        request = urllib2.Request(url)
+        request = Request(url)
         request.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
-        return urllib2.urlopen(request, timeout=timeout).read()
+        return urlopen(request, timeout=timeout).read()
 
 def bind_url(url):
-    """binds an HTTP GET query string endpiont"""
+    """binds an HTTP GET query string endpoint"""
     if url.find('?') == -1: # like http://host/wms
         binder = '?'
 
@@ -413,7 +419,7 @@ def sniff_table(table):
     """Checks whether repository.table is a schema namespaced"""
     schema = None
     table = table
-    if table.find('.') != - 1: 
+    if table.find('.') != - 1:
         schema, table = table.split('.')
     return [schema, table]
 

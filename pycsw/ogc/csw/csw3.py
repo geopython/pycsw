@@ -28,14 +28,15 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import os
 import sys
 import cgi
 from time import time
-from urllib2 import quote, unquote
-import urlparse
-from cStringIO import StringIO
-from ConfigParser import SafeConfigParser
+from six.moves.urllib.parse import quote, unquote
+from six import StringIO
+from six.moves.configparser import SafeConfigParser
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
@@ -514,9 +515,8 @@ class Csw3(object):
                     operation, parameter = pname.split('.')
                 except:
                     return node
-                if (operation in self.parent.context.model['operations'].keys() and
-                    parameter in
-                    self.parent.context.model['operations'][operation]['parameters'].keys()):
+                if (operation in self.parent.context.model['operations'] and
+                    parameter in self.parent.context.model['operations'][operation]['parameters']):
                     listofvalues = etree.SubElement(domainvalue,
                     util.nspath_eval('csw30:ListOfValues', self.parent.context.namespaces))
                     for val in \
@@ -707,8 +707,7 @@ class Csw3(object):
         # check elementname's
         if 'elementname' in self.parent.kvp:
             for ename in self.parent.kvp['elementname']:
-                enamelist = self.parent.repository.queryables['_all'].keys()
-                if ename not in enamelist:
+                if ename not in self.parent.repository.queryables['_all']:
                     return self.exceptionreport('InvalidParameterValue',
                     'elementname', 'Invalid ElementName parameter value: %s' %
                     ename)
@@ -942,7 +941,7 @@ class Csw3(object):
 
                         searchresults.append(self._write_record(
                         res, self.parent.repository.queryables['_all']))
-                    elif self.parent.kvp['outputschema'] in self.parent.outputschemas.keys():  # use outputschema serializer
+                    elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
                         searchresults.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(res, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url')))
                     else:  # use profile serializer
                         searchresults.append(
@@ -1123,7 +1122,7 @@ class Csw3(object):
                     ['mappings']['csw:Record'], reverse=True)
 
                 node = self._write_record( result, self.parent.repository.queryables['_all'])
-            elif self.parent.kvp['outputschema'] in self.parent.outputschemas.keys():  # use outputschema serializer
+            elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
                 node = self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url'))
             else:  # it's a profile output
                 node = self.parent.profiles['loaded'][self.parent.kvp['outputschema']].write_record(
@@ -2053,7 +2052,7 @@ class Csw3(object):
                 prefix = tn.split(':')[0]
                 if prefix in nsmap.keys():  # get uri
                     uri = nsmap[prefix]
-                    newprefix = self.parent.context.namespaces.keys()[self.parent.context.namespaces.values().index(uri)]
+                    newprefix = next(k for k, v in self.parent.context.namespaces.items() if v == uri)
                     LOGGER.debug(uri)
                     LOGGER.debug(prefix)
                     LOGGER.debug(newprefix)

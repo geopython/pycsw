@@ -28,6 +28,8 @@
 #
 # =================================================================
 
+from __future__ import (absolute_import, division, print_function)
+
 import os
 from distutils.core import setup
 import pycsw
@@ -79,9 +81,8 @@ def get_package_data(location='.', forced_dir=None):
         for root, dirs, files in os.walk(filepath):
             if len(files) > 0:
                 # find all the XML Schema documents
-                xsds = filter(lambda x: x.find('.xsd') != -1, files)
-                catalog_xml = filter(lambda x: x.find('catalog.xml') != -1,
-                                     files)
+                xsds = [x for x in files if x.find('.xsd') != -1]
+                catalog_xml = [x for x in files if x.find('catalog.xml') != -1]
                 xsds.extend(catalog_xml)
                 if len(xsds) > 0:
                     if ploc not in package_data:  # set key
@@ -101,7 +102,7 @@ if (os.path.exists('MANIFEST')):
     os.unlink('MANIFEST')
 
 # set setup.packages
-PACKAGES = find_packages('.').keys()
+PACKAGES = list(find_packages('.').keys())
 
 # get package_data.keys()
 PACKAGE_DATA_XSD = find_packages_xsd('pycsw')
