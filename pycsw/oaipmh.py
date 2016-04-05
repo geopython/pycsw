@@ -227,13 +227,13 @@ class OAIPMH(object):
                 etree.SubElement(verbnode, util.nspath_eval('oai:granularity', self.namespaces)).text = 'YYYY-MM-DDThh:mm:ssZ'
 
         elif verb == 'ListSets':
-            for key, value in self.metadata_sets.items():
+            for key, value in sorted(self.metadata_sets.items()):
                 setnode = etree.SubElement(verbnode, util.nspath_eval('oai:set', self.namespaces))
                 etree.SubElement(setnode, util.nspath_eval('oai:setSpec', self.namespaces)).text = key
                 etree.SubElement(setnode, util.nspath_eval('oai:setName', self.namespaces)).text = value[0]
 
         elif verb == 'ListMetadataFormats':
-            for key, value in self.metadata_formats.items():
+            for key, value in sorted(self.metadata_formats.items()):
                 mdfnode = etree.SubElement(verbnode, util.nspath_eval('oai:metadataFormat', self.namespaces))
                 etree.SubElement(mdfnode, util.nspath_eval('oai:metadataPrefix', self.namespaces)).text = key
                 etree.SubElement(mdfnode, util.nspath_eval('oai:schema', self.namespaces)).text = value['schema']
