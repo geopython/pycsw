@@ -1,8 +1,72 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:GetRecordsResponse xmlns:fes20="http://www.opengis.net/fes/2.0" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dct="http://purl.org/dc/terms/" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gm03="http://www.interlis.ch/INTERLIS2.3" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="1" numberOfRecordsReturned="1" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="4" numberOfRecordsReturned="4" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="full">
+    <csw:Record>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+      <dc:title>1 Million Scale WMS Layers from the National Atlas of the United States</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject></dc:subject>
+      <dct:references scheme="OGC:WMS">http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://webservices.nationalatlas.gov/wms/1million?version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
+      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dc:source>http://demo.pycsw.org/services/csw</dc:source>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>18.92 -179.13</ows:LowerCorner>
+        <ows:UpperCorner>71.4 179.79</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+      <dc:title>Wisconsin Lake Clarity</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>SSEC</dc:subject>
+      <dc:subject>PAW</dc:subject>
+      <dc:subject>remote sensing</dc:subject>
+      <dc:subject>meteorology</dc:subject>
+      <dc:subject>atmospheric science</dc:subject>
+      <dc:subject>University of Wisconsin</dc:subject>
+      <dc:subject>Madison</dc:subject>
+      <dc:subject>weather</dc:subject>
+      <dc:subject>land</dc:subject>
+      <dct:references scheme="OGC:WMS">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
+      <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
+      <dct:references scheme="None">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
+      <dct:references scheme="None">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
+      <dct:references scheme="None">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
+      <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
+      <dc:source>http://demo.pycsw.org/services/csw</dc:source>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>42.41 -93.03</ows:LowerCorner>
+        <ows:UpperCorner>47.13 -86.64</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+    <csw:Record>
+      <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+      <dc:title>View &amp; download service for EU-DEM data provided by EOX</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>EU-DEM</dc:subject>
+      <dct:references scheme="OGC:WMS">http://data.eox.at/eudem_ows</dct:references>
+      <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://data.eox.at/eudem_ows?version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
+      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
+      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
+      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
+      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
+      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
+      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
+      <dct:abstract>Produced using Copernicus data and information funded by the European Union - EU-DEM layers.</dct:abstract>
+      <dc:source>http://demo.pycsw.org/services/csw</dc:source>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>12.99 -29.09</ows:LowerCorner>
+        <ows:UpperCorner>12.99 -29.09</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
     <csw:Record>
       <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
       <dc:title>IEM WMS Service</dc:title>
