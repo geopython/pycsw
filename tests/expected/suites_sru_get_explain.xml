@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<zs:explainResponse xmlns:zd="http://www.loc.gov/zing/srw/diagnostic/" xmlns:zs="http://www.loc.gov/zing/srw/" xmlns:srw_dc="info:srw/schema/1/dc-schema" xmlns:zr="http://explain.z3950.org/dtd/2.1/" xmlns:sru="http://www.loc.gov/zing/srw/">
-  <zs:version>1.1</zs:version>
-  <zs:record>
-    <zs:recordPacking>XML</zs:recordPacking>
-    <zs:recordSchema>http://explain.z3950.org/dtd/2.1/</zs:recordSchema>
-    <zs:recordData>
+<sru:explainResponse xmlns:sru="http://www.loc.gov/zing/srw/" xmlns:zr="http://explain.z3950.org/dtd/2.1/">
+  <sru:version>1.1</sru:version>
+  <sru:record>
+    <sru:recordPacking>XML</sru:recordPacking>
+    <sru:recordSchema>http://explain.z3950.org/dtd/2.1/</sru:recordSchema>
+    <sru:recordData>
       <zr:explain>
         <zr:serverInfo method="GET POST SOAP" protocol="SRU" transport="http" version="1.1">
           <zr:host>PYCSW_HOST</zr:host>
@@ -123,6 +123,6 @@
           <zr:default type="numberOfRecords">0</zr:default>
         </zr:configInfo>
       </zr:explain>
-    </zs:recordData>
-  </zs:record>
-</zs:explainResponse>
+    </sru:recordData>
+  </sru:record>
+</sru:explainResponse>

@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2016 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -92,6 +92,10 @@ class StaticContext(object):
             'xs': 'http://www.w3.org/2001/XMLSchema',
             'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
         }
+
+        self.keep_ns_prefixes = [
+            'csw', 'dc', 'dct', 'gmd', 'gml', 'ows', 'xs'
+        ]
 
         self.md_core_model = {
             'typename': 'pycsw:CoreMetadata',
