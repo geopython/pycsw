@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2016 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -651,6 +651,10 @@ class Csw(object):
 
         if hasattr(self, 'soap') and self.soap:
             self._gen_soap_wrapper()
+
+        if etree.__version__ >= '3.5.0':  # remove superfluous namespaces
+            etree.cleanup_namespaces(self.response,
+                                     keep_ns_prefixes=self.context.keep_ns_prefixes)
 
         response = etree.tostring(self.response,
                                   pretty_print=self.pretty_print,
