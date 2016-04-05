@@ -775,7 +775,7 @@ class Csw(object):
             self.context.model['operations']['Transaction'] = {
                 'methods': {'get': False, 'post': True},
                 'parameters': {
-                    'TransactionSchemas': {'values': schema_values}
+                    'TransactionSchemas': {'values': sorted(schema_values)}
                 }
             }
 
