@@ -385,5 +385,5 @@ class Repository(object):
     def _get_repo_filter(self, query):
         ''' Apply repository wide side filter / mask query '''
         if self.filter is not None:
-            return query.filter(self.filter)
+            return query.filter(text(self.filter))
         return query
