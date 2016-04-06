@@ -52,7 +52,7 @@ class OpenDataCatalogRepository(object):
         # ODC PostgreSQL installs are not PostGIS enabled
         if self.dbtype == 'postgresql_psycopg2':
             self.dbtype = 'postgresql'
-            
+
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             cursor = connection.cursor()
             connection.connection.create_function(

@@ -28,6 +28,7 @@
 #
 # =================================================================
 
+from six.moves import zip
 import logging
 from owslib import crs
 from pycsw.core import util

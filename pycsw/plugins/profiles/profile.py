@@ -79,7 +79,7 @@ class Profile(object):
 
     def check_parameters(self):
         ''' Perform extra parameters checking.
-            Return dict with keys "locator", "code", "text" or None ''' 
+            Return dict with keys "locator", "code", "text" or None '''
         raise NotImplementedError
 
     def get_extendedcapabilities(self):
@@ -89,7 +89,7 @@ class Profile(object):
     def get_schemacomponents(self):
         ''' Return schema components as lxml.etree.Element list '''
         raise NotImplementedError
-    
+
     def check_getdomain(self, kvp):
         '''Perform extra profile specific checks in the GetDomain request'''
         raise NotImplementedError
@@ -99,29 +99,29 @@ class Profile(object):
         raise NotImplementedError
 
     def transform2dcmappings(self, queryables):
-        ''' Transform information model mappings into csw:Record mappings ''' 
+        ''' Transform information model mappings into csw:Record mappings '''
         raise NotImplementedError
 
 def load_profiles(path, cls, profiles):
-    ''' load CSW profiles, return dict by class name ''' 
+    ''' load CSW profiles, return dict by class name '''
 
     def look_for_subclass(modulename):
         module = __import__(modulename)
- 
+
         dmod = module.__dict__
         for modname in modulename.split('.')[1:]:
             dmod = dmod[modname].__dict__
- 
+
         for key, entry in dmod.items():
             if key == cls.__name__:
                 continue
- 
+
             try:
                 if issubclass(entry, cls):
                     aps['plugins'][key] = entry
             except TypeError:
                 continue
- 
+
     aps = {}
     aps['plugins'] = {}
     aps['loaded'] = {}
@@ -135,7 +135,7 @@ def load_profiles(path, cls, profiles):
             warnings.warn('%s is now a core module, and does not need to be'
                           ' specified explicitly.  So you can remove %s from '
                           'server.profiles' % (prof, prof))
-        else: 
+        else:
             modulename='%s.%s.%s' % (path.replace(os.sep, '.'), prof, prof)
             look_for_subclass(modulename)
     return aps
