@@ -63,20 +63,16 @@
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="TransactionSchemas">
+        <ows:Value>http://www.isotc211.org/2005/gmi</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/3.0</ows:Value>
-        <ows:Value>http://www.opengis.net/wms</ows:Value>
-        <ows:Value>http://www.opengis.net/wfs</ows:Value>
-        <ows:Value>http://www.opengis.net/wcs</ows:Value>
-        <ows:Value>http://www.opengis.net/wps/1.0.0</ows:Value>
         <ows:Value>http://www.opengis.net/sos/1.0</ows:Value>
         <ows:Value>http://www.opengis.net/sos/2.0</ows:Value>
-        <ows:Value>http://www.isotc211.org/2005/gmi</ows:Value>
+        <ows:Value>http://www.opengis.net/wcs</ows:Value>
+        <ows:Value>http://www.opengis.net/wfs</ows:Value>
+        <ows:Value>http://www.opengis.net/wms</ows:Value>
+        <ows:Value>http://www.opengis.net/wps/1.0.0</ows:Value>
         <ows:Value>urn:geoss:waf</ows:Value>
-        <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
-        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
-        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
-        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetRepositoryItem">

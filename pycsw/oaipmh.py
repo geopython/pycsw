@@ -141,16 +141,16 @@ class OAIPMH(object):
                     kvpout['id'] = kvp['identifier']
                 if ('outputschema' in kvpout and
                     kvp['metadataprefix'] == 'oai_dc'):  # just use default DC
-                    del kvpout['outputschema'] 
+                    del kvpout['outputschema']
             elif kvp['verb'] in ['ListRecords', 'ListIdentifiers']:
                 if 'resumptiontoken' in kvp:
                     kvpout['startposition'] = kvp['resumptiontoken']
                 if ('outputschema' in kvpout and
                    kvp['verb'] == 'ListIdentifiers'):  # simple output only
-                    pass #del kvpout['outputschema'] 
+                    pass #del kvpout['outputschema']
                 if ('outputschema' in kvpout and
                     kvp['metadataprefix'] in ['dc', 'oai_dc']):  # just use default DC
-                    del kvpout['outputschema'] 
+                    del kvpout['outputschema']
 
 
                 start = end = None
@@ -225,13 +225,13 @@ class OAIPMH(object):
                 etree.SubElement(verbnode, util.nspath_eval('oai:granularity', self.namespaces)).text = 'YYYY-MM-DDThh:mm:ssZ'
 
         elif verb == 'ListSets':
-            for key, value in self.metadata_sets.items():
+            for key, value in sorted(self.metadata_sets.items()):
                 setnode = etree.SubElement(verbnode, util.nspath_eval('oai:set', self.namespaces))
                 etree.SubElement(setnode, util.nspath_eval('oai:setSpec', self.namespaces)).text = key
                 etree.SubElement(setnode, util.nspath_eval('oai:setName', self.namespaces)).text = value[0]
 
         elif verb == 'ListMetadataFormats':
-            for key, value in self.metadata_formats.items():
+            for key, value in sorted(self.metadata_formats.items()):
                 mdfnode = etree.SubElement(verbnode, util.nspath_eval('oai:metadataFormat', self.namespaces))
                 etree.SubElement(mdfnode, util.nspath_eval('oai:metadataPrefix', self.namespaces)).text = key
                 etree.SubElement(mdfnode, util.nspath_eval('oai:schema', self.namespaces)).text = value['schema']
@@ -257,7 +257,7 @@ class OAIPMH(object):
                     complete_list_size = response.xpath('//@numberOfRecordsMatched')[0]
                     next_record = response.xpath('//@nextRecord')[0]
                     cursor = str(int(complete_list_size) - int(next_record) - 1)
-                
+
                     resumption_token = etree.SubElement(verbnode, util.nspath_eval('oai:resumptionToken', self.namespaces),
                                                         completeListSize=complete_list_size, cursor=cursor).text = next_record
         return node
@@ -282,7 +282,7 @@ class OAIPMH(object):
             value = xpath
         el = etree.SubElement(parent, util.nspath_eval(elname, self.context.namespaces))
         if value:
-            if elname == 'oai:setSpec': 
+            if elname == 'oai:setSpec':
                 value = None
                 for k, v in self.metadata_sets.items():
                     if v[1] == elname:

@@ -151,7 +151,7 @@ class Sru(object):
             indexinfo = etree.SubElement(explain, util.nspath_eval('zr:indexInfo', self.namespaces))
             etree.SubElement(indexinfo, util.nspath_eval('zr:set', self.namespaces), name='dc', identifier='info:srw/cql-context-set/1/dc-v1.1')
 
-            for key, value in self.mappings['csw:Record']['index'].items():
+            for key, value in sorted(self.mappings['csw:Record']['index'].items()):
                 zrindex = etree.SubElement(indexinfo, util.nspath_eval('zr:index', self.namespaces), id=value)
                 etree.SubElement(zrindex, util.nspath_eval('zr:title', self.namespaces)).text = key
                 zrmap = etree.SubElement(zrindex, util.nspath_eval('zr:map', self.namespaces))

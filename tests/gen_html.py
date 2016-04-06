@@ -30,7 +30,7 @@
 
 import csv
 import os
-from urllib2 import quote
+from six.moves.urllib.parse import quote
 
 JQUERY_VERSION = '1.9.0'
 
@@ -102,7 +102,7 @@ print('''
                 <tr>
                     <td>
                         <select class="xml">
-                            <option value="none">Select a CSW Request</option>'''
+                            <option value="none">Select a CSW Request</option>''')
 
 for root, dirs, files in os.walk('suites'):
     if files:
@@ -132,6 +132,7 @@ print('''
         <h3 class="header">HTTP GET</h3>
             <ul>
 ''')
+
 for root, dirs, files in os.walk('suites'):
     if files:
         for sfile in files:

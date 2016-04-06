@@ -33,10 +33,9 @@
 import os
 import sys
 import cgi
-from urllib2 import quote, unquote
-import urlparse
-from cStringIO import StringIO
-from ConfigParser import SafeConfigParser
+from six.moves.urllib.parse import quote, unquote
+from six import StringIO
+from six.moves.configparser import SafeConfigParser
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
@@ -485,8 +484,9 @@ class Csw2(object):
                     if self.parent.profiles['loaded'][prof].typename == typename:
                         scnodes = \
                         self.parent.profiles['loaded'][prof].get_schemacomponents()
-                        if scnodes is not None:
-                            map(node.append, scnodes)
+                        if scnodes:
+                            for scn in scnodes:
+                                node.append(scn)
         return node
 
     def getdomain(self):
@@ -919,7 +919,7 @@ class Csw2(object):
 
 
         if results is not None:
-            if len(results) < self.parent.kvp['maxrecords']:
+            if len(results) < int(self.parent.kvp['maxrecords']):
                 max1 = len(results)
             else:
                 max1 = int(self.parent.kvp['startposition']) + (int(self.parent.kvp['maxrecords'])-1)

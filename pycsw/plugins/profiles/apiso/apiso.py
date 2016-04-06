@@ -386,7 +386,7 @@ class APISO(profile.Profile):
         is_iso_anyway = False
 
         xml_blob = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:XML'])
-        if caps is None and xml_blob is not None and xml_blob.startswith('<gmd:MD_Metadata'):
+        if caps is None and xml_blob is not None and xml_blob.startswith(b'<gmd:MD_Metadata'):
             is_iso_anyway = True
 
         if (esn == 'full' and (typename == 'gmd:MD_Metadata' or is_iso_anyway)):
@@ -416,7 +416,7 @@ class APISO(profile.Profile):
         # hierarchyLevel
         mtype = util.getqattr(result, queryables['apiso:Type']['dbcol']) or None
 
-        if mtype is not None: 
+        if mtype is not None:
             if mtype == 'http://purl.org/dc/dcmitype/Dataset':
                 mtype = 'dataset'
             hierarchy = etree.SubElement(node, util.nspath_eval('gmd:hierarchyLevel', self.namespaces))
@@ -426,7 +426,7 @@ class APISO(profile.Profile):
             # contact
             contact = etree.SubElement(node, util.nspath_eval('gmd:contact', self.namespaces))
             if caps is not None:
-                CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty', self.namespaces)) 
+                CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty', self.namespaces))
                 if hasattr(caps.provider.contact, 'name'):
                     ind_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:individualName', self.namespaces))
                     etree.SubElement(ind_name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.name
@@ -440,35 +440,35 @@ class APISO(profile.Profile):
                 if hasattr(caps.provider.contact, 'position'):
                     pos_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:positionName', self.namespaces))
                     etree.SubElement(pos_name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.position
-                contact_info = etree.SubElement(CI_resp, util.nspath_eval('gmd:contactInfo', self.namespaces)) 
-                ci_contact = etree.SubElement(contact_info, util.nspath_eval('gmd:CI_Contact', self.namespaces)) 
+                contact_info = etree.SubElement(CI_resp, util.nspath_eval('gmd:contactInfo', self.namespaces))
+                ci_contact = etree.SubElement(contact_info, util.nspath_eval('gmd:CI_Contact', self.namespaces))
                 if hasattr(caps.provider.contact, 'phone'):
-                    phone = etree.SubElement(ci_contact, util.nspath_eval('gmd:phone', self.namespaces)) 
-                    ci_phone = etree.SubElement(phone, util.nspath_eval('gmd:CI_Telephone', self.namespaces)) 
-                    voice = etree.SubElement(ci_phone, util.nspath_eval('gmd:voice', self.namespaces)) 
+                    phone = etree.SubElement(ci_contact, util.nspath_eval('gmd:phone', self.namespaces))
+                    ci_phone = etree.SubElement(phone, util.nspath_eval('gmd:CI_Telephone', self.namespaces))
+                    voice = etree.SubElement(ci_phone, util.nspath_eval('gmd:voice', self.namespaces))
                     etree.SubElement(voice, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.phone
                     if hasattr(caps.provider.contact, 'fax'):
-                        fax = etree.SubElement(ci_phone, util.nspath_eval('gmd:facsimile', self.namespaces)) 
+                        fax = etree.SubElement(ci_phone, util.nspath_eval('gmd:facsimile', self.namespaces))
                         etree.SubElement(fax, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.fax
-                address = etree.SubElement(ci_contact, util.nspath_eval('gmd:address', self.namespaces)) 
-                ci_address = etree.SubElement(address, util.nspath_eval('gmd:CI_Address', self.namespaces)) 
+                address = etree.SubElement(ci_contact, util.nspath_eval('gmd:address', self.namespaces))
+                ci_address = etree.SubElement(address, util.nspath_eval('gmd:CI_Address', self.namespaces))
                 if hasattr(caps.provider.contact, 'address'):
-                    delivery_point = etree.SubElement(ci_address, util.nspath_eval('gmd:deliveryPoint', self.namespaces)) 
+                    delivery_point = etree.SubElement(ci_address, util.nspath_eval('gmd:deliveryPoint', self.namespaces))
                     etree.SubElement(delivery_point, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.address
                 if hasattr(caps.provider.contact, 'city'):
-                    city = etree.SubElement(ci_address, util.nspath_eval('gmd:city', self.namespaces)) 
+                    city = etree.SubElement(ci_address, util.nspath_eval('gmd:city', self.namespaces))
                     etree.SubElement(city, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.city
                 if hasattr(caps.provider.contact, 'region'):
-                    admin_area = etree.SubElement(ci_address, util.nspath_eval('gmd:administrativeArea', self.namespaces)) 
+                    admin_area = etree.SubElement(ci_address, util.nspath_eval('gmd:administrativeArea', self.namespaces))
                     etree.SubElement(admin_area, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.region
                 if hasattr(caps.provider.contact, 'postcode'):
-                    postal_code = etree.SubElement(ci_address, util.nspath_eval('gmd:postalCode', self.namespaces)) 
+                    postal_code = etree.SubElement(ci_address, util.nspath_eval('gmd:postalCode', self.namespaces))
                     etree.SubElement(postal_code, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.postcode
                 if hasattr(caps.provider.contact, 'country'):
-                    country = etree.SubElement(ci_address, util.nspath_eval('gmd:country', self.namespaces)) 
+                    country = etree.SubElement(ci_address, util.nspath_eval('gmd:country', self.namespaces))
                     etree.SubElement(country, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.country
                 if hasattr(caps.provider.contact, 'email'):
-                    email = etree.SubElement(ci_address, util.nspath_eval('gmd:electronicMailAddress', self.namespaces)) 
+                    email = etree.SubElement(ci_address, util.nspath_eval('gmd:electronicMailAddress', self.namespaces))
                     etree.SubElement(email, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.email
 
                 contact_url = None
@@ -478,12 +478,12 @@ class APISO(profile.Profile):
                     contact_url = caps.provider.contact.url
 
                 if contact_url is not None:
-                    online_resource = etree.SubElement(ci_contact, util.nspath_eval('gmd:onlineResource', self.namespaces)) 
-                    gmd_linkage = etree.SubElement(online_resource, util.nspath_eval('gmd:linkage', self.namespaces)) 
+                    online_resource = etree.SubElement(ci_contact, util.nspath_eval('gmd:onlineResource', self.namespaces))
+                    gmd_linkage = etree.SubElement(online_resource, util.nspath_eval('gmd:linkage', self.namespaces))
                     etree.SubElement(gmd_linkage, util.nspath_eval('gmd:URL', self.namespaces)).text = contact_url
 
                 if hasattr(caps.provider.contact, 'role'):
-                    role = etree.SubElement(CI_resp, util.nspath_eval('gmd:role', self.namespaces)) 
+                    role = etree.SubElement(CI_resp, util.nspath_eval('gmd:role', self.namespaces))
                     role_val = caps.provider.contact.role
                     if role_val is None:
                         role_val = 'pointOfContact'
@@ -527,7 +527,7 @@ class APISO(profile.Profile):
            restagname = 'srv:SV_ServiceIdentification'
         else:
            restagname = 'gmd:MD_DataIdentification'
-          
+
         resident = etree.SubElement(identification, util.nspath_eval(restagname, self.namespaces), id=idval)
         tmp2 = etree.SubElement(resident, util.nspath_eval('gmd:citation', self.namespaces))
         tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation', self.namespaces))
@@ -604,7 +604,7 @@ class APISO(profile.Profile):
             if kw is not None:
                 srv_keywords = etree.SubElement(resident, util.nspath_eval('srv:keywords', self.namespaces))
                 srv_keywords.append(write_keywords(kw, self.namespaces))
-                 
+
             if bboxel is not None:
                 bboxel.tag = util.nspath_eval('srv:extent', self.namespaces)
                 resident.append(bboxel)
@@ -638,10 +638,10 @@ class APISO(profile.Profile):
                         etree.SubElement(tmp2, util.nspath_eval('gco:CharacterString', self.namespaces)).text = i
 
                         tmp3 = etree.SubElement(tmp, util.nspath_eval('srv:DCP', self.namespaces))
-                        etree.SubElement(tmp3, util.nspath_eval('srv:DCPList', self.namespaces), codeList='%s#DCPList' % CODELIST, codeListValue='HTTPGet').text = 'HTTPGet' 
+                        etree.SubElement(tmp3, util.nspath_eval('srv:DCPList', self.namespaces), codeList='%s#DCPList' % CODELIST, codeListValue='HTTPGet').text = 'HTTPGet'
 
                         tmp4 = etree.SubElement(tmp, util.nspath_eval('srv:DCP', self.namespaces))
-                        etree.SubElement(tmp4, util.nspath_eval('srv:DCPList', self.namespaces), codeList='%s#DCPList' % CODELIST, codeListValue='HTTPPost').text = 'HTTPPost' 
+                        etree.SubElement(tmp4, util.nspath_eval('srv:DCPList', self.namespaces), codeList='%s#DCPList' % CODELIST, codeListValue='HTTPPost').text = 'HTTPPost'
 
                         connectpoint = etree.SubElement(tmp, util.nspath_eval('srv:connectPoint', self.namespaces))
                         onlineres = etree.SubElement(connectpoint, util.nspath_eval('gmd:CI_OnlineResource', self.namespaces))
@@ -733,7 +733,7 @@ def _get_resource_opname(operations):
     return None
 
 def _write_codelist_element(codelist_element, codelist_value, nsmap):
-    namespace, codelist = codelist_element.split(':')    
+    namespace, codelist = codelist_element.split(':')
 
     element = etree.Element(util.nspath_eval(codelist_element, nsmap),
     codeSpace=CODESPACE, codeList='%s#%s' % (CODELIST, codelist),
