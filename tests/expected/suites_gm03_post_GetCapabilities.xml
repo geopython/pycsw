@@ -50,18 +50,11 @@
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="sections">
+        <ows:Value>Filter_Capabilities</ows:Value>
+        <ows:Value>OperationsMetadata</ows:Value>
         <ows:Value>ServiceIdentification</ows:Value>
         <ows:Value>ServiceProvider</ows:Value>
-        <ows:Value>OperationsMetadata</ows:Value>
-        <ows:Value>Filter_Capabilities</ows:Value>
       </ows:Parameter>
-    </ows:Operation>
-    <ows:Operation name="GetRepositoryItem">
-      <ows:DCP>
-        <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/gm03/default.cfg"/>
-        </ows:HTTP>
-      </ows:DCP>
     </ows:Operation>
     <ows:Operation name="DescribeRecord">
       <ows:DCP>
@@ -70,14 +63,14 @@
           <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/gm03/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
-      <ows:Parameter name="schemaLanguage">
-        <ows:Value>http://www.w3.org/XML/Schema</ows:Value>
-        <ows:Value>http://www.w3.org/TR/xmlschema-1/</ows:Value>
-        <ows:Value>http://www.w3.org/2001/XMLSchema</ows:Value>
-      </ows:Parameter>
       <ows:Parameter name="outputFormat">
-        <ows:Value>application/xml</ows:Value>
         <ows:Value>application/json</ows:Value>
+        <ows:Value>application/xml</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="schemaLanguage">
+        <ows:Value>http://www.w3.org/2001/XMLSchema</ows:Value>
+        <ows:Value>http://www.w3.org/TR/xmlschema-1/</ows:Value>
+        <ows:Value>http://www.w3.org/XML/Schema</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="typeName">
         <ows:Value>csw:Record</ows:Value>
@@ -91,43 +84,19 @@
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ParameterName">
-        <ows:Value>GetRecords.outputFormat</ows:Value>
-        <ows:Value>GetRecords.outputSchema</ows:Value>
-        <ows:Value>GetRecords.CONSTRAINTLANGUAGE</ows:Value>
-        <ows:Value>GetRecords.resultType</ows:Value>
-        <ows:Value>GetRecords.typeNames</ows:Value>
-        <ows:Value>GetRecords.ElementSetName</ows:Value>
+        <ows:Value>DescribeRecord.outputFormat</ows:Value>
+        <ows:Value>DescribeRecord.schemaLanguage</ows:Value>
+        <ows:Value>DescribeRecord.typeName</ows:Value>
         <ows:Value>GetCapabilities.sections</ows:Value>
+        <ows:Value>GetRecordById.ElementSetName</ows:Value>
         <ows:Value>GetRecordById.outputFormat</ows:Value>
         <ows:Value>GetRecordById.outputSchema</ows:Value>
-        <ows:Value>GetRecordById.ElementSetName</ows:Value>
-        <ows:Value>DescribeRecord.schemaLanguage</ows:Value>
-        <ows:Value>DescribeRecord.outputFormat</ows:Value>
-        <ows:Value>DescribeRecord.typeName</ows:Value>
-      </ows:Parameter>
-    </ows:Operation>
-    <ows:Operation name="GetRecordById">
-      <ows:DCP>
-        <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/gm03/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/gm03/default.cfg"/>
-        </ows:HTTP>
-      </ows:DCP>
-      <ows:Parameter name="outputFormat">
-        <ows:Value>application/xml</ows:Value>
-        <ows:Value>application/json</ows:Value>
-      </ows:Parameter>
-      <ows:Parameter name="outputSchema">
-        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
-        <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
-        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
-        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
-        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
-      </ows:Parameter>
-      <ows:Parameter name="ElementSetName">
-        <ows:Value>brief</ows:Value>
-        <ows:Value>summary</ows:Value>
-        <ows:Value>full</ows:Value>
+        <ows:Value>GetRecords.CONSTRAINTLANGUAGE</ows:Value>
+        <ows:Value>GetRecords.ElementSetName</ows:Value>
+        <ows:Value>GetRecords.outputFormat</ows:Value>
+        <ows:Value>GetRecords.outputSchema</ows:Value>
+        <ows:Value>GetRecords.resultType</ows:Value>
+        <ows:Value>GetRecords.typeNames</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetRecords">
@@ -137,20 +106,25 @@
           <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/gm03/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
+      <ows:Parameter name="CONSTRAINTLANGUAGE">
+        <ows:Value>CQL_TEXT</ows:Value>
+        <ows:Value>FILTER</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="ElementSetName">
+        <ows:Value>brief</ows:Value>
+        <ows:Value>full</ows:Value>
+        <ows:Value>summary</ows:Value>
+      </ows:Parameter>
       <ows:Parameter name="outputFormat">
-        <ows:Value>application/xml</ows:Value>
         <ows:Value>application/json</ows:Value>
+        <ows:Value>application/xml</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
-        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
-        <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
-        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
         <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
+        <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
         <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
-      </ows:Parameter>
-      <ows:Parameter name="CONSTRAINTLANGUAGE">
-        <ows:Value>FILTER</ows:Value>
-        <ows:Value>CQL_TEXT</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="resultType">
         <ows:Value>hits</ows:Value>
@@ -160,40 +134,66 @@
       <ows:Parameter name="typeNames">
         <ows:Value>csw:Record</ows:Value>
       </ows:Parameter>
-      <ows:Parameter name="ElementSetName">
-        <ows:Value>brief</ows:Value>
-        <ows:Value>summary</ows:Value>
-        <ows:Value>full</ows:Value>
-      </ows:Parameter>
       <ows:Constraint name="SupportedDublinCoreQueryables">
-        <ows:Value>dc:contributor</ows:Value>
-        <ows:Value>dc:source</ows:Value>
-        <ows:Value>dc:language</ows:Value>
-        <ows:Value>dc:title</ows:Value>
-        <ows:Value>dc:subject</ows:Value>
-        <ows:Value>dc:creator</ows:Value>
-        <ows:Value>dc:type</ows:Value>
-        <ows:Value>ows:BoundingBox</ows:Value>
-        <ows:Value>dct:modified</ows:Value>
-        <ows:Value>dct:abstract</ows:Value>
-        <ows:Value>dc:relation</ows:Value>
-        <ows:Value>dc:date</ows:Value>
-        <ows:Value>dc:identifier</ows:Value>
-        <ows:Value>dc:publisher</ows:Value>
-        <ows:Value>dc:format</ows:Value>
         <ows:Value>csw:AnyText</ows:Value>
+        <ows:Value>dc:contributor</ows:Value>
+        <ows:Value>dc:creator</ows:Value>
+        <ows:Value>dc:date</ows:Value>
+        <ows:Value>dc:format</ows:Value>
+        <ows:Value>dc:identifier</ows:Value>
+        <ows:Value>dc:language</ows:Value>
+        <ows:Value>dc:publisher</ows:Value>
+        <ows:Value>dc:relation</ows:Value>
         <ows:Value>dc:rights</ows:Value>
+        <ows:Value>dc:source</ows:Value>
+        <ows:Value>dc:subject</ows:Value>
+        <ows:Value>dc:title</ows:Value>
+        <ows:Value>dc:type</ows:Value>
+        <ows:Value>dct:abstract</ows:Value>
+        <ows:Value>dct:modified</ows:Value>
+        <ows:Value>ows:BoundingBox</ows:Value>
       </ows:Constraint>
     </ows:Operation>
+    <ows:Operation name="GetRecordById">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/gm03/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/gm03/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="ElementSetName">
+        <ows:Value>brief</ows:Value>
+        <ows:Value>full</ows:Value>
+        <ows:Value>summary</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="outputFormat">
+        <ows:Value>application/json</ows:Value>
+        <ows:Value>application/xml</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="outputSchema">
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
+        <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
+        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Operation name="GetRepositoryItem">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/gm03/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+    </ows:Operation>
+    <ows:Parameter name="service">
+      <ows:Value>CSW</ows:Value>
+    </ows:Parameter>
     <ows:Parameter name="version">
       <ows:Value>2.0.2</ows:Value>
       <ows:Value>3.0.0</ows:Value>
     </ows:Parameter>
-    <ows:Parameter name="service">
-      <ows:Value>CSW</ows:Value>
-    </ows:Parameter>
-    <ows:Constraint name="XPathQueryables">
-      <ows:Value>allowed</ows:Value>
+    <ows:Constraint name="FederatedCatalogues">
+      <ows:Value>http://geo.data.gov/geoportal/csw/discovery</ows:Value>
     </ows:Constraint>
     <ows:Constraint name="MaxRecordDefault">
       <ows:Value>10</ows:Value>
@@ -202,8 +202,8 @@
       <ows:Value>XML</ows:Value>
       <ows:Value>SOAP</ows:Value>
     </ows:Constraint>
-    <ows:Constraint name="FederatedCatalogues">
-      <ows:Value>http://geo.data.gov/geoportal/csw/discovery</ows:Value>
+    <ows:Constraint name="XPathQueryables">
+      <ows:Value>allowed</ows:Value>
     </ows:Constraint>
   </ows:OperationsMetadata>
   <ogc:Filter_Capabilities>
@@ -233,11 +233,11 @@
       <ogc:ComparisonOperators>
         <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>
       </ogc:ComparisonOperators>

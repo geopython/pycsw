@@ -746,6 +746,8 @@ class Csw(object):
 
             self.manager = True
 
+            self.context.model['operations_order'].append('Transaction')
+
             self.context.model['operations']['Transaction'] = {
                 'methods': {'get': False, 'post': True},
                 'parameters': {}
@@ -764,6 +766,8 @@ class Csw(object):
                 'http://www.isotc211.org/2005/gmi',
                 'urn:geoss:waf',
             ]
+
+            self.context.model['operations_order'].append('Harvest')
 
             self.context.model['operations']['Harvest'] = {
                 'methods': {'get': False, 'post': True},

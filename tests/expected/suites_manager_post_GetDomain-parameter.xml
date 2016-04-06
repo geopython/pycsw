@@ -4,23 +4,23 @@
   <csw:DomainValues type="csw:Record">
     <csw:ParameterName>Harvest.ResourceType</csw:ParameterName>
     <csw:ListOfValues>
+      <csw:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</csw:Value>
+      <csw:Value>http://www.interlis.ch/INTERLIS2.3</csw:Value>
+      <csw:Value>http://www.isotc211.org/2005/gmd</csw:Value>
+      <csw:Value>http://www.isotc211.org/2005/gmi</csw:Value>
+      <csw:Value>http://www.isotc211.org/schemas/2005/gmd/</csw:Value>
       <csw:Value>http://www.opengis.net/cat/csw/2.0.2</csw:Value>
       <csw:Value>http://www.opengis.net/cat/csw/3.0</csw:Value>
-      <csw:Value>http://www.opengis.net/wms</csw:Value>
-      <csw:Value>http://www.opengis.net/wmts/1.0</csw:Value>
-      <csw:Value>http://www.opengis.net/wfs</csw:Value>
-      <csw:Value>http://www.opengis.net/wcs</csw:Value>
-      <csw:Value>http://www.opengis.net/wps/1.0.0</csw:Value>
+      <csw:Value>http://www.opengis.net/cat/csw/csdgm</csw:Value>
       <csw:Value>http://www.opengis.net/sos/1.0</csw:Value>
       <csw:Value>http://www.opengis.net/sos/2.0</csw:Value>
-      <csw:Value>http://www.isotc211.org/2005/gmi</csw:Value>
-      <csw:Value>urn:geoss:waf</csw:Value>
-      <csw:Value>http://www.interlis.ch/INTERLIS2.3</csw:Value>
-      <csw:Value>http://www.opengis.net/cat/csw/csdgm</csw:Value>
-      <csw:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</csw:Value>
+      <csw:Value>http://www.opengis.net/wcs</csw:Value>
+      <csw:Value>http://www.opengis.net/wfs</csw:Value>
+      <csw:Value>http://www.opengis.net/wms</csw:Value>
+      <csw:Value>http://www.opengis.net/wmts/1.0</csw:Value>
+      <csw:Value>http://www.opengis.net/wps/1.0.0</csw:Value>
       <csw:Value>http://www.w3.org/2005/Atom</csw:Value>
-      <csw:Value>http://www.isotc211.org/2005/gmd</csw:Value>
-      <csw:Value>http://www.isotc211.org/schemas/2005/gmd/</csw:Value>
+      <csw:Value>urn:geoss:waf</csw:Value>
     </csw:ListOfValues>
   </csw:DomainValues>
 </csw:GetDomainResponse>
