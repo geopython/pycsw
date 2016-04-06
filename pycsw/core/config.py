@@ -172,6 +172,10 @@ class StaticContext(object):
 
         self.models = {
             'csw': {
+                'operations_order': [
+                    'GetCapabilities', 'DescribeRecord', 'GetDomain',
+                    'GetRecords', 'GetRecordById', 'GetRepositoryItem'
+                ],
                 'operations': {
                     'GetCapabilities': {
                         'methods': {
@@ -325,6 +329,10 @@ class StaticContext(object):
                 }
             },
             'csw30': {
+                'operations_order': [
+                    'GetCapabilities', 'GetDomain', 'GetRecords',
+                    'GetRecordById', 'GetRepositoryItem'
+                ],
                 'operations': {
                     'GetCapabilities': {
                         'methods': {

@@ -265,7 +265,7 @@ class Csw2(object):
             util.nspath_eval('ows:OperationsMetadata',
             self.parent.context.namespaces))
 
-            for operation in self.parent.context.model['operations'].keys():
+            for operation in self.parent.context.model['operations_order']:
                 oper = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows:Operation', self.parent.context.namespaces),
                 name=operation)
@@ -296,33 +296,33 @@ class Csw2(object):
                     self.parent.config.get('server', 'url')
 
                 for parameter in \
-                self.parent.context.model['operations'][operation]['parameters']:
+                sorted(self.parent.context.model['operations'][operation]['parameters']):
                     param = etree.SubElement(oper,
                     util.nspath_eval('ows:Parameter',
                     self.parent.context.namespaces), name=parameter)
 
                     for val in \
-                    self.parent.context.model['operations'][operation]\
-                    ['parameters'][parameter]['values']:
+                    sorted(self.parent.context.model['operations'][operation]\
+                    ['parameters'][parameter]['values']):
                         etree.SubElement(param,
                         util.nspath_eval('ows:Value',
                         self.parent.context.namespaces)).text = val
 
                 if operation == 'GetRecords':  # advertise queryables
-                    for qbl in self.parent.repository.queryables.keys():
+                    for qbl in sorted(self.parent.repository.queryables.keys()):
                         if qbl != '_all':
                             param = etree.SubElement(oper,
                             util.nspath_eval('ows:Constraint',
                             self.parent.context.namespaces), name=qbl)
 
-                            for qbl2 in self.parent.repository.queryables[qbl]:
+                            for qbl2 in sorted(self.parent.repository.queryables[qbl]):
                                 etree.SubElement(param,
                                 util.nspath_eval('ows:Value',
                                 self.parent.context.namespaces)).text = qbl2
 
                     if self.parent.profiles is not None:
-                        for con in self.parent.context.model[\
-                        'operations']['GetRecords']['constraints'].keys():
+                        for con in sorted(self.parent.context.model[\
+                        'operations']['GetRecords']['constraints'].keys()):
                             param = etree.SubElement(oper,
                             util.nspath_eval('ows:Constraint',
                             self.parent.context.namespaces), name = con)
@@ -332,7 +332,7 @@ class Csw2(object):
                                 util.nspath_eval('ows:Value',
                                 self.parent.context.namespaces)).text = val
 
-            for parameter in self.parent.context.model['parameters'].keys():
+            for parameter in sorted(self.parent.context.model['parameters'].keys()):
                 param = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows:Parameter', self.parent.context.namespaces),
                 name=parameter)
@@ -341,7 +341,7 @@ class Csw2(object):
                     etree.SubElement(param, util.nspath_eval('ows:Value',
                     self.parent.context.namespaces)).text = val
 
-            for constraint in self.parent.context.model['constraints'].keys():
+            for constraint in sorted(self.parent.context.model['constraints'].keys()):
                 param = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows:Constraint', self.parent.context.namespaces),
                 name=constraint)
@@ -392,7 +392,7 @@ class Csw2(object):
         cmpops = etree.SubElement(scalarcaps,
         util.nspath_eval('ogc:ComparisonOperators', self.parent.context.namespaces))
 
-        for cmpop in fes1.MODEL['ComparisonOperators'].keys():
+        for cmpop in sorted(fes1.MODEL['ComparisonOperators'].keys()):
             etree.SubElement(cmpops,
             util.nspath_eval('ogc:ComparisonOperator',
             self.parent.context.namespaces)).text = \
@@ -524,8 +524,8 @@ class Csw2(object):
                     listofvalues = etree.SubElement(domainvalue,
                     util.nspath_eval('csw:ListOfValues', self.parent.context.namespaces))
                     for val in \
-                    self.parent.context.model['operations'][operation]\
-                    ['parameters'][parameter]['values']:
+                    sorted(self.parent.context.model['operations'][operation]\
+                    ['parameters'][parameter]['values']):
                         etree.SubElement(listofvalues,
                         util.nspath_eval('csw:Value',
                         self.parent.context.namespaces)).text = val

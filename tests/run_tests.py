@@ -66,8 +66,12 @@ def get_validity(sexpected, sresult, soutfile, force_id_mask=False):
             import difflib
             with open(sexpected) as a:
                 with open('results%s%s' % (os.sep, soutfile)) as b:
-                    diff = difflib.unified_diff(a.readlines(), b.readlines())
+                    a2 = a.readlines()
+                    b2 = b.readlines()
+                    diff = difflib.unified_diff(a2, b2)
             print('\n'.join(list(diff)))
+            if len(a2) != len(b2):
+                print('LINE COUNT: expected: %d, result: %d' % (len(a2), len(b2)))
             sstatus = -1
     return sstatus
 

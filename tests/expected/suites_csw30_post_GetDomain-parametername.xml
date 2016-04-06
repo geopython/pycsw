@@ -4,9 +4,9 @@
   <csw30:DomainValues resultType="available" type="csw30:Record">
     <csw30:ParameterName>GetRecords.outputFormat</csw30:ParameterName>
     <csw30:ListOfValues>
-      <csw30:Value>application/xml</csw30:Value>
-      <csw30:Value>application/json</csw30:Value>
       <csw30:Value>application/atom+xml</csw30:Value>
+      <csw30:Value>application/json</csw30:Value>
+      <csw30:Value>application/xml</csw30:Value>
     </csw30:ListOfValues>
   </csw30:DomainValues>
 </csw30:GetDomainResponse>

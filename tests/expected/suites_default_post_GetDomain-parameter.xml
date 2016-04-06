@@ -4,8 +4,8 @@
   <csw:DomainValues type="csw:Record">
     <csw:ParameterName>GetRecords.CONSTRAINTLANGUAGE</csw:ParameterName>
     <csw:ListOfValues>
-      <csw:Value>FILTER</csw:Value>
       <csw:Value>CQL_TEXT</csw:Value>
+      <csw:Value>FILTER</csw:Value>
     </csw:ListOfValues>
   </csw:DomainValues>
 </csw:GetDomainResponse>
