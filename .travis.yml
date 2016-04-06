@@ -10,7 +10,7 @@ python:
 
 matrix:
   allow_failures:
-    - python: 3.4
+    - python: "3.4"
 
 addons:
   apt:
