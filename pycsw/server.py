@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2016 Tom Kralidis
+# Copyright (c) 2015 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -30,14 +30,14 @@
 #
 # =================================================================
 
-import logging
 import os
-from six.moves.urllib.parse import quote, unquote
-from six.moves.urllib.parse import urlparse
-from six import StringIO
-from six.moves.configparser import SafeConfigParser
 import sys
 from time import time
+from urllib2 import quote, unquote
+import urlparse
+from cStringIO import StringIO
+from ConfigParser import SafeConfigParser
+import logging
 
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
@@ -297,7 +297,7 @@ class Csw(object):
             if version_202 or accept_version_202:
                 self.request_version = '2.0.2'
         elif self.requesttype == 'POST':
-            if self.request.find(b'2.0.2') != -1:
+            if self.request.find('2.0.2') != -1:
                 self.request_version = '2.0.2'
 
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
@@ -333,7 +333,6 @@ class Csw(object):
         # generate distributed search model, if specified in config
         if self.config.has_option('server', 'federatedcatalogues'):
             LOGGER.debug('Configuring distributed search.')
-
             constraints['FederatedCatalogues'] = {'values': []}
 
             for fedcat in self.config.get('server',
@@ -376,8 +375,8 @@ class Csw(object):
                                                          namespaces,
                                                          self.config)
 
-            LOGGER.debug('Profiles loaded: %s.' %
-            list(self.profiles['loaded'].keys()))
+            LOGGER.debug(
+                'Profiles loaded: %s.' % self.profiles['loaded'].keys())
 
         # init repository
         # look for tablename, set 'records' as default
@@ -537,8 +536,7 @@ class Csw(object):
                                     self.kvp['acceptversions'])
 
                 # test request
-                if self.kvp['request'] not in \
-                    self.context.model['operations']:
+                if request not in ops.keys():
                     error = 1
                     locator = 'request'
                     if request in ['Transaction', 'Harvest']:
@@ -654,10 +652,6 @@ class Csw(object):
         if hasattr(self, 'soap') and self.soap:
             self._gen_soap_wrapper()
 
-        if etree.__version__ >= '3.5.0':  # remove superfluous namespaces
-            etree.cleanup_namespaces(self.response,
-                                     keep_ns_prefixes=self.context.keep_ns_prefixes)
-
         response = etree.tostring(self.response,
                                   pretty_print=self.pretty_print,
                                   encoding='unicode')
@@ -754,6 +748,7 @@ class Csw(object):
                 'http://www.opengis.net/cat/csw/2.0.2',
                 'http://www.opengis.net/cat/csw/3.0',
                 'http://www.opengis.net/wms',
+                'http://www.opengis.net/wmts/1.0',
                 'http://www.opengis.net/wfs',
                 'http://www.opengis.net/wcs',
                 'http://www.opengis.net/wps/1.0.0',
@@ -773,7 +768,7 @@ class Csw(object):
             self.context.model['operations']['Transaction'] = {
                 'methods': {'get': False, 'post': True},
                 'parameters': {
-                    'TransactionSchemas': {'values': sorted(schema_values)}
+                    'TransactionSchemas': {'values': schema_values}
                 }
             }
 
@@ -790,17 +785,19 @@ class Csw(object):
 
         ipaddress = self.environ['REMOTE_ADDR']
 
-        if not self.config.has_option('manager', 'allowed_ips') or \
-        (self.config.has_option('manager', 'allowed_ips') and not
-         util.ipaddress_in_whitelist(ipaddress,
-                        self.config.get('manager', 'allowed_ips').split(','))):
-            raise RuntimeError(
-            'CSW-T operations not allowed for this IP address: %s' % ipaddress)
+        if self.config.has_option('manager', 'allowed_ips'):
+            allowed_ips = self.config.get('manager', 'allowed_ips').split(',')
+        else:
+            allowed_ips = []
+        ip_in_whitelist = util.ipaddress_in_whitelist(ipaddress, allowed_ips)
+        if len(allowed_ips) > 0 and not ip_in_whitelist:
+            raise RuntimeError('CSW-T operations not allowed for this '
+                               'IP address: %s' % ipaddress)
 
     def _cql_update_queryables_mappings(self, cql, mappings):
         """ Transform CQL query's properties to underlying DB columns """
         LOGGER.debug('Raw CQL text = %s.' % cql)
-        LOGGER.debug(str(list(mappings.keys())))
+        LOGGER.debug(str(mappings.keys()))
         if cql is not None:
             for key in mappings.keys():
                 try:
@@ -817,7 +814,7 @@ class Csw(object):
             LOGGER.debug('Processing responsehandler %s.' %
                          self.kvp['responsehandler'])
 
-            uprh = urlparse(self.kvp['responsehandler'])
+            uprh = urlparse.urlparse(self.kvp['responsehandler'])
 
             if uprh.scheme == 'mailto':  # email
                 import smtplib
