@@ -6,6 +6,7 @@
 #
 # Copyright (c) 2016 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
+# Copyright (c) 2016 James Dickens
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -754,6 +755,7 @@ class Csw(object):
                 'http://www.opengis.net/cat/csw/2.0.2',
                 'http://www.opengis.net/cat/csw/3.0',
                 'http://www.opengis.net/wms',
+                'http://www.opengis.net/wmts/1.0',
                 'http://www.opengis.net/wfs',
                 'http://www.opengis.net/wcs',
                 'http://www.opengis.net/wps/1.0.0',
