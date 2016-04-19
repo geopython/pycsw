@@ -448,7 +448,6 @@ def _parse_wmts(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Format', md.identification.type)
 
     for c in md.contents:
-
         if md.contents[c].parent is None:
             bbox = md.contents[c].boundingBoxWGS84
             tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
@@ -477,6 +476,7 @@ def _parse_wmts(context, repos, record, identifier):
 
     for layer in md.contents:
         recobj = repos.dataset()
+        keywords = ''
         identifier2 = '%s-%s' % (identifier, md.contents[layer].name)
         _set(context, recobj, 'pycsw:Identifier', identifier2)
         _set(context, recobj, 'pycsw:Typename', 'csw:Record')
@@ -493,20 +493,19 @@ def _parse_wmts(context, repos, record, identifier):
             _set(context, recobj, 'pycsw:Abstract', md.contents[layer].abstract)
         else:
             _set(context, recobj, 'pycsw:Abstract', "")
-        if md.contents[layer].keywords:
-            _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[layer].keywords))
-        else:
-            _set(context, recobj, 'pycsw:Keywords', "")
+        if hasattr(md.contents[layer], 'keywords'):  # safeguard against older OWSLib installs
+            keywords = ','.join(md.contents[layer].keywords)
+        _set(context, recobj, 'pycsw:Keywords', keywords)
 
         _set(context, recobj, 'pycsw:AnyText',
              util.get_anytext([md.contents[layer].title,
                               md.contents[layer].abstract,
-                             ','.join(md.contents[layer].keywords)
+                             ','.join(keywords)
                              ]))
 
         bbox = md.contents[layer].boundingBoxWGS84
 
-	if bbox is not None:
+        if bbox is not None:
             tmp = '%s,%s,%s,%s' % (bbox[0], bbox[1], bbox[2], bbox[3])
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
             _set(context, recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:4326')
@@ -525,7 +524,6 @@ def _parse_wmts(context, repos, record, identifier):
             'version': '1.0.0',
             'request': 'GetTile',
             'layer': md.contents[layer].name,
-            'keywords': md.contents[layer].keywords
         }
 
         links = [
