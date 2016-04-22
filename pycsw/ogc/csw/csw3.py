@@ -373,7 +373,7 @@ class Csw3(object):
                         self.parent.context.namespaces), name='FederatedCatalogues')
                         param.append(self._write_allowed_values(self.parent.context.model['constraints']['FederatedCatalogues']['values']))
 
-            for parameter in self.parent.context.model['parameters'].keys():
+            for parameter in sorted(self.parent.context.model['parameters'].keys()):
                 param = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows20:Parameter', self.parent.context.namespaces),
                 name=parameter)
