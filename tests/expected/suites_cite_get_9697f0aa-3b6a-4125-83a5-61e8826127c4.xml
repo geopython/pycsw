@@ -239,15 +239,15 @@
         </ows20:AllowedValues>
       </ows20:Parameter>
     </ows20:Operation>
+    <ows20:Parameter name="service">
+      <ows20:AllowedValues>
+        <ows20:Value>CSW</ows20:Value>
+      </ows20:AllowedValues>
+    </ows20:Parameter>
     <ows20:Parameter name="version">
       <ows20:AllowedValues>
         <ows20:Value>2.0.2</ows20:Value>
         <ows20:Value>3.0.0</ows20:Value>
-      </ows20:AllowedValues>
-    </ows20:Parameter>
-    <ows20:Parameter name="service">
-      <ows20:AllowedValues>
-        <ows20:Value>CSW</ows20:Value>
       </ows20:AllowedValues>
     </ows20:Parameter>
     <ows20:Constraint name="CoreQueryables">
