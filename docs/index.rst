@@ -28,6 +28,7 @@ pycsw |release| Documentation
    profiles
    outputschemas
    geonode
+   hhypermap
    odc
    ckan
    testing
