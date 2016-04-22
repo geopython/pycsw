@@ -37,6 +37,7 @@ import getopt
 import glob
 import filecmp
 import re
+import codecs
 from pycsw.core.util import http_request
 
 
@@ -64,8 +65,10 @@ def get_validity(sexpected, sresult, soutfile, force_id_mask=False):
             sstatus = 1
         else:  # fail
             import difflib
-            with open(sexpected) as a:
-                with open('results%s%s' % (os.sep, soutfile)) as b:
+            encoding = "utf-8"
+            with codecs.open(sexpected, encoding=encoding) as a:
+                with codecs.open('results%s%s' % (os.sep, soutfile),
+                                 encoding=encoding) as b:
                     a2 = a.readlines()
                     b2 = b.readlines()
                     diff = difflib.unified_diff(a2, b2)
@@ -322,8 +325,9 @@ for testsuite in TESTSUITES_LIST:
                         print('\n test %s' % testfile)
 
                         # read test
-                        with open(testfile) as f:
-                            request = f.read()
+                        encoding = "utf-8"
+                        with codecs.open(testfile, encoding=encoding) as fh:
+                            request = fh.read().encode(encoding)
 
                         configkvp = 'config=tests%s%s' % (os.sep, cfg)
                         url2 = '%s?%s' % (URL, configkvp)
