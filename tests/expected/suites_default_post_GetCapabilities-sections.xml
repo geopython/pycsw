@@ -54,11 +54,11 @@
       <ogc:ComparisonOperators>
         <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
-        <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
         <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>
       </ogc:ComparisonOperators>
