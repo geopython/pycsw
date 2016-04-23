@@ -300,7 +300,7 @@ class Csw3(object):
             util.nspath_eval('ows20:OperationsMetadata',
             self.parent.context.namespaces))
 
-            for operation in self.parent.context.model['operations'].keys():
+            for operation in self.parent.context.model['operations_order']:
                 oper = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows20:Operation', self.parent.context.namespaces),
                 name=operation)
@@ -331,7 +331,7 @@ class Csw3(object):
                     self.parent.config.get('server', 'url')
 
                 for parameter in \
-                self.parent.context.model['operations'][operation]['parameters']:
+                sorted(self.parent.context.model['operations'][operation]['parameters']):
                     param = etree.SubElement(oper,
                     util.nspath_eval('ows20:Parameter',
                     self.parent.context.namespaces), name=parameter)
@@ -339,7 +339,7 @@ class Csw3(object):
                     param.append(self._write_allowed_values(self.parent.context.model['operations'][operation]['parameters'][parameter]['values']))
 
                 if operation == 'GetRecords':  # advertise queryables, MaxRecordDefault
-                    for qbl in self.parent.repository.queryables.keys():
+                    for qbl in sorted(self.parent.repository.queryables.keys()):
                         if qbl not in ['_all', 'SupportedDublinCoreQueryables']:
                             param = etree.SubElement(oper,
                             util.nspath_eval('ows20:Constraint',
@@ -348,8 +348,8 @@ class Csw3(object):
                             param.append(self._write_allowed_values(self.parent.repository.queryables[qbl]))
 
                     if self.parent.profiles is not None:
-                        for con in self.parent.context.model[\
-                        'operations']['GetRecords']['constraints'].keys():
+                        for con in sorted(self.parent.context.model[\
+                        'operations']['GetRecords']['constraints'].keys()):
                             param = etree.SubElement(oper,
                             util.nspath_eval('ows20:Constraint',
                             self.parent.context.namespaces), name=con)
@@ -361,11 +361,11 @@ class Csw3(object):
                         'MaxRecordDefault': self.parent.context.model['constraints']['MaxRecordDefault']['values'],
                     }
 
-                    for key, value in extra_constraints.items():
+                    for key in sorted(extra_constraints.keys()):
                         param = etree.SubElement(oper,
                         util.nspath_eval('ows20:Constraint',
                         self.parent.context.namespaces), name=key)
-                        param.append(self._write_allowed_values(value))
+                        param.append(self._write_allowed_values(extra_constraints[key]))
 
                     if 'FederatedCatalogues' in self.parent.context.model['constraints']:
                         param = etree.SubElement(oper,
@@ -373,21 +373,21 @@ class Csw3(object):
                         self.parent.context.namespaces), name='FederatedCatalogues')
                         param.append(self._write_allowed_values(self.parent.context.model['constraints']['FederatedCatalogues']['values']))
 
-            for parameter in self.parent.context.model['parameters'].keys():
+            for parameter in sorted(self.parent.context.model['parameters'].keys()):
                 param = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows20:Parameter', self.parent.context.namespaces),
                 name=parameter)
 
                 param.append(self._write_allowed_values(self.parent.context.model['parameters'][parameter]['values']))
 
-            for qbl in self.parent.repository.queryables.keys():
+            for qbl in sorted(self.parent.repository.queryables.keys()):
                 if qbl == 'SupportedDublinCoreQueryables':
                     param = etree.SubElement(operationsmetadata,
                     util.nspath_eval('ows20:Constraint',
                     self.parent.context.namespaces), name='CoreQueryables')
                     param.append(self._write_allowed_values(self.parent.repository.queryables[qbl]))
 
-            for constraint in self.parent.context.model['constraints'].keys():
+            for constraint in sorted(self.parent.context.model['constraints'].keys()):
                 param = etree.SubElement(operationsmetadata,
                 util.nspath_eval('ows20:Constraint', self.parent.context.namespaces),
                 name=constraint)
@@ -444,7 +444,7 @@ class Csw3(object):
         cmpops = etree.SubElement(scalarcaps,
         util.nspath_eval('fes20:ComparisonOperators', self.parent.context.namespaces))
 
-        for cmpop in fes2.MODEL['ComparisonOperators'].keys():
+        for cmpop in sorted(fes2.MODEL['ComparisonOperators'].keys()):
             etree.SubElement(cmpops,
             util.nspath_eval('fes20:ComparisonOperator',
             self.parent.context.namespaces), name=fes2.MODEL['ComparisonOperators'][cmpop]['opname'])
@@ -518,8 +518,8 @@ class Csw3(object):
                     listofvalues = etree.SubElement(domainvalue,
                     util.nspath_eval('csw30:ListOfValues', self.parent.context.namespaces))
                     for val in \
-                    self.parent.context.model['operations'][operation]\
-                    ['parameters'][parameter]['values']:
+                    sorted(self.parent.context.model['operations'][operation]\
+                    ['parameters'][parameter]['values']):
                         etree.SubElement(listofvalues,
                         util.nspath_eval('csw30:Value',
                         self.parent.context.namespaces)).text = val
@@ -1986,7 +1986,7 @@ class Csw3(object):
         allowed_values = etree.Element(util.nspath_eval('ows20:AllowedValues',
                                        self.parent.context.namespaces))
 
-        for value in values:
+        for value in sorted(values):
             etree.SubElement(allowed_values,
                              util.nspath_eval('ows20:Value',
                              self.parent.context.namespaces)).text = value

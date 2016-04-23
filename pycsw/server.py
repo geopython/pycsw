@@ -520,7 +520,7 @@ class Csw(object):
                     locator = 'version'
                     code = 'InvalidParameterValue'
                     text = ('Invalid value for version: %s. Value MUST be '
-                            '2.0.2 or 3.0.0' % self.kvp['version'])
+                            '2.0.2 or 3.0.0' % kvp_version)
 
                 # check for GetCapabilities acceptversions
                 if 'acceptversions' in self.kvp:
@@ -680,6 +680,9 @@ class Csw(object):
                        '\n' % self.encoding)
             appinfo = '<!-- pycsw %s -->\n' % self.context.version
 
+        if isinstance(self.contenttype, bytes):
+            self.contenttype = self.contenttype.decode()
+
         s = (u'%s%s%s' % (xmldecl, appinfo, response)).encode(self.encoding)
         LOGGER.debug('Response code: %s',
                      self.context.response_codes[self.status])
@@ -746,6 +749,8 @@ class Csw(object):
 
             self.manager = True
 
+            self.context.model['operations_order'].append('Transaction')
+
             self.context.model['operations']['Transaction'] = {
                 'methods': {'get': False, 'post': True},
                 'parameters': {}
@@ -764,6 +769,8 @@ class Csw(object):
                 'http://www.isotc211.org/2005/gmi',
                 'urn:geoss:waf',
             ]
+
+            self.context.model['operations_order'].append('Harvest')
 
             self.context.model['operations']['Harvest'] = {
                 'methods': {'get': False, 'post': True},
