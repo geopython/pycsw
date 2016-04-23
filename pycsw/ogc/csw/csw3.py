@@ -906,7 +906,7 @@ class Csw3(object):
         #    return node
 
         if results is not None:
-            if len(results) < self.parent.kvp['maxrecords']:
+            if len(results) < int(self.parent.kvp['maxrecords']):
                 max1 = len(results)
             else:
                 max1 = int(self.parent.kvp['startposition']) + (int(self.parent.kvp['maxrecords'])-1)
