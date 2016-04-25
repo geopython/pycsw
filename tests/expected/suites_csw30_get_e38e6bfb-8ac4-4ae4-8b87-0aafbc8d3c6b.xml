@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw30:BriefRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <dc:identifier>urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd</dc:identifier>
+  <dc:title></dc:title>
+  <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
+  <ows20:BoundingBox crs="http://www.opengis.net/def/crs/EPSG/0/4326" dimensions="2">
+    <ows20:LowerCorner>60.04 13.75</ows20:LowerCorner>
+    <ows20:UpperCorner>68.41 17.92</ows20:UpperCorner>
+  </ows20:BoundingBox>
+</csw30:BriefRecord>
