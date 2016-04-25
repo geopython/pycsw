@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2016 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -40,6 +40,7 @@ import re
 import codecs
 from pycsw.core.util import http_request
 
+ENCODING = 'utf-8'
 
 def plural(num):
     """Determine plurality given an integer"""
@@ -65,10 +66,9 @@ def get_validity(sexpected, sresult, soutfile, force_id_mask=False):
             sstatus = 1
         else:  # fail
             import difflib
-            encoding = "utf-8"
-            with codecs.open(sexpected, encoding=encoding) as a:
+            with codecs.open(sexpected, encoding=ENCODING) as a:
                 with codecs.open('results%s%s' % (os.sep, soutfile),
-                                 encoding=encoding) as b:
+                                 encoding=ENCODING) as b:
                     a2 = a.readlines()
                     b2 = b.readlines()
                     diff = difflib.unified_diff(a2, b2)
@@ -325,9 +325,8 @@ for testsuite in TESTSUITES_LIST:
                         print('\n test %s' % testfile)
 
                         # read test
-                        encoding = "utf-8"
-                        with codecs.open(testfile, encoding=encoding) as fh:
-                            request = fh.read().encode(encoding)
+                        with codecs.open(testfile, encoding=ENCODING) as fh:
+                            request = fh.read().encode(ENCODING)
 
                         configkvp = 'config=tests%s%s' % (os.sep, cfg)
                         url2 = '%s?%s' % (URL, configkvp)
