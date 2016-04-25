@@ -1,5 +1,5 @@
 #!/usr/bin/python -u
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
