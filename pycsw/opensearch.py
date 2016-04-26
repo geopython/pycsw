@@ -395,7 +395,7 @@ def kvp2filterxml(kvp, context):
         if 'bbox' in kvp and kvp['bbox'] != '':
             LOGGER.debug('Adding bbox')
             root.append(bbox_element)
-        elif time_element:
+        elif time_element is not None:
             LOGGER.debug('Adding time')
             root.append(time_element)
         elif anytext_elements:
