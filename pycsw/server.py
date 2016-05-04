@@ -2313,6 +2313,12 @@ class Csw(object):
                         util.nspath_eval('dc:subject',
                         self.context.namespaces)).text = keyword
 
+                val = util.getqattr(recobj, self.context.md_core_model['mappings']['pycsw:TopicCategory'])
+                if val:
+                    etree.SubElement(record,
+                    util.nspath_eval('dc:subject',
+                    self.context.namespaces), scheme='http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode').text = val
+
                 val = util.getqattr(recobj, queryables['dc:format']['dbcol'])
                 if val:
                     etree.SubElement(record,
