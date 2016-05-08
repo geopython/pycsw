@@ -990,7 +990,7 @@ class Csw3(object):
                         numberOfRecordsMatched=fedcat.results['matches'],
                         numberOfRecordsReturned=fedcat.results['returned'],
                         nextRecord=fedcat.results['nextrecord'],
-                        elapsedTime=get_elapsed_time(start_time, time()),
+                        elapsedTime=str(util.get_elapsed_time(start_time, time())),
                         status=get_resultset_status(
                             fedcat.results['matches'],
                             fedcat.results['nextrecord']))
@@ -1014,7 +1014,7 @@ class Csw3(object):
 #                for rec in resultset:
 #                    searchresults.append(etree.fromstring(resultset[rec].xml, self.parent.context.parser))
 
-        searchresults.attrib['elapsedTime'] = get_elapsed_time(self.parent.process_time_start, time())
+        searchresults.attrib['elapsedTime'] = str(util.get_elapsed_time(self.parent.process_time_start, time()))
 
         if 'responsehandler' in self.parent.kvp:  # process the handler
             self.parent._process_responsehandler(etree.tostring(node,
@@ -2116,8 +2116,3 @@ def get_resultset_status(matched, nextrecord):
        status = 'none'
 
     return status
-
-def get_elapsed_time(begin, end):
-    ''' Helper function to calculate elapsed time '''
-
-    return str(int((end - begin) * 1000))
