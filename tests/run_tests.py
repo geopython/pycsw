@@ -30,15 +30,17 @@
 
 # simple testing framework inspired by MapServer msautotest
 
+import codecs
 import csv
-import sys
-import os
+import filecmp
 import getopt
 import glob
-import filecmp
+import os
 import re
-import codecs
-from pycsw.core.util import http_request
+import sys
+import time
+
+from pycsw.core.util import get_elapsed_time, http_request
 
 ENCODING = 'utf-8'
 
@@ -179,6 +181,8 @@ SYNOPSIS
 
     -r    run tests which harvest remote resources (default off)
 
+    -t    time (milliseconds) in which requests should complete
+
 EXAMPLES
 
     1.) default test example
@@ -193,9 +197,13 @@ EXAMPLES
 
         run_tests.py -u http://localhost:8000/ -s default,apiso
 
-    3.) run tests including remote harvest tests
+    4.) run tests including remote harvest tests
 
         run_tests.py -u http://localhost:8000/ -s default,apiso -r
+
+    5.) default test example with 1000ms time benchmark
+
+        run_tests.py -u http://localhost:8000/ -t 1000
 
 
 '''
@@ -220,9 +228,10 @@ INITED = 0
 LOGWRITER = None
 DATABASE = 'SQLite3'
 REMOTE = False
+TIME = None
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:rh')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:t:rh')
 except getopt.GetoptError as err:
     print('\nERROR: %s' % err)
     print(usage())
@@ -235,6 +244,8 @@ for o, a in OPTS:
         LOGFILE = a
     if o == '-d':
         DATABASE = a
+    if o == '-t':
+        TIME = int(a)
     if o == '-r':
         REMOTE = True
     if o == '-s':
@@ -248,6 +259,9 @@ print('\nRunning tests against %s' % URL)
 if LOGFILE is not None:  # write detailed output to CSV
     LOGWRITER = csv.writer(open(LOGFILE, 'wb'))
     LOGWRITER.writerow(['url', 'configuration', 'testname', 'result'])
+
+if TIME is not None:  # perform benchmarking
+    print('Benchmark: %dms' % TIME)
 
 if TESTSUITES:
     if 'harvesting' in TESTSUITES:
@@ -291,7 +305,11 @@ for testsuite in TESTSUITES_LIST:
                                 print('\n test %s:%s' % (testfile, row[0]))
 
                                 try:
+                                    begin = time.time()
                                     result = http_request('GET', request)
+                                    end = time.time()
+                                    elapsed = get_elapsed_time(begin, end)
+                                    print('  completed in %dms' % elapsed)
                                 except Exception as err:
                                     result = err.read()
 
@@ -310,6 +328,9 @@ for testsuite in TESTSUITES_LIST:
                                 else:
                                     print('  FAILED')
                                     FAILED += 1
+
+                                if TIME and get_elapsed_time(begin, end) > TIME:
+                                    print('  FAILED BENCHMARK')
 
                                 if LOGWRITER is not None:
                                     LOGWRITER.writerow([URL, cfg,
@@ -333,7 +354,11 @@ for testsuite in TESTSUITES_LIST:
 
                         # invoke request
                         try:
+                            begin = time.time()
                             result = http_request('POST', url2, request)
+                            end = time.time()
+                            elapsed = get_elapsed_time(begin, end)
+                            print('  completed in %dms' % elapsed)
                         except Exception as err:
                             result = err.read()
 
@@ -352,6 +377,9 @@ for testsuite in TESTSUITES_LIST:
                         else:
                             print('  FAILED')
                             FAILED += 1
+
+                        if TIME and get_elapsed_time(begin, end) > TIME:
+                            print('  FAILED BENCHMARK')
 
                         if LOGWRITER is not None:
                             LOGWRITER.writerow([URL, cfg, testfile, status])
