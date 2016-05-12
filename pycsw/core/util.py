@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -434,3 +434,8 @@ def validate_4326(bbox_list):
         is_valid = True
 
     return is_valid
+
+def get_elapsed_time(begin, end):
+    ''' Helper function to calculate elapsed time in milliseconds'''
+
+    return int((end - begin) * 1000)

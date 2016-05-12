@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -181,6 +181,7 @@ def setup_testdata():
     ('user=', 'U', 'database username'),
     ('pass=', 'p', 'database password'),
     ('remote', 'r', 'remote testing (harvesting)'),
+    ('time=', 't', 'time (milliseconds) in which requests should complete')
 ])
 def test(options):
     """Run unit tests"""
@@ -194,6 +195,7 @@ def test(options):
     suites = options.get('suites', None)
     database = options.get('database', 'SQLite3')
     remote = options.get('remote')
+    timems = options.get('time', None)
 
     if url is None:
         # run against default server
@@ -211,6 +213,9 @@ def test(options):
 
     if remote:
         cmd = '%s -r' % cmd
+
+    if timems:
+        cmd = '%s -t %s' % (cmd, timems)
 
     # configure/setup database if not default
     if database != 'SQLite3':

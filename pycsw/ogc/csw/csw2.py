@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -1453,6 +1453,12 @@ class Csw2(object):
                         etree.SubElement(record,
                         util.nspath_eval('dc:subject',
                         self.parent.context.namespaces)).text = keyword
+
+                val = util.getqattr(recobj, self.parent.context.md_core_model['mappings']['pycsw:TopicCategory'])
+                if val:
+                    etree.SubElement(record,
+                    util.nspath_eval('dc:subject',
+                    self.parent.context.namespaces), scheme='http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode').text = val
 
                 val = util.getqattr(recobj, queryables['dc:format']['dbcol'])
                 if val:

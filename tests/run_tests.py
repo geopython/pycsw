@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2016 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -31,25 +31,27 @@
 
 # simple testing framework inspired by MapServer msautotest
 
+import codecs
 import csv
-import sys
-import os
+import filecmp
 import getopt
 import glob
-import filecmp
-import re
-import codecs
 from io import BytesIO
 import json
 import logging
+import os
+import re
+import sys
+import time
 
 from lxml import etree
 from lxml import objectify
 
-from pycsw.core.util import http_request
+from pycsw.core.util import get_elapsed_time, http_request
 
 logger = logging.getLogger(__name__)
 
+ENCODING = 'utf-8'
 
 def plural(num):
     """Determine plurality given an integer"""
@@ -59,7 +61,7 @@ def plural(num):
         return ''
 
 
-def test_xml_result(result, expected, encoding="utf-8"):
+def test_xml_result(result, expected, encoding=ENCODING):
     """Compare the XML test results with an expected value.
 
     This function compares the test result with the expected values by
@@ -83,8 +85,8 @@ def test_xml_result(result, expected, encoding="utf-8"):
         If any of the input parameters is not a valid XMl.
     etree.C14NError
         If any of the input parameters cannot be canonicalized. This may
-        happen if there are relative namespace URIs in any of the XML documents,
-        as they are explicitly not allowed when doing XML c14n
+        happen if there are relative namespace URIs in any of the XML
+        documents, as they are explicitly not allowed when doing XML c14n
 
     References
     ----------
@@ -116,7 +118,7 @@ def test_xml_result(result, expected, encoding="utf-8"):
     return matches
 
 
-def test_json_result(result, expected, encoding="utf-8"):
+def test_json_result(result, expected, encoding=ENCODING):
     """Compare the JSON test results with an expected value.
 
     Parameters
@@ -177,20 +179,19 @@ def get_validity(expected_path, result, output_file_name, force_id_mask=False):
 
     """
 
-    encoding = "utf-8"
     normalized_result = normalize(result, force_id_mask=force_id_mask)
     if not os.path.exists(expected_path):  # create expected file
-        with codecs.open(expected_path, 'w', encoding=encoding) as f:
+        with codecs.open(expected_path, 'w', encoding=ENCODING) as f:
             f.write(normalized_result)
         status = 0
     else:  # compare result with expected
-        with codecs.open(expected_path, encoding=encoding) as expected_fh:
+        with codecs.open(expected_path, encoding=ENCODING) as expected_fh:
             expected = expected_fh.read()
             matches_expected = test_xml_result(normalized_result, expected)
             if matches_expected is None:
                 # the file is either not XML (perhaps JSON?) or malformed
                 matches_expected = test_json_result(
-                    normalized_result, expected, encoding=encoding)
+                    normalized_result, expected, encoding=ENCODING)
         if matches_expected:  # pass
             status = 1
         else:  # failed
@@ -218,10 +219,9 @@ def pedantic_get_validity(sexpected, sresult, soutfile, force_id_mask=False):
             sstatus = 1
         else:  # fail
             import difflib
-            encoding = "utf-8"
-            with codecs.open(sexpected, encoding=encoding) as a:
+            with codecs.open(sexpected, encoding=ENCODING) as a:
                 with codecs.open('results%s%s' % (os.sep, soutfile),
-                                 encoding=encoding) as b:
+                                 encoding=ENCODING) as b:
                     a2 = a.readlines()
                     b2 = b.readlines()
                     diff = difflib.unified_diff(a2, b2)
@@ -332,6 +332,8 @@ SYNOPSIS
 
     -r    run tests which harvest remote resources (default off)
 
+    -t    time (milliseconds) in which requests should complete
+
 EXAMPLES
 
     1.) default test example
@@ -346,9 +348,13 @@ EXAMPLES
 
         run_tests.py -u http://localhost:8000/ -s default,apiso
 
-    3.) run tests including remote harvest tests
+    4.) run tests including remote harvest tests
 
         run_tests.py -u http://localhost:8000/ -s default,apiso -r
+
+    5.) default test example with 1000ms time benchmark
+
+        run_tests.py -u http://localhost:8000/ -t 1000
 
 
 '''
@@ -374,9 +380,10 @@ LOGWRITER = None
 DATABASE = 'SQLite3'
 REMOTE = False
 PEDANTIC = False
+TIME = None
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:rhp')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'u:l:s:d:t:rhp')
 except getopt.GetoptError as err:
     print('\nERROR: %s' % err)
     print(usage())
@@ -389,6 +396,8 @@ for o, a in OPTS:
         LOGFILE = a
     if o == '-d':
         DATABASE = a
+    if o == '-t':
+        TIME = int(a)
     if o == '-r':
         REMOTE = True
     if o == '-p':
@@ -404,6 +413,9 @@ print('\nRunning tests against %s' % URL)
 if LOGFILE is not None:  # write detailed output to CSV
     LOGWRITER = csv.writer(open(LOGFILE, 'wb'))
     LOGWRITER.writerow(['url', 'configuration', 'testname', 'result'])
+
+if TIME is not None:  # perform benchmarking
+    print('Benchmark: %dms' % TIME)
 
 if TESTSUITES:
     if 'harvesting' in TESTSUITES:
@@ -447,7 +459,11 @@ for testsuite in TESTSUITES_LIST:
                                 print('\n test %s:%s' % (testfile, row[0]))
 
                                 try:
+                                    begin = time.time()
                                     result = http_request('GET', request)
+                                    end = time.time()
+                                    elapsed = get_elapsed_time(begin, end)
+                                    print('  completed in %dms' % elapsed)
                                 except Exception as err:
                                     result = err.read()
                                 if PEDANTIC:
@@ -482,6 +498,9 @@ for testsuite in TESTSUITES_LIST:
                                     print('  FAILED')
                                     FAILED += 1
 
+                                if TIME and get_elapsed_time(begin, end) > TIME:
+                                    print('  FAILED BENCHMARK')
+
                                 if LOGWRITER is not None:
                                     LOGWRITER.writerow([URL, cfg,
                                                         testfile, status])
@@ -496,16 +515,19 @@ for testsuite in TESTSUITES_LIST:
                         print('\n test %s' % testfile)
 
                         # read test
-                        encoding = "utf-8"
-                        with codecs.open(testfile, encoding=encoding) as fh:
-                            request = fh.read().encode(encoding)
+                        with codecs.open(testfile, encoding=ENCODING) as fh:
+                            request = fh.read().encode(ENCODING)
 
                         configkvp = 'config=tests%s%s' % (os.sep, cfg)
                         url2 = '%s?%s' % (URL, configkvp)
 
                         # invoke request
                         try:
+                            begin = time.time()
                             result = http_request('POST', url2, request)
+                            end = time.time()
+                            elapsed = get_elapsed_time(begin, end)
+                            print('  completed in %dms' % elapsed)
                         except Exception as err:
                             result = err.read()
                         if PEDANTIC:
@@ -533,6 +555,9 @@ for testsuite in TESTSUITES_LIST:
                         else:
                             print('  FAILED')
                             FAILED += 1
+
+                        if TIME and get_elapsed_time(begin, end) > TIME:
+                            print('  FAILED BENCHMARK')
 
                         if LOGWRITER is not None:
                             LOGWRITER.writerow([URL, cfg, testfile, status])

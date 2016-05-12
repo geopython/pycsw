@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<atom:entry xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+  <atom:id>urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e</atom:id>
+  <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e</dc:identifier>
+  <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e"/>
+  <atom:title>Vestibulum massa purus</atom:title>
+  <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+</atom:entry>
