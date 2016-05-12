@@ -38,7 +38,6 @@ import getopt
 import glob
 from io import BytesIO
 import json
-import logging
 import os
 import re
 import sys
@@ -48,8 +47,6 @@ from lxml import etree
 from lxml import objectify
 
 from pycsw.core.util import get_elapsed_time, http_request
-
-logger = logging.getLogger(__name__)
 
 ENCODING = 'utf-8'
 
@@ -477,9 +474,9 @@ for testsuite in TESTSUITES_LIST:
                                                               outfile,
                                                               force_id_mask)
                                     except etree.C14NError:
-                                        logger.info("Could not canonicalize "
-                                                    "{}. Using pedantic "
-                                                    "mode".format(sfile))
+                                        print("Could not canonicalize {}. "
+                                              "Using pedantic "
+                                              "mode".format(row[0]))
                                         status = pedantic_get_validity(
                                             expected, result, outfile,
                                             force_id_mask
@@ -538,8 +535,8 @@ for testsuite in TESTSUITES_LIST:
                                 status = get_validity(expected, result, outfile,
                                                       force_id_mask)
                             except etree.C14NError:
-                                logger.info("Could not canonicalize {}. Using "
-                                            "pedantic mode".format(sfile))
+                                print("Could not canonicalize {}. Using "
+                                      "pedantic mode".format(sfile))
                                 status = pedantic_get_validity(
                                     expected, result, outfile, force_id_mask)
 
