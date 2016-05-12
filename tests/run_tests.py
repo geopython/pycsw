@@ -2,6 +2,7 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2015 Tom Kralidis
 #
@@ -40,11 +41,14 @@ import re
 import codecs
 from io import BytesIO
 import json
+import logging
 
 from lxml import etree
 from lxml import objectify
 
 from pycsw.core.util import http_request
+
+logger = logging.getLogger(__name__)
 
 
 def plural(num):
@@ -57,6 +61,9 @@ def plural(num):
 
 def test_xml_result(result, expected, encoding="utf-8"):
     """Compare the XML test results with an expected value.
+
+    This function compares the test result with the expected values by
+    performing XML canonicalization (c14n)[1]_.
 
     Parameters
     ----------
@@ -74,29 +81,38 @@ def test_xml_result(result, expected, encoding="utf-8"):
     ------
     etree.XMLSyntaxError
         If any of the input parameters is not a valid XMl.
+    etree.C14NError
+        If any of the input parameters cannot be canonicalized. This may
+        happen if there are relative namespace URIs in any of the XML documents,
+        as they are explicitly not allowed when doing XML c14n
+
+    References
+    ----------
+    .. [1] http://www.w3.org/TR/xml-c14n
 
     """
 
     try:
         result_element = etree.fromstring(result)
         expected_element = etree.fromstring(expected.encode(encoding))
-
         result_buffer = BytesIO()
         result_tree = result_element.getroottree()
         objectify.deannotate(result_tree, cleanup_namespaces=True)
-        result_tree.write_c14n(result_buffer, exclusive=True)
+        result_tree.write_c14n(result_buffer)
         expected_buffer = BytesIO()
         expected_tree = expected_element.getroottree()
         objectify.deannotate(expected_tree, cleanup_namespaces=True)
         expected_tree.write_c14n(expected_buffer)
         matches = result_buffer.getvalue() == expected_buffer.getvalue()
+        if not matches:
+            print("result:")
+            print(result_buffer.getvalue())
+            print("+++++++++++++++++++++++")
+            print("expected:")
+            print(expected_buffer.getvalue())
+
     except etree.XMLSyntaxError:
         matches = None
-    except etree.C14NError:
-        print("result: {}".format(result))
-        print("+++++++++++++++++++++++")
-        print("expected: {}".format(expected))
-        raise
     return matches
 
 
@@ -453,9 +469,19 @@ for testsuite in TESTSUITES_LIST:
                                         force_id_mask
                                     )
                                 else:
-                                    status = get_validity(expected, result,
-                                                          outfile,
-                                                          force_id_mask)
+                                    try:
+                                        status = get_validity(expected, result,
+                                                              outfile,
+                                                              force_id_mask)
+                                    except etree.C14NError:
+                                        logger.info("Could not canonicalize "
+                                                    "{}. Using pedantic "
+                                                    "mode".format(sfile))
+                                        status = pedantic_get_validity(
+                                            expected, result, outfile,
+                                            force_id_mask
+                                        )
+
                                 if status == 1:
                                     print('  passed')
                                     PASSED += 1
@@ -499,8 +525,15 @@ for testsuite in TESTSUITES_LIST:
                             status = pedantic_get_validity(
                                 expected, result, outfile, force_id_mask)
                         else:
-                            status = get_validity(expected, result, outfile,
-                                                  force_id_mask)
+                            try:
+                                status = get_validity(expected, result, outfile,
+                                                      force_id_mask)
+                            except etree.C14NError:
+                                logger.info("Could not canonicalize {}. Using "
+                                            "pedantic mode".format(sfile))
+                                status = pedantic_get_validity(
+                                    expected, result, outfile, force_id_mask)
+
                         if status == 1:
                             print('  passed')
                             PASSED += 1
