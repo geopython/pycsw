@@ -134,26 +134,13 @@ def test_json_result(result, expected, encoding="utf-8"):
     """
 
     try:
-        result_dict = json.loads(result, encoding=encoding)
+        result_dict = json.loads(result.decode(encoding), encoding=encoding)
         expected_dict = json.loads(expected, encoding=encoding)
     except ValueError:
         matches = None
     else:
-        ordered_result = order_json_dict(result_dict)
-        ordered_expected = order_json_dict(expected_dict)
-        matches = ordered_result == ordered_expected
+        matches = result_dict == expected_dict
     return matches
-
-
-def order_json_dict(obj):
-    """A sorting algorithm for comparing JSON data."""
-    if isinstance(obj, dict):
-        result = sorted((k, order_json_dict(v)) for k, v in obj.items())
-    elif isinstance(obj, list):
-        result = sorted(order_json_dict(x) for x in obj)
-    else:
-        result = obj
-    return obj
 
 
 def get_validity(expected_path, result, output_file_name, force_id_mask=False):
