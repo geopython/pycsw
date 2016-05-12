@@ -474,7 +474,7 @@ for testsuite in TESTSUITES_LIST:
                                                               outfile,
                                                               force_id_mask)
                                     except etree.C14NError:
-                                        print("Could not canonicalize {}. "
+                                        print("Could not canonicalize {0}. "
                                               "Using pedantic "
                                               "mode".format(row[0]))
                                         status = pedantic_get_validity(
@@ -535,7 +535,7 @@ for testsuite in TESTSUITES_LIST:
                                 status = get_validity(expected, result, outfile,
                                                       force_id_mask)
                             except etree.C14NError:
-                                print("Could not canonicalize {}. Using "
+                                print("Could not canonicalize {0}. Using "
                                       "pedantic mode".format(sfile))
                                 status = pedantic_get_validity(
                                     expected, result, outfile, force_id_mask)
