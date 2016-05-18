@@ -9,6 +9,8 @@ Exception-GetDomain-value-reference,PYCSW_SERVER?config=tests/suites/csw30/defau
 Exception-GetRecordById-dc.xml,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetRecordById&id=urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e
 Exception-GetRecordById-404,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetRecordById&id=does_not_exist2
 OpenSearch-description,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&mode=opensearch&service=CSW&version=3.0.0&request=GetCapabilities
+GetRepositoryItem,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetRepositoryItem&id=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f
+Exception-GetRepositoryItem-notfound,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&service=CSW&version=3.0.0&request=GetRepositoryItem&id=NOTFOUND
 002258f0-627f-457f-b2ad-025777c77ac8,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&mode=opensearch&service=CSW&version=3.0.0&request=GetCapabilities
 045c600d-973d-41eb-9f60-eba1b717b720,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q=Fusc%C3%A9%20Land&bbox=&time=/&outputformat=application/atom+xml&startposition=1&maxrecords=&recordids=
 0bbcf862-5211-4351-9988-63f8bec49c98,PYCSW_SERVER?config=tests/suites/csw30/default.cfg&elementSetName=summary&outputFormat=application/atom%2Bxml&request=GetRecords&service=CSW&typeNames=Record&version=3.0.0
