@@ -629,7 +629,7 @@ class Csw(object):
 
     def getrecordbyid(self, raw=False):
         """ Handle GetRecordById request """
-        return self.iface.getrecordbyid()
+        return self.iface.getrecordbyid(raw)
 
     def getrepositoryitem(self):
         """ Handle GetRepositoryItem request """
