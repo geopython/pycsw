@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2016 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -1327,121 +1327,139 @@ class Csw3(object):
 
             if len(results) > 0:  # exists, keep identifier for update
                 LOGGER.debug('Service already exists, keeping identifier and results')
-                service_identifier = results[0].identifier
+                service_identifier = getattr(results[0], self.parent.context.md_core_model['mappings']['pycsw:Identifier'])
                 service_results = results
                 LOGGER.debug('Identifier is %s' % service_identifier)
             #    return self.exceptionreport('NoApplicableCode', 'source',
             #    'Insert failed: service %s already in repository' % content)
 
-        # parse resource into record
-        try:
-            records_parsed = metadata.parse_record(self.parent.context,
-            content, self.parent.repository, self.parent.kvp['resourcetype'],
-            pagesize=self.parent.csw_harvest_pagesize)
-        except Exception as err:
-            LOGGER.exception(err)
-            return self.exceptionreport('NoApplicableCode', 'source',
-            'Harvest failed: record parsing failed: %s' % str(err))
 
-        inserted = 0
-        updated = 0
-        ir = []
+        if hasattr(self.parent.repository, 'local_ingest') and self.parent.repository.local_ingest:
+            updated = 0
+            deleted = []
+            try:
+                ir = self.parent.repository.insert(self.parent.kvp['resourcetype'], self.parent.kvp['source'])
+                inserted = len(ir)
+            except Exception as err:
+                return self.exceptionreport('NoApplicableCode',
+                'source', 'Harvest (insert) failed: %s.' % str(err))
+        else:
+            # parse resource into record
+            try:
+                records_parsed = metadata.parse_record(self.parent.context,
+                content, self.parent.repository, self.parent.kvp['resourcetype'],
+                pagesize=self.parent.csw_harvest_pagesize)
+            except Exception as err:
+                LOGGER.exception(err)
+                return self.exceptionreport('NoApplicableCode', 'source',
+                'Harvest failed: record parsing failed: %s' % str(err))
 
-        LOGGER.debug('Total Records parsed: %d' % len(records_parsed))
-        for record in records_parsed:
-            if self.parent.kvp['resourcetype'] == 'urn:geoss:waf':
-                src = record.source
-            else:
-                src = self.parent.kvp['source']
+            inserted = 0
+            updated = 0
+            ir = []
 
-            setattr(record, self.parent.context.md_core_model['mappings']['pycsw:Source'],
-                    src)
+            LOGGER.debug('Total Records parsed: %d' % len(records_parsed))
+            for record in records_parsed:
+                if self.parent.kvp['resourcetype'] == 'urn:geoss:waf':
+                    src = record.source
+                else:
+                    src = self.parent.kvp['source']
 
-            setattr(record, self.parent.context.md_core_model['mappings']['pycsw:InsertDate'],
-            util.get_today_and_now())
+                setattr(record, self.parent.context.md_core_model['mappings']['pycsw:Source'],
+                        src)
 
-            identifier = getattr(record,
-            self.parent.context.md_core_model['mappings']['pycsw:Identifier'])
-            source = getattr(record,
-            self.parent.context.md_core_model['mappings']['pycsw:Source'])
-            insert_date = getattr(record,
-            self.parent.context.md_core_model['mappings']['pycsw:InsertDate'])
-            title = getattr(record,
-            self.parent.context.md_core_model['mappings']['pycsw:Title'])
+                setattr(record, self.parent.context.md_core_model['mappings']['pycsw:InsertDate'],
+                util.get_today_and_now())
 
-            if record.type == 'service' and service_identifier is not None:  # service endpoint
-                LOGGER.debug('Replacing service identifier from %s to %s' % (record.identifier, service_identifier))
-                old_identifier = record.identifier
-                identifier = record.identifier = service_identifier
-            if (record.type != 'service' and service_identifier is not None
-                and old_identifier is not None):  # service resource
-                if record.identifier.find(old_identifier) != -1:
-                    new_identifier = record.identifier.replace(old_identifier, service_identifier)
-                    LOGGER.debug('Replacing service resource identifier from %s to %s' % (record.identifier, new_identifier))
-                    identifier = record.identifier = new_identifier
+                identifier = getattr(record,
+                self.parent.context.md_core_model['mappings']['pycsw:Identifier'])
+                source = getattr(record,
+                self.parent.context.md_core_model['mappings']['pycsw:Source'])
+                insert_date = getattr(record,
+                self.parent.context.md_core_model['mappings']['pycsw:InsertDate'])
+                title = getattr(record,
+                self.parent.context.md_core_model['mappings']['pycsw:Title'])
 
-            ir.append({'identifier': identifier, 'title': title})
+                record_type = getattr(record, self.parent.context.md_core_model['mappings']['pycsw:Type'])
 
-            # query repository to see if record already exists
-            LOGGER.debug('checking if record exists (%s)' % identifier)
-            results = self.parent.repository.query_ids(ids=[identifier])
+                record_identifier = getattr(record, self.parent.context.md_core_model['mappings']['pycsw:Identifier'])
 
-            if len(results) == 0:  # check for service identifier
-                LOGGER.debug('checking if service id exists (%s)' % service_identifier)
-                results = self.parent.repository.query_ids(ids=[service_identifier])
+                if record_type == 'service' and service_identifier is not None:  # service endpoint
+                    LOGGER.debug('Replacing service identifier from %s to %s' % (record_identifier, service_identifier))
+                    old_identifier = record_identifier
+                    identifier = record_identifier = service_identifier
+                if (record_type != 'service' and service_identifier is not None
+                    and old_identifier is not None):  # service resource
+                    if record_identifier.find(old_identifier) != -1:
+                        new_identifier = record_identifier.replace(old_identifier, service_identifier)
+                        LOGGER.debug('Replacing service resource identifier from %s to %s' % (record_identifier, new_identifier))
+                        identifier = record_identifier = new_identifier
 
-            LOGGER.debug(str(results))
+                ir.append({'identifier': identifier, 'title': title})
 
-            if len(results) == 0:  # new record, it's a new insert
-                inserted += 1
-                try:
-                    self.parent.repository.insert(record, source, insert_date)
-                except Exception as err:
-                    return self.exceptionreport('NoApplicableCode',
-                    'source', 'Harvest (insert) failed: %s.' % str(err))
-            else:  # existing record, it's an update
-                if source != results[0].source:
-                    # same identifier, but different source
-                    return self.exceptionreport('NoApplicableCode',
-                    'source', 'Insert failed: identifier %s in repository\
-                    has source %s.' % (identifier, source))
+                results = []
+                if not self.parent.config.has_option('repository', 'source'):
+                    # query repository to see if record already exists
+                    LOGGER.debug('checking if record exists (%s)' % identifier)
+                    results = self.parent.repository.query_ids(ids=[identifier])
 
-                try:
-                    self.parent.repository.update(record)
-                except Exception as err:
-                    return self.exceptionreport('NoApplicableCode',
-                    'source', 'Harvest (update) failed: %s.' % str(err))
-                updated += 1
+                    if len(results) == 0:  # check for service identifier
+                        LOGGER.debug('checking if service id exists (%s)' % service_identifier)
+                        results = self.parent.repository.query_ids(ids=[service_identifier])
 
-        node = etree.Element(util.nspath_eval('csw30:HarvestResponse',
+                LOGGER.debug(str(results))
+
+                if len(results) == 0:  # new record, it's a new insert
+                    inserted += 1
+                    try:
+                        tmp = self.parent.repository.insert(record, source, insert_date)
+                        if tmp is not None: ir = tmp
+                    except Exception as err:
+                        return self.exceptionreport('NoApplicableCode',
+                        'source', 'Harvest (insert) failed: %s.' % str(err))
+                else:  # existing record, it's an update
+                    if source != results[0].source:
+                        # same identifier, but different source
+                        return self.exceptionreport('NoApplicableCode',
+                        'source', 'Insert failed: identifier %s in repository\
+                        has source %s.' % (identifier, source))
+
+                    try:
+                        self.parent.repository.update(record)
+                    except Exception as err:
+                        return self.exceptionreport('NoApplicableCode',
+                        'source', 'Harvest (update) failed: %s.' % str(err))
+                    updated += 1
+
+            if service_identifier is not None:
+                fresh_records = [str(i['identifier']) for i in ir]
+                existing_records = [str(i.identifier) for i in service_results]
+
+                deleted = set(existing_records) - set(fresh_records)
+                LOGGER.debug('Records to delete: %s' % str(deleted))
+
+                for to_delete in deleted:
+                    delete_constraint = {
+                        'type': 'filter',
+                        'values': [to_delete],
+                        'where': 'identifier = :pvalue0'
+                    }
+                    self.parent.repository.delete(delete_constraint)
+
+        node = etree.Element(util.nspath_eval('csw:HarvestResponse',
         self.parent.context.namespaces), nsmap=self.parent.context.namespaces)
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/csw/3.0/cswHarvest.xsd' % (self.parent.context.namespaces['csw30'],
+        '%s %s/csw/2.0.2/CSW-publication.xsd' % (self.parent.context.namespaces['csw'],
         self.parent.config.get('server', 'ogc_schemas_base'))
 
         node2 = etree.SubElement(node,
-        util.nspath_eval('csw30:TransactionResponse',
-        self.parent.context.namespaces), version='3.0.0')
-
-        if service_identifier is not None:
-            fresh_records = [str(i['identifier']) for i in ir]
-            existing_records = [str(i.identifier) for i in service_results]
-
-            deleted = set(existing_records) - set(fresh_records)
-            LOGGER.debug('Records to delete: %s' % str(deleted))
-
-            for to_delete in deleted:
-                delete_constraint = {
-                    'type': 'filter',
-                    'values': [to_delete],
-                    'where': 'identifier = :pvalue0'
-                }
-                self.parent.repository.delete(delete_constraint)
+        util.nspath_eval('csw:TransactionResponse',
+        self.parent.context.namespaces), version='2.0.2')
 
         node2.append(
-        self._write_transactionsummary(inserted=inserted, updated=updated,
+        self._write_transactionsummary(inserted=len(ir), updated=updated,
                                        deleted=len(deleted)))
 
         if inserted > 0:

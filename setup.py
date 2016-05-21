@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2016 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -117,7 +117,7 @@ PACKAGE_DATA = get_package_data(PACKAGE_DATA_XSD)
 PACKAGE_DATA.update(get_package_data([ROOT_PACKAGE], 'schemas'))
 
 # set the dependencies
-# GeoNode and OpenDataCatalog do not require SQLAlchemy
+# GeoNode, HHypermap and OpenDataCatalog do not require SQLAlchemy
 with open('requirements.txt') as f:
     INSTALL_REQUIRES = f.read().splitlines()
 
