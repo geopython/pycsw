@@ -407,6 +407,23 @@ class Csw(object):
                 )
 
         elif (self.config.has_option('repository', 'source') and
+                self.config.get('repository', 'source') == 'HHypermap'):
+
+            # load HHypermap repository
+            from pycsw.plugins.repository.hhypermap import hhypermap
+
+            try:
+                self.repository = hhypermap.HHypermapRepository(self.context,
+                                                                repo_filter)
+                LOGGER.debug('HHypermap repository loaded '
+                             '(hhypermap): %s.' % self.repository.dbtype)
+            except Exception as err:
+                self.response = self.iface.exceptionreport(
+                    'NoApplicableCode', 'service',
+                    'Could not load repository (hhypermap): %s' % str(err)
+                )
+
+        elif (self.config.has_option('repository', 'source') and
                 self.config.get('repository', 'source') == 'odc'):
 
             # load odc repository
@@ -629,7 +646,7 @@ class Csw(object):
 
     def getrecordbyid(self, raw=False):
         """ Handle GetRecordById request """
-        return self.iface.getrecordbyid()
+        return self.iface.getrecordbyid(raw)
 
     def getrepositoryitem(self):
         """ Handle GetRepositoryItem request """
