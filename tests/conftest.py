@@ -101,4 +101,3 @@ def log_level(request):
     """
 
     return request.config.getoption("pycsw_loglevel").upper()
-
