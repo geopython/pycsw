@@ -1,4 +1,3 @@
-<<<<<<< 99187d1e1f5a3245614084781cfde3d88f84dd3d
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>

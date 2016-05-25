@@ -51,19 +51,87 @@ ENCODING = "utf-8"
 @pytest.mark.functional
 class TestSuites(object):
 
-    def test_suites_post(self, local_server, test_request, expected_result,
-                         config):
-        print("locals: {0}".format(locals()))
+    def test_apiso_suite(self, server_apiso_suite, test_request,
+                         expected_result):
+        self._test_request(server_apiso_suite, test_request, expected_result)
+
+    def test_apiso_inspire_suite(self, server_apiso_inspire_suite,
+                                 test_request, expected_result):
+        self._test_request(server_apiso_inspire_suite, test_request,
+                           expected_result)
+
+    def test_atom_suite(self, server_atom_suite, test_request,
+                         expected_result):
+        self._test_request(server_atom_suite, test_request, expected_result)
+
+    def test_cite_suite(self, server_cite_suite, test_request,
+                        expected_result):
+        self._test_request(server_cite_suite, test_request, expected_result)
+
+    def test_csw30_suite(self, server_csw30_suite, test_request,
+                        expected_result):
+        self._test_request(server_csw30_suite, test_request, expected_result)
+
+    def test_default_suite(self, server_default_suite, test_request,
+                           expected_result):
+        self._test_request(server_default_suite, test_request, expected_result)
+
+    def test_dif_suite(self, server_dif_suite, test_request,
+                       expected_result):
+        self._test_request(server_dif_suite, test_request, expected_result)
+
+    def test_ebrim_suite(self, server_ebrim_suite, test_request,
+                         expected_result):
+        self._test_request(server_ebrim_suite, test_request, expected_result)
+
+    def test_fgdc_suite(self, server_fgdc_suite, test_request,
+                        expected_result):
+        self._test_request(server_fgdc_suite, test_request, expected_result)
+
+    def test_gm03_suite(self, server_gm03_suite, test_request,
+                        expected_result):
+        self._test_request(server_gm03_suite, test_request, expected_result)
+
+    def test_harvesting_suite(self, server_harvesting_suite, test_request,
+                              expected_result):
+        self._test_request(server_harvesting_suite, test_request,
+                           expected_result)
+
+    def test_oaipmh_suite(self, server_oaipmh_suite, test_request,
+                          expected_result):
+        self._test_request(server_oaipmh_suite, test_request, expected_result)
+
+    def test_repofilter_suite(self, server_repofilter_suite, test_request,
+                              expected_result):
+        self._test_request(server_repofilter_suite, test_request,
+                           expected_result)
+
+    def test_sru_suite(self, server_sru_suite, test_request,
+                       expected_result):
+        self._test_request(server_sru_suite, test_request, expected_result)
+
+    def test_utf_8_suite(self, server_utf_8_suite, test_request,
+                        expected_result):
+        self._test_request(server_utf_8_suite, test_request, expected_result)
+
+    def _test_request(self, pycsw_server_url, test_request, expected_result):
         with open(test_request, encoding=ENCODING) as request_fh:
             request_data = request_fh.read()
         with open(expected_result, encoding=ENCODING) as expected_fh:
             expected = expected_fh.read()
-        response = requests.post(local_server,
-                                 params={"config": config},
+        response = requests.post(pycsw_server_url,
                                  data=request_data)
         response_data = response.text
-        assert _get_validity(expected, response_data)
-        #assert response.status_code == 200
+
+        normalized_result = _normalize(response_data, force_id_mask=False)
+        print("expected: {0}".format(expected))
+        print("response: {0}".format(normalized_result))
+        try:
+            matches_expected = _test_xml_result(normalized_result, expected)
+        except etree.XMLSyntaxError:
+            # the file is either not XML (perhaps JSON?) or malformed
+            matches_expected = _test_json_result(normalized_result, expected)
+        assert matches_expected
 
 
 def _test_xml_result(result, expected):
@@ -133,39 +201,6 @@ def _test_json_result(result, expected):
     result_dict = json.loads(result, encoding=ENCODING)
     expected_dict = json.loads(expected, encoding=ENCODING)
     return result_dict == expected_dict
-
-
-def _get_validity(expected, result, force_id_mask=False):
-    """Test whether the test result matches the expected outcome.
-
-    This function deals with both XML and JSON results. It first tries to
-    parse the result and the expected outcome as XML and evaluates them using
-    XML canonicalization (c14n). If the result cannot be parsed as XML, it then
-    tries to load it as JSON and does a sorted comparison.
-
-    Parameters
-    ----------
-    expected: str
-        The expected outcome of the test
-    result: str
-        The actual result that was generated by running the test code
-    force_id_mask: bool, optional
-        Whether to apply result normalization to id fields
-
-    Returns
-    -------
-    bool
-        Whether the result matches the expected values
-
-    """
-
-    normalized_result = _normalize(result, force_id_mask=force_id_mask)
-    try:
-        matches_expected = _test_xml_result(normalized_result, expected)
-    except etree.XMLSyntaxError:
-        # the file is either not XML (perhaps JSON?) or malformed
-        matches_expected = _test_json_result(normalized_result, expected)
-    return matches_expected
 
 
 def _normalize(sresult, force_id_mask=False):
