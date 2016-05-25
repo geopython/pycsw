@@ -1,3 +1,4 @@
+<<<<<<< 99187d1e1f5a3245614084781cfde3d88f84dd3d
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
@@ -71,4 +72,3 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="session")
 def log_level(request):
     return request.config.getoption("pycsw_loglevel").upper()
-
