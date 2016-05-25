@@ -1,2 +1,4 @@
 Paver==1.2.2
+pytest==2.9.1
+requests==2.10.0
 sphinx
