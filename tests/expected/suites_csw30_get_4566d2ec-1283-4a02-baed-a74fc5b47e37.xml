@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw30:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" updateSequence="PYCSW_UPDATESEQUENCE" version="3.0.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/csw/3.0/cswGetCapabilities.xsd">
+  <ows20:ServiceIdentification>
+    <ows20:Title>pycsw Geospatial Catalogue</ows20:Title>
+    <ows20:Abstract>pycsw is an OGC CSW server implementation written in Python</ows20:Abstract>
+    <ows20:Keywords>
+      <ows20:Keyword>catalogue</ows20:Keyword>
+      <ows20:Keyword>discovery</ows20:Keyword>
+      <ows20:Type codeSpace="ISOTC211/19115">theme</ows20:Type>
+    </ows20:Keywords>
+    <ows20:ServiceType codeSpace="OGC">CSW</ows20:ServiceType>
+    <ows20:ServiceTypeVersion>2.0.2</ows20:ServiceTypeVersion>
+    <ows20:ServiceTypeVersion>3.0.0</ows20:ServiceTypeVersion>
+    <ows20:Fees>None</ows20:Fees>
+    <ows20:AccessConstraints>None</ows20:AccessConstraints>
+  </ows20:ServiceIdentification>
+</csw30:Capabilities>

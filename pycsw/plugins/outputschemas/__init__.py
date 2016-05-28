@@ -1,4 +1,4 @@
-# -*- coding: ISO-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -27,4 +27,5 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
+
 __all__ = ['atom', 'dif', 'fgdc', 'gm03']

@@ -1,4 +1,4 @@
-#-*- coding: iso-8859-15 -*-
+#-*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -52,7 +52,7 @@ class OpenDataCatalogRepository(object):
         # ODC PostgreSQL installs are not PostGIS enabled
         if self.dbtype == 'postgresql_psycopg2':
             self.dbtype = 'postgresql'
-            
+
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             cursor = connection.cursor()
             connection.connection.create_function(
@@ -70,7 +70,7 @@ class OpenDataCatalogRepository(object):
                 self.queryables[qname] = {}
 
                 for qkey, qvalue in \
-                self.context.model['typenames'][tname]['queryables'][qname].iteritems():
+                self.context.model['typenames'][tname]['queryables'][qname].items():
                     self.queryables[qname][qkey] = qvalue
 
         # flatten all queryables

@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Adam Hinz <hinz.adam@gmail.com>
@@ -52,10 +52,10 @@
 # http://localhost:8000/
 #
 
-from StringIO import StringIO
 import os
 import sys
-import urlparse
+import six
+from six.moves.urllib.parse import unquote
 
 from pycsw import server
 
@@ -73,7 +73,7 @@ def application(env, start_response):
     if env['QUERY_STRING'].lower().find('config') != -1:
         for kvp in env['QUERY_STRING'].split('&'):
             if kvp.lower().find('config') != -1:
-                config = urlparse.unquote(kvp.split('=')[1])
+                config = unquote(kvp.split('=')[1])
 
     if not os.path.isabs(config):
         config = os.path.join(PYCSW_ROOT, config)
@@ -105,7 +105,7 @@ def application(env, start_response):
     if gzip and gzip_compresslevel > 0:
         import gzip
 
-        buf = StringIO()
+        buf = six.BytesIO()
         gzipfile = gzip.GzipFile(mode='wb', fileobj=buf,
                                  compresslevel=gzip_compresslevel)
         gzipfile.write(contents)
@@ -116,9 +116,8 @@ def application(env, start_response):
         headers['Content-Encoding'] = 'gzip'
 
     headers['Content-Length'] = str(len(contents))
-    headers['Content-Type'] = csw.contenttype
-
-    start_response(status, headers.items())
+    headers['Content-Type'] = str(csw.contenttype)
+    start_response(status, list(headers.items()))
 
     return [contents]
 
@@ -128,5 +127,5 @@ if __name__ == '__main__':  # run inline using WSGI reference implementation
     if len(sys.argv) > 1:
         port = int(sys.argv[1])
     httpd = make_server('', port, application)
-    print "Serving on port %d..." % port
+    print('Serving on port %d...' % port)
     httpd.serve_forever()

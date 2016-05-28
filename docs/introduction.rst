@@ -23,6 +23,7 @@ Features
 - transactional capabilities (CSW-T)
 - flexible repository configuration
 - `GeoNode`_ connectivity
+- `HHypermap`_ connectivity
 - `Open Data Catalog`_ connectivity
 - `CKAN`_ connectivity
 - federated catalogue distributed searching
@@ -191,8 +192,9 @@ Functions
 .. _`SRU`: http://www.loc.gov/standards/sru/
 .. _`OGC OpenSearch`: http://www.opengeospatial.org/standards/opensearchgeo
 .. _`GeoNode`: http://geonode.org/
+.. _`HHypermap`: https://github.com/cga-harvard/HHypermap
 .. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
 .. _`CKAN`: http://ckan.org/
-.. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1104
+.. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1325
 .. _`OAI-PMH`: http://www.openarchives.org/OAI/openarchivesprotocol.html
 .. _`GM03`: http://www.geocat.ch/internet/geocat/en/home/documentation/gm03.html

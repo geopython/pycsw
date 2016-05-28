@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -28,6 +28,7 @@
 #
 # =================================================================
 
+from six.moves import zip
 import logging
 from owslib import crs
 from pycsw.core import util

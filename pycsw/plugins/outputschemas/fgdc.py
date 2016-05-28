@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -163,7 +163,7 @@ def write_record(recobj, esn, context, url=None):
 
 def write_extent(bbox):
     ''' Generate BBOX extent '''
-    
+
     if bbox is not None:
         try:
             bbox2 = util.wkt2geom(bbox)
