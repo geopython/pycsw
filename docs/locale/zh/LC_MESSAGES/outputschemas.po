@@ -3,13 +3,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"POT-Creation-Date: 2016-05-28 11:27+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
 
 #: ../../outputschemas.rst:4
 msgid "Output Schema Plugins"
@@ -21,9 +22,10 @@ msgstr ""
 
 #: ../../outputschemas.rst:9
 msgid ""
-"pycsw allows for extending the implementation of output schemas to the core "
-"standard.  outputschemas allow for a client to request metadata in a "
-"specific format (ISO, Dublin Core, FGDC, NASA DIF and Atom are default)."
+"pycsw allows for extending the implementation of output schemas to the "
+"core standard.  outputschemas allow for a client to request metadata in a"
+" specific format (ISO, Dublin Core, FGDC, NASA DIF Atom and GM03 are "
+"default)."
 msgstr ""
 
 #: ../../outputschemas.rst:11
@@ -36,50 +38,61 @@ msgstr ""
 msgid "Requirements"
 msgstr ""
 
-#: ../../outputschemas.rst:28
+#: ../../outputschemas.rst:29
 msgid "Implementing a new outputschema"
 msgstr ""
 
-#: ../../outputschemas.rst:30
+#: ../../outputschemas.rst:31
 msgid ""
 "Create a file in ``pycsw/plugins/outputschemas``, which defines the "
 "following:"
 msgstr ""
 
-#: ../../outputschemas.rst:32
+#: ../../outputschemas.rst:33
 msgid ""
 "``NAMESPACE``: the default namespace of the outputschema which will be "
 "advertised"
 msgstr ""
 
-#: ../../outputschemas.rst:33
+#: ../../outputschemas.rst:34
 msgid "``NAMESPACE``: dict of all applicable namespaces to outputschema"
 msgstr ""
 
-#: ../../outputschemas.rst:34
+#: ../../outputschemas.rst:35
 msgid ""
-"``XPATH_MAPPINGS``: dict of pycsw core queryables mapped to the equivalent "
-"XPath of the outputschema"
+"``XPATH_MAPPINGS``: dict of pycsw core queryables mapped to the "
+"equivalent XPath of the outputschema"
 msgstr ""
 
-#: ../../outputschemas.rst:35
+#: ../../outputschemas.rst:36
 msgid ""
 "``write_record``: function which returns a record as an "
 "``lxml.etree.Element`` object"
 msgstr ""
 
-#: ../../outputschemas.rst:37
+#: ../../outputschemas.rst:38
 msgid ""
-"Add the name of the file to ``__init__.py:__all__``.  The new outputschema "
-"is now supported in pycsw."
+"Add the name of the file to ``__init__.py:__all__``.  The new "
+"outputschema is now supported in pycsw."
 msgstr ""
 
-#: ../../outputschemas.rst:40
+#: ../../outputschemas.rst:41
 msgid "Testing"
 msgstr ""
 
-#: ../../outputschemas.rst:42
+#: ../../outputschemas.rst:43
 msgid ""
 "New outputschemas must add examples to the :ref:`tests` interface, which "
 "must provide example requests specific to the profile."
 msgstr ""
+
+#~ msgid ""
+#~ "pycsw allows for extending the "
+#~ "implementation of output schemas to the"
+#~ " core standard.  outputschemas allow for"
+#~ " a client to request metadata in "
+#~ "a specific format (ISO, Dublin Core, "
+#~ "FGDC, NASA DIF and Atom are "
+#~ "default)."
+#~ msgstr ""
+

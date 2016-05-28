@@ -3,13 +3,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"POT-Creation-Date: 2016-05-28 11:27+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
 
 #: ../../introduction.rst:4
 msgid "Introduction"
@@ -60,7 +61,8 @@ msgid "implements Open Archives Initiative Protocol for Metadata Harvesting"
 msgstr "实现了Open Archives Initiative Protocol for Metadata Harvesting"
 
 #: ../../introduction.rst:20
-msgid "supports ISO, Dublin Core, DIF, FGDC and Atom metadata models"
+#, fuzzy
+msgid "supports ISO, Dublin Core, DIF, FGDC, Atom and GM03 metadata models"
 msgstr "支持 ISO、 Dublin Core、DIF、FGDC与Atom 元数据模型"
 
 #: ../../introduction.rst:21
@@ -84,154 +86,167 @@ msgid "`GeoNode`_ connectivity"
 msgstr "可以连接 `GeoNode`_ "
 
 #: ../../introduction.rst:26
+#, fuzzy
+msgid "`HHypermap`_ connectivity"
+msgstr "可以连接 `CKAN`_  "
+
+#: ../../introduction.rst:27
 msgid "`Open Data Catalog`_ connectivity"
 msgstr "可以连接开放数据目录 `Open Data Catalog`_ "
 
-#: ../../introduction.rst:27
+#: ../../introduction.rst:28
 msgid "`CKAN`_ connectivity"
 msgstr "可以连接 `CKAN`_  "
 
-#: ../../introduction.rst:28
+#: ../../introduction.rst:29
 msgid "federated catalogue distributed searching"
 msgstr "联合目录分布式搜索"
 
-#: ../../introduction.rst:29
+#: ../../introduction.rst:30
 msgid "realtime XML Schema validation"
 msgstr "实时XML Schema验证"
 
-#: ../../introduction.rst:30
+#: ../../introduction.rst:31
 msgid "extensible profile plugin architecture"
 msgstr "可扩展的配置文件的插件架构"
 
-#: ../../introduction.rst:33
+#: ../../introduction.rst:34
 msgid "Standards Support"
 msgstr "支持的标准"
 
-#: ../../introduction.rst:36
+#: ../../introduction.rst:37
 msgid "Standard"
 msgstr "标准"
 
-#: ../../introduction.rst:36
+#: ../../introduction.rst:37
 msgid "Version(s)"
 msgstr "版本"
 
-#: ../../introduction.rst:38
+#: ../../introduction.rst:39
 msgid "`OGC CSW`_"
 msgstr ""
 
-#: ../../introduction.rst:38
+#: ../../introduction.rst:39
 msgid "2.0.2"
 msgstr ""
 
-#: ../../introduction.rst:40
+#: ../../introduction.rst:41
 msgid "`OGC Filter`_"
 msgstr ""
 
-#: ../../introduction.rst:40
+#: ../../introduction.rst:41
 msgid "1.1.0"
 msgstr ""
 
-#: ../../introduction.rst:42
+#: ../../introduction.rst:43
 msgid "`OGC OWS Common`_"
 msgstr ""
 
-#: ../../introduction.rst:42
+#: ../../introduction.rst:43
 msgid "1.0.0"
 msgstr ""
 
-#: ../../introduction.rst:44
+#: ../../introduction.rst:45
 msgid "`OGC GML`_"
 msgstr ""
 
-#: ../../introduction.rst:44
+#: ../../introduction.rst:45
 msgid "3.1.1"
 msgstr ""
 
-#: ../../introduction.rst:46
+#: ../../introduction.rst:47
 msgid "`OGC SFSQL`_"
 msgstr ""
 
-#: ../../introduction.rst:46
+#: ../../introduction.rst:47
 msgid "1.2.1"
 msgstr ""
 
-#: ../../introduction.rst:48
+#: ../../introduction.rst:49
 msgid "`Dublin Core`_"
 msgstr ""
 
-#: ../../introduction.rst:48 ../../introduction.rst:62
+#: ../../introduction.rst:49 ../../introduction.rst:65
 msgid "1.1"
 msgstr ""
 
-#: ../../introduction.rst:50
+#: ../../introduction.rst:51
 msgid "`SOAP`_"
 msgstr ""
 
-#: ../../introduction.rst:50
+#: ../../introduction.rst:51
 msgid "1.2"
 msgstr ""
 
-#: ../../introduction.rst:52
+#: ../../introduction.rst:53
 msgid "`ISO 19115`_"
 msgstr ""
 
-#: ../../introduction.rst:52
+#: ../../introduction.rst:53
 msgid "2003"
 msgstr ""
 
-#: ../../introduction.rst:54
+#: ../../introduction.rst:55
 msgid "`ISO 19139`_"
 msgstr ""
 
-#: ../../introduction.rst:54
+#: ../../introduction.rst:55
 msgid "2007"
 msgstr ""
 
-#: ../../introduction.rst:56
+#: ../../introduction.rst:57
 msgid "`ISO 19119`_"
 msgstr ""
 
-#: ../../introduction.rst:56
+#: ../../introduction.rst:57
 msgid "2005"
 msgstr ""
 
-#: ../../introduction.rst:58
+#: ../../introduction.rst:59
 msgid "`NASA DIF`_"
 msgstr ""
 
-#: ../../introduction.rst:58
+#: ../../introduction.rst:59
 msgid "9.7"
 msgstr ""
 
-#: ../../introduction.rst:60
+#: ../../introduction.rst:61
 msgid "`FGDC CSDGM`_"
 msgstr ""
 
-#: ../../introduction.rst:60
+#: ../../introduction.rst:61
 msgid "1998"
 msgstr ""
 
-#: ../../introduction.rst:62
+#: ../../introduction.rst:63
+msgid "`GM03`_"
+msgstr ""
+
+#: ../../introduction.rst:63
+msgid "2.1"
+msgstr ""
+
+#: ../../introduction.rst:65
 msgid "`SRU`_"
 msgstr ""
 
-#: ../../introduction.rst:64
+#: ../../introduction.rst:67
 msgid "`OGC OpenSearch`_"
 msgstr ""
 
-#: ../../introduction.rst:64
+#: ../../introduction.rst:67
 msgid "1.0"
 msgstr ""
 
-#: ../../introduction.rst:66
+#: ../../introduction.rst:69
 msgid "`OAI-PMH`_"
 msgstr ""
 
-#: ../../introduction.rst:66
+#: ../../introduction.rst:69
 msgid "2.0"
 msgstr ""
 
-#: ../../introduction.rst:70
+#: ../../introduction.rst:73
 msgid "Supported Operations"
 msgstr "支持的操作"
 
@@ -255,18 +270,15 @@ msgstr ""
 msgid "GetCapabilities"
 msgstr ""
 
-#: ../../introduction.rst:1 ../../introduction.rst:1 ../../introduction.rst:1
+#: ../../introduction.rst:1
 msgid "mandatory"
 msgstr ""
 
-#: ../../introduction.rst:1 ../../introduction.rst:1 ../../introduction.rst:1
-#: ../../introduction.rst:1 ../../introduction.rst:1 ../../introduction.rst:1
-#: ../../introduction.rst:1 ../../introduction.rst:1
+#: ../../introduction.rst:1
 msgid "yes"
 msgstr ""
 
-#: ../../introduction.rst:1 ../../introduction.rst:1 ../../introduction.rst:1
-#: ../../introduction.rst:1 ../../introduction.rst:1 ../../introduction.rst:1
+#: ../../introduction.rst:1
 msgid "GET (KVP) / POST (XML) / SOAP"
 msgstr ""
 
@@ -282,8 +294,7 @@ msgstr ""
 msgid "GetRecordById"
 msgstr ""
 
-#: ../../introduction.rst:1 ../../introduction.rst:1 ../../introduction.rst:1
-#: ../../introduction.rst:1 ../../introduction.rst:1
+#: ../../introduction.rst:1
 msgid "optional"
 msgstr ""
 
@@ -311,220 +322,225 @@ msgstr ""
 msgid "POST (XML) / SOAP"
 msgstr ""
 
-#: ../../introduction.rst:86
+#: ../../introduction.rst:89
 msgid ""
-"Asynchronous processing supported for GetRecords and Harvest requests (via "
-"``csw:ResponseHandler``)"
-msgstr ""
-
-#: ../../introduction.rst:90
-msgid "Supported Harvest Resource Types are listed in :ref:`transactions`"
+"Asynchronous processing supported for GetRecords and Harvest requests "
+"(via ``csw:ResponseHandler``)"
 msgstr ""
 
 #: ../../introduction.rst:93
-msgid "Supported Output Formats"
-msgstr ""
-
-#: ../../introduction.rst:95
-msgid "XML (default)"
+msgid "Supported Harvest Resource Types are listed in :ref:`transactions`"
 msgstr ""
 
 #: ../../introduction.rst:96
-msgid "JSON"
+msgid "Supported Output Formats"
+msgstr ""
+
+#: ../../introduction.rst:98
+msgid "XML (default)"
 msgstr ""
 
 #: ../../introduction.rst:99
-msgid "Supported Output Schemas"
-msgstr ""
-
-#: ../../introduction.rst:101
-msgid "Dublin Core"
+msgid "JSON"
 msgstr ""
 
 #: ../../introduction.rst:102
-msgid "ISO 19139"
-msgstr ""
-
-#: ../../introduction.rst:103
-msgid "FGDC CSDGM"
+msgid "Supported Output Schemas"
 msgstr ""
 
 #: ../../introduction.rst:104
-msgid "NASA DIF"
+msgid "Dublin Core"
 msgstr ""
 
 #: ../../introduction.rst:105
-msgid "Atom"
+msgid "ISO 19139"
+msgstr ""
+
+#: ../../introduction.rst:106
+msgid "FGDC CSDGM"
+msgstr ""
+
+#: ../../introduction.rst:107
+msgid "NASA DIF"
 msgstr ""
 
 #: ../../introduction.rst:108
-msgid "Supported Sorting Functionality"
+msgid "Atom"
 msgstr ""
 
-#: ../../introduction.rst:110
-msgid "ogc:SortBy"
-msgstr ""
-
-#: ../../introduction.rst:111
-msgid "ascending or descending"
+#: ../../introduction.rst:109
+msgid "GM03"
 msgstr ""
 
 #: ../../introduction.rst:112
-msgid "aspatial (queryable properties)"
+msgid "Supported Sorting Functionality"
 msgstr ""
 
-#: ../../introduction.rst:113
-msgid "spatial (geometric area)"
+#: ../../introduction.rst:114
+msgid "ogc:SortBy"
+msgstr ""
+
+#: ../../introduction.rst:115
+msgid "ascending or descending"
 msgstr ""
 
 #: ../../introduction.rst:116
+msgid "aspatial (queryable properties)"
+msgstr ""
+
+#: ../../introduction.rst:117
+msgid "spatial (geometric area)"
+msgstr ""
+
+#: ../../introduction.rst:120
 msgid "Supported Filters"
 msgstr ""
 
-#: ../../introduction.rst:119
+#: ../../introduction.rst:123
 msgid "Full Text"
 msgstr ""
 
-#: ../../introduction.rst:121
+#: ../../introduction.rst:125
 msgid "csw:AnyText"
 msgstr ""
 
-#: ../../introduction.rst:124
+#: ../../introduction.rst:128
 msgid "Geometry Operands"
 msgstr ""
 
-#: ../../introduction.rst:126
+#: ../../introduction.rst:130
 msgid "gml:Point"
 msgstr ""
 
-#: ../../introduction.rst:127
+#: ../../introduction.rst:131
 msgid "gml:LineString"
 msgstr ""
 
-#: ../../introduction.rst:128
+#: ../../introduction.rst:132
 msgid "gml:Polygon"
 msgstr ""
 
-#: ../../introduction.rst:129
+#: ../../introduction.rst:133
 msgid "gml:Envelope"
 msgstr ""
 
-#: ../../introduction.rst:133
+#: ../../introduction.rst:137
 msgid "Coordinate transformations are supported"
 msgstr ""
 
-#: ../../introduction.rst:136
+#: ../../introduction.rst:140
 msgid "Spatial Operators"
 msgstr ""
 
-#: ../../introduction.rst:138
+#: ../../introduction.rst:142
 msgid "BBOX"
 msgstr ""
 
-#: ../../introduction.rst:139
+#: ../../introduction.rst:143
 msgid "Beyond"
 msgstr ""
 
-#: ../../introduction.rst:140
+#: ../../introduction.rst:144
 msgid "Contains"
 msgstr ""
 
-#: ../../introduction.rst:141
+#: ../../introduction.rst:145
 msgid "Crosses"
 msgstr ""
 
-#: ../../introduction.rst:142
+#: ../../introduction.rst:146
 msgid "Disjoint"
 msgstr ""
 
-#: ../../introduction.rst:143
+#: ../../introduction.rst:147
 msgid "DWithin"
 msgstr ""
 
-#: ../../introduction.rst:144
+#: ../../introduction.rst:148
 msgid "Equals"
 msgstr ""
 
-#: ../../introduction.rst:145
+#: ../../introduction.rst:149
 msgid "Intersects"
 msgstr ""
 
-#: ../../introduction.rst:146
+#: ../../introduction.rst:150
 msgid "Overlaps"
 msgstr ""
 
-#: ../../introduction.rst:147
+#: ../../introduction.rst:151
 msgid "Touches"
 msgstr ""
 
-#: ../../introduction.rst:148
+#: ../../introduction.rst:152
 msgid "Within"
 msgstr ""
 
-#: ../../introduction.rst:151
+#: ../../introduction.rst:155
 msgid "Logical Operators"
 msgstr ""
 
-#: ../../introduction.rst:153
+#: ../../introduction.rst:157
 msgid "Between"
 msgstr ""
 
-#: ../../introduction.rst:154
+#: ../../introduction.rst:158
 msgid "EqualTo"
 msgstr ""
 
-#: ../../introduction.rst:155
+#: ../../introduction.rst:159
 msgid "LessThanEqualTo"
 msgstr ""
 
-#: ../../introduction.rst:156
+#: ../../introduction.rst:160
 msgid "GreaterThan"
 msgstr ""
 
-#: ../../introduction.rst:157
+#: ../../introduction.rst:161
 msgid "Like"
 msgstr ""
 
-#: ../../introduction.rst:158
+#: ../../introduction.rst:162
 msgid "LessThan"
 msgstr ""
 
-#: ../../introduction.rst:159
+#: ../../introduction.rst:163
 msgid "GreaterThanEqualTo"
 msgstr ""
 
-#: ../../introduction.rst:160
+#: ../../introduction.rst:164
 msgid "NotEqualTo"
 msgstr ""
 
-#: ../../introduction.rst:161
+#: ../../introduction.rst:165
 msgid "NullCheck"
 msgstr ""
 
-#: ../../introduction.rst:164
+#: ../../introduction.rst:168
 msgid "Functions"
 msgstr ""
 
-#: ../../introduction.rst:165
+#: ../../introduction.rst:169
 msgid "length"
 msgstr ""
 
-#: ../../introduction.rst:166
+#: ../../introduction.rst:170
 msgid "lower"
 msgstr ""
 
-#: ../../introduction.rst:167
+#: ../../introduction.rst:171
 msgid "ltrim"
 msgstr ""
 
-#: ../../introduction.rst:168
+#: ../../introduction.rst:172
 msgid "rtrim"
 msgstr ""
 
-#: ../../introduction.rst:169
+#: ../../introduction.rst:173
 msgid "trim"
 msgstr ""
 
-#: ../../introduction.rst:170
+#: ../../introduction.rst:174
 msgid "upper"
 msgstr ""
+
