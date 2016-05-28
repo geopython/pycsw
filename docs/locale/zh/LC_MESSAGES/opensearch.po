@@ -1,0 +1,42 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../opensearch.rst:4
+msgid "OpenSearch Support"
+msgstr ""
+
+#: ../../opensearch.rst:6
+msgid ""
+"pycsw supports the `OGC OpenSearch Geo and Time Extensions 1.0`_ standard "
+"via the following conformance classes:"
+msgstr ""
+
+#: ../../opensearch.rst:8
+msgid "Core (GeoSpatial Service) ``{searchTerms}``, ``{geo:box}``"
+msgstr ""
+
+#: ../../opensearch.rst:9
+msgid "Temporal Search core ``{time:start}``, ``{time:end}``"
+msgstr ""
+
+#: ../../opensearch.rst:11
+msgid ""
+"OpenSearch support is enabled by default.  HTTP requests must be specified "
+"with ``mode=opensearch`` in the base URL for OpenSearch requests, e.g.:"
+msgstr ""
+
+#: ../../opensearch.rst:17
+msgid ""
+"This will return the Description document which can then be `autodiscovered "
+"<http://www.opensearch.org/Specifications/OpenSearch/1.1#Autodiscovery>`_."
+msgstr ""

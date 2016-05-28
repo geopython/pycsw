@@ -1,0 +1,80 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../committers.rst:4
+msgid "Committers"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:2
+msgid "Login(s)"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:2
+msgid "Name"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:2
+msgid "Email / Contact"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:2
+msgid "Area(s)"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:4
+msgid "tomkralidis"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:4
+msgid "Tom Kralidis"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:4
+msgid "tomkralidis at gmail.com"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:4
+msgid "Overall"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:5
+msgid "kalxas"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:5
+msgid "Angelos Tzotsos"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:5
+msgid "tzotsos at gmail.com"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:5
+msgid "INSPIRE, APISO profiles, Packaging"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:6
+msgid "adamhinz"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:6
+msgid "Adam Hinz"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:6
+msgid "hinz dot adam at gmail.com"
+msgstr ""
+
+#: ../../../COMMITTERS.txt:6
+msgid "WSGI/Server Deployment"
+msgstr ""
