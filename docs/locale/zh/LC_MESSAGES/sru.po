@@ -26,7 +26,7 @@ msgstr ""
 msgid ""
 "SRU support is enabled by default.  HTTP GET requests must be specified with"
 " ``mode=sru`` for SRU requests, e.g.:"
-msgstr ""
+msgstr "SRU支持缺省情况下是激活的。对于 HTTP GET的 SRU请求，必须指明 ``mode=src``。例如："
 
 #: ../../sru.rst:14
 msgid ""

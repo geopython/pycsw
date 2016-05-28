@@ -61,9 +61,8 @@ msgid "implements Open Archives Initiative Protocol for Metadata Harvesting"
 msgstr "实现了Open Archives Initiative Protocol for Metadata Harvesting"
 
 #: ../../introduction.rst:20
-#, fuzzy
 msgid "supports ISO, Dublin Core, DIF, FGDC, Atom and GM03 metadata models"
-msgstr "支持 ISO、 Dublin Core、DIF、FGDC与Atom 元数据模型"
+msgstr "支持 ISO、 Dublin Core、DIF、FGDC，Atom与 GM03 元数据模型"
 
 #: ../../introduction.rst:21
 msgid "CGI or WSGI deployment"
@@ -86,9 +85,8 @@ msgid "`GeoNode`_ connectivity"
 msgstr "可以连接 `GeoNode`_ "
 
 #: ../../introduction.rst:26
-#, fuzzy
 msgid "`HHypermap`_ connectivity"
-msgstr "可以连接 `CKAN`_  "
+msgstr "可以连接 `HHypermap`_  "
 
 #: ../../introduction.rst:27
 msgid "`Open Data Catalog`_ connectivity"
@@ -252,7 +250,7 @@ msgstr "支持的操作"
 
 #: ../../introduction.rst:1
 msgid "Request"
-msgstr ""
+msgstr "请求"
 
 #: ../../introduction.rst:1
 msgid "Optionality"
@@ -264,7 +262,7 @@ msgstr ""
 
 #: ../../introduction.rst:1
 msgid "HTTP method binding(s)"
-msgstr ""
+msgstr "HTTP方法绑定"
 
 #: ../../introduction.rst:1
 msgid "GetCapabilities"

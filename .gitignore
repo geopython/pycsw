@@ -16,3 +16,4 @@ tests/results
 # test repositories
 data
 .DS_Store 
+docs/locale/zh/LC_MESSAGES/*.mo
