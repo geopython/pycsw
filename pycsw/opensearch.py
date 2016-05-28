@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -30,6 +30,7 @@
 #
 # =================================================================
 
+import six
 import logging
 from pycsw.core import util
 from pycsw.core.etree import etree
@@ -43,7 +44,6 @@ class OpenSearch(object):
         """initialize"""
 
         self.namespaces = {
-            None: 'http://a9.com/-/spec/opensearch/1.1/',
             'atom': 'http://www.w3.org/2005/Atom',
             'geo': 'http://a9.com/-/opensearch/extensions/geo/1.0/',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
@@ -51,13 +51,16 @@ class OpenSearch(object):
         }
 
         self.context = context
-        #self.context.namespaces.update(self.namespaces)
-
+        self.context.namespaces.update(self.namespaces)
 
     def response_csw2opensearch(self, element, cfg):
         """transform a CSW response into an OpenSearch response"""
 
-        LOGGER.debug('RESPONSE: %s', util.xmltag_split(element.tag))
+        root_tag = util.xmltag_split(element.tag)
+        if root_tag == 'ExceptionReport':
+            return element
+
+        LOGGER.debug('RESPONSE: %s', root_tag)
         try:
             version = element.xpath('//@version')[0]
         except Exception as err:
@@ -105,26 +108,26 @@ class OpenSearch(object):
                         namespaces=self.context.namespaces):
                 node.append(rec)
         elif util.xmltag_split(self.exml.tag) == 'Capabilities':
-            node = etree.Element('OpenSearchDescription', nsmap=self.namespaces)
-            etree.SubElement(node, 'ShortName').text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'LongName').text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Description').text = self.exml.xpath('//ows:Abstract', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Tags').text = ' '.join(x.text for x in self.exml.xpath('//ows:Keyword', namespaces=self.context.namespaces))
+            node = etree.Element(util.nspath_eval('os:OpenSearchDescription', self.namespaces), nsmap=self.namespaces)
+            etree.SubElement(node, util.nspath_eval('os:ShortName', self.namespaces)).text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:LongName', self.namespaces)).text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Description', self.namespaces)).text = self.exml.xpath('//ows:Abstract', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Tags', self.namespaces)).text = ' '.join(x.text for x in self.exml.xpath('//ows:Keyword', namespaces=self.context.namespaces))
 
-            node1 = etree.SubElement(node, 'Url')
+            node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/atom+xml')
             node1.set('method', 'get')
-            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}' % self.bind_url)
+            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
 
-            node1 = etree.SubElement(node, 'Image')
+            node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
             node1.set('type', 'image/vnd.microsoft.icon')
             node1.set('width', '16')
             node1.set('height', '16')
             node1.text = 'http://pycsw.org/img/favicon.ico'
 
-            etree.SubElement(node, 'Developer').text = self.exml.xpath('//ows:IndividualName', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Contact').text = self.exml.xpath('//ows:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Attribution').text = self.exml.xpath('//ows:ProviderName', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Developer', self.namespaces)).text = self.exml.xpath('//ows:IndividualName', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Context', self.namespaces)).text = self.exml.xpath('//ows:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Attribution', self.namespaces)).text = self.exml.xpath('//ows:ProviderName', namespaces=self.context.namespaces)[0].text
         elif util.xmltag_split(self.exml.tag) == 'ExceptionReport':
             node = self.exml
         else:  # return Description document
@@ -175,34 +178,34 @@ class OpenSearch(object):
                         namespaces=self.context.namespaces):
                 node.append(rec)
         elif util.xmltag_split(self.exml.tag) == 'Capabilities':
-            node = etree.Element('OpenSearchDescription', nsmap=self.namespaces)
-            etree.SubElement(node, 'ShortName').text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text[:16]
-            etree.SubElement(node, 'LongName').text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Description').text = self.exml.xpath('//ows20:Abstract', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Tags').text = ' '.join(x.text for x in self.exml.xpath('//ows20:Keyword', namespaces=self.context.namespaces))
+            node = etree.Element(util.nspath_eval('os:OpenSearchDescription', self.namespaces), nsmap=self.namespaces)
+            etree.SubElement(node, util.nspath_eval('os:ShortName', self.namespaces)).text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text[:16]
+            etree.SubElement(node, util.nspath_eval('os:LongName', self.namespaces)).text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Description', self.namespaces)).text = self.exml.xpath('//ows20:Abstract', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Tags', self.namespaces)).text = ' '.join(x.text for x in self.exml.xpath('//ows20:Keyword', namespaces=self.context.namespaces))
 
             # Requirement-022
-            node1 = etree.SubElement(node, 'Url')
+            node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/xml')
             node1.set('template', '%sservice=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
 
             # Requirement-023
-            node1 = etree.SubElement(node, 'Url')
+            node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/atom+xml')
             node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom+xml&&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
 
-            node1 = etree.SubElement(node, 'Image')
+            node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
             node1.set('type', 'image/vnd.microsoft.icon')
             node1.set('width', '16')
             node1.set('height', '16')
             node1.text = 'http://pycsw.org/img/favicon.ico'
 
-            os_query = etree.SubElement(node, 'Query', role='example')
+            os_query = etree.SubElement(node, util.nspath_eval('os:Query', self.namespaces), role='example')
             os_query.attrib[util.nspath_eval('geo:box', self.namespaces)] = '-180,-90,180,90'
 
-            etree.SubElement(node, 'Developer').text = self.exml.xpath('//ows20:IndividualName', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Contact').text = self.exml.xpath('//ows20:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
-            etree.SubElement(node, 'Attribution').text = self.exml.xpath('//ows20:ProviderName', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Developer', self.namespaces)).text = self.exml.xpath('//ows20:IndividualName', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Contact', self.namespaces)).text = self.exml.xpath('//ows20:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(node, util.nspath_eval('os:Attribution', self.namespaces)).text = self.exml.xpath('//ows20:ProviderName', namespaces=self.context.namespaces)[0].text
         elif util.xmltag_split(self.exml.tag) == 'ExceptionReport':
             node = self.exml
         else:  # GetRecordById output
@@ -304,7 +307,10 @@ def kvp2filterxml(kvp, context):
             anytext_element.append(el)
             el = etree.Element(util.nspath_eval('ogc:Literal',
                         context.namespaces))
-            el.text = qval.decode('utf8')
+            if six.PY2:
+                el.text = qval.decode('utf8')
+            else:
+                el.text = qval
             anytext_element.append(el)
             anytext_elements.append(anytext_element)
 
@@ -389,7 +395,7 @@ def kvp2filterxml(kvp, context):
         if 'bbox' in kvp and kvp['bbox'] != '':
             LOGGER.debug('Adding bbox')
             root.append(bbox_element)
-        elif time_element:
+        elif time_element is not None:
             LOGGER.debug('Adding time')
             root.append(time_element)
         elif anytext_elements:

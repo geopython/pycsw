@@ -20,6 +20,7 @@ pycsw |release| Documentation
    sru
    opensearch
    oaipmh
+   json
    soap
    sitemaps
    transactions
@@ -27,6 +28,7 @@ pycsw |release| Documentation
    profiles
    outputschemas
    geonode
+   hhypermap
    odc
    ckan
    testing

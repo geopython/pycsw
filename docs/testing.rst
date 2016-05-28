@@ -31,6 +31,8 @@ The tests framework can be run from ``tests`` using `Paver`_ (see ``pavement.py`
   $ paver test -s apiso,fgdc
   # run all tests, including harvesting (this is turned off by default given the volatility of remote services/data testing)
   $ paver test -r
+  # run all tests with 1000ms time benchmark
+  $ paver test -t 1000
 
 The tests perform HTTP GET and POST requests against ``http://localhost:8000``.  The expected output for each test can be found in ``expected``.  Results are categorized as ``passed``, ``failed``, or ``initialized``.  A summary of results is output at the end of the run.
 

@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -68,7 +68,7 @@ class GeoNodeRepository(object):
                 self.queryables[qname] = {}
 
                 for qkey, qvalue in \
-                self.context.model['typenames'][tname]['queryables'][qname].iteritems():
+                self.context.model['typenames'][tname]['queryables'][qname].items():
                     self.queryables[qname][qkey] = qvalue
 
         # flatten all queryables

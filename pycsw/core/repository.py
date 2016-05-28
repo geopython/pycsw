@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -176,7 +176,7 @@ class Repository(object):
                 self.queryables[qname] = {}
 
                 for qkey, qvalue in \
-                self.context.model['typenames'][tname]['queryables'][qname].iteritems():
+                self.context.model['typenames'][tname]['queryables'][qname].items():
                     self.queryables[qname][qkey] = qvalue
 
         # flatten all queryables
@@ -387,5 +387,5 @@ class Repository(object):
     def _get_repo_filter(self, query):
         ''' Apply repository wide side filter / mask query '''
         if self.filter is not None:
-            return query.filter(self.filter)
+            return query.filter(text(self.filter))
         return query

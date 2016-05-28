@@ -1,9 +1,9 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2016 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -79,9 +79,8 @@ def get_package_data(location='.', forced_dir=None):
         for root, dirs, files in os.walk(filepath):
             if len(files) > 0:
                 # find all the XML Schema documents
-                xsds = filter(lambda x: x.find('.xsd') != -1, files)
-                catalog_xml = filter(lambda x: x.find('catalog.xml') != -1,
-                                     files)
+                xsds = [x for x in files if x.find('.xsd') != -1]
+                catalog_xml = [x for x in files if x.find('catalog.xml') != -1]
                 xsds.extend(catalog_xml)
                 if len(xsds) > 0:
                     if ploc not in package_data:  # set key
@@ -101,7 +100,7 @@ if (os.path.exists('MANIFEST')):
     os.unlink('MANIFEST')
 
 # set setup.packages
-PACKAGES = find_packages('.').keys()
+PACKAGES = list(find_packages('.').keys())
 
 # get package_data.keys()
 PACKAGE_DATA_XSD = find_packages_xsd('pycsw')
@@ -118,7 +117,7 @@ PACKAGE_DATA = get_package_data(PACKAGE_DATA_XSD)
 PACKAGE_DATA.update(get_package_data([ROOT_PACKAGE], 'schemas'))
 
 # set the dependencies
-# GeoNode and OpenDataCatalog do not require SQLAlchemy
+# GeoNode, HHypermap and OpenDataCatalog do not require SQLAlchemy
 with open('requirements.txt') as f:
     INSTALL_REQUIRES = f.read().splitlines()
 

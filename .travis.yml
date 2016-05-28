@@ -1,16 +1,25 @@
 language: python
 
-sudo: false
+sudo: required
+dist: trusty
 
 python:
   - "2.6"
   - "2.7"
+  - "3.4"
+
+#matrix:
+#  allow_failures:
+#    - python: "3.4"
 
 addons:
   apt:
     packages:
       - libgeos-c1
       - libxml2-dev
+
+before_script:
+  - pycsw-admin.py -c get_sysprof
 
 install:
   - pip install -r requirements.txt
@@ -28,5 +37,4 @@ notifications:
   irc:
     channels:
       - "irc.freenode.org#pycsw"
-      #- "irc.freenode.org#geopython"
     use_notice: true

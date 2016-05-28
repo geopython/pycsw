@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -86,7 +86,7 @@ def write_record(result, esn, context, url=None):
     if rlinks:
         for link in rlinks.split('^'):
             linkset = link.split(',')
-       
+
             url2 = etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href=linkset[-1], type=linkset[2], title=linkset[1])
 
     etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (url, util.getqattr(result, context.md_core_model['mappings']['pycsw:Identifier'])))
@@ -121,7 +121,7 @@ def write_record(result, esn, context, url=None):
 
 def write_extent(bbox, nsmap):
     ''' Generate BBOX extent '''
-    
+
     if bbox is not None:
         try:
             bbox2 = util.wkt2geom(bbox)
