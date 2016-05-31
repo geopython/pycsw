@@ -113,27 +113,6 @@ def pytest_generate_tests(metafunc):
 
 
 @pytest.fixture(scope="session")
-def suite_info(request):
-    suite_name = request.param
-    test_data = []
-    test_names = []
-    expected_dir = os.path.join(TESTS_ROOT, "expected")
-    suite_dir = os.path.join(TESTS_ROOT, "suites", suite_name)
-    configuration_path = os.path.join(suite_dir, "default.cfg")
-    post_requests_dir = os.path.join(suite_dir, "post")
-    for item in glob.iglob(os.path.join(post_requests_dir, "*")):
-        test_id = os.path.splitext(os.path.basename(item))[0]
-        expected = os.path.join(
-            expected_dir,
-            "suites_{0}_post_{1}.xml".format(suite_name, test_id)
-        )
-        if os.path.isfile(item) and os.path.isfile(expected):
-            test_data.append((item, expected, configuration_path))
-            test_names.append("{0}_{1}".format(suite_name, test_id))
-    return configuration_path, test_data, test_names
-
-
-@pytest.fixture(scope="session")
 def server_apiso_suite(request, tmpdir_factory):
     return _get_server_with_config(request, "apiso",
                                    tmpdir_factory, 8010)
@@ -200,27 +179,33 @@ def server_harvesting_suite(request, tmpdir_factory):
 
 
 @pytest.fixture(scope="session")
+def server_manager_suite(request, tmpdir_factory):
+    return _get_server_with_config(request, "manager",
+                                   tmpdir_factory, 8021)
+
+
+@pytest.fixture(scope="session")
 def server_oaipmh_suite(request, tmpdir_factory):
     return _get_server_with_config(request, "oaipmh",
-                                   tmpdir_factory, 8021)
+                                   tmpdir_factory, 8022)
 
 
 @pytest.fixture(scope="session")
 def server_repofilter_suite(request, tmpdir_factory):
     return _get_server_with_config(request, "repofilter",
-                                   tmpdir_factory, 8022)
+                                   tmpdir_factory, 8023)
 
 
 @pytest.fixture(scope="session")
 def server_sru_suite(request, tmpdir_factory):
     return _get_server_with_config(request, "sru",
-                                   tmpdir_factory, 8023)
+                                   tmpdir_factory, 8024)
 
 
 @pytest.fixture(scope="session")
 def server_utf_8_suite(request, tmpdir_factory):
     return _get_server_with_config(request, "utf-8",
-                                   tmpdir_factory, 8024)
+                                   tmpdir_factory, 8025)
 
 
 def _configure_functional_post_tests(expected_dir, suite_name):
@@ -254,9 +239,9 @@ def _configure_functional_get_tests(expected_dir, suite_name):
                     "suites_{0}_get_{1}.xml".format(suite_name, test_name)
                 )
                 if os.path.isfile(expected):
-                    test_data.append((test_params, expected))
+                    test_data.append((test_params.strip(), expected))
                     test_names.append("{0}_{1}".format(suite_name, test_name))
-    except IOError:
+    except FileNotFoundError:
         pass  # this suite does not have GET tests
     return test_data, test_names
 
