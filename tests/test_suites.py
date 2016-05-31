@@ -35,14 +35,14 @@ under the `suites` directory.
 
 """
 
-import codecs
 from io import BytesIO
 import json
 from lxml import etree
 from lxml import objectify
-import os
-import pytest
 import re
+from urllib.parse import parse_qs
+
+import pytest
 import requests
 
 ENCODING = "utf-8"
@@ -54,159 +54,141 @@ class TestApisoSuite(object):
 
     def test_post_requests(self, server_apiso_suite, test_request,
                            expected_result):
-        pass
-
-    def test_get_requests(self, server_apiso_suite, test_request_parameters,
-                          expected_result):
-        pass
+        _test_post_request(server_apiso_suite, test_request, expected_result)
 
 
 class TestApisoInspireSuite(object):
 
-    def test_post_requests(self, server_apiso_inspire_suite, test_request,
-                           expected_result):
-        pass
-
     def test_get_requests(self, server_apiso_inspire_suite,
                           test_request_parameters, expected_result):
-        pass
+        print("test_request_parameters: {}".format(test_request_parameters))
+        _test_get_request(server_apiso_inspire_suite, test_request_parameters,
+                          expected_result)
 
 
 class TestAtomSuite(object):
 
     def test_post_requests(self, server_atom_suite, test_request,
                            expected_result):
-        pass
+        _test_post_request(server_atom_suite, test_request, expected_result)
 
     def test_get_requests(self, server_atom_suite,
                           test_request_parameters, expected_result):
-        pass
+        _test_get_request(server_atom_suite, test_request_parameters,
+                          expected_result)
 
 
 class TestCiteSuite(object):
 
     def test_post_requests(self, server_cite_suite, test_request,
                            expected_result):
-        pass
+        _test_post_request(server_cite_suite, test_request, expected_result)
 
     def test_get_requests(self, server_cite_suite,
                           test_request_parameters, expected_result):
-        pass
+        _test_get_request(server_cite_suite, test_request_parameters,
+                          expected_result)
 
 
 class TestCsw30Suite(object):
 
     def test_post_requests(self, server_csw30_suite, test_request,
                            expected_result):
-        pass
+        _test_post_request(server_csw30_suite, test_request, expected_result)
 
     def test_get_requests(self, server_csw30_suite,
                           test_request_parameters, expected_result):
-        pass
+        _test_get_request(server_csw30_suite, test_request_parameters,
+                          expected_result)
 
 
 class TestDefaultSuite(object):
 
     def test_post_requests(self, server_default_suite, test_request,
                            expected_result):
-        pass
+        _test_post_request(server_default_suite, test_request, expected_result)
 
     def test_get_requests(self, server_default_suite, test_request_parameters,
                           expected_result):
-        pass
+        _test_get_request(server_default_suite, test_request_parameters,
+                          expected_result)
 
 
 class TestDifSuite(object):
 
     def test_post_requests(self, server_dif_suite, test_request,
                            expected_result):
-        pass
-
-    def test_get_requests(self, server_dif_suite, test_request_parameters,
-                          expected_result):
-        pass
+        _test_post_request(server_dif_suite, test_request, expected_result)
 
 
 class TestEbrimSuite(object):
 
     def test_post_requests(self, server_ebrim_suite, test_request,
                            expected_result):
-        pass
-
-    def test_get_requests(self, server_ebrim_suite, test_request_parameters,
-                          expected_result):
-        pass
+        _test_post_request(server_ebrim_suite, test_request, expected_result)
 
 
 class TestFgdcSuite(object):
 
     def test_post_requests(self, server_fgdc_suite, test_request,
                            expected_result):
-        pass
+        _test_post_request(server_fgdc_suite, test_request, expected_result)
 
-    def test_get_requests(self, server_fgdc_suite, test_request_parameters,
-                          expected_result):
-        pass
 
 class TestGm03Suite(object):
 
     def test_post_requests(self, server_gm03_suite, test_request,
                            expected_result):
-        pass
+        _test_post_request(server_gm03_suite, test_request, expected_result)
 
-    def test_get_requests(self, server_gm03_suite, test_request_parameters,
-                          expected_result):
-        pass
 
 class TestHarvestingSuite(object):
 
     def test_post_requests(self, server_harvesting_suite, test_request,
                            expected_result):
-        pass
+        _test_post_request(server_harvesting_suite, test_request,
+                           expected_result)
 
     def test_get_requests(self, server_harvesting_suite,
                           test_request_parameters, expected_result):
-        pass
+        _test_get_request(server_harvesting_suite, test_request_parameters,
+                          expected_result)
+
+
+class TestManagerSuite(object):
+
+    def test_post_requests(self, server_manager_suite, test_request,
+                           expected_result):
+        _test_post_request(server_manager_suite, test_request, expected_result)
+
 
 class TestOaipmhSuite(object):
 
-    def test_post_requests(self, server_oaipmh_suite, test_request,
-                           expected_result):
-        pass
-
     def test_get_requests(self, server_oaipmh_suite, test_request_parameters,
                           expected_result):
-        pass
+        _test_get_request(server_oaipmh_suite, test_request_parameters,
+                          expected_result)
 
 class TestRepofilterSuite(object):
 
     def test_post_requests(self, server_repofilter_suite, test_request,
                            expected_result):
-        pass
+        _test_post_request(server_repofilter_suite, test_request,
+                           expected_result)
 
-    def test_get_requests(self, server_repofilter_suite,
-                          test_request_parameters, expected_result):
-        pass
 
 class TestSruSuite(object):
 
-    def test_post_requests(self, server_sru_suite, test_request,
-                           expected_result):
-        pass
-
     def test_get_requests(self, server_sru_suite, test_request_parameters,
                           expected_result):
-        pass
+        _test_get_request(server_sru_suite, test_request_parameters,
+                          expected_result)
 
 class TestUtf8Suite(object):
 
     def test_post_requests(self, server_utf_8_suite, test_request,
                            expected_result):
-        pass
-
-    def test_get_requests(self, server_utf_8_suite, test_request_parameters,
-                          expected_result):
-        pass
+        _test_post_request(server_utf_8_suite, test_request, expected_result)
 
 
 def _test_post_request(pycsw_server_url, test_request, expected_result):
@@ -216,8 +198,20 @@ def _test_post_request(pycsw_server_url, test_request, expected_result):
         expected = expected_fh.read()
     response = requests.post(pycsw_server_url,
                              data=request_data)
-    response_data = response.text
+    _compare_response(response, expected)
 
+
+def _test_get_request(pycsw_server_url, parameters, expected_result):
+    with open(expected_result, encoding=ENCODING) as expected_fh:
+        expected = expected_fh.read()
+    payload = parse_qs(parameters)
+    print("payload: {}".format(payload))
+    response = requests.get(pycsw_server_url, params=payload)
+    _compare_response(response, expected)
+
+
+def _compare_response(response, expected):
+    response_data = response.text
     normalized_result = _normalize(response_data, force_id_mask=False)
     print("expected: {0}".format(expected))
     print("response: {0}".format(normalized_result))
@@ -227,10 +221,6 @@ def _test_post_request(pycsw_server_url, test_request, expected_result):
         # the file is either not XML (perhaps JSON?) or malformed
         matches_expected = _test_json_result(normalized_result, expected)
     assert matches_expected
-
-
-def _test_get_request(pycsw_server_url, parameters, expected_result):
-    pass
 
 
 def _test_xml_result(result, expected):
