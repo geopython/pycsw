@@ -1,4 +1,4 @@
-geolinks==0.0.1
+geolinks==0.2.0
 lxml==3.3.5
 OWSLib<0.9.0
 pyproj==1.9.3
