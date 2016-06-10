@@ -34,7 +34,7 @@ from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
 from pycsw.core import util
-from aggregator.models import Layer, Resource, Service
+from hypermap.aggregator.models import Layer, Resource, Service
 
 HYPERMAP_SERVICE_TYPES = {
     # 'HHypermap enum': 'CSW enum'
