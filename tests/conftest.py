@@ -15,25 +15,32 @@ from pycsw.core.config import StaticContext
 TESTS_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
-# This list holds the names of the suites that are available for functional
-# testing
-FUNCTIONAL_SUITES = [
-    "apiso",
-    "apiso-inspire",
-    "atom",
-    "cite",
-    "csw30",
-    "default",
-    "dif",
-    "ebrim",
-    "fgdc",
-    "gm03",
-    "harvesting",
-    "oaipmh",
-    "repofilter",
-    "sru",
-    "utf-8",
-]
+# This dict holds the names of the suites that are available for functional
+# testing and also if they use a custom database or not. If a suite has a
+# custom database, then a new db is created and possibly loaded with the suite's
+# test data (if there is any test data). If a suite does not use a custom db,
+# then it means that its tests it will have a database loaded with records
+# from the CITE suite
+# If you omit the "has_own_db" key from a suite's dict, it is assumed that
+# the value is False
+FUNCTIONAL_SUITES = {
+    "apiso": {"has_own_db": True},
+    "apiso-inspire": {},
+    "atom": {},
+    "cite": {"has_own_db": True},
+    "csw30": {},
+    "default": {},
+    "dif": {},
+    "ebrim": {},
+    "fgdc": {},
+    "gm03": {},
+    "harvesting": {"has_own_db": True},
+    "manager": {"has_own_db": True},
+    "oaipmh": {},
+    "repofilter": {},
+    "sru": {},
+    "utf-8": {},
+}
 
 
 def pytest_configure(config):
@@ -62,7 +69,7 @@ def pytest_addoption(parser):
         help="Password to use for creating and accessing local postgres "
              "databases used for functional tests."
     )
-    for suite_name in FUNCTIONAL_SUITES:
+    for suite_name in FUNCTIONAL_SUITES.keys():
         parser.addoption(
             "--server-url-{0}-suite".format(suite_name),
             help="URL to perform functional tests for the {0!r} suite. If not "
@@ -82,7 +89,7 @@ def pytest_generate_tests(metafunc):
     """
 
     expected_dir = os.path.join(TESTS_ROOT, "expected")
-    for suite_name in FUNCTIONAL_SUITES:
+    for suite_name in FUNCTIONAL_SUITES.keys():
         safe_suite_name = _get_suite_safe_name(suite_name)
         fixture_name = "server_{0}_suite".format(safe_suite_name)
         uses_fixture = fixture_name in metafunc.fixturenames
@@ -284,11 +291,11 @@ def _get_server_with_config(request, suite_name, tmpdir_factory, port_number):
                                             suite_name, "default.cfg")
         config = ConfigParser()
         config.read(original_config_path)
-        safe_suite_name = _get_suite_safe_name(suite_name)
-        test_temp_directory = tmpdir_factory.mktemp(safe_suite_name,
+        #safe_suite_name = _get_suite_safe_name(suite_name)
+        test_temp_directory = tmpdir_factory.mktemp(suite_name,
                                                     numbered=True)
         db_url = _initialize_database(
-            request, safe_suite_name, test_temp_directory,
+            request, suite_name, test_temp_directory,
             config.get("repository", "table"),
             os.path.join(TESTS_ROOT, "suites", suite_name, "data")
         )
@@ -319,7 +326,7 @@ def _initialize_database(request, suite_name, test_dir, table_name, data_path):
         Pytest's FixtureRequest object, holding information about the test
         context
     suite_name: str
-        The safe name of the current suite
+        The name of the current suite
     test_dir: str
         Full path to the temporary directory being used in the suite's tests
     data_path: str
@@ -347,6 +354,10 @@ def _initialize_database(request, suite_name, test_dir, table_name, data_path):
                                                           suite_name))
     admin.setup_db(db_url, table_name, test_dir)
     print("Loading database data...")
+    if not FUNCTIONAL_SUITES[suite_name].get("has_own_db", False):
+        print("Loading CITE data into database...")
+        cite_data_dir = os.path.join(TESTS_ROOT, "suites", "cite", "data")
+        data_path = cite_data_dir
     admin.load_records(StaticContext(), db_url, table_name, data_path)
     return db_url
 
@@ -381,6 +392,7 @@ def _start_local_server(request, config_path, port_number):
     env = os.environ.copy()
     env["PYCSW_CONFIG"] = config_path
     pycsw_process = subprocess.Popen(shlex.split(command), cwd=working_dir,
+                                     stdout=subprocess.PIPE,
                                      env=env)
     time.sleep(3)  # give the external process some time to start
 
