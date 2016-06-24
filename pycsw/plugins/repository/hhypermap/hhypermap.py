@@ -88,9 +88,10 @@ class HHypermapRepository(object):
         for qbl in self.queryables:
             self.queryables['_all'].update(self.queryables[qbl])
         self.queryables['_all'].update(self.context.md_core_model['mappings'])
-
-        self.context.model['operations']['Harvest']['parameters']['ResourceType']['values'] = HYPERMAP_SERVICE_TYPES.keys()
-        self.context.model['operations']['Transaction']['parameters']['TransactionSchemas']['values'] = HYPERMAP_SERVICE_TYPES.keys()
+        
+        if 'Harvest' in self.context.model['operations'] and 'Transaction' in self.context.model['operations']:
+            self.context.model['operations']['Harvest']['parameters']['ResourceType']['values'] = HYPERMAP_SERVICE_TYPES.keys()
+            self.context.model['operations']['Transaction']['parameters']['TransactionSchemas']['values'] = HYPERMAP_SERVICE_TYPES.keys()
 
     def dataset(self):
         ''' Stub to mock a pycsw dataset object for Transactions'''
