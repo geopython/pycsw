@@ -6,7 +6,7 @@ Installation
 System Requirements
 -------------------
 
-pycsw is written in `Python <http://python.org>`_, and works with (tested) version 2.6 and 2.7
+pycsw is written in `Python <http://python.org>`_, and works with (tested) version 2.6, 2.7 and 3.4
 
 pycsw requires the following Python supporting libraries:
 
@@ -15,6 +15,9 @@ pycsw requires the following Python supporting libraries:
 - `pyproj`_ for coordinate transformations
 - `Shapely`_ for spatial query / geometry support
 - `OWSLib`_ for CSW client and metadata parser
+- `six`_ for Python 2/3 compatibility
+- `xmltodict`_ for working with XML similar to working with JSON
+- `geolinks`_ for dealing with geospatial links
 
 .. note::
 
@@ -101,41 +104,47 @@ Installing from the Python Package Index (PyPi)
 Installing from OpenSUSE Build Service
 --------------------------------------
 
-In order to install the OBS package in openSUSE 12.3, one can run the following commands as user ``root``:
+In order to install the pycsw package in openSUSE Leap (stable distribution), one can run the following commands as user ``root``:
 
 .. code-block:: bash
 
-  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_12.3/ GEO
-  # zypper -ar http://download.opensuse.org/repositories/devel:/languages:/python/openSUSE_12.3/ python
+  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_Leap_42.1/ GEO
   # zypper refresh
   # zypper install python-pycsw pycsw-cgi
 
-For earlier openSUSE versions change ``12.3`` with ``12.2``. For future openSUSE version use ``Factory``.
 
-An alternative method is to use the `One-Click Installer <http://software.opensuse.org/search?q=pycsw&baseproject=openSUSE%3A12.3&lang=en&include_home=true&exclude_debug=true>`_.
+In order to install the pycsw package in openSUSE Tumbleweed (rolling distribution), one can run the following commands as user ``root``:
+
+.. code-block:: bash
+
+  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_Tumbleweed/ GEO
+  # zypper refresh
+  # zypper install python-pycsw pycsw-cgi
+
+An alternative method is to use the `One-Click Installer <https://software.opensuse.org/package/python-pycsw>`_.
 
 .. _ubuntu:
 
-Installing on Ubuntu/Xubuntu/Kubuntu
-------------------------------------
+Installing on Ubuntu/Mint
+-------------------------
 
-In order to install pycsw to an Ubuntu based distribution, one can run the following commands:
+In order to install the most recent pycsw release to an Ubuntu-based distribution, one can use the UbuntuGIS Unstable repository by running the following commands:
 
 .. code-block:: bash
 
-  # sudo add-apt-repository ppa:pycsw/stable
+  # sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
   # sudo apt-get update
   # sudo apt-get install python-pycsw pycsw-cgi
 
-An alternative method is to use the OSGeoLive installation script located in ``pycsw/etc/dist/osgeolive``:
+Alternatively, one can use the UbuntuGIS Stable repository which includes older but very well tested versions:
 
-.. code-block:: bash
+  # sudo add-apt-repository ppa:ubuntugis/ppa
+  # sudo apt-get update
+  # sudo apt-get install python-pycsw pycsw-cgi
 
-  # cd pycsw/etc/dist
-  # sudo ./install_pycsw.sh
+.. note::
+  Since Ubuntu 16.04 LTS Xenial release, pycsw is included by default in the official Multiverse repository.
 
-The script installs the dependencies (Apache, lxml, sqlalchemy, shapely, pyproj) and then pycsw to ``/var/www``. 
-  
 Running on Windows
 ------------------
 
@@ -203,6 +212,9 @@ which will publish pycsw to ``http://localhost:8000/``
 .. _`Shapely`: http://toblerity.github.io/shapely/
 .. _`pyproj`: http://code.google.com/p/pyproj/
 .. _`OWSLib`: https://github.com/geopython/OWSLib
+.. _`six`: https://pypi.python.org/pypi/six/
+.. _`xmltodict`: https://github.com/martinblech/xmltodict
+.. _`geolinks`: https://github.com/geopython/geolinks
 .. _`easy_install`: http://packages.python.org/distribute/easy_install.html
 .. _`pip`: http://www.pip-installer.org
 .. _`Web Server Gateway Interface`: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
