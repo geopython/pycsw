@@ -34,6 +34,7 @@ pycsw |release| Documentation
    ckan
    api
    testing
+   migration-guide
    tools
    support
    contributing
