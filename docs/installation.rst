@@ -25,7 +25,7 @@ pycsw requires the following Python supporting libraries:
 
 .. note::
 
-  For :ref:`GeoNode <geonode>` or :ref:`Open Data Catalog <odc>` deployments, SQLAlchemy is not required
+  For :ref:`GeoNode <geonode>` or :ref:`Open Data Catalog <odc>` or :ref:`HHypermap <hhypermap>` deployments, SQLAlchemy is not required
 
 Installing from Source
 ----------------------
