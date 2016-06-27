@@ -8,7 +8,7 @@ pycsw is an OGC CSW server implementation written in Python.
 Features
 ========
 
-- certified OGC `Compliant`_ and OGC Reference Implementation
+- certified OGC `Compliant`_ and OGC Reference Implementation for both CSW 2.0.2 and CSW 3.0.0
 - harvesting support for WMS, WFS, WCS, WPS, WAF, CSW, SOS
 - implements `INSPIRE Discovery Services 3.0`_
 - implements `ISO Metadata Application Profile 1.0.0`_
@@ -19,6 +19,7 @@ Features
 - implements Open Archives Initiative Protocol for Metadata Harvesting
 - supports ISO, Dublin Core, DIF, FGDC, Atom and GM03 metadata models
 - CGI or WSGI deployment
+- Python 2 and 3 compatible
 - simple configuration
 - transactional capabilities (CSW-T)
 - flexible repository configuration
@@ -38,9 +39,9 @@ Standards Support
 +===================+==============+
 | `OGC CSW`_        | 2.0.2, 3.0.0 |
 +-------------------+--------------+
-| `OGC Filter`_     | 1.1.0        |
+| `OGC Filter`_     | 1.1.0, 2.0.0 |
 +-------------------+--------------+
-| `OGC OWS Common`_ | 1.0.0        |
+| `OGC OWS Common`_ | 1.0.0, 2.0.0 |
 +-------------------+--------------+
 | `OGC GML`_        | 3.1.1        |
 +-------------------+--------------+
@@ -82,6 +83,7 @@ Supported Operations
   GetRepositoryItem,optional,yes,GET (KVP)
   GetDomain,optional,yes,GET (KVP) / POST (XML) / SOAP
   Harvest,optional,yes,GET (KVP) / POST (XML) / SOAP
+  UnHarvest,optional,no,
   Transaction,optional,yes,POST (XML) / SOAP
 
 .. note::
@@ -119,8 +121,8 @@ Supported Sorting Functionality
 Supported Filters
 -----------------
 
-Full Text
-^^^^^^^^^
+Full Text Search
+^^^^^^^^^^^^^^^^
 
 - csw:AnyText
 
