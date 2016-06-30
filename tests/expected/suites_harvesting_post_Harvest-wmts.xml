@@ -3,7 +3,7 @@
 <csw:HarvestResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
   <csw:TransactionResponse version="2.0.2">
     <csw:TransactionSummary>
-      <csw:totalInserted>175</csw:totalInserted>
+      <csw:totalInserted>244</csw:totalInserted>
       <csw:totalUpdated>0</csw:totalUpdated>
       <csw:totalDeleted>0</csw:totalDeleted>
     </csw:TransactionSummary>
@@ -14,699 +14,975 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Temp_Night</dc:identifier>
-        <dc:title>MODIS_Aqua_Cloud_Top_Temp_Night</dc:title>
+        <dc:title>Cloud Top Temperature (Night, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_SurfaceReflectance_Bands721</dc:identifier>
-        <dc:title>MODIS_Aqua_SurfaceReflectance_Bands721</dc:title>
+        <dc:title>Land Surface Reflectance (Bands 7-2-1, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-VIIRS_SNPP_CorrectedReflectance_BandsM3-I3-M11</dc:identifier>
-        <dc:title>VIIRS_SNPP_CorrectedReflectance_BandsM3-I3-M11</dc:title>
+        <dc:title>Corrected Reflectance (M3-I3-M11, VIIRS, SNPP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Uncertainty_Analyzed_Root_Zone_Soil_Moisture</dc:identifier>
-        <dc:title>SMAP_L4_Uncertainty_Analyzed_Root_Zone_Soil_Moisture</dc:title>
+        <dc:title>Root Zone Soil Moisture Uncertainty (L4, 12z Instantaneous, Model Value-Added, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Combined_Value_Added_AOD</dc:identifier>
-        <dc:title>MODIS_Combined_Value_Added_AOD</dc:title>
+        <dc:title>Aerosol Optical Depth (Value Added, MODIS, Combined Aqua and Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_CorrectedReflectance_TrueColor_Alaska_Monthly</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, Alaska Monthly, Best Available, Landsat)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_VV</dc:identifier>
-        <dc:title>SMAP_L3_Active_Sigma0_VV</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Brightness_Temp_89H_Day</dc:identifier>
-        <dc:title>AMSRE_Brightness_Temp_89H_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Faraday_Rotation_Aft</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Faraday_Rotation_Aft</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_HH_RFI</dc:identifier>
-        <dc:title>SMAP_L3_Active_Sigma0_HH_RFI</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Cloud_Liquid_Water_Night</dc:identifier>
-        <dc:title>AMSR2_Cloud_Liquid_Water_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_HNO3_46hPa_Night</dc:identifier>
-        <dc:title>MLS_HNO3_46hPa_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_V</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Fore_V</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Fore_H</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H_QA</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Fore_H_QA</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Faraday_Rotation_Fore</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Faraday_Rotation_Fore</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-GMI_Brightness_Temp_Asc</dc:identifier>
-        <dc:title>GMI_Brightness_Temp_Asc</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-GMI_Rain_Rate_Dsc</dc:identifier>
-        <dc:title>GMI_Rain_Rate_Dsc</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_XPOL_RFI</dc:identifier>
-        <dc:title>SMAP_L3_Active_Sigma0_XPOL_RFI</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Brightness_Temp_Band31_Day</dc:identifier>
-        <dc:title>MODIS_Terra_Brightness_Temp_Band31_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Mean_Gross_Primary_Productivity</dc:identifier>
-        <dc:title>SMAP_L4_Mean_Gross_Primary_Productivity</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Pressure_Day</dc:identifier>
-        <dc:title>MODIS_Terra_Cloud_Top_Pressure_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Snow_Water_Equivalent</dc:identifier>
-        <dc:title>AMSR2_Snow_Water_Equivalent</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Land_Surface_Temp_Day</dc:identifier>
-        <dc:title>MODIS_Terra_Land_Surface_Temp_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-Coastlines</dc:identifier>
-        <dc:title>Coastlines</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_HNO3_46hPa_Day</dc:identifier>
-        <dc:title>MLS_HNO3_46hPa_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L2_Passive_Soil_Moisture_Option1</dc:identifier>
-        <dc:title>SMAP_L2_Passive_Soil_Moisture_Option1</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-OMI_SO2_Middle_Troposphere</dc:identifier>
-        <dc:title>OMI_SO2_Middle_Troposphere</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L2_Passive_Soil_Moisture_Option3</dc:identifier>
-        <dc:title>SMAP_L2_Passive_Soil_Moisture_Option3</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MEaSUREs_Daily_Landscape_Freeze_Thaw_AMSRE</dc:identifier>
-        <dc:title>MEaSUREs_Daily_Landscape_Freeze_Thaw_AMSRE</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Temp_Day</dc:identifier>
-        <dc:title>MODIS_Aqua_Cloud_Top_Temp_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-GHRSST_L4_MUR_Sea_Surface_Temperature</dc:identifier>
-        <dc:title>GHRSST_L4_MUR_Sea_Surface_Temperature</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Land_Surface_Temp_Night</dc:identifier>
-        <dc:title>MODIS_Terra_Land_Surface_Temp_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Precipitation_Rate_Day</dc:identifier>
-        <dc:title>AMSRE_Surface_Precipitation_Rate_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-VIIRS_CityLights_2012</dc:identifier>
-        <dc:title>VIIRS_EarthAtNight_2012</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Rain_Rate_Day</dc:identifier>
-        <dc:title>AMSRE_Surface_Rain_Rate_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_VV_RFI</dc:identifier>
-        <dc:title>SMAP_L3_Active_Sigma0_VV_RFI</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_SurfaceReflectance_Bands143</dc:identifier>
-        <dc:title>MODIS_Aqua_SurfaceReflectance_Bands143</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Uncertainty_Analyzed_Surface_Soil_Moisture</dc:identifier>
-        <dc:title>SMAP_L4_Uncertainty_Analyzed_Surface_Soil_Moisture</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-Reference_Labels</dc:identifier>
-        <dc:title>Reference_Labels</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_O3_46hPa_Day</dc:identifier>
-        <dc:title>MLS_O3_46hPa_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_Temperature_46hPa_Day</dc:identifier>
-        <dc:title>MLS_Temperature_46hPa_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_V</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Aft_V</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_XPOL</dc:identifier>
-        <dc:title>SMAP_L3_Active_Sigma0_XPOL</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_CorrectedReflectance_Bands721</dc:identifier>
-        <dc:title>MODIS_Terra_CorrectedReflectance_Bands721</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-GMI_Brightness_Temp_Dsc</dc:identifier>
-        <dc:title>GMI_Brightness_Temp_Dsc</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Brightness_Temp_89V_Day</dc:identifier>
-        <dc:title>AMSRE_Brightness_Temp_89V_Day</dc:title>
+        <dc:title>Sigma0 (L3, Active, VV Polarization, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Pressure_Night</dc:identifier>
-        <dc:title>MODIS_Aqua_Cloud_Top_Pressure_Night</dc:title>
+        <dc:title>Cloud Top Pressure (Night, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Chlorophyll_A</dc:identifier>
-        <dc:title>MODIS_Terra_Chlorophyll_A</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Brightness_Temp_Band31_Day</dc:identifier>
-        <dc:title>MODIS_Aqua_Brightness_Temp_Band31_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_H</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Aft_H</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_V_RFI</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Aft_V_RFI</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Land_Surface_Temp_Day</dc:identifier>
-        <dc:title>MODIS_Aqua_Land_Surface_Temp_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Passive_Brightness_Temp_H</dc:identifier>
-        <dc:title>SMAP_L3_Passive_Brightness_Temp_H</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Chlorophyll_A</dc:identifier>
-        <dc:title>MODIS_Aqua_Chlorophyll_A</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-BlueMarble_ShadedRelief</dc:identifier>
-        <dc:title>BlueMarble_ShadedRelief</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Concentration_25km</dc:identifier>
-        <dc:title>AMSRE_Sea_Ice_Concentration_25km</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Sea_Ice</dc:identifier>
-        <dc:title>MODIS_Terra_Sea_Ice</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Brightness_Temp_89V_Night</dc:identifier>
-        <dc:title>AMSRE_Brightness_Temp_89V_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Brightness_Temp_89H_Day</dc:identifier>
+        <dc:title>Brightness Temperature (89H Ghz B Scan, Day, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-OMI_Aerosol_Index</dc:identifier>
-        <dc:title>OMI_Aerosol_Index</dc:title>
+        <dc:title>Aerosol Index (OMI, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Fraction_Night</dc:identifier>
+        <dc:title>Cloud Fraction (Night, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_AOD_Deep_Blue_Combined</dc:identifier>
+        <dc:title>Merged Aerosol Optical Depth (Deep Blue, Land and Ocean, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Analyzed_Surface_Soil_Moisture</dc:identifier>
-        <dc:title>SMAP_L4_Analyzed_Surface_Soil_Moisture</dc:title>
+        <dc:title>Surface Soil Moisture (L4, 12z Instantaneous, Model Value-Added, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Columnar_Water_Vapor_Day</dc:identifier>
-        <dc:title>AMSR2_Columnar_Water_Vapor_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_AOD_Deep_Blue_Land</dc:identifier>
+        <dc:title>Deep Blue Aerosol Optical Depth (Land, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Aerosol</dc:identifier>
-        <dc:title>MODIS_Aqua_Aerosol</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Optical_Thickness_PCL</dc:identifier>
+        <dc:title>Cloud Optical Thickness (PCL, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_CO_Total_Column_Night</dc:identifier>
-        <dc:title>AIRS_CO_Total_Column_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_HH_RFI</dc:identifier>
+        <dc:title>Sigma0 RFI (L3, Active, HH Polarization, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Passive_Brightness_Temp_V</dc:identifier>
-        <dc:title>SMAP_L3_Passive_Brightness_Temp_V</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Cloud_Liquid_Water_Night</dc:identifier>
+        <dc:title>Columnar Cloud Liquid Water (Night, AMSR2, GCOM-W1)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Precipitation_Day</dc:identifier>
-        <dc:title>AIRS_Precipitation_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_HNO3_46hPa_Night</dc:identifier>
+        <dc:title>Nitric Acid (46 hPa, Night, MLS, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L2_Passive_Soil_Moisture_Option2</dc:identifier>
-        <dc:title>SMAP_L2_Passive_Soil_Moisture_Option2</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_V</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature (L1, Passive, Fore, V Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-Sea_Surface_Temp_Microwave</dc:identifier>
-        <dc:title>Sea_Surface_Temp_Microwave</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature (L1, Passive, Fore, H Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_XPOL_QA</dc:identifier>
-        <dc:title>SMAP_L3_Active_Sigma0_XPOL_QA</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_400hPa_Night</dc:identifier>
+        <dc:title>Relative Humidity (400 hPa, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Precipitation_Rate_Night</dc:identifier>
-        <dc:title>AMSRE_Surface_Precipitation_Rate_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_700hPa_Night</dc:identifier>
+        <dc:title>Air Temperature (700 hPa, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_CO_Total_Column_Day</dc:identifier>
-        <dc:title>AIRS_CO_Total_Column_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H_QA</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature QA (L1, Passive, Fore, H Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-GMI_Snow_Rate_Dsc</dc:identifier>
-        <dc:title>GMI_Snow_Rate_Dsc</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Passive_Soil_Moisture</dc:identifier>
-        <dc:title>SMAP_L3_Active_Passive_Soil_Moisture</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-Sea_Surface_Temp_Blended</dc:identifier>
-        <dc:title>Sea_Surface_Temp_Blended</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-OSM_Land_Water_Map</dc:identifier>
-        <dc:title>OSM_Land_Water_Map</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-OSM_Land_Mask</dc:identifier>
-        <dc:title>OSM_Land_Mask</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-ASTER_GDEM_Color_Index</dc:identifier>
-        <dc:title>ASTER_GDEM_Color_Index</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Prata_SO2_Index_Night</dc:identifier>
-        <dc:title>AIRS_Prata_SO2_Index_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Concentration_12km</dc:identifier>
-        <dc:title>AMSRE_Sea_Ice_Concentration_12km</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-GMI_Rain_Rate_Asc</dc:identifier>
-        <dc:title>GMI_Rain_Rate_Asc</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_CorrectedReflectance_Bands721</dc:identifier>
-        <dc:title>MODIS_Aqua_CorrectedReflectance_Bands721</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Mean_Net_Ecosystem_Exchange</dc:identifier>
-        <dc:title>SMAP_L4_Mean_Net_Ecosystem_Exchange</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_SurfaceReflectance_Bands721</dc:identifier>
-        <dc:title>MODIS_Terra_SurfaceReflectance_Bands721</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Frozen_Area</dc:identifier>
-        <dc:title>SMAP_L4_Frozen_Area</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-Sea_Surface_Temp_Infrared</dc:identifier>
-        <dc:title>Sea_Surface_Temp_Infrared</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Passive_Brightness_Temp_V</dc:identifier>
-        <dc:title>SMAP_L3_Active_Passive_Brightness_Temp_V</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_500hPa_Night</dc:identifier>
+        <dc:title>Relative Humidity (500 hPa, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Snow_Cover</dc:identifier>
-        <dc:title>MODIS_Aqua_Snow_Cover</dc:title>
+        <dc:title>Snow Cover (MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Snow_Mass</dc:identifier>
-        <dc:title>SMAP_L4_Snow_Mass</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-GMI_Brightness_Temp_Asc</dc:identifier>
+        <dc:title>Brightness Temperature (Ascending, GMI, GPM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-VIIRS_SNPP_CorrectedReflectance_TrueColor</dc:identifier>
-        <dc:title>VIIRS_SNPP_CorrectedReflectance_TrueColor</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Height_Day</dc:identifier>
+        <dc:title>Cloud Top Height (Day, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_HH_QA</dc:identifier>
-        <dc:title>SMAP_L3_Active_Sigma0_HH_QA</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_700hPa_Day</dc:identifier>
+        <dc:title>Air Temperature (700 hPa, Day, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_CorrectedReflectance_TrueColor</dc:identifier>
-        <dc:title>MODIS_Terra_CorrectedReflectance_TrueColor</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-GMI_Rain_Rate_Dsc</dc:identifier>
+        <dc:title>Rain Rate (Descending, GMI, GPM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_HH</dc:identifier>
-        <dc:title>SMAP_L3_Active_Sigma0_HH</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_XPOL_RFI</dc:identifier>
+        <dc:title>Sigma0 RFI (L3, Active, XPOL Polarization, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Passive_Brightness_Temp_H</dc:identifier>
-        <dc:title>SMAP_L3_Active_Passive_Brightness_Temp_H</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Brightness_Temp_Band31_Day</dc:identifier>
+        <dc:title>Brightness Temperature (Band31, Day, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_V_RFI</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Fore_V_RFI</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Mean_Gross_Primary_Productivity</dc:identifier>
+        <dc:title>Gross Primary Production (L4, 9 km Grid Cell Mean, Model Value-Added, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Brightness_Temp_89H_Night</dc:identifier>
-        <dc:title>AMSRE_Brightness_Temp_89H_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Pressure_Day</dc:identifier>
+        <dc:title>Cloud Top Pressure (Day, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_V_QA</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Fore_V_QA</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Snow_Water_Equivalent</dc:identifier>
+        <dc:title>Snow Water Equivalent (AMSR2, GCOM-W1)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Wind_Speed_Day</dc:identifier>
-        <dc:title>AMSR2_Wind_Speed_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Land_Surface_Temp_Day</dc:identifier>
+        <dc:title>Land Surface Temperature (Day, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-OMI_Cloud_Pressure</dc:identifier>
-        <dc:title>OMI_Cloud_Pressure</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-Coastlines</dc:identifier>
+        <dc:title>Coastlines (OSM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_H2O_46hPa_Day</dc:identifier>
-        <dc:title>MLS_H2O_46hPa_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_HNO3_46hPa_Day</dc:identifier>
+        <dc:title>Nitric Acid (46 hPa, Day, MLS, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Water_Vapor_5km_Day</dc:identifier>
-        <dc:title>MODIS_Terra_Water_Vapor_5km_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L2_Passive_Soil_Moisture_Option1</dc:identifier>
+        <dc:title>Soil Moisture (L2, Passive, Single Channel Algorithm, H Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_V_QA</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Aft_V_QA</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-OMI_SO2_Middle_Troposphere</dc:identifier>
+        <dc:title>Sulfur Dioxide (Middle Troposphere, OMI, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-BlueMarble_NextGeneration</dc:identifier>
-        <dc:title>BlueMarble_NextGeneration</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L2_Passive_Soil_Moisture_Option3</dc:identifier>
+        <dc:title>Soil Moisture (L2, Passive, Dual Channel Algorithm, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_SurfaceReflectance_Bands121</dc:identifier>
-        <dc:title>MODIS_Terra_SurfaceReflectance_Bands121</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_CorrectedReflectance_TrueColor_CONUS_Monthly</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, CONUS Monthly, Best Available, Landsat)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_CO_215hPa_Day</dc:identifier>
-        <dc:title>MLS_CO_215hPa_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MEaSUREs_Daily_Landscape_Freeze_Thaw_AMSRE</dc:identifier>
+        <dc:title>Freeze Thaw (Daily Landscape, AMSR-E, MEaSUREs)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_CO_215hPa_Night</dc:identifier>
-        <dc:title>MLS_CO_215hPa_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Effective_Radius_PCL</dc:identifier>
+        <dc:title>Cloud Effective Radius (PCL, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Dust_Score</dc:identifier>
-        <dc:title>AIRS_Dust_Score</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_600hPa_Night</dc:identifier>
+        <dc:title>Relative Humidity (600 hPa, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-OMI_Absorbing_Aerosol_Optical_Depth</dc:identifier>
-        <dc:title>OMI_Absorbing_Aerosol_Optical_Depth</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-GHRSST_L4_MUR_Sea_Surface_Temperature</dc:identifier>
+        <dc:title>Sea Surface Temperature (L4, MUR Global Foundation, GHRSST)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Emult_Average</dc:identifier>
-        <dc:title>SMAP_L4_Emult_Average</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_CorrectedReflectance_TrueColor_Global_Monthly</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, Global Monthly, Best Available, NEX, Landsat)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Brightness_Temp_6km_89H</dc:identifier>
-        <dc:title>AMSR2_Sea_Ice_Brightness_Temp_6km_89H</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Land_Surface_Temp_Night</dc:identifier>
+        <dc:title>Land Surface Temperature (Night, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_H_RFI</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Aft_H_RFI</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Precipitation_Rate_Day</dc:identifier>
+        <dc:title>Surface Precipitation Rate (Day, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Surface_Rain_Rate_Day</dc:identifier>
-        <dc:title>AMSR2_Surface_Rain_Rate_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-VIIRS_CityLights_2012</dc:identifier>
+        <dc:title>Earth at Night (2012, VIIRS, SNPP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Brightness_Temp_89V</dc:identifier>
-        <dc:title>AMSRE_Sea_Ice_Brightness_Temp_89V</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Rain_Rate_Day</dc:identifier>
+        <dc:title>Surface Rain Rate (Day, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Aerosol</dc:identifier>
-        <dc:title>MODIS_Terra_Aerosol</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_VV_RFI</dc:identifier>
+        <dc:title>Sigma0 RFI (L3, Active, VV Polarization, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Surface_Precipitation_Rate_Night</dc:identifier>
-        <dc:title>AMSR2_Surface_Precipitation_Rate_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Multi_Layer_Flag</dc:identifier>
+        <dc:title>Cloud Multi Layer Flag (MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Brightness_Temp_89H</dc:identifier>
-        <dc:title>AMSRE_Sea_Ice_Brightness_Temp_89H</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Water_Path_PCL</dc:identifier>
+        <dc:title>Cloud Water Path (PCL, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_VV_QA</dc:identifier>
-        <dc:title>SMAP_L3_Active_Sigma0_VV_QA</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Fraction_Day</dc:identifier>
+        <dc:title>Cloud Fraction (Day, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Temp_Day</dc:identifier>
-        <dc:title>MODIS_Terra_Cloud_Top_Temp_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_SurfaceReflectance_Bands143</dc:identifier>
+        <dc:title>Land Surface Reflectance (True Color, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Brightness_Temp_6km_89V</dc:identifier>
-        <dc:title>AMSR2_Sea_Ice_Brightness_Temp_6km_89V</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Uncertainty_Analyzed_Surface_Soil_Moisture</dc:identifier>
+        <dc:title>Surface Soil Moisture Uncertainty (L4, 12z Instantaneous, Model Value-Added, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Water_Mask</dc:identifier>
-        <dc:title>MODIS_Water_Mask</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-Reference_Labels</dc:identifier>
+        <dc:title>Reference Labels (OSM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_Temperature_46hPa_Night</dc:identifier>
-        <dc:title>MLS_Temperature_46hPa_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Temp_Day</dc:identifier>
+        <dc:title>Cloud Top Temperature (Day, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1</dc:identifier>
-        <dc:title>VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_O3_46hPa_Day</dc:identifier>
+        <dc:title>Ozone (46 hPa, Day, MLS, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Passive_Soil_Moisture</dc:identifier>
-        <dc:title>SMAP_L3_Passive_Soil_Moisture</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_Temperature_46hPa_Day</dc:identifier>
+        <dc:title>Air Temperature (46 hPa, Day, MLS, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Cloud_Liquid_Water_Day</dc:identifier>
-        <dc:title>AMSR2_Cloud_Liquid_Water_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_V</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature (L1, Passive, Aft, V Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Water_Vapor_5km_Night</dc:identifier>
-        <dc:title>MODIS_Terra_Water_Vapor_5km_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Fraction_Day</dc:identifier>
+        <dc:title>Cloud Fraction (Day, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-OMI_SO2_Lower_Troposphere</dc:identifier>
-        <dc:title>OMI_SO2_Lower_Troposphere</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_XPOL</dc:identifier>
+        <dc:title>Sigma0 (L3, Active, XPOL Polarization, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-BlueMarble_ShadedRelief_Bathymetry</dc:identifier>
-        <dc:title>BlueMarble_ShadedRelief_Bathymetry</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_CorrectedReflectance_Bands721</dc:identifier>
+        <dc:title>Corrected Reflectance (Bands 7-2-1, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-GHRSST_L4_G1SST_Sea_Surface_Temperature</dc:identifier>
-        <dc:title>GHRSST_L4_G1SST_Sea_Surface_Temperature</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-GMI_Brightness_Temp_Dsc</dc:identifier>
+        <dc:title>Brightness Temperature (Descending, GMI, GPM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H_RFI</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Fore_H_RFI</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Brightness_Temp_89V_Day</dc:identifier>
+        <dc:title>Brightness Temperature (89V Ghz B Scan, Day, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Snow_Cover</dc:identifier>
-        <dc:title>MODIS_Terra_Snow_Cover</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_700hPa_Night</dc:identifier>
+        <dc:title>Relative Humidity (700 hPa, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Analyzed_Root_Zone_Soil_Moisture</dc:identifier>
-        <dc:title>SMAP_L4_Analyzed_Root_Zone_Soil_Moisture</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Phase_Optical_Properties</dc:identifier>
+        <dc:title>Cloud Phase Optical Properties (MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Mean_Heterotrophic_Respiration</dc:identifier>
-        <dc:title>SMAP_L4_Mean_Heterotrophic_Respiration</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Chlorophyll_A</dc:identifier>
+        <dc:title>Chlorophyll (MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_H2O_46hPa_Night</dc:identifier>
-        <dc:title>MLS_H2O_46hPa_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Effective_Radius_37</dc:identifier>
+        <dc:title>Cloud Effective Radius (3.7 micron, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_SurfaceReflectance_Bands143</dc:identifier>
-        <dc:title>MODIS_Terra_SurfaceReflectance_Bands143</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_400hPa_Night</dc:identifier>
+        <dc:title>Air Temperature (400 hPa, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Brightness_Temp_Band31_Night</dc:identifier>
-        <dc:title>MODIS_Terra_Brightness_Temp_Band31_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Rain_Rate_Night</dc:identifier>
-        <dc:title>AMSRE_Surface_Rain_Rate_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Soil_Moisture</dc:identifier>
-        <dc:title>SMAP_L3_Active_Soil_Moisture</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-Reference_Features</dc:identifier>
-        <dc:title>Reference_Features</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Concentration_25km</dc:identifier>
-        <dc:title>AMSR2_Sea_Ice_Concentration_25km</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Snow_Depth_Over_Ice</dc:identifier>
-        <dc:title>AMSRE_Snow_Depth_Over_Ice</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Pressure_Night</dc:identifier>
-        <dc:title>MODIS_Terra_Cloud_Top_Pressure_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Columnar_Water_Vapor_Night</dc:identifier>
-        <dc:title>AMSR2_Columnar_Water_Vapor_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_N2O_46hPa_Day</dc:identifier>
-        <dc:title>MLS_N2O_46hPa_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_CorrectedReflectance_TrueColor</dc:identifier>
-        <dc:title>MODIS_Aqua_CorrectedReflectance_TrueColor</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-OMI_Aerosol_Optical_Depth</dc:identifier>
-        <dc:title>OMI_Aerosol_Optical_Depth</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_V_RFI</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature RFI (L1, Passive, Aft, V Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Water_Vapor_5km_Day</dc:identifier>
-        <dc:title>MODIS_Aqua_Water_Vapor_5km_Day</dc:title>
+        <dc:title>Water Vapor Infrared (Day, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_CorrectedReflectance_Bands367</dc:identifier>
-        <dc:title>MODIS_Terra_CorrectedReflectance_Bands367</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Passive_Soil_Moisture</dc:identifier>
+        <dc:title>Soil Moisture (L3, Passive, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-GMI_Snow_Rate_Asc</dc:identifier>
-        <dc:title>GMI_Snow_Rate_Asc</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Phase_Optical_Properties</dc:identifier>
+        <dc:title>Cloud Phase Optical Properties (MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Dust_Score_Ocean_Day</dc:identifier>
-        <dc:title>AIRS_Dust_Score_Ocean_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Chlorophyll_A</dc:identifier>
+        <dc:title>Chlorophyll (MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Pressure_Day</dc:identifier>
-        <dc:title>MODIS_Aqua_Cloud_Top_Pressure_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-BlueMarble_ShadedRelief</dc:identifier>
+        <dc:title>Blue Marble Shaded Relief (MODIS)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Data_No_Data</dc:identifier>
-        <dc:title>MODIS_Terra_Data_No_Data</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Concentration_25km</dc:identifier>
+        <dc:title>Sea Ice Concentration (25 km, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Precipitation_Night</dc:identifier>
-        <dc:title>AIRS_Precipitation_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_CO_215hPa_Night</dc:identifier>
+        <dc:title>Carbon Monoxide (215 hPa, Night, MLS, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Concentration_12km</dc:identifier>
-        <dc:title>AMSR2_Sea_Ice_Concentration_12km</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Sea_Ice</dc:identifier>
+        <dc:title>Sea Ice Extent (MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Temp_Night</dc:identifier>
-        <dc:title>MODIS_Terra_Cloud_Top_Temp_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Brightness_Temp_89V_Night</dc:identifier>
+        <dc:title>Brightness Temperature (89V Ghz B Scan, Night, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MEaSUREs_Daily_Landscape_Freeze_Thaw_SSMI</dc:identifier>
-        <dc:title>MEaSUREs_Daily_Landscape_Freeze_Thaw_SSMI</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Phase_Infrared_Night</dc:identifier>
+        <dc:title>Cloud Phase (Infrared, Night, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Surface_Precipitation_Rate_Day</dc:identifier>
-        <dc:title>AMSR2_Surface_Precipitation_Rate_Day</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Height_Day</dc:identifier>
+        <dc:title>Cloud Top Height (Day, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_H_QA</dc:identifier>
-        <dc:title>SMAP_L1_Passive_Brightness_Temp_Aft_H_QA</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-Blue_Marble</dc:identifier>
+        <dc:title>Blue Marble (Reverb)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_N2O_46hPa_Night</dc:identifier>
-        <dc:title>MLS_N2O_46hPa_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Phase_Infrared_Day</dc:identifier>
+        <dc:title>Cloud Phase (Infrared, Day, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SRTM_Color_Index</dc:identifier>
-        <dc:title>SRTM_Color_Index</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Columnar_Water_Vapor_Day</dc:identifier>
+        <dc:title>Columnar Water Vapor (Day, AMSR2, GCOM-W1)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_O3_46hPa_Night</dc:identifier>
-        <dc:title>MLS_O3_46hPa_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_SurfaceReflectance_Bands121</dc:identifier>
+        <dc:title>Land Surface Reflectance (Bands 1-2-1, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Dust_Score_Ocean_Night</dc:identifier>
-        <dc:title>AIRS_Dust_Score_Ocean_Night</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Aerosol</dc:identifier>
+        <dc:title>Aerosol Optical Depth (MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_SurfaceReflectance_Bands121</dc:identifier>
-        <dc:title>MODIS_Aqua_SurfaceReflectance_Bands121</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_CO_Total_Column_Night</dc:identifier>
+        <dc:title>Carbon Monoxide (Total Column, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Wind_Speed_Night</dc:identifier>
-        <dc:title>AMSR2_Wind_Speed_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Soil_Temperature_Layer_1</dc:identifier>
-        <dc:title>SMAP_L4_Soil_Temperature_Layer_1</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-ASTER_GDEM_Greyscale_Shaded_Relief</dc:identifier>
-        <dc:title>ASTER_GDEM_Greyscale_Shaded_Relief</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Surface_Rain_Rate_Night</dc:identifier>
-        <dc:title>AMSR2_Surface_Rain_Rate_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Prata_SO2_Index_Day</dc:identifier>
-        <dc:title>AIRS_Prata_SO2_Index_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Brightness_Temp_Band31_Night</dc:identifier>
-        <dc:title>MODIS_Aqua_Brightness_Temp_Band31_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_SO2_147hPa_Night</dc:identifier>
-        <dc:title>MLS_SO2_147hPa_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Land_Surface_Temp_Night</dc:identifier>
-        <dc:title>MODIS_Aqua_Land_Surface_Temp_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_SO2_147hPa_Day</dc:identifier>
-        <dc:title>MLS_SO2_147hPa_Day</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Sea_Ice</dc:identifier>
-        <dc:title>MODIS_Aqua_Sea_Ice</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Water_Vapor_5km_Night</dc:identifier>
-        <dc:title>MODIS_Aqua_Water_Vapor_5km_Night</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Data_No_Data</dc:identifier>
-        <dc:title>MODIS_Aqua_Data_No_Data</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Passive_Brightness_Temp_V</dc:identifier>
+        <dc:title>Corrected Brightness Temperature (L3, Passive, V Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-OMI_SO2_Upper_Troposphere_and_Stratosphere</dc:identifier>
-        <dc:title>OMI_SO2_Upper_Troposphere_and_Stratosphere</dc:title>
+        <dc:title>Sulfur Dioxide (Upper Troposphere and Stratosphere, OMI, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Height_Night</dc:identifier>
+        <dc:title>Cloud Top Height (Night, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Precipitation_Day</dc:identifier>
+        <dc:title>Precipitation (Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_NDVI_Global_Monthly</dc:identifier>
+        <dc:title>NDVI (Global Monthly, Best Available, NEX, Landsat)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L2_Passive_Soil_Moisture_Option2</dc:identifier>
+        <dc:title>Soil Moisture (L2, Passive, Single Channel Algorithm, V Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_XPOL_QA</dc:identifier>
+        <dc:title>Sigma0 QA (L3, Active, XPOL Polarization, Radar, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Precipitation_Rate_Night</dc:identifier>
+        <dc:title>Surface Precipitation Rate (Night, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H_RFI</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature RFI (L1, Passive, Fore, H Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_CO_Total_Column_Day</dc:identifier>
+        <dc:title>Carbon Monoxide (Total Column, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-GMI_Snow_Rate_Dsc</dc:identifier>
+        <dc:title>Snow Rate (Descending, GMI, GPM)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_V_QA</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature QA (L1, Passive, Fore, V Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_AOD_Deep_Blue_Land</dc:identifier>
+        <dc:title>Deep Blue Aerosol Optical Depth (Land, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Aerosol_Optical_Depth_3km</dc:identifier>
+        <dc:title>Aerosol Optical Depth (3km, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-OSM_Land_Water_Map</dc:identifier>
+        <dc:title>Land Water Map (OSM)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-OSM_Land_Mask</dc:identifier>
+        <dc:title>Land Mask (OSM)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Effective_Radius_37</dc:identifier>
+        <dc:title>Cloud Effective Radius (3.7 micron, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Water_Vapor_5km_Night</dc:identifier>
+        <dc:title>Water Vapor Infrared (Night, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_CorrectedReflectance_TrueColor_Alaska_Annual</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, Alaska Annual, Best Available, Landsat)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_H_QA</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature QA (L1, Passive, Aft, H Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ASTER_GDEM_Color_Index</dc:identifier>
+        <dc:title>Digital Elevation Model (Color Index, ASTER, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Prata_SO2_Index_Night</dc:identifier>
+        <dc:title>Sulfur Dioxide (Prata, Night, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Optical_Thickness_PCL</dc:identifier>
+        <dc:title>Cloud Optical Thickness (PCL, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Concentration_12km</dc:identifier>
+        <dc:title>Sea Ice Concentration (12 km, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-GMI_Rain_Rate_Asc</dc:identifier>
+        <dc:title>Rain Rate (Ascending, GMI, GPM)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_CorrectedReflectance_Bands721</dc:identifier>
+        <dc:title>Corrected Reflectance (Bands 7-2-1, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_850hPa_Night</dc:identifier>
+        <dc:title>Air Temperature (850 hPa, Night, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Mean_Net_Ecosystem_Exchange</dc:identifier>
+        <dc:title>Net Ecosystem CO2 Exchange (L4, 9 km Grid Cell Mean, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_SurfaceReflectance_Bands721</dc:identifier>
+        <dc:title>Land Surface Reflectance (Bands 7-2-1, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Frozen_Area</dc:identifier>
+        <dc:title>Percent Frozen Area (L4, 9 km Grid Cell Coverage, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Angstrom_Exponent_Ocean</dc:identifier>
+        <dc:title>Dark Target Aerosol Angstrom Exponent (Ocean, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Passive_Brightness_Temp_V</dc:identifier>
+        <dc:title>Disaggregated Brightness Temperature (L3, Active/Passive, V Polarization, Radar/Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_500hPa_Day</dc:identifier>
+        <dc:title>Relative Humidity (500 hPa, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Effective_Radius_PCL</dc:identifier>
+        <dc:title>Cloud Effective Radius (PCL, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Snow_Mass</dc:identifier>
+        <dc:title>Snow Mass (L4, 12z-3z Average, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-VIIRS_SNPP_CorrectedReflectance_TrueColor</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, VIIRS, SNPP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_850hPa_Day</dc:identifier>
+        <dc:title>Relative Humidity (850 hPa, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Angstrom_Exponent_Land</dc:identifier>
+        <dc:title>Deep Blue Aerosol Angstrom Exponent (Land, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Fraction_Night</dc:identifier>
+        <dc:title>Cloud Fraction (Night, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_HH_QA</dc:identifier>
+        <dc:title>Sigma0 QA (L3, Active, HH Polarization, Radar, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_CorrectedReflectance_TrueColor</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Phase_Infrared_Day</dc:identifier>
+        <dc:title>Cloud Phase (Infrared, Day, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_HH</dc:identifier>
+        <dc:title>Sigma0 (L3, Active, HH Polarization, Radar, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Passive_Brightness_Temp_H</dc:identifier>
+        <dc:title>Disaggregated Brightness Temperature (L3, Active/Passive, H Polarization, Radar/Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_V_RFI</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature RFI (L1, Passive, Fore, V Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Brightness_Temp_89H_Night</dc:identifier>
+        <dc:title>Brightness Temperature (89H Ghz B Scan, Night, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Passive_Soil_Moisture</dc:identifier>
+        <dc:title>Soil Moisture (L3, Active/Passive, Radar/Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Data_No_Data</dc:identifier>
+        <dc:title>Data/No Data Mask (MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Wind_Speed_Day</dc:identifier>
+        <dc:title>Wind Speed (Day, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-OMI_Cloud_Pressure</dc:identifier>
+        <dc:title>Cloud Pressure (OMI, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_H2O_46hPa_Day</dc:identifier>
+        <dc:title>Water Vapor (46 hPa, Day, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Water_Vapor_5km_Day</dc:identifier>
+        <dc:title>Water Vapor Infrared (Day, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_CorrectedReflectance_TrueColor_CONUS_Seasonal</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, CONUS Seasonal, Landsat)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Effective_Radius</dc:identifier>
+        <dc:title>Cloud Effective Radius (MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_V_QA</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature QA (L1, Passive, Aft, V Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Aerosol_Optical_Depth_3km</dc:identifier>
+        <dc:title>Aerosol Optical Depth (3km, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-BlueMarble_NextGeneration</dc:identifier>
+        <dc:title>Blue Marble (MODIS)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Surface_Rain_Rate_Day</dc:identifier>
+        <dc:title>Surface Rain Rate (Day, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_CO_215hPa_Day</dc:identifier>
+        <dc:title>Carbon Monoxide (215 hPa, Day, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_850hPa_Night</dc:identifier>
+        <dc:title>Relative Humidity (850 hPa, Night, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Effective_Radius</dc:identifier>
+        <dc:title>Cloud Effective Radius (MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Phase_Infrared_Night</dc:identifier>
+        <dc:title>Cloud Phase (Infrared, Night, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Water_Path</dc:identifier>
+        <dc:title>Cloud Water Path (MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Dust_Score</dc:identifier>
+        <dc:title>Dust Score Ocean (Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-OMI_Absorbing_Aerosol_Optical_Depth</dc:identifier>
+        <dc:title>Aerosol Optical Depth, Absorbing (OMI, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Emult_Average</dc:identifier>
+        <dc:title>Percent of Potential Vegetation Light Use Efficiency (L4, 9 km Grid Cell Mean, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Brightness_Temp_6km_89H</dc:identifier>
+        <dc:title>Brightness Temperature for Sea Ice (89H Ghz, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_H_RFI</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature RFI (L1, Passive, Aft, H Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-GMI_Snow_Rate_Asc</dc:identifier>
+        <dc:title>Snow Rate (Ascending, GMI, GPM)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Brightness_Temp_89V</dc:identifier>
+        <dc:title>Brightness Temperature for Sea Ice (89V Ghz, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_AOD_Deep_Blue_Combined</dc:identifier>
+        <dc:title>Merged Aerosol Optical Depth (Deep Blue, Land and Ocean, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_N2O_46hPa_Night</dc:identifier>
+        <dc:title>Nitrous Oxide (46 hPa, Night, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Surface_Precipitation_Rate_Night</dc:identifier>
+        <dc:title>Surface Precipitation Rate (Night, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Optical_Thickness</dc:identifier>
+        <dc:title>Cloud Optical Thickness (MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Brightness_Temp_89H</dc:identifier>
+        <dc:title>Brightness Temperature for Sea Ice (89H Ghz, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Height_Night</dc:identifier>
+        <dc:title>Cloud Top Height (Night, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_VV_QA</dc:identifier>
+        <dc:title>Sigma0 QA (L3, Active, VV Polarization, Radar, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Temp_Day</dc:identifier>
+        <dc:title>Cloud Top Temperature (Day, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Brightness_Temp_6km_89V</dc:identifier>
+        <dc:title>Brightness Temperature for Sea Ice (89V Ghz, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_400hPa_Day</dc:identifier>
+        <dc:title>Air Temperature (400 hPa, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Water_Mask</dc:identifier>
+        <dc:title>Water Mask (MODIS/SRTM)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Faraday_Rotation_Fore</dc:identifier>
+        <dc:title>Faraday Rotation Angle (L1, Passive, Fore, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_500hPa_Night</dc:identifier>
+        <dc:title>Air Temperature (500 hPa, Night, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_Temperature_46hPa_Night</dc:identifier>
+        <dc:title>Air Temperature (46 hPa, Night, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1</dc:identifier>
+        <dc:title>Corrected Reflectance (M11-I2-I1, VIIRS, SNPP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_700hPa_Day</dc:identifier>
+        <dc:title>Relative Humidity (700 hPa, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Multi_Layer_Flag</dc:identifier>
+        <dc:title>Cloud Multi Layer Flag (MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Cloud_Liquid_Water_Day</dc:identifier>
+        <dc:title>Columnar Cloud Liquid Water (Day, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Water_Vapor_5km_Night</dc:identifier>
+        <dc:title>Water Vapor Infrared (Night, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-OMI_SO2_Lower_Troposphere</dc:identifier>
+        <dc:title>Sulfur Dioxide (Lower Troposphere, OMI, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-BlueMarble_ShadedRelief_Bathymetry</dc:identifier>
+        <dc:title>Blue Marble Shaded Relief and Bathymetry (MODIS)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Water_Path</dc:identifier>
+        <dc:title>Cloud Water Path (MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-GHRSST_L4_G1SST_Sea_Surface_Temperature</dc:identifier>
+        <dc:title>Sea Surface Temperature (L4, G1SST Global Foundation, GHRSST)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Effective_Radius_37_PCL</dc:identifier>
+        <dc:title>Cloud Effective Radius (3.7 micron PCL, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Snow_Cover</dc:identifier>
+        <dc:title>Snow Cover (MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Analyzed_Root_Zone_Soil_Moisture</dc:identifier>
+        <dc:title>Root Zone Soil Moisture (L4, 12z Instantaneous, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Uncertainty_Mean_Net_Ecosystem_Exchange</dc:identifier>
+        <dc:title>Net Ecosystem CO2 Exchange Uncertainty (L4, 9 km Grid Cell Mean, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Mean_Heterotrophic_Respiration</dc:identifier>
+        <dc:title>Heterotrophic Respiration (L4, 9 km Grid Cell Mean, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_H2O_46hPa_Night</dc:identifier>
+        <dc:title>Water Vapor (46 hPa, Night, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_CorrectedReflectance_TrueColor_Alaska_Seasonal</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, Alaska Seasonal, Best Available, Landsat)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_SurfaceReflectance_Bands143</dc:identifier>
+        <dc:title>Land Surface Reflectance (True Color, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_600hPa_Day</dc:identifier>
+        <dc:title>Air Temperature (600 hPa, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Effective_Radius_37_PCL</dc:identifier>
+        <dc:title>Cloud Effective Radius (3.7 micron PCL, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Brightness_Temp_Band31_Night</dc:identifier>
+        <dc:title>Brightness Temperature (Band31, Night, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_H</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature (L1, Passive, Aft, H Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Rain_Rate_Night</dc:identifier>
+        <dc:title>Surface Rain Rate (Night, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Soil_Moisture</dc:identifier>
+        <dc:title>Soil Moisture (L3, Active, Radar, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Reference_Features</dc:identifier>
+        <dc:title>Reference Features (OSM)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Concentration_25km</dc:identifier>
+        <dc:title>Sea Ice Concentration (25 km, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Angstrom_Exponent_Ocean</dc:identifier>
+        <dc:title>Dark Target Aerosol Angstrom Exponent (Ocean, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Optical_Thickness</dc:identifier>
+        <dc:title>Cloud Optical Thickness (MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Snow_Depth_Over_Ice</dc:identifier>
+        <dc:title>Snow Depth Over Ice (12 km, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Pressure_Night</dc:identifier>
+        <dc:title>Cloud Top Pressure (Night, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Columnar_Water_Vapor_Night</dc:identifier>
+        <dc:title>Columnar Water Vapor (Night, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_N2O_46hPa_Day</dc:identifier>
+        <dc:title>Nitrous Oxide (46 hPa, Day, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_CorrectedReflectance_TrueColor</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-OMI_Aerosol_Optical_Depth</dc:identifier>
+        <dc:title>Aerosol Optical Depth (OMI, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Land_Surface_Temp_Day</dc:identifier>
+        <dc:title>Land Surface Temperature (Day, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_600hPa_Night</dc:identifier>
+        <dc:title>Air Temperature (600 hPa, Night, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_CorrectedReflectance_Bands367</dc:identifier>
+        <dc:title>Corrected Reflectance (Bands 3-6-7, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Faraday_Rotation_Aft</dc:identifier>
+        <dc:title>Faraday Rotation Angle (L1, Passive, Aft, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_SO2_147hPa_Day</dc:identifier>
+        <dc:title>Sulfur Dioxide (147 hPa, Day, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_600hPa_Day</dc:identifier>
+        <dc:title>Relative Humidity (600 hPa, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Pressure_Day</dc:identifier>
+        <dc:title>Cloud Top Pressure (Day, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Passive_Brightness_Temp_H</dc:identifier>
+        <dc:title>Corrected Brightness Temperature (L3, Passive, H Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Angstrom_Exponent_Land</dc:identifier>
+        <dc:title>Deep Blue Aerosol Angstrom Exponent (Land, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Precipitation_Night</dc:identifier>
+        <dc:title>Precipitation (Night, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Concentration_12km</dc:identifier>
+        <dc:title>Sea Ice Concentration (12 km, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Temp_Night</dc:identifier>
+        <dc:title>Cloud Top Temperature (Night, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MEaSUREs_Daily_Landscape_Freeze_Thaw_SSMI</dc:identifier>
+        <dc:title>Freeze Thaw (Daily Landscape, SSMI, MEaSUREs)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Surface_Precipitation_Rate_Day</dc:identifier>
+        <dc:title>Surface Precipitation Rate (Day, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_400hPa_Day</dc:identifier>
+        <dc:title>Relative Humidity (400 hPa, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Aerosol</dc:identifier>
+        <dc:title>Aerosol Optical Depth (MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SRTM_Color_Index</dc:identifier>
+        <dc:title>Digital Elevation Model (Color Index, SRTM)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_O3_46hPa_Night</dc:identifier>
+        <dc:title>Ozone (46 hPa, Night, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Dust_Score_Ocean_Night</dc:identifier>
+        <dc:title>Dust Score Ocean (Night, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_CorrectedReflectance_TrueColor_CONUS_Annual</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, CONUS Annual, Landsat)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Brightness_Temp_Band31_Day</dc:identifier>
+        <dc:title>Brightness Temperature (Band31, Day, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Wind_Speed_Night</dc:identifier>
+        <dc:title>Wind Speed (Night, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Soil_Temperature_Layer_1</dc:identifier>
+        <dc:title>Surface Soil Temperature (L4, 12z Instantaneous, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ASTER_GDEM_Greyscale_Shaded_Relief</dc:identifier>
+        <dc:title>Digital Elevation Model (Greyscale Shaded Relief, ASTER, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Surface_Rain_Rate_Night</dc:identifier>
+        <dc:title>Surface Rain Rate (Night, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Prata_SO2_Index_Day</dc:identifier>
+        <dc:title>Sulfur Dioxide (Prata, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Brightness_Temp_Band31_Night</dc:identifier>
+        <dc:title>Brightness Temperature (Band31, Night, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_SO2_147hPa_Night</dc:identifier>
+        <dc:title>Sulfur Dioxide (147 hPa, Night, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_SurfaceReflectance_Bands121</dc:identifier>
+        <dc:title>Land Surface Reflectance (Bands 1-2-1, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Land_Surface_Temp_Night</dc:identifier>
+        <dc:title>Land Surface Temperature (Night, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Dust_Score_Ocean_Day</dc:identifier>
+        <dc:title>Dust Score Ocean (Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_500hPa_Day</dc:identifier>
+        <dc:title>Air Temperature (500 hPa, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Sea_Ice</dc:identifier>
+        <dc:title>Sea Ice Extent (MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_850hPa_Day</dc:identifier>
+        <dc:title>Air Temperature (850 hPa, Day, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Data_No_Data</dc:identifier>
+        <dc:title>Data/No Data Mask (MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Water_Path_PCL</dc:identifier>
+        <dc:title>Cloud Water Path (PCL, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-ASTER_GDEM_Color_Shaded_Relief</dc:identifier>
-        <dc:title>ASTER_GDEM_Color_Shaded_Relief</dc:title>
+        <dc:title>Digital Elevation Model (Color Shaded Relief, ASTER, Terra)</dc:title>
       </csw:BriefRecord>
     </csw:InsertResult>
   </csw:TransactionResponse>
