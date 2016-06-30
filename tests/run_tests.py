@@ -326,6 +326,8 @@ SYNOPSIS
 
     -s    testsuites to run (comma-seperated list)
 
+    -p    run tests in pedantic mode (byte level diff check) (default: c14n mode)
+
     -d    database (SQLite3 [default], PostgreSQL, MySQL)
 
     -r    run tests which harvest remote resources (default off)
