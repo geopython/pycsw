@@ -34,7 +34,7 @@ from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
 from pycsw.core import util
-from hypermap.aggregator.models import Layer, Resource, Service
+from hypermap.aggregator.models import Layer, Service
 
 HYPERMAP_SERVICE_TYPES = {
     # 'HHypermap enum': 'CSW enum'
@@ -88,24 +88,24 @@ class HHypermapRepository(object):
         for qbl in self.queryables:
             self.queryables['_all'].update(self.queryables[qbl])
         self.queryables['_all'].update(self.context.md_core_model['mappings'])
-        
+
         if 'Harvest' in self.context.model['operations'] and 'Transaction' in self.context.model['operations']:
             self.context.model['operations']['Harvest']['parameters']['ResourceType']['values'] = HYPERMAP_SERVICE_TYPES.keys()
             self.context.model['operations']['Transaction']['parameters']['TransactionSchemas']['values'] = HYPERMAP_SERVICE_TYPES.keys()
 
     def dataset(self):
         ''' Stub to mock a pycsw dataset object for Transactions'''
-        return type('Resource', (object,), {})
+        return type('Service', (object,), {})
 
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
-        return self._get_repo_filter(Resource.objects).filter(id__in=ids).all()
+        return self._get_repo_filter(Layer.objects).filter(id__in=ids).all()
 
     def query_domain(self, domain, typenames, domainquerytype='list',
         count=False):
         ''' Query by property domain values '''
 
-        objects = self._get_repo_filter(Resource.objects)
+        objects = self._get_repo_filter(Layer.objects)
 
         if domainquerytype == 'range':
             return [tuple(objects.aggregate(
@@ -121,14 +121,14 @@ class HHypermapRepository(object):
         ''' Query to get latest (default) or earliest update to repository '''
         from datetime import datetime
         if direction=='min':
-            return Resource.objects.aggregate(
+            return Layer.objects.aggregate(
                 Min('last_updated'))['last_updated__min'].strftime('%Y-%m-%dT%H:%M:%SZ')
-        return self._get_repo_filter(Resource.objects).aggregate(
+        return self._get_repo_filter(Layer.objects).aggregate(
             Max('last_updated'))['last_updated__max'].strftime('%Y-%m-%dT%H:%M:%SZ')
 
     def query_source(self, source):
         ''' Query by source '''
-        return self._get_repo_filter(Resource.objects).filter(url=source)
+        return self._get_repo_filter(Layer.objects).filter(url=source)
 
     def query(self, constraint, sortby=None, typenames=None,
         maxrecords=10, startposition=0):
@@ -136,10 +136,10 @@ class HHypermapRepository(object):
 
         # run the raw query and get total
         if 'where' in constraint:  # GetRecords with constraint
-            query = self._get_repo_filter(Resource.objects).extra(where=[constraint['where']], params=constraint['values'])
+            query = self._get_repo_filter(Layer.objects).extra(where=[constraint['where']], params=constraint['values'])
 
         else:  # GetRecords sans constraint
-            query = self._get_repo_filter(Resource.objects)
+            query = self._get_repo_filter(Layer.objects)
 
         total = query.count()
 
@@ -180,7 +180,7 @@ class HHypermapRepository(object):
 
         # return a list of ids that were inserted or updated
         ids = []
-        for res in Resource.objects.filter(url=source).all():
+        for res in Service.objects.filter(url=source).all():
             ids.append({'identifier': res.id_string, 'title': res.title})
         return ids
         
