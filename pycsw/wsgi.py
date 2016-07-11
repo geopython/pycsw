@@ -70,18 +70,23 @@ def application(env, start_response):
     if 'PYCSW_CONFIG' in env:
         config = env['PYCSW_CONFIG']
 
+    root = PYCSW_ROOT
+
+    if 'PYCSW_ROOT' in env:
+        root = env['PYCSW_ROOT']
+
     if env['QUERY_STRING'].lower().find('config') != -1:
         for kvp in env['QUERY_STRING'].split('&'):
             if kvp.lower().find('config') != -1:
                 config = unquote(kvp.split('=')[1])
 
     if not os.path.isabs(config):
-        config = os.path.join(PYCSW_ROOT, config)
+        config = os.path.join(root, config)
 
     if 'HTTP_HOST' in env and ':' in env['HTTP_HOST']:
         env['HTTP_HOST'] = env['HTTP_HOST'].split(':')[0]
 
-    env['local.app_root'] = PYCSW_ROOT
+    env['local.app_root'] = root
 
     csw = server.Csw(config, env)
 
