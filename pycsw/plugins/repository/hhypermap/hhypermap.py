@@ -34,10 +34,11 @@ from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
 from pycsw.core import util
-from hypermap.aggregator.models import Layer, Service
+from hypermap.aggregator.models import Layer, Service, Endpoint
 
 HYPERMAP_SERVICE_TYPES = {
     # 'HHypermap enum': 'CSW enum'
+    'http://www.opengis.net/cat/csw/2.0.2': 'OGC:CSW',
     'http://www.opengis.net/wms': 'OGC:WMS',
     'http://www.opengis.net/wmts/1.0': 'OGC:WMTS',
     'https://wiki.osgeo.org/wiki/TMS': 'OSGeo:TMS',
@@ -173,15 +174,22 @@ class HHypermapRepository(object):
         ''' Insert or update a record in the repository '''
 
         try:
-            s = Service(type=HYPERMAP_SERVICE_TYPES[resourcetype], url=source)
-            s.save()
+            if resourcetype == 'http://www.opengis.net/cat/csw/2.0.2':
+                res = Endpoint(url=source)
+            else:
+                res = Service(type=HYPERMAP_SERVICE_TYPES[resourcetype], url=source)
+            res.save()
         except Exception as err:
            raise RuntimeError('HHypermap error: %s' % err)
 
         # return a list of ids that were inserted or updated
         ids = []
-        for res in Service.objects.filter(url=source).all():
-            ids.append({'identifier': res.id_string, 'title': res.title})
+        if resourcetype == 'http://www.opengis.net/cat/csw/2.0.2':
+            for res in Endpoint.objects.filter(url=source).all():
+                ids.append({'identifier': res.id_string, 'title': res.url})
+        else:
+            for res in Service.objects.filter(url=source).all():
+                ids.append({'identifier': res.id_string, 'title': res.title})
         return ids
         
     def delete(self, constraint):
