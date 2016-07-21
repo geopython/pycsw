@@ -4,77 +4,86 @@ msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-23 21:42+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2016-06-08 15:43+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: ../../tools.rst:4
 msgid "Cataloguing and Metadata Tools"
-msgstr ""
+msgstr "编目和元数据工具"
 
 #: ../../tools.rst:7
 msgid "CSW Clients"
-msgstr ""
+msgstr "CSW客户端"
 
 #: ../../tools.rst:9
 msgid ""
-"`Geoportal CSW Clients "
-"<http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_"
+"`Geoportal CSW Clients <http://sourceforge.net/apps/mediawiki/geoportal/"
+"index.php?title=Geoportal_CSW_Clients>`_"
 msgstr ""
+"`Geoportal CSW客户端 <http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_"
 
 #: ../../tools.rst:10
-msgid "`OWSLib <http://geopython.github.io/OWSLib>`_"
-msgstr ""
+msgid "OWSLib <http://geopython.github.io/OWSLib>"
+msgstr "OWSLib <http://geopython.github.io/OWSLib>"
 
 #: ../../tools.rst:11
 msgid ""
 "`MetaSearch <https://hub.qgis.org/wiki/quantum-gis/MetaSearch>`_ (`QGIS "
 "<http://qgis.org/>`_ plugin)"
 msgstr ""
+" `联合检索<https://hub.qgis.org/wiki/quantum-gis/MetaSearch>`_ （`QGIS <http://qgis.org/>`_ 插件）"
 
 #: ../../tools.rst:14
 msgid "CSW Servers"
-msgstr ""
+msgstr "CSW服务器"
 
 #: ../../tools.rst:16
 msgid "`deegree <http://deegree.org/>`_"
-msgstr ""
+msgstr "`deegree <http://deegree.org/>`_"
 
 #: ../../tools.rst:17
 msgid "`eXcat <http://gdsc.nlr.nl/gdsc/en/tools/excat>`_"
-msgstr ""
+msgstr "`eXcat <http://gdsc.nlr.nl/gdsc/en/tools/excat>`_"
 
 #: ../../tools.rst:18
 msgid "`GeoNetwork opensource <http://geonetwork-opensource.org/>`_"
-msgstr ""
+msgstr "`开源地理 <http://geonetwork-opensource.org/>`_"
 
 #: ../../tools.rst:21
 msgid "Metadata Editing Tools"
-msgstr ""
+msgstr "元数据编辑工具"
 
 #: ../../tools.rst:23
 msgid "`CatMDEdit <http://catmdedit.sourceforge.net/>`_"
-msgstr ""
+msgstr "`CatMDEdit <http://catmdedit.sourceforge.net/>`_"
 
 #: ../../tools.rst:24
 msgid "`EUOSME <https://joinup.ec.europa.eu/software/euosme/description>`_"
-msgstr ""
+msgstr "`EUOSME <https://joinup.ec.europa.eu/software/euosme/description>`_"
 
 #: ../../tools.rst:25
 msgid "`GIMED <http://sourceforge.net/projects/gimed/>`_"
-msgstr ""
+msgstr "`GIMED <http://sourceforge.net/projects/gimed/>`_"
 
 #: ../../tools.rst:26
 msgid ""
-"`Metatools <http://hub.qgis.org/projects/metatools>`_ (`QGIS "
-"<http://qgis.org/>`_ plugin)"
+"`Metatools <http://hub.qgis.org/projects/metatools>`_ (`QGIS <http://qgis."
+"org/>`_ plugin)"
 msgstr ""
+"`Metatools <http://hub.qgis.org/projects/metatools>`_ (`QGIS <http://qgis."
+"org/>`_ plugin)"
 
 #: ../../tools.rst:27
 msgid ""
-"`QSphere <http://hub.qgis.org/plugins/qsphere>`_ (`QGIS <http://qgis.org/>`_"
-" plugin)"
+"`QSphere <http://hub.qgis.org/plugins/qsphere>`_ (`QGIS <http://qgis.org/"
+">`_ plugin)"
 msgstr ""
+"`QSphere <http://hub.qgis.org/plugins/qsphere>`_ (`QGIS <http://qgis.org/"
+">`_ plugin)"
