@@ -17,3 +17,5 @@ tests/results
 data
 .DS_Store 
 docs/locale/zh/LC_MESSAGES/*.mo
+docs/locale/de/
+

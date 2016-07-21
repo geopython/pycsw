@@ -3,16 +3,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-28 11:27+0800\n"
+"POT-Creation-Date: 2016-07-21 19:55+0800\n"
 "PO-Revision-Date: 2016-06-08 11:02+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: zh\n"
-"X-Generator: Poedit 1.8.7\n"
 
 #: ../../introduction.rst:4
 msgid "Introduction"
@@ -239,8 +237,8 @@ msgid "1.0"
 msgstr "1.0"
 
 #: ../../introduction.rst:69
-msgid "OAI-PMH"
-msgstr "OAI-PMH"
+msgid "`OAI-PMH`_"
+msgstr ""
 
 #: ../../introduction.rst:69
 msgid "2.0"
@@ -543,3 +541,7 @@ msgstr "函数：除去字符串开始和尾部空格"
 #: ../../introduction.rst:174
 msgid "upper"
 msgstr "上"
+
+msgid "OAI-PMH"
+msgstr "OAI-PMH"
+
