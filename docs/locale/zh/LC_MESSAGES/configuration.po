@@ -156,7 +156,7 @@ msgstr ""
 
 #: ../../configuration.rst:28
 msgid "**[manager]**"
-msgstr "管理者"
+msgstr ""
 
 #: ../../configuration.rst:30
 msgid ""
@@ -302,7 +302,7 @@ msgstr ""
 
 #: ../../configuration.rst:59
 msgid "**[repository]**"
-msgstr ""
+msgstr "**[repository]**"
 
 #: ../../configuration.rst:61
 msgid ""
@@ -355,7 +355,7 @@ msgstr "最大记录处理"
 msgid ""
 "The The following describes how ``maxRecords`` is handled by the "
 "configuration when handling ``GetRecords`` requests:"
-msgstr "下面介绍的是``maxRecords``怎样处理``GetRecords``请求时的配置"
+msgstr "下面介绍的是 ``maxRecords`` 怎样处理 ``GetRecords`` 请求时的配置"
 
 #: ../../configuration.rst:1
 msgid "server.maxrecords"
@@ -435,8 +435,8 @@ msgid ""
 "base URL with the ``config=`` approach.  In this case, there are many "
 "options to advertise the base URL."
 msgstr ""
-"在做基URL时，一些备用配置的部署不用 ``config=`` 方式做广告。通常状态下，会有"
-"很多别的方式来做广告。"
+"在做基URL时，一些备用配置的部署不用 ``config=`` 方式做声明。通常状态下，会有"
+"很多别的方式来做声明。"
 
 #: ../../configuration.rst:102
 msgid "Environment Variables"
@@ -466,7 +466,7 @@ msgid ""
 msgstr ""
 "pycsw 将以同样的方式配置设置 ``PYCSW_CONFIG`` 的环境变量，就如同它在基 URL 中"
 "指定了一样。 请注意，配置值 ``server.url`` 值必须匹配 ``Request_URI`` 值，这样"
-"在 pycsw 的功能 XML 中就可以做广告了。"
+"在 pycsw 的功能 XML 中就可以做正确声明了。"
 
 #: ../../configuration.rst:118
 msgid "Wrapper Script"
