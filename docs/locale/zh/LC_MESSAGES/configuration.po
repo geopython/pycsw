@@ -24,32 +24,32 @@ msgid ""
 "with a sample configuration (``default-sample.cfg``).  Copy the file to "
 "``default.cfg`` and edit the following:"
 msgstr ""
-"pycsw 的运行配置写为此格式'default.cfg '。 pycsw 还有一个示例配置 (默"
-"认'sample.cfg ')。 将文件复制到 'default.cfg ' 和编辑以下内容 ︰"
+"pycsw 的运行配置写为此格式 ``default.cfg`` 。 pycsw 还有一个示例配置 ("
+" ``default-sample.cfg`` )。 将文件复制到 ``default.cfg`` 并编辑以下内容 ︰"
 
 #: ../../configuration.rst:8
 msgid "**[server]**"
-msgstr "服务器"
+msgstr "**[server]**"
 
 #: ../../configuration.rst:10
 msgid "**home**: the full filesystem path to pycsw"
-msgstr "主页: pycsw 的完整文件系统路径"
+msgstr "**home**: pycsw 的完整文件系统路径"
 
 #: ../../configuration.rst:11
 msgid "**url**: the URL of the resulting service"
-msgstr "网址: 生成服务器的网址"
+msgstr "**url**: 生成服务器的网址"
 
 #: ../../configuration.rst:12
 msgid "**mimetype**: the MIME type when returning HTTP responses"
-msgstr "mime类型：当HTTP响应时的MIME型"
+msgstr "**mimetype**： 当HTTP响应时的MIME型"
 
 #: ../../configuration.rst:13
 msgid ""
 "**language**: the ISO 639-1 language and ISO 3166-1 alpha2 country code of "
 "the service (e.g. ``en-CA``, ``fr-CA``, ``en-US``)"
 msgstr ""
-"语言: ISO 639-1 语言和 ISO 3166-1 α2服务器上的国家/地区代码 （例如 'en-CA "
-"'、' fr-CA '、 EN-US）"
+"**language**: ISO 639-1 语言和 ISO 3166-1 α2服务器上的国家/地区代码 （例如 ``en-CA`` "
+"、``fr-CA``、 ``EN-US`` ）"
 
 #: ../../configuration.rst:14
 msgid ""
@@ -57,8 +57,8 @@ msgid ""
 "docs.python.org/2/library/codecs.html#standard-encodings).  Default value "
 "is 'UTF-8'"
 msgstr ""
-"编码: 编码的内容类别 (例如 ' ISO-8859-1 '，见 https://docs.python.org/2/"
-"library/codecs.html#standard-encodings) 。 默认值是 ' UTF-8'"
+"**encoding**: 编码的内容类别 (例如 ``ISO-8859-1``，见 https://docs.python.org/2/library/codecs.html#standard-encodings) 。"
+" 默认值是 'UTF-8'"
 
 #: ../../configuration.rst:15
 msgid ""
@@ -75,19 +75,19 @@ msgid ""
 "**loglevel**: the logging level (see http://docs.python.org/library/logging."
 "html#logging-levels)"
 msgstr ""
-"日志级别: 日志记录级别 （见 http://docs.python.org/library/logging."
+"**loglevel**: 日志记录级别 （见 http://docs.python.org/library/logging."
 "html#logging-levels）"
 
 #: ../../configuration.rst:17
 msgid "**logfile**: the full file path to the logfile"
-msgstr "日志文件：日志文件的完整文件系统路径"
+msgstr "**logfile**：日志文件的完整文件系统路径"
 
 #: ../../configuration.rst:18
 msgid ""
 "**ogc_schemas_base**: base URL of OGC XML schemas tree file structure "
 "(default is http://schemas.opengis.net)"
 msgstr ""
-"ogc模式库: OGC XML 模型文件结构树的网址库 (默认 http://schemas.opengis.net)"
+"**ogc_schemas_base**: OGC XML 模型文件结构树的网址库 (默认 http://schemas.opengis.net)"
 
 #: ../../configuration.rst:19
 msgid ""
@@ -95,20 +95,20 @@ msgid ""
 "for distributed searching, if requested by the client (see :ref:"
 "`distributedsearching`)"
 msgstr ""
-"同盟目录: 如果客户端有用户请求加入时， CSW端以逗号分隔的列表就会用于分布式搜"
+"**federatedcatalogues**: 如果客户端有用户请求加入时， CSW端以逗号分隔的列表就会用于分布式搜"
 "索 (请参阅 :ref:`distributedsearching` )"
 
 #: ../../configuration.rst:20
 msgid ""
 "**pretty_print**: whether to pretty print the output (``true`` or "
 "``false``).  Default is ``false``"
-msgstr "优质打印: 输出的（''是'或'否'）来确认是否要优质打印。 默认值为否"
+msgstr "**pretty_print**: 输出的（''是'或'否'）来确认是否要优质打印。 默认值为否"
 
 #: ../../configuration.rst:21
 msgid ""
 "**gzip_compresslevel**: gzip compression level, lowest is ``1``, highest is "
 "``9``.  Default is off"
-msgstr "压缩级别: 压缩级别，最低是 '1 '，最高是' 9 '。 默认值是不压缩"
+msgstr "**gzip_compresslevel**: 压缩级别，最低是 '1 '，最高是' 9 '。 默认值是不压缩"
 
 #: ../../configuration.rst:22
 msgid ""
@@ -116,7 +116,7 @@ msgid ""
 "values.  Accepted values are ``list`` and ``range`` (min/max). Default is "
 "``list``"
 msgstr ""
-"搜索域: 在GetDomain中应当如何输出域值呢。 目前的域值有'列表'和'range' （最"
+"**domainquerytype**: 在GetDomain中应当如何输出域值呢。 目前的域值有'列表'和'range' （最"
 "小/最大）。默认值是列表。"
 
 #: ../../configuration.rst:23
@@ -125,7 +125,7 @@ msgid ""
 "counts for values.  Accepted values are ``true`` and ``False``. Default is "
 "``false``"
 msgstr ""
-"counts域：在GetDomain中，是否要提供频率计数值的操作。 目前的值"
+"**domaincounts**：在GetDomain中，是否要提供频率计数值的操作。 目前的值"
 "有'是'和'否' 。默认值为否"
 
 #: ../../configuration.rst:24
@@ -150,7 +150,7 @@ msgid ""
 "Ranking Method for a Geospatial Search of Text Objects  <http://pubs.usgs."
 "gov/of/2006/1279/2006-1279.pdf>`_."
 msgstr ""
-"空间等级: 是否在对空间搜索的结果进行排名的一项参数（' 是' 或' 否' ），此排名"
+"**spatial_ranking**: 是否在对空间搜索的结果进行排名的一项参数（' 是' 或' 否' ），此排名"
 "参数在每“K.J. Lanfear 2006” - 文本对象空间搜索的一个空间覆盖排名方法，“K.J. "
 "Lanfear 2006”网址：<http: pubs.usgs.gov/of/2006/1279/2006-1279.pdf>_."
 
@@ -162,7 +162,7 @@ msgstr "管理者"
 msgid ""
 "**transactions**: whether to enable transactions (``true`` or ``false``).  "
 "Default is ``false`` (see :ref:`transactions`)"
-msgstr "交易记录: 是否可以交易 （ ``true`` 或 ``false`` ）。 默认值为否 (请参阅 :ref:`transactions` )"
+msgstr "**transactions**: 是否可以交易 （ ``true`` 或 ``false`` ）。 默认值为否 (请参阅 :ref:`transactions` )"
 
 #: ../../configuration.rst:31
 msgid ""
@@ -170,7 +170,7 @@ msgid ""
 "wildcards (e.g. 192.168.0.*) or CIDR notations (e.g. 192.168.100.0/24) "
 "allowed to perform transactions (see :ref:`transactions`)"
 msgstr ""
-"允许访问的ip: IP 地址 (如 192.168.0.103)、 通配符 (如 192.168.0.*) 或 CIDR "
+"**allowed_ips**: IP 地址 (如 192.168.0.103)、 通配符 (如 192.168.0.*) 或 CIDR "
 "表示法 (例如 192.168.100.0/24) 以逗号分隔的列表允许执行交易 (请 :ref:`transactions` ） "
 
 #: ../../configuration.rst:32
@@ -183,21 +183,21 @@ msgstr ""
 
 #: ../../configuration.rst:34
 msgid "**[metadata:main]**"
-msgstr "元数据：主要的元数据"
+msgstr ""
 
 #: ../../configuration.rst:36
 msgid "**identification_title**: the title of the service"
-msgstr "identification_title：服务项目标题"
+msgstr "**identification_title**： 服务项目标题"
 
 #: ../../configuration.rst:37
 msgid "**identification_abstract**: some descriptive text about the service"
-msgstr " identification_abstract: 一些有关该服务的描述性文本"
+msgstr "**identification_abstract**: 一些有关该服务的描述性文本"
 
 #: ../../configuration.rst:38
 msgid ""
 "**identification_keywords**: comma delimited list of keywords about the "
 "service"
-msgstr "identification_keywords: 以逗号分隔的服务器有关的关键字列表"
+msgstr "**identification_keywords**: 以逗号分隔的服务器有关的关键字列表"
 
 #: ../../configuration.rst:39
 msgid ""
@@ -206,83 +206,83 @@ msgid ""
 "Codelist/gmxCodelists.xml#MD_KeywordTypeCode>`_).  Accepted values are "
 "``discipline``, ``temporal``, ``place``, ``theme``, ``stratum``"
 msgstr ""
-"identification_keywords_type: 每 'ISO 19115 MD_KeywordTypeCode 代码列表"
+"**identification_keywords_type**: 每 'ISO 19115 MD_KeywordTypeCode 代码列表"
 "<http: www.isotc211.org/2005/resources/codelist/gmxcodelists."
-"xml#md_keywordtypecode=\"\">' _)的关键字类型。 接受的值是 '自律 '、' 时间 "
-"'' 放 '、 '主题 '、' 层 '</http:>"
+"xml#md_keywordtypecode=\"\">' _)的关键字类型。 接受的值是"
+"``discipline``, ``temporal``, ``place``, ``theme``, ``stratum``"
 
 #: ../../configuration.rst:40
 msgid "**identification_fees**: fees associated with the service"
-msgstr "identification_fees: 与服务有关的费用"
+msgstr "**identification_fees**: 与服务有关的费用"
 
 #: ../../configuration.rst:41
 msgid ""
 "**identification_accessconstraints**: access constraints associated with "
 "the service"
-msgstr "identification_accessconstraints: 访问与该服务相关的限制条目"
+msgstr "**identification_accessconstraints**: 访问与该服务相关的限制条目"
 
 #: ../../configuration.rst:42
 msgid "**provider_name**: the name of the service provider"
-msgstr "provider_name: 服务供应商的名字"
+msgstr "**provider_name**: 服务提供者的名字"
 
 #: ../../configuration.rst:43
 msgid "**provider_url**: the URL of the service provider"
-msgstr "**provider_url**: 服务供应商的网址"
+msgstr "**provider_url**: 服务提供者的网址"
 
 #: ../../configuration.rst:44
 msgid "**contact_name**: the name of the provider contact"
-msgstr "provider_name: 服务供应商联系人"
+msgstr "**provider_name**: 服务提供者联系人"
 
 #: ../../configuration.rst:45
 msgid "**contact_position**: the position title of the provider contact"
-msgstr "contact_position:供应商联系人的职位名称"
+msgstr "**contact_position**:提供者联系人的职位名称"
 
 #: ../../configuration.rst:46
 msgid "**contact_address**: the address of the provider contact"
-msgstr "contact_address: 供应商联系人的地址"
+msgstr "**contact_address**: 提供者联系人的地址"
 
 #: ../../configuration.rst:47
 msgid "**contact_city**: the city of the provider contact"
-msgstr "contact_city：供应商联系人所在城市"
+msgstr "**contact_city**：提供者联系人所在城市"
 
 #: ../../configuration.rst:48
 msgid ""
 "**contact_stateorprovince**: the province or territory of the provider "
 "contact"
-msgstr "contact_stateorprovince: 供应商联系人所在省份或更详细地址"
+msgstr "**contact_stateorprovince**: 提供者联系人所在省份或更详细地址"
 
 #: ../../configuration.rst:49
 msgid "**contact_postalcode**: the postal code of the provider contact"
-msgstr "contact_postalcode: 供应商联系人所在地区的邮政编码"
+msgstr "**contact_postalcode**: 提供者联系人所在地区的邮政编码"
 
 #: ../../configuration.rst:50
 msgid "**contact_country**: the country of the provider contact"
-msgstr " contact_country: 供应商联系人所在国籍"
+msgstr "**contact_country**: 提供者联系人所在国籍"
 
 #: ../../configuration.rst:51
 msgid "**contact_phone**: the phone number of the provider contact"
-msgstr "contact_phone: 供应商联系人的电话号码"
+msgstr "**contact_phone**: 提供者联系人的电话号码"
 
 #: ../../configuration.rst:52
 msgid "**contact_fax**: the facsimile number of the provider contact"
-msgstr "contact_fax: 供应商联系人的传真号码"
+msgstr "**contact_fax**: 提供者联系人的传真号码"
 
 #: ../../configuration.rst:53
 msgid "**contact_email**: the email address of the provider contact"
-msgstr "contact_email: 供应商联系人的电子邮件地址"
+msgstr "**contact_email**: 提供者联系人的电子邮件地址"
 
 #: ../../configuration.rst:54
 msgid ""
 "**contact_url**: the URL to more information about the provider contact"
-msgstr "contact_url: 供应商联系人的详细URL"
+msgstr "**contact_url**: 提供者联系人的详细URL"
 
 #: ../../configuration.rst:55
 msgid "**contact_hours**: the hours of service to contact the provider"
-msgstr "contact_hours: 提供商联系人的服务时数"
+msgstr "**contact_hours**: 提供者联系人的服务时数"
 
 #: ../../configuration.rst:56
 msgid "**contact_instructions**: the how to contact the provider contact"
-msgstr "contact_instructions: 如何与供应商取得联系"
+msgstr "**contact_instructions**: 如何与提供者取得联系"
 
 #: ../../configuration.rst:57
 msgid ""
@@ -293,14 +293,16 @@ msgid ""
 "``distributor``, ``user``, ``resourceProvider``, ``originator``, ``owner``, "
 "``principalInvestigator``"
 msgstr ""
-"contact_role: 在 'ISO 19115 CI_RoleCode 代码列表中：<http: www.isotc211."
+"**contact_role**: 在 'ISO 19115 CI_RoleCode 代码列表中：<http: www.isotc211."
 "org/2005/resources/codelist/gmxcodelists.xml#ci_rolecode=\"\">' _)有每位提供"
-"商联系人的职务。有 '编辑者 '， '程序员 '，发布者' ，托管员 '、 '联系人 '、' "
-"经销商 '、 '用户 '、'资源获取人 '、 '发起人 '、 ' 所有者' ，' 负责人'"
+"商联系人的职务。可接受的值包括  ``author``, "
+"``processor``, ``publisher``, ``custodian``, ``pointOfContact``, "
+"``distributor``, ``user``, ``resourceProvider``, ``originator``, ``owner``, "
+"``principalInvestigator``"
 
 #: ../../configuration.rst:59
 msgid "**[repository]**"
-msgstr "存储库"
+msgstr ""
 
 #: ../../configuration.rst:61
 msgid ""
@@ -308,8 +310,7 @@ msgid ""
 "format (see http://docs.sqlalchemy.org/en/latest/core/engines.html#database-"
 "urls)"
 msgstr ""
-"数据库：元数据库中完整的文件路径，数据库URL格式（见http://docs.sqlalchemy."
-"org/en/latest/core/engines.html#database-urls）"
+"**database**：元数据库中完整的文件路径，数据库URL格式（见 http://docs.sqlalchemy.org/en/latest/core/engines.html#database-urls）"
 
 #: ../../configuration.rst:62
 msgid ""
@@ -317,20 +318,20 @@ msgid ""
 "If you are using PostgreSQL with a DB schema other than ``public``, qualify "
 "the table like ``myschema.table``"
 msgstr ""
-"表格：元数据记录的表名（默认为``records``）。如果您在使用除了``public``以外"
-"的DB模式PostgreSQL，表格就会被限定，像``myschema.table``"
+"**table**：元数据记录的表名（默认为 ``records``）。如果您在使用除了``public``以外"
+"的DB模式PostgreSQL，表格就会被限定，像 ``myschema.table`` "
 
 #: ../../configuration.rst:63
 msgid ""
 "**mappings**: custom repository mappings (see :ref:`custom_repository`)"
-msgstr "映射：自定义的映射库（请参见 :ref:`custom_repository` ）"
+msgstr "**mappings**：自定义的映射库（请参见 :ref:`custom_repository` ）"
 
 #: ../../configuration.rst:64
 msgid ""
 "**source**: the source of this repository only if not local (e.g. :ref:"
 "`geonode`, :ref:`odc`).  Supported values are ``geonode``, ``odc``"
 msgstr ""
-"来源：不在本地的数据库源（例如：请参考 :ref:`geonode` ，  :ref:`odc` ）。现有值为"
+"**source**：不在本地的数据库源（例如：请参考 :ref:`geonode` ，  :ref:`odc` ）。现有值为"
 "`geonode`，`odc`"
 
 #: ../../configuration.rst:65
@@ -338,7 +339,7 @@ msgid ""
 "**filter**: server side database filter to apply as mask to all CSW "
 "requests (see :ref:`repofilters`)"
 msgstr ""
-"过滤器：服务器端的数据库过滤器，适用所有CSW请求掩码（请参阅： :ref:`repofilters`）"
+"**filter**：服务器端的数据库过滤器，适用所有CSW请求掩码（请参阅： :ref:`repofilters`）"
 
 #: ../../configuration.rst:69
 msgid ""
@@ -358,11 +359,11 @@ msgstr "下面介绍的是``maxRecords``怎样处理``GetRecords``请求时的�
 
 #: ../../configuration.rst:1
 msgid "server.maxrecords"
-msgstr "服务器.最大记录值"
+msgstr ""
 
 #: ../../configuration.rst:1
 msgid "GetRecords.maxRecords"
-msgstr "最大记录值获取"
+msgstr "
 
 #: ../../configuration.rst:1
 msgid "Result"
@@ -453,7 +454,7 @@ msgstr ""
 
 #: ../../configuration.rst:113
 msgid "Apache must be restarted after changes to ``httpd.conf``"
-msgstr "在更改'Httpd.conf ' 后必须重新启动 Apache"
+msgstr "在更改 ``Httpd.conf``  后必须重新启动 Apache"
 
 #: ../../configuration.rst:115
 msgid ""
