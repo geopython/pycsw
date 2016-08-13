@@ -28,6 +28,8 @@
 #
 # =================================================================
 
+import inspect
+
 from django.db import models
 from django.db import connection
 from django.db.models import Avg, Max, Min, Count
@@ -35,6 +37,7 @@ from django.conf import settings
 
 from pycsw.core import util
 from hypermap.aggregator.models import Layer, Service, Endpoint
+from hypermap.aggregator.utils import create_layer_from_metadata_xml
 
 HYPERMAP_SERVICE_TYPES = {
     # 'HHypermap enum': 'CSW enum'
@@ -162,34 +165,71 @@ class HHypermapRepository(object):
         else:  # no sort
             return [str(total), query.all()[startposition:startposition+int(maxrecords)]]
 
-    def insert(self, resourcetype, source):
+    def insert(self, resourcetype, source, insert_date=None):
         ''' Insert a record into the repository '''
 
-        if resourcetype not in HYPERMAP_SERVICE_TYPES.keys():
-           raise RuntimeError('Unsupported Service Type')
+        caller = inspect.stack()[1][3]
 
-        return self._insert_or_update(resourcetype, source, mode='insert')
+        if caller == 'transaction':  # insert of Layer
+            hhclass = 'Layer'
+            source = resourcetype
+            resourcetype = resourcetype.csw_schema
+        else:  # insert of service
+            hhclass = 'Service'
+            if resourcetype not in HYPERMAP_SERVICE_TYPES.keys():
+                raise RuntimeError('Unsupported Service Type')
 
-    def _insert_or_update(self, resourcetype, source, mode='insert'):
+        return self._insert_or_update(resourcetype, source, mode='insert', hhclass=hhclass)
+
+    def _insert_or_update(self, resourcetype, source, mode='insert', hhclass='Service'):
         ''' Insert or update a record in the repository '''
 
+        keywords = []
         try:
-            if resourcetype == 'http://www.opengis.net/cat/csw/2.0.2':
-                res = Endpoint(url=source)
+            if hhclass == 'Layer':
+                # TODO: better way of figuring out duplicates
+                match = Layer.objects.filter(name=source.title, title=source.title, abstract=source.abstract, is_monitored=False)
+                matches = match.all()
+                if matches:
+                    if mode == 'insert':
+                        raise RuntimeError('HHypermap error: Layer %d \'%s\' already exists' % (matches[0].id, source.title))
+                    elif mode == 'update':
+                        match.update(
+                            name=source.title,
+                            title=source.title,
+                            abstract=source.abstract,
+                            is_monitored=False,
+                            xml=source.xml,
+                            wkt_geometry=source.wkt_geometry,
+                            anytext=util.get_anytext([source.title, source.abstract, source.keywords_csv])
+                        )
+
+                res, keywords = create_layer_from_metadata_xml(resourcetype, source.xml, monitor=False)
             else:
-                res = Service(type=HYPERMAP_SERVICE_TYPES[resourcetype], url=source)
+                if resourcetype == 'http://www.opengis.net/cat/csw/2.0.2':
+                    res = Endpoint(url=source)
+                else:
+                    res = Service(type=HYPERMAP_SERVICE_TYPES[resourcetype], url=source)
             res.save()
+            if keywords:
+                for kw in keywords:
+                    res.keywords.add(kw)
         except Exception as err:
            raise RuntimeError('HHypermap error: %s' % err)
 
         # return a list of ids that were inserted or updated
         ids = []
-        if resourcetype == 'http://www.opengis.net/cat/csw/2.0.2':
-            for res in Endpoint.objects.filter(url=source).all():
-                ids.append({'identifier': res.id_string, 'title': res.url})
+
+        if hhclass == 'Layer':
+            ids.append({'identifier': res.id_string, 'title': res.title })
         else:
-            for res in Service.objects.filter(url=source).all():
-                ids.append({'identifier': res.id_string, 'title': res.title})
+            if resourcetype == 'http://www.opengis.net/cat/csw/2.0.2':
+                for res in Endpoint.objects.filter(url=source).all():
+                    ids.append({'identifier': res.id_string, 'title': res.url})
+            else:
+                for res in Service.objects.filter(url=source).all():
+                    ids.append({'identifier': res.id_string, 'title': res.title})
+
         return ids
         
     def delete(self, constraint):
