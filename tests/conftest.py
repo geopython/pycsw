@@ -88,30 +88,33 @@ def pytest_generate_tests(metafunc):
 
     """
 
-    expected_dir = os.path.join(TESTS_ROOT, "expected")
+    test_name_get_matches = (
+        metafunc.function.__name__ == "test_get_requests")
+    test_name_post_matches = (
+        metafunc.function.__name__ == "test_post_requests")
     for suite_name in FUNCTIONAL_SUITES.keys():
         safe_suite_name = _get_suite_safe_name(suite_name)
         fixture_name = "server_{0}_suite".format(safe_suite_name)
-        uses_fixture = fixture_name in metafunc.fixturenames
-        test_name_post = "test_post_requests"
-        test_name_get = "test_get_requests"
-        test_name_get_matches = metafunc.function.__name__ == test_name_get
-        test_name_post_matches = metafunc.function.__name__ == test_name_post
-        if uses_fixture and test_name_post_matches:
-            test_data, test_names = _configure_functional_post_tests(
-                expected_dir, safe_suite_name)
+        if fixture_name in metafunc.fixturenames and test_name_get_matches:
+            test_data, test_names = _configure_functional_get_tests(suite_name)
             metafunc.parametrize(
-                ["test_request", "expected_result"],
+                [
+                    "{0}_test_request_parameters".format(safe_suite_name),
+                    "{0}_expected_get_result".format(safe_suite_name)
+                ],
                 test_data,
                 ids=test_names,
                 scope="session"
             )
             break
-        elif uses_fixture and test_name_get_matches:
-            test_data, test_names = _configure_functional_get_tests(
-                expected_dir, suite_name)
+        elif fixture_name in metafunc.fixturenames and test_name_post_matches:
+            test_data, test_names = _configure_functional_post_tests(
+                suite_name)
             metafunc.parametrize(
-                ["test_request_parameters", "expected_result"],
+                [
+                    "{0}_test_request".format(safe_suite_name),
+                    "{0}_expected_post_result".format(safe_suite_name)
+                ],
                 test_data,
                 ids=test_names,
                 scope="session"
@@ -215,36 +218,33 @@ def server_utf_8_suite(request, tmpdir_factory):
                                    tmpdir_factory, 8025)
 
 
-def _configure_functional_post_tests(expected_dir, suite_name):
+def _configure_functional_post_tests(suite_name):
     test_data = []
     test_names = []
     suite_dir = os.path.join(TESTS_ROOT, "suites", suite_name)
     post_requests_dir = os.path.join(suite_dir, "post")
+    expected_dir = os.path.join(suite_dir, "expected")
     for item in glob.iglob(os.path.join(post_requests_dir, "*")):
         test_id = os.path.splitext(os.path.basename(item))[0]
-        expected = os.path.join(
-            expected_dir,
-            "suites_{0}_post_{1}.xml".format(suite_name, test_id)
-        )
+        expected = os.path.join(expected_dir,"post_{0}.xml".format(test_id))
         if os.path.isfile(item) and os.path.isfile(expected):
             test_data.append((item, expected))
             test_names.append("{0}_{1}".format(suite_name, test_id))
     return test_data, test_names
 
 
-def _configure_functional_get_tests(expected_dir, suite_name):
+def _configure_functional_get_tests(suite_name):
     test_data = []
     test_names = []
     request_file_path = os.path.join(TESTS_ROOT, "suites", suite_name,
                                      "get", "requests.txt")
+    expected_dir = os.path.join(TESTS_ROOT, "suites", suite_name, "expected")
     try:
         with open(request_file_path, encoding="utf-8") as fh:
             for line in fh:
                 test_name, sep, test_params = line.partition(",")
-                expected = os.path.join(
-                    expected_dir,
-                    "suites_{0}_get_{1}.xml".format(suite_name, test_name)
-                )
+                expected = os.path.join(expected_dir,
+                                        "get_{0}.xml".format(test_name))
                 if os.path.isfile(expected):
                     test_data.append((test_params.strip(), expected))
                     test_names.append("{0}_{1}".format(suite_name, test_name))
@@ -286,7 +286,8 @@ def _get_server_with_config(request, suite_name, tmpdir_factory, port_number):
 
     url = request.config.getoption("--server-url-{0}-suite".format(suite_name))
     if url is None:
-        print("Initializing server for {0!r} suite...".format(suite_name))
+        print("Initializing server for {0!r} suite at port "
+              "{1!r}...".format(suite_name, port_number))
         original_config_path = os.path.join(TESTS_ROOT, "suites",
                                             suite_name, "default.cfg")
         config = ConfigParser()
@@ -300,6 +301,11 @@ def _get_server_with_config(request, suite_name, tmpdir_factory, port_number):
             os.path.join(TESTS_ROOT, "suites", suite_name, "data")
         )
         # now we can change the config as needed
+        #server_url = "http://localhost:{0}".format(port_number)
+        #config.set("server", "url", server_url)
+        config.set("server", "loglevel", "DEBUG")
+        config.set("server", "logfile", os.path.join(test_temp_directory,
+                                                     "pycsw.log"))
         config.set("repository", "database", db_url)
         new_config = test_temp_directory.join("default.cfg")
         fh = new_config.open("w")
@@ -387,18 +393,20 @@ def _start_local_server(request, config_path, port_number):
 
     """
 
-    command = "python pycsw/wsgi.py {}".format(port_number)
+    url = "http://localhost:{0}".format(port_number)
+    print("Starting a local server at {0}...".format(url))
+    command = "python pycsw/wsgi.py {0}".format(port_number)
     working_dir = os.path.dirname(TESTS_ROOT)
     env = os.environ.copy()
     env["PYCSW_CONFIG"] = config_path
     pycsw_process = subprocess.Popen(shlex.split(command), cwd=working_dir,
                                      stdout=subprocess.PIPE,
                                      env=env)
-    time.sleep(3)  # give the external process some time to start
+    time.sleep(2)  # give the external process some time to start
 
     def finalizer():
         pycsw_process.terminate()
         pycsw_process.wait()
 
     request.addfinalizer(finalizer)
-    return "http://localhost:{}".format(port_number)
+    return url

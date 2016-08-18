@@ -41,6 +41,7 @@ from lxml import etree
 from lxml import objectify
 import re
 from urllib.parse import parse_qs
+from urllib.parse import unquote
 
 import pytest
 import requests
@@ -52,174 +53,257 @@ pytestmark = pytest.mark.functional
 
 class TestApisoSuite(object):
 
-    def test_post_requests(self, server_apiso_suite, test_request,
-                           expected_result):
-        _test_post_request(server_apiso_suite, test_request, expected_result)
+    def test_post_requests(self,
+                           server_apiso_suite,
+                           apiso_test_request,
+                           apiso_expected_post_result):
+        _test_post_request(server_apiso_suite,
+                           apiso_test_request,
+                           apiso_expected_post_result)
 
 
 class TestApisoInspireSuite(object):
 
-    def test_get_requests(self, server_apiso_inspire_suite,
-                          test_request_parameters, expected_result):
-        print("test_request_parameters: {}".format(test_request_parameters))
-        _test_get_request(server_apiso_inspire_suite, test_request_parameters,
-                          expected_result)
+    def test_get_requests(self,
+                          server_apiso_inspire_suite,
+                          apiso_inspire_test_request_parameters,
+                          apiso_inspire_expected_get_result):
+        _test_get_request(server_apiso_inspire_suite,
+                          apiso_inspire_test_request_parameters,
+                          apiso_inspire_expected_get_result)
 
 
 class TestAtomSuite(object):
 
-    def test_post_requests(self, server_atom_suite, test_request,
-                           expected_result):
-        _test_post_request(server_atom_suite, test_request, expected_result)
+    def test_post_requests(self,
+                           server_atom_suite,
+                           atom_test_request,
+                           atom_expected_post_result):
+        _test_post_request(server_atom_suite,
+                           atom_test_request,
+                           atom_expected_post_result)
 
     def test_get_requests(self, server_atom_suite,
-                          test_request_parameters, expected_result):
-        _test_get_request(server_atom_suite, test_request_parameters,
-                          expected_result)
+                          atom_test_request_parameters,
+                          atom_expected_get_result):
+        _test_get_request(server_atom_suite,
+                          atom_test_request_parameters,
+                          atom_expected_get_result)
 
 
 class TestCiteSuite(object):
 
-    def test_post_requests(self, server_cite_suite, test_request,
-                           expected_result):
-        _test_post_request(server_cite_suite, test_request, expected_result)
+    def test_post_requests(self, server_cite_suite, cite_test_request,
+                           cite_expected_post_result):
+        _test_post_request(server_cite_suite, cite_test_request,
+                           cite_expected_post_result)
 
     def test_get_requests(self, server_cite_suite,
-                          test_request_parameters, expected_result):
-        _test_get_request(server_cite_suite, test_request_parameters,
-                          expected_result)
+                          cite_test_request_parameters,
+                          cite_expected_get_result):
+        print("locals: {0}".format(locals()))
+        _test_get_request(server_cite_suite, cite_test_request_parameters,
+                          cite_expected_get_result)
 
 
 class TestCsw30Suite(object):
 
-    def test_post_requests(self, server_csw30_suite, test_request,
-                           expected_result):
-        _test_post_request(server_csw30_suite, test_request, expected_result)
+    def test_post_requests(self,
+                           server_csw30_suite,
+                           csw30_test_request,
+                           csw30_expected_post_result):
+        _test_post_request(server_csw30_suite,
+                           csw30_test_request,
+                           csw30_expected_post_result)
 
     def test_get_requests(self, server_csw30_suite,
-                          test_request_parameters, expected_result):
-        _test_get_request(server_csw30_suite, test_request_parameters,
-                          expected_result)
+                          csw30_test_request_parameters,
+                          csw30_expected_get_result):
+        _test_get_request(server_csw30_suite,
+                          csw30_test_request_parameters,
+                          csw30_expected_get_result)
 
 
 class TestDefaultSuite(object):
 
-    def test_post_requests(self, server_default_suite, test_request,
-                           expected_result):
-        _test_post_request(server_default_suite, test_request, expected_result)
+    def test_post_requests(self,
+                           server_default_suite,
+                           default_test_request,
+                           default_expected_post_result):
+        _test_post_request(server_default_suite,
+                           default_test_request,
+                           default_expected_post_result)
 
-    def test_get_requests(self, server_default_suite, test_request_parameters,
-                          expected_result):
-        _test_get_request(server_default_suite, test_request_parameters,
-                          expected_result)
+    def test_get_requests(self,
+                          server_default_suite,
+                          default_test_request_parameters,
+                          default_expected_get_result):
+        _test_get_request(server_default_suite,
+                          default_test_request_parameters,
+                          default_expected_get_result)
 
 
 class TestDifSuite(object):
 
-    def test_post_requests(self, server_dif_suite, test_request,
-                           expected_result):
-        _test_post_request(server_dif_suite, test_request, expected_result)
+    def test_post_requests(self,
+                           server_dif_suite,
+                           dif_test_request,
+                           dif_expected_post_result):
+        _test_post_request(server_dif_suite,
+                           dif_test_request,
+                           dif_expected_post_result)
 
 
 class TestEbrimSuite(object):
 
-    def test_post_requests(self, server_ebrim_suite, test_request,
-                           expected_result):
-        _test_post_request(server_ebrim_suite, test_request, expected_result)
+    def test_post_requests(self, server_ebrim_suite,
+                           ebrim_test_request,
+                           ebrim_expected_post_result):
+        _test_post_request(server_ebrim_suite,
+                           ebrim_test_request,
+                           ebrim_expected_post_result)
 
 
 class TestFgdcSuite(object):
 
-    def test_post_requests(self, server_fgdc_suite, test_request,
-                           expected_result):
-        _test_post_request(server_fgdc_suite, test_request, expected_result)
+    def test_post_requests(self,
+                           server_fgdc_suite,
+                           fgdc_test_request,
+                           fgdc_expected_post_result):
+        _test_post_request(server_fgdc_suite,
+                           fgdc_test_request,
+                           fgdc_expected_post_result)
 
 
 class TestGm03Suite(object):
 
-    def test_post_requests(self, server_gm03_suite, test_request,
-                           expected_result):
-        _test_post_request(server_gm03_suite, test_request, expected_result)
+    def test_post_requests(self,
+                           server_gm03_suite,
+                           gm03_test_request,
+                           gm03_expected_post_result):
+        _test_post_request(server_gm03_suite,
+                           gm03_test_request,
+                           gm03_expected_post_result)
 
 
 class TestHarvestingSuite(object):
 
-    def test_post_requests(self, server_harvesting_suite, test_request,
-                           expected_result):
-        _test_post_request(server_harvesting_suite, test_request,
-                           expected_result)
+    def test_post_requests(self,
+                           server_harvesting_suite,
+                           harvesting_test_request,
+                           harvesting_expected_post_result):
+        _test_post_request(server_harvesting_suite,
+                           harvesting_test_request,
+                           harvesting_expected_post_result)
 
-    def test_get_requests(self, server_harvesting_suite,
-                          test_request_parameters, expected_result):
-        _test_get_request(server_harvesting_suite, test_request_parameters,
-                          expected_result)
+    def test_get_requests(self,
+                          server_harvesting_suite,
+                          harvesting_test_request_parameters,
+                          harvesting_expected_get_result):
+        _test_get_request(server_harvesting_suite,
+                          harvesting_test_request_parameters,
+                          harvesting_expected_get_result)
 
 
 class TestManagerSuite(object):
 
-    def test_post_requests(self, server_manager_suite, test_request,
-                           expected_result):
-        _test_post_request(server_manager_suite, test_request, expected_result)
+    def test_post_requests(self,
+                           server_manager_suite,
+                           manager_test_request,
+                           manager_expected_post_result):
+        _test_post_request(server_manager_suite,
+                           manager_test_request,
+                           manager_expected_post_result)
 
 
 class TestOaipmhSuite(object):
 
-    def test_get_requests(self, server_oaipmh_suite, test_request_parameters,
-                          expected_result):
-        _test_get_request(server_oaipmh_suite, test_request_parameters,
-                          expected_result)
+    def test_get_requests(self, server_oaipmh_suite,
+                          oaipmh_test_request_parameters,
+                          oaipmh_expected_get_result):
+        _test_get_request(server_oaipmh_suite,
+                          oaipmh_test_request_parameters,
+                          oaipmh_expected_get_result)
+
 
 class TestRepofilterSuite(object):
 
-    def test_post_requests(self, server_repofilter_suite, test_request,
-                           expected_result):
-        _test_post_request(server_repofilter_suite, test_request,
-                           expected_result)
+    def test_post_requests(self,
+                           server_repofilter_suite,
+                           repofilter_test_request,
+                           repofilter_expected_post_result):
+        _test_post_request(server_repofilter_suite,
+                           repofilter_test_request,
+                           repofilter_expected_post_result)
 
 
 class TestSruSuite(object):
 
-    def test_get_requests(self, server_sru_suite, test_request_parameters,
-                          expected_result):
-        _test_get_request(server_sru_suite, test_request_parameters,
-                          expected_result)
+    def test_get_requests(self,
+                          server_sru_suite,
+                          sru_test_request_parameters,
+                          sru_expected_get_result):
+        _test_get_request(server_sru_suite,
+                          sru_test_request_parameters,
+                          sru_expected_get_result)
 
 class TestUtf8Suite(object):
 
-    def test_post_requests(self, server_utf_8_suite, test_request,
-                           expected_result):
-        _test_post_request(server_utf_8_suite, test_request, expected_result)
+    def test_post_requests(self,
+                           server_utf_8_suite,
+                           utf_8_test_request,
+                           utf_8_expected_post_result):
+        _test_post_request(server_utf_8_suite,
+                           utf_8_test_request,
+                           utf_8_expected_post_result)
 
 
 def _test_post_request(pycsw_server_url, test_request, expected_result):
     with open(test_request, encoding=ENCODING) as request_fh:
         request_data = request_fh.read()
+    response = requests.post(pycsw_server_url,
+                             data=bytes(request_data, ENCODING))
     with open(expected_result, encoding=ENCODING) as expected_fh:
         expected = expected_fh.read()
-    response = requests.post(pycsw_server_url,
-                             data=request_data)
     _compare_response(response, expected)
 
 
 def _test_get_request(pycsw_server_url, parameters, expected_result):
+    print("**********************")
+    print("EXPECTED_RESULT: {0}".format(expected_result))
+    print("PARAMETERS: {0}".format(parameters))
+    print("**********************")
     with open(expected_result, encoding=ENCODING) as expected_fh:
         expected = expected_fh.read()
-    payload = parse_qs(parameters)
-    print("payload: {}".format(payload))
-    response = requests.get(pycsw_server_url, params=payload)
+    #payload = parse_qs(bytes(parameters, ENCODING))
+    #payload = parse_qs(parameters)
+    payload = {}
+    for kvp in parameters.split("&"):
+        print("kvp: {}".format(kvp))
+        parts = kvp.split("=")
+        payload[parts[0].lower()] = unquote(parts[1]) if len(parts) > 1 else ""
+        #payload[parts[0].lower()] = parts[1] if len(parts) > 1 else ""
+    print("payload: {0}".format(payload))
+    request_headers = {}
+    if "outputformat" in payload.keys():
+        request_headers.setdefault("Accept", payload["outputformat"])
+    response = requests.get(pycsw_server_url, params=payload,
+                            headers=request_headers)
     _compare_response(response, expected)
 
 
 def _compare_response(response, expected):
+    response.encoding = ENCODING
     response_data = response.text
     normalized_result = _normalize(response_data, force_id_mask=False)
-    print("expected: {0}".format(expected))
-    print("response: {0}".format(normalized_result))
     try:
         matches_expected = _test_xml_result(normalized_result, expected)
     except etree.XMLSyntaxError:
         # the file is either not XML (perhaps JSON?) or malformed
         matches_expected = _test_json_result(normalized_result, expected)
+    if not matches_expected:
+        print("expected: {0}".format(expected))
+        print("response: {0}".format(normalized_result))
     assert matches_expected
 
 
