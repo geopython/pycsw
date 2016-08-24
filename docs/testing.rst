@@ -36,6 +36,11 @@ The tests framework can be run from ``tests`` using `Paver`_ (see ``pavement.py`
 
 The tests perform HTTP GET and POST requests against ``http://localhost:8000``.  The expected output for each test can be found in ``expected``.  Results are categorized as ``passed``, ``failed``, or ``initialized``.  A summary of results is output at the end of the run.
 
+WSGI and CGI Modes
+^^^^^^^^^^^^^^^^^^
+
+By default, pycsw performs unit tests by starting a WSGI server instance.  To test using CGI mode, add ``-m cgi``.  This will start a pycsw server instance using a CGI handler.
+
 Failed Tests
 ^^^^^^^^^^^^
 
