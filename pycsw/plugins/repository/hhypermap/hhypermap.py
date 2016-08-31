@@ -36,7 +36,7 @@ from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
 from pycsw.core import util
-from hypermap.aggregator.models import Layer, Service, Endpoint
+from hypermap.aggregator.models import Catalog, Layer, Service, Endpoint
 from hypermap.aggregator.utils import create_layer_from_metadata_xml
 
 HYPERMAP_SERVICE_TYPES = {
@@ -210,6 +210,9 @@ class HHypermapRepository(object):
                     res = Endpoint(url=source)
                 else:
                     res = Service(type=HYPERMAP_SERVICE_TYPES[resourcetype], url=source)
+                    
+            if self.filter is not None:
+                res.catalog = Catalog.objects.get(id=int(self.filter.split()[-1]))
             res.save()
             if keywords:
                 for kw in keywords:
