@@ -188,14 +188,14 @@ class HHypermapRepository(object):
         try:
             if hhclass == 'Layer':
                 # TODO: better way of figuring out duplicates
-                match = Layer.objects.filter(name=source.title, title=source.title, abstract=source.abstract, is_monitored=False)
+                match = Layer.objects.filter(name=source.name, title=source.title, abstract=source.abstract, is_monitored=False)
                 matches = match.all()
                 if matches:
                     if mode == 'insert':
                         raise RuntimeError('HHypermap error: Layer %d \'%s\' already exists' % (matches[0].id, source.title))
                     elif mode == 'update':
                         match.update(
-                            name=source.title,
+                            name=source.name,
                             title=source.title,
                             abstract=source.abstract,
                             is_monitored=False,
@@ -210,7 +210,7 @@ class HHypermapRepository(object):
                     res = Endpoint(url=source)
                 else:
                     res = Service(type=HYPERMAP_SERVICE_TYPES[resourcetype], url=source)
-                    
+
             if self.filter is not None:
                 res.catalog = Catalog.objects.get(id=int(self.filter.split()[-1]))
             res.save()
@@ -234,7 +234,7 @@ class HHypermapRepository(object):
                     ids.append({'identifier': res.id_string, 'title': res.title})
 
         return ids
-        
+
     def delete(self, constraint):
         ''' Delete a record from the repository '''
 
