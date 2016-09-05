@@ -224,22 +224,19 @@ class HHypermapRepository(object):
         ids = []
 
         if hhclass == 'Layer':
-            ids.append({'identifier': res.id_string, 'title': res.title })
+            ids.append({'identifier': res.uuid, 'title': res.title })
         else:
             if resourcetype == 'http://www.opengis.net/cat/csw/2.0.2':
                 for res in Endpoint.objects.filter(url=source).all():
-                    ids.append({'identifier': res.id_string, 'title': res.url})
+                    ids.append({'identifier': res.uuid, 'title': res.url})
             else:
                 for res in Service.objects.filter(url=source).all():
-                    ids.append({'identifier': res.id_string, 'title': res.title})
+                    ids.append({'identifier': res.uuid, 'title': res.title})
 
         return ids
 
     def delete(self, constraint):
         ''' Delete a record from the repository '''
-
-        # FIXME: id_string is a virtual property and cannot be queried against
-        constraint['where'] = constraint['where'].replace('id_string', 'id')
 
         results = self._get_repo_filter(Service.objects).extra(where=[constraint['where']],
                                                                params=constraint['values']).all()
