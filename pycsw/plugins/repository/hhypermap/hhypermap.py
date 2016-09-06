@@ -188,14 +188,14 @@ class HHypermapRepository(object):
         try:
             if hhclass == 'Layer':
                 # TODO: better way of figuring out duplicates
-                match = Layer.objects.filter(name=source.title, title=source.title, abstract=source.abstract, is_monitored=False)
+                match = Layer.objects.filter(name=source.name, title=source.title, abstract=source.abstract, is_monitored=False)
                 matches = match.all()
                 if matches:
                     if mode == 'insert':
                         raise RuntimeError('HHypermap error: Layer %d \'%s\' already exists' % (matches[0].id, source.title))
                     elif mode == 'update':
                         match.update(
-                            name=source.title,
+                            name=source.name,
                             title=source.title,
                             abstract=source.abstract,
                             is_monitored=False,
@@ -210,6 +210,7 @@ class HHypermapRepository(object):
                     res = Endpoint(url=source)
                 else:
                     res = Service(type=HYPERMAP_SERVICE_TYPES[resourcetype], url=source)
+
             if self.filter is not None:
                 res.catalog = Catalog.objects.get(id=int(self.filter.split()[-1]))                    
             res.save()
@@ -223,22 +224,19 @@ class HHypermapRepository(object):
         ids = []
 
         if hhclass == 'Layer':
-            ids.append({'identifier': res.id_string, 'title': res.title })
+            ids.append({'identifier': res.uuid, 'title': res.title })
         else:
             if resourcetype == 'http://www.opengis.net/cat/csw/2.0.2':
                 for res in Endpoint.objects.filter(url=source).all():
-                    ids.append({'identifier': res.id_string, 'title': res.url})
+                    ids.append({'identifier': res.uuid, 'title': res.url})
             else:
                 for res in Service.objects.filter(url=source).all():
-                    ids.append({'identifier': res.id_string, 'title': res.title})
+                    ids.append({'identifier': res.uuid, 'title': res.title})
 
         return ids
-        
+
     def delete(self, constraint):
         ''' Delete a record from the repository '''
-
-        # FIXME: id_string is a virtual property and cannot be queried against
-        constraint['where'] = constraint['where'].replace('id_string', 'id')
 
         results = self._get_repo_filter(Service.objects).extra(where=[constraint['where']],
                                                                params=constraint['values']).all()
