@@ -1,2 +1,2 @@
-Paver==1.2.2
+Paver==1.2.4
 sphinx
