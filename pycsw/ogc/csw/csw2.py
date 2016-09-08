@@ -1955,9 +1955,14 @@ class Csw2(object):
         self.parent.context.namespaces),
         exceptionCode=code, locator=locator)
 
-        etree.SubElement(exception,
+        exception_text = etree.SubElement(exception,
         util.nspath_eval('ows:ExceptionText',
-        self.parent.context.namespaces)).text = text
+        self.parent.context.namespaces))
+
+        try:
+            exception_text.text = text
+        except ValueError as err:
+            exception_text.text = repr(text)
 
         return node
 

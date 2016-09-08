@@ -530,7 +530,10 @@ class Csw(object):
 
                 # test version
                 kvp_version = self.kvp.get('version', '')
-                kvp_version_integer = util.get_version_integer(kvp_version)
+                try:
+                    kvp_version_integer = util.get_version_integer(kvp_version)
+                except Exception as err:
+                    kvp_version_integer = 'invalid_value'
                 if (request != 'GetCapabilities' and
                         kvp_version_integer != own_version_integer):
                     error = 1
