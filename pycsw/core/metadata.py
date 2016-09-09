@@ -218,7 +218,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     if pagesize > matches:
         pagesize = matches
 
-    LOGGER.debug('Harvesting %d CSW records' % matches)
+    LOGGER.debug('Harvesting %d CSW records', matches)
 
     # loop over all catalogue records incrementally
     for r in range(1, matches+1, pagesize):
@@ -345,7 +345,7 @@ def _parse_wms(context, repos, record, identifier):
 
     # generate record foreach layer
 
-    LOGGER.debug('Harvesting %d WMS layers' % len(md.contents))
+    LOGGER.debug('Harvesting %d WMS layers', len(md.contents))
 
     for layer in md.contents:
         recobj = repos.dataset()
@@ -472,7 +472,7 @@ def _parse_wmts(context, repos, record, identifier):
 
     # generate record for each layer
 
-    LOGGER.debug('Harvesting %d WMTS layers' % len(md.contents))
+    LOGGER.debug('Harvesting %d WMTS layers', len(md.contents))
 
     for layer in md.contents:
         recobj = repos.dataset()
@@ -584,7 +584,7 @@ def _parse_wfs(context, repos, record, identifier):
 
     # generate record foreach featuretype
 
-    LOGGER.debug('Harvesting %d WFS featuretypes' % len(md.contents))
+    LOGGER.debug('Harvesting %d WFS featuretypes', len(md.contents))
 
     for featuretype in md.contents:
         recobj = repos.dataset()
@@ -689,7 +689,7 @@ def _parse_wcs(context, repos, record, identifier):
 
     # generate record foreach coverage
 
-    LOGGER.debug('Harvesting %d WCS coverages ' % len(md.contents))
+    LOGGER.debug('Harvesting %d WCS coverages ', len(md.contents))
 
     for coverage in md.contents:
         recobj = repos.dataset()

@@ -70,7 +70,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
                 postgis_lib_version = row[0]
             create_sfsql_tables=False
             create_postgis_geometry = True
-            LOGGER.info('PostGIS %s detected: Skipping SFSQL tables creation' % postgis_lib_version)
+            LOGGER.info('PostGIS %s detected: Skipping SFSQL tables creation', postgis_lib_version)
         except:
             pass
 

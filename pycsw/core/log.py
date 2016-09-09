@@ -92,7 +92,7 @@ def setup_logger(config=None):
                         datefmt=TIME_FORMAT,
                         format=MSG_FORMAT)
 
-    LOGGER.info('Logging initialized (level: %s).' % loglevel)
+    LOGGER.info('Logging initialized (level: %s).', loglevel)
 
     if loglevel == 'DEBUG':  # turn on CGI debugging
         LOGGER.info('CGI debugging enabled.')
