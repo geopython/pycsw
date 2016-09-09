@@ -117,7 +117,7 @@ class OAIPMH(object):
     def request(self, kvp):
         """process OAI-PMH request"""
         kvpout = {'service': 'CSW', 'version': '2.0.2', 'mode': 'oaipmh'}
-        LOGGER.debug('Incoming kvp: %s' % kvp)
+        LOGGER.debug('Incoming kvp: %s', kvp)
         if 'verb' in kvp:
             if 'metadataprefix' in kvp:
                 self.metadata_prefix = kvp['metadataprefix']
@@ -127,7 +127,7 @@ class OAIPMH(object):
                     kvpout['outputschema'] = kvp['metadataprefix']
             else:
                 self.metadata_prefix = 'csw-record'
-            LOGGER.info('metadataPrefix: %s' % self.metadata_prefix)
+            LOGGER.info('metadataPrefix: %s', self.metadata_prefix)
             if kvp['verb'] in ['ListRecords', 'ListIdentifiers', 'GetRecord']:
                 kvpout['request'] = 'GetRecords'
                 kvpout['resulttype'] = 'results'
@@ -168,7 +168,7 @@ class OAIPMH(object):
                         time_query = end
                     kvpout['constraintlanguage'] = 'CQL_TEXT'
                     kvpout['constraint'] = time_query
-        LOGGER.debug('Resulting parameters: %s' % kvpout)
+        LOGGER.debug('Resulting parameters: %s', kvpout)
         return kvpout
 
     def response(self, response, kvp, repository, server_url):

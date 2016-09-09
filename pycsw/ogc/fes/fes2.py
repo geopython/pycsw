@@ -99,7 +99,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
     tmp = element.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=nsmap)
     if len(tmp) > 0:  # this is binary logic query
         boq = ' %s ' % util.xmltag_split(tmp[0].tag).lower()
-        LOGGER.debug('Binary logic detected; operator=%s' % boq)
+        LOGGER.debug('Binary logic detected; operator=%s', boq)
         tmp = tmp[0]
     else:
         tmp = element
@@ -165,7 +165,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                 pval = elem.find(util.nspath_eval('ogc:Literal', nsmap)).text
 
         com_op = _get_comparison_operator(elem)
-        LOGGER.debug('Comparison operator: %s' % com_op)
+        LOGGER.debug('Comparison operator: %s', com_op)
 
         # if this is a case insensitive search
         # then set the DB-specific LIKE comparison operator
@@ -254,20 +254,20 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             if child_not.tag in \
                 [util.nspath_eval('ogc:%s' % n, nsmap) for n in
                     MODEL['SpatialOperators']['values']]:
-                LOGGER.debug('ogc:Not / spatial operator detected: %s' % child.tag)
+                LOGGER.debug('ogc:Not / spatial operator detected: %s', child.tag)
                 queries.append("%s = %s" %
                                (_get_spatial_operator(
                                    queryables['pycsw:BoundingBox'],
                                    child.xpath('child::*')[0], dbtype, nsmap),
                                    boolean_false))
             else:
-                LOGGER.debug('ogc:Not / comparison operator detected: %s' % child.tag)
+                LOGGER.debug('ogc:Not / comparison operator detected: %s', child.tag)
                 queries.append('not %s' % _get_comparison_expression(child_not))
 
         elif child.tag in \
             [util.nspath_eval('ogc:%s' % n, nsmap) for n in
                 MODEL['SpatialOperators']['values']]:
-            LOGGER.debug('spatial operator detected: %s' % child.tag)
+            LOGGER.debug('spatial operator detected: %s', child.tag)
             if boq is not None and boq == ' not ':
                 # for ogc:Not spatial queries in PostGIS we must explictly
                 # test that pycsw:BoundingBox is null as well
@@ -298,7 +298,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             LOGGER.debug('Comparison operator processing')
             tagname = ' %s ' % util.xmltag_split(child.tag).lower()
             if tagname in [' or ', ' and ']:  # this is a nested binary logic query
-                LOGGER.debug('Nested binary logic detected; operator=%s' % tagname)
+                LOGGER.debug('Nested binary logic detected; operator=%s', tagname)
                 for child2 in child.xpath('child::*'):
                     queries_nested.append(_get_comparison_expression(child2))
                 queries.append('(%s)' % tagname.join(queries_nested))
@@ -334,7 +334,7 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_col
 
     spatial_predicate = util.xmltag_split(element.tag).lower()
 
-    LOGGER.debug('Spatial predicate: %s' % spatial_predicate)
+    LOGGER.debug('Spatial predicate: %s', spatial_predicate)
 
     if dbtype == 'mysql':  # adjust spatial query for MySQL
         LOGGER.debug('Adjusting spatial query for MySQL')

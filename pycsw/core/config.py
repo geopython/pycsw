@@ -563,7 +563,7 @@ class StaticContext(object):
     def refresh_dc(self, mappings):
         """Refresh Dublin Core mappings"""
 
-        LOGGER.debug('refreshing Dublin Core mappings with %s' % str(mappings))
+        LOGGER.debug('refreshing Dublin Core mappings with %s', str(mappings))
 
         defaults = {
             'dc:title': 'pycsw:Title',

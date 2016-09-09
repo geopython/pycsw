@@ -130,7 +130,7 @@ class Csw(object):
 
         log.setup_logger(self.config)
 
-        LOGGER.debug('running configuration %s' % rtconfig)
+        LOGGER.debug('running configuration %s', rtconfig)
         LOGGER.debug(str(self.environ['QUERY_STRING']))
 
         # set OGC schemas location
@@ -170,8 +170,8 @@ class Csw(object):
             except:
                 pass
 
-        LOGGER.debug('Configuration: %s.' % self.config)
-        LOGGER.debug('Model: %s.' % self.context.model)
+        LOGGER.debug('Configuration: %s.', self.config)
+        LOGGER.debug('Model: %s.', self.context.model)
 
         # load user-defined mappings if they exist
         if self.config.has_option('repository', 'mappings'):
@@ -182,15 +182,14 @@ class Csw(object):
                 modulename = '%s' % os.path.splitext(module)[0].replace(
                     os.sep, '.')
                 LOGGER.debug('Loading custom repository mappings '
-                             'from %s.' % module)
+                             'from %s.', module)
                 mappings = imp.load_source(modulename, module)
                 self.context.md_core_model = mappings.MD_CORE_MODEL
                 self.context.refresh_dc(mappings.MD_CORE_MODEL)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
                     'NoApplicableCode', 'service',
-                    'Could not load repository.mappings %s' % str(err)
-                )
+                    'Could not load repository.mappings %s', str(err))
 
         # load outputschemas
         LOGGER.debug('Loading outputschemas.')
@@ -201,8 +200,8 @@ class Csw(object):
             mod = getattr(output_schema_module.plugins.outputschemas, osch)
             self.outputschemas[mod.NAMESPACE] = mod
 
-        LOGGER.debug('Outputschemas loaded: %s.' % self.outputschemas)
-        LOGGER.debug('Namespaces: %s' % self.context.namespaces)
+        LOGGER.debug('Outputschemas loaded: %s.', self.outputschemas)
+        LOGGER.debug('Namespaces: %s', self.context.namespaces)
 
     def expand_path(self, path):
         """ return safe path for WSGI environments """
@@ -475,8 +474,8 @@ class Csw(object):
             else:
                 code = 'InvalidParameterValue'
 
-        LOGGER.debug('HTTP Headers:\n%s.' % self.environ)
-        LOGGER.debug('Parsed request parameters: %s' % self.kvp)
+        LOGGER.debug('HTTP Headers:\n%s.', self.environ)
+        LOGGER.debug('Parsed request parameters: %s', self.kvp)
 
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
                 self.kvp['mode'] == 'opensearch'):
@@ -828,7 +827,7 @@ class Csw(object):
 
     def _cql_update_queryables_mappings(self, cql, mappings):
         """ Transform CQL query's properties to underlying DB columns """
-        LOGGER.debug('Raw CQL text = %s.' % cql)
+        LOGGER.debug('Raw CQL text = %s.', cql)
         LOGGER.debug(str(list(mappings.keys())))
         if cql is not None:
             for key in mappings.keys():
@@ -836,7 +835,7 @@ class Csw(object):
                     cql = cql.replace(key, mappings[key]['dbcol'])
                 except:
                     cql = cql.replace(key, mappings[key])
-            LOGGER.debug('Interpolated CQL text = %s.' % cql)
+            LOGGER.debug('Interpolated CQL text = %s.', cql)
             return cql
 
     def _process_responsehandler(self, xml):
@@ -870,7 +869,7 @@ class Csw(object):
                     msg.quit()
                     LOGGER.debug('Email sent successfully.')
                 except Exception as err:
-                    LOGGER.debug('Error processing email: %s.' % str(err))
+                    LOGGER.debug('Error processing email', exc_info=True)
 
             elif uprh.scheme == 'ftp':
                 import ftplib
@@ -886,7 +885,7 @@ class Csw(object):
                     ftp.quit()
                     LOGGER.debug('FTP sent successfully.')
                 except Exception as err:
-                    LOGGER.debug('Error processing FTP: %s.' % str(err))
+                    LOGGER.error('Error processing FTP', exc_info=True)
 
     @staticmethod
     def normalize_kvp(kvp):
