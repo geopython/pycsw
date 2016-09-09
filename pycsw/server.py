@@ -472,8 +472,12 @@ class Csw(object):
                     Value MUST be CSW' % self.kvp['service']
 
                 # test version
+                try:
+                    kvp_version_integer = util.get_version_integer(self.kvp['version'])
+                except Exception as err:
+                    kvp_version_integer = 'invalid_value'
                 if ('version' in self.kvp and
-                    util.get_version_integer(self.kvp['version']) !=
+                    kvp_version_integer !=
                     util.get_version_integer('2.0.2') and
                     self.kvp['request'] != 'GetCapabilities'):
                     error = 1
@@ -593,9 +597,14 @@ class Csw(object):
         self.context.namespaces),
         exceptionCode=code, locator=locator)
 
-        etree.SubElement(exception,
+        exception_text = etree.SubElement(exception,
         util.nspath_eval('ows:ExceptionText',
-        self.context.namespaces)).text = text
+        self.context.namespaces))
+
+        try:
+            exception_text.text = text
+        except ValueError as err:
+            exception_text.text = repr(text)
 
         return node
 
