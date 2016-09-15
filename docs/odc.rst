@@ -12,4 +12,6 @@ Open Data Catalog Setup
 
 Open Data Catalog provides CSW functionality using pycsw out of the box (installing ODC will also install pycsw).  Settings are defined in https://github.com/azavea/Open-Data-Catalog/blob/master/OpenDataCatalog/settings.py#L165.
 
+ODC settings must ensure that ``REGISTRY_PYCSW['repository']['source']`` is set to``hypermap.search.pycsw_repository``.
+
 At this point, pycsw is able to read from the Open Data Catalog repository using the Django ORM.

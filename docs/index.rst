@@ -27,6 +27,7 @@ pycsw |release| Documentation
    transactions
    repofilters
    profiles
+   repositories
    outputschemas
    geonode
    hhypermap
