@@ -144,7 +144,16 @@ To override the default settings:
   ...
   mappings=path/to/mappings.py
 
-See the :ref:`geonode` and :ref:`odc` for further examples.
+Note you can also reference mappings as a Python object as a dotted path:
+
+.. code-block:: none
+
+  [repository]
+  ...
+  mappings='path.to.pycsw_mappings'
+
+
+See the :ref:`geonode`, :ref:`hhypermap`, and :ref:`odc` for further examples.
 
 Existing Repository Requirements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

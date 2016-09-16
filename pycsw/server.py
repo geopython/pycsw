@@ -179,17 +179,21 @@ class Csw(object):
             try:
                 import imp
                 module = self.config.get('repository', 'mappings')
-                modulename = '%s' % os.path.splitext(module)[0].replace(
-                    os.sep, '.')
+                if '/' in module:  # filepath
+                    modulename = '%s' % os.path.splitext(module)[0].replace(
+                        os.sep, '.')
+                    mappings = imp.load_source(modulename, module)
+                else:  # dotted name
+                    mappings = __import__(module, fromlist=[''])
                 LOGGER.debug('Loading custom repository mappings '
                              'from %s.', module)
-                mappings = imp.load_source(modulename, module)
                 self.context.md_core_model = mappings.MD_CORE_MODEL
                 self.context.refresh_dc(mappings.MD_CORE_MODEL)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
-                    'NoApplicableCode', 'service',
-                    'Could not load repository.mappings %s', str(err))
+                    'NoAppliicableCode', 'service',
+                    'Could not load repository.mappings %s' % str(err)
+                )
 
         # load outputschemas
         LOGGER.debug('Loading outputschemas.')
@@ -388,56 +392,20 @@ class Csw(object):
         if self.config.has_option('repository', 'filter'):
             repo_filter = self.config.get('repository', 'filter')
 
-        if (self.config.has_option('repository', 'source') and
-                self.config.get('repository', 'source') == 'geonode'):
+        if self.config.has_option('repository', 'source'):  # load custom repository
+            rs = self.config.get('repository', 'source')
+            rs_modname, rs_clsname = rs.rsplit('.', 1)
 
-            # load geonode repository
-            from pycsw.plugins.repository.geonode import geonode_
+            rs_mod = __import__(rs_modname, globals(), locals(), [rs_clsname])
+            rs_cls = getattr(rs_mod, rs_clsname)
 
             try:
-                self.repository = geonode_.GeoNodeRepository(self.context,
-                                                             repo_filter)
-                LOGGER.debug('GeoNode repository loaded '
-                             '(geonode): %s.' % self.repository.dbtype)
+                self.repository = rs_cls(self.context, repo_filter)
+                LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
                     'NoApplicableCode', 'service',
-                    'Could not load repository (geonode): %s' % str(err)
-                )
-
-        elif (self.config.has_option('repository', 'source') and
-                self.config.get('repository', 'source') == 'HHypermap'):
-
-            # load HHypermap repository
-            from pycsw.plugins.repository.hhypermap import hhypermap
-
-            try:
-                self.repository = hhypermap.HHypermapRepository(self.context,
-                                                                repo_filter)
-                LOGGER.debug('HHypermap repository loaded '
-                             '(hhypermap): %s.' % self.repository.dbtype)
-            except Exception as err:
-                self.response = self.iface.exceptionreport(
-                    'NoApplicableCode', 'service',
-                    'Could not load repository (hhypermap): %s' % str(err)
-                )
-
-        elif (self.config.has_option('repository', 'source') and
-                self.config.get('repository', 'source') == 'odc'):
-
-            # load odc repository
-            from pycsw.plugins.repository.odc import odc
-
-            try:
-                self.repository = odc.OpenDataCatalogRepository(self.context,
-                                                                repo_filter)
-                LOGGER.debug('OpenDataCatalog repository loaded '
-                             '(geonode): %s.' % self.repository.dbtype)
-            except Exception as err:
-                self.response = self.iface.exceptionreport(
-                    'NoApplicableCode', 'service',
-                    'Could not load repository (odc): %s' % str(err)
-                )
+                    'Could not load custom repository %s: %s' % (rs, str(err)))
 
         else:  # load default repository
             self.orm = 'sqlalchemy'

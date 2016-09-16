@@ -12,4 +12,6 @@ GeoNode Setup
 
 pycsw is enabled and configured by default in GeoNode, so there are no additional steps required once GeoNode is setup.  See the ``CATALOGUE`` and ``PYCSW`` `settings.py entries`_ at http://docs.geonode.org/en/latest/developers/reference/django-apps.html#id1 for customizing pycsw within GeoNode.
 
+The GeoNode plugin is managed outside of pycsw within the GeoNode project.
+
 .. _`settings.py entries`: http://docs.geonode.org/en/latest/developers/reference/django-apps.html#id1
