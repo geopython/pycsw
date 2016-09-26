@@ -149,7 +149,7 @@ class Repository(object):
             LOGGER.debug('PostgreSQL FTS enabled: %r', self.fts)
 
         if temp_dbtype is not None:
-            LOGGER.debug('%s support detected' % temp_dbtype)
+            LOGGER.debug('%s support detected', temp_dbtype)
             self.dbtype = temp_dbtype
 
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings

@@ -81,7 +81,7 @@ class Geometry(object):
             LOGGER.debug('geometry srsName detected')
             self.crs = crs.Crs(operand.attrib['srsName'])
         else:
-            LOGGER.debug('setting default geometry srsName %s' % DEFAULT_SRS)
+            LOGGER.debug('setting default geometry srsName %s', DEFAULT_SRS)
             self.crs = DEFAULT_SRS
 
         self.type = util.xmltag_split(operand.tag)
@@ -188,7 +188,7 @@ class Geometry(object):
         from shapely.geometry import Point, LineString, Polygon
         from shapely.wkt import loads
 
-        LOGGER.debug('Transforming geometry from %s to %s' % (src, dest))
+        LOGGER.debug('Transforming geometry from %s to %s', src, dest)
 
         vertices = []
 
