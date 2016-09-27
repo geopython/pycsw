@@ -3,7 +3,7 @@
 <csw:HarvestResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
   <csw:TransactionResponse version="2.0.2">
     <csw:TransactionSummary>
-      <csw:totalInserted>244</csw:totalInserted>
+      <csw:totalInserted>295</csw:totalInserted>
       <csw:totalUpdated>0</csw:totalUpdated>
       <csw:totalDeleted>0</csw:totalDeleted>
     </csw:TransactionSummary>
@@ -11,6 +11,10 @@
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
         <dc:title>NASA Global Imagery Browse Services for EOSDIS</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MISR_Radiance_Average_Natural_Color_Monthly</dc:identifier>
+        <dc:title>Radiance Average (AN, Natural Color, Monthly, MISR, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Temp_Night</dc:identifier>
@@ -25,20 +29,44 @@
         <dc:title>Corrected Reflectance (M3-I3-M11, VIIRS, SNPP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_Shortwave_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Shortwave Flux (Monthly, Clear-Sky, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Net_Shortwave_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Net Shortwave Flux (Monthly, Clear-Sky, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Uncertainty_Analyzed_Root_Zone_Soil_Moisture</dc:identifier>
         <dc:title>Root Zone Soil Moisture Uncertainty (L4, 12z Instantaneous, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Temp_Day</dc:identifier>
+        <dc:title>Cloud Top Temperature (Day, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Combined_Value_Added_AOD</dc:identifier>
         <dc:title>Aerosol Optical Depth (Value Added, MODIS, Combined Aqua and Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Terra_TOA_Shortwave_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Shortwave Flux Clear-Sky (Monthly, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_CorrectedReflectance_TrueColor_Alaska_Monthly</dc:identifier>
         <dc:title>Corrected Reflectance (True Color, Alaska Monthly, Best Available, Landsat)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_VV</dc:identifier>
-        <dc:title>Sigma0 (L3, Active, VV Polarization, Radar, SMAP)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_Shortwave_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Shortwave Flux (Monthly, All-Sky, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Height_Day</dc:identifier>
+        <dc:title>Cloud Top Height (Day, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Shortwave_Flux_Up_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Shortwave Flux (Monthly, Up, Clear-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Pressure_Night</dc:identifier>
@@ -53,12 +81,20 @@
         <dc:title>Aerosol Index (OMI, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Combined_TOA_Shortwave_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Shortwave Flux Clear-Sky (Monthly, CERES, Aqua+Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Fraction_Night</dc:identifier>
         <dc:title>Cloud Fraction (Night, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_AOD_Deep_Blue_Combined</dc:identifier>
         <dc:title>Merged Aerosol Optical Depth (Deep Blue, Land and Ocean, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Soil_Temperature_Layer_1</dc:identifier>
+        <dc:title>Surface Soil Temperature (L4, 12z Instantaneous, Model Value-Added, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Analyzed_Surface_Soil_Moisture</dc:identifier>
@@ -89,16 +125,20 @@
         <dc:title>Uncorrected Brightness Temperature (L1, Passive, Fore, V Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H</dc:identifier>
-        <dc:title>Uncorrected Brightness Temperature (L1, Passive, Fore, H Polarization, Radiometer, SMAP)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Combined_TOA_Shortwave_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Shortwave Flux All-Sky (Monthly, CERES, Aqua+Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_400hPa_Night</dc:identifier>
         <dc:title>Relative Humidity (400 hPa, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_700hPa_Night</dc:identifier>
-        <dc:title>Air Temperature (700 hPa, Night, AIRS, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_CRE_Net_Total_Flux_Monthly</dc:identifier>
+        <dc:title>Surface CRE Net Total Flux (Monthly, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Net_Total_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Net Total Flux (Monthly, Clear-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H_QA</dc:identifier>
@@ -129,8 +169,8 @@
         <dc:title>Rain Rate (Descending, GMI, GPM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_XPOL_RFI</dc:identifier>
-        <dc:title>Sigma0 RFI (L3, Active, XPOL Polarization, Radar, SMAP)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MOPITT_CO_Monthly_Surface_Mixing_Ratio_Night</dc:identifier>
+        <dc:title>Carbon Monoxide (Monthly, Night, Surface Mixing Ratio, MOPITT, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Brightness_Temp_Band31_Day</dc:identifier>
@@ -161,8 +201,8 @@
         <dc:title>Nitric Acid (46 hPa, Day, MLS, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L2_Passive_Soil_Moisture_Option1</dc:identifier>
-        <dc:title>Soil Moisture (L2, Passive, Single Channel Algorithm, H Polarization, Radiometer, SMAP)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_H_QA</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature QA (L1, Passive, Aft, H Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-OMI_SO2_Middle_Troposphere</dc:identifier>
@@ -181,8 +221,12 @@
         <dc:title>Freeze Thaw (Daily Landscape, AMSR-E, MEaSUREs)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Effective_Radius_PCL</dc:identifier>
-        <dc:title>Cloud Effective Radius (PCL, MODIS, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MISR_Radiance_Average_Infrared_Color_Monthly</dc:identifier>
+        <dc:title>Radiance Average (AN, Infrared Color, Monthly, MISR, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MOPITT_CO_Monthly_Total_Column_Day</dc:identifier>
+        <dc:title>Carbon Monoxide (Monthly, Day, Total Column, v6, Standard, MOPITT, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_600hPa_Night</dc:identifier>
@@ -205,20 +249,32 @@
         <dc:title>Surface Precipitation Rate (Day, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Snow_Mass</dc:identifier>
+        <dc:title>Snow Mass (L4, 12z-3z Average, Model Value-Added, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-VIIRS_CityLights_2012</dc:identifier>
         <dc:title>Earth at Night (2012, VIIRS, SNPP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Rain_Rate_Day</dc:identifier>
-        <dc:title>Surface Rain Rate (Day, AMSR-E, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Longwave_Flux_Up_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Longwave Flux (Monthly, Up, Clear-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_VV_RFI</dc:identifier>
         <dc:title>Sigma0 RFI (L3, Active, VV Polarization, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Multi_Layer_Flag</dc:identifier>
-        <dc:title>Cloud Multi Layer Flag (MODIS, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MISR_Directional_Hemispherical_Reflectance_Average_Natural_Color_Monthly</dc:identifier>
+        <dc:title>DHR Average (Monthly, Natural Color, MISR, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Combined_TOA_Longwave_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Longwave Flux All-Sky (Monthly, CERES, Aqua+Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Surface_Rain_Rate_Day</dc:identifier>
+        <dc:title>Surface Rain Rate (Day, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Water_Path_PCL</dc:identifier>
@@ -227,6 +283,10 @@
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Fraction_Day</dc:identifier>
         <dc:title>Cloud Fraction (Day, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_CRE_Net_Shortwave_Flux_Monthly</dc:identifier>
+        <dc:title>Surface CRE Net Shortwave Flux (Monthly, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_SurfaceReflectance_Bands143</dc:identifier>
@@ -241,8 +301,8 @@
         <dc:title>Reference Labels (OSM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Temp_Day</dc:identifier>
-        <dc:title>Cloud Top Temperature (Day, MODIS, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Net_Total_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Net Total Flux (Monthly, All-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MLS_O3_46hPa_Day</dc:identifier>
@@ -261,12 +321,20 @@
         <dc:title>Cloud Fraction (Day, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_NDVI_Global_Annual</dc:identifier>
+        <dc:title>NDVI (Global Annual, Best Available, NEX, Landsat)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_XPOL</dc:identifier>
         <dc:title>Sigma0 (L3, Active, XPOL Polarization, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_CorrectedReflectance_Bands721</dc:identifier>
         <dc:title>Corrected Reflectance (Bands 7-2-1, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Brightness_Temp_Band31_Night</dc:identifier>
+        <dc:title>Brightness Temperature (Band31, Night, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-GMI_Brightness_Temp_Dsc</dc:identifier>
@@ -293,6 +361,14 @@
         <dc:title>Cloud Effective Radius (3.7 micron, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Longwave_Flux_Down_All_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Longwave Flux (Monthly, Down, All-Sky, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Terra_TOA_Window_Region_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Window-Region Flux Clear-Sky (Monthly, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_400hPa_Night</dc:identifier>
         <dc:title>Air Temperature (400 hPa, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
@@ -303,6 +379,10 @@
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Water_Vapor_5km_Day</dc:identifier>
         <dc:title>Water Vapor Infrared (Day, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Combined_TOA_Window_Region_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Window-Region Flux Clear-Sky (Monthly, CERES, Aqua+Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Passive_Soil_Moisture</dc:identifier>
@@ -325,6 +405,14 @@
         <dc:title>Sea Ice Concentration (25 km, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Multi_Layer_Flag</dc:identifier>
+        <dc:title>Cloud Multi Layer Flag (MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L2_Passive_Soil_Moisture_Option1</dc:identifier>
+        <dc:title>Soil Moisture (L2, Passive, Single Channel Algorithm, H Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MLS_CO_215hPa_Night</dc:identifier>
         <dc:title>Carbon Monoxide (215 hPa, Night, MLS, Aura)</dc:title>
       </csw:BriefRecord>
@@ -337,12 +425,16 @@
         <dc:title>Brightness Temperature (89V Ghz B Scan, Night, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_Longwave_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Longwave Flux (Monthly, Clear-Sky, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Phase_Infrared_Night</dc:identifier>
         <dc:title>Cloud Phase (Infrared, Night, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Height_Day</dc:identifier>
-        <dc:title>Cloud Top Height (Day, MODIS, Terra)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Combined_TOA_Window_Region_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Window-Region Flux All-Sky (Monthly, CERES, Aqua+Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-Blue_Marble</dc:identifier>
@@ -353,16 +445,32 @@
         <dc:title>Cloud Phase (Infrared, Day, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MOPITT_CO_Daily_Surface_Mixing_Ratio_Night</dc:identifier>
+        <dc:title>Carbon Monoxide (Daily, Night, Surface Mixing Ratio, MOPITT, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Columnar_Water_Vapor_Day</dc:identifier>
         <dc:title>Columnar Water Vapor (Day, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_VV</dc:identifier>
+        <dc:title>Sigma0 (L3, Active, VV Polarization, Radar, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Effective_Radius_PCL</dc:identifier>
+        <dc:title>Cloud Effective Radius (PCL, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_SurfaceReflectance_Bands121</dc:identifier>
         <dc:title>Land Surface Reflectance (Bands 1-2-1, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Shortwave_Flux_Down_All_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Shortwave Flux (Monthly, Down, All-Sky, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Aerosol</dc:identifier>
-        <dc:title>Aerosol Optical Depth (MODIS, Aqua)</dc:title>
+        <dc:title>Dark Target Aerosol Optical Depth (Land and Ocean, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AIRS_CO_Total_Column_Night</dc:identifier>
@@ -401,6 +509,14 @@
         <dc:title>Surface Precipitation Rate (Night, AMSR-E, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-GHRSST_L4_G1SST_Sea_Surface_Temperature</dc:identifier>
+        <dc:title>Sea Surface Temperature (L4, G1SST Global Foundation, GHRSST)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Data_No_Data</dc:identifier>
+        <dc:title>Data/No Data Mask (MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H_RFI</dc:identifier>
         <dc:title>Uncorrected Brightness Temperature RFI (L1, Passive, Fore, H Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
@@ -413,8 +529,8 @@
         <dc:title>Snow Rate (Descending, GMI, GPM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_V_QA</dc:identifier>
-        <dc:title>Uncorrected Brightness Temperature QA (L1, Passive, Fore, V Polarization, Radiometer, SMAP)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Combined_TOA_Longwave_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Longwave Flux Clear-Sky (Monthly, CERES, Aqua+Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_AOD_Deep_Blue_Land</dc:identifier>
@@ -445,8 +561,8 @@
         <dc:title>Corrected Reflectance (True Color, Alaska Annual, Best Available, Landsat)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Aft_H_QA</dc:identifier>
-        <dc:title>Uncorrected Brightness Temperature QA (L1, Passive, Aft, H Polarization, Radiometer, SMAP)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MOPITT_CO_Daily_Total_Column_Night</dc:identifier>
+        <dc:title>Carbon Monoxide (Daily, Night, Total Column, MOPITT, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-ASTER_GDEM_Color_Index</dc:identifier>
@@ -457,8 +573,16 @@
         <dc:title>Sulfur Dioxide (Prata, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MOPITT_CO_Monthly_Total_Column_Night</dc:identifier>
+        <dc:title>Carbon Monoxide (Monthly, Night, Total Column, MOPITT, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Optical_Thickness_PCL</dc:identifier>
         <dc:title>Cloud Optical Thickness (PCL, MODIS, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_Net_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Net Flux (Monthly, Clear-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Concentration_12km</dc:identifier>
@@ -493,8 +617,8 @@
         <dc:title>Dark Target Aerosol Angstrom Exponent (Ocean, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Passive_Brightness_Temp_V</dc:identifier>
-        <dc:title>Disaggregated Brightness Temperature (L3, Active/Passive, V Polarization, Radar/Radiometer, SMAP)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Net_Shortwave_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Net Shortwave Flux (Monthly, All-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_500hPa_Day</dc:identifier>
@@ -505,8 +629,12 @@
         <dc:title>Cloud Effective Radius (PCL, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Snow_Mass</dc:identifier>
-        <dc:title>Snow Mass (L4, 12z-3z Average, Model Value-Added, SMAP)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MLS_O3_46hPa_Night</dc:identifier>
+        <dc:title>Ozone (46 hPa, Night, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Net_Longwave_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Net Longwave Flux (Monthly, Clear-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-VIIRS_SNPP_CorrectedReflectance_TrueColor</dc:identifier>
@@ -549,8 +677,16 @@
         <dc:title>Uncorrected Brightness Temperature RFI (L1, Passive, Fore, V Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Shortwave_Flux_Down_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Shortwave Flux (Monthly, Down, Clear-Sky, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Brightness_Temp_89H_Night</dc:identifier>
         <dc:title>Brightness Temperature (89H Ghz B Scan, Night, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_H</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature (L1, Passive, Fore, H Polarization, Radiometer, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Passive_Soil_Moisture</dc:identifier>
@@ -563,6 +699,10 @@
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Wind_Speed_Day</dc:identifier>
         <dc:title>Wind Speed (Day, AMSR2, GCOM-W1)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_CRE_Shortwave_Flux_Monthly</dc:identifier>
+        <dc:title>TOA CRE Shortwave Flux (Monthly, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-OMI_Cloud_Pressure</dc:identifier>
@@ -605,8 +745,16 @@
         <dc:title>Carbon Monoxide (215 hPa, Day, MLS, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Effective_Radius_37_PCL</dc:identifier>
+        <dc:title>Cloud Effective Radius (3.7 micron PCL, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_850hPa_Night</dc:identifier>
         <dc:title>Relative Humidity (850 hPa, Night, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MOPITT_CO_Monthly_Surface_Mixing_Ratio_Day</dc:identifier>
+        <dc:title>Carbon Monoxide (Monthly, Day, Surface Mixing Ratio, v6, Standard, MOPITT, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Effective_Radius</dc:identifier>
@@ -619,10 +767,6 @@
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Water_Path</dc:identifier>
         <dc:title>Cloud Water Path (MODIS, Terra)</dc:title>
-      </csw:BriefRecord>
-      <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Dust_Score</dc:identifier>
-        <dc:title>Dust Score Ocean (Day, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-OMI_Absorbing_Aerosol_Optical_Depth</dc:identifier>
@@ -645,8 +789,8 @@
         <dc:title>Snow Rate (Ascending, GMI, GPM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Brightness_Temp_89V</dc:identifier>
-        <dc:title>Brightness Temperature for Sea Ice (89V Ghz, AMSR-E, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Longwave_Flux_Up_All_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Longwave Flux (Monthly, Up, All-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_AOD_Deep_Blue_Combined</dc:identifier>
@@ -661,6 +805,10 @@
         <dc:title>Surface Precipitation Rate (Night, AMSR2, GCOM-W1)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Terra_TOA_Shortwave_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Shortwave Flux All-Sky (Monthly, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Optical_Thickness</dc:identifier>
         <dc:title>Cloud Optical Thickness (MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
@@ -673,12 +821,16 @@
         <dc:title>Cloud Top Height (Night, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_Longwave_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Longwave Flux (Monthly, All-Sky, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_VV_QA</dc:identifier>
         <dc:title>Sigma0 QA (L3, Active, VV Polarization, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Temp_Day</dc:identifier>
-        <dc:title>Cloud Top Temperature (Day, MODIS, Terra)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_700hPa_Night</dc:identifier>
+        <dc:title>Air Temperature (700 hPa, Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Brightness_Temp_6km_89V</dc:identifier>
@@ -709,6 +861,10 @@
         <dc:title>Corrected Reflectance (M11-I2-I1, VIIRS, SNPP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_Net_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Net Flux (Monthly, All-Sky, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AIRS_RelativeHumidity_700hPa_Day</dc:identifier>
         <dc:title>Relative Humidity (700 hPa, Day, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
@@ -729,6 +885,14 @@
         <dc:title>Sulfur Dioxide (Lower Troposphere, OMI, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Passive_Brightness_Temp_V</dc:identifier>
+        <dc:title>Disaggregated Brightness Temperature (L3, Active/Passive, V Polarization, Radar/Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_CRE_Longwave_Flux_Monthly</dc:identifier>
+        <dc:title>TOA CRE Longwave Flux (Monthly, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-BlueMarble_ShadedRelief_Bathymetry</dc:identifier>
         <dc:title>Blue Marble Shaded Relief and Bathymetry (MODIS)</dc:title>
       </csw:BriefRecord>
@@ -737,8 +901,8 @@
         <dc:title>Cloud Water Path (MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-GHRSST_L4_G1SST_Sea_Surface_Temperature</dc:identifier>
-        <dc:title>Sea Surface Temperature (L4, G1SST Global Foundation, GHRSST)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Longwave_Flux_Down_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Longwave Flux (Monthly, Down, Clear-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Effective_Radius_37_PCL</dc:identifier>
@@ -761,6 +925,14 @@
         <dc:title>Heterotrophic Respiration (L4, 9 km Grid Cell Mean, Model Value-Added, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Terra_TOA_Longwave_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Longwave Flux All-Sky (Monthly, CERES, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Reference_Features</dc:identifier>
+        <dc:title>Reference Features (OSM)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MLS_H2O_46hPa_Night</dc:identifier>
         <dc:title>Water Vapor (46 hPa, Night, MLS, Aura)</dc:title>
       </csw:BriefRecord>
@@ -777,8 +949,8 @@
         <dc:title>Air Temperature (600 hPa, Day, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Effective_Radius_37_PCL</dc:identifier>
-        <dc:title>Cloud Effective Radius (3.7 micron PCL, MODIS, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Net_Longwave_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Net Longwave Flux (Monthly, All-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Brightness_Temp_Band31_Night</dc:identifier>
@@ -797,8 +969,8 @@
         <dc:title>Soil Moisture (L3, Active, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-Reference_Features</dc:identifier>
-        <dc:title>Reference Features (OSM)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_Shortwave_Flux_Up_All_Sky_Monthly</dc:identifier>
+        <dc:title>Surface Shortwave Flux (Monthly, Up, All-Sky, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Concentration_25km</dc:identifier>
@@ -809,12 +981,24 @@
         <dc:title>Dark Target Aerosol Angstrom Exponent (Ocean, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L1_Passive_Brightness_Temp_Fore_V_QA</dc:identifier>
+        <dc:title>Uncorrected Brightness Temperature QA (L1, Passive, Fore, V Polarization, Radiometer, SMAP)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Landsat_WELD_CorrectedReflectance_TrueColor_Global_Annual</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, Global Annual, Best Available, NEX, Landsat)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Optical_Thickness</dc:identifier>
         <dc:title>Cloud Optical Thickness (MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Snow_Depth_Over_Ice</dc:identifier>
         <dc:title>Snow Depth Over Ice (12 km, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L3_Active_Sigma0_XPOL_RFI</dc:identifier>
+        <dc:title>Sigma0 RFI (L3, Active, XPOL Polarization, Radar, SMAP)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Top_Pressure_Night</dc:identifier>
@@ -829,8 +1013,8 @@
         <dc:title>Nitrous Oxide (46 hPa, Day, MLS, Aura)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_CorrectedReflectance_TrueColor</dc:identifier>
-        <dc:title>Corrected Reflectance (True Color, MODIS, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Terra_TOA_Window_Region_Flux_All_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Window-Region Flux All-Sky (Monthly, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-OMI_Aerosol_Optical_Depth</dc:identifier>
@@ -843,6 +1027,10 @@
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AIRS_Temperature_600hPa_Night</dc:identifier>
         <dc:title>Air Temperature (600 hPa, Night, AIRS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MOPITT_CO_Daily_Total_Column_Day</dc:identifier>
+        <dc:title>Carbon Monoxide (Daily, Day, Total Column, v6, Standard, MOPITT, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_CorrectedReflectance_Bands367</dc:identifier>
@@ -877,6 +1065,10 @@
         <dc:title>Precipitation (Night, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-AMSRE_Sea_Ice_Brightness_Temp_89V</dc:identifier>
+        <dc:title>Brightness Temperature for Sea Ice (89V Ghz, AMSR-E, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AMSR2_Sea_Ice_Concentration_12km</dc:identifier>
         <dc:title>Sea Ice Concentration (12 km, AMSR2, GCOM-W1)</dc:title>
       </csw:BriefRecord>
@@ -898,15 +1090,15 @@
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Aerosol</dc:identifier>
-        <dc:title>Aerosol Optical Depth (MODIS, Terra)</dc:title>
+        <dc:title>Dark Target Aerosol Optical Depth (Land and Ocean, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-SRTM_Color_Index</dc:identifier>
         <dc:title>Digital Elevation Model (Color Index, SRTM)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MLS_O3_46hPa_Night</dc:identifier>
-        <dc:title>Ozone (46 hPa, Night, MLS, Aura)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_CRE_Net_Flux_Monthly</dc:identifier>
+        <dc:title>TOA CRE Net Flux (Monthly, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-AIRS_Dust_Score_Ocean_Night</dc:identifier>
@@ -925,8 +1117,12 @@
         <dc:title>Wind Speed (Night, AMSR2, GCOM-W1)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-SMAP_L4_Soil_Temperature_Layer_1</dc:identifier>
-        <dc:title>Surface Soil Temperature (L4, 12z Instantaneous, Model Value-Added, SMAP)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MOPITT_CO_Daily_Surface_Mixing_Ratio_Day</dc:identifier>
+        <dc:title>Carbon Monoxide (Daily, Day, Surface Mixing Ratio, v6, Standard, MOPITT, Terra)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_Surface_CRE_Net_Longwave_Flux_Monthly</dc:identifier>
+        <dc:title>Surface CRE Net Longwave Flux (Monthly, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-ASTER_GDEM_Greyscale_Shaded_Relief</dc:identifier>
@@ -941,12 +1137,20 @@
         <dc:title>Sulfur Dioxide (Prata, Day, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Brightness_Temp_Band31_Night</dc:identifier>
-        <dc:title>Brightness Temperature (Band31, Night, MODIS, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_CorrectedReflectance_TrueColor</dc:identifier>
+        <dc:title>Corrected Reflectance (True Color, MODIS, Aqua)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_Terra_TOA_Longwave_Flux_Clear_Sky_Monthly</dc:identifier>
+        <dc:title>TOA Longwave Flux Clear-Sky (Monthly, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MLS_SO2_147hPa_Night</dc:identifier>
         <dc:title>Sulfur Dioxide (147 hPa, Night, MLS, Aura)</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Water_Path_PCL</dc:identifier>
+        <dc:title>Cloud Water Path (PCL, MODIS, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_SurfaceReflectance_Bands121</dc:identifier>
@@ -973,12 +1177,12 @@
         <dc:title>Air Temperature (850 hPa, Day, AIRS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Data_No_Data</dc:identifier>
-        <dc:title>Data/No Data Mask (MODIS, Aqua)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Aqua_Cloud_Top_Temp_Day</dc:identifier>
+        <dc:title>Cloud Top Temperature (Day, MODIS, Aqua)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
-        <dc:identifier>PYCSW_IDENTIFIER-MODIS_Terra_Cloud_Water_Path_PCL</dc:identifier>
-        <dc:title>Cloud Water Path (PCL, MODIS, Terra)</dc:title>
+        <dc:identifier>PYCSW_IDENTIFIER-CERES_EBAF_TOA_Incoming_Solar_Flux_Monthly</dc:identifier>
+        <dc:title>Incoming Solar Flux (Monthly, CERES, Terra)</dc:title>
       </csw:BriefRecord>
       <csw:BriefRecord>
         <dc:identifier>PYCSW_IDENTIFIER-ASTER_GDEM_Color_Shaded_Relief</dc:identifier>
