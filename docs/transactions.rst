@@ -19,7 +19,7 @@ For transactions and harvesting, pycsw supports the following metadata resource 
   ISO 19139,``http://www.isotc211.org/2005/gmd``,yes,yes
   ISO GMI,``http://www.isotc211.org/2005/gmi``,yes,yes
   OGC:CSW 2.0.2,``http://www.opengis.net/cat/csw/2.0.2``,,yes
-  OGC:WMS 1.1.1,``http://www.opengis.net/wms``,,yes
+  OGC:WMS 1.1.1/1.3.0,``http://www.opengis.net/wms``,,yes
   OGC:WMTS 1.0.0,``http://www.opengis.net/wmts/1.0``,,yes
   OGC:WFS 1.1.0,``http://www.opengis.net/wfs``,,yes
   OGC:WCS 1.0.0,``http://www.opengis.net/wcs``,,yes
