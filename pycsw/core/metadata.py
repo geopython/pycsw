@@ -300,6 +300,11 @@ def _parse_wms(context, repos, record, identifier):
     serviceobj = repos.dataset()
 
     md = WebMapService(record)
+    try:
+        md = WebMapService(record, version='1.3.0')
+    except Exception as err:
+        LOGGER.info('Looks like WMS 1.3.0 is not supported; trying 1.1.1', err)
+        md = WebMapService(record)
 
     # generate record of service instance
     _set(context, serviceobj, 'pycsw:Identifier', identifier)
