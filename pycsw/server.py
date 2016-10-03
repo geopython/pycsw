@@ -33,12 +33,14 @@
 
 import logging
 import os
-from six.moves.urllib.parse import quote, unquote
+from six.moves.urllib.parse import parse_qsl
+from six.moves.urllib.parse import splitquery
 from six.moves.urllib.parse import urlparse
 from six import StringIO
 from six.moves.configparser import SafeConfigParser
 import sys
 from time import time
+import wsgiref
 
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
@@ -234,39 +236,12 @@ class Csw(object):
 
         else:  # it's a GET request
             self.requesttype = 'GET'
-
-            scheme = '%s://' % self.environ['wsgi.url_scheme']
-
-            if self.environ.get('HTTP_HOST'):
-                url = '%s%s' % (scheme, self.environ['HTTP_HOST'])
-            else:
-                url = '%s%s' % (scheme, self.environ['SERVER_NAME'])
-
-                if self.environ['wsgi.url_scheme'] == 'https':
-                    if self.environ['SERVER_PORT'] != '443':
-                        url += ':' + self.environ['SERVER_PORT']
-                else:
-                    if self.environ['SERVER_PORT'] != '80':
-                        url += ':' + self.environ['SERVER_PORT']
-
-            url += quote(self.environ.get('SCRIPT_NAME', ''))
-            url += quote(self.environ.get('PATH_INFO', ''))
-
-            if self.environ.get('QUERY_STRING'):
-                url += '?' + self.environ['QUERY_STRING']
-
-            self.request = url
+            self.request = wsgiref.util.request_uri(self.environ)
+            try:
+                self.kvp = dict(parse_qsl(splitquery(self.request)[-1]))
+            except AttributeError:
+                self.kvp = {}
             LOGGER.debug('Request type: GET.  Request:\n%s\n', self.request)
-
-            pairs = self.environ.get('QUERY_STRING').split("&")
-
-            kvp = {}
-
-            for pairstr in pairs:
-                pair = [unquote(a) for a in pairstr.split("=")]
-                kvp[pair[0]] = pair[1] if len(pair) > 1 else ""
-            self.kvp = kvp
-
         return self.dispatch()
 
     def opensearch(self):
