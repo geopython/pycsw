@@ -1436,7 +1436,7 @@ class Csw3(object):
                 existing_records = [str(i.identifier) for i in service_results]
 
                 deleted = set(existing_records) - set(fresh_records)
-                LOGGER.debug('Records to delete: %s' % str(deleted))
+                LOGGER.debug('Records to delete: %s', deleted)
 
                 for to_delete in deleted:
                     delete_constraint = {
