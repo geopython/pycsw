@@ -749,6 +749,7 @@ class Csw(object):
                 'http://www.opengis.net/wms',
                 'http://www.opengis.net/wmts/1.0',
                 'http://www.opengis.net/wfs',
+                'http://www.opengis.net/wfs/2.0',
                 'http://www.opengis.net/wcs',
                 'http://www.opengis.net/wps/1.0.0',
                 'http://www.opengis.net/sos/1.0',

@@ -84,9 +84,13 @@ def parse_record(context, record, repos=None,
         LOGGER.debug('WPS detected, fetching via OWSLib')
         return [_parse_wps(context, repos, record, identifier)]
 
-    elif mtype == 'http://www.opengis.net/wfs':  # WFS
+    elif mtype == 'http://www.opengis.net/wfs':  # WFS 1.1.0
         LOGGER.debug('WFS detected, fetching via OWSLib')
-        return _parse_wfs(context, repos, record, identifier)
+        return _parse_wfs(context, repos, record, identifier, '1.1.0')
+
+    elif mtype == 'http://www.opengis.net/wfs/2.0':  # WFS 2.0.0
+        LOGGER.debug('WFS detected, fetching via OWSLib')
+        return _parse_wfs(context, repos, record, identifier, '2.0.0')
 
     elif mtype == 'http://www.opengis.net/wcs':  # WCS
         LOGGER.debug('WCS detected, fetching via OWSLib')
@@ -544,7 +548,7 @@ def _parse_wmts(context, repos, record, identifier):
     return recobjs
 
 
-def _parse_wfs(context, repos, record, identifier):
+def _parse_wfs(context, repos, record, identifier, version):
 
     from owslib.wfs import WebFeatureService
 
@@ -552,7 +556,11 @@ def _parse_wfs(context, repos, record, identifier):
     recobjs = []
     serviceobj = repos.dataset()
 
-    md = WebFeatureService(record, '1.1.0')
+    try:
+        md = WebFeatureService(record, version)
+    except Exception as err:
+        if version == '1.1.0':
+            md = WebFeatureService(record, '1.0.0')
 
     # generate record of service instance
     _set(context, serviceobj, 'pycsw:Identifier', identifier)
