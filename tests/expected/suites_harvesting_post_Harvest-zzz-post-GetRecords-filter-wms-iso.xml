@@ -1145,7 +1145,7 @@
             <gco:LocalName>OGC:WMS</gco:LocalName>
           </srv:serviceType>
           <srv:serviceTypeVersion>
-            <gco:CharacterString>1.1.1</gco:CharacterString>
+            <gco:CharacterString>1.3.0</gco:CharacterString>
           </srv:serviceTypeVersion>
           <srv:keywords>
             <gmd:MD_Keywords>
