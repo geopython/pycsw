@@ -3,7 +3,6 @@ Type=Application
 Encoding=UTF-8
 Name=pycsw
 Comment=pycsw catalog server
-Categories=Application;Education;Geography;
 Exec=firefox http://localhost/pycsw/tests/index.html
 Icon=/var/www/html/pycsw/docs/_static/pycsw-logo.png
 Terminal=false
