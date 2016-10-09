@@ -38,6 +38,7 @@ from six import StringIO
 from six.moves.configparser import SafeConfigParser
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
+from pycsw.ogc.csw.cql import cql2fes1
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
 from pycsw.core import config, log, metadata, util
@@ -732,12 +733,20 @@ class Csw2(object):
                     % self.parent.kvp['constraintlanguage'])
                 if self.parent.kvp['constraintlanguage'] == 'CQL_TEXT':
                     tmp = self.parent.kvp['constraint']
-                    self.parent.kvp['constraint'] = {}
-                    self.parent.kvp['constraint']['type'] = 'cql'
-                    self.parent.kvp['constraint']['where'] = \
-                    self.parent._cql_update_queryables_mappings(tmp,
-                    self.parent.repository.queryables['_all'])
-                    self.parent.kvp['constraint']['values'] = {}
+                    try:
+                        LOGGER.debug('Transforming CQL into fes1')
+                        LOGGER.debug('CQL: %s', tmp)
+                        self.parent.kvp['constraint'] = {}
+                        self.parent.kvp['constraint']['type'] = 'filter'
+                        cql = cql2fes1(tmp, self.parent.context.namespaces)
+                        self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = fes1.parse(cql,
+                        self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
+                        self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
+                    except Exception as err:
+                        LOGGER.error('Invalid CQL query %s', tmp)
+                        LOGGER.error('Error message: %s', err, exc_info=True)
+                        return self.exceptionreport('InvalidParameterValue',
+                        'constraint', 'Invalid Filter syntax')
                 elif self.parent.kvp['constraintlanguage'] == 'FILTER':
                     # validate filter XML
                     try:
@@ -815,8 +824,10 @@ class Csw2(object):
             maxrecords=self.parent.kvp['maxrecords'],
             startposition=int(self.parent.kvp['startposition'])-1)
         except Exception as err:
+            LOGGER.debug('Invalid query syntax.  Query: %s', self.parent.kvp['constraint'])
+            LOGGER.debug('Invalid query syntax.  Result: %s', err)
             return self.exceptionreport('InvalidParameterValue', 'constraint',
-            'Invalid query: %s' % err)
+            'Invalid query syntax')
 
         dsresults = []
 
@@ -1536,13 +1547,21 @@ class Csw2(object):
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
             except Exception as err:
                 return 'Invalid Filter request: %s' % err
+
         tmp = element.find(util.nspath_eval('csw:CqlText', self.parent.context.namespaces))
         if tmp is not None:
-            LOGGER.debug('CQL specified: %s.' % tmp.text)
-            query['type'] = 'cql'
-            query['where'] = self.parent._cql_update_queryables_mappings(tmp.text,
-            self.parent.repository.queryables['_all'])
-            query['values'] = {}
+            LOGGER.debug('CQL specified: %s.', tmp.text)
+            try:
+                LOGGER.debug('Transforming CQL into OGC Filter')
+                query['type'] = 'filter'
+                cql = cql2fes1(tmp.text, self.parent.context.namespaces)
+                query['where'], query['values'] = fes1.parse(cql,
+                self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
+                self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
+            except Exception as err:
+                LOGGER.error('Invalid CQL request: %s', tmp.text)
+                LOGGER.error('Error message: %s', err, exc_info=True)
+                return 'Invalid CQL request'
         return query
 
     def parse_postdata(self, postdata):
