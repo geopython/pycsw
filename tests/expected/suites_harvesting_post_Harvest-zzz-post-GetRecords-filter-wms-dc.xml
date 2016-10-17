@@ -72,7 +72,7 @@
       <dc:title>IEM WMS Service</dc:title>
       <dc:type>service</dc:type>
       <dc:subject></dc:subject>
-      <dc:format>OGC:WMS</dc:format>
+      <dc:format>WMS</dc:format>
       <dct:references scheme="OGC:WMS">http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi</dct:references>
       <dct:abstract>IEM generated CONUS composite of NWS WSR-88D level III base reflectivity.</dct:abstract>
       <dc:creator>Daryl Herzmann</dc:creator>
