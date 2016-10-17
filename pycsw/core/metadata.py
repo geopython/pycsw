@@ -82,7 +82,7 @@ def parse_record(context, record, repos=None,
 
     elif mtype == 'http://www.opengis.net/wps/1.0.0':  # WPS
         LOGGER.debug('WPS detected, fetching via OWSLib')
-        return [_parse_wps(context, repos, record, identifier)]
+        return _parse_wps(context, repos, record, identifier)
 
     elif mtype == 'http://www.opengis.net/wfs':  # WFS 1.1.0
         LOGGER.debug('WFS detected, fetching via OWSLib')
@@ -757,6 +757,7 @@ def _parse_wps(context, repos, record, identifier):
 
     from owslib.wps import WebProcessingService
 
+    recobjs = []
     serviceobj = repos.dataset()
 
     md = WebProcessingService(record)
@@ -795,7 +796,44 @@ def _parse_wps(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
 
-    return serviceobj
+    recobjs.append(serviceobj)
+
+    # generate record foreach process
+
+    LOGGER.debug('Harvesting %d WPS processes', len(md.processes))
+
+    for process in md.processes:
+        recobj = repos.dataset()
+        identifier2 = '%s-%s' % (identifier, process.identifier)
+        _set(context, recobj, 'pycsw:Identifier', identifier2)
+        _set(context, recobj, 'pycsw:Typename', 'csw:Record')
+        _set(context, recobj, 'pycsw:Schema', 'http://www.opengis.net/wps/1.0.0')
+        _set(context, recobj, 'pycsw:MdSource', record)
+        _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
+        _set(context, recobj, 'pycsw:Type', 'software')
+        _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
+        _set(context, recobj, 'pycsw:Title', process.title)
+        _set(context, recobj, 'pycsw:Abstract', process.abstract)
+
+        _set(context, recobj, 'pycsw:AnyText',
+             util.get_anytext([process.title, process.abstract]))
+
+        params = {
+            'service': 'WPS',
+            'version': '1.0.0',
+            'request': 'DescribeProcess',
+            'identifier': process.identifier
+        }
+
+        links.append(
+        '%s,OGC-WPS DescribeProcess service (ver 1.0.0),OGC:WPS-1.0.0-http-describe-process,%s' % (identifier, build_get_url(md.url, {'service': 'WPS', 'version': '1.0.0', 'request': 'DescribeProcess', 'identifier': process.identifier})))
+
+        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+
+        recobjs.append(recobj)
+
+    return recobjs
 
 
 def _parse_sos(context, repos, record, identifier, version):
