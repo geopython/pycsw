@@ -9,3 +9,5 @@ GetRecords-filter,PYCSW_SERVER?config=tests/suites/default/default.cfg&service=C
 Exception-GetRepositoryItem-service-invalid1,PYCSW_SERVER?config=tests/suites/default/default.cfg&service=CSW%00&version=2.0.2&request=GetRepositoryItem&id=123
 Exception-GetRepositoryItem-service-invalid2,PYCSW_SERVER?config=tests/suites/default/default.cfg&service=CSW%00'&version=2.0.2&request=GetRepositoryItem&id=123
 Exception-GetRepositoryItem-version-invalid,PYCSW_SERVER?config=tests/suites/default/default.cfg&service=CSW&version=2.0.2'&request=GetRepositoryItem&id=123
+GetRecords-filter-cql-title,PYCSW_SERVER?config=tests/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&constraintlanguage=CQL_TEXT&constraint=dc%3Atitle%20like%20%27%25lor%25%27
+GetRecords-filter-cql-title-or-abstract,PYCSW_SERVER?config=tests/suites/default/default.cfg&service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&constraintlanguage=CQL_TEXT&constraint=dc%3Atitle%20like%20%27%25lor%25%27%20or%20dct%3Aabstract%20like%20%27%25pharetra%25%27
