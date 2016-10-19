@@ -1,28 +1,3 @@
-# -*- coding: utf-8 -*-
-# =================================================================
-#
-# Authors: Adam Hinz <hinz.adam@gmail.com>
-#
-# Copyright (c) 2015 Adam Hinz
-#
-# Permission is hereby granted, free of charge, to any person
-# obtaining a copy of this software and associated documentation
-# files (the "Software"), to deal in the Software without
-# restriction, including without limitation the rights to use,
-# copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following
-# conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
@@ -55,6 +30,8 @@
 import os
 import sys
 import six
+import re
+import ConfigParser
 from six.moves.urllib.parse import unquote
 
 from pycsw import server
@@ -62,10 +39,43 @@ from pycsw import server
 
 PYCSW_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+def dynUpdateConfigurationURLs(new_url):
+    '''
+    Update dynamically PyCSW configuration to match public IP:port of this server.
+
+    The PyCSW server can be deployed in a VM or a container in different environment (dev, prod...). Its IP:port is therefore not deterministic.
+    The values of 'serveraddress' in default.cfg can't be forecasted in advance.
+
+    This function is meant to be called the client emit a request.
+    The base URL requested by the client is retrieved and reinjected in PyCSW configuration.
+    '''
+    confFile = os.environ.get('PYCSW_CONFIG', '/etc/pycsw/default.cfg')
+    configpar = ConfigParser.ConfigParser()
+    configpar.read(confFile)
+    # Old values
+    oldServerURL = configpar.get('server', 'url')
+
+    # New values
+    new_url = re.sub('^https?://', '', new_url)  # Remove http[s] if present
+    newServerURL = 'http://' + new_url + '/pycsw/csw.py'
+
+    # Update the config is URLs are not the same as the one used for this HTTP requet.
+    if oldServerURL != newServerURL:
+        configpar.set('server', 'url', newServerURL)
+
+        with open(confFile, 'wb') as configfilePtr:
+            configpar.write(configfilePtr)
+
+        print('--------------------------------------------------------------------------------------------------------------------------')
+        print('Dynamically update PyCSW config \'serverURL\' to \'%s\'' % (newServerURL))
+
+
 
 def application(env, start_response):
     """WSGI wrapper"""
     config = 'default.cfg'
+
+    dynUpdateConfigurationURLs(env['HTTP_HOST'])   # Ex: 'HTTP_HOST': '172.16.10.21',
 
     if 'PYCSW_CONFIG' in env:
         config = env['PYCSW_CONFIG']
