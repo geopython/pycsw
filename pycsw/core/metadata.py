@@ -1241,9 +1241,22 @@ def _parse_iso(context, repos, exml):
             _set(context, recobj, 'pycsw:ConditionApplyingToAccessAndUse',
             md.identification.uselimitation[0])
 
-    if hasattr(md.identification, 'format'):
-        _set(context, recobj, 'pycsw:Format', md.distribution.format)
+        if hasattr(md.identification, 'format'):
+            _set(context, recobj, 'pycsw:Format', md.distribution.format)
 
+        wkt_polygon = None
+        if hasattr(md.identification, 'extent') and hasattr(md.identification.extent, 'boundingPolygon'):
+            if (hasattr(md.identification.extent.boundingPolygon, 'polygons') and
+                 len(md.identification.extent.boundingPolygon.polygons) > 0):
+                 if hasattr(md.identification.extent.boundingPolygon.polygons[0], 'exterior_ring'):
+                      exterior_ring = md.identification.extent.boundingPolygon.polygons[0].exterior_ring
+                      # Example: [(20.0, 26.0), (20.0, 35.0), (30.0, 35.0), (30.0, 25.0), (20.0, 26.0)]
+                      wkt_polygon = 'POLYGON((' + ', '.join(map(lambda x: str(x[0])+' '+str(x[1]) , exterior_ring)) + '))'
+                      # Result: POLYGON((20.0 26.0, 20.0 35.0, 30.0 35.0, 30.0 25.0, 20.0 26.0))
+                 elif hasattr(md.identification.extent.boundingPolygon.polygons[0], 'interior_rings'):
+                      # Not supported
+                      pass
+        
     if md.serviceidentification is not None:
         _set(context, recobj, 'pycsw:ServiceType', md.serviceidentification.type)
         _set(context, recobj, 'pycsw:ServiceTypeVersion', md.serviceidentification.version)
@@ -1310,7 +1323,10 @@ def _parse_iso(context, repos, exml):
     if len(links) > 0:
         _set(context, recobj, 'pycsw:Links', '^'.join(links))
 
-    if bbox is not None:
+    # Use the polygon (exterior ring), if set, or the bounding box as fallback
+    if wkt_polygon is not None:
+        _set(context, recobj, 'pycsw:BoundingBox', wkt_polygon)
+    elif bbox is not None:
         try:
             tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
