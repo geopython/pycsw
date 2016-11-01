@@ -7,6 +7,7 @@
 # Copyright (c) 2016 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2016 James Dickens
+# Copyright (c) 2016 Ricardo Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -40,7 +41,7 @@ from six import StringIO
 from six.moves.configparser import SafeConfigParser
 import sys
 from time import time
-import wsgiref
+import wsgiref.util
 
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
@@ -238,7 +239,8 @@ class Csw(object):
             self.requesttype = 'GET'
             self.request = wsgiref.util.request_uri(self.environ)
             try:
-                self.kvp = dict(parse_qsl(splitquery(self.request)[-1]))
+                query_part = splitquery(self.request)[-1]
+                self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
             except AttributeError:
                 self.kvp = {}
             LOGGER.debug('Request type: GET.  Request:\n%s\n', self.request)
@@ -426,7 +428,7 @@ class Csw(object):
             LOGGER.debug('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
-        if ((self.kvp == {'': ''} and self.request_version == '3.0.0') or
+        if ((len(self.kvp) == 0 and self.request_version == '3.0.0') or
                 (len(self.kvp) == 1 and 'config' in self.kvp)):
             LOGGER.debug('Turning on default csw30:Capabilities for base URL')
             self.kvp = {
