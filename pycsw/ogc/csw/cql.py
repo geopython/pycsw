@@ -99,7 +99,9 @@ def _parse_condition(condition):
 
     LOGGER.debug('condition: %s', condition)
 
-    property_name, operator, literal = condition.split()
+    # split at the most 2 times to take into account literals with
+    # spaces in them
+    property_name, operator, literal = condition.split(None, 2)
 
     literal = literal.replace('"', '').replace('\'', '')
 
