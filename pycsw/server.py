@@ -7,6 +7,7 @@
 # Copyright (c) 2016 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2016 James Dickens
+# Copyright (c) 2016 Ricardo Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -33,12 +34,14 @@
 
 import logging
 import os
-from six.moves.urllib.parse import quote, unquote
+from six.moves.urllib.parse import parse_qsl
+from six.moves.urllib.parse import splitquery
 from six.moves.urllib.parse import urlparse
 from six import StringIO
 from six.moves.configparser import SafeConfigParser
 import sys
 from time import time
+import wsgiref.util
 
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
@@ -234,39 +237,13 @@ class Csw(object):
 
         else:  # it's a GET request
             self.requesttype = 'GET'
-
-            scheme = '%s://' % self.environ['wsgi.url_scheme']
-
-            if self.environ.get('HTTP_HOST'):
-                url = '%s%s' % (scheme, self.environ['HTTP_HOST'])
-            else:
-                url = '%s%s' % (scheme, self.environ['SERVER_NAME'])
-
-                if self.environ['wsgi.url_scheme'] == 'https':
-                    if self.environ['SERVER_PORT'] != '443':
-                        url += ':' + self.environ['SERVER_PORT']
-                else:
-                    if self.environ['SERVER_PORT'] != '80':
-                        url += ':' + self.environ['SERVER_PORT']
-
-            url += quote(self.environ.get('SCRIPT_NAME', ''))
-            url += quote(self.environ.get('PATH_INFO', ''))
-
-            if self.environ.get('QUERY_STRING'):
-                url += '?' + self.environ['QUERY_STRING']
-
-            self.request = url
+            self.request = wsgiref.util.request_uri(self.environ)
+            try:
+                query_part = splitquery(self.request)[-1]
+                self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
+            except AttributeError:
+                self.kvp = {}
             LOGGER.debug('Request type: GET.  Request:\n%s\n', self.request)
-
-            pairs = self.environ.get('QUERY_STRING').split("&")
-
-            kvp = {}
-
-            for pairstr in pairs:
-                pair = [unquote(a) for a in pairstr.split("=")]
-                kvp[pair[0]] = pair[1] if len(pair) > 1 else ""
-            self.kvp = kvp
-
         return self.dispatch()
 
     def opensearch(self):
@@ -451,7 +428,7 @@ class Csw(object):
             LOGGER.debug('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
-        if ((self.kvp == {'': ''} and self.request_version == '3.0.0') or
+        if ((len(self.kvp) == 0 and self.request_version == '3.0.0') or
                 (len(self.kvp) == 1 and 'config' in self.kvp)):
             LOGGER.debug('Turning on default csw30:Capabilities for base URL')
             self.kvp = {
