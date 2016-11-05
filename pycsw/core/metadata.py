@@ -82,11 +82,15 @@ def parse_record(context, record, repos=None,
 
     elif mtype == 'http://www.opengis.net/wps/1.0.0':  # WPS
         LOGGER.debug('WPS detected, fetching via OWSLib')
-        return [_parse_wps(context, repos, record, identifier)]
+        return _parse_wps(context, repos, record, identifier)
 
-    elif mtype == 'http://www.opengis.net/wfs':  # WFS
+    elif mtype == 'http://www.opengis.net/wfs':  # WFS 1.1.0
         LOGGER.debug('WFS detected, fetching via OWSLib')
-        return _parse_wfs(context, repos, record, identifier)
+        return _parse_wfs(context, repos, record, identifier, '1.1.0')
+
+    elif mtype == 'http://www.opengis.net/wfs/2.0':  # WFS 2.0.0
+        LOGGER.debug('WFS detected, fetching via OWSLib')
+        return _parse_wfs(context, repos, record, identifier, '2.0.0')
 
     elif mtype == 'http://www.opengis.net/wcs':  # WCS
         LOGGER.debug('WCS detected, fetching via OWSLib')
@@ -218,7 +222,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     if pagesize > matches:
         pagesize = matches
 
-    LOGGER.debug('Harvesting %d CSW records' % matches)
+    LOGGER.debug('Harvesting %d CSW records', matches)
 
     # loop over all catalogue records incrementally
     for r in range(1, matches+1, pagesize):
@@ -300,6 +304,11 @@ def _parse_wms(context, repos, record, identifier):
     serviceobj = repos.dataset()
 
     md = WebMapService(record)
+    try:
+        md = WebMapService(record, version='1.3.0')
+    except Exception as err:
+        LOGGER.info('Looks like WMS 1.3.0 is not supported; trying 1.1.1', err)
+        md = WebMapService(record)
 
     # generate record of service instance
     _set(context, serviceobj, 'pycsw:Identifier', identifier)
@@ -345,7 +354,7 @@ def _parse_wms(context, repos, record, identifier):
 
     # generate record foreach layer
 
-    LOGGER.debug('Harvesting %d WMS layers' % len(md.contents))
+    LOGGER.debug('Harvesting %d WMS layers', len(md.contents))
 
     for layer in md.contents:
         recobj = repos.dataset()
@@ -472,7 +481,7 @@ def _parse_wmts(context, repos, record, identifier):
 
     # generate record for each layer
 
-    LOGGER.debug('Harvesting %d WMTS layers' % len(md.contents))
+    LOGGER.debug('Harvesting %d WMTS layers', len(md.contents))
 
     for layer in md.contents:
         recobj = repos.dataset()
@@ -539,7 +548,7 @@ def _parse_wmts(context, repos, record, identifier):
     return recobjs
 
 
-def _parse_wfs(context, repos, record, identifier):
+def _parse_wfs(context, repos, record, identifier, version):
 
     from owslib.wfs import WebFeatureService
 
@@ -547,7 +556,11 @@ def _parse_wfs(context, repos, record, identifier):
     recobjs = []
     serviceobj = repos.dataset()
 
-    md = WebFeatureService(record, '1.1.0')
+    try:
+        md = WebFeatureService(record, version)
+    except Exception as err:
+        if version == '1.1.0':
+            md = WebFeatureService(record, '1.0.0')
 
     # generate record of service instance
     _set(context, serviceobj, 'pycsw:Identifier', identifier)
@@ -584,7 +597,7 @@ def _parse_wfs(context, repos, record, identifier):
 
     # generate record foreach featuretype
 
-    LOGGER.debug('Harvesting %d WFS featuretypes' % len(md.contents))
+    LOGGER.debug('Harvesting %d WFS featuretypes', len(md.contents))
 
     for featuretype in md.contents:
         recobj = repos.dataset()
@@ -689,7 +702,7 @@ def _parse_wcs(context, repos, record, identifier):
 
     # generate record foreach coverage
 
-    LOGGER.debug('Harvesting %d WCS coverages ' % len(md.contents))
+    LOGGER.debug('Harvesting %d WCS coverages ', len(md.contents))
 
     for coverage in md.contents:
         recobj = repos.dataset()
@@ -744,6 +757,7 @@ def _parse_wps(context, repos, record, identifier):
 
     from owslib.wps import WebProcessingService
 
+    recobjs = []
     serviceobj = repos.dataset()
 
     md = WebProcessingService(record)
@@ -782,7 +796,44 @@ def _parse_wps(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
 
-    return serviceobj
+    recobjs.append(serviceobj)
+
+    # generate record foreach process
+
+    LOGGER.debug('Harvesting %d WPS processes', len(md.processes))
+
+    for process in md.processes:
+        recobj = repos.dataset()
+        identifier2 = '%s-%s' % (identifier, process.identifier)
+        _set(context, recobj, 'pycsw:Identifier', identifier2)
+        _set(context, recobj, 'pycsw:Typename', 'csw:Record')
+        _set(context, recobj, 'pycsw:Schema', 'http://www.opengis.net/wps/1.0.0')
+        _set(context, recobj, 'pycsw:MdSource', record)
+        _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
+        _set(context, recobj, 'pycsw:Type', 'software')
+        _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
+        _set(context, recobj, 'pycsw:Title', process.title)
+        _set(context, recobj, 'pycsw:Abstract', process.abstract)
+
+        _set(context, recobj, 'pycsw:AnyText',
+             util.get_anytext([process.title, process.abstract]))
+
+        params = {
+            'service': 'WPS',
+            'version': '1.0.0',
+            'request': 'DescribeProcess',
+            'identifier': process.identifier
+        }
+
+        links.append(
+        '%s,OGC-WPS DescribeProcess service (ver 1.0.0),OGC:WPS-1.0.0-http-describe-process,%s' % (identifier, build_get_url(md.url, {'service': 'WPS', 'version': '1.0.0', 'request': 'DescribeProcess', 'identifier': process.identifier})))
+
+        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+
+        recobjs.append(recobj)
+
+    return recobjs
 
 
 def _parse_sos(context, repos, record, identifier, version):

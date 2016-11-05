@@ -8,7 +8,7 @@ pycsw is an OGC CSW server implementation written in Python.
 Features
 ========
 
-- certified OGC `Compliant`_ and OGC Reference Implementation
+- certified OGC `Compliant`_ and OGC Reference Implementation for both CSW 2.0.2 and CSW 3.0.0
 - harvesting support for WMS, WFS, WCS, WPS, WAF, CSW, SOS
 - implements `INSPIRE Discovery Services 3.0`_
 - implements `ISO Metadata Application Profile 1.0.0`_
@@ -19,10 +19,12 @@ Features
 - implements Open Archives Initiative Protocol for Metadata Harvesting
 - supports ISO, Dublin Core, DIF, FGDC, Atom and GM03 metadata models
 - CGI or WSGI deployment
+- Python 2 and 3 compatible
 - simple configuration
 - transactional capabilities (CSW-T)
 - flexible repository configuration
 - `GeoNode`_ connectivity
+- `HHypermap`_ connectivity
 - `Open Data Catalog`_ connectivity
 - `CKAN`_ connectivity
 - federated catalogue distributed searching
@@ -32,41 +34,41 @@ Features
 Standards Support
 -----------------
 
-+-------------------+------------+
-| Standard          | Version(s) |
-+===================+============+
-| `OGC CSW`_        | 2.0.2      |
-+-------------------+------------+
-| `OGC Filter`_     | 1.1.0      |
-+-------------------+------------+
-| `OGC OWS Common`_ | 1.0.0      |
-+-------------------+------------+
-| `OGC GML`_        | 3.1.1      |
-+-------------------+------------+
-| `OGC SFSQL`_      | 1.2.1      |
-+-------------------+------------+
-| `Dublin Core`_    | 1.1        |
-+-------------------+------------+
-| `SOAP`_           | 1.2        |
-+-------------------+------------+
-| `ISO 19115`_      | 2003       |
-+-------------------+------------+
-| `ISO 19139`_      | 2007       |
-+-------------------+------------+
-| `ISO 19119`_      | 2005       |
-+-------------------+------------+
-| `NASA DIF`_       | 9.7        | 
-+-------------------+------------+
-| `FGDC CSDGM`_     | 1998       | 
-+-------------------+------------+
-| `GM03`_           | 2.1        |
-+-------------------+------------+
-| `SRU`_            | 1.1        | 
-+-------------------+------------+
-| `OGC OpenSearch`_ | 1.0        | 
-+-------------------+------------+
-| `OAI-PMH`_        | 2.0        | 
-+-------------------+------------+
++-------------------+--------------+
+| Standard          | Version(s)   |
++===================+==============+
+| `OGC CSW`_        | 2.0.2, 3.0.0 |
++-------------------+--------------+
+| `OGC Filter`_     | 1.1.0, 2.0.0 |
++-------------------+--------------+
+| `OGC OWS Common`_ | 1.0.0, 2.0.0 |
++-------------------+--------------+
+| `OGC GML`_        | 3.1.1        |
++-------------------+--------------+
+| `OGC SFSQL`_      | 1.2.1        |
++-------------------+--------------+
+| `Dublin Core`_    | 1.1          |
++-------------------+--------------+
+| `SOAP`_           | 1.2          |
++-------------------+--------------+
+| `ISO 19115`_      | 2003         |
++-------------------+--------------+
+| `ISO 19139`_      | 2007         |
++-------------------+--------------+
+| `ISO 19119`_      | 2005         |
++-------------------+--------------+
+| `NASA DIF`_       | 9.7          |
++-------------------+--------------+
+| `FGDC CSDGM`_     | 1998         |
++-------------------+--------------+
+| `GM03`_           | 2.1          |
++-------------------+--------------+
+| `SRU`_            | 1.1          |
++-------------------+--------------+
+| `OGC OpenSearch`_ | 1.0          |
++-------------------+--------------+
+| `OAI-PMH`_        | 2.0          |
++-------------------+--------------+
 
 Supported Operations
 --------------------
@@ -81,6 +83,7 @@ Supported Operations
   GetRepositoryItem,optional,yes,GET (KVP)
   GetDomain,optional,yes,GET (KVP) / POST (XML) / SOAP
   Harvest,optional,yes,GET (KVP) / POST (XML) / SOAP
+  UnHarvest,optional,no,
   Transaction,optional,yes,POST (XML) / SOAP
 
 .. note::
@@ -118,8 +121,8 @@ Supported Sorting Functionality
 Supported Filters
 -----------------
 
-Full Text
-^^^^^^^^^
+Full Text Search
+^^^^^^^^^^^^^^^^
 
 - csw:AnyText
 
@@ -191,8 +194,9 @@ Functions
 .. _`SRU`: http://www.loc.gov/standards/sru/
 .. _`OGC OpenSearch`: http://www.opengeospatial.org/standards/opensearchgeo
 .. _`GeoNode`: http://geonode.org/
+.. _`HHypermap`: https://github.com/cga-harvard/HHypermap
 .. _`Open Data Catalog`: https://github.com/azavea/Open-Data-Catalog/
 .. _`CKAN`: http://ckan.org/
-.. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1325
+.. _`Compliant`: http://www.opengeospatial.org/resource/products/details/?pid=1374
 .. _`OAI-PMH`: http://www.openarchives.org/OAI/openarchivesprotocol.html
 .. _`GM03`: http://www.geocat.ch/internet/geocat/en/home/documentation/gm03.html

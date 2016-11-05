@@ -139,10 +139,10 @@ for root, dirs, files in os.walk('suites'):
             if sfile == 'requests.txt':  # it's a list of GET requests
                 with open('%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)) as f:
                     gets = csv.reader(f)
-                for row in gets:
-                    baseurl, query_string = row[1].split('?')
-                    query = '%s?%s' % (baseurl.replace('PYCSW_SERVER', '../csw.py'), query_string.replace('&', '&amp;'))
-                    print('<li><a href="%s">%s</a></li>' % (query, row[0]))
+                    for row in gets:
+                        baseurl, query_string = row[1].split('?')
+                        query = '%s?%s' % (baseurl.replace('PYCSW_SERVER', '../csw.py'), query_string.replace('&', '&amp;'))
+                        print('<li><a href="%s">%s</a></li>' % (query, row[0]))
 print('''
             </ul>
         <hr/>

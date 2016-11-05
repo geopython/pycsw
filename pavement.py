@@ -180,6 +180,7 @@ def setup_testdata():
     ('database=', 'd', 'database (SQLite3 [default], PostgreSQL, MySQL)'),
     ('user=', 'U', 'database username'),
     ('pass=', 'p', 'database password'),
+    ('pedantic', 'P', 'run tests in pedantic mode (byte level diff check) (default: c14n mode)'),
     ('remote', 'r', 'remote testing (harvesting)'),
     ('time=', 't', 'time (milliseconds) in which requests should complete')
 ])
@@ -196,6 +197,7 @@ def test(options):
     database = options.get('database', 'SQLite3')
     remote = options.get('remote')
     timems = options.get('time', None)
+    pedantic = options.get('pedantic', False)
 
     if url is None:
         # run against default server
@@ -213,6 +215,9 @@ def test(options):
 
     if remote:
         cmd = '%s -r' % cmd
+
+    if pedantic:
+        cmd = '%s -p' % cmd
 
     if timems:
         cmd = '%s -t %s' % (cmd, timems)

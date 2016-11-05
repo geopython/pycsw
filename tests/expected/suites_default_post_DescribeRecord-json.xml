@@ -1,6 +1,6 @@
 {
     "csw:DescribeRecordResponse": {
-        "@http://www.w3.org/2001/XMLSchema-instance:schemaLocation": "http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",
+        "@xsi:schemaLocation": "http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",
         "csw:SchemaComponent": {
             "@schemaLanguage": "XMLSCHEMA",
             "@targetNamespace": "http://www.opengis.net/cat/csw/2.0.2",

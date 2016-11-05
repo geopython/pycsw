@@ -16,6 +16,7 @@ pycsw |release| Documentation
    installation
    configuration
    administration
+   csw-support
    distributedsearching
    sru
    opensearch
@@ -26,11 +27,15 @@ pycsw |release| Documentation
    transactions
    repofilters
    profiles
+   repositories
    outputschemas
    geonode
+   hhypermap
    odc
    ckan
+   api
    testing
+   migration-guide
    tools
    support
    contributing

@@ -192,7 +192,7 @@ class OpenSearch(object):
             # Requirement-023
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/atom+xml')
-            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom+xml&&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
+            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom%%2Bxml&&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
 
             node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
             node1.set('type', 'image/vnd.microsoft.icon')

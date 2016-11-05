@@ -7,6 +7,7 @@
 # Copyright (c) 2016 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2016 James Dickens
+# Copyright (c) 2016 Ricardo Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -33,12 +34,14 @@
 
 import logging
 import os
-from six.moves.urllib.parse import quote, unquote
+from six.moves.urllib.parse import parse_qsl
+from six.moves.urllib.parse import splitquery
 from six.moves.urllib.parse import urlparse
 from six import StringIO
 from six.moves.configparser import SafeConfigParser
 import sys
 from time import time
+import wsgiref.util
 
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
@@ -130,7 +133,7 @@ class Csw(object):
 
         log.setup_logger(self.config)
 
-        LOGGER.debug('running configuration %s' % rtconfig)
+        LOGGER.debug('running configuration %s', rtconfig)
         LOGGER.debug(str(self.environ['QUERY_STRING']))
 
         # set OGC schemas location
@@ -170,8 +173,8 @@ class Csw(object):
             except:
                 pass
 
-        LOGGER.debug('Configuration: %s.' % self.config)
-        LOGGER.debug('Model: %s.' % self.context.model)
+        LOGGER.debug('Configuration: %s.', self.config)
+        LOGGER.debug('Model: %s.', self.context.model)
 
         # load user-defined mappings if they exist
         if self.config.has_option('repository', 'mappings'):
@@ -179,16 +182,19 @@ class Csw(object):
             try:
                 import imp
                 module = self.config.get('repository', 'mappings')
-                modulename = '%s' % os.path.splitext(module)[0].replace(
-                    os.sep, '.')
+                if '/' in module:  # filepath
+                    modulename = '%s' % os.path.splitext(module)[0].replace(
+                        os.sep, '.')
+                    mappings = imp.load_source(modulename, module)
+                else:  # dotted name
+                    mappings = __import__(module, fromlist=[''])
                 LOGGER.debug('Loading custom repository mappings '
-                             'from %s.' % module)
-                mappings = imp.load_source(modulename, module)
+                             'from %s.', module)
                 self.context.md_core_model = mappings.MD_CORE_MODEL
                 self.context.refresh_dc(mappings.MD_CORE_MODEL)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
-                    'NoApplicableCode', 'service',
+                    'NoAppliicableCode', 'service',
                     'Could not load repository.mappings %s' % str(err)
                 )
 
@@ -201,8 +207,8 @@ class Csw(object):
             mod = getattr(output_schema_module.plugins.outputschemas, osch)
             self.outputschemas[mod.NAMESPACE] = mod
 
-        LOGGER.debug('Outputschemas loaded: %s.' % self.outputschemas)
-        LOGGER.debug('Namespaces: %s' % self.context.namespaces)
+        LOGGER.debug('Outputschemas loaded: %s.', self.outputschemas)
+        LOGGER.debug('Namespaces: %s', self.context.namespaces)
 
     def expand_path(self, path):
         """ return safe path for WSGI environments """
@@ -231,39 +237,13 @@ class Csw(object):
 
         else:  # it's a GET request
             self.requesttype = 'GET'
-
-            scheme = '%s://' % self.environ['wsgi.url_scheme']
-
-            if self.environ.get('HTTP_HOST'):
-                url = '%s%s' % (scheme, self.environ['HTTP_HOST'])
-            else:
-                url = '%s%s' % (scheme, self.environ['SERVER_NAME'])
-
-                if self.environ['wsgi.url_scheme'] == 'https':
-                    if self.environ['SERVER_PORT'] != '443':
-                        url += ':' + self.environ['SERVER_PORT']
-                else:
-                    if self.environ['SERVER_PORT'] != '80':
-                        url += ':' + self.environ['SERVER_PORT']
-
-            url += quote(self.environ.get('SCRIPT_NAME', ''))
-            url += quote(self.environ.get('PATH_INFO', ''))
-
-            if self.environ.get('QUERY_STRING'):
-                url += '?' + self.environ['QUERY_STRING']
-
-            self.request = url
+            self.request = wsgiref.util.request_uri(self.environ)
+            try:
+                query_part = splitquery(self.request)[-1]
+                self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
+            except AttributeError:
+                self.kvp = {}
             LOGGER.debug('Request type: GET.  Request:\n%s\n', self.request)
-
-            pairs = self.environ.get('QUERY_STRING').split("&")
-
-            kvp = {}
-
-            for pairstr in pairs:
-                pair = [unquote(a) for a in pairstr.split("=")]
-                kvp[pair[0]] = pair[1] if len(pair) > 1 else ""
-            self.kvp = kvp
-
         return self.dispatch()
 
     def opensearch(self):
@@ -389,39 +369,20 @@ class Csw(object):
         if self.config.has_option('repository', 'filter'):
             repo_filter = self.config.get('repository', 'filter')
 
-        if (self.config.has_option('repository', 'source') and
-                self.config.get('repository', 'source') == 'geonode'):
+        if self.config.has_option('repository', 'source'):  # load custom repository
+            rs = self.config.get('repository', 'source')
+            rs_modname, rs_clsname = rs.rsplit('.', 1)
 
-            # load geonode repository
-            from pycsw.plugins.repository.geonode import geonode_
+            rs_mod = __import__(rs_modname, globals(), locals(), [rs_clsname])
+            rs_cls = getattr(rs_mod, rs_clsname)
 
             try:
-                self.repository = geonode_.GeoNodeRepository(self.context,
-                                                             repo_filter)
-                LOGGER.debug('GeoNode repository loaded '
-                             '(geonode): %s.' % self.repository.dbtype)
+                self.repository = rs_cls(self.context, repo_filter)
+                LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
                     'NoApplicableCode', 'service',
-                    'Could not load repository (geonode): %s' % str(err)
-                )
-
-        elif (self.config.has_option('repository', 'source') and
-                self.config.get('repository', 'source') == 'odc'):
-
-            # load odc repository
-            from pycsw.plugins.repository.odc import odc
-
-            try:
-                self.repository = odc.OpenDataCatalogRepository(self.context,
-                                                                repo_filter)
-                LOGGER.debug('OpenDataCatalog repository loaded '
-                             '(geonode): %s.' % self.repository.dbtype)
-            except Exception as err:
-                self.response = self.iface.exceptionreport(
-                    'NoApplicableCode', 'service',
-                    'Could not load repository (odc): %s' % str(err)
-                )
+                    'Could not load custom repository %s: %s' % (rs, str(err)))
 
         else:  # load default repository
             self.orm = 'sqlalchemy'
@@ -458,8 +419,8 @@ class Csw(object):
             else:
                 code = 'InvalidParameterValue'
 
-        LOGGER.debug('HTTP Headers:\n%s.' % self.environ)
-        LOGGER.debug('Parsed request parameters: %s' % self.kvp)
+        LOGGER.debug('HTTP Headers:\n%s.', self.environ)
+        LOGGER.debug('Parsed request parameters: %s', self.kvp)
 
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
                 self.kvp['mode'] == 'opensearch'):
@@ -467,7 +428,7 @@ class Csw(object):
             LOGGER.debug('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
-        if ((self.kvp == {'': ''} and self.request_version == '3.0.0') or
+        if ((len(self.kvp) == 0 and self.request_version == '3.0.0') or
                 (len(self.kvp) == 1 and 'config' in self.kvp)):
             LOGGER.debug('Turning on default csw30:Capabilities for base URL')
             self.kvp = {
@@ -513,7 +474,10 @@ class Csw(object):
 
                 # test version
                 kvp_version = self.kvp.get('version', '')
-                kvp_version_integer = util.get_version_integer(kvp_version)
+                try:
+                    kvp_version_integer = util.get_version_integer(kvp_version)
+                except Exception as err:
+                    kvp_version_integer = 'invalid_value'
                 if (request != 'GetCapabilities' and
                         kvp_version_integer != own_version_integer):
                     error = 1
@@ -629,7 +593,7 @@ class Csw(object):
 
     def getrecordbyid(self, raw=False):
         """ Handle GetRecordById request """
-        return self.iface.getrecordbyid()
+        return self.iface.getrecordbyid(raw)
 
     def getrepositoryitem(self):
         """ Handle GetRepositoryItem request """
@@ -762,6 +726,7 @@ class Csw(object):
                 'http://www.opengis.net/wms',
                 'http://www.opengis.net/wmts/1.0',
                 'http://www.opengis.net/wfs',
+                'http://www.opengis.net/wfs/2.0',
                 'http://www.opengis.net/wcs',
                 'http://www.opengis.net/wps/1.0.0',
                 'http://www.opengis.net/sos/1.0',
@@ -808,7 +773,7 @@ class Csw(object):
 
     def _cql_update_queryables_mappings(self, cql, mappings):
         """ Transform CQL query's properties to underlying DB columns """
-        LOGGER.debug('Raw CQL text = %s.' % cql)
+        LOGGER.debug('Raw CQL text = %s.', cql)
         LOGGER.debug(str(list(mappings.keys())))
         if cql is not None:
             for key in mappings.keys():
@@ -816,7 +781,7 @@ class Csw(object):
                     cql = cql.replace(key, mappings[key]['dbcol'])
                 except:
                     cql = cql.replace(key, mappings[key])
-            LOGGER.debug('Interpolated CQL text = %s.' % cql)
+            LOGGER.debug('Interpolated CQL text = %s.', cql)
             return cql
 
     def _process_responsehandler(self, xml):
@@ -850,7 +815,7 @@ class Csw(object):
                     msg.quit()
                     LOGGER.debug('Email sent successfully.')
                 except Exception as err:
-                    LOGGER.debug('Error processing email: %s.' % str(err))
+                    LOGGER.debug('Error processing email', exc_info=True)
 
             elif uprh.scheme == 'ftp':
                 import ftplib
@@ -866,7 +831,7 @@ class Csw(object):
                     ftp.quit()
                     LOGGER.debug('FTP sent successfully.')
                 except Exception as err:
-                    LOGGER.debug('Error processing FTP: %s.' % str(err))
+                    LOGGER.error('Error processing FTP', exc_info=True)
 
     @staticmethod
     def normalize_kvp(kvp):

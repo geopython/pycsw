@@ -180,6 +180,7 @@
           <ows20:Value>http://www.opengis.net/sos/2.0</ows20:Value>
           <ows20:Value>http://www.opengis.net/wcs</ows20:Value>
           <ows20:Value>http://www.opengis.net/wfs</ows20:Value>
+          <ows20:Value>http://www.opengis.net/wfs/2.0</ows20:Value>
           <ows20:Value>http://www.opengis.net/wms</ows20:Value>
           <ows20:Value>http://www.opengis.net/wmts/1.0</ows20:Value>
           <ows20:Value>http://www.opengis.net/wps/1.0.0</ows20:Value>
@@ -205,6 +206,7 @@
           <ows20:Value>http://www.opengis.net/sos/2.0</ows20:Value>
           <ows20:Value>http://www.opengis.net/wcs</ows20:Value>
           <ows20:Value>http://www.opengis.net/wfs</ows20:Value>
+          <ows20:Value>http://www.opengis.net/wfs/2.0</ows20:Value>
           <ows20:Value>http://www.opengis.net/wms</ows20:Value>
           <ows20:Value>http://www.opengis.net/wmts/1.0</ows20:Value>
           <ows20:Value>http://www.opengis.net/wps/1.0.0</ows20:Value>

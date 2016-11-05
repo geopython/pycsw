@@ -16,6 +16,7 @@
       <csw:Value>http://www.opengis.net/sos/2.0</csw:Value>
       <csw:Value>http://www.opengis.net/wcs</csw:Value>
       <csw:Value>http://www.opengis.net/wfs</csw:Value>
+      <csw:Value>http://www.opengis.net/wfs/2.0</csw:Value>
       <csw:Value>http://www.opengis.net/wms</csw:Value>
       <csw:Value>http://www.opengis.net/wmts/1.0</csw:Value>
       <csw:Value>http://www.opengis.net/wps/1.0.0</csw:Value>

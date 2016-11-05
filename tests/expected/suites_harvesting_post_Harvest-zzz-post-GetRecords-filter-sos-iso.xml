@@ -479,6 +479,16 @@
                 <gco:CharacterString>GetObservation</gco:CharacterString>
               </srv:operationName>
               <srv:identifier>
+                <gco:CharacterString>CDIP221</gco:CharacterString>
+              </srv:identifier>
+            </srv:SV_CoupledResource>
+          </srv:coupledResource>
+          <srv:coupledResource>
+            <srv:SV_CoupledResource>
+              <srv:operationName>
+                <gco:CharacterString>GetObservation</gco:CharacterString>
+              </srv:operationName>
+              <srv:identifier>
                 <gco:CharacterString>ALL_PLATFORMS</gco:CharacterString>
               </srv:identifier>
             </srv:SV_CoupledResource>
@@ -624,6 +634,7 @@
           <srv:operatesOn uuidref="44098" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-44098"/>
           <srv:operatesOn uuidref="WLIS" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-WLIS"/>
           <srv:operatesOn uuidref="CO2" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-CO2"/>
+          <srv:operatesOn uuidref="CDIP221" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-CDIP221"/>
           <srv:operatesOn uuidref="ALL_PLATFORMS" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-ALL_PLATFORMS"/>
           <srv:operatesOn uuidref="A01" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-A01"/>
           <srv:operatesOn uuidref="MDS02" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-MDS02"/>
