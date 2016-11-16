@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
+  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" recordSchema="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" elementSet="brief">
+    <dif:DIF xsi:schemaLocation="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/ http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd">
+      <dif:Entry_ID>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dif:Entry_ID>
+      <dif:Entry_Title>Mauris sed neque</dif:Entry_Title>
+      <dif:Data_Set_Citation>
+        <dif:Dataset_Creator/>
+        <dif:Dataset_Release_Date/>
+        <dif:Dataset_Publisher/>
+        <dif:Data_Presentation_Form/>
+      </dif:Data_Set_Citation>
+      <dif:ISO_Topic_Category/>
+      <dif:Keyword>Vegetation-Cropland</dif:Keyword>
+      <dif:Temporal_Coverage>
+        <dif:Start_Date/>
+        <dif:End_Date/>
+      </dif:Temporal_Coverage>
+      <dif:Spatial_Coverage>
+        <dif:Southernmost_Latitude>47.59</dif:Southernmost_Latitude>
+        <dif:Northernmost_Latitude>51.22</dif:Northernmost_Latitude>
+        <dif:Westernmost_Longitude>-4.1</dif:Westernmost_Longitude>
+        <dif:Easternmost_Longitude>0.89</dif:Easternmost_Longitude>
+      </dif:Spatial_Coverage>
+      <dif:Access_Constraints/>
+      <dif:Data_Set_Language/>
+      <dif:Originating_Center/>
+      <dif:Summary>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</dif:Summary>
+      <dif:DIF_Creation_Date/>
+      <dif:Related_URL>
+        <dif:URL/>
+      </dif:Related_URL>
+      <dif:Metadata_Name>CEOS IDN DIF</dif:Metadata_Name>
+      <dif:Metadata_Version>9.7</dif:Metadata_Version>
+    </dif:DIF>
+    <dif:DIF xsi:schemaLocation="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/ http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd">
+      <dif:Entry_ID>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dif:Entry_ID>
+      <dif:Entry_Title>Ñunç elementum</dif:Entry_Title>
+      <dif:Data_Set_Citation>
+        <dif:Dataset_Creator/>
+        <dif:Dataset_Release_Date/>
+        <dif:Dataset_Publisher/>
+        <dif:Data_Presentation_Form/>
+      </dif:Data_Set_Citation>
+      <dif:ISO_Topic_Category/>
+      <dif:Keyword>Hydrography-Oceanographic</dif:Keyword>
+      <dif:Temporal_Coverage>
+        <dif:Start_Date/>
+        <dif:End_Date/>
+      </dif:Temporal_Coverage>
+      <dif:Spatial_Coverage>
+        <dif:Southernmost_Latitude>44.79</dif:Southernmost_Latitude>
+        <dif:Northernmost_Latitude>51.13</dif:Northernmost_Latitude>
+        <dif:Westernmost_Longitude>-6.17</dif:Westernmost_Longitude>
+        <dif:Easternmost_Longitude>-2.23</dif:Easternmost_Longitude>
+      </dif:Spatial_Coverage>
+      <dif:Access_Constraints/>
+      <dif:Data_Set_Language/>
+      <dif:Originating_Center/>
+      <dif:Summary></dif:Summary>
+      <dif:DIF_Creation_Date/>
+      <dif:Related_URL>
+        <dif:URL/>
+      </dif:Related_URL>
+      <dif:Metadata_Name>CEOS IDN DIF</dif:Metadata_Name>
+      <dif:Metadata_Version>9.7</dif:Metadata_Version>
+    </dif:DIF>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>

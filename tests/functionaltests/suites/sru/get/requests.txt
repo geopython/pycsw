@@ -1,0 +1,5 @@
+explain,mode=sru
+search,mode=sru&version=1.1&operation=searchRetrieve&query=lor
+search_maxrecords,mode=sru&operation=searchRetrieve&query=lor&maximumRecords=2
+search_startrecord_maxrecords,mode=sru&operation=searchRetrieve&query=lor&maximumRecords=2&startRecord=1
+search_cql,mode=sru&operation=searchRetrieve&query=dc:title%20like%20'%lor%'&maximumRecords=5

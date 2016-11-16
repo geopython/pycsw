@@ -1,0 +1,12 @@
+opensearch,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&resulttype=results&elementsetname=brief
+opensearch-description,mode=opensearch&service=CSW&version=2.0.2&request=GetCapabilities
+opensearch-ogc-q,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&q=greece
+opensearch-ogc-bbox,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&bbox=-180,-90,180,90
+opensearch-ogc-time,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2001/2004
+opensearch-ogc-timestart,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2004/
+opensearch-ogc-timeend,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=/2004
+opensearch-ogc-q-and-time,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2001/2007&q=vitae
+opensearch-ogc-bbox-and-time,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&time=2001/2007&bbox=-180,-90,180,90
+opensearch-ogc-q-and-bbox,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&q=vegetation&bbox=-180,-90,180,90
+opensearch-ogc-count-and-page1,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&q=vegetation&startposition=1
+opensearch-ogc-count-and-page2,mode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&resulttype=results&typenames=csw:Record&q=vegetation&startposition=1&maxrecords=1

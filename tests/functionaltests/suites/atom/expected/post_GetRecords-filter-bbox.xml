@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordsResponse xmlns:atom="http://www.w3.org/2005/Atom" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
+  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" recordSchema="http://www.w3.org/2005/Atom" elementSet="brief">
+    <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+      <atom:category term="Vegetation-Cropland"/>
+      <atom:id>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</atom:id>
+      <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
+      <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63"/>
+      <atom:title>Mauris sed neque</atom:title>
+      <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+      <atom:summary>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</atom:summary>
+      <georss:where>
+        <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:lowerCorner>47.59 -4.1</gml:lowerCorner>
+          <gml:upperCorner>51.22 0.89</gml:upperCorner>
+        </gml:Envelope>
+      </georss:where>
+    </atom:entry>
+    <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+      <atom:category term="Hydrography-Oceanographic"/>
+      <atom:id>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</atom:id>
+      <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
+      <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc"/>
+      <atom:title>Ñunç elementum</atom:title>
+      <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+      <georss:where>
+        <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:lowerCorner>44.79 -6.17</gml:lowerCorner>
+          <gml:upperCorner>51.13 -2.23</gml:upperCorner>
+        </gml:Envelope>
+      </georss:where>
+    </atom:entry>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>

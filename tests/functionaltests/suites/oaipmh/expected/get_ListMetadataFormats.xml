@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<oai:OAI-PMH xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
+  <oai:request verb="ListMetadataFormats">http://localhost/pycsw/csw.py?config=tests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
+  <oai:ListMetadataFormats>
+    <oai:metadataFormat>
+      <oai:metadataPrefix>csw-record</oai:metadataPrefix>
+      <oai:schema>http://schemas.opengis.net/csw/2.0.2/record.xsd</oai:schema>
+      <oai:metadataNamespace>http://www.opengis.net/cat/csw/2.0.2</oai:metadataNamespace>
+    </oai:metadataFormat>
+    <oai:metadataFormat>
+      <oai:metadataPrefix>dif</oai:metadataPrefix>
+      <oai:schema>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd</oai:schema>
+      <oai:metadataNamespace>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</oai:metadataNamespace>
+    </oai:metadataFormat>
+    <oai:metadataFormat>
+      <oai:metadataPrefix>fgdc-std</oai:metadataPrefix>
+      <oai:schema>http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd</oai:schema>
+      <oai:metadataNamespace>http://www.opengis.net/cat/csw/csdgm</oai:metadataNamespace>
+    </oai:metadataFormat>
+    <oai:metadataFormat>
+      <oai:metadataPrefix>gm03</oai:metadataPrefix>
+      <oai:schema>http://www.geocat.ch/internet/geocat/en/home/documentation/gm03.parsys.50316.downloadList.86742.DownloadFile.tmp/gm0321.zip</oai:schema>
+      <oai:metadataNamespace>http://www.interlis.ch/INTERLIS2.3</oai:metadataNamespace>
+    </oai:metadataFormat>
+    <oai:metadataFormat>
+      <oai:metadataPrefix>iso19139</oai:metadataPrefix>
+      <oai:schema>http://www.isotc211.org/2005/gmd/gmd.xsd</oai:schema>
+      <oai:metadataNamespace>http://www.isotc211.org/2005/gmd</oai:metadataNamespace>
+    </oai:metadataFormat>
+    <oai:metadataFormat>
+      <oai:metadataPrefix>oai_dc</oai:metadataPrefix>
+      <oai:schema>http://www.openarchives.org/OAI/2.0/oai_dc.xsd</oai:schema>
+      <oai:metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</oai:metadataNamespace>
+    </oai:metadataFormat>
+  </oai:ListMetadataFormats>
+</oai:OAI-PMH>

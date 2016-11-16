@@ -1,0 +1,2 @@
+GetCapabilities,service=CSW&version=2.0.2&request=GetCapabilities
+GetCapabilities-lang,service=CSW&version=2.0.2&request=GetCapabilities&lang=gre

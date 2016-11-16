@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw30:GetDomain service="CSW" version="3.0.0" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/csw/3.0/cswAll.xsd">
+   <csw30:ParameterName>GetRecords.outputFormat-something</csw30:ParameterName>
+</csw30:GetDomain>

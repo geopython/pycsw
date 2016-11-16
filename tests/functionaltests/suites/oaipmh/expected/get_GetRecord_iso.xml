@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<oai:OAI-PMH xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
+  <oai:request identifier="urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f" metadataprefix="iso19139" verb="GetRecord">http://localhost/pycsw/csw.py?config=tests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
+  <oai:GetRecord>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</oai:identifier>
+        <oai:dateStamp/>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+          <gmd:fileIdentifier>
+            <gco:CharacterString>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</gco:CharacterString>
+          </gmd:fileIdentifier>
+          <gmd:language>
+            <gco:CharacterString/>
+          </gmd:language>
+          <gmd:hierarchyLevel>
+            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Image" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Image</gmd:MD_ScopeCode>
+          </gmd:hierarchyLevel>
+          <gmd:contact/>
+          <gmd:dateStamp>
+            <gco:Date/>
+          </gmd:dateStamp>
+          <gmd:metadataStandardName>
+            <gco:CharacterString>ISO19115</gco:CharacterString>
+          </gmd:metadataStandardName>
+          <gmd:metadataStandardVersion>
+            <gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>
+          </gmd:metadataStandardVersion>
+          <gmd:identificationInfo>
+            <gmd:MD_DataIdentification id="urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f">
+              <gmd:citation>
+                <gmd:CI_Citation>
+                  <gmd:title>
+                    <gco:CharacterString>Lorem ipsum</gco:CharacterString>
+                  </gmd:title>
+                </gmd:CI_Citation>
+              </gmd:citation>
+              <gmd:abstract>
+                <gco:CharacterString>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</gco:CharacterString>
+              </gmd:abstract>
+              <gmd:descriptiveKeywords>
+                <gmd:MD_Keywords>
+                  <gmd:keyword>
+                    <gco:CharacterString>Tourism--Greece</gco:CharacterString>
+                  </gmd:keyword>
+                </gmd:MD_Keywords>
+              </gmd:descriptiveKeywords>
+              <gmd:language>
+                <gco:CharacterString/>
+              </gmd:language>
+            </gmd:MD_DataIdentification>
+          </gmd:identificationInfo>
+        </gmd:MD_Metadata>
+      </oai:metadata>
+    </oai:record>
+  </oai:GetRecord>
+</oai:OAI-PMH>
