@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
+  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" recordSchema="http://www.opengis.net/cat/csw/csdgm" elementSet="brief">
+    <metadata xsi:noNamespaceSchemaLocation="http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd">
+      <idinfo>
+        <datasetid>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</datasetid>
+        <citation>
+          <citeinfo>
+            <title>Mauris sed neque</title>
+            <publinfo>
+              <publish></publish>
+            </publinfo>
+            <origin></origin>
+            <geoform></geoform>
+            <onlink></onlink>
+          </citeinfo>
+        </citation>
+        <keywords>
+          <theme>
+            <themekey>Vegetation-Cropland</themekey>
+          </theme>
+        </keywords>
+        <accconst></accconst>
+        <descript>
+          <abstract>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</abstract>
+        </descript>
+        <spdom>
+          <bounding>
+            <westbc>-4.1</westbc>
+            <eastbc>0.89</eastbc>
+            <northbc>51.22</northbc>
+            <southbc>47.59</southbc>
+          </bounding>
+        </spdom>
+        <datacred></datacred>
+        <spdoinfo>
+          <direct>http://purl.org/dc/dcmitype/Dataset</direct>
+        </spdoinfo>
+      </idinfo>
+      <distinfo>
+        <stdorder>
+          <digform>
+            <digtinfo>
+              <formname></formname>
+            </digtinfo>
+          </digform>
+        </stdorder>
+      </distinfo>
+      <lineage>
+        <srcinfo>
+          <srccite>
+            <citeinfo>
+              <title></title>
+            </citeinfo>
+          </srccite>
+        </srcinfo>
+      </lineage>
+      <metainfo>
+        <metd></metd>
+      </metainfo>
+    </metadata>
+    <metadata xsi:noNamespaceSchemaLocation="http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd">
+      <idinfo>
+        <datasetid>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</datasetid>
+        <citation>
+          <citeinfo>
+            <title>Ñunç elementum</title>
+            <publinfo>
+              <publish></publish>
+            </publinfo>
+            <origin></origin>
+            <geoform></geoform>
+            <onlink></onlink>
+          </citeinfo>
+        </citation>
+        <keywords>
+          <theme>
+            <themekey>Hydrography-Oceanographic</themekey>
+          </theme>
+        </keywords>
+        <accconst></accconst>
+        <descript>
+          <abstract></abstract>
+        </descript>
+        <spdom>
+          <bounding>
+            <westbc>-6.17</westbc>
+            <eastbc>-2.23</eastbc>
+            <northbc>51.13</northbc>
+            <southbc>44.79</southbc>
+          </bounding>
+        </spdom>
+        <datacred></datacred>
+        <spdoinfo>
+          <direct>http://purl.org/dc/dcmitype/Dataset</direct>
+        </spdoinfo>
+      </idinfo>
+      <distinfo>
+        <stdorder>
+          <digform>
+            <digtinfo>
+              <formname></formname>
+            </digtinfo>
+          </digform>
+        </stdorder>
+      </distinfo>
+      <lineage>
+        <srcinfo>
+          <srccite>
+            <citeinfo>
+              <title></title>
+            </citeinfo>
+          </srccite>
+        </srcinfo>
+      </lineage>
+      <metainfo>
+        <metd></metd>
+      </metainfo>
+    </metadata>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>

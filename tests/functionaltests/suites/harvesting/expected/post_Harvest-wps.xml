@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:HarvestResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
+  <csw:TransactionResponse version="2.0.2">
+    <csw:TransactionSummary>
+      <csw:totalInserted>11</csw:totalInserted>
+      <csw:totalUpdated>0</csw:totalUpdated>
+      <csw:totalDeleted>0</csw:totalDeleted>
+    </csw:TransactionSummary>
+    <csw:InsertResult>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>Geo Data Portal WPS Implementation</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.filemanagement.CreateNewShapefileDataStore</dc:identifier>
+        <dc:title>gov.usgs.cida.gdp.wps.algorithm.filemanagement.CreateNewShapefileDataStore</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.discovery.GetGridTimeRange</dc:identifier>
+        <dc:title>Get Grid Time Range</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.filemanagement.ReceiveFiles</dc:identifier>
+        <dc:title>gov.usgs.cida.gdp.wps.algorithm.filemanagement.ReceiveFiles</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.discovery.GetWcsCoverages</dc:identifier>
+        <dc:title>gov.usgs.cida.gdp.wps.algorithm.discovery.GetWcsCoverages</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.filemanagement.GetWatersGeom</dc:identifier>
+        <dc:title>gov.usgs.cida.gdp.wps.algorithm.filemanagement.GetWatersGeom</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.communication.GeoserverManagementAlgorithm</dc:identifier>
+        <dc:title>gov.usgs.cida.gdp.wps.algorithm.communication.GeoserverManagementAlgorithm</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.communication.EmailWhenFinishedAlgorithm</dc:identifier>
+        <dc:title>gov.usgs.cida.gdp.wps.algorithm.communication.EmailWhenFinishedAlgorithm</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.discovery.InterrogateDataset</dc:identifier>
+        <dc:title>Interogate Dataset URI</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids</dc:identifier>
+        <dc:title>List OpendDAP Grids</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-gov.usgs.cida.gdp.wps.algorithm.discovery.CalculateWCSCoverageInfo</dc:identifier>
+        <dc:title>gov.usgs.cida.gdp.wps.algorithm.discovery.CalculateWCSCoverageInfo</dc:title>
+      </csw:BriefRecord>
+    </csw:InsertResult>
+  </csw:TransactionResponse>
+</csw:HarvestResponse>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" updateSequence="PYCSW_UPDATESEQUENCE" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <ows:ServiceProvider>
+    <ows:ProviderName>pycsw</ows:ProviderName>
+    <ows:ProviderSite xlink:type="simple" xlink:href="http://pycsw.org/"/>
+    <ows:ServiceContact>
+      <ows:IndividualName>Kralidis, Tom</ows:IndividualName>
+      <ows:PositionName>Senior Systems Scientist</ows:PositionName>
+      <ows:ContactInfo>
+        <ows:Phone>
+          <ows:Voice>+01-416-xxx-xxxx</ows:Voice>
+          <ows:Facsimile>+01-416-xxx-xxxx</ows:Facsimile>
+        </ows:Phone>
+        <ows:Address>
+          <ows:DeliveryPoint>TBA</ows:DeliveryPoint>
+          <ows:City>Toronto</ows:City>
+          <ows:AdministrativeArea>Ontario</ows:AdministrativeArea>
+          <ows:PostalCode>M9C 3Z9</ows:PostalCode>
+          <ows:Country>Canada</ows:Country>
+          <ows:ElectronicMailAddress>tomkralidis@gmail.com</ows:ElectronicMailAddress>
+        </ows:Address>
+        <ows:OnlineResource xlink:type="simple" xlink:href="http://kralidis.ca/"/>
+        <ows:HoursOfService>0800h - 1600h EST</ows:HoursOfService>
+        <ows:ContactInstructions>During hours of service.  Off on weekends.</ows:ContactInstructions>
+      </ows:ContactInfo>
+      <ows:Role codeSpace="ISOTC211/19115">pointOfContact</ows:Role>
+    </ows:ServiceContact>
+  </ows:ServiceProvider>
+  <ogc:Filter_Capabilities>
+    <ogc:Spatial_Capabilities>
+      <ogc:GeometryOperands>
+        <ogc:GeometryOperand>gml:Point</ogc:GeometryOperand>
+        <ogc:GeometryOperand>gml:LineString</ogc:GeometryOperand>
+        <ogc:GeometryOperand>gml:Polygon</ogc:GeometryOperand>
+        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+      </ogc:GeometryOperands>
+      <ogc:SpatialOperators>
+        <ogc:SpatialOperator name="BBOX"/>
+        <ogc:SpatialOperator name="Beyond"/>
+        <ogc:SpatialOperator name="Contains"/>
+        <ogc:SpatialOperator name="Crosses"/>
+        <ogc:SpatialOperator name="Disjoint"/>
+        <ogc:SpatialOperator name="DWithin"/>
+        <ogc:SpatialOperator name="Equals"/>
+        <ogc:SpatialOperator name="Intersects"/>
+        <ogc:SpatialOperator name="Overlaps"/>
+        <ogc:SpatialOperator name="Touches"/>
+        <ogc:SpatialOperator name="Within"/>
+      </ogc:SpatialOperators>
+    </ogc:Spatial_Capabilities>
+    <ogc:Scalar_Capabilities>
+      <ogc:LogicalOperators/>
+      <ogc:ComparisonOperators>
+        <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>
+      </ogc:ComparisonOperators>
+      <ogc:ArithmeticOperators>
+        <ogc:Functions>
+          <ogc:FunctionNames>
+            <ogc:FunctionName nArgs="1">length</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">lower</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">ltrim</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">rtrim</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">trim</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">upper</ogc:FunctionName>
+          </ogc:FunctionNames>
+        </ogc:Functions>
+      </ogc:ArithmeticOperators>
+    </ogc:Scalar_Capabilities>
+    <ogc:Id_Capabilities>
+      <ogc:EID/>
+      <ogc:FID/>
+    </ogc:Id_Capabilities>
+  </ogc:Filter_Capabilities>
+</csw:Capabilities>

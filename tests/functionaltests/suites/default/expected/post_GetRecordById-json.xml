@@ -1,0 +1,18 @@
+{
+    "csw:GetRecordByIdResponse": {
+        "@xsi:schemaLocation": "http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",
+        "csw:SummaryRecord": {
+            "dc:identifier": "urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63",
+            "dc:title": "Mauris sed neque",
+            "dc:type": "http://purl.org/dc/dcmitype/Dataset",
+            "dc:subject": "Vegetation-Cropland",
+            "dct:abstract": "Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.",
+            "ows:BoundingBox": {
+                "@crs": "urn:x-ogc:def:crs:EPSG:6.11:4326",
+                "@dimensions": "2",
+                "ows:LowerCorner": "47.59 -4.1",
+                "ows:UpperCorner": "51.22 0.89"
+            }
+        }
+    }
+}

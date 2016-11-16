@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GetRecords service="CSW" version="2.0.2" maxRecords="10" resultType="results" xmlns="http://www.opengis.net/cat/csw/2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+    <Query typeNames="csw:Record">
+       <ElementSetName>full</ElementSetName>
+       <Constraint version="1.0.0">
+          <ogc:Filter>
+             <ogc:And>
+                <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\">
+                   <ogc:PropertyName>dc:title</ogc:PropertyName>
+                   <ogc:Literal>Lorem%</ogc:Literal>
+                </ogc:PropertyIsLike>
+                <ogc:Or>
+                   <ogc:PropertyIsEqualTo>
+                      <ogc:PropertyName>dc:type</ogc:PropertyName>
+                      <ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal>
+                   </ogc:PropertyIsEqualTo>
+                   <ogc:PropertyIsEqualTo>
+                      <ogc:PropertyName>dc:type</ogc:PropertyName>
+                      <ogc:Literal>http://purl.org/dc/dcmitype/Service</ogc:Literal>
+                   </ogc:PropertyIsEqualTo>
+                   <ogc:PropertyIsEqualTo>
+                      <ogc:PropertyName>dc:type</ogc:PropertyName>
+                      <ogc:Literal>http://purl.org/dc/dcmitype/Image</ogc:Literal>
+                   </ogc:PropertyIsEqualTo>
+                   <ogc:PropertyIsEqualTo>
+                      <ogc:PropertyName>dc:type</ogc:PropertyName>
+                      <ogc:Literal>http://purl.org/dc/dcmitype/Text</ogc:Literal>
+                   </ogc:PropertyIsEqualTo>
+                </ogc:Or>
+             </ogc:And>
+          </ogc:Filter>
+       </Constraint>
+    </Query>
+</GetRecords>

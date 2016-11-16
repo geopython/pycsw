@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordByIdResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:Record>
+    <dc:identifier>NS06agg</dc:identifier>
+    <dc:title>PacIOOS Nearshore Sensor 06: Pohnpei, Micronesia</dc:title>
+    <dc:type>dataset</dc:type>
+    <dc:subject>Oceans &gt; Ocean Chemistry &gt; Chlorophyll</dc:subject>
+    <dc:subject>Oceans &gt; Ocean Optics &gt; Turbidity</dc:subject>
+    <dc:subject>Oceans &gt; Ocean Temperature &gt; Water Temperature</dc:subject>
+    <dc:subject>Oceans &gt; Salinity/Density &gt; Conductivity</dc:subject>
+    <dc:subject>Oceans &gt; Salinity/Density &gt; Salinity</dc:subject>
+    <dc:subject>Oceans &gt; Water Quality</dc:subject>
+    <dc:subject>Ocean &amp;gt; Pacific Ocean &amp;gt; Western Pacific Ocean &amp;gt; Micronesia &amp;gt; Federated States of Micronesia</dc:subject>
+    <dc:subject>Ocean &amp;gt; Pacific Ocean &amp;gt; United States of America &amp;gt; Territories</dc:subject>
+    <dc:subject>Federated States of Micronesia &amp;gt; Pohnpei &amp;gt; Pohnpei Lagoon</dc:subject>
+    <dc:subject>Pacific Islands Ocean Observing System (PacIOOS)</dc:subject>
+    <dc:subject>Pacific Islands Ocean Observing System (PacIOOS)</dc:subject>
+    <dc:subject>sea_water_temperature</dc:subject>
+    <dc:subject>sea_water_electrical_conductivity</dc:subject>
+    <dc:subject>sea_water_turbidity</dc:subject>
+    <dc:subject>mass_concentration_of_chlorophyll_in_sea_water</dc:subject>
+    <dc:subject>sea_water_salinity</dc:subject>
+    <dc:subject>depth</dc:subject>
+    <dc:subject>latitude</dc:subject>
+    <dc:subject>longitude</dc:subject>
+    <dc:subject>time</dc:subject>
+    <dc:subject scheme="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode">climatologyMeteorologyAtmosphere</dc:subject>
+    <dct:references scheme="None">http://oos.soest.hawaii.edu/thredds/idd/nss_pacioos.html?dataset=NS06agg</dct:references>
+    <dct:references scheme="WWW:LINK">http://oos.soest.hawaii.edu/thredds/dodsC/pacioos/nss/ns06agg.html</dct:references>
+    <dct:references scheme="None">http://pacioos.org/voyager/index.html?b=6.874279%2C158.077126%2C7.050468%2C158.369808&amp;tz=pont&amp;o=qual:2::p0NS06p1</dct:references>
+    <dct:references scheme="None">http://oos.soest.hawaii.edu/dchart/index.html?dsetid=54cd0688ada08d86748b9c5762509f</dct:references>
+    <dct:references scheme="None">http://oos.soest.hawaii.edu/erddap/tabledap/nss06_agg.graph?time%2Ctemperature&amp;.draw=lines</dct:references>
+    <dct:references scheme="None">http://pacioos.org/focus/waterquality/wq_fsm.php</dct:references>
+    <dct:references scheme="None">http://oos.soest.hawaii.edu/thredds/dodsC/pacioos/nss/ns06agg</dct:references>
+    <dc:relation></dc:relation>
+    <dct:modified>2014-04-16</dct:modified>
+    <dct:abstract>The nearshore sensors are part of the Pacific Islands Ocean Observing System (PacIOOS) and are designed to measure a variety of ocean parameters at fixed point locations. NS06 is located at the dock in Pohnpei lagoon and is mounted to the bottom in about 1 meter of water. The instrument is a Sea-Bird Electronics model 16+ V2 coupled with a WET Labs ECO-FLNTUS combination sensor.</dct:abstract>
+    <dc:date>2014-04-16</dc:date>
+    <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+      <ows:LowerCorner>6.96 158.22</ows:LowerCorner>
+      <ows:UpperCorner>6.96 158.22</ows:UpperCorner>
+    </ows:BoundingBox>
+  </csw:Record>
+</csw:GetRecordByIdResponse>
