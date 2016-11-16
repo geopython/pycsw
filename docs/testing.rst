@@ -38,7 +38,7 @@ that pycsw works as expected.
 
 Each test follows the same workflow:
 
-* Setup a local pycsw instance with a custom configuration and data repository
+* Instantiate a pycsw instance with a custom configuration and data repository
   for each suite of tests;
 
 * Perform a series of GET and POST requests to the running pycsw instance;
@@ -48,17 +48,28 @@ Each test follows the same workflow:
   otherwise it fails.
 
 
-A number of different test suites exist under ``tests/suites``. Each suite
-specifies the following structure:
+A number of different test suites exist under ``tests/functionaltests/suites``.
+Each suite specifies the following structure:
 
 * A mandatory ``default.cfg`` file with the pycsw configuration that must be
-  used by the test suite
+  used by the test suite;
 
 * A mandatory ``expected/`` directory containing the expected results for each
   request
 
 * An optional ``data/`` directory that contains ``.xml`` files with testing
-  data that is to be loaded into the suite's database before running the tests
+  data that is to be loaded into the suite's database before running the tests.
+  The presence of this directory and its contents have the following meaning
+  for tests:
+
+  * If ``data/`` directory is present and contains files, they will be loaded
+    into a new database for running the tests of the suite;
+
+  * If ``data/`` directory is present and does not contain any data files, a
+    new empty database is used in the tests;
+
+  * If ``data/`` directory is absent, the suite will use a database populated
+    with test data from the CITE suite.
 
 * An optional ``get/requests.txt`` file that holds request parameters used for
   making HTTP GET requests.
@@ -77,8 +88,131 @@ specifies the following structure:
 * An optional ``post/`` directory that holds ``.xml`` files used for making
   HTTP POST requests
 
+Test identifiers
+^^^^^^^^^^^^^^^^
+
+Each test has an identifier that is built using the following rule:
+
+    <test_function>[<suite_name>_<http_method>_<test_name>]
+
+For example:
+
+    test_suites[default_post_GetRecords-end]
 
 .. _functional tests: https://en.wikipedia.org/wiki/Functional_testing
+
+
+Running tests
+-------------
+
+Since pycsw uses `pytest`_, tests are run with the ``py.test`` runner. A basic
+test run can be made with:
+
+.. code:: bash
+
+   py.test
+
+This command will run all tests and report on the number of successes, failures
+and also the time it took to run them. The `py.test` command accepts several
+additional parameters that can be used in order to customize the execution of
+tests. Look into `pytest's invocation documentation`_ for a more complete
+description. You can also get a description of the available parameters by
+running:
+
+.. code:: bash
+
+   py.test --help
+
+.. _pytest's invocation documentation: http://docs.pytest.org/en/latest/usage.html
+
+
+Running specific suites and test cases
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use the `-k name expression` flag to select which tests to run. Since each
+test's name includes the suite name, http method and an identifier for the
+test, it is easy to run only certain tests.
+
+.. code:: bash
+
+   py.test -k "apiso and GetRecords"  # run only tests from the `apiso` suite that have `GetRecords` in their name
+   py.test -k "post and GetRecords"  # run only tests that use HTTP POST and `GetRecords` in their name
+   py.test -k "not harvesting"  # run all tests except those from the `harvesting` suite
+
+
+
+Exiting fast
+^^^^^^^^^^^^
+
+The `--exitfirst` (or `-x`) flag can be used to stop the test runner
+immediately if some test case fails.
+
+.. code:: bash
+
+   py.test --exitfirst
+
+
+Seeing more output
+^^^^^^^^^^^^^^^^^^
+
+There are three main ways to get more output from running tests:
+
+* The `--verbose` (or `-v`) flag
+
+* The `--capture=no` flag - Messages sent to stdout by a test are not
+  suppressed;
+
+* The `--pycsw-loglevel` flag - Sets the log level of the pycsw instance under
+  test. Set this value to `debug` in order to see all debug messages sent by
+  pycsw while processing a request
+
+
+.. code:: bash
+
+   py.test --verbose
+   py.test --pycsw-loglevel=debug
+   py.test --capture=no --pycsw-loglevel=debug
+
+
+Test coverage
+^^^^^^^^^^^^^
+
+Use the `--cov pycsw` flag in order to see information on code coverage. It is
+possible to get output in a variety of formats.
+
+.. code:: bash
+
+   py.test --cov pycsw
+
+
+Specifying a timeout for tests
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `--timeout <seconds>` option can be used to specify that if a test takes
+more than `<seconds>` to run it is considered to have failed. Seconds can be
+a float, so it is possibe to specify sub-second timeouts
+
+.. code:: bash
+
+   py.test --timeout=1.5
+
+
+Linting with flake8
+^^^^^^^^^^^^^^^^^^^
+
+Use the `--flake8` flag to also check if the code complies with Python's style
+guide
+
+.. code:: bash
+
+   py.test --flake8
+
+
+Running tests against a remote server
+-------------------------------------
+
+TBD
+
 
 
 Running tests locally
