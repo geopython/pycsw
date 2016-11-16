@@ -1,0 +1,64 @@
+{
+    "csw:GetRecordsResponse": {
+        "@version": "2.0.2",
+        "@xsi:schemaLocation": "http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",
+        "csw:SearchStatus": {
+            "@timestamp": "PYCSW_TIMESTAMP"
+        },
+        "csw:SearchResults": {
+            "@nextRecord": "6",
+            "@numberOfRecordsMatched": "12",
+            "@numberOfRecordsReturned": "5",
+            "@recordSchema": "http://www.opengis.net/cat/csw/2.0.2",
+            "@elementSet": "full",
+            "csw:Record": [
+                {
+                    "dc:identifier": "urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f",
+                    "dc:type": "http://purl.org/dc/dcmitype/Image",
+                    "dc:format": "image/svg+xml",
+                    "dc:title": "Lorem ipsum",
+                    "dct:spatial": "GR-22",
+                    "dc:subject": "Tourism--Greece",
+                    "dct:abstract": "Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu."
+                },
+                {
+                    "dc:identifier": "urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd",
+                    "dc:type": "http://purl.org/dc/dcmitype/Service",
+                    "dct:abstract": "Proin sit amet justo. In justo. Aenean adipiscing nulla id tellus.",
+                    "ows:BoundingBox": {
+                        "@crs": "urn:x-ogc:def:crs:EPSG:6.11:4326",
+                        "ows:LowerCorner": "60.042 13.754",
+                        "ows:UpperCorner": "68.410 17.920"
+                    }
+                },
+                {
+                    "dc:identifier": "urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493",
+                    "dc:title": "Maecenas enim",
+                    "dc:type": "http://purl.org/dc/dcmitype/Text",
+                    "dc:format": "application/xhtml+xml",
+                    "dc:subject": "Marine sediments",
+                    "dct:abstract": "Pellentesque tempus magna non sapien fringilla blandit."
+                },
+                {
+                    "dc:identifier": "urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4",
+                    "dc:type": "http://purl.org/dc/dcmitype/Service",
+                    "dc:title": "Ut facilisis justo ut lacus",
+                    "dc:subject": {
+                        "@scheme": "http://www.digest.org/2.1",
+                        "#text": "Vegetation"
+                    },
+                    "dc:relation": "urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63"
+                },
+                {
+                    "dc:identifier": "urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec",
+                    "dc:title": "Aliquam fermentum purus quis arcu",
+                    "dc:type": "http://purl.org/dc/dcmitype/Text",
+                    "dc:subject": "Hydrography--Dictionaries",
+                    "dc:format": "application/pdf",
+                    "dc:date": "2006-05-12",
+                    "dct:abstract": "Vestibulum quis ipsum sit amet metus imperdiet vehicula. Nulla scelerisque cursus mi."
+                }
+            ]
+        }
+    }
+}

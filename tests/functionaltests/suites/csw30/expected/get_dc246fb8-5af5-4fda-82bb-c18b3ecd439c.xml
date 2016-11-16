@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+  <atom:id>http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg</atom:id>
+  <atom:title>pycsw Geospatial Catalogue</atom:title>
+  <atom:author>
+    <atom:name>pycsw</atom:name>
+  </atom:author>
+  <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities" rel="search" type="application/opensearchdescription+xml"/>
+  <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+  <os:Query role="request"/>
+  <os:totalResults>3</os:totalResults>
+  <os:startIndex>1</os:startIndex>
+  <os:itemsPerPage>3</os:itemsPerPage>
+  <atom:entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:category term="Tourism--Greece"/>
+    <atom:id>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</atom:id>
+    <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f"/>
+    <atom:title>Lorem ipsum</atom:title>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+    <atom:summary>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</atom:summary>
+  </atom:entry>
+  <atom:entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:category term="Hydrography--Dictionaries"/>
+    <atom:id>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</atom:id>
+    <dc:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</dc:identifier>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec"/>
+    <atom:title>Aliquam fermentum purus quis arcu</atom:title>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+    <atom:summary>Vestibulum quis ipsum sit amet metus imperdiet vehicula. Nulla scelerisque cursus mi.</atom:summary>
+  </atom:entry>
+  <atom:entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:id>urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</atom:id>
+    <dc:identifier>urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</dc:identifier>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2"/>
+    <atom:title>Lorem ipsum dolor sit amet</atom:title>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+  </atom:entry>
+</atom:feed>

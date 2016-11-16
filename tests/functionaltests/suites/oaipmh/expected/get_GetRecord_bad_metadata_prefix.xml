@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<oai:OAI-PMH xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
+  <oai:request identifier="urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f" metadataprefix="csw-recordd" verb="GetRecord">http://localhost/pycsw/csw.py?config=tests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
+  <oai:error code="badArgument">Invalid outputschema parameter csw-recordd</oai:error>
+</oai:OAI-PMH>

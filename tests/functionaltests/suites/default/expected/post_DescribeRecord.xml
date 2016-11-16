@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:DescribeRecordResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SchemaComponent schemaLanguage="XMLSCHEMA" targetNamespace="http://www.opengis.net/cat/csw/2.0.2">
+    <xs:schema id="csw-record" targetNamespace="http://www.opengis.net/cat/csw/2.0.2" elementFormDefault="qualified" version="2.0.2 2010-01-22">
+   <xs:annotation>
+      <xs:appinfo>
+         <dc:identifier>http://schemas.opengis.net/csw/2.0.2/record.xsd</dc:identifier>
+      </xs:appinfo>
+      <xs:documentation xml:lang="en">
+         This schema defines the basic record types that must be supported
+         by all CSW implementations. These correspond to full, summary, and
+         brief views based on DCMI metadata terms.
+         
+         CSW is an OGC Standard.
+         Copyright (c) 2004,2010 Open Geospatial Consortium, Inc. All Rights Reserved.
+         To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
+      </xs:documentation>
+   </xs:annotation>
+
+   <xs:import namespace="http://purl.org/dc/terms/" schemaLocation="rec-dcterms.xsd"/>
+   <xs:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="rec-dcmes.xsd"/>
+   <xs:import namespace="http://www.opengis.net/ows" schemaLocation="../../ows/1.0.0/owsAll.xsd"/>
+
+   <xs:element name="AbstractRecord" id="AbstractRecord" type="csw:AbstractRecordType" abstract="true"/>
+   <xs:complexType name="AbstractRecordType" id="AbstractRecordType" abstract="true"/>
+
+   <xs:element name="DCMIRecord" type="csw:DCMIRecordType" substitutionGroup="csw:AbstractRecord"/>
+   <xs:complexType name="DCMIRecordType">
+      <xs:annotation>
+         <xs:documentation xml:lang="en">
+            This type encapsulates all of the standard DCMI metadata terms,
+            including the Dublin Core refinements; these terms may be mapped
+            to the profile-specific information model.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="csw:AbstractRecordType">
+            <xs:sequence>
+               <xs:group ref="dct:DCMI-terms"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:element name="BriefRecord" type="csw:BriefRecordType" substitutionGroup="csw:AbstractRecord"/>
+   <xs:complexType name="BriefRecordType" final="#all">
+      <xs:annotation>
+         <xs:documentation xml:lang="en">
+            This type defines a brief representation of the common record
+            format.  It extends AbstractRecordType to include only the
+             dc:identifier and dc:type properties.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="csw:AbstractRecordType">
+            <xs:sequence>
+               <xs:element ref="dc:identifier" minOccurs="1" maxOccurs="unbounded"/>
+               <xs:element ref="dc:title" minOccurs="1" maxOccurs="unbounded"/>
+               <xs:element ref="dc:type" minOccurs="0"/>
+               <xs:element ref="ows:BoundingBox" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:element name="SummaryRecord" type="csw:SummaryRecordType" substitutionGroup="csw:AbstractRecord"/>
+   <xs:complexType name="SummaryRecordType" final="#all">
+      <xs:annotation>
+         <xs:documentation xml:lang="en">
+            This type defines a summary representation of the common record
+            format.  It extends AbstractRecordType to include the core
+            properties.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="csw:AbstractRecordType">
+            <xs:sequence>
+               <xs:element ref="dc:identifier" minOccurs="1" maxOccurs="unbounded"/>
+               <xs:element ref="dc:title" minOccurs="1" maxOccurs="unbounded"/>
+               <xs:element ref="dc:type" minOccurs="0"/>
+               <xs:element ref="dc:subject" minOccurs="0" maxOccurs="unbounded"/>
+               <xs:element ref="dc:format" minOccurs="0" maxOccurs="unbounded"/>
+               <xs:element ref="dc:relation" minOccurs="0" maxOccurs="unbounded"/>
+               <xs:element ref="dct:modified" minOccurs="0" maxOccurs="unbounded"/>
+               <xs:element ref="dct:abstract" minOccurs="0" maxOccurs="unbounded"/>
+               <xs:element ref="dct:spatial" minOccurs="0" maxOccurs="unbounded"/>
+               <xs:element ref="ows:BoundingBox" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:element name="Record" type="csw:RecordType" substitutionGroup="csw:AbstractRecord"/>
+   <xs:complexType name="RecordType" final="#all">
+      <xs:annotation>
+         <xs:documentation xml:lang="en">
+            This type extends DCMIRecordType to add ows:BoundingBox;
+            it may be used to specify a spatial envelope for the
+            catalogued resource.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="csw:DCMIRecordType">
+            <xs:sequence>
+               <xs:element name="AnyText" type="csw:EmptyType" minOccurs="0" maxOccurs="unbounded"/>
+               <xs:element ref="ows:BoundingBox" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="EmptyType"/>
+</xs:schema>
+  </csw:SchemaComponent>
+</csw:DescribeRecordResponse>

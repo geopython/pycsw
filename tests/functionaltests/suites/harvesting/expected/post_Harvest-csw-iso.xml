@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:HarvestResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
+  <csw:TransactionResponse version="2.0.2">
+    <csw:TransactionSummary>
+      <csw:totalInserted>34</csw:totalInserted>
+      <csw:totalUpdated>0</csw:totalUpdated>
+      <csw:totalDeleted>0</csw:totalDeleted>
+    </csw:TransactionSummary>
+    <csw:InsertResult>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>pycsw Geospatial Catalogue OGC services demo</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>1 Million Scale WMS Layers from the National Atlas of the United States</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ports1m</dc:identifier>
+        <dc:title>1 Million Scale - Ports</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-national1m</dc:identifier>
+        <dc:title>1 Million Scale - National Boundary</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-elevation</dc:identifier>
+        <dc:title>1 Million Scale - Elevation 100 Meter Resolution</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-impervious</dc:identifier>
+        <dc:title>1 Million Scale - Impervious Surface 100 Meter Resolution</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-coast1m</dc:identifier>
+        <dc:title>1 Million Scale - Coastlines</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-cdl</dc:identifier>
+        <dc:title>1 Million Scale - 113th Congressional Districts</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-states1m</dc:identifier>
+        <dc:title>1 Million Scale - States</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-elsli0100g</dc:identifier>
+        <dc:title>1 Million Scale - Color-Sliced Elevation 100 Meter Resolution</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-landcov100m</dc:identifier>
+        <dc:title>1 Million Scale - Land Cover 100 Meter Resolution</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-cdp</dc:identifier>
+        <dc:title>1 Million Scale - 113th Congressional Districts by Party</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-amtrak1m</dc:identifier>
+        <dc:title>1 Million Scale - Railroad and Bus Passenger Stations</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-airports1m</dc:identifier>
+        <dc:title>1 Million Scale - Airports</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-one_million</dc:identifier>
+        <dc:title>1 Million Scale WMS Layers from the National Atlas of the United States</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-satvi0100g</dc:identifier>
+        <dc:title>1 Million Scale - Satellite View 100 Meter Resolution</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-srcoi0100g</dc:identifier>
+        <dc:title>1 Million Scale - Color Shaded Relief 100 Meter Resolution</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-srgri0100g</dc:identifier>
+        <dc:title>1 Million Scale - Gray Shaded Relief 100 Meter Resolution</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-treecanopy</dc:identifier>
+        <dc:title>1 Million Scale - Tree Canopy 100 Meter Resolution</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-svsri0100g</dc:identifier>
+        <dc:title>1 Million Scale - Satellite View with Shaded Relief 100 Meter Resolution</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>Wisconsin Lake Clarity</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Highways</dc:identifier>
+        <dc:title>Highways</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-LakesTSI</dc:identifier>
+        <dc:title>LakesTSI</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-LakeClarity</dc:identifier>
+        <dc:title>Wisconsin Lake Clarity</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-LakesTSI_0305</dc:identifier>
+        <dc:title>LakesTSI_0305</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Relief</dc:identifier>
+        <dc:title>Relief</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-LakeNames_0305</dc:identifier>
+        <dc:title>LakeNames_0305</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Roads</dc:identifier>
+        <dc:title>Roads</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-LakeNames</dc:identifier>
+        <dc:title>LakeNames</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-Counties</dc:identifier>
+        <dc:title>Counties</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>View &amp; download service for EU-DEM data provided by EOX</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-EU-DEM</dc:identifier>
+        <dc:title>EU-DEM</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MS</dc:identifier>
+        <dc:title>View &amp; download service for EU-DEM data provided by EOX</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-eudem_color</dc:identifier>
+        <dc:title>EU-DEM color shaded</dc:title>
+      </csw:BriefRecord>
+    </csw:InsertResult>
+  </csw:TransactionResponse>
+</csw:HarvestResponse>

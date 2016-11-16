@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+  <atom:id>http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg</atom:id>
+  <atom:title>pycsw Geospatial Catalogue</atom:title>
+  <atom:author>
+    <atom:name>pycsw</atom:name>
+  </atom:author>
+  <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities" rel="search" type="application/opensearchdescription+xml"/>
+  <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+  <os:Query role="request"/>
+  <os:totalResults>0</os:totalResults>
+  <os:startIndex>1</os:startIndex>
+  <os:itemsPerPage>0</os:itemsPerPage>
+</atom:feed>

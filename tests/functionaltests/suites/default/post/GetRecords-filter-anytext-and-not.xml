@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<csw:GetRecords xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" outputSchema="http://www.opengis.net/cat/csw/2.0.2" outputFormat="application/xml" version="2.0.2" service="CSW" resultType="results" maxRecords="10" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:Query typeNames="csw:Record">
+    <csw:ElementSetName>summary</csw:ElementSetName>
+    <csw:Constraint version="1.1.0">
+      <ogc:Filter>
+        <ogc:And>
+          <ogc:PropertyIsLike wildCard="*" singleChar="?" escapeChar="\" matchCase="false">
+            <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+            <ogc:Literal>*lorem*</ogc:Literal>
+          </ogc:PropertyIsLike>
+          <ogc:PropertyIsLike wildCard="*" singleChar="?" escapeChar="\" matchCase="false">
+            <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+            <ogc:Literal>*ipsum*</ogc:Literal>
+          </ogc:PropertyIsLike>
+          <ogc:Not>
+            <ogc:PropertyIsLike wildCard="*" singleChar="?" escapeChar="\" matchCase="false">
+              <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+              <ogc:Literal>*dolor*</ogc:Literal>
+            </ogc:PropertyIsLike>
+          </ogc:Not>
+        </ogc:And>
+      </ogc:Filter>
+    </csw:Constraint>
+  </csw:Query>
+</csw:GetRecords>

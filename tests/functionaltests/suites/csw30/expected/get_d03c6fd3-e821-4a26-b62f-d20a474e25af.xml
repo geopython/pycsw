@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw30:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" updateSequence="PYCSW_UPDATESEQUENCE" version="3.0.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/csw/3.0/cswGetCapabilities.xsd">
+  <ows20:ServiceProvider>
+    <ows20:ProviderName>pycsw</ows20:ProviderName>
+    <ows20:ProviderSite xlink:type="simple" xlink:href="http://pycsw.org/"/>
+    <ows20:ServiceContact>
+      <ows20:IndividualName>Kralidis, Tom</ows20:IndividualName>
+      <ows20:PositionName>Senior Systems Scientist</ows20:PositionName>
+      <ows20:ContactInfo>
+        <ows20:Phone>
+          <ows20:Voice>+01-416-xxx-xxxx</ows20:Voice>
+          <ows20:Facsimile>+01-416-xxx-xxxx</ows20:Facsimile>
+        </ows20:Phone>
+        <ows20:Address>
+          <ows20:DeliveryPoint>TBA</ows20:DeliveryPoint>
+          <ows20:City>Toronto</ows20:City>
+          <ows20:AdministrativeArea>Ontario</ows20:AdministrativeArea>
+          <ows20:PostalCode>M9C 3Z9</ows20:PostalCode>
+          <ows20:Country>Canada</ows20:Country>
+          <ows20:ElectronicMailAddress>tomkralidis@gmail.com</ows20:ElectronicMailAddress>
+        </ows20:Address>
+        <ows20:OnlineResource xlink:type="simple" xlink:href="http://kralidis.ca/"/>
+        <ows20:HoursOfService>0800h - 1600h EST</ows20:HoursOfService>
+        <ows20:ContactInstructions>During hours of service.  Off on weekends.</ows20:ContactInstructions>
+      </ows20:ContactInfo>
+      <ows20:Role codeSpace="ISOTC211/19115">pointOfContact</ows20:Role>
+    </ows20:ServiceContact>
+  </ows20:ServiceProvider>
+</csw30:Capabilities>

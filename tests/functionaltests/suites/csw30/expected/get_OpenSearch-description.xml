@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<os:OpenSearchDescription xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+  <os:ShortName>pycsw Geospatial</os:ShortName>
+  <os:LongName>pycsw Geospatial Catalogue</os:LongName>
+  <os:Description>pycsw is an OGC CSW server implementation written in Python</os:Description>
+  <os:Tags>catalogue discovery</os:Tags>
+  <os:Url type="application/xml" template="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg&amp;service=CSW&amp;version=3.0.0&amp;request=GetRecords&amp;elementsetname=full&amp;typenames=csw:Record&amp;resulttype=results&amp;q={searchTerms?}&amp;bbox={geo:box?}&amp;time={time:start?}/{time:end?}&amp;outputformat=application/xml&amp;outputschema=http://www.opengis.net/cat/csw/3.0&amp;startposition={startIndex?}&amp;maxrecords={count?}&amp;recordids={geo:uid}"/>
+  <os:Url type="application/atom+xml" template="http://localhost/pycsw/csw.py?config=tests/suites/csw30/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetRecords&amp;elementsetname=full&amp;typenames=csw:Record&amp;resulttype=results&amp;q={searchTerms?}&amp;bbox={geo:box?}&amp;time={time:start?}/{time:end?}&amp;outputformat=application/atom%2Bxml&amp;&amp;startposition={startIndex?}&amp;maxrecords={count?}&amp;recordids={geo:uid}"/>
+  <os:Image type="image/vnd.microsoft.icon" width="16" height="16">http://pycsw.org/img/favicon.ico</os:Image>
+  <os:Query role="example" geo:box="-180,-90,180,90"/>
+  <os:Developer>Kralidis, Tom</os:Developer>
+  <os:Contact>tomkralidis@gmail.com</os:Contact>
+  <os:Attribution>pycsw</os:Attribution>
+</os:OpenSearchDescription>
