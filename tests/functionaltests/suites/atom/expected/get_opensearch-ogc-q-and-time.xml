@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+  <atom:id>http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg</atom:id>
+  <atom:title>pycsw Geospatial Catalogue</atom:title>
+  <os:totalResults>1</os:totalResults>
+  <os:startIndex>1</os:startIndex>
+  <os:itemsPerPage>1</os:itemsPerPage>
+  <atom:entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:category term="Land titles"/>
+    <atom:id>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</atom:id>
+    <dc:identifier>urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db</dc:identifier>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:e9330592-0932-474b-be34-c3a3bb67c7db"/>
+    <atom:title>Fuscé vitae ligulä</atom:title>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+    <atom:summary>Morbi ultriçes, dui suscipit vestibulum prètium, velit ante pretium tortor, egët tincidunt pede odio ac nulla.</atom:summary>
+  </atom:entry>
+</atom:feed>

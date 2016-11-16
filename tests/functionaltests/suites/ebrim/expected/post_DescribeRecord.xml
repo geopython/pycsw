@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:DescribeRecordResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SchemaComponent schemaLanguage="XMLSCHEMA" targetNamespace="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0">
+    <xs:schema xmlns:xmime="http://www.w3.org/2005/05/xmlmime" id="wrs" targetNamespace="http://www.opengis.net/cat/wrs/1.0" elementFormDefault="qualified" version="1.0.1">
+
+  <xs:annotation>
+    <xs:appinfo xmlns:sch="http://www.ascc.net/xml/schematron">
+      <sch:pattern id="ComplexSlotValuesPattern" name="ComplexSlotValuesPattern">
+        <sch:rule context="//wrs:ValueList">
+          <sch:report test="rim:Value">rim:Value not allowed in this context: expected wrs:AnyValue.</sch:report>
+        </sch:rule>
+      </sch:pattern>
+    </xs:appinfo>
+    <xs:documentation xml:lang="en">
+    Schema for CSW-ebRIM catalogue profile (OGC 07-110r3).
+    </xs:documentation>
+  </xs:annotation>
+    
+  <xs:import namespace="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" schemaLocation="http://docs.oasis-open.org/regrep/v3.0/schema/rim.xsd"/>
+  <xs:import namespace="http://www.opengis.net/cat/csw/2.0.2" schemaLocation="http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd"/>
+  <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.w3.org/1999/xlink.xsd"/>
+  <xs:import namespace="http://www.opengis.net/ogc" schemaLocation="http://schemas.opengis.net/filter/1.1.0/filter.xsd"/>
+    
+  <xs:element name="Capabilities" type="csw:CapabilitiesType"/>
+  <xs:element name="RecordId" type="wrs:RecordIdType" substitutionGroup="ogc:_Id" id="RecordId">
+    <xs:annotation>
+    <xs:documentation xml:lang="en">
+    A general record identifier, expressed as an absolute URI that maps to 
+    the rim:RegistryObject/@id attribute. It substitutes for the ogc:_Id 
+    element in an OGC filter expression.
+    </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="RecordIdType" id="RecordIdType">
+    <xs:complexContent mixed="true">
+      <xs:extension base="ogc:AbstractIdType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="ExtrinsicObject" type="wrs:ExtrinsicObjectType" substitutionGroup="rim:ExtrinsicObject"/>
+  <xs:complexType name="ExtrinsicObjectType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+      Extends rim:ExtrinsicObjectType to add the following:
+      1. MTOM/XOP based attachment support.
+      2. XLink based reference to a part in a multipart/related message 
+         structure.
+      NOTE: This content model is planned for RegRep 4.0.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="rim:ExtrinsicObjectType">
+        <xs:choice minOccurs="0" maxOccurs="1">
+          <xs:element name="repositoryItemRef" type="wrs:SimpleLinkType"/>
+          <xs:element name="repositoryItem" type="xsd:base64Binary" xmime:expectedContentTypes="*/*"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="ValueList" type="wrs:ValueListType" substitutionGroup="rim:ValueList"/>
+  <xs:complexType name="ValueListType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">Allows complex slot values.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="rim:ValueListType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+          <xs:element ref="wrs:AnyValue"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="AnyValue" type="wrs:AnyValueType"/>
+  <xs:complexType name="AnyValueType" mixed="true">
+    <xs:sequence>
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="SimpleLinkType" id="SimpleLinkType">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+      Incorporates the attributes defined for use in simple XLink elements.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attributeGroup ref="xlink:simpleAttrs"/>
+  </xs:complexType>
+</xs:schema>
+  </csw:SchemaComponent>
+</csw:DescribeRecordResponse>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
+  <csw:SearchResults nextRecord="6" numberOfRecordsMatched="16" numberOfRecordsReturned="5" recordSchema="http://www.opengis.net/cat/csw/2.0.2" elementSet="brief">
+    <csw:BriefRecord>
+      <dc:identifier>3e9a8c05</dc:identifier>
+      <dc:title>test Title</dc:title>
+      <dc:type>service</dc:type>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>34.8 19.37</ows:LowerCorner>
+        <ows:UpperCorner>41.75 29.61</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
+      <dc:identifier>366f6257-19eb-4f20-ba78-0698ac4aae77</dc:identifier>
+      <dc:title>Aerial Photos</dc:title>
+      <dc:type>dataset</dc:type>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>38.0 20.0</ows:LowerCorner>
+        <ows:UpperCorner>40.0 24.0</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
+      <dc:identifier>75a7eb5e-336e-453d-ab06-209b1070d396</dc:identifier>
+      <dc:title>Aerial Photos</dc:title>
+      <dc:type>dataset</dc:type>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>38.0 20.0</ows:LowerCorner>
+        <ows:UpperCorner>40.0 24.0</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
+      <dc:identifier>a7308c0a-b748-48e2-bab7-0a608a51d416</dc:identifier>
+      <dc:title>Aerial Photos</dc:title>
+      <dc:type>dataset</dc:type>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>38.0 20.0</ows:LowerCorner>
+        <ows:UpperCorner>40.0 24.0</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+    <csw:BriefRecord>
+      <dc:identifier>0173e0d7-6ea9-4407-b846-f29d6bfa9903</dc:identifier>
+      <dc:title>Aerial Photos</dc:title>
+      <dc:type>dataset</dc:type>
+      <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+        <ows:LowerCorner>38.0 20.0</ows:LowerCorner>
+        <ows:UpperCorner>40.0 24.0</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:BriefRecord>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>

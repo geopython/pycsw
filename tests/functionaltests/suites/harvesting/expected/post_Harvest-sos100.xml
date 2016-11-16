@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:HarvestResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd">
+  <csw:TransactionResponse version="2.0.2">
+    <csw:TransactionSummary>
+      <csw:totalInserted>30</csw:totalInserted>
+      <csw:totalUpdated>0</csw:totalUpdated>
+      <csw:totalDeleted>0</csw:totalDeleted>
+    </csw:TransactionSummary>
+    <csw:InsertResult>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER</dc:identifier>
+        <dc:title>Northeastern Regional Association of Coastal Ocean Observing Systems</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CML</dc:identifier>
+        <dc:title>Mooring CML data from the COOA (UNH-COOA) located UNH Coastal Marine Lab Field Station</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-F01</dc:identifier>
+        <dc:title>Mooring F01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Penobscot Bay</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-F02</dc:identifier>
+        <dc:title>Mooring F02 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located DeepCwind Castine Test Site</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMB-MO-04</dc:identifier>
+        <dc:title>Mooring SMB-MO-04 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (SmartBay) located Pilot Boarding Station, Red Island Shoal, Placentia Bay, NL, CA</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-LDLC3</dc:identifier>
+        <dc:title>Mooring LDLC3 data from the LISICOS (LISICOS) located New London Ledge Light</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CDIP154</dc:identifier>
+        <dc:title>Mooring CDIP154 data from the COOA (UNH-COOA-CDIP) located Block Island, RI</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CDIP176</dc:identifier>
+        <dc:title>Mooring CDIP176 data from the COOA (UNH-COOA-CDIP) located Halifax Harbor, CA</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ARTG</dc:identifier>
+        <dc:title>Mooring ARTG data from the LISICOS (LISICOS) located North of Smithtown Bay</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-M01</dc:identifier>
+        <dc:title>Mooring M01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Jordan Basin</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-N01</dc:identifier>
+        <dc:title>Mooring N01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Northeast Channel</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-44039</dc:identifier>
+        <dc:title>Mooring 44039 data from the LISICOS (LISICOS) located Central Long Island Sound</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMB-MO-01</dc:identifier>
+        <dc:title>Mooring SMB-MO-01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (SmartBay) located Mouth of Placentia Bay, NL, Canada</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-SMB-MO-05</dc:identifier>
+        <dc:title>Mooring SMB-MO-05 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (SmartBay) located Come By Chance Point, Placentia Bay, NL, CA</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-D02</dc:identifier>
+        <dc:title>Mooring D02 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Lower Harpswell Sound</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-E02</dc:identifier>
+        <dc:title>Mooring E02 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located DeepCwind Test Site</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-E01</dc:identifier>
+        <dc:title>Mooring E01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Central Maine Shelf</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-B01</dc:identifier>
+        <dc:title>Mooring B01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Western Maine Shelf</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-EXRX</dc:identifier>
+        <dc:title>Mooring EXRX data from the LISICOS (LISICOS) located Execution Rocks Long Island Sound</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-44098</dc:identifier>
+        <dc:title>Mooring 44098 data from the COOA (UNH-COOA) located Jeffrey's Ledge</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-WLIS</dc:identifier>
+        <dc:title>Mooring WLIS data from the LISICOS (LISICOS) located Western Long Island Sound</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CO2</dc:identifier>
+        <dc:title>Mooring CO2 data from the COOA (UNH-COOA) located Appledore Island</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CDIP221</dc:identifier>
+        <dc:title>Mooring CDIP221 data from the COOA (UNH-COOA-CDIP) located Cape Cod Bay, MA</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-ALL_PLATFORMS</dc:identifier>
+        <dc:title>Mooring data for all buoys from the Northeastern Regional Association of Coastal Ocean Observing Systems (NERACOOS) located in the NERACOOS Region</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-A01</dc:identifier>
+        <dc:title>Mooring A01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Massachusetts Bay</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-MDS02</dc:identifier>
+        <dc:title>Mooring MDS02 data from the URI (Univ. of Rhode Is.) located SAMP MD S</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-GREAT_BAY</dc:identifier>
+        <dc:title>Mooring GREAT_BAY data from the COOA (UNH-COOA) located Great Bay, NH</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-I01</dc:identifier>
+        <dc:title>Mooring I01 data from the Northeastern Regional Association of Coastal Ocean Observing Systems (Univ. of Maine) located Eastern Maine Shelf</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-CDIP207</dc:identifier>
+        <dc:title>Mooring CDIP207 data from the COOA (UNH-COOA-CDIP) located Fire Island, NY</dc:title>
+      </csw:BriefRecord>
+      <csw:BriefRecord>
+        <dc:identifier>PYCSW_IDENTIFIER-44060</dc:identifier>
+        <dc:title>Mooring 44060 data from the LISICOS (LISICOS) located Eastern Long Island Sound</dc:title>
+      </csw:BriefRecord>
+    </csw:InsertResult>
+  </csw:TransactionResponse>
+</csw:HarvestResponse>
