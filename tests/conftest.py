@@ -32,6 +32,12 @@ import pytest
 
 
 def pytest_configure(config):
+    """Configure pytest
+
+    This function adds additional markers to pytest.
+
+    """
+
     config.addinivalue_line(
         "markers",
         "functional: Run only functional tests"
@@ -43,6 +49,7 @@ def pytest_configure(config):
 
 
 def pytest_addoption(parser):
+    """Add additional command-line parameters to pytest"""
     parser.addoption(
         "--database-backend",
         choices=["sqlite", "postgres"],
@@ -70,5 +77,12 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope="session")
 def log_level(request):
+    """Log level to use when instantiating a new pycsw server.
+
+    The value for this fixture is retrieved from the `--pycsw.loglevel`
+    command-line parameter.
+
+    """
+
     return request.config.getoption("pycsw_loglevel").upper()
 

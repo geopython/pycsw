@@ -51,6 +51,11 @@ def test_suites(configuration, request_method, request_data, expected_result,
     """
     Test suites.
 
+    This function is automatically parametrized by pytest as a result of the
+    ``conftest:pytest_Generate_tests`` function. The input parameters are thus
+    supplied by pytest as a result of discovering and parsing the existing
+    test suites located under ``tests/functionaltests/suites``.
+
     Parameters
     ----------
     configuration: SafeConfigParser
@@ -65,6 +70,49 @@ def test_suites(configuration, request_method, request_data, expected_result,
     normalize_identifier_fields: bool
         Whether to normalize the identifier fields in responses. This
         parameter is used only in the 'harvesting' and 'manager' suites
+
+    """
+
+    request_environment = _prepare_wsgi_test_environment(request_method,
+                                                         request_data)
+    pycsw_server = server.Csw(rtconfig=configuration, env=request_environment)
+    status, contents = pycsw_server.dispatch_wsgi()
+    with codecs.open(expected_result, encoding="utf-8") as fh:
+        expected = fh.read()
+    normalized_result = _normalize(
+        contents,
+        normalize_identifiers=normalize_identifier_fields
+    )
+    try:
+        matches_expected = _test_xml_result(normalized_result, expected)
+    except etree.XMLSyntaxError:
+        # the file is either not XML (perhaps JSON?) or malformed
+        matches_expected = _test_json_result(normalized_result, expected)
+    except etree.C14NError:
+        print("XML canonicalization has failed. Trying to compare result "
+              "with expected using difflib")
+        matches_expected = _test_xml_diff(normalized_result, expected)
+    if not matches_expected:
+        print("expected: {0}".format(expected))
+        print("response: {0}".format(normalized_result))
+    assert matches_expected
+
+
+def _prepare_wsgi_test_environment(request_method, request_data):
+    """Set up a testing environment for tests.
+
+    Parameters
+    ----------
+    request_method: str
+        The HTTP method of the request. Sould be either GET or POST.
+    request_data: str
+        Either the path to the request file, for POST requests or the request
+        parameters for GET requests.
+
+    Returns
+    -------
+    dict
+        A dict with the environment variables to use in the test
 
     """
 
@@ -87,36 +135,15 @@ def test_suites(configuration, request_method, request_data, expected_result,
         print("Request contents: {0}".format(request_data))
         request_environment["QUERY_STRING"] = request_data
     wsgiref.util.setup_testing_defaults(request_environment)
-    pycsw_server = server.Csw(rtconfig=configuration, env=request_environment)
-    status, contents = pycsw_server.dispatch_wsgi()
-    with codecs.open(expected_result, encoding="utf-8") as fh:
-        expected = fh.read()
-    _compare_response(contents, expected,
-                      normalize_id_fields=normalize_identifier_fields)
-
-
-def _compare_response(response, expected, normalize_id_fields):
-    normalized_result = _normalize(response, force_id_mask=normalize_id_fields)
-    try:
-        matches_expected = _test_xml_result(normalized_result, expected)
-    except etree.XMLSyntaxError:
-        # the file is either not XML (perhaps JSON?) or malformed
-        matches_expected = _test_json_result(normalized_result, expected)
-    except etree.C14NError:
-        print("XML canonicalization has failed. Trying to compare result "
-              "with expected using difflib")
-        matches_expected = _test_xml_diff(normalized_result, expected)
-    if not matches_expected:
-        print("expected: {0}".format(expected))
-        print("response: {0}".format(normalized_result))
-    assert matches_expected
+    return request_environment
 
 
 def _test_xml_result(result, expected, encoding="utf-8"):
     """Compare the XML test results with an expected value.
 
     This function compares the test result with the expected values by
-    performing XML canonicalization (c14n)[1]_.
+    performing XML canonicalization (c14n)[1]_, which compares the semantic
+    meanings of both XML files.
 
     Parameters
     ----------
@@ -182,28 +209,65 @@ def _test_json_result(result, expected, encoding="utf-8"):
 
 
 def _test_xml_diff(result, expected):
+    """Compare two XML strings by using python's ``difflib.SequenceMatcher``.
+
+    This is a character-by-cahracter comparison and does not take into account
+    the semantic meaning of XML elements and attributes.
+
+    Parameters
+    ----------
+    result: str
+        The result of running the test.
+    expected: str
+        The expected outcome.
+
+    Returns
+    -------
+    bool
+        Whether the result matches the expectations or not.
+
+    """
+
     sequence_matcher = SequenceMatcher(None, result, expected)
     ratio = sequence_matcher.ratio()
     return ratio == pytest.approx(1.0)
 
 
-def _normalize(sresult, force_id_mask=False):
-    """Replace time, updateSequence and version specific values with generic
-    values"""
+def _normalize(sresult, normalize_identifiers=False):
+    """
+    Normalize test output so that it can be compared with the expected result.
+
+    Several dynamic elements of a pycsw response (such as time,
+    updateSequence, etc) are replaced with static constants to ease comparison.
+
+    Parameters
+    ----------
+    sresult: str
+        The test result.
+    normalize_identifiers: bool, optional
+        Whether identifier fields should be normalized.
+
+    Returns
+    -------
+    str
+        The normalized response.
+
+    """
 
     # XML responses
     version = re.search(r'<!-- (.*) -->', sresult)
     updatesequence = re.search(r'updateSequence="(\S+)"', sresult)
     timestamp = re.search(r'timestamp="(.*)"', sresult)
     timestamp2 = re.search(r'timeStamp="(.*)"', sresult)
-    timestamp3 = re.search(r'<oai:responseDate>(.*)</oai:responseDate>', sresult)
-    timestamp4 = re.search(r'<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>', sresult)
+    timestamp3 = re.search(r'<oai:responseDate>(.*)</oai:responseDate>',
+                           sresult)
+    timestamp4 = re.search(
+        r'<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>', sresult)
     zrhost = re.search(r'<zr:host>(.*)</zr:host>', sresult)
     zrport = re.search(r'<zr:port>(.*)</zr:port>', sresult)
     elapsed_time = re.search(r'elapsedTime="(.*)"', sresult)
     expires = re.search(r'expires="(.*?)"', sresult)
     atom_updated = re.findall(r'<atom:updated>(.*)</atom:updated>', sresult)
-
     if version:
         sresult = sresult.replace(version.group(0), r'<!-- PYCSW_VERSION -->')
     if updatesequence:
@@ -216,11 +280,15 @@ def _normalize(sresult, force_id_mask=False):
         sresult = sresult.replace(timestamp2.group(0),
                                   r'timeStamp="PYCSW_TIMESTAMP"')
     if timestamp3:
-        sresult = sresult.replace(timestamp3.group(0),
-                                  r'<oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>')
+        sresult = sresult.replace(
+            timestamp3.group(0),
+            r'<oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>'
+        )
     if timestamp4:
-        sresult = sresult.replace(timestamp4.group(0),
-                                  r'<oai:earliestDatestamp>PYCSW_TIMESTAMP</oai:earliestDatestamp>')
+        sresult = sresult.replace(
+            timestamp4.group(0),
+            r'<oai:earliestDatestamp>PYCSW_TIMESTAMP</oai:earliestDatestamp>'
+        )
     if zrport:
         sresult = sresult.replace(zrport.group(0),
                                   r'<zr:port>PYCSW_PORT</zr:port>')
@@ -235,7 +303,6 @@ def _normalize(sresult, force_id_mask=False):
                                   r'expires="PYCSW_EXPIRES"')
     for au in atom_updated:
         sresult = sresult.replace(au, r'PYCSW_TIMESTAMP')
-
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints
     if sresult.find(r'HarvestResponse') != -1:
@@ -243,25 +310,23 @@ def _normalize(sresult, force_id_mask=False):
                                 sresult)
         for i in identifier:
             sresult = sresult.replace(i, r'PYCSW_IDENTIFIER')
-
     # JSON responses
     timestamp = re.search(r'"@timestamp": "(.*?)"', sresult)
 
     if timestamp:
         sresult = sresult.replace(timestamp.group(0),
                                   r'"@timestamp": "PYCSW_TIMESTAMP"')
-
     # harvesting-based GetRecords/GetRecordById responses
-    if force_id_mask:
-        dcid = re.findall(r'<dc:identifier>(urn:uuid.*)</dc:identifier>', sresult)
+    if normalize_identifiers:
+        dcid = re.findall(r'<dc:identifier>(urn:uuid.*)</dc:identifier>',
+                          sresult)
         isoid = re.findall(r'id="(urn:uuid.*)"', sresult)
-        isoid2 = re.findall(r'<gco:CharacterString>(urn:uuid.*)</gco', sresult)
-
+        isoid2 = re.findall(r'<gco:CharacterString>(urn:uuid.*)</gco',
+                            sresult)
         for d in dcid:
             sresult = sresult.replace(d, r'PYCSW_IDENTIFIER')
         for i in isoid:
             sresult = sresult.replace(i, r'PYCSW_IDENTIFIER')
         for i2 in isoid2:
             sresult = sresult.replace(i2, r'PYCSW_IDENTIFIER')
-
     return sresult
