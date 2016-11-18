@@ -703,26 +703,6 @@
           <srv:containsOperations>
             <srv:SV_OperationMetadata>
               <srv:operationName>
-                <gco:CharacterString>DefaultMaxFeatures</gco:CharacterString>
-              </srv:operationName>
-              <srv:DCP>
-                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPGet">HTTPGet</srv:DCPList>
-              </srv:DCP>
-              <srv:DCP>
-                <srv:DCPList codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DCPList" codeListValue="HTTPPost">HTTPPost</srv:DCPList>
-              </srv:DCP>
-              <srv:connectPoint>
-                <gmd:CI_OnlineResource>
-                  <gmd:linkage>
-                    <gmd:URL>http://maps.cera.govt.nz/arcgis/services/CERA/CERA_TechClasses_WGS84/MapServer/WFSServer</gmd:URL>
-                  </gmd:linkage>
-                </gmd:CI_OnlineResource>
-              </srv:connectPoint>
-            </srv:SV_OperationMetadata>
-          </srv:containsOperations>
-          <srv:containsOperations>
-            <srv:SV_OperationMetadata>
-              <srv:operationName>
                 <gco:CharacterString>ImplementsSimpleWFS</gco:CharacterString>
               </srv:operationName>
               <srv:DCP>
