@@ -1585,6 +1585,10 @@ class Csw3(object):
                     if val:
                         etree.SubElement(record,
                         util.nspath_eval(i, self.parent.context.namespaces)).text = val
+                val = util.getqattr(recobj, queryables['dct:spatial']['dbcol'])
+                if val:
+                    etree.SubElement(record,
+                    util.nspath_eval('dct:spatial', self.parent.context.namespaces), scheme='http://www.opengis.net/def/crs').text = val
 
             # always write out ows:BoundingBox
             bboxel = write_boundingbox(getattr(recobj,
