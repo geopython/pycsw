@@ -1517,11 +1517,15 @@ class Csw2(object):
             if self.parent.kvp['elementsetname'] == 'full':  # add full elements
                 for i in ['dc:date', 'dc:creator', \
                 'dc:publisher', 'dc:contributor', 'dc:source', \
-                'dc:language', 'dc:rights']:
+                'dc:language', 'dc:rights', 'dct:alternative']:
                     val = util.getqattr(recobj, queryables[i]['dbcol'])
                     if val:
                         etree.SubElement(record,
                         util.nspath_eval(i, self.parent.context.namespaces)).text = val
+                val = util.getqattr(recobj, queryables['dct:spatial']['dbcol'])
+                if val:
+                    etree.SubElement(record,
+                    util.nspath_eval('dct:spatial', self.parent.context.namespaces), scheme='http://www.opengis.net/def/crs').text = val
 
             # always write out ows:BoundingBox
             bboxel = write_boundingbox(getattr(recobj,

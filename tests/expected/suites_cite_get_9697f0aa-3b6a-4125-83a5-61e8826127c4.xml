@@ -267,7 +267,9 @@
         <ows20:Value>dc:title</ows20:Value>
         <ows20:Value>dc:type</ows20:Value>
         <ows20:Value>dct:abstract</ows20:Value>
+        <ows20:Value>dct:alternative</ows20:Value>
         <ows20:Value>dct:modified</ows20:Value>
+        <ows20:Value>dct:spatial</ows20:Value>
         <ows20:Value>ows:BoundingBox</ows20:Value>
       </ows20:AllowedValues>
     </ows20:Constraint>

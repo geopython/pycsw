@@ -171,7 +171,9 @@
         <ows:Value>dc:title</ows:Value>
         <ows:Value>dc:type</ows:Value>
         <ows:Value>dct:abstract</ows:Value>
+        <ows:Value>dct:alternative</ows:Value>
         <ows:Value>dct:modified</ows:Value>
+        <ows:Value>dct:spatial</ows:Value>
         <ows:Value>ows:BoundingBox</ows:Value>
       </ows:Constraint>
       <ows:Constraint name="SupportedISOQueryables">
