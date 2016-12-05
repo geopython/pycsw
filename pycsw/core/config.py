@@ -289,6 +289,8 @@ class StaticContext(object):
                                 # map Dublin Core queryables to core metadata model
                                 'dc:title':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Title']},
+                                'dct:alternative':
+                                {'dbcol': self.md_core_model['mappings']['pycsw:AlternateTitle']},
                                 'dc:creator':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Creator']},
                                 'dc:subject':
@@ -318,6 +320,8 @@ class StaticContext(object):
                                 'dc:rights':
                                 {'dbcol':
                                  self.md_core_model['mappings']['pycsw:AccessConstraints']},
+                                'dct:spatial':
+                                {'dbcol': self.md_core_model['mappings']['pycsw:CRS']},
                                 # bbox and full text map to internal fixed columns
                                 'ows:BoundingBox':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:BoundingBox']},
@@ -502,6 +506,8 @@ class StaticContext(object):
                                 # map Dublin Core queryables to core metadata model
                                 'dc:title':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Title']},
+                                'dct:alternative':
+                                {'dbcol': self.md_core_model['mappings']['pycsw:AlternateTitle']},
                                 'dc:creator':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Creator']},
                                 'dc:subject':
@@ -531,6 +537,8 @@ class StaticContext(object):
                                 'dc:rights':
                                 {'dbcol':
                                  self.md_core_model['mappings']['pycsw:AccessConstraints']},
+                                'dct:spatial':
+                                {'dbcol': self.md_core_model['mappings']['pycsw:CRS']},
                                 # bbox and full text map to internal fixed columns
                                 'ows:BoundingBox':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:BoundingBox']},
@@ -567,6 +575,7 @@ class StaticContext(object):
 
         defaults = {
             'dc:title': 'pycsw:Title',
+            'dct:alternative': 'pycsw:AlternateTitle',
             'dc:creator': 'pycsw:Creator',
             'dc:subject': 'pycsw:Keywords',
             'dct:abstract': 'pycsw:Abstract',
@@ -581,6 +590,7 @@ class StaticContext(object):
             'dc:language': 'pycsw:Language',
             'dc:relation': 'pycsw:Relation',
             'dc:rights': 'pycsw:AccessConstraints',
+            'dct:spatial': 'pycsw:CRS',
             'ows:BoundingBox': 'pycsw:BoundingBox',
             'csw:AnyText': 'pycsw:AnyText',
         }
