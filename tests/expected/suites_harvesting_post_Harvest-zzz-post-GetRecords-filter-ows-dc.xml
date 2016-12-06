@@ -31,7 +31,7 @@
       <dc:subject>reference implementation</dc:subject>
       <dc:format>CSW</dc:format>
       <dct:references scheme="OGC:CSW">http://demo.pycsw.org/cite/csw</dct:references>
-      <dct:abstract>pycsw is an OGC CSW server implementation written in Python. pycsw fully implements the OpenGIS Catalogue Service Implementation Specification (Catalogue Service for the Web). Initial development started in 2010 (more formally announced in 2011). The project is certified OGC Compliant, and is an OGC Reference Implementation.  Since 2015, pycsw is an official OSGeo Project. pycsw allows for the publishing and discovery of geospatial metadata via numerous APIs (CSW 2/CSW 3, OpenSearch, OAI-PMH, SRU). Existing repositories of geospatial metadata can also be exposed, providing a standards-based metadata and catalogue component of spatial data infrastructures. pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X).</dct:abstract>
+      <dct:abstract>pycsw is an OGC CSW server implementation written in Python. pycsw fully implements the OpenGIS Catalogue Service Implementation Specification (Catalogue Service for the Web). Initial development started in 2010 (more formally announced in 2011). The project is certified OGC Compliant, and is an OGC Reference Implementation. Since 2015, pycsw is an official OSGeo Project. pycsw allows for the publishing and discovery of [[geospatial]] metadata via numerous APIs (CSW 2/CSW 3, OpenSearch, OAI-PMH, SRU). Existing repositories of geospatial metadata can also be exposed, providing a standards-based metadata and catalogue component of spatial data infrastructures. pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X)</dct:abstract>
       <dc:creator>Lastname, Firstname</dc:creator>
       <dc:publisher>Organization Name</dc:publisher>
       <dc:contributor>Lastname, Firstname</dc:contributor>
@@ -72,6 +72,7 @@
       <dc:contributor>Eric Bridger</dc:contributor>
       <dc:source>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi</dc:source>
       <dc:rights>NONE</dc:rights>
+      <dct:spatial scheme="http://www.opengis.net/def/crs">urn:ogc:def:crs:EPSG:6.11:4326</dct:spatial>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>40.58 -73.73</ows:LowerCorner>
         <ows:UpperCorner>47.79 -54.05</ows:UpperCorner>
@@ -95,6 +96,7 @@
       <dc:contributor>Boyan Brodaric</dc:contributor>
       <dc:source>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</dc:source>
       <dc:rights>NONE</dc:rights>
+      <dct:spatial scheme="http://www.opengis.net/def/crs">urn:ogc:def:crs:EPSG:6.11:4326</dct:spatial>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>41.0 -120.0</ows:LowerCorner>
         <ows:UpperCorner>60.0 -60.0</ows:UpperCorner>
@@ -116,6 +118,7 @@
       <dc:rights>
     NONE
   </dc:rights>
+      <dct:spatial scheme="http://www.opengis.net/def/crs">urn:ogc:def:crs:EPSG:6.11:4326</dct:spatial>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>41.03 -97.71</ows:LowerCorner>
         <ows:UpperCorner>49.67 -80.68</ows:UpperCorner>
