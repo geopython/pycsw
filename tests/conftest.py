@@ -52,21 +52,37 @@ def pytest_addoption(parser):
     """Add additional command-line parameters to pytest"""
     parser.addoption(
         "--database-backend",
-        choices=["sqlite", "postgres"],
+        choices=["sqlite", "postgresql"],
         default="sqlite",
         help="Database backend to use when performing functional tests"
     )
     parser.addoption(
-        "--database-user-postgres",
+        "--database-user-postgresql",
         default="postgres",
         help="Username to use for creating and accessing local postgres "
              "databases used for functional tests."
     )
     parser.addoption(
-        "--database-password-postgres",
+        "--database-password-postgresql",
         default="",
         help="Password to use for creating and accessing local postgres "
              "databases used for functional tests."
+    )
+    parser.addoption(
+        "--database-name-postgresql",
+        default="test_pycsw",
+        help="Name of the postgres database that is to be used for testing."
+    )
+    parser.addoption(
+        "--database-host-postgresql",
+        default="127.0.0.1",
+        help="hostname or ip of the host that is running the postgres "
+             "database server to use in testing."
+    )
+    parser.addoption(
+        "--database-port-postgresql",
+            default="5432",
+        help="Port where the postgres server is listening for connections."
     )
     parser.addoption(
         "--pycsw-loglevel",
