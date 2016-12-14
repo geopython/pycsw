@@ -11,8 +11,8 @@ The tests can be run locally as part of the development cycle. They are also
 run on pycsw's `Travis`_ continuous integration server against all pushes and
 pull requests to the code repository.
 
-.. _ogc-cite:
 
+.. _ogc-cite:
 
 OGC CITE
 --------
@@ -20,12 +20,6 @@ OGC CITE
 In addition to pycsw's own tests, all public releases are also tested via the
 OGC `Compliance & Interoperability Testing & Evaluation Initiative`_ (CITE).
 The pycsw `wiki`_ documents CITE testing procedures and status.
-
-.. _pytest: http://pytest.org/latest/
-.. _Travis: http://travis-ci.org/geopython/pycsw
-.. _Compliance & Interoperability Testing & Evaluation Initiative:
-   http://cite.opengeospatial.org/
-.. _wiki: https://github.com/geopython/pycsw/wiki/OGC-CITE-Compliance
 
 
 Test suites
@@ -38,7 +32,7 @@ that pycsw works as expected.
 
 Each test follows the same workflow:
 
-* Instantiate a pycsw instance with a custom configuration and data repository
+* Create a new pycsw instance with a custom configuration and data repository
   for each suite of tests;
 
 * Perform a series of GET and POST requests to the running pycsw instance;
@@ -55,7 +49,7 @@ Each suite specifies the following structure:
   used by the test suite;
 
 * A mandatory ``expected/`` directory containing the expected results for each
-  request
+  request;
 
 * An optional ``data/`` directory that contains ``.xml`` files with testing
   data that is to be loaded into the suite's database before running the tests.
@@ -69,7 +63,7 @@ Each suite specifies the following structure:
     new empty database is used in the tests;
 
   * If ``data/`` directory is absent, the suite will use a database populated
-    with test data from the CITE suite.
+    with test data from the ``CITE`` suite.
 
 * An optional ``get/requests.txt`` file that holds request parameters used for
   making HTTP GET requests.
@@ -80,13 +74,14 @@ Each suite specifies the following structure:
 
   For example:
 
-    GetCapabilities,service=CSW&version=2.0.2&request=GetCapabilities
+    TestGetCapabilities,service=CSW&version=2.0.2&request=GetCapabilities
 
   When tests are run, the *test_id* is used for naming each test and for
   finding the expected result.
 
 * An optional ``post/`` directory that holds ``.xml`` files used for making
   HTTP POST requests
+
 
 Test identifiers
 ^^^^^^^^^^^^^^^^
@@ -98,8 +93,6 @@ Each test has an identifier that is built using the following rule:
 For example:
 
     test_suites[default_post_GetRecords-end]
-
-.. _functional tests: https://en.wikipedia.org/wiki/Functional_testing
 
 
 Running tests
@@ -123,29 +116,27 @@ running:
 
    py.test --help
 
-.. _pytest's invocation documentation: http://docs.pytest.org/en/latest/usage.html
 
 
 Running specific suites and test cases
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Use the `-k name expression` flag to select which tests to run. Since each
+Use the ``-k <name_expression>`` flag to select which tests to run. Since each
 test's name includes the suite name, http method and an identifier for the
 test, it is easy to run only certain tests.
 
 .. code:: bash
 
-   py.test -k "apiso and GetRecords"  # run only tests from the `apiso` suite that have `GetRecords` in their name
-   py.test -k "post and GetRecords"  # run only tests that use HTTP POST and `GetRecords` in their name
-   py.test -k "not harvesting"  # run all tests except those from the `harvesting` suite
-
+   py.test -k "apiso and GetRecords"  # run only tests from the apiso suite that have GetRecords in their name
+   py.test -k "post and GetRecords"  # run only tests that use HTTP POST and GetRecords in their name
+   py.test -k "not harvesting"  # run all tests except those from the harvesting suite
 
 
 Exiting fast
 ^^^^^^^^^^^^
 
-The `--exitfirst` (or `-x`) flag can be used to stop the test runner
-immediately if some test case fails.
+The ``--exitfirst`` (or ``-x``) flag can be used to stop the test runner
+immediately as soon as a test case fails.
 
 .. code:: bash
 
@@ -157,21 +148,21 @@ Seeing more output
 
 There are three main ways to get more output from running tests:
 
-* The `--verbose` (or `-v`) flag
+* The ``--verbose`` (or ``-v``) flag;
 
-* The `--capture=no` flag - Messages sent to stdout by a test are not
+* The ``--capture=no`` flag - Messages sent to stdout by a test are not
   suppressed;
 
-* The `--pycsw-loglevel` flag - Sets the log level of the pycsw instance under
-  test. Set this value to `debug` in order to see all debug messages sent by
-  pycsw while processing a request
+* The ``--pycsw-loglevel`` flag - Sets the log level of the pycsw instance
+  under test. Set this value to ``debug`` in order to see all debug messages
+  sent by pycsw while processing a request.
 
 
 .. code:: bash
 
    py.test --verbose
    py.test --pycsw-loglevel=debug
-   py.test --capture=no --pycsw-loglevel=debug
+   py.test -v --capture=no --pycsw-loglevel=debug
 
 
 Test coverage
@@ -206,6 +197,33 @@ guide
 .. code:: bash
 
    py.test --flake8
+
+
+Testing multiple python versions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For testing multiple python versions and configurations simultaneously you can
+use `tox`_. pycsw includes a `tox.ini` file with a suitable configuration. It
+can be used to run tests against multiple python versions and also multiple
+database backends. When running `tox` you can send arguments to the `py.test`
+runner by using the invocation `tox <tox arguments> -- <py.test arguments>`.
+Examples:
+
+.. code:: bash
+
+   # install tox on your system
+   sudo pip install tox
+
+   # run all tests on multiple python versions against all databases,
+   # with default arguments
+   tox
+
+   # run tests only with python2.7 and using sqlite as backend
+   tox -e py27-sqlite
+
+   # run only csw30 suite tests with python3.5 and postgresql as backend
+   tox -e py35-postgresql -- -k 'csw30'
+
 
 
 Running tests against a remote server
@@ -334,4 +352,12 @@ requests against your pycsw install.  The tests are is located in
 
 Then navigate to ``http://host/path/to/pycsw/tests/index.html``.
 
+.. _Compliance & Interoperability Testing & Evaluation Initiative: http://cite.opengeospatial.org/
+.. _functional tests: https://en.wikipedia.org/wiki/Functional_testing
 .. _`Paver`: http://paver.github.io/paver/
+.. _pytest's invocation documentation: http://docs.pytest.org/en/latest/usage.html
+.. _pytest: http://pytest.org/latest/
+.. _Travis: http://travis-ci.org/geopython/pycsw
+.. _tox: https://tox.readthedocs.io
+.. _wiki: https://github.com/geopython/pycsw/wiki/OGC-CITE-Compliance
+
