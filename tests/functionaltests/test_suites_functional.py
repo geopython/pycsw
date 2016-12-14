@@ -97,6 +97,8 @@ def test_suites(configuration, request_method, request_data, expected_result,
     if not matches_expected:
         print("expected: {0}".format(expected.encode(encoding)))
         print("response: {0}".format(normalized_result.encode(encoding)))
+        #print("expected: {0}".format(expected))
+        #print("response: {0}".format(normalized_result))
     assert matches_expected
 
 

@@ -80,6 +80,7 @@
       <dc:contributor>Daryl Herzmann</dc:contributor>
       <dc:source>http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi</dc:source>
       <dc:rights>None</dc:rights>
+      <dct:spatial scheme="http://www.opengis.net/def/crs">urn:ogc:def:crs:EPSG:6.11:4326</dct:spatial>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>24.0 -126.0</ows:LowerCorner>
         <ows:UpperCorner>50.0 -66.0</ows:UpperCorner>

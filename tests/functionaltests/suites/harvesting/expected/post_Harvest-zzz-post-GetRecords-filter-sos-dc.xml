@@ -37,6 +37,7 @@
       <dc:contributor>Eric Bridger</dc:contributor>
       <dc:source>http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi</dc:source>
       <dc:rights>NONE</dc:rights>
+      <dct:spatial scheme="http://www.opengis.net/def/crs">urn:ogc:def:crs:EPSG:6.11:4326</dct:spatial>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>40.58 -73.73</ows:LowerCorner>
         <ows:UpperCorner>47.79 -54.05</ows:UpperCorner>
@@ -60,6 +61,7 @@
       <dc:contributor>Boyan Brodaric</dc:contributor>
       <dc:source>http://ngwd-bdnes.cits.nrcan.gc.ca/GinService/sos/gw</dc:source>
       <dc:rights>NONE</dc:rights>
+      <dct:spatial scheme="http://www.opengis.net/def/crs">urn:ogc:def:crs:EPSG:6.11:4326</dct:spatial>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>41.0 -120.0</ows:LowerCorner>
         <ows:UpperCorner>60.0 -60.0</ows:UpperCorner>
