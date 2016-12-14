@@ -391,9 +391,14 @@ def export_records(context, database, table, xml_dirpath):
         filename = os.path.join(dirpath, '%s.xml' % identifier)
         try:
             LOGGER.info('Writing to file %s', filename)
+            if hasattr(record.xml, 'decode'):
+                str_xml = record.xml.decode('utf-8')
+            else:
+                str_xml = record.xml
             with open(filename, 'w') as xml:
                 xml.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-                xml.write(record.xml)
+                xml.write(str_xml)
+
         except Exception as err:
             raise RuntimeError("Error writing to %s" % filename, err)
 

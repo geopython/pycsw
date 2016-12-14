@@ -171,7 +171,8 @@ def setup_testdata():
             datapath = path('tests/suites/%s/data' % database)
             info('Loading test data from %s' % datapath)
             sh('pycsw-admin.py -c load_records -f %s -p %s' % (cfg, datapath))
-
+            exportpath = path('tests/suites/%s/exports' % database)
+            sh('pycsw-admin.py -c export_records -f %s -p %s' % (cfg, exportpath))
 
 @task
 @cmdopts([
@@ -229,7 +230,7 @@ def test(options):
 
         if database == 'PostgreSQL':  # configure PG
 
-            from pycsw.admin import setup_db, load_records
+            from pycsw.admin import setup_db, load_records, export_records
             from pycsw.config import StaticContext
 
             cmd = '%s -d %s' % (cmd, database)
@@ -278,6 +279,10 @@ def test(options):
                 if suite in ['cite', 'apiso']:  # load test data
                     dirname = '%s%sdata' % (os.path.dirname(cfg), os.sep)
                     load_records(context, db_conn, tablename, dirname)
+
+                if suite in ['cite', 'apiso']:  # export test data
+                    exportpath = '%s%sexports' % (os.path.dirname(cfg), os.sep)
+                    export_records(context, db_conn, tablename, exportpath)
 
         else:
             raise Exception('Invalid database specified')
