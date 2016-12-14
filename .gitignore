@@ -11,6 +11,7 @@ tests/index.html
 tests/results
 **.cache
 .coverage
+.tox
 
 # test configurations
 /default.cfg
