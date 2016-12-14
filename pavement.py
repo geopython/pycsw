@@ -2,8 +2,10 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2016 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,17 +30,10 @@
 #
 # =================================================================
 
-from __future__ import (absolute_import, division, print_function)
-
-import glob
 import os
-import sys
-import time
-
-from six.moves import configparser
 
 from paver.easy import task, cmdopts, needs, \
-    pushd, sh, call_task, path, info, BuildFailure
+    pushd, sh, call_task, path, info
 
 DOCS = 'docs'
 STAGE_DIR = '/tmp'
@@ -145,198 +140,3 @@ def package_tar_gz(options):
         tar = tarfile.open(filename, 'w:gz')
         tar.add(package_name)
         tar.close()
-
-@task
-def setup_testdata():
-    """Create test databases and load test data"""
-
-    test_database_parameters = {
-        # suite: has_testdata
-        'apiso': True,
-        'cite': True,
-        'harvesting': False,
-        'manager': False
-    }
-
-    for suite in test_database_parameters.keys():
-        dbfile = 'tests/suites/%s/data/records.db' % suite
-        if os.path.isfile(dbfile):
-            os.remove(dbfile)
-
-    for database, has_testdata in test_database_parameters.items():
-        info('Setting up test database %s' % database)
-        cfg = path('tests/suites/%s/default.cfg' % database)
-        sh('pycsw-admin.py -c setup_db -f %s' % cfg)
-        if has_testdata:
-            datapath = path('tests/suites/%s/data' % database)
-            info('Loading test data from %s' % datapath)
-            sh('pycsw-admin.py -c load_records -f %s -p %s' % (cfg, datapath))
-
-
-@task
-@cmdopts([
-    ('url=', 'u', 'pycsw endpoint'),
-    ('suites=', 's', 'comma-separated list of testsuites'),
-    ('database=', 'd', 'database (SQLite3 [default], PostgreSQL, MySQL)'),
-    ('user=', 'U', 'database username'),
-    ('pass=', 'p', 'database password'),
-    ('pedantic', 'P', 'run tests in pedantic mode (byte level diff check) (default: c14n mode)'),
-    ('remote', 'r', 'remote testing (harvesting)'),
-    ('time=', 't', 'time (milliseconds) in which requests should complete')
-])
-def test(options):
-    """Run unit tests"""
-
-    db_setup = False
-    db_conn = None
-    cfg_files = []
-    status = 0
-
-    url = options.get('url', None)
-    suites = options.get('suites', None)
-    database = options.get('database', 'SQLite3')
-    remote = options.get('remote')
-    timems = options.get('time', None)
-    pedantic = options.get('pedantic', False)
-
-    if url is None:
-        # run against default server
-        call_task('stop')
-        call_task('reset')
-        if database == 'SQLite3':
-            call_task('setup_testdata')
-        call_task('start')
-        url = 'http://localhost:8000'
-
-    if suites is not None:
-        cmd = 'python run_tests.py -u %s -s %s' % (url, suites)
-    else:
-        cmd = 'python run_tests.py -u %s' % url
-
-    if remote:
-        cmd = '%s -r' % cmd
-
-    if pedantic:
-        cmd = '%s -p' % cmd
-
-    if timems:
-        cmd = '%s -t %s' % (cmd, timems)
-
-    # configure/setup database if not default
-    if database != 'SQLite3':
-        db_setup = True
-        temp_db = 'pycsw_ci_test_pid_%d' % os.getpid()
-
-        if database == 'PostgreSQL':  # configure PG
-
-            from pycsw.admin import setup_db, load_records
-            from pycsw.config import StaticContext
-
-            cmd = '%s -d %s' % (cmd, database)
-
-            init_sfsql = True
-            home = os.path.abspath(os.path.dirname(__file__))
-            user = options.get('user', 'postgres')
-            password = options.get('pass', '')
-            context = StaticContext()
-
-            db_conn = 'postgresql://%s:%s@localhost/%s' % (
-                      user, password, temp_db)
-
-            if password:
-                sh('set PGPASSWORD=%s' % password)
-
-            sh('createdb %s -U %s' % (temp_db, user))
-            sh('createlang --dbname=%s plpythonu -U %s' % (temp_db, user))
-
-            # update all default.cfg files to point to test DB
-            cfg_files = glob.glob('tests%ssuites%s*%s*.cfg' % (3*(os.sep,)))
-
-            for cfg in cfg_files:
-                # generate table
-                suite = cfg.split(os.sep)[2]
-
-                tablename = 'records_cite'
-
-                if suite == 'manager':
-                    tablename = 'records_manager'
-                elif suite == 'apiso':
-                    tablename = 'records_apiso'
-
-                config = configparser.SafeConfigParser()
-                with open(cfg) as read_data:
-                    config.readfp(read_data)
-                config.set('repository', 'database', db_conn)
-                config.set('repository', 'table', tablename)
-                with open(cfg, 'wb') as config2:
-                    config.write(config2)
-
-                if suite in ['cite', 'manager', 'apiso']:  # setup tables
-                    setup_db(db_conn, tablename, home, init_sfsql, init_sfsql)
-                    init_sfsql = False
-
-                if suite in ['cite', 'apiso']:  # load test data
-                    dirname = '%s%sdata' % (os.path.dirname(cfg), os.sep)
-                    load_records(context, db_conn, tablename, dirname)
-
-        else:
-            raise Exception('Invalid database specified')
-
-    with pushd('tests'):
-        try:
-            sh(cmd)
-        except BuildFailure as err:
-            status = 1
-        # stop pycsw instance
-        call_task('stop')
-
-    if db_setup:  # tearDown
-        for cfg in cfg_files:
-            sh('git checkout %s' % cfg)
-        if database == 'PostgreSQL':
-            sh("psql -c \"select pg_terminate_backend(procpid) from pg_stat_activity where datname='%s';\" -U %s" % (temp_db, user))
-            sh('dropdb %s -U %s' % (temp_db, user))
-            sh('unset PGPASSWORD')
-
-    sys.exit(status)
-
-
-@task
-def start(options):
-    """Start local WSGI server instance"""
-    sh('python pycsw/wsgi.py 8000 &')
-    time.sleep(10)
-
-
-@task
-def stop():
-    """Stop local WSGI server instance"""
-
-    kill_process('python', 'pycsw/wsgi.py')
-
-
-@task
-@cmdopts([
-    ('force', 'f', 'forces git clean'),
-])
-def reset(options):
-    """Return codebase to pristine state"""
-
-    force = options.get('force')
-    if force:
-        sh('git clean -dxf')
-
-
-def kill_process(procname, scriptname):
-    """kill WSGI processes that may be running in development"""
-
-    # from http://stackoverflow.com/a/2940878
-    import subprocess, signal
-    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-
-    for line in out.decode().splitlines():
-        if procname in line and scriptname in line:
-            pid = int(line.split()[1])
-            info('Stopping %s %s %d' % (procname, scriptname, pid))
-            os.kill(pid, signal.SIGKILL)
