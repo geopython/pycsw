@@ -30,6 +30,7 @@
 
 import pytest
 
+
 def pytest_configure(config):
     """Configure pytest
 
@@ -80,7 +81,7 @@ def pytest_addoption(parser):
     )
     parser.addoption(
         "--database-port-postgresql",
-            default="5432",
+        default="5432",
         help="Port where the postgres server is listening for connections."
     )
     parser.addoption(
