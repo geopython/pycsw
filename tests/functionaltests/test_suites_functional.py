@@ -76,8 +76,10 @@ def test_suites(configuration, request_method, request_data, expected_result,
     request_environment = _prepare_wsgi_test_environment(request_method,
                                                          request_data)
     pycsw_server = server.Csw(rtconfig=configuration, env=request_environment)
-    status, contents = pycsw_server.dispatch_wsgi()
-    with codecs.open(expected_result, encoding="utf-8") as fh:
+    encoding = "utf-8"
+    status, raw_contents = pycsw_server.dispatch_wsgi()
+    contents = raw_contents.decode(encoding)
+    with codecs.open(expected_result, encoding=encoding) as fh:
         expected = fh.read()
     normalized_result = _normalize(
         contents,
@@ -93,8 +95,8 @@ def test_suites(configuration, request_method, request_data, expected_result,
               "with expected using difflib")
         matches_expected = _test_xml_diff(normalized_result, expected)
     if not matches_expected:
-        print("expected: {0}".format(expected))
-        print("response: {0}".format(normalized_result))
+        print("expected: {0}".format(expected.encode(encoding)))
+        print("response: {0}".format(normalized_result.encode(encoding)))
     assert matches_expected
 
 
@@ -124,10 +126,10 @@ def _prepare_wsgi_test_environment(request_method, request_data):
     if request_method == "POST":
         print("request_path: {0}".format(request_data))
         request_buffer = BytesIO()
-        with open(request_data) as fh:
+        encoding = "utf-8"
+        with codecs.open(request_data, encoding=encoding) as fh:
             contents = fh.read()
-            print("Request contents: {}".format(contents))
-            request_buffer.write(contents)
+            request_buffer.write(contents.encode(encoding))
             request_environment["CONTENT_LENGTH"] = request_buffer.tell()
             request_buffer.seek(0)
             request_environment["wsgi.input"] = request_buffer
@@ -148,9 +150,9 @@ def _test_xml_result(result, expected, encoding="utf-8"):
     Parameters
     ----------
     result: str
-        The result of running the test.
+        The result of running the test as a unicode string
     expected: str
-        The expected outcome.
+        The expected outcome as a unicode string.
 
     Returns
     -------
@@ -172,7 +174,7 @@ def _test_xml_result(result, expected, encoding="utf-8"):
 
     """
 
-    result_element = etree.fromstring(result)
+    result_element = etree.fromstring(result.encode(encoding))
     expected_element = etree.fromstring(expected.encode(encoding))
     result_buffer = BytesIO()
     result_tree = result_element.getroottree()
@@ -234,8 +236,7 @@ def _test_xml_diff(result, expected):
 
 
 def _normalize(sresult, normalize_identifiers=False):
-    """
-    Normalize test output so that it can be compared with the expected result.
+    """Normalize test output so it can be compared with the expected result.
 
     Several dynamic elements of a pycsw response (such as time,
     updateSequence, etc) are replaced with static constants to ease comparison.
@@ -243,7 +244,7 @@ def _normalize(sresult, normalize_identifiers=False):
     Parameters
     ----------
     sresult: str
-        The test result.
+        The test result as a unicode string.
     normalize_identifiers: bool, optional
         Whether identifier fields should be normalized.
 
@@ -259,17 +260,23 @@ def _normalize(sresult, normalize_identifiers=False):
     updatesequence = re.search(r'updateSequence="(\S+)"', sresult)
     timestamp = re.search(r'timestamp="(.*)"', sresult)
     timestamp2 = re.search(r'timeStamp="(.*)"', sresult)
-    timestamp3 = re.search(r'<oai:responseDate>(.*)</oai:responseDate>',
-                           sresult)
+    timestamp3 = re.search(
+        r'<oai:responseDate>(.*)</oai:responseDate>',
+        sresult
+    )
     timestamp4 = re.search(
-        r'<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>', sresult)
+        r'<oai:earliestDatestamp>(.*)</oai:earliestDatestamp>',
+        sresult
+    )
     zrhost = re.search(r'<zr:host>(.*)</zr:host>', sresult)
     zrport = re.search(r'<zr:port>(.*)</zr:port>', sresult)
     elapsed_time = re.search(r'elapsedTime="(.*)"', sresult)
     expires = re.search(r'expires="(.*?)"', sresult)
-    atom_updated = re.findall(r'<atom:updated>(.*)</atom:updated>', sresult)
+    atom_updated = re.findall(r'<atom:updated>(.*)</atom:updated>',
+                              sresult)
     if version:
-        sresult = sresult.replace(version.group(0), r'<!-- PYCSW_VERSION -->')
+        sresult = sresult.replace(version.group(0),
+                                  r'<!-- PYCSW_VERSION -->')
     if updatesequence:
         sresult = sresult.replace(updatesequence.group(0),
                                   r'updateSequence="PYCSW_UPDATESEQUENCE"')
@@ -306,8 +313,10 @@ def _normalize(sresult, normalize_identifiers=False):
     # for csw:HarvestResponse documents, mask identifiers
     # which are dynamically generated for OWS endpoints
     if sresult.find(r'HarvestResponse') != -1:
-        identifier = re.findall(r'<dc:identifier>(\S+)</dc:identifier>',
-                                sresult)
+        identifier = re.findall(
+            r'<dc:identifier>(\S+)</dc:identifier>',
+            sresult
+        )
         for i in identifier:
             sresult = sresult.replace(i, r'PYCSW_IDENTIFIER')
     # JSON responses
@@ -318,11 +327,15 @@ def _normalize(sresult, normalize_identifiers=False):
                                   r'"@timestamp": "PYCSW_TIMESTAMP"')
     # harvesting-based GetRecords/GetRecordById responses
     if normalize_identifiers:
-        dcid = re.findall(r'<dc:identifier>(urn:uuid.*)</dc:identifier>',
-                          sresult)
+        dcid = re.findall(
+            r'<dc:identifier>(urn:uuid.*)</dc:identifier>',
+            sresult
+        )
         isoid = re.findall(r'id="(urn:uuid.*)"', sresult)
-        isoid2 = re.findall(r'<gco:CharacterString>(urn:uuid.*)</gco',
-                            sresult)
+        isoid2 = re.findall(
+            r'<gco:CharacterString>(urn:uuid.*)</gco',
+            sresult
+        )
         for d in dcid:
             sresult = sresult.replace(d, r'PYCSW_IDENTIFIER')
         for i in isoid:
