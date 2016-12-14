@@ -9,6 +9,8 @@ MANIFEST
 # testing artifacts
 tests/index.html
 tests/results
+tests/suites/*/exports
+tests/expected/suites_*exports_*
 
 # test configurations
 /default.cfg
