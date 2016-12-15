@@ -24,8 +24,8 @@ addons:
 #  - pycsw-admin.py -c get_sysprof
 #
 install:
-  - pip install --user -r requirements-dev.txt
-  - pip install --user .
+  - pip install -r requirements-dev.txt
+  - pip install .
 
 script:
   - py.test -k 'not harvesting' --cov pytest
