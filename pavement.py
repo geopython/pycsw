@@ -171,7 +171,7 @@ def setup_testdata():
             datapath = path('tests/suites/%s/data' % database)
             info('Loading test data from %s' % datapath)
             sh('pycsw-admin.py -c load_records -f %s -p %s' % (cfg, datapath))
-            exportpath = path('tests/suites/%s/exports' % database)
+            exportpath = path('tests/results/exports')
             sh('pycsw-admin.py -c export_records -f %s -p %s' % (cfg, exportpath))
 
 @task
@@ -281,7 +281,7 @@ def test(options):
                     load_records(context, db_conn, tablename, dirname)
 
                 if suite in ['cite', 'apiso']:  # export test data
-                    exportpath = '%s%sexports' % (os.path.dirname(cfg), os.sep)
+                    exportpath = 'tests/results/exports'
                     export_records(context, db_conn, tablename, exportpath)
 
         else:
