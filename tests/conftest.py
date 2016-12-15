@@ -32,7 +32,7 @@ import pytest
 
 
 def pytest_configure(config):
-    """Configure pytest
+    """Configure pytest.
 
     This function adds additional markers to pytest.
 
@@ -49,7 +49,7 @@ def pytest_configure(config):
 
 
 def pytest_addoption(parser):
-    """Add additional command-line parameters to pytest"""
+    """Add additional command-line parameters to pytest."""
     parser.addoption(
         "--database-backend",
         choices=["sqlite", "postgresql"],

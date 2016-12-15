@@ -1,10 +1,10 @@
 # =================================================================
 #
-# Authors: Tom Kralidis <tomkralidis@gmail.com>
-#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+# Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#          Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2016 Tom Kralidis
 # Copyright (c) 2016 Ricardo Garcia Silva
+# Copyright (c) 2016 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -48,11 +48,10 @@ pytestmark = pytest.mark.functional
 
 def test_suites(configuration, request_method, request_data, expected_result,
                 normalize_identifier_fields):
-    """
-    Test suites.
+    """Test suites.
 
     This function is automatically parametrized by pytest as a result of the
-    ``conftest:pytest_Generate_tests`` function. The input parameters are thus
+    ``conftest:pytest_generate_tests`` function. The input parameters are thus
     supplied by pytest as a result of discovering and parsing the existing
     test suites located under ``tests/functionaltests/suites``.
 
