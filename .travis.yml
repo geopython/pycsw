@@ -1,13 +1,15 @@
 language: python
 
-sudo: required
-dist: trusty
-
+#
+#sudo: required
+#dist: trusty
+#
 python:
-  - "2.6"
+#  - "2.6"
   - "2.7"
-  - "3.4"
-
+#  - "3.4"
+#  - "3.5"
+#
 #matrix:
 #  allow_failures:
 #    - python: "3.4"
@@ -17,24 +19,19 @@ addons:
     packages:
       - libgeos-c1
       - libxml2-dev
-
-before_script:
-  - pycsw-admin.py -c get_sysprof
-
+#
+#before_script:
+#  - pycsw-admin.py -c get_sysprof
+#
 install:
-  - pip install -r requirements.txt
-  - pip install -r requirements-dev.txt
-  - pip install -r requirements-standalone.txt
-  - python setup.py -q install
+  - pip install --user -r requirements-dev.txt
+  - pip install --user .
 
 script:
-  - paver test
+  - py.test -k 'not harvesting' --cov pytest
 
-after_script:
-  - paver stop
-
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#pycsw"
-    use_notice: true
+#notifications:
+#  irc:
+#    channels:
+#      - "irc.freenode.org#pycsw"
+#    use_notice: true
