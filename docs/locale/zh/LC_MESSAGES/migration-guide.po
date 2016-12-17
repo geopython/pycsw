@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010-2015, Tom Kralidis This work is licensed under a
+# Creative Commons Attribution 4.0 International License
+# This file is distributed under the same license as the pycsw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.1-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-21 21:02+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: ../../migration-guide.rst:4
+msgid "pycsw Migration Guide"
+msgstr "pycsw迁移向导"
+
+#: ../../migration-guide.rst:6
+msgid ""
+"This page provides migration support across pycsw versions over time to "
+"help with pycsw change management."
+msgstr "这个页面提供了pycsw跨版本管理的支持"
+
+#: ../../migration-guide.rst:10
+msgid "pycsw 1.x to 2.0 Migration"
+msgstr "pycsw 1.x到2.0的迁移"
+
+#: ../../migration-guide.rst:12
+msgid ""
+"the default CSW version is now 3.0.0.  CSW clients need to explicitly "
+"specify ``version=2.0.2`` for CSW 2 behaviour.  Also, pycsw "
+"administrators can use a WSGI wrapper to the pycsw API to force "
+"``version=2.0.2`` on init of ``pycsw.server.Csw`` from the server.  See "
+":ref:`csw-support` for more information."
+msgstr "缺省的CSW版本是 3.0.0。 CSW 客户端需要显式地声明 ```version=2.0.2`` 来使用 CSW 2的行为。"
+"另外，pycsw管理器可能通过在服务器端通过 ``pycsw.server.Csw`` 初始化来使用强制的 pycsw ``version=2.0.2``。 "
+"查看 :ref:`csw-support` 来获取更多的信息。 "
+
+#: ../../migration-guide.rst:17
+msgid ""
+"``pycsw.server.Csw.dispatch_wsgi()`` previously returned the response "
+"content as a string.  2.0.0 introduces a compatability break to "
+"additionally return the HTTP status code along with the response as a "
+"list"
+msgstr ""
+
+#: ../../migration-guide.rst:42
+msgid "See :ref:`api` for more information."
+msgstr "查看 :ref:`api` 来获取更多的信息。"
+

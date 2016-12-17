@@ -1,0 +1,270 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-21 21:02+0800\n"
+"PO-Revision-Date: 2016-06-07 10:58+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: ../../installation.rst:4
+msgid "Installation"
+msgstr "安装"
+
+#: ../../installation.rst:7
+msgid "System Requirements"
+msgstr "系统要求"
+
+#: ../../installation.rst:9
+msgid ""
+"pycsw is written in `Python <http://python.org>`_, and works with "
+"(tested) version 2.6, 2.7 and 3.4"
+msgstr "pycsw 编写语言是 `Python <http://python.org>`_ ，版本（测试通过）为 2.6， 2.7及3.4"
+
+#: ../../installation.rst:11
+msgid "pycsw requires the following Python supporting libraries:"
+msgstr "pycsw 是由以下Python库支撑的︰"
+
+#: ../../installation.rst:13
+msgid "`lxml`_ for XML support"
+msgstr "`lxml`_  用于XML 支撑"
+
+#: ../../installation.rst:14
+msgid "`SQLAlchemy`_ for database bindings"
+msgstr "`SQLAlchemy`_ 用于数据库绑定"
+
+#: ../../installation.rst:15
+msgid "`pyproj`_ for coordinate transformations"
+msgstr "`pyproj`_ 用于变换坐标"
+
+#: ../../installation.rst:16
+msgid "`Shapely`_ for spatial query / geometry support"
+msgstr "`Shapely`_ 用于空间查询/ 几何支持"
+
+#: ../../installation.rst:17
+msgid "`OWSLib`_ for CSW client and metadata parser"
+msgstr "`OWSLib`_ 用于CSW客户端和元数据分析"
+
+#: ../../installation.rst:18
+msgid "`six`_ for Python 2/3 compatibility"
+msgstr "`six`_  用于处理 Python 2/3 兼容性"
+
+#: ../../installation.rst:19
+msgid "`xmltodict`_ for working with XML similar to working with JSON"
+msgstr "`xmltodict`_ ，来像使用 JSON 一样使用 XML"
+
+#: ../../installation.rst:20
+msgid "`geolinks`_ for dealing with geospatial links"
+msgstr "`geolinks`_ 处理 地理空间链接"
+
+#: ../../installation.rst:24
+msgid "You can install these dependencies via `easy_install`_ or `pip`_"
+msgstr "通过 `easy_install`_ or `pip`_ 可以安装一些与之相关的程序"
+
+#: ../../installation.rst:28
+msgid ""
+"For :ref:`GeoNode <geonode>` or :ref:`Open Data Catalog <odc>` or "
+":ref:`HHypermap <hhypermap>` deployments, SQLAlchemy is not required"
+msgstr "对于 :ref:`GeoNode <geonode>` 或 :ref:`Open Data Catalog <odc>` ，或 :ref:`HHypermap <hhypermap>` 部署，SQLAlchemy 不是必需的"
+
+#: ../../installation.rst:31
+msgid "Installing from Source"
+msgstr "从源代码安装"
+
+#: ../../installation.rst:33
+msgid ""
+"`Download <http://pycsw.org/download>`_ the latest stable version or "
+"fetch from Git."
+msgstr " `下载<http: pycsw.org/download>`_ 最新稳定版本，或从 Git 获取。"
+
+#: ../../installation.rst:36
+msgid "For Developers and the Truly Impatient"
+msgstr "为开发人员和真正Impatient"
+
+#: ../../installation.rst:38
+msgid "The 4 minute install:"
+msgstr "安装需要4分钟"
+
+#: ../../installation.rst:56
+msgid "The Quick and Dirty Way"
+msgstr "快速但并非完善的方式"
+
+#: ../../installation.rst:62
+msgid ""
+"Ensure that CGI is enabled for the install directory.  For example, on "
+"Apache, if pycsw is installed in ``/srv/www/htdocs/pycsw`` (where the URL"
+" will be ``http://host/pycsw/csw.py``), add the following to "
+"``httpd.conf``:"
+msgstr ""
+"确保在安装目录中 CGI已启用。 例如，对 Apache，如果 pycsw 安装在 ``/srv/www/htdocs/pycsw`` "
+"（这时，URL 就会在 ``http://host/pycsw/csw.py`` ），将以下信息添加至 ``httpd.conf`` :"
+
+#: ../../installation.rst:73
+msgid ""
+"If pycsw is installed in ``cgi-bin``, this should work as expected.  In "
+"this case, the :ref:`tests <tests>` application must be moved to a "
+"different location to serve static HTML documents."
+msgstr ""
+"如果 pycsw安装在 ``cgi-bin`` 下，工作就能预期进行。在这种情况下，  :ref:`tests<tests>` "
+"应用程序就必须转移到其它位置，成为静态的 HTML 文件。"
+
+#: ../../installation.rst:75
+msgid ""
+"Make sure, you have all the dependencies from ``requirements.txt and "
+"requirements-standalone.txt``"
+msgstr ""
+"请确保你已经从 ``requirements.txt and requirements-standalone.txt`` "
+"获得所有dependencies"
+
+#: ../../installation.rst:78
+msgid "The Clean and Proper Way"
+msgstr "适当的方式"
+
+#: ../../installation.rst:86
+msgid ""
+"At this point, pycsw is installed as a library and requires a CGI "
+"``csw.py`` or WSGI ``pycsw/wsgi.py`` script to be served into your web "
+"server environment (see below for WSGI configuration/deployment)."
+msgstr ""
+"在这一点上，pycsw 安装库将 CGI 'csw.py '或 WSGI' pycsw/wsgi.py ' 脚本发送到您的 web 服务器环境 "
+"（参见下文 WSGI 配置/部署）。"
+
+#: ../../installation.rst:93
+msgid "Installing from the Python Package Index (PyPi)"
+msgstr "从 Python Package 指数 (PyPi) 安装"
+
+#: ../../installation.rst:105
+msgid "Installing from OpenSUSE Build Service"
+msgstr "从 OpenSUSE 生成服务安装"
+
+#: ../../installation.rst:107
+msgid ""
+"In order to install the pycsw package in openSUSE Leap (stable "
+"distribution), one can run the following commands as user ``root``:"
+msgstr "若要在 openSUSE  Leap (稳定版本) 安装 pycsw 包，就可以以用户 ``root`` 身份运行以下命令 ︰"
+
+#: ../../installation.rst:116
+msgid ""
+"In order to install the pycsw package in openSUSE Tumbleweed (rolling "
+"distribution), one can run the following commands as user ``root``:"
+msgstr "若要在 openSUSE  Tumbleweed (滚动版本) 安装 pycsw 包，就可以以用户 ``root`` 身份运行以下命令 ︰"
+
+
+#: ../../installation.rst:124
+msgid ""
+"An alternative method is to use the `One-Click Installer "
+"<https://software.opensuse.org/package/python-pycsw>`_."
+msgstr ""
+"另一种方法是使用一键式安装程序"
+"<https://software.opensuse.org/package/python-pycsw>`_."
+
+#: ../../installation.rst:129
+msgid "Installing on Ubuntu/Mint"
+msgstr "在 Ubuntu/Mint系统上安装"
+
+#: ../../installation.rst:131
+msgid ""
+"In order to install the most recent pycsw release to an Ubuntu-based "
+"distribution, one can use the UbuntuGIS Unstable repository by running "
+"the following commands:"
+msgstr "为了在基于 Ubuntu 的发行版安装最新的 pycsw，可以运行以下命令来使用 UbuntuGIS 非稳定版本 ︰"
+
+#: ../../installation.rst:139
+msgid ""
+"Alternatively, one can use the UbuntuGIS Stable repository which includes"
+" older but very well tested versions:"
+msgstr ""
+
+#: ../../installation.rst:141
+msgid ""
+"# sudo add-apt-repository ppa:ubuntugis/ppa # sudo apt-get update # sudo "
+"apt-get install python-pycsw pycsw-cgi"
+msgstr ""
+
+#: ../../installation.rst:146
+msgid ""
+"Since Ubuntu 16.04 LTS Xenial release, pycsw is included by default in "
+"the official Multiverse repository."
+msgstr ""
+
+#: ../../installation.rst:149
+msgid "Running on Windows"
+msgstr "在 Windows 上运行"
+
+#: ../../installation.rst:151
+msgid "For Windows installs, change the first line of ``csw.py`` to:"
+msgstr "对于Windows 安装，更改 'csw.py ' 的第一行 ︰"
+
+#: ../../installation.rst:158
+msgid ""
+"The use of ``-u`` is required to properly output gzip-compressed "
+"responses."
+msgstr "使用 ``-u`` 需要正确输出 gzip 压缩响应。"
+
+#: ../../installation.rst:161
+msgid "Security"
+msgstr "安全性"
+
+#: ../../installation.rst:163
+msgid ""
+"By default, ``default.cfg`` is at the root of the pycsw install.  If "
+"pycsw is setup outside an HTTP server's ``cgi-bin`` area, this file could"
+" be read.  The following options protect the configuration:"
+msgstr ""
+"默认情况下，' default.cfg ' 是 pycsw 安装的根目录。 如果 pycsw 设置在 HTTP 服务器 'cgi-bin' "
+"区域以外，此文件就可以被读取。 以下是几项保护配置的选项 ︰"
+
+#: ../../installation.rst:165
+msgid ""
+"move ``default.cfg`` to a non HTTP accessible area, and modify ``csw.py``"
+" to point to the updated location"
+msgstr "将 'default.cfg' 移动到非 HTTP 可访问的区域，并修改 'csw.py' 以指向更新的位置"
+
+#: ../../installation.rst:166
+msgid ""
+"configure web server to deny access to the configuration.  For example, "
+"in Apache, add the following to ``httpd.conf``:"
+msgstr "配置 web 服务器，拒绝对配置的访问。 例如，在 Apache 中，在 'httpd.conf '下添加以下内容:"
+
+#: ../../installation.rst:177
+msgid "Running on WSGI"
+msgstr "在 WSGI 上运行"
+
+#: ../../installation.rst:179
+msgid ""
+"pycsw supports the `Web Server Gateway Interface`_ (WSGI).  To run pycsw "
+"in WSGI mode, use ``pycsw/wsgi.py`` in your WSGI server environment."
+msgstr ""
+"pycsw 支持 `Web 服务器网关接口`_ (WSGI)。 在 WSGI 模式下运行 pycsw，在 WSGI 服务器环境中使用 "
+"``pycsw/wsgi.py`` 。"
+
+#: ../../installation.rst:184
+msgid ""
+"``mod_wsgi`` supports only the version of python it was compiled with. If"
+" the target server already supports WSGI applications, pycsw will need to"
+" use the same python version. `WSGIDaemonProcess`_ provides a ``python-"
+"path`` directive that may allow a virtualenv created from the python "
+"version ``mod_wsgi`` uses."
+msgstr ""
+"``mod_wsgi`` 只支持已编译的python版本。如果目标服务器支持 WSGI 应用，pycsw也是相同的 python "
+"版本。`WSGIDaemonProcess`_ 提供一个  ``python-path``  指令，其允许从 python 版本 "
+"``mod_wsgi`` 进行virtualenv 的创建。"
+
+#: ../../installation.rst:188
+msgid "Below is an example of configuring with Apache:"
+msgstr "下面是Apache 配置的示例 ︰"
+
+#: ../../installation.rst:201
+msgid "or use the `WSGI reference implementation`_:"
+msgstr "或者使用 `WSGI 参考实例`_ :"
+
+#: ../../installation.rst:208
+msgid "which will publish pycsw to ``http://localhost:8000/``"
+msgstr " 将pycsw发布到 ``http://localhost:8000/`` "
+
+

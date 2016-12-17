@@ -1,0 +1,558 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-21 21:52+0800\n"
+"PO-Revision-Date: 2016-06-08 11:02+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: ../../introduction.rst:4
+msgid "Introduction"
+msgstr "引言"
+
+#: ../../introduction.rst:6
+msgid "pycsw is an OGC CSW server implementation written in Python."
+msgstr "pycsw是使用 Python 语言实现的 OGC CSW 服务。"
+
+#: ../../introduction.rst:9
+msgid "Features"
+msgstr "特性"
+
+#: ../../introduction.rst:11
+msgid ""
+"certified OGC `Compliant`_ and OGC Reference Implementation for both CSW "
+"2.0.2 and CSW 3.0.0"
+msgstr "认证 OGC `Compliant`_ 与 OGC 参考实现"
+
+#: ../../introduction.rst:12
+msgid "harvesting support for WMS, WFS, WCS, WPS, WAF, CSW, SOS"
+msgstr "WMS、WFS、WCS、WPS、WAF、CSW、SOS得到支持"
+
+#: ../../introduction.rst:13
+msgid "implements `INSPIRE Discovery Services 3.0`_"
+msgstr "实现了 `INSPIRE Discovery Services 3.0`_"
+
+#: ../../introduction.rst:14
+msgid "implements `ISO Metadata Application Profile 1.0.0`_"
+msgstr "实现了 `ISO Metadata Application Profile 1.0.0`_"
+
+#: ../../introduction.rst:15
+msgid "implements `FGDC CSDGM Application Profile for CSW 2.0`_"
+msgstr "实现了 `FGDC CSDGM Application Profile for CSW 2.0`_"
+
+#: ../../introduction.rst:16
+msgid "implements the Search/Retrieval via URL (`SRU`_) search protocol"
+msgstr "实现了通过URL (`SRU`_) 查找接口进行查找或抓取"
+
+#: ../../introduction.rst:17
+msgid "implements Full Text Search capabilities"
+msgstr "实现了全文检索的功能"
+
+#: ../../introduction.rst:18
+msgid "implements OGC OpenSearch Geo and Time Extensions"
+msgstr "实现了 OGC 开放搜索与时空扩展"
+
+#: ../../introduction.rst:19
+msgid "implements Open Archives Initiative Protocol for Metadata Harvesting"
+msgstr "支持元数据主动文档开放协议"
+
+#: ../../introduction.rst:20
+msgid "supports ISO, Dublin Core, DIF, FGDC, Atom and GM03 metadata models"
+msgstr "支持 ISO、Dublin Core、DIF、FGDC，Atom与 GM03 元数据模型"
+
+#: ../../introduction.rst:21
+msgid "CGI or WSGI deployment"
+msgstr "CGI或WSCI部署"
+
+#: ../../introduction.rst:22
+msgid "Python 2 and 3 compatible"
+msgstr ""
+
+#: ../../introduction.rst:23
+msgid "simple configuration"
+msgstr "简单配置"
+
+#: ../../introduction.rst:24
+msgid "transactional capabilities (CSW-T)"
+msgstr "事务功能（CSW-T））"
+
+#: ../../introduction.rst:25
+msgid "flexible repository configuration"
+msgstr "灵活的存储配置"
+
+#: ../../introduction.rst:26
+msgid "`GeoNode`_ connectivity"
+msgstr "连接 `GeoNode`_ "
+
+#: ../../introduction.rst:27
+msgid "`HHypermap`_ connectivity"
+msgstr "连接 `HHypermap`_  "
+
+#: ../../introduction.rst:28
+msgid "`Open Data Catalog`_ connectivity"
+msgstr "连接 `开放数据目录`_"
+
+#: ../../introduction.rst:29
+msgid "`CKAN`_ connectivity"
+msgstr "连接 `CKAN`_  "
+
+#: ../../introduction.rst:30
+msgid "federated catalogue distributed searching"
+msgstr "联合目录分布式搜索"
+
+#: ../../introduction.rst:31
+msgid "realtime XML Schema validation"
+msgstr "实时XML Schema验证"
+
+#: ../../introduction.rst:32
+msgid "extensible profile plugin architecture"
+msgstr "可扩展的配置文件插件架构"
+
+#: ../../introduction.rst:35
+msgid "Standards Support"
+msgstr "支持的标准"
+
+#: ../../introduction.rst:38
+msgid "Standard"
+msgstr "标准"
+
+#: ../../introduction.rst:38
+msgid "Version(s)"
+msgstr "版本"
+
+#: ../../introduction.rst:40
+msgid "`OGC CSW`_"
+msgstr "`OGC CSW`_"
+
+#: ../../introduction.rst:40
+msgid "2.0.2, 3.0.0"
+msgstr ""
+
+#: ../../introduction.rst:42
+msgid "`OGC Filter`_"
+msgstr "`OGC Filte`_"
+
+#: ../../introduction.rst:42
+msgid "1.1.0, 2.0.0"
+msgstr ""
+
+#: ../../introduction.rst:44
+msgid "`OGC OWS Common`_"
+msgstr ""
+
+#: ../../introduction.rst:44
+msgid "1.0.0, 2.0.0"
+msgstr ""
+
+#: ../../introduction.rst:46
+msgid "`OGC GML`_"
+msgstr "`OGC GML`_"
+
+#: ../../introduction.rst:46
+msgid "3.1.1"
+msgstr "3.1.1"
+
+#: ../../introduction.rst:48
+msgid "`OGC SFSQL`_"
+msgstr "`OGC SFSQL`_"
+
+#: ../../introduction.rst:48
+msgid "1.2.1"
+msgstr "1.2.1"
+
+#: ../../introduction.rst:50
+msgid "`Dublin Core`_"
+msgstr "`Dublin Core`_"
+
+#: ../../introduction.rst:50 ../../introduction.rst:66
+msgid "1.1"
+msgstr "1.1"
+
+#: ../../introduction.rst:52
+msgid "`SOAP`_"
+msgstr "`SOAP`_"
+
+#: ../../introduction.rst:52
+msgid "1.2"
+msgstr "1.2"
+
+#: ../../introduction.rst:54
+msgid "`ISO 19115`_"
+msgstr "`ISO 19115`_"
+
+#: ../../introduction.rst:54
+msgid "2003"
+msgstr "2003"
+
+#: ../../introduction.rst:56
+msgid "`ISO 19139`_"
+msgstr "`ISO 19139`_"
+
+#: ../../introduction.rst:56
+msgid "2007"
+msgstr "2007"
+
+#: ../../introduction.rst:58
+msgid "`ISO 19119`_"
+msgstr "`ISO 19119`_"
+
+#: ../../introduction.rst:58
+msgid "2005"
+msgstr "2005"
+
+#: ../../introduction.rst:60
+msgid "`NASA DIF`_"
+msgstr "`NASA DIF`_"
+
+#: ../../introduction.rst:60
+msgid "9.7"
+msgstr "9.7"
+
+#: ../../introduction.rst:62
+msgid "`FGDC CSDGM`_"
+msgstr "`FGDC CSDGM`_"
+
+#: ../../introduction.rst:62
+msgid "1998"
+msgstr "1998"
+
+#: ../../introduction.rst:64
+msgid "`GM03`_"
+msgstr "`GM03`_"
+
+#: ../../introduction.rst:64
+msgid "2.1"
+msgstr "2.1"
+
+#: ../../introduction.rst:66
+msgid "`SRU`_"
+msgstr "`SRU`_"
+
+#: ../../introduction.rst:68
+msgid "`OGC OpenSearch`_"
+msgstr "`OGC OpenSearch`_"
+
+#: ../../introduction.rst:68
+msgid "1.0"
+msgstr "1.0"
+
+#: ../../introduction.rst:70
+msgid "`OAI-PMH`_"
+msgstr ""
+
+#: ../../introduction.rst:70
+msgid "2.0"
+msgstr "2.0"
+
+#: ../../introduction.rst:74
+msgid "Supported Operations"
+msgstr "支持的操作"
+
+#: ../../introduction.rst:1
+msgid "Request"
+msgstr "请求"
+
+#: ../../introduction.rst:1
+msgid "Optionality"
+msgstr "可选性"
+
+#: ../../introduction.rst:1
+msgid "Supported"
+msgstr "支持"
+
+#: ../../introduction.rst:1
+msgid "HTTP method binding(s)"
+msgstr "HTTP方法绑定"
+
+#: ../../introduction.rst:1
+msgid "GetCapabilities"
+msgstr "功能"
+
+#: ../../introduction.rst:1
+msgid "mandatory"
+msgstr "必填"
+
+#: ../../introduction.rst:1
+msgid "yes"
+msgstr "是"
+
+#: ../../introduction.rst:1
+msgid "GET (KVP) / POST (XML) / SOAP"
+msgstr "GET (KVP) / POST (XML) / SOAP"
+
+#: ../../introduction.rst:1
+msgid "DescribeRecord"
+msgstr "记录详述"
+
+#: ../../introduction.rst:1
+msgid "GetRecords"
+msgstr "获取记录"
+
+#: ../../introduction.rst:1
+msgid "GetRecordById"
+msgstr "GetRecordById"
+
+#: ../../introduction.rst:1
+msgid "optional"
+msgstr "选项"
+
+#: ../../introduction.rst:1
+msgid "GetRepositoryItem"
+msgstr "项目库获取"
+
+#: ../../introduction.rst:1
+msgid "GET (KVP)"
+msgstr "KVP获取"
+
+#: ../../introduction.rst:1
+msgid "GetDomain"
+msgstr "GetDomain"
+
+#: ../../introduction.rst:1
+msgid "Harvest"
+msgstr "获取"
+
+#: ../../introduction.rst:1
+msgid "UnHarvest"
+msgstr ""
+
+#: ../../introduction.rst:1
+msgid "no"
+msgstr ""
+
+#: ../../introduction.rst:1
+msgid "Transaction"
+msgstr "订单"
+
+#: ../../introduction.rst:1
+msgid "POST (XML) / SOAP"
+msgstr "POST (XML) / SOAP"
+
+#: ../../introduction.rst:91
+msgid ""
+"Asynchronous processing supported for GetRecords and Harvest requests "
+"(via ``csw:ResponseHandler``)"
+msgstr "异步处理支持 GetRecords 和获取请求 （通过 ' csw:ResponseHandler ')"
+
+#: ../../introduction.rst:95
+msgid "Supported Harvest Resource Types are listed in :ref:`transactions`"
+msgstr "获取资源类型请参考: :ref:`transactions` 中列表"
+
+#: ../../introduction.rst:98
+msgid "Supported Output Formats"
+msgstr "支持的输出格式"
+
+#: ../../introduction.rst:100
+msgid "XML (default)"
+msgstr "XML （默认值）"
+
+#: ../../introduction.rst:101
+msgid "JSON"
+msgstr "JSON代码"
+
+#: ../../introduction.rst:104
+msgid "Supported Output Schemas"
+msgstr "支持的输出模式"
+
+#: ../../introduction.rst:106
+msgid "Dublin Core"
+msgstr "Dublin Core"
+
+#: ../../introduction.rst:107
+msgid "ISO 19139"
+msgstr "ISO 19139"
+
+#: ../../introduction.rst:108
+msgid "FGDC CSDGM"
+msgstr "FGDC CSDGM"
+
+#: ../../introduction.rst:109
+msgid "NASA DIF"
+msgstr "NASA DIF"
+
+#: ../../introduction.rst:110
+msgid "Atom"
+msgstr "Atom"
+
+#: ../../introduction.rst:111
+msgid "GM03"
+msgstr "GM03"
+
+#: ../../introduction.rst:114
+msgid "Supported Sorting Functionality"
+msgstr "支持排序功能 "
+
+#: ../../introduction.rst:116
+msgid "ogc:SortBy"
+msgstr "ogc:SortBy"
+
+#: ../../introduction.rst:117
+msgid "ascending or descending"
+msgstr "升序或降序"
+
+#: ../../introduction.rst:118
+msgid "aspatial (queryable properties)"
+msgstr "非空间 （可查询属性）"
+
+#: ../../introduction.rst:119
+msgid "spatial (geometric area)"
+msgstr "空间 （几何区域）"
+
+#: ../../introduction.rst:122
+msgid "Supported Filters"
+msgstr "筛选条件"
+
+#: ../../introduction.rst:125
+msgid "Full Text Search"
+msgstr ""
+
+#: ../../introduction.rst:127
+msgid "csw:AnyText"
+msgstr "csw:任意文章"
+
+#: ../../introduction.rst:130
+msgid "Geometry Operands"
+msgstr "几何操作"
+
+#: ../../introduction.rst:132
+msgid "gml:Point"
+msgstr "gml:点"
+
+#: ../../introduction.rst:133
+msgid "gml:LineString"
+msgstr "gml:线"
+
+#: ../../introduction.rst:134
+msgid "gml:Polygon"
+msgstr "gml:面"
+
+#: ../../introduction.rst:135
+msgid "gml:Envelope"
+msgstr "gml:外框"
+
+#: ../../introduction.rst:139
+msgid "Coordinate transformations are supported"
+msgstr "坐标变换"
+
+#: ../../introduction.rst:142
+msgid "Spatial Operators"
+msgstr "空间操作"
+
+#: ../../introduction.rst:144
+msgid "BBOX"
+msgstr "BBOX"
+
+#: ../../introduction.rst:145
+msgid "Beyond"
+msgstr "以外"
+
+#: ../../introduction.rst:146
+msgid "Contains"
+msgstr "包括"
+
+#: ../../introduction.rst:147
+msgid "Crosses"
+msgstr "交叉"
+
+#: ../../introduction.rst:148
+msgid "Disjoint"
+msgstr "不相交"
+
+#: ../../introduction.rst:149
+msgid "DWithin"
+msgstr "DWithin"
+
+#: ../../introduction.rst:150
+msgid "Equals"
+msgstr "等于"
+
+#: ../../introduction.rst:151
+msgid "Intersects"
+msgstr "相交"
+
+#: ../../introduction.rst:152
+msgid "Overlaps"
+msgstr "重叠"
+
+#: ../../introduction.rst:153
+msgid "Touches"
+msgstr "触动"
+
+#: ../../introduction.rst:154
+msgid "Within"
+msgstr "内"
+
+#: ../../introduction.rst:157
+msgid "Logical Operators"
+msgstr "逻辑运算符"
+
+#: ../../introduction.rst:159
+msgid "Between"
+msgstr "两者之间"
+
+#: ../../introduction.rst:160
+msgid "EqualTo"
+msgstr "等于"
+
+#: ../../introduction.rst:161
+msgid "LessThanEqualTo"
+msgstr "小于等于"
+
+#: ../../introduction.rst:162
+msgid "GreaterThan"
+msgstr "大于"
+
+#: ../../introduction.rst:163
+msgid "Like"
+msgstr "似"
+
+#: ../../introduction.rst:164
+msgid "LessThan"
+msgstr "小于"
+
+#: ../../introduction.rst:165
+msgid "GreaterThanEqualTo"
+msgstr "大于等于"
+
+#: ../../introduction.rst:166
+msgid "NotEqualTo"
+msgstr "不等于"
+
+#: ../../introduction.rst:167
+msgid "NullCheck"
+msgstr "零检验"
+
+#: ../../introduction.rst:170
+msgid "Functions"
+msgstr "功能"
+
+#: ../../introduction.rst:171
+msgid "length"
+msgstr "长度"
+
+#: ../../introduction.rst:172
+msgid "lower"
+msgstr "低于"
+
+#: ../../introduction.rst:173
+msgid "ltrim"
+msgstr "函数：除去字符串开始的空格"
+
+#: ../../introduction.rst:174
+msgid "rtrim"
+msgstr "函数：除去字符串尾部空格"
+
+#: ../../introduction.rst:175
+msgid "trim"
+msgstr "函数：除去字符串开始和尾部空格"
+
+#: ../../introduction.rst:176
+msgid "upper"
+msgstr "转成大写"
+

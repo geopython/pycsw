@@ -1,0 +1,56 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-28 11:27+0800\n"
+"PO-Revision-Date: 2016-06-08 11:03+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: ../../opensearch.rst:4
+msgid "OpenSearch Support"
+msgstr "OpenSearch支撑"
+
+#: ../../opensearch.rst:6
+msgid ""
+"pycsw supports the `OGC OpenSearch Geo and Time Extensions 1.0`_ "
+"standard via the following conformance classes:"
+msgstr ""
+"pycsw通过以下分类支持 `OGC OpenSearch地理和时间扩展1.0`_ 标准："
+
+#: ../../opensearch.rst:8
+msgid ""
+"Core (GeoSpatial Service) ``{searchTerms}``, ``{geo:box}``, "
+"``{startIndex}``, ``{count}``"
+msgstr ""
+"核心（地理空间服务）``{searchTerms}`，``{geo:box}``，"
+"``{startIndex}``，``{count}``"
+
+#: ../../opensearch.rst:9
+msgid "Temporal Search core ``{time:start}``, ``{time:end}``"
+msgstr "时间搜索核心``{时间：开始}``，``{时间：结束}``"
+
+#: ../../opensearch.rst:11
+msgid ""
+"OpenSearch support is enabled by default.  HTTP requests must be "
+"specified with ``mode=opensearch`` in the base URL for OpenSearch "
+"requests, e.g.:"
+msgstr ""
+"OpenSearch启动是默认的。 HTTP请求必须在OpenSearch要求的基准URL中指"
+"定``mode=opensearch``，例如："
+
+#: ../../opensearch.rst:17
+msgid ""
+"This will return the Description document which can then be "
+"`autodiscovered <http://www.opensearch.org/Specifications/"
+"OpenSearch/1.1#Autodiscovery>`_."
+msgstr ""
+"将返回描述文档，此文档可以 `autodiscovered <http://www.opensearch.org/Specifications/OpenSearch/1.1#Autodiscovery>`_ 。"

@@ -1,0 +1,35 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010-2015, Tom Kralidis This work is licensed under a
+# Creative Commons Attribution 4.0 International License
+# This file is distributed under the same license as the pycsw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-28 11:06+0800\n"
+"PO-Revision-Date: 2016-06-07 10:59+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.7\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_TW\n"
+
+#: ../../json.rst:4
+msgid "JSON Support"
+msgstr "对JSON的支持"
+
+#: ../../json.rst:6
+msgid ""
+"pycsw supports JSON support for ``DescribeRecord``, ``GetRecords`` and "
+"``GetRecordById`` requests.  Adding ``outputFormat=application/json`` to "
+"your CSW request will return the response as a JSON representation."
+msgstr ""
+"pycsw 对JSON 的支持包括 ``DescribeRecord``, ``GetRecords`` 和 "
+"``GetRecordById`` 的请求。  在你的CSW请示中添加 "
+"``outputFormat=application/json`` 会返回JSON格式表达的响应。"

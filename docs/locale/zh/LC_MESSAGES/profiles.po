@@ -1,0 +1,277 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"PO-Revision-Date: 2016-06-08 14:52+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: ../../profiles.rst:4
+msgid "Profile Plugins"
+msgstr "配置文件的插件"
+
+#: ../../profiles.rst:7 ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:7
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:35
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:7
+msgid "Overview"
+msgstr "视图"
+
+#: ../../profiles.rst:9
+msgid ""
+"pycsw allows for the implementation of profiles to the core standard. "
+"Profiles allow specification of additional metadata format types (i.e. ISO "
+"19139:2007, NASA DIF, INSPIRE, etc.) to the repository, which can be "
+"queried and presented to the client.  pycsw supports a plugin architecture "
+"which allows for runtime loading of Python code."
+msgstr ""
+"pycsw 使配置文件达到核心标准。配置文件允许其余元数据格式类型 (例如ISO "
+"19139:2007, NASA DIF, INSPIRE等) 特定到存储库，此配置文件可以查询，也可以提"
+"交给客户端。 pycsw 支持插件体系结构，也支持运行时加载的 Python 代码。"
+
+#: ../../profiles.rst:11
+msgid ""
+"All profiles must be placed in the ``pycsw/plugins/profiles`` directory."
+msgstr "所有的配置文件必须放在 ' pycsw/插件/配置文件 '目录中。"
+
+#: ../../profiles.rst:14
+msgid "Requirements"
+msgstr "要求"
+
+#: ../../profiles.rst:30
+msgid "Abstract Base Class Definition"
+msgstr "抽象基类定义"
+
+#: ../../profiles.rst:32
+msgid ""
+"All profile code must be instantiated as a subclass of ``profile."
+"Profile``.  Below is an example to add a ``Foo`` profile:"
+msgstr ""
+"配置文件的所有代码须实例化为 ``profile.Profile`` 。下面是一个添加配置文件 ``Foo`` 的示例︰"
+
+#: ../../profiles.rst:53
+msgid ""
+"Your profile plugin class (``FooProfile``) must implement all methods as "
+"per ``profile.Profile``.  Profile methods must always return ``lxml.etree."
+"Element`` types, or ``None``."
+msgstr ""
+"您的配置插件类 (FooProfile) 必须按照``profile.Profile``完成所有的配置工作。 "
+"配置文件方法须保持 ``lxml.etree.Element`` 类型或 ``None``"
+
+#: ../../profiles.rst:56
+msgid "Enabling Profiles"
+msgstr "启用配置文件"
+
+#: ../../profiles.rst:58
+msgid ""
+"All profiles are disabled by default.  To specify profiles at runtime, set "
+"the ``server.profiles`` value in the :ref:`configuration` to the name of "
+"the package (in the ``pycsw/plugins/profiles`` directory).  To enable "
+"multiple profiles, specify as a comma separated value (see :ref:"
+"`configuration`)."
+msgstr ""
+"所有配置文件默认是不可用的。 若要指定在运行时的配置文件，在参考文件"
+" :ref:`configuration` 中设置 ``server.profiles`` 值（在 ``pycsw/plugins/profiles`` 目录"
+"中）。 若要启用多个配置文件，请指定值（以逗号分隔） (请参见： :ref:`configuration` )。"
+
+#: ../../profiles.rst:61
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:27
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:27
+msgid "Testing"
+msgstr "测试"
+
+#: ../../profiles.rst:63
+msgid ""
+"Profiles must add examples to the :ref:`tests` interface, which must "
+"provide example requests specific to the profile."
+msgstr ""
+"配置文件必须添加到 :ref:`tests` 接口，此接口须提供特定于该配置文件的示例请求。"
+
+#: ../../profiles.rst:66
+msgid "Supported Profiles"
+msgstr "支持的配置文件"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:4
+msgid "ISO Metadata Application Profile (1.0.0)"
+msgstr "ISO 元数据应用程序配置文件 (1.0.0)"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:8
+msgid ""
+"The ISO Metadata Application Profile (APISO) is a profile of CSW 2.0.2 "
+"which enables discovery of geospatial metadata following ISO 19139:2007 and "
+"ISO 19119:2005/PDAM 1."
+msgstr ""
+"ISO 元数据应用程序配置文件 (APISO) 是CSW 2.0.2的配置文件，是继地理空间元数"
+"据 ISO 19139:2007 和 ISO 19119:2005 之后开发的文件。"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:11
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:40
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:11
+msgid "Configuration"
+msgstr "配置"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:13
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:13
+msgid "No extra configuration is required."
+msgstr "不需要其余配置。"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:16
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:16
+msgid "Querying"
+msgstr "查询"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:18
+msgid "**typename**: ``gmd:MD_Metadata``"
+msgstr "类型名称：``gmd:MD_元数据``"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:19
+msgid "**outputschema**: ``http://www.isotc211.org/2005/gmd``"
+msgstr "输出模式： ``http://www.isotc211.org/2005/gmd``"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:22
+msgid "Enabling APISO Support"
+msgstr "启用 APISO 支持"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:24
+msgid ""
+"To enable APISO support, add ``apiso`` to ``server.profiles`` as specified "
+"in :ref:`configuration`."
+msgstr ""
+"若要启用 APISO 支持，作为指定 :ref:`configuration` 信息，将 `apiso` 添加到 ``server.profiles`` "
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:29
+msgid ""
+"A testing interface is available in ``tests/index.html`` which contains "
+"tests specific to APISO to demonstrate functionality.  See :ref:`tests` for "
+"more information."
+msgstr ""
+"测试接口在 ``tests/index.html`` 可用，其包含特定于 APISO 演示功能的测试。请参"
+"见: :ref:`tests` 及其它更多信息。"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:32
+msgid "INSPIRE Extension"
+msgstr "激发扩展"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:37
+msgid ""
+"APISO includes an extension for enabling `INSPIRE Discovery Services 3.0`_ "
+"support.  To enable the INSPIRE extension to APISO, create a ``[metadata:"
+"inspire]`` section in the main configuration with ``enabled`` set to "
+"``true``."
+msgstr ""
+"APISO 包括启用 `INSPIRE Discovery Services 3.0`_ 的扩展。 若要启用 INSPIRE扩展到 APISO，需"
+"要用 ``enabled`` set to ``true``在主要的配置中创建 ``[metadata:inspire]`` 部分"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:42
+msgid "**[metadata:inspire]**"
+msgstr "元数据：inspire"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:44
+msgid ""
+"**enabled**: whether to enable the INSPIRE extension (``true`` or ``false``)"
+msgstr "启用: 是否启用INSPIRE扩展 （'是 '或'否'）"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:45
+msgid ""
+"**languages_supported**: supported languages (see http://inspire.ec.europa."
+"eu/schemas/common/1.0/enums/enum_eng.xsd, simpleType ``euLanguageISO6392B``)"
+msgstr ""
+"支持的语言： （见 http://inspire.ec.europa.eu/schemas/common/1.0/enums/"
+"enum_eng.xsd，simpleType ' euLanguageISO6392B '）"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:46
+msgid ""
+"**default_language**: the default language (see http://inspire.ec.europa.eu/"
+"schemas/common/1.0/enums/enum_eng.xsd, simpleType ``euLanguageISO6392B``)"
+msgstr ""
+"默认语言 （见 http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng."
+"xsd，simpleType ' euLanguageISO6392B '）"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:47
+msgid "**date**: date of INSPIRE metadata offering (in `ISO 8601`_ format)"
+msgstr "**date**: INSPIRE元数据的日期 （在 `ISO 8601`_ 格式中） "
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:48
+msgid ""
+"**gemet_keywords**: a comma-seperated keyword list of `GEMET INSPIRE theme "
+"keywords`_ about the service (see http://inspire.ec.europa.eu/schemas/"
+"common/1.0/enums/enum_eng.xsd, complexType ``inspireTheme_eng``)"
+msgstr ""
+"**gemet_keywords**: 关于服务的，以逗号分隔的关键字列表 `GEMET INSPIRE 主题关键词`_ "
+" （见 http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd，"
+"complexType ``inspireTheme_eng`` ）"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:49
+msgid ""
+"**conformity_service**: the level of INSPIRE conformance for spatial data "
+"sets and services (``conformant``, ``notConformant``, ``notEvaluated``)"
+msgstr ""
+"conformity_service: 以空间数据集和服务 (``conformant``, ``notConformant``, "
+"``notEvaluated``)为目标的INSPIRE级别"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:50
+msgid ""
+"**contact_organization**: the organization name responsible for the INSPIRE "
+"metadata"
+msgstr "contact_organization: 负责 INSPIRE元数据的组织名称"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:51
+msgid ""
+"**contact_email**: the email address of entity responsible for the INSPIRE "
+"metadata"
+msgstr "contact_email: 负责 INSPIRE元数据实体的电子邮件地址"
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:52
+msgid ""
+"**temp_extent**: temporal extent of the service (in `ISO 8601`_ format).  "
+"Either a single date (i.e. ``yyyy-mm-dd``), or an extent (i.e. ``yyyy-mm-dd/"
+"yyyy-mm-dd``)"
+msgstr ""
+"**temp_extent**: （ `ISO 8601`_ 格式）服务时间。 单个日期 ( ``yyyy-mm-dd`` ) 或多"
+"数以 ( ``yyyy-mm-dd/yyyy-mm-dd`` )"
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:4
+msgid "CSW-ebRIM Registry Service - Part 1: ebRIM profile of CSW"
+msgstr "CSW-ebRIM注册服务-第一部分: CSW的ebRIM 配置文件"
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:8
+msgid ""
+"The CSW-ebRIM Registry Service is a profile of CSW 2.0.2 which enables "
+"discovery of geospatial metadata following the ebXML information model."
+msgstr ""
+"CSW-ebRIM注册服务是CSW 2.0.2的配置文件，是继ebXML 信息模型之后的地理空间元数"
+"据配置文件。"
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:18
+msgid "**typename**: ``rim:RegistryObject``"
+msgstr "类型名称: ' rim: RegistryObject '"
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:19
+msgid "**outputschema**: ``urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0``"
+msgstr "输出模式: ' urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' "
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:22
+msgid "Enabling ebRIM Support"
+msgstr "启用 ebRIM 支持"
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:24
+msgid ""
+"To enable ebRIM support, add ``ebrim`` to ``server.profiles`` as specified "
+"in :ref:`configuration`."
+msgstr ""
+"若要启用 ebRIM 支持，需添加 ``ebrim`` 到 ``server.profiles`` ，以 作为指定的   :ref:`configuration`。 "
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:29
+msgid ""
+"A testing interface is available in ``tests/index.html`` which contains "
+"tests specific to ebRIM to demonstrate functionality.  See :ref:`tests` for "
+"more information."
+msgstr ""
+"测试接口在 ``tests/index.html``  可用，其包含特定于ebRIM演示功能的测试。请参见: :ref:`tests` 及其它更多信息。"
