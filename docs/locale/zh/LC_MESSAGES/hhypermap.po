@@ -1,0 +1,72 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010-2015, Tom Kralidis This work is licensed under a
+# Creative Commons Attribution 4.0 International License
+# This file is distributed under the same license as the pycsw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-17 17:33+0800\n"
+"PO-Revision-Date: 2016-06-06 16:04+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: ../../hhypermap.rst:4
+msgid "HHypermap Configuration"
+msgstr "HHypermap配置"
+
+#: ../../hhypermap.rst:6
+#, fuzzy
+msgid ""
+"HHypermap (Harvard Hypermap) Registry (https://github.com/cga-"
+"harvard/HHypermap) is an application that manages OWS, Esri REST, and "
+"other types of map service harvesting, and maintains uptime statistics "
+"for services and layers. HHypermap Registry will publish to HHypermap "
+"Search (based on Lucene) which provides a fast search and visualization "
+"environment for spatio-temporal materials."
+msgstr ""
+"HHypermap (Harvard Hypermap) Supervisor（https://github.com/cga-"
+"harvard/HHypermap）是管理OWS、ESRI "
+"REST、其他类型的地图服务、维护服务和图层正常运行统计的一款应用程序。HHypermap "
+"Supervisor会发布到HHypermap搜索中（基于Lucene），它可实现空间数据的快速搜索和可视化环境。"
+
+#: ../../hhypermap.rst:8
+msgid ""
+"HHypermap uses CSW as a cataloguing mechanism to ingest, query and "
+"present geospatial metadata."
+msgstr "HHypermap使用CSW作为摄取、查询、地理空间元数据显示的编目。"
+
+#: ../../hhypermap.rst:10
+msgid ""
+"pycsw supports binding to an existing HHypermap repository for metadata "
+"query."
+msgstr "为元数据查询，将pycsw绑定到已有的HHypermap存储库。"
+
+#: ../../hhypermap.rst:13
+msgid "HHypermap Setup"
+msgstr "HHypermap设置"
+
+#: ../../hhypermap.rst:15
+msgid ""
+"pycsw is enabled and configured by default in HHypermap, so there are no "
+"additional steps required once HHypermap is setup.  See the "
+"``REGISTRY_PYCSW`` `hypermap/settings.py entries`_ for customizing pycsw "
+"within HHypermap."
+msgstr ""
+"在HHypermap中，pycsw的启用与配置是默认设置的，所以HHypermap的安装程序是不需要额外步骤的。"
+"想定制HHypermap-pycsw，请参见 "
+"``REGISTRY_PYCSW`` `hypermap/settings.py entries`_ "。
+
+#: ../../hhypermap.rst:17
+msgid ""
+"The HHypermap plugin is managed outside of pycsw within the HHypermap "
+"project.  HHypermap settings must ensure that "
+"``REGISTRY_PYCSW['repository']['source']`` is set "
+"to``hypermap.search.pycsw_repository``."
+msgstr ""

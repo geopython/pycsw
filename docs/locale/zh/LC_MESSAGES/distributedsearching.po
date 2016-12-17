@@ -1,0 +1,156 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"PO-Revision-Date: 2016-06-06 15:05+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: ../../distributedsearching.rst:4
+msgid "Distributed Searching"
+msgstr "分布式搜索"
+
+#: ../../distributedsearching.rst:8
+msgid ""
+"Your server must be able to make outgoing HTTP requests for this "
+"functionality."
+msgstr "此功能的作用就是可以使你的服务器传出HTTP请求。"
+
+#: ../../distributedsearching.rst:10
+msgid ""
+"pycsw has the ability to perform distributed searching against other CSW "
+"servers.  Distributed searching is disabled by default; to enable, ``server."
+"federatedcatalogues`` must be set.  A CSW client must issue a GetRecords "
+"request with ``csw:DistributedSearch`` specified, along with an optional "
+"``hopCount`` attribute (see subclause 10.8.4.13 of the CSW specification).  "
+"When enabled, pycsw will search all specified catalogues and return a "
+"unified set of search results to the client.  Due to the distributed nature "
+"of this functionality, requests will take extra time to process compared to "
+"queries against the local repository."
+msgstr ""
+"pycsw与其它CSW服务器不同的是，它有能力自己实现分布式搜索。此分布式搜索默认为"
+"禁用；若想启用，必须设置 ``server.federatedcatalogues`` 。CSW客户端会发出一个"
+"Getrecords指定性请求 ``csw:DistributedSearch`` ，以及一个可选的 ``hopCount`` "
+"属性（见CSW规范中第10.8.4.13 ）。当启用时，pycsw会搜索所有指定的目录并会将一"
+"组统一的搜索结果返回给客户端。由于此功能的分布式性质，若要查询本地存储库，请"
+"求可能会需要更多的时间来处理。"
+
+#: ../../distributedsearching.rst:13
+msgid "Scenario: Federated Search"
+msgstr "场景：联合搜索"
+
+#: ../../distributedsearching.rst:15
+msgid ""
+"pycsw deployment with 3 configurations (CSW-1, CSW-2, CSW-3), subsequently "
+"providing three (3) endpoints.  Each endpoint is based on an opaque "
+"metadata repository (based on theme/place/discipline, etc.).  Goal is to "
+"perform a single search against all endpoints."
+msgstr ""
+"pycsw部署共有3项配置（CSW-1，CSW-2，CSW-3），同时也会提供3个端点。每个端点是"
+"基于一个不透明的元数据信息库（基于主题/地点/学科等）。目标是执行对所有端点一"
+"对一的搜索。"
+
+#: ../../distributedsearching.rst:17
+msgid ""
+"pycsw realizes this functionality by supporting :ref:`alternate "
+"configurations <alternate-configurations>`, and exposes the additional CSW "
+"endpoint(s) with the following design pattern:"
+msgstr ""
+"pycsw的本功能是靠 :ref:`交替配置<alternate-configurations>` 支持的，并是按"
+"以下设计模式来公开其他CSW端点的︰"
+
+#: ../../distributedsearching.rst:19
+msgid "CSW-1: ``http://localhost/pycsw/csw.py?config=CSW-1.cfg``"
+msgstr "CSW-1: ``http://localhost/pycsw/csw.py?config=CSW-1.cfg``"
+
+#: ../../distributedsearching.rst:21
+msgid "CSW-2: ``http://localhost/pycsw/csw.py?config=CSW-2.cfg``"
+msgstr "CSW-2: ``http://localhost/pycsw/csw.py?config=CSW-2.cfg``"
+
+#: ../../distributedsearching.rst:23
+msgid "CSW-3: ``http://localhost/pycsw/csw.py?config=CSW-3.cfg``"
+msgstr "CSW-3: ``http://localhost/pycsw/csw.py?config=CSW-3.cfg``"
+
+#: ../../distributedsearching.rst:25
+msgid ""
+"...where the ``*.cfg`` configuration files are configured for each "
+"respective metadata repository.  The above CSW endpoints can be interacted "
+"with as usual."
+msgstr ""
+"只要有 ``*.cfg``  这个配置文件，它就可以为每个元数据存储库进行配置。 以上的CSW"
+"端点也可以像往常一样进行交互。"
+
+#: ../../distributedsearching.rst:27
+msgid ""
+"To federate the discovery of the three (3) portals into a unified search, "
+"pycsw realizes this functionality by deploying an additional configuration "
+"which acts as the superset of CSW-1, CSW-2, CSW-3:"
+msgstr ""
+"将这3个门户联合成统一的搜索，pycsw就可以通过部署超集的CSW-1、 CSW-2、 CSW-3 "
+"这些附加配置来实现此功能："
+
+#: ../../distributedsearching.rst:29
+msgid "CSW-all: ``http://localhost/pycsw/csw.py?config=CSW-all.cfg``"
+msgstr "所有的CSW: ``http://localhost/pycsw/csw.py?config=CSW-all.cfg``"
+
+#: ../../distributedsearching.rst:31
+msgid ""
+"This allows the client to invoke one (1) CSW GetRecords request, in which "
+"the CSW endpoint spawns the same GetRecords request to 1..n distributed CSW "
+"endpoints.  Distributed CSW endpoints are advertised in CSW Capabilities "
+"XML via ``ows:Constraint``:"
+msgstr ""
+"这允许客户端调用 1 CSW GetRecords 请求，其中CSW端点就会生成相同的GetRecords"
+"请求，从1到n分布各个CSW 终结点。分布式CSW端点通过 'ows:Constraint' 在CSW功"
+"能 XML上发布广告︰"
+
+#: ../../distributedsearching.rst:45
+msgid ""
+"...which advertises which CSW endpoint(s) the CSW server will spawn if a "
+"distributed search is requested by the client."
+msgstr "如果在客户端请求分布式搜索的话，CSW服务器将spawn。"
+
+#: ../../distributedsearching.rst:47
+msgid "in the CSW-all configuration:"
+msgstr "CSW-all 配置"
+
+#: ../../distributedsearching.rst:55
+msgid ""
+"At which point a CSW client request to CSW-all with "
+"``distributedsearch=TRUE``, while specifying an optional ``hopCount``.  "
+"Query network topology:"
+msgstr ""
+"当指定选项``hopCount``时，CSW客户端就会用 ' distributedsearch = TRUE '请求所"
+"有的CSW。 查询网络拓扑 ︰"
+
+#: ../../distributedsearching.rst:73
+msgid ""
+"As a result, a pycsw deployment in this scenario may be approached on a per "
+"'theme' basis, or at an aggregate level."
+msgstr ""
+"因此，在这个场景中，pycsw 部署就会深入每个 '主题' 的基础部分或总体水平。"
+
+#: ../../distributedsearching.rst:75
+msgid ""
+"All interaction in this scenario is local to the pycsw installation, so "
+"network performance would not be problematic."
+msgstr ""
+"在这个场景中的所有交互都是在本地pycsw 安装的，所以网络性能的好与坏是不会产生"
+"影响的。"
+
+#: ../../distributedsearching.rst:77
+msgid ""
+"A very important facet of distributed search is as per Annex B of OGC:CSW "
+"2.0.2.  Given that all the CSW endpoints are managed locally, duplicates "
+"and infinite looping are not deemed to present an issue."
+msgstr ""
+"分布式搜索的一个非常重要的方面是OGC的附件B问题：CSW 2.0.2。鉴于所有的CSW端点"
+"都是本地管理，因此复制和无限循环不会存在问题。"

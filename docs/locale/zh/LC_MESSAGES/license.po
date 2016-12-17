@@ -1,0 +1,78 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-28 11:27+0800\n"
+"PO-Revision-Date: 2016-06-07 15:12+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: ../../license.rst:4
+msgid "License"
+msgstr "授权"
+
+#: ../../../LICENSE.txt:1
+msgid "The MIT License (MIT)"
+msgstr "MIT 许可证 (MIT)"
+
+#: ../../../LICENSE.txt:3
+msgid ""
+"Copyright (c) 2010-2015 Tom Kralidis Copyright (c) 2011-2015 Angelos "
+"Tzotsos Copyright (c) 2012-2015 Adam Hinz Copyright (c) 2015      "
+"Ricardo Garcia Silva"
+msgstr ""
+"版权所有 (c) 2010年-2015年Tom Kralidis 版权所有 （c） 2011年-2015年"
+"Angelos Tzotsos 版权所有 (c) 2012年-2015年Adam Hinz Copyright版权所有 "
+"（c） 2015年Ricardo Garcia Silva"
+
+#: ../../../LICENSE.txt:8
+msgid ""
+"Permission is hereby granted, free of charge, to any person obtaining a "
+"copy of this software and associated documentation files (the \"Software"
+"\"), to deal in the Software without restriction, including without "
+"limitation the rights to use, copy, modify, merge, publish, distribute, "
+"sublicense, and/or sell copies of the Software, and to permit persons to "
+"whom the Software is furnished to do so, subject to the following "
+"conditions:"
+msgstr ""
+"特此授予权限，此软件是免费的，任何人都可获得本软件副本及相关文档文件 "
+"（\"软件\"），处理软件也不受限制，包括使用、 复制、 修改、 合并、 发布、 "
+"分发、 二次许可，或复印件转卖。给予授权的人应符合以下条件︰"
+
+#: ../../../LICENSE.txt:15
+msgid ""
+"The above copyright notice and this permission notice shall be included "
+"in all copies or substantial portions of the Software."
+msgstr "上面的版权声明和许可声明应列入所有副本或软件的重要部分。"
+
+#: ../../../LICENSE.txt:18
+msgid ""
+"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, "
+"EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF "
+"MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. "
+"IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY "
+"CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, "
+"TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE "
+"SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+msgstr ""
+"该软件为“原版”，不做任何担保（明文或暗文的担保），包括对适销性、特定用途"
+"和非侵权性的保证。在任何情况下，不论是合同，侵权或其他，软件使用或其他交"
+"易。作者或版权持有者是法律责任的任何索赔、损害赔偿或其他责任。"
+
+#: ../../license.rst:9
+msgid "Documentation"
+msgstr "说明文件"
+
+#: ../../license.rst:11
+msgid ""
+"The documentation is released under the `Creative Commons Attribution "
+"4.0 International (CC BY 4.0)`_ license."
+msgstr "该文档是 `知识共享署名4.0国际发布（CC BY 4.0）`_ 许可证下发的。"

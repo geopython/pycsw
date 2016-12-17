@@ -1,0 +1,96 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-28 11:27+0800\n"
+"PO-Revision-Date: 2016-06-08 13:51+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: ../../outputschemas.rst:4
+msgid "Output Schema Plugins"
+msgstr "输出模式插件"
+
+#: ../../outputschemas.rst:7
+msgid "Overview"
+msgstr "视图"
+
+#: ../../outputschemas.rst:9
+msgid ""
+"pycsw allows for extending the implementation of output schemas to the "
+"core standard.  outputschemas allow for a client to request metadata in "
+"a specific format (ISO, Dublin Core, FGDC, NASA DIF Atom and GM03 are "
+"default)."
+msgstr ""
+"pycsw 使输出架构达到核心标准。输出架构允许客户端请求特定格式的元数据 "
+"（ISO, Dublin Core, FGDC, NASA DIF Atom、GM03是默认设置）。"
+
+#: ../../outputschemas.rst:11
+msgid ""
+"All outputschemas must be placed in the ``pycsw/plugins/outputschemas`` "
+"directory."
+msgstr ""
+"所有输出架构必须都放在 ' pycsw/插件/输出架构（`pycsw/plugins/"
+"outputschemas`） 目录中。"
+
+#: ../../outputschemas.rst:14
+msgid "Requirements"
+msgstr "要求"
+
+#: ../../outputschemas.rst:29
+msgid "Implementing a new outputschema"
+msgstr "实施新的输出架构"
+
+#: ../../outputschemas.rst:31
+msgid ""
+"Create a file in ``pycsw/plugins/outputschemas``, which defines the "
+"following:"
+msgstr "创建文件 ' pycsw/插件/输出架构 '，其中定义了以下内容 ︰"
+
+#: ../../outputschemas.rst:33
+msgid ""
+"``NAMESPACE``: the default namespace of the outputschema which will be "
+"advertised"
+msgstr "命名空间: 输出架构的默认命名空间"
+
+#: ../../outputschemas.rst:34
+msgid "``NAMESPACE``: dict of all applicable namespaces to outputschema"
+msgstr "命名空间: 所有适用的命名空间在输出架构中以目录显示"
+
+#: ../../outputschemas.rst:35
+msgid ""
+"``XPATH_MAPPINGS``: dict of pycsw core queryables mapped to the "
+"equivalent XPath of the outputschema"
+msgstr "' XPATH_MAPPINGS ': pycsw 核心查询目录映射到输出空间的等效XPath"
+
+#: ../../outputschemas.rst:36
+msgid ""
+"``write_record``: function which returns a record as an ``lxml.etree."
+"Element`` object"
+msgstr "'write_record ': 返回记录为' lxml.etree.Element ' 对象记录的功能"
+
+#: ../../outputschemas.rst:38
+msgid ""
+"Add the name of the file to ``__init__.py:__all__``.  The new "
+"outputschema is now supported in pycsw."
+msgstr "将文件名添加到 '__init__.py:__all__ '。 新的输出架构就在 pycsw中。"
+
+#: ../../outputschemas.rst:41
+msgid "Testing"
+msgstr "测试"
+
+#: ../../outputschemas.rst:43
+msgid ""
+"New outputschemas must add examples to the :ref:`tests` interface, which "
+"must provide example requests specific to the profile."
+msgstr ""
+"新的输出架构必须添加到示例: :ref:`tests` 接口，此 '测试' 接口须提供特定于该配置"
+"文件的示例请求。"

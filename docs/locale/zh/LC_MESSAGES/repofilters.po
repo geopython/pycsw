@@ -1,0 +1,179 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"PO-Revision-Date: 2016-06-08 15:16+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: ../../repofilters.rst:4
+msgid "Repository Filters"
+msgstr "存储库中的筛选器"
+
+#: ../../repofilters.rst:6
+msgid ""
+"pycsw has the ability to perform server side repository / database filters "
+"as a means to mask all CSW requests to query against a specific subset of "
+"the metadata repository, thus providing the ability to deploy multiple "
+"pycsw instances pointing to the same database in different ways via the "
+"``repository.filter`` configuration option."
+msgstr ""
+"pycsw 有能力执行服务器端存储库或数据库筛选功能，以覆盖所有的CSW请求，目的是"
+"查询元数据存储库中的一个特定子集，从而需部署多个 pycsw 实例，通过 "
+"'repository.filter' 配置选项，以不同的方式指向同一个数据库。"
+
+#: ../../repofilters.rst:8
+msgid ""
+"Repository filters are a convenient way to subset your repository at the "
+"server level without the hassle of creating proper database views.  For "
+"large repositories, it may be better to subset at the database level for "
+"performance."
+msgstr ""
+"存储库中的筛选器是一种便捷方式，是为了创建子数据库，以免去创建适当数据库视图"
+"的服务器级别的步骤。 对于大型数据库而言，它可能比创建数据库级别的子集要更好"
+"一些。"
+
+#: ../../repofilters.rst:11
+msgid "Scenario: One Database, Many Views"
+msgstr "场景 ︰ 一个数据库，很多种视角"
+
+#: ../../repofilters.rst:13
+msgid "Imagine a sample database table of records (subset below for brevity):"
+msgstr "想象一下，现在要记录数据库示例表（下面以子集做为简称）："
+
+#: ../../repofilters.rst:1
+msgid "identifier"
+msgstr "标识"
+
+#: ../../repofilters.rst:1
+msgid "parentidentifier"
+msgstr "母标识符"
+
+#: ../../repofilters.rst:1
+msgid "title"
+msgstr "标题"
+
+#: ../../repofilters.rst:1
+msgid "abstract"
+msgstr "摘要"
+
+#: ../../repofilters.rst:1
+msgid "1"
+msgstr "1"
+
+#: ../../repofilters.rst:1
+msgid "33"
+msgstr "33"
+
+#: ../../repofilters.rst:1
+msgid "foo1"
+msgstr "第一页"
+
+#: ../../repofilters.rst:1
+msgid "bar1"
+msgstr "第1条"
+
+#: ../../repofilters.rst:1
+msgid "2"
+msgstr "2"
+
+#: ../../repofilters.rst:1
+msgid "foo2"
+msgstr "第二页"
+
+#: ../../repofilters.rst:1
+msgid "bar2"
+msgstr "第2条"
+
+#: ../../repofilters.rst:1
+msgid "3"
+msgstr "3"
+
+#: ../../repofilters.rst:1
+msgid "55"
+msgstr "55"
+
+#: ../../repofilters.rst:1
+msgid "foo3"
+msgstr "第三页"
+
+#: ../../repofilters.rst:1
+msgid "bar3"
+msgstr "第3条"
+
+#: ../../repofilters.rst:1
+msgid "4"
+msgstr "4"
+
+#: ../../repofilters.rst:1
+msgid "5"
+msgstr "5"
+
+#: ../../repofilters.rst:1
+msgid "21"
+msgstr "21"
+
+#: ../../repofilters.rst:1
+msgid "foo5"
+msgstr "第五页"
+
+#: ../../repofilters.rst:1
+msgid "bar5"
+msgstr "第5条"
+
+#: ../../repofilters.rst:1
+msgid "foo6"
+msgstr "第六页"
+
+#: ../../repofilters.rst:1
+msgid "bar6"
+msgstr "第6条"
+
+#: ../../repofilters.rst:25
+msgid ""
+"A default pycsw instance (with no ``repository.filters`` option) will "
+"always process CSW requests against the entire table.  So a CSW "
+"`GetRecords` filter like:"
+msgstr ""
+"若没有``repository.filters``选项，pycsw默认是始终处理整个表的CSW请求。"
+"CSW`GetRecords`过滤如："
+
+#: ../../repofilters.rst:36
+msgid "...will return:"
+msgstr "...将返回："
+
+#: ../../repofilters.rst:44
+msgid ""
+"Suppose you wanted to deploy another pycsw instance which serves metadata "
+"from the same database, but only from a specific subset.  Here we set the "
+"``repository.filter`` option:"
+msgstr ""
+"假设你要部署其他pycsw应用实例，此实例来自同一个数据库的元数据，但它只能来自"
+"一个特定子集。在这里，我们设置了``repository.filter``选项："
+
+#: ../../repofilters.rst:52 ../../repofilters.rst:67
+msgid ""
+"The same CSW `GetRecords` filter as per above then yields the following "
+"results:"
+msgstr "依上述所说，同一CSW`GetRecords`过滤器将得到以下结果："
+
+#: ../../repofilters.rst:59
+msgid "Another example:"
+msgstr "另一个例子："
+
+#: ../../repofilters.rst:74
+msgid ""
+"The ``repository.filter`` option accepts all core queryables set in the "
+"pycsw core model (see ``pycsw.config.StaticContext.md_core_model`` for the "
+"complete list)."
+msgstr ""
+"该``数据库.过滤器``选项功能是在pycsw核心模式中接收所有核心查询设置（见"
+"``pycsw.config.StaticContext.md_core_model``的完整列表）。"

@@ -1,0 +1,383 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-17 17:33+0800\n"
+"PO-Revision-Date: 2016-06-01 08:59+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: ../../administration.rst:4
+msgid "Administration"
+msgstr "管理"
+
+#: ../../administration.rst:6
+msgid ""
+"pycsw administration is handled by the ``pycsw-admin.py`` utility.  "
+"``pycsw-admin.py`` is installed as part of the pycsw install process and "
+"should be available in your PATH."
+msgstr ""
+"pycsw 通过工具 ``pycsw-admin.py`` 进行管理。 ``pycsw-admin.py`` 需作为 pycsw "
+"安装的一部分安装到系统，可在你的路径中使用。"
+
+#: ../../administration.rst:11
+msgid ""
+"Run ``pycsw-admin.py -h`` to see all administration operations and "
+"parameters"
+msgstr "运行 ``pycsw-admin.py -h`` 来查看所有的管理操作与参数。 "
+
+#: ../../administration.rst:14
+msgid "Metadata Repository Setup"
+msgstr "元数据库创建设置"
+
+#: ../../administration.rst:16
+msgid "pycsw supports the following databases:"
+msgstr "pycsw支持以下数据库："
+
+#: ../../administration.rst:18
+msgid "SQLite3"
+msgstr ""
+
+#: ../../administration.rst:19 ../../administration.rst:114
+msgid "PostgreSQL"
+msgstr ""
+
+#: ../../administration.rst:20
+msgid "PostgreSQL with PostGIS enabled"
+msgstr ""
+
+#: ../../administration.rst:21
+msgid "MySQL"
+msgstr ""
+
+#: ../../administration.rst:24
+msgid ""
+"The easiest and fastest way to deploy pycsw is to use SQLite3 as the "
+"backend."
+msgstr "最简单快速部署 pycws 的方式是使用 SQLite3 作为数据存储。"
+
+#: ../../administration.rst:27
+msgid "PostgreSQL support includes support for PostGIS functions if enabled"
+msgstr "PostgreSQL支持PostGIS功能"
+
+#: ../../administration.rst:30
+msgid ""
+"If PostGIS (1.x or 2.x) is activated before setting up the "
+"pycsw/PostgreSQL database, then native PostGIS geometries will be "
+"enabled."
+msgstr ""
+"如果PostGIS（1.×或2.x）可在建立pycsw / PostgreSQL数据库之前激活，那么本机的PostGIS "
+"geometries就可以使用。"
+
+#: ../../administration.rst:32
+msgid ""
+"To expose your geospatial metadata via pycsw, perform the following "
+"actions:"
+msgstr "可通过 pycsw 发布你的地理空间元数据，可执行以下操作："
+
+#: ../../administration.rst:34
+msgid "setup the database"
+msgstr "创建数据库"
+
+#: ../../administration.rst:35
+msgid "import metadata"
+msgstr "导入元数据"
+
+#: ../../administration.rst:36
+msgid "publish the repository"
+msgstr "数据库发布"
+
+#: ../../administration.rst:39
+msgid "Supported Information Models"
+msgstr "支持的信息模型"
+
+#: ../../administration.rst:41
+msgid "By default, pycsw supports the ``csw:Record`` information model."
+msgstr "pycsw本身默认支持 ``csw:Record`` 信息模型。"
+
+#: ../../administration.rst:44
+msgid "See :ref:`profiles` for information on enabling profiles"
+msgstr "请参考 :ref:`profiles` 有关配置文件的信息"
+
+#: ../../administration.rst:47
+msgid "Setting up the Database"
+msgstr "创建数据库"
+
+#: ../../administration.rst:53
+msgid "This will create the necessary tables and values for the repository."
+msgstr "需创建数据库必要的表格与数值"
+
+#: ../../administration.rst:55
+msgid ""
+"The database created is an `OGC SFSQL`_ compliant database, and can be "
+"used with any implementing software.  For example, to use with `OGR`_:"
+msgstr "需创建一个标准的 `OGC SFSQL`_ 数据库，此数据库可应用于任何软件。例如， `OGR`_ "
+
+#: ../../administration.rst:67
+msgid ""
+"If PostGIS is detected, the pycsw-admin.py script does not create the "
+"SFSQL tables as they are already in the database."
+msgstr "如检测到PostGIS， pycsw-admin.py脚本就不会再创建 SFSQL 表，因为数据库中已经存在了。"
+
+#: ../../administration.rst:71
+msgid "Loading Records"
+msgstr "加载记录"
+
+#: ../../administration.rst:77
+msgid ""
+"This will import all ``*.xml`` records from ``/path/to/records`` into the"
+" database specified in ``default.cfg`` (``repository.database``).  "
+"Passing ``-r`` to the script will process ``/path/to/records`` "
+"recursively.  Passing ``-y`` to the script will force overwrite existing "
+"metadata with the same identifier.  Note that ``-p`` accepts either a "
+"directory path or single file."
+msgstr ""
+"这时所有的 ``*.xml`` 记录就会从 ``/path/to/records`` 中导入到指定的数据库 ``default.cfg`` "
+"(``repository.database``)。将 ``-r`` 复制到脚本中， 程序 ``/path/to/records`` "
+"就会层层递归。将 ``-y`` 复制到脚本中， 程序 ``/path/to/records`` 将强制替换现有的相同元数据标识符。请注意， "
+"``-p`` 只能接受一个目录路径或单个文件。"
+
+#: ../../administration.rst:80
+msgid "Records can also be imported using CSW-T (see :ref:`transactions`)."
+msgstr "记录也可以使用 CSW-T导入 （请查看  :ref:`transactions` ）"
+
+#: ../../administration.rst:83
+msgid "Exporting the Repository"
+msgstr "导出数据库"
+
+#: ../../administration.rst:89
+msgid ""
+"This will write each record in the database specified in ``default.cfg`` "
+"(``repository.database``) to an XML document on disk, in directory "
+"``/path/to/output_dir``."
+msgstr ""
+" ``default.cfg`` (``repository.database``) 会将数据库的每项记录都录入在磁盘XML文件的目录下 "
+"``/path/to/output_dir`` "
+
+#: ../../administration.rst:92
+msgid "Optimizing the Database"
+msgstr "优化数据库"
+
+#: ../../administration.rst:99
+msgid "This feature is relevant only for PostgreSQL and MySQL"
+msgstr "此功能只关联 PostgreSQL和MySQL"
+
+#: ../../administration.rst:102
+msgid "Deleting Records from the Repository"
+msgstr "从数据库中删除记录"
+
+#: ../../administration.rst:108
+msgid "This will empty the repository of all records."
+msgstr "数据库中的所有记录都会被清空"
+
+#: ../../administration.rst:111
+msgid "Database Specific Notes"
+msgstr "数据库特别需要注意的是"
+
+#: ../../administration.rst:116
+msgid ""
+"if PostGIS is not enabled, pycsw makes uses of PL/Python functions.  To "
+"enable PostgreSQL support, the database user must be able to create "
+"functions within the database. In case of recent PostgreSQL versions "
+"(9.x), the PL/Python extension must be enabled prior to pycsw setup"
+msgstr ""
+"若 PostGIS不可用，pycsw会启用 "
+"PL/Python功能。在PostgreSQL支持下，用户必须在数据库中创建这些功能。如果是最新版本PostgreSQL (9.x)，PL/ "
+"Python扩展必须在pycsw安装之前可运行"
+
+#: ../../administration.rst:117
+msgid ""
+"`PostgreSQL Full Text Search`_ is supported for ``csw:AnyText`` based "
+"queries.  pycsw creates a tsvector column based on the text from anytext "
+"column. Then pycsw creates a GIN index against the anytext_tsvector "
+"column.  This is created automatically in ``pycsw.admin.setup_db``.  Any "
+"query against `csw:AnyText` or `apiso:AnyText` will process using "
+"PostgreSQL FTS handling"
+msgstr ""
+" `PostgreSQL Full Text Search`_ (全文搜索)是 ``csw:AnyText`` "
+"查询功能支撑的。pycsw创建的tsvector栏是基于文本anytext栏。然而pycsw创建的GIN索引却不是基于文本anytext栏。这在 "
+"``pycsw.admin.setup_db`` 是自动生成的。任何针对 `csw:AnyText` or `apiso:AnyText` "
+"的查询都是使用PostgreSQL FTS处理的。"
+
+#: ../../administration.rst:120
+msgid "PostGIS"
+msgstr ""
+
+#: ../../administration.rst:122
+msgid ""
+"pycsw makes use of PostGIS spatial functions and native geometry data "
+"type."
+msgstr "pycsw使用的是PostGIS空间功能和本地geometry数据类型"
+
+#: ../../administration.rst:123
+msgid ""
+"It is advised to install the PostGIS extension before setting up the "
+"pycsw database"
+msgstr "建议在创建pycsw数据库前先安装PostGIS扩展信息"
+
+#: ../../administration.rst:124
+msgid ""
+"If PostGIS is detected, the pycsw-admin.py script will create both a "
+"native geometry column and a WKT column, as well as a trigger to keep "
+"both synchronized."
+msgstr "一旦PostGIS被监测到，脚本pycsw-admin.py既会在本地 geometry栏创建，也会在WKT栏创建，就像是触发器一样，会保持同步 "
+
+#: ../../administration.rst:125
+msgid ""
+"In case PostGIS gets disabled, pycsw will continue to work with the "
+"`WKT`_ column"
+msgstr "一旦PostGIS被禁用，这时 `WKT`_ 栏中的pycsw会运行"
+
+#: ../../administration.rst:126
+msgid ""
+"In case of migration from plain PostgreSQL database to PostGIS, the "
+"spatial functions of PostGIS will be used automatically"
+msgstr "如果plain PostgreSQL数据库移入PostGIS中，PostGIS的空间功能将自行启动"
+
+#: ../../administration.rst:127
+msgid ""
+"When migrating from plain PostgreSQL database to PostGIS, in order to "
+"enable native geometry support, a \"GEOMETRY\" column named "
+"\"wkb_geometry\" needs to be created manually (along with the update "
+"trigger in ``pycsw.admin.setup_db``). Also the native geometries must be "
+"filled manually from the `WKT`_ field. Next versions of pycsw will "
+"automate this process"
+msgstr ""
+"如果plain PostgreSQL数据库移入PostGIS中， 一个名为 \"wkb_geometry\" 的 \"GEOMETRY\" "
+"栏就需要被手动创建出来（随着 ``pycsw.admin.setup_db`` 一起更新）。本地geometries也必须在 `WKT`_ "
+"中手动创建。pycsw的下一个版本就会将此过程自动化运行 "
+
+#: ../../administration.rst:132
+msgid "Mapping to an Existing Repository"
+msgstr "映射到现有的存储库"
+
+#: ../../administration.rst:134
+msgid ""
+"pycsw supports publishing metadata from an existing repository.  To "
+"enable this functionality, the default database mappings must be modified"
+" to represent the existing database columns mapping to the abstract core "
+"model (the default mappings are in ``pycsw/config.py:MD_CORE_MODEL``)."
+msgstr ""
+"pycsw支持在现在的存储库中发布元数据。为实现此功能，默认的数据库映射功能就必须替换掉原有的数据库栏，此数据库栏是映射到abstract "
+"core model 中的（默认的眏射方式在 ``pycsw/config.py:MD_CORE_MODEL`` 中）"
+
+#: ../../administration.rst:136
+msgid "To override the default settings:"
+msgstr "覆盖默认的安装设置："
+
+#: ../../administration.rst:138
+msgid "define a custom database mapping based on ``etc/mappings.py``"
+msgstr "基于``etc/mappings.py``映射的自定义数据库"
+
+#: ../../administration.rst:139
+msgid ""
+"in ``default.cfg``, set ``repository.mappings`` to the location of the "
+"mappings.py file:"
+msgstr "在 ``default.cfg``中, 将 ``repository.mappings`` 配置到mappings.py 文件中:"
+
+#: ../../administration.rst:147
+msgid "Note you can also reference mappings as a Python object as a dotted path:"
+msgstr ""
+
+#: ../../administration.rst:156
+#, fuzzy
+msgid ""
+"See the :ref:`geonode`, :ref:`hhypermap`, and :ref:`odc` for further "
+"examples."
+msgstr "请参照 :ref:`geonode` 和 :ref:`odc` 查看更多例子."
+
+#: ../../administration.rst:159
+msgid "Existing Repository Requirements"
+msgstr "现有的存储需求"
+
+#: ../../administration.rst:161
+msgid ""
+"pycsw requires certain repository attributes and semantics to exist in "
+"any repository to operate as follows:"
+msgstr "pycsw需要特定的存储属性，也需要语义来操作如下程序："
+
+#: ../../administration.rst:163
+msgid "``pycsw:Identifier``: unique identifier"
+msgstr "``pycsw:Identifier``：唯一的标识符"
+
+#: ../../administration.rst:164
+msgid ""
+"``pycsw:Typename``: typename for the metadata; typically the value of the"
+" root element tag (e.g. ``csw:Record``, ``gmd:MD_Metadata``)"
+msgstr "``pycsw:Typename``: 元数据的类型名；典型的根标签值（例如``csw:Record``, ``gmd:MD_Metadata``）"
+
+#: ../../administration.rst:165
+msgid ""
+"``pycsw:Schema``: schema for the metadata; typically the target namespace"
+" (e.g. ``http://www.opengis.net/cat/csw/2.0.2``, "
+"``http://www.isotc211.org/2005/gmd``)"
+msgstr ""
+"``pycsw:Schema``: "
+"元数据图表；典型的目标名称空间（例如``http://www.opengis.net/cat/csw/2.0.2``, "
+"``http://www.isotc211.org/2005/gmd``）"
+
+#: ../../administration.rst:166
+msgid "``pycsw:InsertDate``: date of insertion"
+msgstr "``pycsw:InsertDate``: 插入日期"
+
+#: ../../administration.rst:167
+msgid "``pycsw:XML``: full XML representation"
+msgstr "``pycsw:XML``:完整的XML表示形式"
+
+#: ../../administration.rst:168
+msgid ""
+"``pycsw:AnyText``: bag of XML element text values, used for full text "
+"search.  Realized with the following design pattern:"
+msgstr "``pycsw:AnyText``: XML元素文件值包，用于完整的文本搜索。实现了以下设计功能："
+
+#: ../../administration.rst:170
+msgid "capture all XML element and attribute values"
+msgstr "获取所有的XML元素与属性值"
+
+#: ../../administration.rst:171
+msgid "store in repository"
+msgstr "存储数据库"
+
+#: ../../administration.rst:172
+msgid "``pycsw:BoundingBox``: string of `WKT`_ or `EWKT`_ geometry"
+msgstr "``pycsw:BoundingBox``: `WKT`_ or `EWKT`_ geometry字符串"
+
+#: ../../administration.rst:174
+msgid "The following repository semantics exist if the attributes are specified:"
+msgstr "一旦被指定了属性，以下的语义库就会自动存在 ︰"
+
+#: ../../administration.rst:176
+msgid "``pycsw:Keywords``: comma delimited list of keywords"
+msgstr "' pycsw:Keywords ': 以逗号分隔的关键字列表"
+
+#: ../../administration.rst:177
+msgid ""
+"``pycsw:Links``: structure of links in the format "
+"\"name,description,protocol,url[^,,,[^,,,]]\""
+msgstr "' pycsw:Links ': 链接的格式结构\"名称、 描述、 协议、 网页地址 [^，[^...]]\""
+
+#: ../../administration.rst:179
+msgid "Values of mappings can be derived from the following mechanisms:"
+msgstr "映射值由以下的结构获得："
+
+#: ../../administration.rst:181
+msgid "text fields"
+msgstr "文本域"
+
+#: ../../administration.rst:182
+msgid "Python datetime.datetime or datetime.date objects"
+msgstr "Python ``datetime.datetime`` 或 ``datetime.date`` 对象"
+
+#: ../../administration.rst:183
+msgid "Python functions"
+msgstr "Python函数"
+
+#: ../../administration.rst:185
+msgid "Further information is provided in ``pycsw/config.py:MD_CORE_MODEL``."
+msgstr "在 'pycsw/config.py:MD_CORE_MODEL ' 中获得更多资料"
+

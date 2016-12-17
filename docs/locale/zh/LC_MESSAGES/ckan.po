@@ -1,0 +1,57 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"PO-Revision-Date: 2016-06-01 09:14+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: ../../ckan.rst:4
+msgid "CKAN Configuration"
+msgstr "CKAN配置"
+
+#: ../../ckan.rst:6
+msgid ""
+"CKAN (http://ckan.org) is a powerful data management system that makes data "
+"accessible – by providing tools to streamline publishing, sharing, finding "
+"and using data. CKAN is aimed at data publishers (national and regional "
+"governments, companies and organizations) wanting to make their data open "
+"and available."
+msgstr ""
+"CKAN (http://ckan.org)是一个功能强大的数据管理系统，该系统提高了数据可访问"
+"性，通过提供工具来无缝地发布、共享、发现和使用数据。CKAN的目的在于使他们变成"
+"数据开放并可用的数据发布者（国家和地方政府、公司和组织）。"
+
+#: ../../ckan.rst:8
+msgid ""
+"`ckanext-spatial`_ is CKAN's geospatial extension.  The extension adds a "
+"spatial field to the default CKAN dataset schema, using PostGIS as the "
+"backend. This allows to perform spatial queries and display the dataset "
+"extent on the frontend. It also provides harvesters to import geospatial "
+"metadata into CKAN from other sources, as well as commands to support the "
+"CSW standard. Finally, it also includes plugins to preview spatial formats "
+"such as GeoJSON."
+msgstr ""
+" `ckanext 空间`_ 是 CKAN 的地理空间扩展。此功能扩展将空间的字段添加到默认的 "
+"CKAN 数据集架构中，使用 PostGIS 作为后端。可实现空间位置查询，还可显示前端数"
+"据集的扩展信息。它还有收集信息的功能，从其他来源处将地理空间的元数据导入到"
+"CKAN中，就如同CKAN也支持csw标准命令一样。最后，它还有可预览空间信息的插件，"
+"例如 GeoJSON。"
+
+#: ../../ckan.rst:11
+msgid "CKAN Setup"
+msgstr "CKAN设置"
+
+#: ../../ckan.rst:13
+msgid ""
+"Installation and configuration Instructions are provided as part of the "
+"ckanext-spatial `documentation`_."
+msgstr "安装和配置说明在ckanext-spatial的 `documentation`_ 部分"

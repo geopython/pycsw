@@ -1,0 +1,354 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.0-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"PO-Revision-Date: 2016-06-03 15:38+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: ../../../CONTRIBUTING.rst:2
+msgid "Contributing to pycsw"
+msgstr "pycsw的贡献"
+
+#: ../../../CONTRIBUTING.rst:4
+msgid ""
+"The pycsw project openly welcomes contributions (bug reports, bug fixes, "
+"code enhancements/features, etc.).  This document will outline some "
+"guidelines on contributing to pycsw.  As well, the pycsw `community </"
+"community.html>`_ is a great place to get an idea of how to connect and "
+"participate in pycsw community and development."
+msgstr ""
+"Pycsw 项目是开源的 （bug 报告、 bug 修复、 代码增强功能等）。 此篇文章将概述"
+"pycsw 的一些作用。 pycsw'社区' </community.html> _ ，就是提供一些建议，应该"
+"如何连接和参与 pycsw 社区，并如何更好地发展。"
+
+#: ../../../CONTRIBUTING.rst:9
+msgid "pycsw has the following modes of contribution:"
+msgstr "以下是几项pycsw做出的贡献 ︰"
+
+#: ../../../CONTRIBUTING.rst:11 ../../../CONTRIBUTING.rst:25
+msgid "GitHub Commit Access"
+msgstr "GitHub 提交修改的权限"
+
+#: ../../../CONTRIBUTING.rst:12 ../../../CONTRIBUTING.rst:33
+msgid "GitHub Pull Requests"
+msgstr "GitHub 的请求"
+
+#: ../../../CONTRIBUTING.rst:15
+msgid "Code of Conduct"
+msgstr "行为准则"
+
+#: ../../../CONTRIBUTING.rst:17
+msgid ""
+"Contributors to this project are expected to act respectfully toward others "
+"in accordance with the `OSGeo Code of Conduct <http://www.osgeo.org/"
+"code_of_conduct>`_."
+msgstr ""
+"此项目的贡献者是遵守 'OSGeo 行为守则<http: www.osgeo.org/code_of_conduct>' _"
+
+#: ../../../CONTRIBUTING.rst:20
+msgid "Contributions and Licensing"
+msgstr "贡献和许可"
+
+#: ../../../CONTRIBUTING.rst:22
+msgid ""
+"Contributors are asked to confirm that they comply with project `license "
+"<https://github.com/geopython/pycsw/blob/master/LICENSE.txt>`_ guidelines."
+msgstr ""
+"贡献者应当符合 '许可证<https: github.com/geopython/pycsw/blob/master/"
+"license.txt>' _ 准则。"
+
+#: ../../../CONTRIBUTING.rst:27
+msgid ""
+"proposals to provide developers with GitHub commit access shall be emailed "
+"to the pycsw-devel `mailing list`_.  Proposals shall be approved by the "
+"pycsw development team.  Committers shall be added by the project admin"
+msgstr ""
+"建议开发人员提供 GitHub 的提交访问权限，此权限应通过电子邮件发送到pycsw-"
+"devel `mailing list`_。 希望 pycsw 开发团队可以允许。 应由项目管理员处添加访"
+"问者"
+
+#: ../../../CONTRIBUTING.rst:28
+msgid "removal of commit access shall be handled in the same manner"
+msgstr "应以同样的方式解除提交访问权限"
+
+#: ../../../CONTRIBUTING.rst:29
+msgid ""
+"each committer must send an email to the pycsw mailing list agreeing to the "
+"license guidelines (see `Contributions and Licensing Agreement Template "
+"<#contributions-and-licensing-agreement-template>`_).  **This is only "
+"required once**"
+msgstr ""
+"每个提交的用户必须发送电子邮件到 pycsw 邮件列表中，前得是同意许可证准则 "
+"（见 '贡献和许可协议模板 <#contributions-and-licensing-agreement-template>' "
+"_）。只需一次即可。"
+
+#: ../../../CONTRIBUTING.rst:30
+msgid ""
+"each committer shall be listed in https://github.com/geopython/pycsw/blob/"
+"master/COMMITTERS.txt"
+msgstr ""
+"每个提交的用户会显示在https://github.com/geopython/pycsw/blob/master/"
+"COMMITTERS.txt列表中"
+
+#: ../../../CONTRIBUTING.rst:35
+msgid ""
+"pull requests can provide agreement to license guidelines as text in the "
+"pull request or via email to the pycsw `mailing list`_  (see `Contributions "
+"and Licensing Agreement Template <#contributions-and-licensing-agreement-"
+"template>`_).  **This is only required for a contributor's first pull "
+"request.  Subsequent pull requests do not require this step**"
+msgstr ""
+"pull 请求可以提供协议许可准则，在pull请求时可作为文本，也可以电邮至 pycsw 邮"
+"件列表 （见 `贡献和许可协议模板<#contributions-and-licensing-agreement-template>`_ ）。 这只需要在第一次Pull请求时使用。 后续的请求不需要此步骤"
+
+#: ../../../CONTRIBUTING.rst:36
+msgid ""
+"pull requests may include copyright in the source code header by the "
+"contributor if the contribution is significant or the contributor wants to "
+"claim copyright on their contribution"
+msgstr "如果有重大贡献或贡献者想要申请版权专利，pull请求可以将源代码设置权限"
+
+#: ../../../CONTRIBUTING.rst:37
+msgid ""
+"all contributors shall be listed at https://github.com/geopython/pycsw/"
+"graphs/contributors"
+msgstr ""
+"所有贡献者均在 https://github.com/geopython/pycsw/graphs/contributors 列表中"
+
+#: ../../../CONTRIBUTING.rst:38
+msgid ""
+"unclaimed copyright, by default, is assigned to the main copyright holders "
+"as specified in https://github.com/geopython/pycsw/blob/master/LICENSE.txt"
+msgstr ""
+"若无人声明版权所属，在默认情况下，会指定分配给主要的版权持有人，在https://"
+"github.com/geopython/pycsw/blob/master/LICENSE.txt中强调指出"
+
+#: ../../../CONTRIBUTING.rst:41
+msgid "Contributions and Licensing Agreement Template"
+msgstr "贡献和许可协议模板"
+
+#: ../../../CONTRIBUTING.rst:43
+msgid ""
+"``Hi all, I'd like to contribute <feature X|bugfix Y|docs|something else> "
+"to pycsw. I confirm that my contributions to pycsw will be compatible with "
+"the pycsw license guidelines at the time of contribution.``"
+msgstr ""
+"``大家好，我愿意在pycsw贡献 <feature X|bugfix Y|docs|something else>。我证"
+"明，我对pycsw的贡献将与pycsw许可指南兼容。``"
+
+#: ../../../CONTRIBUTING.rst:49
+msgid "GitHub"
+msgstr "GitHub"
+
+#: ../../../CONTRIBUTING.rst:51
+msgid ""
+"Code, tests, documentation, wiki and issue tracking are all managed on "
+"GitHub. Make sure you have a `GitHub account <https://github.com/signup/"
+"free>`_."
+msgstr ""
+"代码，测试，文档，wiki和问题都在GitHub上进行追踪管理，以确保每个人均有一个自"
+"己的 GitHub的账户<https://github.com/signup/free> 。 "
+
+#: ../../../CONTRIBUTING.rst:55
+msgid "Code Overview"
+msgstr "代码概览"
+
+#: ../../../CONTRIBUTING.rst:57
+msgid ""
+"the pycsw `wiki <https://github.com/geopython/pycsw/wiki/Code-"
+"Architecture>`_ documents an overview of the codebase"
+msgstr ""
+"在pycsw `维基 <https://github.com/geopython/pycsw/wiki/Code-Architecture>`_ 有"
+"详细的代码库概述"
+
+#: ../../../CONTRIBUTING.rst:60
+msgid "Documentation"
+msgstr "说明文件"
+
+#: ../../../CONTRIBUTING.rst:62
+msgid "documentation is managed in ``docs/``, in reStructuredText format"
+msgstr "文档在 ``docs/`` 中管理，以reStructuredText格式"
+
+#: ../../../CONTRIBUTING.rst:63
+msgid "`Sphinx`_ is used to generate the documentation"
+msgstr "`Sphinx`_ 作用是生成文档"
+
+#: ../../../CONTRIBUTING.rst:64
+msgid ""
+"See the `reStructuredText Primer <http://sphinx-doc.org/rest.html>`_ on rST "
+"markup and syntax."
+msgstr ""
+"在RST上的标记和语法中见 reStructuredText Primer<http://sphinx-doc.org/rest.html> 。"
+
+#: ../../../CONTRIBUTING.rst:67
+msgid "Bugs"
+msgstr "错误"
+
+#: ../../../CONTRIBUTING.rst:69
+msgid ""
+"pycsw's `issue tracker <https://github.com/geopython/pycsw/issues>`_ is the "
+"place to report bugs or request enhancements. To submit a bug be sure to "
+"specify the pycsw version you are using, the appropriate component, a "
+"description of how to reproduce the bug, as well as what version of Python "
+"and platform. For convenience, you can run ``pycsw-admin.py -c "
+"get_sysprof`` and copy/paste the output into your issue."
+msgstr ""
+"<https://github.com/geopython/pycsw/issues> `_是pycsw问题跟踪器，是报告错误"
+"或要求改进的地方。当您提交出现的错误时，一定要指定您正在使用的pycsw版本，相"
+"应的组件，如何操作显示的错误信息，以及Python和平台的版本。为方便起见，你可以"
+"运行``pycsw-admin.py -c get_sysprof``，并将输出信息复制、粘贴到您的问题中。"
+
+#: ../../../CONTRIBUTING.rst:72
+msgid "Forking pycsw"
+msgstr "分叉pycsw"
+
+#: ../../../CONTRIBUTING.rst:74
+msgid ""
+"Contributions are most easily managed via GitHub pull requests.  `Fork "
+"<https://github.com/geopython/pycsw/fork>`_ pycsw into your own GitHub "
+"repository to be able to commit your work and submit pull requests."
+msgstr ""
+"通过 GitHub pull 请求后，贡献是最容易管理的。 '叉<https: github.com/"
+"geopython/pycsw/fork>' _ pycsw 放到你自己 GitHub 存储库中，这样可以轻松地提"
+"交你的工作，并提交pull请求。"
+
+#: ../../../CONTRIBUTING.rst:78
+msgid "Development"
+msgstr "开发"
+
+#: ../../../CONTRIBUTING.rst:81
+msgid "GitHub Commit Guidelines"
+msgstr "GitHub 提交指南"
+
+#: ../../../CONTRIBUTING.rst:83
+msgid "enhancements and bug fixes should be identified with a GitHub issue"
+msgstr "增强和 bug 修复应该等同于 GitHub 问题"
+
+#: ../../../CONTRIBUTING.rst:84
+msgid ""
+"commits should be granular enough for other developers to understand the "
+"nature / implications of the change(s)"
+msgstr "提交时粒数应该足够量，为方便其他开发人员了解自然/变化的影响（S）"
+
+#: ../../../CONTRIBUTING.rst:85
+msgid ""
+"for trivial commits that do not need `Travis CI <https://travis-ci.org/"
+"geopython/pycsw>`_ to run, include ``[ci skip]`` as part of the commit "
+"message"
+msgstr ""
+"如果是一些琐碎的提交，就像是 ``[ci skip]`` 也是做为提交消息的一部分，则不需"
+"要运行`Travis CI <https://travis-ci.org/geopython/pycsw>`_，"
+
+#: ../../../CONTRIBUTING.rst:86
+msgid ""
+"non-trivial Git commits shall be associated with a GitHub issue.  As "
+"documentation can always be improved, tickets need not be opened for "
+"improving the docs"
+msgstr ""
+"若是重大事件的 Git 提交应与 GitHub 问题部门取得联系。 以文档格式是可以修改"
+"的，但修改文档的tickets则是不必公开的"
+
+#: ../../../CONTRIBUTING.rst:87
+msgid "Git commits shall include a description of changes"
+msgstr "Git 提交应包括更改说明"
+
+#: ../../../CONTRIBUTING.rst:88
+msgid ""
+"Git commits shall include the GitHub issue number (i.e. ``#1234``) in the "
+"Git commit log message"
+msgstr "Git 提交应在Git 提交日志中写入 GitHub 问题编号 (例如 ' #1234 ')"
+
+#: ../../../CONTRIBUTING.rst:89
+msgid ""
+"all enhancements or bug fixes must successfully pass all :ref:`ogc-cite` "
+"tests before they are committed"
+msgstr "在提交之前，所有应改进的或错误修改的必须通过所有 :ref:`ogc-cite` 测试"
+
+#: ../../../CONTRIBUTING.rst:90
+msgid ""
+"all enhancements or bug fixes must successfully pass all :ref:`tests` tests "
+"before they are committed"
+msgstr "在提交之前，所有应改进的或错误修改的必须通过所有 :ref:`tests` 测试"
+
+#: ../../../CONTRIBUTING.rst:91
+msgid ""
+"enhancements which can be demonstrated from the pycsw :ref:`tests` should "
+"be accompanied by example CSW request XML"
+msgstr "pycsw加强的部分请参考 :ref:`tests` ，应附有像CSW的 请求 XML"
+
+#: ../../../CONTRIBUTING.rst:94
+msgid "Coding Guidelines"
+msgstr "编码准则"
+
+#: ../../../CONTRIBUTING.rst:96
+msgid "pycsw instead of PyCSW, pyCSW, Pycsw"
+msgstr "写法应是pycsw，而不是 PyCSW，pyCSW，Pycsw"
+
+#: ../../../CONTRIBUTING.rst:97
+msgid "always code with `PEP 8`_ conventions"
+msgstr "应是 `PEP 8`_ 公约代码"
+
+#: ../../../CONTRIBUTING.rst:98
+msgid ""
+"always run source code through ``pep8`` and `pylint`_, using all pylint "
+"defaults except for ``C0111``.  ``sbin/pycsw-pylint.sh`` is included for "
+"convenience"
+msgstr ""
+"应使用所有 pylint 默认设置的 ``pep8`` 与 `pylint`_，运行除了 ``C0111`` 的源代"
+"码。 ``sbin/pycsw-pylint.sh`` 是为了方便起见"
+
+#: ../../../CONTRIBUTING.rst:99
+msgid ""
+"for exceptions which make their way to OGC ``ExceptionReport`` XML, always "
+"specify the appropriate ``locator`` and ``code`` parameters"
+msgstr ""
+"除了OGC  'ExceptionReport' XML运行方式为个别例外，通常会指定合适的 '定位器 "
+"'和' 代码 ' 参数"
+
+#: ../../../CONTRIBUTING.rst:100
+msgid ""
+"the pycsw wiki documents `developer tasks`_ for things like releasing "
+"documentation, testing, etc."
+msgstr "pycsw wiki 文档的 `developer tasks`_ 类似于发布文档，测试等。"
+
+#: ../../../CONTRIBUTING.rst:103
+msgid "Submitting a Pull Request"
+msgstr "提交pull请求"
+
+#: ../../../CONTRIBUTING.rst:105
+msgid ""
+"This section will guide you through steps of working on pycsw.  This "
+"section assumes you have forked pycsw into your own GitHub repository."
+msgstr ""
+"这一节将指导您操作pycsw的步骤。 本节假定在您自己GitHub资料库中，有分叉的 "
+"pycsw。"
+
+#: ../../../CONTRIBUTING.rst:129
+msgid ""
+"Your changes are now visible on your pycsw repository on GitHub.  You are "
+"now ready to create a pull request. A member of the pycsw team will review "
+"the pull request and provide feedback / suggestions if required.  If "
+"changes are required, make them against the same branch and push as per "
+"above (all changes to the branch in the pull request apply)."
+msgstr ""
+"您的更改在 GitHub自己的 pycsw 存储库为可见状态。 现在你要创建pull请求。Pycsw"
+"的团队成员将审查你的pull请求，若您有需要，团队成员会提供给您反馈建议。 如果"
+"需要改动，要另立分支，并push以上步骤 （pull请求中所有更改的分支）。"
+
+#: ../../../CONTRIBUTING.rst:133
+msgid ""
+"The pull request will then be merged by the pycsw team.  You can then "
+"delete your local branch (on GitHub), and then update your own repository "
+"to ensure your pycsw repository is up to date with pycsw master:"
+msgstr ""
+"然后pycsw 团队将合并pull请求。 你可以删除掉你本地的分支（在 GitHub)，更新您"
+"自己的库，以确保您的 pycsw 存储库与pycsw总站是同步的 ︰"
