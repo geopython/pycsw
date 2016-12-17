@@ -48,6 +48,9 @@ import sys, os
 
 # -- General configuration -----------------------------------------------------
 
+# locale 
+locale_dirs = ['locale/']
+
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
 
