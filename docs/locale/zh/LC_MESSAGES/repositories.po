@@ -1,0 +1,91 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010-2015, Tom Kralidis This work is licensed under a
+# Creative Commons Attribution 4.0 International License
+# This file is distributed under the same license as the pycsw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.1-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-17 17:33+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: ../../repositories.rst:4
+msgid "Repository Plugins"
+msgstr ""
+
+#: ../../repositories.rst:7
+msgid "Overview"
+msgstr ""
+
+#: ../../repositories.rst:9
+msgid ""
+"pycsw allows for the implementation of custom repositories in order to "
+"connect to a backend different from the pycsw's default.  This is "
+"especially useful when downstream applications manage their own metadata "
+"model/database/document store and want pycsw to connect to it directly "
+"instead of using pycsw's default model, thus creating duplicate "
+"repositories which then require syncronization/accounting.  Repository "
+"plugins enable a single metadata backend which is independent from the "
+"pycsw setup.  pycsw thereby becomes a pure wrapper around a given backend"
+" in providing CSW and other APIs atop a given application."
+msgstr ""
+
+#: ../../repositories.rst:11
+msgid ""
+"All outputschemas must be placed in the ``pycsw/plugins/outputschemas`` "
+"directory."
+msgstr ""
+
+#: ../../repositories.rst:14
+msgid "Requirements"
+msgstr ""
+
+#: ../../repositories.rst:16
+msgid "Repository plugins:"
+msgstr ""
+
+#: ../../repositories.rst:18
+msgid "can be developed and referenced / connected external to pycsw"
+msgstr ""
+
+#: ../../repositories.rst:19
+msgid "must be accessible within the ``PYTHONPATH`` of a given application"
+msgstr ""
+
+#: ../../repositories.rst:20
+msgid ""
+"must implement pycsw's ``pycsw.core.repository.Repository`` properties "
+"and methods"
+msgstr ""
+
+#: ../../repositories.rst:21
+msgid ""
+"must be specified in the pycsw :ref:`configuration` as a class reference "
+"(e.g. ``path.to.repo_plugin.MyRepository``)"
+msgstr ""
+
+#: ../../repositories.rst:22
+msgid ""
+"must minimally implement the ``query_insert``, ``query_domain``, "
+"``query_ids``, and ``query`` methods"
+msgstr ""
+
+#: ../../repositories.rst:25
+msgid "Configuration"
+msgstr ""
+
+#: ../../repositories.rst:27
+msgid ""
+"set pycsw's ``repository.source`` setting to the class which implements "
+"the custom repository:"
+msgstr ""
+
