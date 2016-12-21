@@ -19,8 +19,11 @@ python:
 addons:
   apt:
     packages:
-      - libgeos-c1
+      - libgeos-dev
+      - libpq-dev
       - libxml2-dev
+      - libxslt1-dev
+      - libz-dev
 #
 #before_script:
 #  - pycsw-admin.py -c get_sysprof
