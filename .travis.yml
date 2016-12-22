@@ -29,8 +29,8 @@ addons:
 #  - pycsw-admin.py -c get_sysprof
 #
 install:
-  - pip install -r requirements-dev.txt
-  - pip install .
+  - pip install --requirement requirements-dev.txt
+  - pip install --editable .
 
 script:
   - py.test -k 'not harvesting' --exitfirst --cov pycsw
