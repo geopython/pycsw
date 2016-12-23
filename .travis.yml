@@ -30,8 +30,8 @@ install:
 script:
   - tox -- --exitfirst -k 'not harvesting'
 
-#notifications:
-#  irc:
-#    channels:
-#      - "irc.freenode.org#pycsw"
-#    use_notice: true
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#pycsw"
+    use_notice: true
