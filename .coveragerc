@@ -1,0 +1,12 @@
+[run]
+branch = True
+source = pycsw
+
+[paths]
+source =
+    pycsw
+    .tox/*/lib/python*/site-packages/pycsw
+    /usr/local/lib/python*/dist-packages/pycsw
+
+[report]
+show_missing = True
