@@ -9,9 +9,12 @@ MANIFEST
 # testing artifacts
 tests/index.html
 tests/results
+**.cache
+.coverage
+.tox
 
 # test configurations
 /default.cfg
 
-# test repositories
-data
+# pycharm ide
+.idea
