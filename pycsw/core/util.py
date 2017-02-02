@@ -55,16 +55,30 @@ def get_today_and_now():
 
 
 def datetime2iso8601(value):
-    """Return a datetime value as ISO8601"""
+    """Return a datetime value as ISO8601
+
+    Parameters
+    ----------
+    value: datetime.date or datetime.datetime or None
+        The temporal value to be converted
+
+    Returns
+    -------
+    str
+        A string with the temporal value in ISO8601 format.
+
+    """
+
     if value is None:
-        return None
-    if isinstance(value, datetime.date):
-        return value.strftime('%Y-%m-%d')
-    if value.hour == 0 and value.minute == 0 and value.second == 0:
-        # YYYY-MM-DD only
-        return value.strftime('%Y-%m-%d')
-    else:
-        return value.strftime('%Y-%m-%dT%H:%M:%SZ')
+        result = None
+    elif isinstance(value, datetime.datetime):
+        if value == value.replace(hour=0, minute=0, second=0, microsecond=0):
+            result = value.strftime("%Y-%m-%d")
+        else:
+            result = value.strftime("%Y-%m-%dT%H:%M:%SZ")
+    else:  # value is a datetime.date
+        result = value.strftime('%Y-%m-%d')
+    return result
 
 
 def get_time_iso2unix(isotime):
@@ -74,17 +88,39 @@ def get_time_iso2unix(isotime):
 
 
 def get_version_integer(version):
-    """Get an integer of the OGC version value x.y.z"""
+    """Get an integer of the OGC version value x.y.z
+
+    In case of an invalid version string this returns -1.
+
+    Parameters
+    ----------
+    version: str or None
+        The version string that is to be transformed into an integer
+
+    Returns
+    -------
+    int
+        The transformed version
+
+    Raises
+    ------
+    RuntimeError
+        When the input version is neither a string or None
+
+    """
+
     if version is not None:  # split and make integer
-        xyz = version.split('.')
-        if len(xyz) != 3:
-            return -1
         try:
-            return int(xyz[0]) * 10000 + int(xyz[1]) * 100 + int(xyz[2])
-        except Exception as err:
+            xyz = version.split('.')
+            if len(xyz) == 3:
+                result = int(xyz[0]) * 10000 + int(xyz[1]) * 100 + int(xyz[2])
+            else:
+                result = -1
+        except AttributeError as err:
             raise RuntimeError('%s' % str(err))
-    else:  # not a valid version string
-        return -1
+    else:
+        result = -1
+    return result
 
 
 def find_exml(val, attrib=False):
