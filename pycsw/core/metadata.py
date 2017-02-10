@@ -51,7 +51,7 @@ def parse_record(context, record, repos=None,
     # parse web services
     if (mtype == 'http://www.opengis.net/cat/csw/2.0.2' and
         isinstance(record, str) and record.startswith('http')):
-        LOGGER.debug('CSW service detected, fetching via HTTP')
+        LOGGER.info('CSW service detected, fetching via HTTP')
         # CSW service, not csw:Record
         try:
             return _parse_csw(context, repos, record, identifier, pagesize)
@@ -59,7 +59,7 @@ def parse_record(context, record, repos=None,
             # TODO: implement better exception handling
             if str(err).find('ExceptionReport') != -1:
                 msg = 'CSW harvesting error: %s' % str(err)
-                LOGGER.debug(msg)
+                LOGGER.exception(msg)
                 raise RuntimeError(msg)
             LOGGER.debug('Not a CSW, attempting to fetch Dublin Core')
             try:
@@ -69,44 +69,44 @@ def parse_record(context, record, repos=None,
             return [_parse_dc(context, repos, etree.fromstring(content, context.parser))]
 
     elif mtype == 'urn:geoss:waf':  # WAF
-        LOGGER.debug('WAF detected, fetching via HTTP')
+        LOGGER.info('WAF detected, fetching via HTTP')
         return _parse_waf(context, repos, record, identifier)
 
     elif mtype == 'http://www.opengis.net/wms':  # WMS
-        LOGGER.debug('WMS detected, fetching via OWSLib')
+        LOGGER.info('WMS detected, fetching via OWSLib')
         return _parse_wms(context, repos, record, identifier)
 
     elif mtype == 'http://www.opengis.net/wmts/1.0':  # WMTS
-        LOGGER.debug('WMTS 1.0.0 detected, fetching via OWSLib')
+        LOGGER.info('WMTS 1.0.0 detected, fetching via OWSLib')
         return _parse_wmts(context, repos, record, identifier)
 
     elif mtype == 'http://www.opengis.net/wps/1.0.0':  # WPS
-        LOGGER.debug('WPS detected, fetching via OWSLib')
+        LOGGER.info('WPS detected, fetching via OWSLib')
         return _parse_wps(context, repos, record, identifier)
 
     elif mtype == 'http://www.opengis.net/wfs':  # WFS 1.1.0
-        LOGGER.debug('WFS detected, fetching via OWSLib')
+        LOGGER.info('WFS detected, fetching via OWSLib')
         return _parse_wfs(context, repos, record, identifier, '1.1.0')
 
     elif mtype == 'http://www.opengis.net/wfs/2.0':  # WFS 2.0.0
-        LOGGER.debug('WFS detected, fetching via OWSLib')
+        LOGGER.info('WFS detected, fetching via OWSLib')
         return _parse_wfs(context, repos, record, identifier, '2.0.0')
 
     elif mtype == 'http://www.opengis.net/wcs':  # WCS
-        LOGGER.debug('WCS detected, fetching via OWSLib')
+        LOGGER.info('WCS detected, fetching via OWSLib')
         return _parse_wcs(context, repos, record, identifier)
 
     elif mtype == 'http://www.opengis.net/sos/1.0':  # SOS 1.0.0
-        LOGGER.debug('SOS 1.0.0 detected, fetching via OWSLib')
+        LOGGER.info('SOS 1.0.0 detected, fetching via OWSLib')
         return _parse_sos(context, repos, record, identifier, '1.0.0')
 
     elif mtype == 'http://www.opengis.net/sos/2.0':  # SOS 2.0.0
-        LOGGER.debug('SOS 2.0.0 detected, fetching via OWSLib')
+        LOGGER.info('SOS 2.0.0 detected, fetching via OWSLib')
         return _parse_sos(context, repos, record, identifier, '2.0.0')
 
     elif (mtype == 'http://www.opengis.net/cat/csw/csdgm' and
           record.startswith('http')):  # FGDC
-        LOGGER.debug('FGDC detected, fetching via HTTP')
+        LOGGER.info('FGDC detected, fetching via HTTP')
         record = util.http_request('GET', record)
 
     return _parse_metadata(context, repos, record)
@@ -128,7 +128,7 @@ def _parse_metadata(context, repos, record):
 
     root = exml.tag
 
-    LOGGER.debug('Serialized metadata, parsing content model')
+    LOGGER.info('Serialized metadata, parsing content model')
 
     if root == '{%s}MD_Metadata' % context.namespaces['gmd']:  # ISO
         return [_parse_iso(context, repos, exml)]
@@ -159,7 +159,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     # if init raises error, this might not be a CSW
     md = CatalogueServiceWeb(record, timeout=60)
 
-    LOGGER.debug('Setting CSW service metadata')
+    LOGGER.info('Setting CSW service metadata')
     # generate record of service instance
     _set(context, serviceobj, 'pycsw:Identifier', identifier)
     _set(context, serviceobj, 'pycsw:Typename', 'csw:Record')
@@ -204,7 +204,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     grop = md.get_operation_by_name('GetRecords')
     if all(['gmd:MD_Metadata' in grop.parameters['typeNames']['values'],
             'http://www.isotc211.org/2005/gmd' in grop.parameters['outputSchema']['values']]):
-        LOGGER.info('CSW supports ISO')
+        LOGGER.debug('CSW supports ISO')
         csw_typenames = 'gmd:MD_Metadata'
         csw_outputschema = 'http://www.isotc211.org/2005/gmd'
 
@@ -222,7 +222,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     if pagesize > matches:
         pagesize = matches
 
-    LOGGER.debug('Harvesting %d CSW records', matches)
+    LOGGER.info('Harvesting %d CSW records', matches)
 
     # loop over all catalogue records incrementally
     for r in range(1, matches+1, pagesize):
@@ -234,7 +234,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
         for k, v in md.records.items():
             # try to parse metadata
             try:
-                LOGGER.debug('Parsing metadata record: %s', v.xml)
+                LOGGER.info('Parsing metadata record: %s', v.xml)
                 if csw_typenames == 'gmd:MD_Metadata':
                     recobjs.append(_parse_iso(context, repos,
                                               etree.fromstring(v.xml, context.parser)))
@@ -242,7 +242,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
                     recobjs.append(_parse_dc(context, repos,
                                              etree.fromstring(v.xml, context.parser)))
             except Exception as err:  # parsing failed for some reason
-                LOGGER.warning('Metadata parsing failed %s', err)
+                LOGGER.exception('Metadata parsing failed')
 
     return recobjs
 
@@ -263,7 +263,7 @@ def _parse_waf(context, repos, record, identifier):
     up = urlparse(record)
     links = []
 
-    LOGGER.debug('collecting links')
+    LOGGER.info('collecting links')
     for link in tree.xpath('//a/@href'):
         link = link.strip()
         if not link:
@@ -286,7 +286,7 @@ def _parse_waf(context, repos, record, identifier):
 
     LOGGER.debug('%d links found', len(links))
     for link in links:
-        LOGGER.debug('Processing link %s', link)
+        LOGGER.info('Processing link %s', link)
         # fetch and parse
         linkcontent = util.http_request('GET', link)
         recobj = _parse_metadata(context, repos, linkcontent)[0]
@@ -354,7 +354,7 @@ def _parse_wms(context, repos, record, identifier):
 
     # generate record foreach layer
 
-    LOGGER.debug('Harvesting %d WMS layers', len(md.contents))
+    LOGGER.info('Harvesting %d WMS layers', len(md.contents))
 
     for layer in md.contents:
         recobj = repos.dataset()
@@ -597,7 +597,7 @@ def _parse_wfs(context, repos, record, identifier, version):
 
     # generate record foreach featuretype
 
-    LOGGER.debug('Harvesting %d WFS featuretypes', len(md.contents))
+    LOGGER.info('Harvesting %d WFS featuretypes', len(md.contents))
 
     for featuretype in md.contents:
         recobj = repos.dataset()
@@ -702,7 +702,7 @@ def _parse_wcs(context, repos, record, identifier):
 
     # generate record foreach coverage
 
-    LOGGER.debug('Harvesting %d WCS coverages ', len(md.contents))
+    LOGGER.info('Harvesting %d WCS coverages ', len(md.contents))
 
     for coverage in md.contents:
         recobj = repos.dataset()
@@ -800,7 +800,7 @@ def _parse_wps(context, repos, record, identifier):
 
     # generate record foreach process
 
-    LOGGER.debug('Harvesting %d WPS processes', len(md.processes))
+    LOGGER.info('Harvesting %d WPS processes', len(md.processes))
 
     for process in md.processes:
         recobj = repos.dataset()
@@ -886,7 +886,7 @@ def _parse_sos(context, repos, record, identifier, version):
 
     # generate record foreach offering
 
-    LOGGER.debug('Harvesting %d SOS ObservationOffering\'s ', len(md.contents))
+    LOGGER.info('Harvesting %d SOS ObservationOffering\'s ', len(md.contents))
 
     for offering in md.contents:
         recobj = repos.dataset()
@@ -1305,7 +1305,7 @@ def _parse_iso(context, repos, exml):
                         (scpt.name, scpt.description, scpt.protocol, scpt.url)
                         links.append(linkstr)
     except Exception as err:  # srv: identification does not exist
-        LOGGER.debug('no srv:SV_ServiceIdentification links found')
+        LOGGER.exception('no srv:SV_ServiceIdentification links found')
 
     if len(links) > 0:
         _set(context, recobj, 'pycsw:Links', '^'.join(links))
