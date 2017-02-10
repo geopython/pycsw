@@ -194,7 +194,7 @@ class Csw(object):
                 self.context.refresh_dc(mappings.MD_CORE_MODEL)
             except Exception as err:
                 self.response = self.iface.exceptionreport(
-                    'NoAppliicableCode', 'service',
+                    'NoApplicableCode', 'service',
                     'Could not load repository.mappings %s' % str(err)
                 )
 
