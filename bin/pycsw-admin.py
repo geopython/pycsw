@@ -33,12 +33,9 @@
 from six.moves import configparser
 from six.moves import input
 import getopt
-import logging
 import sys
 
 from pycsw.core import admin, config
-
-logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
 CONTEXT = config.StaticContext()
 

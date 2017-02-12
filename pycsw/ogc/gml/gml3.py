@@ -100,12 +100,12 @@ class Geometry(object):
 
         # reproject data if needed
         if self.crs is not None and self.crs.code not in [4326, 'CRS84']:
-            LOGGER.debug('transforming geometry to 4326')
+            LOGGER.info('transforming geometry to 4326')
             try:
                 self.wkt = self.transform(self.crs.code, DEFAULT_SRS.code)
             except Exception as err:
-                raise RuntimeError('Reprojection error: Invalid srsName '
-                                   '"%s": %s' % (self.crs.id, str(err)))
+                LOGGER.exception('Coordinate transformation error')
+                raise RuntimeError('Reprojection error: Invalid srsName')
 
     def _get_point(self):
         """Parse gml:Point"""
@@ -188,7 +188,7 @@ class Geometry(object):
         from shapely.geometry import Point, LineString, Polygon
         from shapely.wkt import loads
 
-        LOGGER.debug('Transforming geometry from %s to %s', src, dest)
+        LOGGER.info('Transforming geometry from %s to %s', src, dest)
 
         vertices = []
 

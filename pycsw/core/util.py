@@ -242,7 +242,7 @@ def get_spatial_overlay_rank(target_geometry, query_geometry):
                 LOGGER.debug('Spatial Rank: %s', str(((X/Q)**kq)*((X/T)**kt)))
                 return str(((X/Q)**kq)*((X/T)**kt))
         except Exception as err:
-                LOGGER.warn('Cannot derive spatial overlay ranking %s', err)
+                LOGGER.exception('Cannot derive spatial overlay ranking %s')
                 return '0'
     return '0'
 

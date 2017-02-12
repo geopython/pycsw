@@ -56,7 +56,7 @@ class Repository(object):
         Engines are memoized by url
         '''
         if url not in clazz._engines:
-            LOGGER.debug('creating new engine: %s', url)
+            LOGGER.info('creating new engine: %s', url)
             engine = create_engine('%s' % url, echo=False)
 
             # load SQLite query bindings
@@ -100,7 +100,7 @@ class Repository(object):
 
         base = declarative_base(bind=self.engine)
 
-        LOGGER.debug('binding ORM to existing database')
+        LOGGER.info('binding ORM to existing database')
 
         self.postgis_geometry_column = None
 
@@ -123,7 +123,7 @@ class Repository(object):
                 temp_dbtype = 'postgresql+postgis+wkt'
                 LOGGER.debug('PostgreSQL+PostGIS1+WKT detected')
             except Exception as err:
-                LOGGER.debug('PostgreSQL+PostGIS1+WKT detection failed')
+                LOGGER.exception('PostgreSQL+PostGIS1+WKT detection failed')
 
             # check if PostgreSQL is enabled with PostGIS 2.x
             try:
@@ -131,7 +131,7 @@ class Repository(object):
                 temp_dbtype = 'postgresql+postgis+wkt'
                 LOGGER.debug('PostgreSQL+PostGIS2+WKT detected')
             except Exception as err:
-                LOGGER.debug('PostgreSQL+PostGIS2+WKT detection failed')
+                LOGGER.exception('PostgreSQL+PostGIS2+WKT detection failed')
 
             # check if a native PostGIS geometry column exists
             try:
@@ -141,7 +141,7 @@ class Repository(object):
                 temp_dbtype = 'postgresql+postgis+native'
                 LOGGER.debug('PostgreSQL+PostGIS+Native detected')
             except Exception as err:
-                LOGGER.debug('PostgreSQL+PostGIS+Native not picked up: %s', str(err))
+                LOGGER.exception('PostgreSQL+PostGIS+Native not picked up: %s')
 
             # check if a native PostgreSQL FTS GIN index exists
             result = self.session.execute("select relname from pg_class where relname='fts_gin_idx'").scalar()
@@ -167,7 +167,7 @@ class Repository(object):
                 self.connection.create_function('get_spatial_overlay_rank', 2,
                 util.get_spatial_overlay_rank)
 
-        LOGGER.debug('setting repository queryables')
+        LOGGER.info('setting repository queryables')
         # generate core queryables db and obj bindings
         self.queryables = {}
 
@@ -209,12 +209,12 @@ class Repository(object):
         domain_value = getattr(self.dataset, domain)
 
         if domainquerytype == 'range':
-            LOGGER.debug('Generating property name range values')
+            LOGGER.info('Generating property name range values')
             query = self.session.query(func.min(domain_value),
                                        func.max(domain_value))
         else:
             if count:
-                LOGGER.debug('Generating property name frequency counts')
+                LOGGER.info('Generating property name frequency counts')
                 query = self.session.query(getattr(self.dataset, domain),
                     func.count(domain_value)).group_by(domain_value)
             else:
@@ -293,7 +293,9 @@ class Repository(object):
             self.session.commit()
         except Exception as err:
             self.session.rollback()
-            raise RuntimeError('ERROR: %s' % str(err.orig))
+            msg = 'Cannot commit to repository'
+            LOGGER.exception(msg)
+            raise RuntimeError(msg)
 
     def update(self, record=None, recprops=None, constraint=None):
         ''' Update a record in the repository based on identifier '''
@@ -319,7 +321,9 @@ class Repository(object):
                 self.session.commit()
             except Exception as err:
                 self.session.rollback()
-                raise RuntimeError('ERROR: %s' % str(err.orig))
+                msg = 'Cannot commit to repository'
+                LOGGER.exception(msg)
+                raise RuntimeError(msg)
         else:  # update based on record properties
             LOGGER.debug('property based update')
             try:
@@ -352,7 +356,9 @@ class Repository(object):
                 return rows
             except Exception as err:
                 self.session.rollback()
-                raise RuntimeError('ERROR: %s' % str(err.orig))
+                msg = 'Cannot commit to repository'
+                LOGGER.exception(msg)
+                raise RuntimeError(msg)
 
     def delete(self, constraint):
         ''' Delete a record from the repository '''
@@ -380,7 +386,9 @@ class Repository(object):
             self.session.commit()
         except Exception as err:
             self.session.rollback()
-            raise RuntimeError('ERROR: %s' % str(err.orig))
+            msg = 'Cannot commit to repository'
+            LOGGER.exception(msg)
+            raise RuntimeError(msg)
 
         return rows
 

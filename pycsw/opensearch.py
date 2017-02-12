@@ -271,14 +271,14 @@ def kvp2filterxml(kvp, context):
             env.attrib['srsName'] = 'urn:ogc:def:crs:OGC:1.3:CRS84'
             if not util.validate_4326(bbox_list):
                 msg = '4326 coordinates out of range: %s' % bbox_list
-                LOGGER.debug(msg)
+                LOGGER.error(msg)
                 raise RuntimeError(msg)
 
         try:
             el.text = "%s %s" % (bbox_list[0], bbox_list[1])
         except Exception as err:
             errortext = 'Exception: OpenSearch bbox not valid.\nError: %s.' % str(err)
-            LOGGER.debug(errortext)
+            LOGGER.exception(errortext)
         env.append(el)
         el = etree.Element(util.nspath_eval('gml:upperCorner',
                     context.namespaces))
@@ -286,7 +286,7 @@ def kvp2filterxml(kvp, context):
             el.text = "%s %s" % (bbox_list[2], bbox_list[3])
         except Exception as err:
             errortext = 'Exception: OpenSearch bbox not valid.\nError: %s.' % str(err)
-            LOGGER.debug(errortext)
+            LOGGER.exception(errortext)
         env.append(el)
         bbox_element.append(env)
 
@@ -385,7 +385,7 @@ def kvp2filterxml(kvp, context):
         else:
             # Error
             errortext = 'Exception: OpenSearch time not valid: %s.' % str(kvp['time'])
-            LOGGER.debug(errortext)
+            LOGGER.error(errortext)
 
     if par_count == 0:
         return ''
