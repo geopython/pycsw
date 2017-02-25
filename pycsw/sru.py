@@ -123,7 +123,8 @@ class Sru(object):
     def response_csw2sru(self, element, environ):
         """transform a CSW response into an SRU response"""
 
-        if util.xmltag_split(element.tag) == 'Capabilities':  # explain
+        response_name = etree.QName(element).localname
+        if response_name == 'Capabilities':  # explain
             node = etree.Element(util.nspath_eval('sru:explainResponse', self.namespaces), nsmap=self.namespaces)
 
             etree.SubElement(node, util.nspath_eval('sru:version', self.namespaces)).text = self.sru_version
@@ -168,7 +169,7 @@ class Sru(object):
             configinfo = etree.SubElement(explain, util.nspath_eval('zr:configInfo', self.namespaces))
             etree.SubElement(configinfo, util.nspath_eval('zr:default', self.namespaces), type='numberOfRecords').text = '0'
 
-        elif util.xmltag_split(element.tag) == 'GetRecordsResponse':
+        elif response_name == 'GetRecordsResponse':
 
             recpos = int(element.xpath('//@nextRecord')[0]) - int(element.xpath('//@numberOfRecordsReturned')[0])
 
@@ -188,7 +189,7 @@ class Sru(object):
                 etree.SubElement(record, util.nspath_eval('zs:recordPosition', self.namespaces)).text = str(recpos)
                 recpos += 1
 
-        elif util.xmltag_split(element.tag) == 'ExceptionReport':
+        elif response_name == 'ExceptionReport':
             node = self.exceptionreport2diagnostic(element)
         return node
 

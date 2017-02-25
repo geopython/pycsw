@@ -194,7 +194,7 @@ class OAIPMH(object):
             etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Unknown verb \'%s\'' % kvp['verb']
             return node
 
-        if util.xmltag_split(response.tag) == 'ExceptionReport':
+        if etree.QName(response).localname == 'ExceptionReport':
             etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = response.xpath('//ows:ExceptionText|//ows20:ExceptionText', namespaces=self.context.namespaces)[0].text
             return node
 
