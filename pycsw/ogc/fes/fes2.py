@@ -31,7 +31,9 @@
 # =================================================================
 
 import logging
+
 from pycsw.core import util
+from pycsw.core.etree import etree
 from pycsw.ogc.gml import gml3
 
 LOGGER = logging.getLogger(__name__)
@@ -98,7 +100,8 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
 
     tmp = element.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=nsmap)
     if len(tmp) > 0:  # this is binary logic query
-        boq = ' %s ' % util.xmltag_split(tmp[0].tag).lower()
+        element_name = etree.QName(tmp[0]).localname
+        boq = ' %s ' % element_name.lower()
         LOGGER.debug('Binary logic detected; operator=%s', boq)
         tmp = tmp[0]
     else:
@@ -296,7 +299,8 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             values.append(child.attrib.get('fid'))
         else:  # comparison operator
             LOGGER.debug('Comparison operator processing')
-            tagname = ' %s ' % util.xmltag_split(child.tag).lower()
+            child_tag_name = etree.QName(child).localname
+            tagname = ' %s ' % child_tag_name.lower()
             if tagname in [' or ', ' and ']:  # this is a nested binary logic query
                 LOGGER.debug('Nested binary logic detected; operator=%s', tagname)
                 for child2 in child.xpath('child::*'):
@@ -332,7 +336,7 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_col
     #make decision to apply spatial ranking to results
     set_spatial_ranking(geometry)
 
-    spatial_predicate = util.xmltag_split(element.tag).lower()
+    spatial_predicate = etree.QName(element).localname.lower()
 
     LOGGER.debug('Spatial predicate: %s', spatial_predicate)
 
@@ -401,7 +405,8 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_col
 def _get_comparison_operator(element):
     """return the SQL operator based on Filter query"""
 
-    return MODEL['ComparisonOperators']['ogc:%s' % util.xmltag_split(element.tag)]['opvalue']
+    element_name = etree.QName(element).localname
+    return MODEL['ComparisonOperators']['ogc:%s' % element_name]['opvalue']
 
 def set_spatial_ranking(geometry):
     """Given that we have a spatial query in ogc:Filter we check the type of geometry

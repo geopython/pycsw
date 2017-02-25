@@ -3,9 +3,11 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2015 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
+# Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -30,15 +32,24 @@
 #
 # =================================================================
 
+import inspect
 import logging
 import os
-from sqlalchemy import create_engine, asc, desc, func, __version__, select
+
+import six
+from shapely.wkt import loads
+from shapely.geos import ReadingError
+from sqlalchemy import create_engine, func, __version__, select
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
+
 from pycsw.core import util
+from pycsw.core.etree import etree
+from pycsw.core.etree import PARSER
 
 LOGGER = logging.getLogger(__name__)
+
 
 class Repository(object):
     _engines = {}
@@ -66,16 +77,7 @@ class Repository(object):
                 from sqlalchemy import event
                 @event.listens_for(engine, "connect")
                 def connect(dbapi_connection, connection_rec):
-                    dbapi_connection.create_function(
-                    'query_spatial', 4, util.query_spatial)
-                    dbapi_connection.create_function(
-                    'update_xpath', 3, util.update_xpath)
-                    dbapi_connection.create_function('get_anytext', 1,
-                    util.get_anytext)
-                    dbapi_connection.create_function('get_geometry_area', 1,
-                    util.get_geometry_area)
-                    dbapi_connection.create_function('get_spatial_overlay_rank', 2,
-                    util.get_spatial_overlay_rank)
+                    create_custom_sql_functions(dbapi_connection)
 
             clazz._engines[url] = engine
 
@@ -104,11 +106,19 @@ class Repository(object):
 
         self.postgis_geometry_column = None
 
-        schema, table = util.sniff_table(table)
+        schema_name, table_name = table.rpartition(".")[::2]
 
-        self.dataset = type('dataset', (base,),
-        dict(__tablename__=table,__table_args__={'autoload': True,
-                                                 'schema': schema}))
+        self.dataset = type(
+            'dataset',
+            (base,),
+            {
+                "__tablename__": table_name,
+                "__table_args__": {
+                    "autoload": True,
+                    "schema": schema_name or None,
+                },
+            }
+        )
 
         self.dbtype = self.engine.name
 
@@ -135,7 +145,13 @@ class Repository(object):
 
             # check if a native PostGIS geometry column exists
             try:
-                result = self.session.execute("select f_geometry_column from geometry_columns where f_table_name = '%s' and f_geometry_column != 'wkt_geometry' limit 1;" % table)
+                result = self.session.execute(
+                    "select f_geometry_column "
+                    "from geometry_columns "
+                    "where f_table_name = '%s' "
+                    "and f_geometry_column != 'wkt_geometry' "
+                    "limit 1;" % table_name
+                )
                 row = result.fetchone()
                 self.postgis_geometry_column = str(row['f_geometry_column'])
                 temp_dbtype = 'postgresql+postgis+native'
@@ -156,16 +172,7 @@ class Repository(object):
             # <= 0.6 behaviour
             if not __version__ >= '0.7':
                 self.connection = self.engine.raw_connection()
-                self.connection.create_function(
-                'query_spatial', 4, util.query_spatial)
-                self.connection.create_function(
-                'update_xpath', 3, util.update_xpath)
-                self.connection.create_function('get_anytext', 1,
-                util.get_anytext)
-                self.connection.create_function('get_geometry_area', 1,
-                util.get_geometry_area)
-                self.connection.create_function('get_spatial_overlay_rank', 2,
-                util.get_spatial_overlay_rank)
+                create_custom_sql_functions(self.connection)
 
         LOGGER.debug('setting repository queryables')
         # generate core queryables db and obj bindings
@@ -389,3 +396,164 @@ class Repository(object):
         if self.filter is not None:
             return query.filter(text(self.filter))
         return query
+
+
+def create_custom_sql_functions(connection):
+    """Register custom functions on the database connection."""
+    if six.PY2:
+        inspect_function = inspect.getargspec
+    else:  # python3
+        inspect_function = inspect.getfullargspec
+
+    for function_object in [
+        query_spatial,
+        update_xpath,
+        get_anytext,
+        get_geometry_area,
+        get_spatial_overlay_rank
+    ]:
+        argspec = inspect_function(function_object)
+        connection.create_function(
+            function_object.__name__,
+            len(argspec.args),
+            function_object
+        )
+
+
+def get_anytext(bag):
+    """
+    generate bag of text for free text searches
+    accepts list of words, string of XML, or etree.Element
+    """
+
+    if isinstance(bag, list):  # list of words
+        return ' '.join([_f for _f in bag if _f]).strip()
+    else:  # xml
+        if isinstance(bag, six.binary_type) or isinstance(bag, six.text_type):
+            # serialize to lxml
+            bag = etree.fromstring(bag, PARSER)
+        # get all XML element content
+        return ' '.join([value.strip() for value in bag.xpath('//text()')])
+
+
+def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
+    """Perform spatial query
+
+    Parameters
+    ----------
+    bbox_data_wkt: str
+        Well-Known Text representation of the data being queried
+    bbox_input_wkt: str
+        Well-Known Text representation of the input being queried
+    predicate: str
+        Spatial predicate to use in query
+    distance: int or float or str
+        Distance parameter for when using either of ``beyond`` or ``dwithin``
+        predicates.
+
+    Returns
+    -------
+    str
+        Either ``true`` or ``false`` depending on the result of the spatial
+        query
+
+    Raises
+    ------
+    RuntimeError
+        If an invalid predicate is used
+
+    """
+
+    try:
+        bbox1 = loads(bbox_data_wkt.split(';')[-1])
+        bbox2 = loads(bbox_input_wkt)
+        if predicate == 'bbox':
+            result = bbox1.intersects(bbox2)
+        elif predicate == 'beyond':
+            result = bbox1.distance(bbox2) > float(distance)
+        elif predicate == 'contains':
+            result = bbox1.contains(bbox2)
+        elif predicate == 'crosses':
+            result = bbox1.crosses(bbox2)
+        elif predicate == 'disjoint':
+            result = bbox1.disjoint(bbox2)
+        elif predicate == 'dwithin':
+            result = bbox1.distance(bbox2) <= float(distance)
+        elif predicate == 'equals':
+            result = bbox1.equals(bbox2)
+        elif predicate == 'intersects':
+            result = bbox1.intersects(bbox2)
+        elif predicate == 'overlaps':
+            result = bbox1.intersects(bbox2) and not bbox1.touches(bbox2)
+        elif predicate == 'touches':
+            result = bbox1.touches(bbox2)
+        elif predicate == 'within':
+            result = bbox1.within(bbox2)
+        else:
+            raise RuntimeError(
+                'Invalid spatial query predicate: %s' % predicate)
+    except (AttributeError, ValueError, ReadingError):
+        result = False
+    return "true" if result else "false"
+
+
+def update_xpath(nsmap, xml, recprop):
+    """Update XML document XPath values"""
+
+    if isinstance(xml, six.binary_type) or isinstance(xml, six.text_type):
+        # serialize to lxml
+        xml = etree.fromstring(xml, PARSER)
+
+    recprop = eval(recprop)
+    nsmap = eval(nsmap)
+    try:
+        nodes = xml.xpath(recprop['rp']['xpath'], namespaces=nsmap)
+        if len(nodes) > 0:  # matches
+            for node1 in nodes:
+                if node1.text != recprop['value']:  # values differ, update
+                    node1.text = recprop['value']
+    except Exception as err:
+        print(err)
+        raise RuntimeError('ERROR: %s' % str(err))
+
+    return etree.tostring(xml)
+
+
+def get_geometry_area(geometry):
+    """Derive area of a given geometry"""
+    try:
+        if geometry is not None:
+            return str(loads(geometry).area)
+        return '0'
+    except:
+        return '0'
+
+
+def get_spatial_overlay_rank(target_geometry, query_geometry):
+    """Derive spatial overlay rank for geospatial search as per Lanfear (2006)
+    http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf"""
+
+    #TODO: Add those parameters to config file
+    kt = 1.0
+    kq = 1.0
+    if target_geometry is not None and query_geometry is not None:
+        try:
+            q_geom = loads(query_geometry)
+            t_geom = loads(target_geometry)
+            Q = q_geom.area
+            T = t_geom.area
+            if any(item == 0.0 for item in [Q, T]):
+                LOGGER.warning('Geometry has no area')
+                return '0'
+            X = t_geom.intersection(q_geom).area
+            if kt == 1.0 and kq == 1.0:
+                LOGGER.debug('Spatial Rank: %s', str((X/Q)*(X/T)))
+                return str((X/Q)*(X/T))
+            else:
+                LOGGER.debug('Spatial Rank: %s', str(((X/Q)**kq)*((X/T)**kt)))
+                return str(((X/Q)**kq)*((X/T)**kt))
+        except Exception as err:
+            LOGGER.warning('Cannot derive spatial overlay ranking %s', err)
+            return '0'
+    return '0'
+

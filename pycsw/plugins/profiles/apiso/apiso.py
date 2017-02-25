@@ -393,9 +393,6 @@ class APISO(profile.Profile):
             # dump record as is and exit
             return etree.fromstring(xml_blob, self.context.parser)
 
-        if typename == 'csw:Record':  # transform csw:Record -> gmd:MD_Metadata model mappings
-            util.transform_mappings(queryables, self.repository['mappings']['csw:Record'])
-
         node = etree.Element(util.nspath_eval('gmd:MD_Metadata', self.namespaces))
         node.attrib[util.nspath_eval('xsi:schemaLocation', self.context.namespaces)] = \
         '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)

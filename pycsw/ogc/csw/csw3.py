@@ -942,9 +942,11 @@ class Csw3(object):
                                 typename = self.parent.profiles['loaded'][prof].typename
                                 break
 
-                        util.transform_mappings(self.parent.repository.queryables['_all'],
-                        self.parent.context.model['typenames'][typename]\
-                        ['mappings']['csw:Record'], reverse=True)
+                        util.transform_mappings(
+                            self.parent.repository.queryables['_all'],
+                            self.parent.context.model['typenames'][typename][
+                                'mappings']['csw:Record']
+                        )
 
                         searchresults.append(self._write_record(
                         res, self.parent.repository.queryables['_all']))
@@ -999,7 +1001,7 @@ class Csw3(object):
                         numberOfRecordsMatched=fedcat.results['matches'],
                         numberOfRecordsReturned=fedcat.results['returned'],
                         nextRecord=fedcat.results['nextrecord'],
-                        elapsedTime=str(util.get_elapsed_time(start_time, time())),
+                        elapsedTime=str(get_elapsed_time(start_time, time())),
                         status=get_resultset_status(
                             fedcat.results['matches'],
                             fedcat.results['nextrecord']))
@@ -1023,7 +1025,7 @@ class Csw3(object):
 #                for rec in resultset:
 #                    searchresults.append(etree.fromstring(resultset[rec].xml, self.parent.context.parser))
 
-        searchresults.attrib['elapsedTime'] = str(util.get_elapsed_time(self.parent.process_time_start, time()))
+        searchresults.attrib['elapsedTime'] = str(get_elapsed_time(self.parent.process_time_start, time()))
 
         if 'responsehandler' in self.parent.kvp:  # process the handler
             self.parent._process_responsehandler(etree.tostring(node,
@@ -1124,9 +1126,11 @@ class Csw3(object):
                         break
 
                 if typename is not None:
-                    util.transform_mappings(self.parent.repository.queryables['_all'],
-                    self.parent.context.model['typenames'][typename]\
-                    ['mappings']['csw:Record'], reverse=True)
+                    util.transform_mappings(
+                        self.parent.repository.queryables['_all'],
+                        self.parent.context.model['typenames'][typename][
+                            'mappings']['csw:Record']
+                    )
 
                 node = self._write_record( result, self.parent.repository.queryables['_all'])
             elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
@@ -1668,7 +1672,7 @@ class Csw3(object):
             util.nspath_eval('soapenv:Body',
             self.parent.context.namespaces)).xpath('child::*')[0]
 
-        xsd_filename = 'csw%s.xsd' % util.xmltag_split(doc.tag)
+        xsd_filename = 'csw%s.xsd' % etree.QName(doc).localname
         schema = os.path.join(self.parent.config.get('server', 'home'),
         'core', 'schemas', 'ogc', 'csw', '3.0', xsd_filename)
 
@@ -1699,7 +1703,7 @@ class Csw3(object):
             LOGGER.debug(errortext)
             return errortext
 
-        request['request'] = util.xmltag_split(doc.tag)
+        request['request'] = etree.QName(doc).localname
         LOGGER.debug('Request operation %s specified.', request['request'])
         tmp = doc.find('.').attrib.get('service')
         if tmp is not None:
@@ -2157,3 +2161,9 @@ def get_resultset_status(matched, nextrecord):
        status = 'none'
 
     return status
+
+
+def get_elapsed_time(begin, end):
+    """Helper function to calculate elapsed time in milliseconds."""
+
+    return int((end - begin) * 1000)

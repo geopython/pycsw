@@ -31,7 +31,9 @@
 from six.moves import zip
 import logging
 from owslib import crs
+
 from pycsw.core import util
+from pycsw.core.etree import etree
 
 LOGGER = logging.getLogger(__name__)
 
@@ -84,7 +86,7 @@ class Geometry(object):
             LOGGER.debug('setting default geometry srsName %s', DEFAULT_SRS)
             self.crs = DEFAULT_SRS
 
-        self.type = util.xmltag_split(operand.tag)
+        self.type = etree.QName(operand).localname
 
         if self.type == 'Point':
             self._get_point()

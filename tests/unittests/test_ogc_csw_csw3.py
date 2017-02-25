@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
 # =================================================================
 #
-# Authors: Tom Kralidis <tomkralidis@gmail.com>
-#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+# Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
@@ -29,41 +26,19 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
+"""Unit tests for pycsw.ogc.csw.csw3"""
 
-import json
+import pytest
 
-import xmltodict
+from pycsw.ogc.csw import csw3
 
-
-def xml2dict(xml_string, namespaces):
-    """Convert an xml document to a dictionary.
-
-    Parameters
-    ----------
-    xml_string: str
-        XML representation to convert to a dictionary.
-    namespaces: dict
-        Namespaces used in the ``xml_string`` parameter
-
-    Returns
-    -------
-    ordereddict
-        An ordered dictionary with the contents of the xml data
-
-    """
-
-    namespaces_reverse = dict((v, k) for k, v in namespaces.items())
-    return xmltodict.parse(xml_string, process_namespaces=True,
-                           namespaces=namespaces_reverse)
+pytestmark = pytest.mark.unit
 
 
-def xml2json(xml_string, namespaces, pretty_print=False):
-    """Convert an xml string to JSON"""
-
-    separators = (',', ': ')
-
-    if pretty_print:
-        return json.dumps(xml2dict(xml_string, namespaces),
-                          indent=4, separators=separators)
-
-    return json.dumps(xml2dict(xml_string, namespaces), separators=separators)
+@pytest.mark.parametrize("begin, end, expected", [
+    (0, 1, 1000),
+    (3, 8, 5000),
+])
+def test_get_elapsed_time(begin, end, expected):
+    result = csw3.get_elapsed_time(begin, end)
+    assert result == expected

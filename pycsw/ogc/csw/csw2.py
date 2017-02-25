@@ -954,9 +954,11 @@ class Csw2(object):
                                 typename = self.parent.profiles['loaded'][prof].typename
                                 break
 
-                        util.transform_mappings(self.parent.repository.queryables['_all'],
-                        self.parent.context.model['typenames'][typename]\
-                        ['mappings']['csw:Record'], reverse=True)
+                        util.transform_mappings(
+                            self.parent.repository.queryables['_all'],
+                            self.parent.context.model['typenames'][typename][
+                                'mappings']['csw:Record']
+                        )
 
                         searchresults.append(self._write_record(
                         res, self.parent.repository.queryables['_all']))
@@ -1064,9 +1066,11 @@ class Csw2(object):
                         break
 
                 if typename is not None:
-                    util.transform_mappings(self.parent.repository.queryables['_all'],
-                    self.parent.context.model['typenames'][typename]\
-                    ['mappings']['csw:Record'], reverse=True)
+                    util.transform_mappings(
+                        self.parent.repository.queryables['_all'],
+                        self.parent.context.model['typenames'][typename][
+                            'mappings']['csw:Record']
+                    )
 
                 node.append(self._write_record(
                 result, self.parent.repository.queryables['_all']))
@@ -1623,7 +1627,7 @@ class Csw2(object):
             LOGGER.error(errortext)
             return errortext
 
-        request['request'] = util.xmltag_split(doc.tag)
+        request['request'] = etree.QName(doc).localname
         LOGGER.debug('Request operation %s specified.', request['request'])
         tmp = doc.find('.').attrib.get('service')
         if tmp is not None:
