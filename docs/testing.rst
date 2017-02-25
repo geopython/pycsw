@@ -6,6 +6,9 @@ Testing
 Pycsw uses `pytest`_ for managing its automated tests. There are a number of
 test suites that perform mostly functional testing. These tests ensure that
 pycsw is compliant with the various supported standards.
+There is also a growing set of unit tests. These focus on smaller scope 
+testing, in order to verify that individual bits of code are working as
+expected.
 
 Tests can be run locally as part of the development cycle. They are also
 run on pycsw's `Travis`_ continuous integration server against all pushes and
@@ -132,6 +135,28 @@ The new test suite database will be created automatically and used as part of
 tests.
 
 
+Unit tests
+----------
+
+pycsw also features unit tests. These deal with testing the expected behaviour
+of individual functions.
+
+The usual implementation of unit tests is to import the function/method under
+test, run it with a set of known arguments and assert that the result matches
+the expected outcome.
+
+Unit tests are defined in `pycsw/tests/unittests/<module_name>`.
+
+pycsw's unit tests are marked with the `unit` marker. This makes it easy to run
+them in isolation:
+
+.. code:: bash
+
+   # running only the unit tests (not the functional ones)
+   py.test -m unit
+
+
+
 Running tests
 -------------
 
@@ -157,7 +182,19 @@ running:
 Running specific suites and test cases
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Use the ``-k <name_expression>`` flag to select which tests to run. Since each
+py.test allows tagging tests with markers. These can be used to selectively run
+some tests. pycsw uses two markers:
+
+* ``unit`` - run only inut tests
+* ``functional``- run onyl functional tests
+
+Markers can be specified by using the ``-m <marker_name>`` flag.
+
+.. code:: bash
+
+   py.test -m functional  # run only functional tests
+
+You can also use the ``-k <name_expression>`` flag to select which tests to run. Since each
 test's name includes the suite name, http method and an identifier for the
 test, it is easy to run only certain tests.
 
@@ -166,6 +203,9 @@ test, it is easy to run only certain tests.
    py.test -k "apiso and GetRecords"  # run only tests from the apiso suite that have GetRecords in their name
    py.test -k "post and GetRecords"  # run only tests that use HTTP POST and GetRecords in their name
    py.test -k "not harvesting"  # run all tests except those from the harvesting suite
+
+
+The ``-m`` and ``-k`` flags can be combined.
 
 
 Exiting fast
