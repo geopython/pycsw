@@ -2,9 +2,11 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2015 Tom Kralidis
 # Copyright (c) 2016 James F. Dickens
+# Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -33,10 +35,15 @@ import logging
 import uuid
 from six.moves import range
 from six.moves.urllib.parse import urlparse
-from owslib.util import build_get_url
+
 from geolinks import sniff_link
-from pycsw.core import util
+from owslib.util import build_get_url
+from shapely.wkt import loads
+from shapely.geometry import MultiPolygon
+
 from pycsw.core.etree import etree
+from pycsw.core import repository
+from pycsw.core import util
 
 LOGGER = logging.getLogger(__name__)
 
@@ -166,7 +173,12 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     _set(context, serviceobj, 'pycsw:Schema', 'http://www.opengis.net/cat/csw/2.0.2')
     _set(context, serviceobj, 'pycsw:MdSource', record)
     _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
-    _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(md._exml))
+    _set(
+        context,
+        serviceobj,
+        'pycsw:AnyText',
+        repository.get_anytext(md._exml)
+    )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
@@ -370,10 +382,16 @@ def _parse_wms(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:Abstract', md.contents[layer].abstract)
         _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[layer].keywords))
 
-        _set(context, recobj, 'pycsw:AnyText',
-             util.get_anytext([md.contents[layer].title,
-                              md.contents[layer].abstract,
-                              ','.join(md.contents[layer].keywords)]))
+        _set(
+            context,
+            recobj,
+            'pycsw:AnyText',
+            repository.get_anytext([
+                md.contents[layer].title,
+                md.contents[layer].abstract,
+                ','.join(md.contents[layer].keywords)
+            ])
+        )
 
         bbox = md.contents[layer].boundingBoxWGS84
         if bbox is not None:
@@ -442,7 +460,12 @@ def _parse_wmts(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Schema', 'http://www.opengis.net/wmts/1.0')
     _set(context, serviceobj, 'pycsw:MdSource', record)
     _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
-    _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(md.getServiceXML()))
+    _set(
+        context,
+        serviceobj,
+        'pycsw:AnyText',
+        repository.get_anytext(md.getServiceXML())
+    )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
@@ -506,11 +529,16 @@ def _parse_wmts(context, repos, record, identifier):
             keywords = ','.join(md.contents[layer].keywords)
         _set(context, recobj, 'pycsw:Keywords', keywords)
 
-        _set(context, recobj, 'pycsw:AnyText',
-             util.get_anytext([md.contents[layer].title,
-                              md.contents[layer].abstract,
-                             ','.join(keywords)
-                             ]))
+        _set(
+            context,
+            recobj,
+            'pycsw:AnyText',
+             repository.get_anytext([
+                 md.contents[layer].title,
+                 md.contents[layer].abstract,
+                 ','.join(keywords)
+             ])
+        )
 
         bbox = md.contents[layer].boundingBoxWGS84
 
@@ -568,7 +596,12 @@ def _parse_wfs(context, repos, record, identifier, version):
     _set(context, serviceobj, 'pycsw:Schema', 'http://www.opengis.net/wfs')
     _set(context, serviceobj, 'pycsw:MdSource', record)
     _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
-    _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(etree.tostring(md._capabilities)))
+    _set(
+        context,
+        serviceobj,
+        'pycsw:AnyText',
+        repository.get_anytext(etree.tostring(md._capabilities))
+    )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
@@ -613,10 +646,16 @@ def _parse_wfs(context, repos, record, identifier, version):
         _set(context, recobj, 'pycsw:Abstract', md.contents[featuretype].abstract)
         _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[featuretype].keywords))
 
-        _set(context, recobj, 'pycsw:AnyText',
-             util.get_anytext([md.contents[featuretype].title,
-                              md.contents[featuretype].abstract,
-                              ','.join(md.contents[featuretype].keywords)]))
+        _set(
+            context,
+            recobj,
+            'pycsw:AnyText',
+            repository.get_anytext([
+                md.contents[featuretype].title,
+                md.contents[featuretype].abstract,
+                ','.join(md.contents[featuretype].keywords)
+            ])
+        )
 
         bbox = md.contents[featuretype].boundingBoxWGS84
         if bbox is not None:
@@ -646,7 +685,7 @@ def _parse_wfs(context, repos, record, identifier, version):
 
     # Derive a bbox based on aggregated featuretype bbox values
 
-    bbox_agg = util.bbox_from_polygons(bboxs)
+    bbox_agg = bbox_from_polygons(bboxs)
 
     if bbox_agg is not None:
         _set(context, serviceobj, 'pycsw:BoundingBox', bbox_agg)
@@ -673,7 +712,12 @@ def _parse_wcs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Schema', 'http://www.opengis.net/wcs')
     _set(context, serviceobj, 'pycsw:MdSource', record)
     _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
-    _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(etree.tostring(md._capabilities)))
+    _set(
+        context,
+        serviceobj,
+        'pycsw:AnyText',
+        repository.get_anytext(etree.tostring(md._capabilities))
+    )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
@@ -718,10 +762,16 @@ def _parse_wcs(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:Abstract', md.contents[coverage].abstract)
         _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[coverage].keywords))
 
-        _set(context, recobj, 'pycsw:AnyText',
-             util.get_anytext([md.contents[coverage].title,
-                              md.contents[coverage].abstract,
-                              ','.join(md.contents[coverage].keywords)]))
+        _set(
+            context,
+            recobj,
+            'pycsw:AnyText',
+            repository.get_anytext([
+                md.contents[coverage].title,
+                md.contents[coverage].abstract,
+                ','.join(md.contents[coverage].keywords)
+            ])
+        )
 
         bbox = md.contents[coverage].boundingBoxWGS84
         if bbox is not None:
@@ -743,7 +793,7 @@ def _parse_wcs(context, repos, record, identifier):
 
     # Derive a bbox based on aggregated coverage bbox values
 
-    bbox_agg = util.bbox_from_polygons(bboxs)
+    bbox_agg = bbox_from_polygons(bboxs)
 
     if bbox_agg is not None:
         _set(context, serviceobj, 'pycsw:BoundingBox', bbox_agg)
@@ -768,7 +818,12 @@ def _parse_wps(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Schema', 'http://www.opengis.net/wps/1.0.0')
     _set(context, serviceobj, 'pycsw:MdSource', record)
     _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
-    _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(md._capabilities))
+    _set(
+        context,
+        serviceobj,
+        'pycsw:AnyText',
+        repository.get_anytext(md._capabilities)
+    )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
@@ -815,8 +870,12 @@ def _parse_wps(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:Title', process.title)
         _set(context, recobj, 'pycsw:Abstract', process.abstract)
 
-        _set(context, recobj, 'pycsw:AnyText',
-             util.get_anytext([process.title, process.abstract]))
+        _set(
+            context,
+            recobj,
+            'pycsw:AnyText',
+            repository.get_anytext([process.title, process.abstract])
+        )
 
         params = {
             'service': 'WPS',
@@ -857,7 +916,12 @@ def _parse_sos(context, repos, record, identifier, version):
     _set(context, serviceobj, 'pycsw:Schema', schema)
     _set(context, serviceobj, 'pycsw:MdSource', record)
     _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
-    _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(etree.tostring(md._capabilities)))
+    _set(
+        context,
+        serviceobj,
+        'pycsw:AnyText',
+        repository.get_anytext(etree.tostring(md._capabilities))
+    )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
@@ -900,8 +964,12 @@ def _parse_sos(context, repos, record, identifier, version):
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
         _set(context, recobj, 'pycsw:Title', md.contents[offering].description)
         _set(context, recobj, 'pycsw:Abstract', md.contents[offering].description)
-        _set(context, recobj, 'pycsw:TempExtent_begin', util.datetime2iso8601(md.contents[offering].begin_position))
-        _set(context, recobj, 'pycsw:TempExtent_end', util.datetime2iso8601(md.contents[offering].end_position))
+        begin = md.contents[offering].begin_position
+        end = md.contents[offering].end_position
+        _set(context, recobj, 'pycsw:TempExtent_begin',
+             util.datetime2iso8601(begin) if begin is not None else None)
+        _set(context, recobj, 'pycsw:TempExtent_end', 
+             util.datetime2iso8601(end) if end is not None else None)
 
         #For observed_properties that have mmi url or urn, we simply want the observation name.
         observed_properties = []
@@ -918,7 +986,7 @@ def _parse_sos(context, repos, record, identifier, version):
         anytext = []
         anytext.append(md.contents[offering].description)
         anytext.extend(observed_properties)
-        _set(context, recobj, 'pycsw:AnyText', util.get_anytext(anytext))
+        _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(anytext))
         _set(context, recobj, 'pycsw:Keywords', ','.join(observed_properties))
 
         bbox = md.contents[offering].bbox
@@ -935,7 +1003,7 @@ def _parse_sos(context, repos, record, identifier, version):
 
     # Derive a bbox based on aggregated featuretype bbox values
 
-    bbox_agg = util.bbox_from_polygons(bboxs)
+    bbox_agg = bbox_from_polygons(bboxs)
 
     if bbox_agg is not None:
         _set(context, serviceobj, 'pycsw:BoundingBox', bbox_agg)
@@ -965,7 +1033,7 @@ def _parse_fgdc(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
-    _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
+    _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', 'en-US')
 
     if hasattr(md.idinfo, 'descript'):
@@ -1061,7 +1129,7 @@ def _parse_gm03(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
-    _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
+    _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', data.metadata.language)
     _set(context, recobj, 'pycsw:Type', data.metadata.hierarchy_level[0])
     _set(context, recobj, 'pycsw:Date', data.metadata.date_stamp)
@@ -1150,7 +1218,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
-    _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
+    _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', md.language)
     _set(context, recobj, 'pycsw:Type', md.hierarchy)
     _set(context, recobj, 'pycsw:ParentIdentifier', md.parentidentifier)
@@ -1341,7 +1409,7 @@ def _parse_dc(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
-    _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
+    _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', md.language)
     _set(context, recobj, 'pycsw:Type', md.type)
     _set(context, recobj, 'pycsw:Title', md.title)
@@ -1403,3 +1471,29 @@ def caps2iso(record, caps, context):
     queryables = dict(apiso_obj.repository['queryables']['SupportedISOQueryables'].items())
     iso_xml = apiso_obj.write_record(record, 'full', 'http://www.isotc211.org/2005/gmd', queryables, caps)
     return etree.tostring(iso_xml)
+
+
+def bbox_from_polygons(bboxs):
+    """Derive an aggregated bbox from n polygons
+
+    Parameters
+    ----------
+    bboxs: list
+        A sequence of strings containing Well-Known Text representations of
+        polygons
+
+    Returns
+    -------
+    str
+        Well-Known Text representation of the aggregated bounding box for
+        all the input polygons
+    """
+
+    try:
+        multi_pol = MultiPolygon(
+            [loads(bbox) for bbox in bboxs]
+        )
+        bstr = ",".join(["{0:.2f}".format(b) for b in multi_pol.bounds])
+        return util.bbox2wktpolygon(bstr)
+    except Exception as err:
+        raise RuntimeError('Cannot aggregate polygons: %s' % str(err))

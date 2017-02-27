@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
 # =================================================================
 #
-# Authors: Tom Kralidis <tomkralidis@gmail.com>
-#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+# Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
@@ -29,41 +26,30 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
+"""Unit tests for pycsw.core.metadata"""
 
-import json
+import pytest
 
-import xmltodict
+from pycsw.core import metadata
 
-
-def xml2dict(xml_string, namespaces):
-    """Convert an xml document to a dictionary.
-
-    Parameters
-    ----------
-    xml_string: str
-        XML representation to convert to a dictionary.
-    namespaces: dict
-        Namespaces used in the ``xml_string`` parameter
-
-    Returns
-    -------
-    ordereddict
-        An ordered dictionary with the contents of the xml data
-
-    """
-
-    namespaces_reverse = dict((v, k) for k, v in namespaces.items())
-    return xmltodict.parse(xml_string, process_namespaces=True,
-                           namespaces=namespaces_reverse)
+pytestmark = pytest.mark.unit
 
 
-def xml2json(xml_string, namespaces, pretty_print=False):
-    """Convert an xml string to JSON"""
+@pytest.mark.parametrize("bboxes, expected", [
+    (
+        [
+            "POLYGON ((0 0, 0 1, 1 1, 1 0, 0 0))",
+            "POLYGON ((2 2, 2 3, 3 3, 3 2, 2 2))",
+        ],
+        "POLYGON((0.00 0.00, 0.00 3.00, 3.00 3.00, 3.00 0.00, 0.00 0.00))"
+    ),
+])
+def test_bbox_from_polygons(bboxes, expected):
+    result = metadata.bbox_from_polygons(bboxes)
+    assert result == expected
 
-    separators = (',', ': ')
 
-    if pretty_print:
-        return json.dumps(xml2dict(xml_string, namespaces),
-                          indent=4, separators=separators)
-
-    return json.dumps(xml2dict(xml_string, namespaces), separators=separators)
+def test_bbox_from_polygons_invalid():
+    bboxes = "stuff"
+    with pytest.raises(RuntimeError):
+        metadata.bbox_from_polygons(bboxes)

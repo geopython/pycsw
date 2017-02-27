@@ -2,8 +2,10 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,4 +30,14 @@
 #
 # =================================================================
 
+"""Custom etree objects for pycsw
+
+Be sure to use the ``PARSER`` object defined in this module whenever it is
+necessary to parse external XML objects. This parser offers better protection
+against known XML attacks.
+
+"""
+
 from lxml import etree
+
+PARSER = etree.XMLParser(resolve_entities=False)

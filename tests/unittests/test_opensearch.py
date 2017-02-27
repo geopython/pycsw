@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
 # =================================================================
 #
-# Authors: Tom Kralidis <tomkralidis@gmail.com>
-#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+# Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
@@ -29,41 +26,36 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
+"""Unit tests for pycsw.opensearch"""
 
-import json
+import pytest
 
-import xmltodict
+from pycsw import opensearch
 
-
-def xml2dict(xml_string, namespaces):
-    """Convert an xml document to a dictionary.
-
-    Parameters
-    ----------
-    xml_string: str
-        XML representation to convert to a dictionary.
-    namespaces: dict
-        Namespaces used in the ``xml_string`` parameter
-
-    Returns
-    -------
-    ordereddict
-        An ordered dictionary with the contents of the xml data
-
-    """
-
-    namespaces_reverse = dict((v, k) for k, v in namespaces.items())
-    return xmltodict.parse(xml_string, process_namespaces=True,
-                           namespaces=namespaces_reverse)
+pytestmark = pytest.mark.unit
 
 
-def xml2json(xml_string, namespaces, pretty_print=False):
-    """Convert an xml string to JSON"""
-
-    separators = (',', ': ')
-
-    if pretty_print:
-        return json.dumps(xml2dict(xml_string, namespaces),
-                          indent=4, separators=separators)
-
-    return json.dumps(xml2dict(xml_string, namespaces), separators=separators)
+@pytest.mark.parametrize("bbox, expected", [
+    ([10, 30, -10, -30], True),
+    ([10.0, 30.0, -10.0, -30.0], True),
+    (["10", "30", "-10", "-30"], True),
+    ([-180, 30, -10, -30], True),
+    ([180, 30, -10, -30], True),
+    ([0, -90, -10, -30], True),
+    ([0, 90, -10, -30], True),
+    ([10, 30, -180, -30], True),
+    ([10, 30, 180, -30], True),
+    ([10, 30, -10, -90], True),
+    ([10, 30, -10, 90], True),
+    ([-190, 30, -10, -30], False),
+    ([190, 30, -10, -30], False),
+    ([10, 100, -10, -30], False),
+    ([10, -100, -10, -30], False),
+    ([10, 30, -190, -30], False),
+    ([10, 30, 190, -30], False),
+    ([10, 30, -10, -190], False),
+    ([10, 30, -10, 190], False),
+])
+def test_validate_4326(bbox, expected):
+    result = opensearch.validate_4326(bbox)
+    assert result == expected
