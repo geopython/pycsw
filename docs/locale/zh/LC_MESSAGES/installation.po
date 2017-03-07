@@ -23,8 +23,8 @@ msgstr "系统要求"
 #: ../../installation.rst:9
 msgid ""
 "pycsw is written in `Python <http://python.org>`_, and works with "
-"(tested) version 2.6, 2.7 and 3.4"
-msgstr "pycsw 编写语言是 `Python <http://python.org>`_ ，版本（测试通过）为 2.6， 2.7及3.4"
+"(tested) version 2.7, 3.4 and 3.5"
+msgstr "pycsw 编写语言是 `Python <http://python.org>`_ ，版本（测试通过）为 2.7, 3.4 及3.5"
 
 #: ../../installation.rst:11
 msgid "pycsw requires the following Python supporting libraries:"
