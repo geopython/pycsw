@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2017 Tom Kralidis
 # Copyright (c) 2016 James F. Dickens
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -1136,13 +1136,13 @@ def _parse_gm03(context, repos, exml):
 
     for dt in data.date:
         if dt.date_type == 'modified':
-            _set(context, recobj, 'pycsw:Modified', data.date.date)
+            _set(context, recobj, 'pycsw:Modified', dt.date)
         elif dt.date_type == 'creation':
-            _set(context, recobj, 'pycsw:CreationDate', data.date.date)
+            _set(context, recobj, 'pycsw:CreationDate', dt.date)
         elif dt.date_type == 'publication':
-            _set(context, recobj, 'pycsw:PublicationDate', data.date.date)
+            _set(context, recobj, 'pycsw:PublicationDate', dt.date)
         elif dt.date_type == 'revision':
-            _set(context, recobj, 'pycsw:RevisionDate', data.date.date)
+            _set(context, recobj, 'pycsw:RevisionDate', dt.date)
 
     if hasattr(data, 'metadata_point_of_contact'):
         _set(context, recobj, 'pycsw:ResponsiblePartyRole', data.metadata_point_of_contact.role)
@@ -1155,7 +1155,8 @@ def _parse_gm03(context, repos, exml):
 
     if hasattr(data, 'data_identification'):
         _set(context, recobj, 'pycsw:Abstract', get_value_by_language(data.data_identification.abstract.pt_group, language))
-        _set(context, recobj, 'pycsw:TopicCategory', data.data_identification.topic_category)
+        if hasattr(data.data_identification, 'topic_category'):
+            _set(context, recobj, 'pycsw:TopicCategory', data.data_identification.topic_category)
         _set(context, recobj, 'pycsw:ResourceLanguage', data.data_identification.language)
 
     if hasattr(data, 'format'):
@@ -1183,14 +1184,15 @@ def _parse_gm03(context, repos, exml):
     # online linkages
     name = description = protocol = ''
 
-    if hasattr(data.online_resource, 'name'):
-        name = get_value_by_language(data.online_resource.name.pt_group, language)
-    if hasattr(data.online_resource, 'description'):
-        description = get_value_by_language(data.online_resource.description.pt_group, language)
-    linkage = get_value_by_language(data.online_resource.linkage.pt_group, language, 'url')
+    if hasattr(data, 'online_resource'):
+        if hasattr(data.online_resource, 'name'):
+            name = get_value_by_language(data.online_resource.name.pt_group, language)
+        if hasattr(data.online_resource, 'description'):
+            description = get_value_by_language(data.online_resource.description.pt_group, language)
+        linkage = get_value_by_language(data.online_resource.linkage.pt_group, language, 'url')
 
-    tmp = '%s,"%s",%s,%s' % (name, description, protocol, linkage)
-    links.append(tmp)
+        tmp = '%s,"%s",%s,%s' % (name, description, protocol, linkage)
+        links.append(tmp)
 
     if len(links) > 0:
         _set(context, recobj, 'pycsw:Links', '^'.join(links))
