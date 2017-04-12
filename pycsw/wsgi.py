@@ -2,8 +2,10 @@
 # =================================================================
 #
 # Authors: Adam Hinz <hinz.adam@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2015 Adam Hinz
+# Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -60,71 +62,79 @@ from six.moves.urllib.parse import unquote
 from pycsw import server
 
 
-PYCSW_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
 def application(env, start_response):
     """WSGI wrapper"""
-    config = 'default.cfg'
 
-    if 'PYCSW_CONFIG' in env:
-        config = env['PYCSW_CONFIG']
-
-    root = PYCSW_ROOT
-
-    if 'PYCSW_ROOT' in env:
-        root = env['PYCSW_ROOT']
-
-    if env['QUERY_STRING'].lower().find('config') != -1:
-        for kvp in env['QUERY_STRING'].split('&'):
-            if kvp.lower().find('config') != -1:
-                config = unquote(kvp.split('=')[1])
-
-    if not os.path.isabs(config):
-        config = os.path.join(root, config)
-
+    pycsw_root = get_pycsw_root_path(env)
+    env['local.app_root'] = pycsw_root
+    configuration_path = get_configuration_path(env, pycsw_root)
     if 'HTTP_HOST' in env and ':' in env['HTTP_HOST']:
         env['HTTP_HOST'] = env['HTTP_HOST'].split(':')[0]
-
-    env['local.app_root'] = root
-
-    csw = server.Csw(config, env)
-
+    csw = server.Csw(configuration_path, env)
     gzip = False
     if ('HTTP_ACCEPT_ENCODING' in env and
             env['HTTP_ACCEPT_ENCODING'].find('gzip') != -1):
         # set for gzip compressed response
         gzip = True
-
     # set compression level
     if csw.config.has_option('server', 'gzip_compresslevel'):
         gzip_compresslevel = \
             int(csw.config.get('server', 'gzip_compresslevel'))
     else:
         gzip_compresslevel = 0
-
     status, contents = csw.dispatch_wsgi()
-
     headers = {}
-
     if gzip and gzip_compresslevel > 0:
         import gzip
-
         buf = six.BytesIO()
         gzipfile = gzip.GzipFile(mode='wb', fileobj=buf,
                                  compresslevel=gzip_compresslevel)
         gzipfile.write(contents)
         gzipfile.close()
-
         contents = buf.getvalue()
-
         headers['Content-Encoding'] = 'gzip'
-
     headers['Content-Length'] = str(len(contents))
     headers['Content-Type'] = str(csw.contenttype)
     start_response(status, list(headers.items()))
-
     return [contents]
+
+
+def get_pycsw_root_path(request_environment, root_path_key="PYCSW_ROOT"):
+    app_root = os.getenv(
+        root_path_key,
+        request_environment.get(root_path_key)
+    )
+    if app_root is None:
+        app_root = os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__)))
+    return app_root
+
+
+def get_configuration_path(request_environment, pycsw_root,
+                           config_path_key="PYCSW_CONFIG"):
+    """Get the path for pycsw configuration file.
+
+    The configuration file path is searched in the following:
+    * The presence of a `config` parameter in the request's query string;
+    * A `PYCSW_CONFIG` environment variable;
+    * A `PYCSW_CONFIG WSGI variable.
+
+    """
+
+    query_string = request_environment["QUERY_STRING"].lower()
+    for kvp in query_string.split('&'):
+        if "config" in kvp:
+            configuration_path = unquote(kvp.split('=')[1])
+            break
+    else:  # did not find any `config` parameter in the request
+        configuration_path = os.getenv(
+            config_path_key,
+            request_environment.get(config_path_key, "")
+        )
+    if not os.path.isabs(configuration_path):
+        configuration_path = os.path.join(pycsw_root, configuration_path)
+    return configuration_path
+
 
 if __name__ == '__main__':  # run inline using WSGI reference implementation
     from wsgiref.simple_server import make_server
