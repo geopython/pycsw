@@ -100,6 +100,25 @@ def application(env, start_response):
 
 
 def get_pycsw_root_path(request_environment, root_path_key="PYCSW_ROOT"):
+    """Get pycsw's root path
+    
+    Parameters
+    ----------
+    request_environment: dict
+        A mapping with the request's environment. Typically the WSGI's 
+        environment 
+    root_path_key: str
+        Name of the key in both the ``request_environment`` argument and the
+        process' environmental variables that specifies the path to pycsw's 
+        root path.
+         
+    Returns
+    -------
+    str
+        Path to pycsw's root path, as read from the supplied configuration.
+    
+    """
+
     app_root = os.getenv(
         root_path_key,
         request_environment.get(root_path_key)
@@ -118,6 +137,22 @@ def get_configuration_path(request_environment, pycsw_root,
     * The presence of a `config` parameter in the request's query string;
     * A `PYCSW_CONFIG` environment variable;
     * A `PYCSW_CONFIG WSGI variable.
+    
+    Parameters
+    ----------
+    request_environment: dict
+        A mapping with the request's environment. Typically the WSGI's 
+        environment 
+    pycsw_root: str
+        pycsw's default root path
+    config_path_key: str, optional
+        Name of the variable that specifies the path to pycsw's configuration 
+        file.
+        
+    Returns
+    -------
+    str
+        Path where pycsw expects to find its own configuration file
 
     """
 

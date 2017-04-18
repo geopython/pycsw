@@ -37,6 +37,10 @@ pytestmark = pytest.mark.unit
 
 
 def test_get_pycsw_root_path():
+    """Ensure that os.getenv is called and that application environment is 
+    read first before wsgi request environment
+    """
+
     fake_root_path_key = "something"
     fake_env = "stuff"
     fake_request_environment = {
