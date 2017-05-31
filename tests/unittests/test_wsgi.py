@@ -35,21 +35,60 @@ from pycsw import wsgi
 
 pytestmark = pytest.mark.unit
 
-
-def test_get_pycsw_root_path():
-    """Ensure that os.getenv is called and that application environment is 
-    read first before wsgi request environment
-    """
-
-    fake_root_path_key = "something"
-    fake_env = "stuff"
-    fake_request_environment = {
-        fake_root_path_key: fake_env,
-    }
+@pytest.mark.parametrize("process_env, wsgi_env, fake_dir, expected", [
+    ({}, None, "dummy", "dummy"),
+    ({"PYCSW_ROOT": "this"}, None, "dummy", "this"),
+    ({"PYCSW_ROOT": "this"}, {"PYCSW_ROOT": "that"}, "dummy", "this"),
+    ({}, {"PYCSW_ROOT": "that"}, "dummy", "that"),
+])
+def test_get_pycsw_root_path(process_env, wsgi_env, fake_dir, expected):
     with mock.patch("pycsw.wsgi.os", autospec=True) as mock_os:
-        mock_os.getenv.return_value = True
+        mock_os.path.dirname.return_value = fake_dir
         result = wsgi.get_pycsw_root_path(
-            fake_request_environment,
-            root_path_key=fake_root_path_key
+            process_env,
+            request_environment=wsgi_env
         )
-        mock_os.getenv.assert_called_with(fake_root_path_key, fake_env)
+        assert result == expected
+
+
+@pytest.mark.parametrize("process_env, wsgi_env, pycsw_root, expected", [
+    ({}, {}, "dummy", "dummy/"),
+    ({"PYCSW_CONFIG": "default.cfg"}, {}, "dummy", "dummy/default.cfg"),
+    (
+        {"PYCSW_CONFIG": "/some/abs/path/default.cfg"},
+        {},
+        "dummy",
+        "/some/abs/path/default.cfg"
+    ),
+    (
+        {"PYCSW_CONFIG": "default.cfg"},
+        {"QUERY_STRING": ""},
+        "dummy",
+        "dummy/default.cfg"
+    ),
+    (
+        {"PYCSW_CONFIG": "default.cfg"},
+        {"QUERY_STRING": "config=other.cfg"},
+        "dummy",
+        "dummy/other.cfg"
+    ),
+    (
+        {"PYCSW_CONFIG": "default.cfg"},
+        {"QUERY_STRING": "config=/other/path/other.cfg"},
+        "dummy",
+        "/other/path/other.cfg"
+    ),
+])
+def test_get_configuration_path(process_env, wsgi_env, pycsw_root, expected):
+    result = wsgi.get_configuration_path(process_env, wsgi_env, pycsw_root)
+    assert result == expected
+
+
+#@pytest.mark.parametrize("compression_level", [
+#    1, 2, 3, 4, 5, 6, 7, 8, 9,
+#])
+#def test_compress_response(compression_level):
+#    fake_response = "dummy"
+#    with mock.patch("pycsw.wsgi.gzip", autospec=True) as mock_gzip:
+#        compressed_response, headers = wsgi.compress_response(
+#            fake_response, compression_level)
