@@ -28,6 +28,8 @@
 # =================================================================
 """Unit tests for pycsw.wsgi"""
 
+from wsgiref.util import setup_testing_defaults
+
 import mock
 import pytest
 
@@ -84,11 +86,68 @@ def test_get_configuration_path(process_env, wsgi_env, pycsw_root, expected):
     assert result == expected
 
 
-#@pytest.mark.parametrize("compression_level", [
-#    1, 2, 3, 4, 5, 6, 7, 8, 9,
-#])
-#def test_compress_response(compression_level):
-#    fake_response = "dummy"
-#    with mock.patch("pycsw.wsgi.gzip", autospec=True) as mock_gzip:
-#        compressed_response, headers = wsgi.compress_response(
-#            fake_response, compression_level)
+@pytest.mark.parametrize("compression_level", [
+    1, 2, 3, 4, 5, 6, 7, 8, 9,
+])
+def test_compress_response(compression_level):
+    fake_response = "dummy"
+    with mock.patch("pycsw.wsgi.gzip", autospec=True) as mock_gzip:
+        compressed_response, headers = wsgi.compress_response(
+            fake_response, compression_level)
+        creation_kwargs = mock_gzip.GzipFile.call_args[1]
+        assert creation_kwargs["compresslevel"] == compression_level
+        assert headers["Content-Encoding"] == "gzip"
+
+
+def test_application_no_gzip():
+    fake_config_path = "fake_config_path"
+    fake_status = "fake_status"
+    fake_response = "fake_response"
+    fake_content_type = "fake_content_type"
+    request_env = {}
+    setup_testing_defaults(request_env)
+    mock_start_response = mock.MagicMock()
+    with mock.patch("pycsw.wsgi.server", autospec=True) as mock_server, \
+            mock.patch.object(
+                wsgi, "get_configuration_path") as mock_get_config_path:
+        mock_get_config_path.return_value = fake_config_path
+        mock_csw_class = mock_server.Csw
+        mock_pycsw = mock_csw_class.return_value
+        mock_pycsw.dispatch_wsgi.return_value = (fake_status, fake_response)
+        mock_pycsw.contenttype = fake_content_type
+        result = wsgi.application(request_env, mock_start_response)
+        mock_csw_class.assert_called_with(fake_config_path, request_env)
+        start_response_args = mock_start_response.call_args[0]
+        assert fake_status in start_response_args
+        assert result == [fake_response]
+
+
+def test_application_gzip():
+    fake_config_path = "fake_config_path"
+    fake_status = "fake_status"
+    fake_response = "fake_response"
+    fake_content_type = "fake_content_type"
+    fake_compression_level = 5
+    fake_compressed_contents = "fake compressed contents"
+    fake_compression_headers = {"phony": "dummy"}
+    request_env = {"HTTP_ACCEPT_ENCODING": "gzip"}
+    setup_testing_defaults(request_env)
+    mock_start_response = mock.MagicMock()
+    with mock.patch("pycsw.wsgi.server", autospec=True) as mock_server, \
+            mock.patch.object(
+                wsgi, "get_configuration_path") as mock_get_config_path, \
+            mock.patch.object(wsgi, "compress_response") as mock_compress:
+
+        mock_compress.return_value = (fake_compressed_contents,
+                                      fake_compression_headers)
+        mock_get_config_path.return_value = fake_config_path
+        mock_csw_class = mock_server.Csw
+        mock_pycsw = mock_csw_class.return_value
+        mock_pycsw.config = mock.MagicMock()
+        mock_pycsw.config.get.return_value = fake_compression_level
+        mock_pycsw.dispatch_wsgi.return_value = (fake_status, fake_response)
+        mock_pycsw.contenttype = fake_content_type
+        wsgi.application(request_env, mock_start_response)
+        mock_pycsw.config.get.assert_called_with("server",
+                                                 "gzip_compresslevel")
+        mock_compress.assert_called_with(fake_response, fake_compression_level)

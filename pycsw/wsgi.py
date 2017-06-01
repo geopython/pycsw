@@ -54,6 +54,7 @@
 # http://localhost:8000/
 #
 
+import gzip
 import os
 import sys
 
@@ -114,7 +115,6 @@ def compress_response(response, compression_level):
 
     """
 
-    import gzip
     buf = six.BytesIO()
     gzipfile = gzip.GzipFile(mode='wb', fileobj=buf,
                              compresslevel=compression_level)
