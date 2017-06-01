@@ -328,7 +328,12 @@ def _parse_wms(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Schema', 'http://www.opengis.net/wms')
     _set(context, serviceobj, 'pycsw:MdSource', record)
     _set(context, serviceobj, 'pycsw:InsertDate', util.get_today_and_now())
-    _set(context, serviceobj, 'pycsw:AnyText', util.get_anytext(md.getServiceXML()))
+    _set(
+        context,
+        serviceobj,
+        'pycsw:AnyText',
+        repository.get_anytext(md.getServiceXML())
+    )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
@@ -968,7 +973,7 @@ def _parse_sos(context, repos, record, identifier, version):
         end = md.contents[offering].end_position
         _set(context, recobj, 'pycsw:TempExtent_begin',
              util.datetime2iso8601(begin) if begin is not None else None)
-        _set(context, recobj, 'pycsw:TempExtent_end', 
+        _set(context, recobj, 'pycsw:TempExtent_end',
              util.datetime2iso8601(end) if end is not None else None)
 
         #For observed_properties that have mmi url or urn, we simply want the observation name.
