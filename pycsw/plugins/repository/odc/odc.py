@@ -35,7 +35,7 @@ from django.db import connection
 from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
 
-from pycsw.core import util
+from pycsw.core import repository, util
 from OpenDataCatalog.opendata.models import Resource
 
 class OpenDataCatalogRepository(object):
@@ -58,7 +58,7 @@ class OpenDataCatalogRepository(object):
             connection.connection.create_function(
             'query_spatial', 4, util.query_spatial)
             connection.connection.create_function(
-            'get_anytext', 1, util.get_anytext)
+            'get_anytext', 1, repository.get_anytext)
             connection.connection.create_function(
             'get_geometry_area', 1, util.get_geometry_area)
 
