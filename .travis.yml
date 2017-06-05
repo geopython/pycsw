@@ -4,14 +4,55 @@ cache: pip
 
 dist: trusty
 
-matrix:
+jobs:
   include:
-    - python: "2.7"
+    - stage: unit-test
+      python: "2.7"
       env: TOXENV=py27-sqlite
-    - python: "3.4"
+      install: pip install tox
+      script: tox -- --exitfirst -m unit
+    - stage: unit-test
+      python: "3.4"
       env: TOXENV=py34-sqlite
-    - python: "3.5"
+      install: pip install tox
+      script: tox -- --exitfirst -m unit
+    - stage: unit-test
+      python: "3.5"
       env: TOXENV=py35-sqlite
+      install: pip install tox
+      script: tox -- --exitfirst -m unit
+
+    - stage: unit-coverage-upload
+      python: "2.7"
+      env: TOXENV=coverage-report-sqlite
+      install: pip install codecov tox
+      script:
+        - tox
+        - codecov -F unittests
+
+    - stage: integration-test
+      python: "2.7"
+      env: TOXENV=py27-sqlite
+      install: pip install tox
+      script: tox -- --exitfirst -m functional -k 'not harvesting'
+    - stage: integration-test
+      python: "3.4"
+      env: TOXENV=py34-sqlite
+      install: pip install tox
+      script: tox -- --exitfirst -m functional -k 'not harvesting'
+    - stage: integration-test
+      python: "3.5"
+      env: TOXENV=py35-sqlite
+      install: pip install tox
+      script: tox -- --exitfirst -m functional -k 'not harvesting'
+
+    - stage: integration-coverage-upload
+      python: "2.7"
+      env: TOXENV=coverage-report-sqlite
+      install: pip install codecov tox
+      script:
+        - tox
+        - codecov -F integrationtests
 
 addons:
   apt:
@@ -22,12 +63,6 @@ addons:
       - libxslt1-dev
       - libz-dev
 
-install:
-  - pip install tox
-
-script:
-  - tox -- --exitfirst -m unit
-  - tox -- --exitfirst -m functional -k 'not harvesting'
 
 notifications:
   irc:
