@@ -2,8 +2,10 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,4 +30,6 @@
 #
 # =================================================================
 
-__version__ = '2.1-dev'
+import pkg_resources
+
+__version__ = pkg_resources.require("pycsw")[0].version

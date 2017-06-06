@@ -2,8 +2,10 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2016 Tom Kralidis
+# Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,123 +30,54 @@
 #
 # =================================================================
 
+import io
 import os
-from distutils.core import setup
-import pycsw
+
+from setuptools import find_packages, setup
 
 
-def is_package(path):
-    """Decipher whether a filepath is a Python package"""
-    return (
-        os.path.isdir(path) and
-        os.path.isfile(os.path.join(path, '__init__.py'))
-    )
+def read(filename, encoding="utf-8"):
+    full_path = os.path.join(os.path.dirname(__file__), filename)
+    with io.open(full_path, encoding=encoding) as fh:
+        contents = fh.read()
+    return contents
 
-
-def find_packages(path, base=''):
-    """Find all packages in path"""
-    packages = {}
-    for item in os.listdir(path):
-        directory = os.path.join(path, item)
-        if is_package(directory):
-            if base:
-                module_name = "%(base)s.%(item)s" % vars()
-            else:
-                module_name = item
-            packages[module_name] = directory
-            packages.update(find_packages(directory, module_name))
-    return packages
-
-
-def find_packages_xsd(location='.'):
-    """
-    Figure out which packages need to be specified as package_data
-    keys (the ones with XML Schema documents
-    """
-    packages = []
-    for root, dirs, files in os.walk(location):
-        if 'schemas' in dirs:  # include as a package_data key
-            packages.append(root.replace(os.sep, '.').replace('..', ''))
-    return packages
-
-
-def get_package_data(location='.', forced_dir=None):
-    """Generate package_data dict"""
-    package_data = {}
-    for ploc in location:
-        # turn package identifier into filepath
-        filepath = ploc.replace('.', os.sep)
-        if forced_dir is not None:  # force os.walk to traverse subdir
-            filepath = '%s%sschemas' % (filepath, os.sep)
-        for root, dirs, files in os.walk(filepath):
-            if len(files) > 0:
-                # find all the XML Schema documents
-                xsds = [x for x in files if x.find('.xsd') != -1]
-                catalog_xml = [x for x in files if x.find('catalog.xml') != -1]
-                xsds.extend(catalog_xml)
-                if len(xsds) > 0:
-                    if ploc not in package_data:  # set key
-                        package_data[ploc] = []
-                    for xsd in xsds:  # add filename to list
-                        root2 = root.replace(filepath, '').split(os.sep)[1:]
-                        pathstr = '%s%s%s' % (os.sep.join(root2), os.sep, xsd)
-                        if forced_dir is not None:
-                            filename = 'schemas%s%s' % (os.sep, pathstr)
-                        else:
-                            filename = pathstr
-                        package_data[ploc].append(filename)
-    return package_data
 
 # ensure a fresh MANIFEST file is generated
 if (os.path.exists('MANIFEST')):
     os.unlink('MANIFEST')
 
-# set setup.packages
-PACKAGES = list(find_packages('.').keys())
-
-# get package_data.keys()
-PACKAGE_DATA_XSD = find_packages_xsd('pycsw')
-
-# Because package 'pycsw' contains all other packages,
-# process it last, so that it doesn't set it's package_data
-# files to one already set in other packages
-ROOT_PACKAGE = PACKAGE_DATA_XSD.pop(0)
-
-# set package_data
-PACKAGE_DATA = get_package_data(PACKAGE_DATA_XSD)
-
-# update package_data for pycsw package
-PACKAGE_DATA.update(get_package_data([ROOT_PACKAGE], 'schemas'))
-
-# set the dependencies
-# GeoNode, HHypermap and OpenDataCatalog do not require SQLAlchemy
-with open('requirements.txt') as f:
-    INSTALL_REQUIRES = f.read().splitlines()
-
-KEYWORDS = ('pycsw csw catalogue catalog metadata discovery search'
-            ' ogc iso fgdc dif ebrim inspire')
-
-DESCRIPTION = 'pycsw is an OGC CSW server implementation written in Python'
-
-with open('README.txt') as f:
-    LONG_DESCRIPTION = f.read()
-
 setup(
     name='pycsw',
-    version=pycsw.__version__,
-    description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
+    version=read("VERSION.txt"),
+    description='pycsw is an OGC CSW server implementation written in Python',
+    long_description=read("README.txt"),
     license='MIT',
     platforms='all',
-    keywords=KEYWORDS,
+    keywords=" ".join([
+        'pycsw',
+        'csw',
+        'catalogue',
+        'catalog',
+        'metadata',
+        'discovery',
+        'search',
+        'ogc',
+        'iso',
+        'fgdc',
+        'dif',
+        'ebrim',
+        'inspire',
+    ]),
     author='Tom Kralidis',
     author_email='tomkralidis@gmail.com',
     maintainer='Tom Kralidis',
     maintainer_email='tomkralidis@gmail.com',
     url='http://pycsw.org/',
-    install_requires=INSTALL_REQUIRES,
-    packages=PACKAGES,
-    package_data=PACKAGE_DATA,
+    install_requires=read("requirements.txt").splitlines(),
+    packages=find_packages(),
+    include_package_data=True,
+    # TODO: replace scripts with entry_points (needs a refactoring of pycsw-admin first)
     scripts=[os.path.join('bin', 'pycsw-admin.py')],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
