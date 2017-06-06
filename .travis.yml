@@ -6,53 +6,49 @@ dist: trusty
 
 jobs:
   include:
+
     - stage: unit-test
       python: "2.7"
       env: TOXENV=py27-sqlite
-      install: pip install tox
+      install: pip install codecov tox
       script: tox -- --exitfirst -m unit
+      after_success: codecov -F unittests
+
     - stage: unit-test
       python: "3.4"
       env: TOXENV=py34-sqlite
-      install: pip install tox
+      install: pip install codecov tox
       script: tox -- --exitfirst -m unit
+      after_success: codecov -F unittests
+
     - stage: unit-test
       python: "3.5"
       env: TOXENV=py35-sqlite
-      install: pip install tox
-      script: tox -- --exitfirst -m unit
-
-    - stage: unit-coverage-upload
-      python: "2.7"
-      env: TOXENV=coverage-report-sqlite
       install: pip install codecov tox
-      script:
-        - tox
-        - codecov -F unittests
+      script: tox -- --exitfirst -m unit
+      after_success: codecov -F unittests
 
     - stage: integration-test
       python: "2.7"
       env: TOXENV=py27-sqlite
-      install: pip install tox
+      install: pip install codecov tox
       script: tox -- --exitfirst -m functional -k 'not harvesting'
+      after_success: codecov -F integrationtests
+
     - stage: integration-test
       python: "3.4"
       env: TOXENV=py34-sqlite
-      install: pip install tox
+      install: pip install codecov tox
       script: tox -- --exitfirst -m functional -k 'not harvesting'
+      after_success: codecov -F integrationtests
+
     - stage: integration-test
       python: "3.5"
       env: TOXENV=py35-sqlite
-      install: pip install tox
-      script: tox -- --exitfirst -m functional -k 'not harvesting'
-
-    - stage: integration-coverage-upload
-      python: "2.7"
-      env: TOXENV=coverage-report-sqlite
       install: pip install codecov tox
-      script:
-        - tox
-        - codecov -F integrationtests
+      script: tox -- --exitfirst -m functional -k 'not harvesting'
+      after_success: codecov -F integrationtests
+
 
 addons:
   apt:
