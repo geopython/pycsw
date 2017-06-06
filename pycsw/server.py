@@ -774,8 +774,9 @@ class Csw(object):
         if self.config.get('manager', 'transactions') != 'true':
             raise RuntimeError('CSW-T interface is disabled')
 
+        """ get the client first forwarded ip """
         if 'HTTP_X_FORWARDED_FOR' in self.environ:
-            ipaddress = self.environ['HTTP_X_FORWARDED_FOR']
+            ipaddress = self.environ['HTTP_X_FORWARDED_FOR'].split(',')[0].strip()
         else:
             ipaddress = self.environ['REMOTE_ADDR']
 
