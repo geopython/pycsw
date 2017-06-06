@@ -36,11 +36,11 @@ import os
 from setuptools import find_packages, setup
 
 
-def read(*names, **kwargs):
-    return io.open(
-        os.path.join(os.path.dirname(__file__), *names),
-        encoding=kwargs.get("encoding", "utf-8")
-    ).read()
+def read(filename, encoding="utf-8"):
+    full_path = os.path.join(os.path.dirname(__file__), filename)
+    with io.open(full_path, encoding=encoding) as fh:
+        contents = fh.read()
+    return contents
 
 
 # ensure a fresh MANIFEST file is generated
