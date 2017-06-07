@@ -1,0 +1,5 @@
+# This file holds some fake requirements to fool the readthedocs service into
+# building the documentation. For more information, see
+# https://github.com/geopython/pycsw/issues/521
+mock
+sphinx
