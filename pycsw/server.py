@@ -273,6 +273,7 @@ class Csw(object):
     def dispatch(self, writer=sys.stdout, write_headers=True):
         """ Handle incoming HTTP request """
 
+        error = 0
         if self.requesttype == 'GET':
             self.kvp = self.normalize_kvp(self.kvp)
             version_202 = ('version' in self.kvp and
@@ -384,10 +385,12 @@ class Csw(object):
                 self.repository = rs_cls(self.context, repo_filter)
                 LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
             except Exception as err:
-                msg = 'Could not load custom repository'
+                msg = 'Could not load custom repository %s: %s' % (rs, err)
                 LOGGER.exception(msg)
-                self.response = self.iface.exceptionreport(
-                    'NoApplicableCode', 'service', msg)
+                error = 1
+                code = 'NoApplicableCode'
+                locator = 'service'
+                text = 'Could not initialize repository. Check server logs'
 
         else:  # load default repository
             self.orm = 'sqlalchemy'
@@ -404,17 +407,17 @@ class Csw(object):
                 LOGGER.debug(
                     'Repository loaded (local): %s.' % self.repository.dbtype)
             except Exception as err:
-                msg = 'Could not load repository (local)'
+                msg = 'Could not load repository (local): %s' % err
                 LOGGER.exception(msg)
-                self.response = self.iface.exceptionreport(
-                    'NoApplicableCode', 'service', msg)
+                error = 1
+                code = 'NoApplicableCode'
+                locator = 'service'
+                text = 'Could not initialize repository. Check server logs'
 
         if self.requesttype == 'POST':
             LOGGER.debug('HTTP POST request')
             LOGGER.debug('CSW version: %s', self.iface.version)
             self.kvp = self.iface.parse_postdata(self.request)
-
-        error = 0
 
         if isinstance(self.kvp, str):  # it's an exception
             error = 1
