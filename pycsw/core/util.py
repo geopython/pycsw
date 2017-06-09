@@ -36,10 +36,13 @@ import datetime
 import logging
 import time
 
+import six
 from six.moves.urllib.request import Request, urlopen
 from six.moves.urllib.parse import urlparse
 from shapely.wkt import loads
 from owslib.util import http_post
+
+from pycsw.core.etree import etree, PARSER
 
 LOGGER = logging.getLogger(__name__)
 
@@ -307,3 +310,19 @@ def ipaddress_in_whitelist(ipaddress, whitelist):
                     if ipaddress.startswith(white.split('*')[0]):
                         return True
     return False
+
+
+def get_anytext(bag):
+    """
+    generate bag of text for free text searches
+    accepts list of words, string of XML, or etree.Element
+    """
+
+    if isinstance(bag, list):  # list of words
+        return ' '.join([_f for _f in bag if _f]).strip()
+    else:  # xml
+        if isinstance(bag, six.binary_type) or isinstance(bag, six.text_type):
+            # serialize to lxml
+            bag = etree.fromstring(bag, PARSER)
+        # get all XML element content
+        return ' '.join([value.strip() for value in bag.xpath('//text()')])
