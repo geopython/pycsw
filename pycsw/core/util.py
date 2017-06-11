@@ -154,6 +154,14 @@ def nspath_eval(xpath, nsmap):
     return '/'.join(out)
 
 
+def wktenvelope2bbox(envelope):
+    """returns bbox string of WKT ENVELOPE definition"""
+
+    tmparr = [x.strip() for x in envelope.split('(')[1].split(')')[0].split(',')]
+    bbox = '%s,%s,%s,%s' % (tmparr[0], tmparr[3], tmparr[1], tmparr[2])
+    return bbox
+
+
 def wkt2geom(ewkt, bounds=True):
     """Return Shapely geometry object based on WKT/EWKT
 
@@ -179,6 +187,8 @@ def wkt2geom(ewkt, bounds=True):
     """
 
     wkt = ewkt.split(";")[-1] if ewkt.find("SRID") != -1 else ewkt
+    if wkt.startswith('ENVELOPE'):
+        wkt = bbox2wktpolygon(wktenvelope2bbox(wkt))
     geometry = loads(wkt)
     return geometry.envelope.bounds if bounds else geometry
 
@@ -198,6 +208,8 @@ def bbox2wktpolygon(bbox):
 
     """
 
+    if bbox.startswith('ENVELOPE'):
+        bbox = wktenvelope2bbox(bbox)
     minx, miny, maxx, maxy = [float(coord) for coord in bbox.split(",")]
     return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' \
         % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)

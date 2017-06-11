@@ -113,6 +113,14 @@ def test_nspath_eval_invalid_element():
             }
         )
 
+@pytest.mark.parametrize("envelope, expected", [
+    ("ENVELOPE (-180,180,90,-90)", "-180,-90,180,90"),
+    (" ENVELOPE(-180,180,90,-90)", "-180,-90,180,90"),
+    (" ENVELOPE( -180, 180, 90, -90) ", "-180,-90,180,90"),
+])
+def test_wktenvelope2bbox(envelope, expected):
+    result = util.wktenvelope2bbox(envelope)
+    assert result == expected
 
 # TODO - Add more WKT cases for other geometry types
 @pytest.mark.parametrize("wkt, bounds, expected", [
