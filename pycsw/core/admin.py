@@ -217,8 +217,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         AS $$
             import sys
             sys.path.append('%s')
-            from pycsw.core import repository
-            return repository.get_anytext(xml)
+            from pycsw.core import util
+            return util.get_anytext(xml)
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
             function_query_spatial = '''

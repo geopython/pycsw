@@ -42,7 +42,6 @@ from shapely.wkt import loads
 from shapely.geometry import MultiPolygon
 
 from pycsw.core.etree import etree
-from pycsw.core import repository
 from pycsw.core import util
 
 LOGGER = logging.getLogger(__name__)
@@ -177,7 +176,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
         context,
         serviceobj,
         'pycsw:AnyText',
-        repository.get_anytext(md._exml)
+        util.get_anytext(md._exml)
     )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
@@ -332,7 +331,7 @@ def _parse_wms(context, repos, record, identifier):
         context,
         serviceobj,
         'pycsw:AnyText',
-        repository.get_anytext(md.getServiceXML())
+        util.get_anytext(md.getServiceXML())
     )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
@@ -391,7 +390,7 @@ def _parse_wms(context, repos, record, identifier):
             context,
             recobj,
             'pycsw:AnyText',
-            repository.get_anytext([
+            util.get_anytext([
                 md.contents[layer].title,
                 md.contents[layer].abstract,
                 ','.join(md.contents[layer].keywords)
@@ -469,7 +468,7 @@ def _parse_wmts(context, repos, record, identifier):
         context,
         serviceobj,
         'pycsw:AnyText',
-        repository.get_anytext(md.getServiceXML())
+        util.get_anytext(md.getServiceXML())
     )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
@@ -538,7 +537,7 @@ def _parse_wmts(context, repos, record, identifier):
             context,
             recobj,
             'pycsw:AnyText',
-             repository.get_anytext([
+             util.get_anytext([
                  md.contents[layer].title,
                  md.contents[layer].abstract,
                  ','.join(keywords)
@@ -605,7 +604,7 @@ def _parse_wfs(context, repos, record, identifier, version):
         context,
         serviceobj,
         'pycsw:AnyText',
-        repository.get_anytext(etree.tostring(md._capabilities))
+        util.get_anytext(etree.tostring(md._capabilities))
     )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
@@ -655,7 +654,7 @@ def _parse_wfs(context, repos, record, identifier, version):
             context,
             recobj,
             'pycsw:AnyText',
-            repository.get_anytext([
+            util.get_anytext([
                 md.contents[featuretype].title,
                 md.contents[featuretype].abstract,
                 ','.join(md.contents[featuretype].keywords)
@@ -721,7 +720,7 @@ def _parse_wcs(context, repos, record, identifier):
         context,
         serviceobj,
         'pycsw:AnyText',
-        repository.get_anytext(etree.tostring(md._capabilities))
+        util.get_anytext(etree.tostring(md._capabilities))
     )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
@@ -771,7 +770,7 @@ def _parse_wcs(context, repos, record, identifier):
             context,
             recobj,
             'pycsw:AnyText',
-            repository.get_anytext([
+            util.get_anytext([
                 md.contents[coverage].title,
                 md.contents[coverage].abstract,
                 ','.join(md.contents[coverage].keywords)
@@ -827,7 +826,7 @@ def _parse_wps(context, repos, record, identifier):
         context,
         serviceobj,
         'pycsw:AnyText',
-        repository.get_anytext(md._capabilities)
+        util.get_anytext(md._capabilities)
     )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
@@ -879,7 +878,7 @@ def _parse_wps(context, repos, record, identifier):
             context,
             recobj,
             'pycsw:AnyText',
-            repository.get_anytext([process.title, process.abstract])
+            util.get_anytext([process.title, process.abstract])
         )
 
         params = {
@@ -925,7 +924,7 @@ def _parse_sos(context, repos, record, identifier, version):
         context,
         serviceobj,
         'pycsw:AnyText',
-        repository.get_anytext(etree.tostring(md._capabilities))
+        util.get_anytext(etree.tostring(md._capabilities))
     )
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
@@ -991,7 +990,7 @@ def _parse_sos(context, repos, record, identifier, version):
         anytext = []
         anytext.append(md.contents[offering].description)
         anytext.extend(observed_properties)
-        _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(anytext))
+        _set(context, recobj, 'pycsw:AnyText', util.get_anytext(anytext))
         _set(context, recobj, 'pycsw:Keywords', ','.join(observed_properties))
 
         bbox = md.contents[offering].bbox
@@ -1038,7 +1037,7 @@ def _parse_fgdc(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
-    _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(exml))
+    _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', 'en-US')
 
     if hasattr(md.idinfo, 'descript'):
@@ -1134,7 +1133,7 @@ def _parse_gm03(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
-    _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(exml))
+    _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', data.metadata.language)
     _set(context, recobj, 'pycsw:Type', data.metadata.hierarchy_level[0])
     _set(context, recobj, 'pycsw:Date', data.metadata.date_stamp)
@@ -1225,7 +1224,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
-    _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(exml))
+    _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', md.language)
     _set(context, recobj, 'pycsw:Type', md.hierarchy)
     _set(context, recobj, 'pycsw:ParentIdentifier', md.parentidentifier)
@@ -1416,7 +1415,7 @@ def _parse_dc(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
-    _set(context, recobj, 'pycsw:AnyText', repository.get_anytext(exml))
+    _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', md.language)
     _set(context, recobj, 'pycsw:Type', md.type)
     _set(context, recobj, 'pycsw:Title', md.title)
