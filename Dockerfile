@@ -41,7 +41,10 @@ RUN pip install --upgrade pip setuptools \
   && pip install gunicorn \
   && pip install . \
   && mkdir /etc/pycsw \
-  && mv default-sample.cfg /etc/pycsw/pycsw.cfg
+  && mkdir data \
+  && mv default-sample.cfg /etc/pycsw/pycsw.cfg \
+  && chown -R pycsw:pycsw *
+
 
 USER pycsw
 
