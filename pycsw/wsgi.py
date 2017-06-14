@@ -92,6 +92,9 @@ def application(env, start_response):
                 "the server does not specify the 'gzip_compresslevel' option. "
                 "Returning an uncompressed response..."
             )
+        except configparser.NoSectionError:
+            print('Could not load user configuration %s' % configuration_path)
+
     start_response(status, list(headers.items()))
     return [contents]
 
@@ -163,7 +166,6 @@ def get_pycsw_root_path(process_environment, request_environment=None,
     )
     return app_root
 
-
 def get_configuration_path(process_environment, request_environment,
                            pycsw_root, config_path_key="PYCSW_CONFIG"):
     """Get the path for pycsw configuration file.
@@ -193,18 +195,23 @@ def get_configuration_path(process_environment, request_environment,
 
     """
 
+    # scan from config= or PYCSW_CONFIG environment variable
     query_string = request_environment.get("QUERY_STRING", "").lower()
+
     for kvp in query_string.split('&'):
         if "config" in kvp:
             configuration_path = unquote(kvp.split('=')[1])
             break
-    else:  # did not find any `config` parameter in the request
+    else:
+        # did not find any `config` parameter in the request
+        # lets try the process env, request env and fallback to
+        # <pycsw_root>/default.cfg
         configuration_path = process_environment.get(
             config_path_key,
-            request_environment.get(config_path_key, "")
+            request_environment.get(
+                config_path_key, os.path.join(pycsw_root, "default.cfg")
+            )
         )
-    if not os.path.isabs(configuration_path):
-        configuration_path = os.path.join(pycsw_root, configuration_path)
     return configuration_path
 
 

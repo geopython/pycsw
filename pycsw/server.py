@@ -116,11 +116,10 @@ class Csw(object):
                     with codecs.open(rtconfig, encoding='utf-8') as scp:
                         self.config.readfp(scp)
         except Exception as err:
-            LOGGER.exception('Could not load user configuration: %s', err)
+            msg = 'Could not load configuration'
+            LOGGER.exception('%s %s: %s', msg, rtconfig, err)
             self.response = self.iface.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Error opening configuration %s' % rtconfig
-            )
+                'NoApplicableCode', 'service', msg)
             return
 
         # set server.home safely

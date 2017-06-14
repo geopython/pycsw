@@ -54,8 +54,8 @@ def test_get_pycsw_root_path(process_env, wsgi_env, fake_dir, expected):
 
 
 @pytest.mark.parametrize("process_env, wsgi_env, pycsw_root, expected", [
-    ({}, {}, "dummy", "dummy/"),
-    ({"PYCSW_CONFIG": "default.cfg"}, {}, "dummy", "dummy/default.cfg"),
+    ({}, {}, "dummy", "dummy/default.cfg"),
+    ({"PYCSW_CONFIG": "default.cfg"}, {}, "dummy", "default.cfg"),
     (
         {"PYCSW_CONFIG": "/some/abs/path/default.cfg"},
         {},
@@ -66,13 +66,13 @@ def test_get_pycsw_root_path(process_env, wsgi_env, fake_dir, expected):
         {"PYCSW_CONFIG": "default.cfg"},
         {"QUERY_STRING": ""},
         "dummy",
-        "dummy/default.cfg"
+        "default.cfg"
     ),
     (
         {"PYCSW_CONFIG": "default.cfg"},
         {"QUERY_STRING": "config=other.cfg"},
         "dummy",
-        "dummy/other.cfg"
+        "other.cfg"
     ),
     (
         {"PYCSW_CONFIG": "default.cfg"},
