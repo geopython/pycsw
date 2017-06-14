@@ -51,7 +51,7 @@ setup(
     name='pycsw',
     version=read("VERSION.txt"),
     description='pycsw is an OGC CSW server implementation written in Python',
-    long_description=read("README.txt"),
+    long_description=read("README.rst"),
     license='MIT',
     platforms='all',
     keywords=" ".join([
