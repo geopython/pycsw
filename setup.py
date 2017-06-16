@@ -39,7 +39,7 @@ from setuptools import find_packages, setup
 def read(filename, encoding="utf-8"):
     full_path = os.path.join(os.path.dirname(__file__), filename)
     with io.open(full_path, encoding=encoding) as fh:
-        contents = fh.read()
+        contents = fh.read().strip()
     return contents
 
 
