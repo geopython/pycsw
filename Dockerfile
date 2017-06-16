@@ -1,15 +1,14 @@
-FROM python:3.5-alpine
+FROM alpine:3.4
 
 ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
 
-# adding a pycsw user with no password and an uid of 1000
 RUN adduser -D -u 1000 pycsw
 
 WORKDIR /home/pycsw
 
 COPY . .
 
-# There's bug in libxml2 v3.9.4 that prevents using an XMLParser with a schema
+# There's bug in libxml2 v2.9.4 that prevents using an XMLParser with a schema
 # file.
 #
 # https://bugzilla.gnome.org/show_bug.cgi?id=766834
@@ -19,15 +18,20 @@ COPY . .
 # version, which works fine.
 # This means that we need to use alpine's archives for version 3.1, which are
 # the ones that contain the previous version of libxml2
+#
+# Also, for some unkwnon reason, alpine 3.1 version of libxml2 depends on
+# python2. We'd rather use python3 for pycsw, so we install it too.
 RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.1/main' >> /etc/apk/repositories \
   && apk add --no-cache \
     build-base \
     ca-certificates \
     postgresql-dev \
-    python-dev \
+    python3 \
+    python3-dev \
     libpq \
     libxslt-dev \
-    'libxml2-dev<3.9.4' \
+    'libxml2<2.9.4' \
+    'libxml2-dev<2.9.4' \
     wget \
   && apk add --no-cache \
     --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
@@ -35,11 +39,11 @@ RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.1/main' >> /etc/apk/repositori
     geos \
     geos-dev
 
-RUN pip install --upgrade pip setuptools \
-  && pip install --requirement requirements-standalone.txt \
-  && pip install --requirement requirements-pg.txt \
-  && pip install gunicorn \
-  && pip install . \
+RUN pip3 install --upgrade pip setuptools \
+  && pip3 install --requirement requirements-standalone.txt \
+  && pip3 install --requirement requirements-pg.txt \
+  && pip3 install gunicorn \
+  && pip3 install . \
   && mkdir /etc/pycsw \
   && mkdir data \
   && mv default-sample.cfg /etc/pycsw/pycsw.cfg \
