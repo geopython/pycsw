@@ -1,6 +1,5 @@
 -r requirements.txt
 -r requirements-standalone.txt
--r requirements-pg.txt
 
 mock==2.0.0
 Paver==1.2.4

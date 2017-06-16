@@ -35,11 +35,17 @@ import os
 import re
 from six.moves import configparser
 
-import psycopg2
+import apipkg
 import pytest
 
 from pycsw.core import admin
 from pycsw.core.config import StaticContext
+
+apipkg.initpkg("optionaldependencies", {
+    "psycopg2": "psycopg2",
+})
+
+from optionaldependencies import psycopg2  # NOQA: E402
 
 TESTS_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
