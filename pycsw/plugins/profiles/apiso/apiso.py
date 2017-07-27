@@ -490,7 +490,7 @@ class APISO(profile.Profile):
                 if val:
                     CI_resp = etree.SubElement(contact, util.nspath_eval('gmd:CI_ResponsibleParty', self.namespaces))
                     org_name = etree.SubElement(CI_resp, util.nspath_eval('gmd:organisationName', self.namespaces))
-                    etree.SubElement(org_name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val
+                    etree.SubElement(org_name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = str(val)
 
             # date
             val = util.getqattr(result, queryables['apiso:Modified']['dbcol'])
