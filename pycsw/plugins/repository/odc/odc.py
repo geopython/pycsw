@@ -34,6 +34,8 @@ from django.db import models
 from django.db import connection
 from django.db.models import Avg, Max, Min, Count
 from django.conf import settings
+from guardian.shortcuts import get_objects_for_user
+from django.contrib.auth.models import AnonymousUser
 
 from pycsw.core import repository, util
 from OpenDataCatalog.opendata.models import Resource
@@ -130,6 +132,10 @@ class OpenDataCatalogRepository(object):
 
         else:  # GetRecords sans constraint
             query = self._get_repo_filter(Resource.objects)
+        
+        # filter query to show only public records
+        permitted = get_objects_for_user(AnonymousUser(), 'base.view_resourcebase')
+        query = query.filter(id__in=permitted)
 
         total = query.count()
 
