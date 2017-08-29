@@ -16,5 +16,8 @@ tests/results
 # test configurations
 /default.cfg
 
+# git stuff
+.git
+
 # pycharm ide
 .idea

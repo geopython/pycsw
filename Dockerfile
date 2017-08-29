@@ -32,6 +32,7 @@ RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.1/main' >> /etc/apk/repositori
     libxslt-dev \
     'libxml2<2.9.4' \
     'libxml2-dev<2.9.4' \
+    netcat-openbsd \
     wget \
   && apk add --no-cache \
     --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
@@ -54,10 +55,7 @@ USER pycsw
 
 EXPOSE 8000
 
-ENTRYPOINT [ \
-  "gunicorn", \
-  "--workers=2", \
-  "--bind=0.0.0.0:8000", \
-  "--access-logfile=-", \
-  "pycsw.wsgi" \
+ENTRYPOINT [\
+  "python3", \
+  "/home/pycsw/bin/entrypoint.py" \
 ]
