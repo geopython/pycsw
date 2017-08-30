@@ -26,7 +26,6 @@ RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.1/main' >> /etc/apk/repositori
     libxslt-dev \
     'libxml2<2.9.4' \
     'libxml2-dev<2.9.4' \
-    netcat-openbsd \
     wget \
   && apk add --no-cache \
     --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
@@ -51,6 +50,10 @@ RUN pip3 install --upgrade pip setuptools \
   && cp bin/entrypoint.py /usr/local/bin/entrypoint.py \
   && chmod a+x /usr/local/bin/entrypoint.py \
   && cp -r tests /home/pycsw \
+  && cp requirements.txt /home/pycsw \
+  && cp requirements-standalone.txt /home/pycsw \
+  && cp requirements-pg.txt /home/pycsw \
+  && cp requirements-dev.txt /home/pycsw \
   && chown -R pycsw:pycsw /home/pycsw/* \
   && rm -rf *
 

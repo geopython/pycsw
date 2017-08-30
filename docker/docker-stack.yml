@@ -4,6 +4,7 @@
 # Use it with docker-compose or in a docker swarm:
 #
 # docker-compose --file docker-stack.yml --project pycsw up
+#
 
 version: "3"
 

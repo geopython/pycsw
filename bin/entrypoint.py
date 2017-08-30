@@ -11,25 +11,19 @@ additional input.
 
 
 import argparse
-from collections import namedtuple
 import logging
 import os
 from six.moves.configparser import SafeConfigParser
 from subprocess import call
-from subprocess import PIPE
 from time import sleep
+
+from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import ProgrammingError
 
 from pycsw.core import admin
 
 logger = logging.getLogger(__name__)
-
-DatabaseParameters = namedtuple("DatabaseParameters", [
-    "host",
-    "port",
-    "user",
-    "password",
-    "path"
-])
 
 
 def launch_pycsw(gunicorn_workers=2):
@@ -70,42 +64,35 @@ def handle_sqlite_db(database_url, table_name):
 
 
 def handle_postgresql_db(database_url, table_name):
-    db_params = _extract_postgres_url_params(database_url)
-    _wait_for_network_service(db_params.host, db_params.port)
-    # - set up the db with pycsw-admin if needed
-    _create_pycsw_schema(database_url, table_name)
+    _wait_for_postgresql_db(database_url)
+    try:
+        _create_pycsw_schema(database_url, table_name)
+    except ProgrammingError:
+        pass  # database tables are already created
 
 
-def _extract_postgres_url_params(database_url):
-    db_params = database_url.partition("://")[-1]
-    rest, db_name = db_params.rpartition("/")[::2]
-    user_params, host_params = rest.partition("@")[::2]
-    user, password = user_params.partition(":")[::2]
-    host, port = host_params.partition(":")[::2]
-    port = port if port != "" else "5432"
-    return DatabaseParameters(host, port, user, password, db_name)
+def _wait_for_postgresql_db(database_url, max_tries=10, wait_seconds=3):
+    logger.debug("Waiting for {!r}...".format(database_url))
+    engine = create_engine(database_url)
+    current_try = 0
+    while current_try < max_tries:
+        try:
+            engine.execute("SELECT version();")
+            logger.debug("Database is already up!")
+            break
+        except OperationalError:
+            logger.debug("Database not responding yet ...")
+            current_try += 1
+            sleep(wait_seconds)
+    else:
+        raise RuntimeError(
+            "Database not responding at {} after {} tries. "
+            "Giving up".format(database_url, max_tries)
+        )
 
 
 def _create_pycsw_schema(database_url, table):
     admin.setup_db(database=database_url, table=table, home="/home/pycsw")
-
-
-def _wait_for_network_service(host, port, max_tries=10, wait_seconds=3):
-    logger.debug("Waiting for {!r}:{!r}...".format(host, port))
-    current_try = 0
-    while current_try < max_tries:
-        return_code = call(
-            ["nc", "-z", str(host), str(port)], stdout=PIPE, stderr=PIPE)
-        if int(return_code) == 0:
-            logger.debug("{!r}:{!r} is already up!".format(host, port))
-            break
-        else:
-            current_try += 1
-            sleep(wait_seconds)
-    else:
-        raise RuntimeError("Could not find {}:{} after {} tries. "
-                           "Giving up".format(host, port, max_tries))
-
 
 
 if __name__ == "__main__":
