@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Entrypoint script for docker containers.
 
 This module serves as the entrypoint for docker containers. Its main
@@ -38,7 +40,7 @@ def launch_pycsw(gunicorn_workers=2):
     db = db_url.partition(":")[0].partition("+")[0]
     db_handler = {
         "sqlite": handle_sqlite_db,
-        "postgres": handle_postgresql_db,
+        "postgresql": handle_postgresql_db,
     }.get(db)
     logger.debug("Setting up pycsw's data repository...")
     logger.debug("Repository URL: {}".format(db_url))
@@ -59,6 +61,11 @@ def launch_pycsw(gunicorn_workers=2):
 def handle_sqlite_db(database_url, table_name):
     db_path = database_url.rpartition(":///")[-1]
     if not os.path.isfile(db_path):
+        try:
+            os.makedirs(os.path.dirname(db_path))
+        except OSError as exc:
+            if exc.args[0] == 17:  # directory already exists
+                pass
         _create_pycsw_schema(database_url, table_name)
 
 
@@ -67,7 +74,6 @@ def handle_postgresql_db(database_url, table_name):
     _wait_for_network_service(db_params.host, db_params.port)
     # - set up the db with pycsw-admin if needed
     _create_pycsw_schema(database_url, table_name)
-    raise NotImplementedError
 
 
 def _extract_postgres_url_params(database_url):

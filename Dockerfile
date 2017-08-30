@@ -2,12 +2,6 @@ FROM alpine:3.4
 
 ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
 
-RUN adduser -D -u 1000 pycsw
-
-WORKDIR /home/pycsw
-
-COPY . .
-
 # There's bug in libxml2 v2.9.4 that prevents using an XMLParser with a schema
 # file.
 #
@@ -40,6 +34,12 @@ RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.1/main' >> /etc/apk/repositori
     geos \
     geos-dev
 
+RUN adduser -D -u 1000 pycsw
+
+WORKDIR /tmp/pycsw
+
+COPY . .
+
 RUN pip3 install --upgrade pip setuptools \
   && pip3 install --requirement requirements-standalone.txt \
   && pip3 install --requirement requirements-pg.txt \
@@ -48,8 +48,13 @@ RUN pip3 install --upgrade pip setuptools \
   && mkdir /etc/pycsw \
   && mkdir data \
   && mv default-sample.cfg /etc/pycsw/pycsw.cfg \
-  && chown -R pycsw:pycsw *
+  && cp bin/entrypoint.py /usr/local/bin/entrypoint.py \
+  && chmod a+x /usr/local/bin/entrypoint.py \
+  && cp -r tests /home/pycsw \
+  && chown -R pycsw:pycsw /home/pycsw/* \
+  && rm -rf *
 
+WORKDIR /home/pycsw
 
 USER pycsw
 
@@ -57,5 +62,5 @@ EXPOSE 8000
 
 ENTRYPOINT [\
   "python3", \
-  "/home/pycsw/bin/entrypoint.py" \
+  "/usr/local/bin/entrypoint.py" \
 ]
