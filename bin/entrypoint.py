@@ -131,7 +131,7 @@ if __name__ == "__main__":
         default=2,
         help="Number of workers to use by the gunicorn server. Defaults to 2."
     )
-    args, remaining_args = parser.parse_known_args()
+    args = parser.parse_args()
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.WARNING)
     launch_pycsw(gunicorn_workers=args.workers)
