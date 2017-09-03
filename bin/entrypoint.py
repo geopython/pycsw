@@ -42,6 +42,7 @@ import argparse
 import logging
 import os
 from six.moves.configparser import SafeConfigParser
+from six.moves.configparser import NoOptionError
 from subprocess import call
 from time import sleep
 
@@ -54,11 +55,8 @@ from pycsw.core import admin
 logger = logging.getLogger(__name__)
 
 
-def launch_pycsw(gunicorn_workers=2):
-    logger.debug("Reading pycsw config...")
-    config = SafeConfigParser()
-    config.read("/etc/pycsw/pycsw.cfg")
-    db_url = config.get("repository", "database")
+def launch_pycsw(pycsw_config, gunicorn_workers=2):
+    db_url = pycsw_config.get("repository", "database")
     db = db_url.partition(":")[0].partition("+")[0]
     db_handler = {
         "sqlite": handle_sqlite_db,
@@ -66,7 +64,11 @@ def launch_pycsw(gunicorn_workers=2):
     }.get(db)
     logger.debug("Setting up pycsw's data repository...")
     logger.debug("Repository URL: {}".format(db_url))
-    db_handler(db_url, config.get("repository", "table"))
+    db_handler(
+        db_url,
+        pycsw_config.get("repository", "table"),
+        pycsw_config.get("server", "home")
+    )
     logger.debug("Launching pycsw...")
     pycsw_server_command = [
         "gunicorn",
@@ -75,12 +77,11 @@ def launch_pycsw(gunicorn_workers=2):
         "--error-logfile=-",
         "--workers={}".format(gunicorn_workers)
     ]
-    pycsw_server_command.append("--workers={}".format(gunicorn_workers))
     pycsw_server_command.append("pycsw.wsgi")
     call(pycsw_server_command)
 
 
-def handle_sqlite_db(database_url, table_name):
+def handle_sqlite_db(database_url, table_name, pycsw_home):
     db_path = database_url.rpartition(":///")[-1]
     if not os.path.isfile(db_path):
         try:
@@ -88,13 +89,15 @@ def handle_sqlite_db(database_url, table_name):
         except OSError as exc:
             if exc.args[0] == 17:  # directory already exists
                 pass
-        _create_pycsw_schema(database_url, table_name)
+        admin.setup_db(database=database_url, table=table_name,
+                       home=pycsw_home)
 
 
-def handle_postgresql_db(database_url, table_name):
+def handle_postgresql_db(database_url, table_name, pycsw_home):
     _wait_for_postgresql_db(database_url)
     try:
-        _create_pycsw_schema(database_url, table_name)
+        admin.setup_db(database=database_url, table=table_name,
+                       home=pycsw_home)
     except ProgrammingError:
         pass  # database tables are already created
 
@@ -119,19 +122,19 @@ def _wait_for_postgresql_db(database_url, max_tries=10, wait_seconds=3):
         )
 
 
-def _create_pycsw_schema(database_url, table):
-    admin.setup_db(database=database_url, table=table, home="/home/pycsw")
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--verbose", action="store_true")
     parser.add_argument(
         "--workers",
         default=2,
         help="Number of workers to use by the gunicorn server. Defaults to 2."
     )
     args = parser.parse_args()
-    logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.WARNING)
-    launch_pycsw(gunicorn_workers=args.workers)
+    config = SafeConfigParser()
+    config.read(os.getenv("PYCSW_CONFIG"))
+    try:
+        level = config.get("server", "loglevel").upper()
+    except NoOptionError:
+        level = "WARNING"
+    logging.basicConfig(level=getattr(logging, level))
+    launch_pycsw(config, gunicorn_workers=args.workers)

@@ -50,12 +50,11 @@ services:
       - db-data:/var/lib/postgresql/data/pgdata
 
   pycsw:
-    image: ricardogsilva/pycsw:${PYCSW_DOCKER_VERSION}
+    image: geopython/pycsw:${PYCSW_DOCKER_VERSION}
     ports:
       - "8000:8000"
     volumes:
       - ./docker-stack-pycsw.cfg:/etc/pycsw/pycsw.cfg
-    command: [--verbose]
 
 
 volumes:
