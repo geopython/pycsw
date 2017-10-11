@@ -28,8 +28,6 @@
 # =================================================================
 FROM alpine:3.4
 
-ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
-
 # There's bug in libxml2 v2.9.4 that prevents using an XMLParser with a schema
 # file.
 #
@@ -67,15 +65,18 @@ WORKDIR /tmp/pycsw
 
 COPY . .
 
+ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+
 RUN pip3 install --upgrade pip setuptools \
   && pip3 install --requirement requirements-standalone.txt \
   && pip3 install --requirement requirements-pg.txt \
   && pip3 install gunicorn \
   && pip3 install . \
   && mkdir /etc/pycsw \
-  && mkdir data \
-  && mv default-sample.cfg /etc/pycsw/pycsw.cfg \
-  && cp bin/entrypoint.py /usr/local/bin/entrypoint.py \
+  && mv docker/pycsw.cfg ${PYCSW_CONFIG} \
+  && mkdir /var/lib/pycsw \
+  && chown pycsw:pycsw /var/lib/pycsw \
+  && cp docker/entrypoint.py /usr/local/bin/entrypoint.py \
   && chmod a+x /usr/local/bin/entrypoint.py \
   && cp -r tests /home/pycsw \
   && cp requirements.txt /home/pycsw \
@@ -88,6 +89,7 @@ RUN pip3 install --upgrade pip setuptools \
 WORKDIR /home/pycsw
 
 USER pycsw
+
 
 EXPOSE 8000
 

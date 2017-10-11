@@ -35,6 +35,8 @@
 #
 # docker-compose --file docker-stack.yml --project pycsw up
 #
+# PYCSW_DOCKER_IMAGE=2.1-dev docker stack deploy --compose-file docker-stack.yml pycsw
+#
 
 version: "3"
 
