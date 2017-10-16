@@ -1,0 +1,63 @@
+# =================================================================
+#
+# Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#
+# Copyright (c) 2017 Ricardo Garcia Silva
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+# =================================================================
+#
+#
+# This docker-stack file demos how to use the pycsw docker image with a
+# postgis database
+#
+# Use it with docker-compose or in a docker swarm:
+#
+# docker-compose --file docker-stack.yml --project pycsw up
+#
+# PYCSW_DOCKER_IMAGE=2.1-dev docker stack deploy --compose-file docker-stack.yml pycsw
+#
+
+version: "3"
+
+services:
+
+  db:
+    image: mdillon/postgis:9.6-alpine
+    environment:
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: pycsw
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - db-data:/var/lib/postgresql/data/pgdata
+
+  pycsw:
+    image: geopython/pycsw:${PYCSW_DOCKER_VERSION}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docker-stack-pycsw.cfg:/etc/pycsw/pycsw.cfg
+
+
+volumes:
+  db-data:
