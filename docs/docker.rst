@@ -2,12 +2,26 @@ Docker
 ======
 
 pycsw is available as a Docker image. The image is hosted on the docker hub
-at geopython/pyycsw. It can be obtained by running:
+at [geopython/pycsw](https://hub.docker.com/r/geopython/pycsw/). It can be obtained by running:
 
 docker pull geopython/pycsw:<pycsw-version>
 
 The ``latest`` tag is also availabe and corresponds to the most up to date 
 master branch.
+
+Assuming you already have [docker installed](), you can get a pycsw instance up and running by issuing the following
+command::
+
+    docker run -p 8000:8000 geopython/pycsw
+
+Docker will retrieve the pycsw image from docker hub (if needed) and then start a new container listening on port 8000.
+
+The default configuration will run pycsw with an sqlite repository backend loaded with some test data from the CITE
+test suite. You cna use this to take pycsw for a test drive.
+
+
+Running custom pycsw instances
+------------------------------
 
 pycsw.cfg
 +++++++++
@@ -17,20 +31,19 @@ mount or as a docker secret (in the case of docker swarm). The configuration
 file is searched at the value of the ``PYCSW_CONFIG`` environmental variable,
 which defaults to ``/etc/pycsw/pycsw.cfg``. 
 
-Supplying the configuration file via bind mount:
+Supplying the configuration file via bind mount::
 
-docker run \
-    --name pycsw \
-    --dettach \
-    -v <path-to-pycsw.cfg>:/etc/pycsw/pycsw.cfg \
-    -p 8000:8000 \
-    geopython/pycsw
+    docker run \
+        --name pycsw \
+        --detach \
+        -v <path-to-local-pycsw.cfg>:/etc/pycsw/pycsw.cfg \
+        -p 8000:8000 \
+        geopython/pycsw
 
+Supplying the configuration file via docker secrets::
 
-Supplying the configuration file via docker secrets:
-
-docker secret create pycsw.cfg <path-to-pycsw.cfg>
-docker service create --name pycsw --secret pycsw.cfg geopython/pycsw
+    docker secret create pycsw-config <path-to-local-pycsw.cfg>
+    docker service create --name pycsw --secret pycsw.cfg geopython/pycsw
 
 
 sqlite repositories
