@@ -1,5 +1,5 @@
 Docker
-------
+======
 
 pycsw is available as a Docker image. The image is hosted on the `dockerhub`_.
 
@@ -17,7 +17,7 @@ pycsw for a test drive.
 
 
 Inspect logs
-^^^^^^^^^^^^
+------------
 
 The default configuration for the docker image outputs logs to stdout. This is
 common practice with docker containers and enables the inspection of logs
@@ -40,7 +40,7 @@ with the ``docker logs`` command::
 
 
 Using pycsw-admin
-^^^^^^^^^^^^^^^^^
+-----------------
 
 ``pycsw-admin`` can be executed on a running container by
 using ``docker exec``::
@@ -49,10 +49,10 @@ using ``docker exec``::
 
 
 Running custom pycsw containers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 
 pycsw configuration
-+++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^
 
 It is possible to supply a custom configuration file for pycsw as a bind 
 mount or as a docker secret (in the case of docker swarm). The configuration 
@@ -80,7 +80,7 @@ Supplying the configuration file via docker secrets::
 
 
 sqlite repositories
-+++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^
 
 The default database repository is the CITE database that is used for running 
 pycsw's test suites. Docker volumes may be used to specify a custom sqlite
@@ -97,7 +97,7 @@ database path. It should be mounted under ``/var/lib/pycsw``::
 
 
 PostgreSQL repositories
-+++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifying a PostgreSQL repository is just a matter of configuring a custom
 pycsw.cfg file with the correct specification.
@@ -107,7 +107,7 @@ file that spins up a postgis database together with a pycsw instance.
 
 
 Setting up a development environment with docker
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------------------
 
 Working on pycsw's code using docker enables an isolated environment that
 helps ensuring reproducibility while at the same time keeping your base
