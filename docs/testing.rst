@@ -241,6 +241,21 @@ There are three main ways to get more output from running tests:
    py.test -v --capture=no --pycsw-loglevel=debug
 
 
+Comparing results with difflib instead of XML c14n
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The functional tests compare results with their expected values by using
+[XML canonicalisation - XML c14n](https://www.w3.org/TR/xml-c14n/).
+Alternatively, you can call py.test with the ``--functional-prefer-diffs``
+flag. This will enable comparison based on python's ``difflib``. Comparison
+is made on a line-by-line basis and in case of failure, a unified diff will
+be printed to standard output.
+
+.. code:: bash
+
+   py.test -m functional -k 'harvesting' --functional-prefer-diffs
+
+
 Test coverage
 ^^^^^^^^^^^^^
 
