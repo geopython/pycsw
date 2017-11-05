@@ -220,3 +220,5 @@ which will publish pycsw to ``http://localhost:8000/``
 .. _`Web Server Gateway Interface`: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
 .. _`WSGIDaemonProcess`: https://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIDaemonProcess
 .. _`WSGI reference implementation`: http://docs.python.org/library/wsgiref.html
+
+.. include:: docker.rst
