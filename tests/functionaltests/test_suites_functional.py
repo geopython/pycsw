@@ -32,6 +32,7 @@
 
 import codecs
 from difflib import SequenceMatcher
+from difflib import unified_diff
 from io import BytesIO
 import json
 import re
@@ -47,7 +48,7 @@ pytestmark = pytest.mark.functional
 
 
 def test_suites(configuration, request_method, request_data, expected_result,
-                normalize_identifier_fields):
+                normalize_identifier_fields, use_xml_canonicalisation):
     """Test suites.
 
     This function is automatically parametrized by pytest as a result of the
@@ -69,6 +70,9 @@ def test_suites(configuration, request_method, request_data, expected_result,
     normalize_identifier_fields: bool
         Whether to normalize the identifier fields in responses. This
         parameter is used only in the 'harvesting' and 'manager' suites
+    use_xml_canonicalisation: bool
+        Whether to compare results with their expected values by using xml
+        canonicalisation or simply by doing a diff.
 
     """
 
@@ -84,21 +88,37 @@ def test_suites(configuration, request_method, request_data, expected_result,
         contents,
         normalize_identifiers=normalize_identifier_fields
     )
-    try:
-        matches_expected = _test_xml_result(normalized_result, expected)
-    except etree.XMLSyntaxError:
-        # the file is either not XML (perhaps JSON?) or malformed
-        matches_expected = _test_json_result(normalized_result, expected)
-    except etree.C14NError:
-        print("XML canonicalization has failed. Trying to compare result "
-              "with expected using difflib")
-        matches_expected = _test_xml_diff(normalized_result, expected)
+    if use_xml_canonicalisation:
+        print("Comparing results using XML canonicalization...")
+        matches_expected = _compare_with_xml_canonicalisation(
+            normalized_result, expected)
+    else:
+        print("Comparing results using diffs...")
+        matches_expected = _compare_without_xml_canonicalisation(
+            normalized_result, expected)
     if not matches_expected:
         #print("expected: {0}".format(expected.encode(encoding)))
         #print("response: {0}".format(normalized_result.encode(encoding)))
         print("expected: {0}".format(expected))
         print("response: {0}".format(normalized_result))
     assert matches_expected
+
+
+def _compare_with_xml_canonicalisation(normalized_result, expected):
+    try:
+        matches_expected = _test_xml_result(normalized_result, expected)
+    except etree.XMLSyntaxError:
+        # the file is either not XML (perhaps JSON?) or malformed
+        matches_expected = _test_json_result(normalized_result, expected)
+    except etree.C14NError:
+        print("XML canonicalisation has failed. Trying to compare result "
+              "with expected using difflib")
+        matches_expected = _test_xml_diff(normalized_result, expected)
+    return matches_expected
+
+
+def _compare_without_xml_canonicalisation(normalized_result, expected):
+    return _test_xml_diff(normalized_result, expected)
 
 
 def _prepare_wsgi_test_environment(request_method, request_data):
@@ -214,7 +234,7 @@ def _test_json_result(result, expected, encoding="utf-8"):
 def _test_xml_diff(result, expected):
     """Compare two XML strings by using python's ``difflib.SequenceMatcher``.
 
-    This is a character-by-cahracter comparison and does not take into account
+    This is a character-by-character comparison and does not take into account
     the semantic meaning of XML elements and attributes.
 
     Parameters
@@ -233,7 +253,12 @@ def _test_xml_diff(result, expected):
 
     sequence_matcher = SequenceMatcher(None, result, expected)
     ratio = sequence_matcher.ratio()
-    return ratio == pytest.approx(1.0)
+    matches = ratio == pytest.approx(1.0)
+    if not matches:
+        print("Result does not match expected.")
+        diff = unified_diff(result.splitlines(), expected.splitlines())
+        print("\n".join(list(diff)))
+    return matches
 
 
 def _normalize(sresult, normalize_identifiers=False):
