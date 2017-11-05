@@ -43,7 +43,7 @@ import logging
 import os
 from six.moves.configparser import SafeConfigParser
 from six.moves.configparser import NoOptionError
-from subprocess import call
+import sys
 from time import sleep
 
 from sqlalchemy import create_engine
@@ -55,7 +55,26 @@ from pycsw.core import admin
 logger = logging.getLogger(__name__)
 
 
-def launch_pycsw(pycsw_config, gunicorn_workers=2):
+def launch_pycsw(pycsw_config, workers=2, reload=False):
+    """Launch pycsw.
+
+    Main function of this entrypoint script. It will read pycsw's config file
+    and handle the specified repository backend, after which it will yield
+    control to the gunicorn wsgi server.
+
+    The ``os.execlp`` function is used to launch gunicorn. This causes it to
+    replace the current process - something analogous to bash's `exec`
+    command, which seems to be a common techinque when writing docker
+    entrypoint scripts. This means gunicorn will become PID 1 inside the
+    container and it somehow simplifies the process of interacting with it
+    (e.g. if the need arises to restart the worker processes). It also allows
+    for a clean exit. See
+
+    http://docs.gunicorn.org/en/latest/signals.html
+
+    for more information on how to control gunicorn by sending UNIX signals.
+    """
+
     db_url = pycsw_config.get("repository", "database")
     db = db_url.partition(":")[0].partition("+")[0]
     db_handler = {
@@ -69,16 +88,27 @@ def launch_pycsw(pycsw_config, gunicorn_workers=2):
         pycsw_config.get("repository", "table"),
         pycsw_config.get("server", "home")
     )
-    logger.debug("Launching pycsw...")
-    pycsw_server_command = [
-        "gunicorn",
+    sys.stdout.flush()
+    # we're using --reload-engine=poll because there is a bug with gunicorn
+    # that prevents using inotify together with python3. For more info:
+    #
+    # https://github.com/benoitc/gunicorn/issues/1477
+    #
+
+    args = ["--reload", "--reload-engine=poll"] if reload else []
+    execution_args = ["gunicorn"] + args + [
         "--bind=0.0.0.0:8000",
         "--access-logfile=-",
         "--error-logfile=-",
-        "--workers={}".format(gunicorn_workers)
+        "--workers={}".format(workers),
+        "pycsw.wsgi",
+
     ]
-    pycsw_server_command.append("pycsw.wsgi")
-    call(pycsw_server_command)
+    logger.debug("Launching pycsw with {} ...".format(" ".join(execution_args)))
+    os.execlp(
+        "gunicorn",
+        *execution_args
+    )
 
 
 def handle_sqlite_db(database_url, table_name, pycsw_home):
@@ -129,6 +159,14 @@ if __name__ == "__main__":
         default=2,
         help="Number of workers to use by the gunicorn server. Defaults to 2."
     )
+    parser.add_argument(
+        "-r",
+        "--reload",
+        action="store_true",
+        help="Should the gunicorn server automatically restart workers when "
+             "code changes? This option is only useful for development. "
+             "Defaults to False."
+    )
     args = parser.parse_args()
     config = SafeConfigParser()
     config.read(os.getenv("PYCSW_CONFIG"))
@@ -137,4 +175,4 @@ if __name__ == "__main__":
     except NoOptionError:
         level = "WARNING"
     logging.basicConfig(level=getattr(logging, level))
-    launch_pycsw(config, gunicorn_workers=args.workers)
+    launch_pycsw(config, workers=args.workers, reload=args.reload)
