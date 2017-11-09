@@ -276,8 +276,10 @@ class Csw(object):
             if version_202 or accept_version_202:
                 self.request_version = '2.0.2'
         elif self.requesttype == 'POST':
-            if self.request.find(b'2.0.2') != -1:
+            if self.request.find(b'cat/csw/2.0.2') != -1:
                 self.request_version = '2.0.2'
+            elif self.request.find(b'cat/csw/3.0') != -1:
+                self.request_version = '3.0.0'
 
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
                 self.kvp['mode'] == 'sru'):
@@ -482,6 +484,12 @@ class Csw(object):
             own_version_integer = util.get_version_integer(
                 self.request_version)
             if self.request_version == '2.0.2':
+                basic_options.append('version')
+            if self.request_version == '3.0.0' and 'version' not in self.kvp:
+                if 'service' not in self.kvp:
+                    self.kvp['service'] = 'CSW'
+                    basic_options.append('service')
+                self.kvp['version'] = self.request_version
                 basic_options.append('version')
 
             for k in basic_options:
