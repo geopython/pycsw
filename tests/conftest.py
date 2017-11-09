@@ -89,6 +89,13 @@ def pytest_addoption(parser):
         default="warning",
         help="Log level for the pycsw server."
     )
+    parser.addoption(
+        "--functional-prefer-diffs",
+        action="store_true",
+        help="When running functional tests, compare results with their "
+             "expected values by using diffs instead of XML canonicalisation "
+             "(the default)."
+    )
 
 
 @pytest.fixture(scope="session")

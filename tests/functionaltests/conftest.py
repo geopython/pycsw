@@ -122,13 +122,16 @@ def pytest_generate_tests(metafunc):
             normalize_ids = True if suite in ("harvesting",
                                               "manager") else False
             suite_dirs = _get_suite_dirs(suite)
+            use_xml_canonicalisation = not metafunc.config.getoption(
+                "--functional-prefer-diffs")
             if suite_dirs.post_tests_dir is not None:
                 post_argvalues, post_ids = _get_post_parameters(
                     post_tests_dir=suite_dirs.post_tests_dir,
                     expected_tests_dir=suite_dirs.expected_results_dir,
                     config_path=config_path,
                     suite_name=suite,
-                    normalize_ids=normalize_ids
+                    normalize_ids=normalize_ids,
+                    use_xml_canonicalisation=use_xml_canonicalisation
                 )
                 arg_values.extend(post_argvalues)
                 test_ids.extend(post_ids)
@@ -138,13 +141,15 @@ def pytest_generate_tests(metafunc):
                     expected_tests_dir=suite_dirs.expected_results_dir,
                     config_path=config_path,
                     suite_name=suite,
-                    normalize_ids=normalize_ids
+                    normalize_ids=normalize_ids,
+                    use_xml_canonicalisation=use_xml_canonicalisation
                 )
                 arg_values.extend(get_argvalues)
                 test_ids.extend(get_ids)
         metafunc.parametrize(
             argnames=["configuration", "request_method", "request_data",
-                      "expected_result", "normalize_identifier_fields"],
+                      "expected_result", "normalize_identifier_fields",
+                      "use_xml_canonicalisation"],
             argvalues=arg_values,
             indirect=["configuration"],
             ids=test_ids,
@@ -229,7 +234,7 @@ def _get_cite_suite_data_dir():
 
 
 def _get_get_parameters(get_tests_dir, expected_tests_dir, config_path,
-                        suite_name, normalize_ids):
+                        suite_name, normalize_ids, use_xml_canonicalisation):
     """Return the parameters suitable for parametrizing HTTP GET tests."""
     method = "GET"
     test_argvalues = []
@@ -246,7 +251,7 @@ def _get_get_parameters(get_tests_dir, expected_tests_dir, config_path,
             )
             test_argvalues.append(
                 (config_path, method, test_params, expected_result_path,
-                 normalize_ids)
+                 normalize_ids, use_xml_canonicalisation)
             )
             test_ids.append(
                 "{suite}_{http_method}_{name}".format(
@@ -257,7 +262,7 @@ def _get_get_parameters(get_tests_dir, expected_tests_dir, config_path,
 
 
 def _get_post_parameters(post_tests_dir, expected_tests_dir, config_path,
-                         suite_name, normalize_ids):
+                         suite_name, normalize_ids, use_xml_canonicalisation):
     """Return the parameters suitable for parametrizing HTTP POST tests."""
     method = "POST"
     test_argvalues = []
@@ -277,7 +282,8 @@ def _get_post_parameters(post_tests_dir, expected_tests_dir, config_path,
         )
         test_argvalues.append(
             (config_path, method, request_path,
-             expected_result_path, normalize_ids)
+             expected_result_path, normalize_ids,
+             use_xml_canonicalisation)
         )
         test_ids.append(
             "{suite}_{http_method}_{file_name}".format(
