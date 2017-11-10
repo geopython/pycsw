@@ -1,14 +1,14 @@
 Docker
 ======
 
-pycsw is available as a Docker image. The image is hosted on the `dockerhub`_.
+pycsw is available as a Docker image. The image is hosted on the `Docker Hub`_.
 
 Assuming you already have docker installed, you can get a pycsw instance up
 and running by issuing the following command::
 
     docker run -p 8000:8000 geopython/pycsw
 
-Docker will retrieve the pycsw image from dockerhub (if needed) and then
+Docker will retrieve the pycsw image from Docker Hub (if needed) and then
 start a new container listening on port 8000.
 
 The default configuration will run pycsw with an sqlite repository backend
@@ -165,5 +165,5 @@ example by running::
     firefox docs/_build/html/index.html
 
 
-.. _dockerhub: https://hub.docker.com/r/geopython/pycsw/
+.. _Docker Hub: https://hub.docker.com/r/geopython/pycsw/
 .. _pycsw's github repository: https://github.com/geopython/pycsw/tree/master/docker
