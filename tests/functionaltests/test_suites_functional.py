@@ -102,7 +102,7 @@ def test_suites(test_identifier, use_xml_canonicalisation,
         print("Comparing results using diffs...")
         matches_expected = _compare_without_xml_canonicalisation(
             normalized_result, expected)
-    if not matches_expected and not use_xml_canonicalisation:
+    if not matches_expected and use_xml_canonicalisation:
         print("expected: {0}".format(expected))
         print("response: {0}".format(normalized_result))
     if save_results_directory is not None:
