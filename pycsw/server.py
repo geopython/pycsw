@@ -460,7 +460,7 @@ class Csw(object):
                 self.request_version)
             if self.request_version == '2.0.2':
                 basic_options.append('version')
-            if self.request_version == '3.0.0' and 'version' not in self.kvp:
+            if self.request_version == '3.0.0' and 'version' not in self.kvp and self.requesttype == 'POST':
                 if 'service' not in self.kvp:
                     self.kvp['service'] = 'CSW'
                     basic_options.append('service')
