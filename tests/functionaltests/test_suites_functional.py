@@ -35,6 +35,7 @@ from difflib import SequenceMatcher
 from difflib import unified_diff
 from io import BytesIO
 import json
+import os
 import re
 import wsgiref.util
 
@@ -47,8 +48,9 @@ from pycsw import server
 pytestmark = pytest.mark.functional
 
 
-def test_suites(configuration, request_method, request_data, expected_result,
-                normalize_identifier_fields, use_xml_canonicalisation):
+def test_suites(test_identifier, use_xml_canonicalisation,
+                save_results_directory, configuration, request_method,
+                request_data, expected_result, normalize_identifier_fields):
     """Test suites.
 
     This function is automatically parametrized by pytest as a result of the
@@ -73,6 +75,10 @@ def test_suites(configuration, request_method, request_data, expected_result,
     use_xml_canonicalisation: bool
         Whether to compare results with their expected values by using xml
         canonicalisation or simply by doing a diff.
+    save_results_directory: str
+        Path to a directory where to test results should be saved to. A value
+        of ``None`` (the default) means that results will not get saved to
+        disk.
 
     """
 
@@ -96,11 +102,12 @@ def test_suites(configuration, request_method, request_data, expected_result,
         print("Comparing results using diffs...")
         matches_expected = _compare_without_xml_canonicalisation(
             normalized_result, expected)
-    if not matches_expected:
-        #print("expected: {0}".format(expected.encode(encoding)))
-        #print("response: {0}".format(normalized_result.encode(encoding)))
+    if not matches_expected and not use_xml_canonicalisation:
         print("expected: {0}".format(expected))
         print("response: {0}".format(normalized_result))
+    if save_results_directory is not None:
+        _save_test_result(save_results_directory, normalized_result,
+                          test_identifier, encoding)
     assert matches_expected
 
 
@@ -369,3 +376,20 @@ def _normalize(sresult, normalize_identifiers=False):
         for i2 in isoid2:
             sresult = sresult.replace(i2, r'PYCSW_IDENTIFIER')
     return sresult
+
+
+def _save_test_result(target_directory_path, test_result, filename, encoding):
+    """Save the input test result to disk"""
+    full_directory_path = os.path.abspath(
+        os.path.expanduser(os.path.expandvars(target_directory_path)))
+    try:
+        os.makedirs(full_directory_path)
+    except OSError as exc:
+        if exc.errno == 17:  # directory already exists
+            pass
+        else:
+            raise
+    target_path = os.path.join(full_directory_path, filename)
+    with codecs.open(target_path, "w", encoding=encoding) as fh:
+        fh.write(test_result)
+    return target_path

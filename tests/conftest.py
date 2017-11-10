@@ -96,6 +96,11 @@ def pytest_addoption(parser):
              "expected values by using diffs instead of XML canonicalisation "
              "(the default)."
     )
+    parser.addoption(
+        "--functional-save-results-directory",
+        help="When running functional tests, save each test's result under "
+             "the input directory path."
+    )
 
 
 @pytest.fixture(scope="session")

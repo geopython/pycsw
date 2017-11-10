@@ -256,6 +256,19 @@ be printed to standard output.
    py.test -m functional -k 'harvesting' --functional-prefer-diffs
 
 
+Saving test results for disk
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The result of each functional test can be saved to disk by using the
+``--functional-save-results-directory`` option. Each result file is named
+after the test identifier it has when running with pytest.
+
+.. code:: bash
+
+   py.test -m functional -k 'not harvesting' --functional-save-results-directory=/tmp/pycsw-test-results
+
+
+
 Test coverage
 ^^^^^^^^^^^^^
 

@@ -63,15 +63,18 @@ RUN adduser -D -u 1000 pycsw
 
 WORKDIR /tmp/pycsw
 
-COPY . .
-
-ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+COPY requirements-standalone.txt requirements-pg.txt ./
 
 RUN pip3 install --upgrade pip setuptools \
   && pip3 install --requirement requirements-standalone.txt \
   && pip3 install --requirement requirements-pg.txt \
-  && pip3 install gunicorn \
-  && pip3 install . \
+  && pip3 install gunicorn
+
+COPY . .
+
+ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+
+RUN pip3 install . \
   && mkdir /etc/pycsw \
   && mv docker/pycsw.cfg ${PYCSW_CONFIG} \
   && mkdir /var/lib/pycsw \
