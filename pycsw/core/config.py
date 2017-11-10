@@ -363,7 +363,7 @@ class StaticContext(object):
                         },
                         'parameters': {
                             'typeNames': {
-                                'values': ['csw:Record']
+                                'values': ['csw:Record', 'csw30:Record']
                             },
                             'outputSchema': {
                                 'values': ['http://www.opengis.net/cat/csw/3.0']

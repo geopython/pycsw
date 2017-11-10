@@ -92,6 +92,7 @@
       </ows20:Parameter>
       <ows20:Parameter name="typeNames">
         <ows20:AllowedValues>
+          <ows20:Value>csw30:Record</ows20:Value>
           <ows20:Value>csw:Record</ows20:Value>
         </ows20:AllowedValues>
       </ows20:Parameter>

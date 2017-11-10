@@ -613,7 +613,7 @@ class Csw3(object):
                 'elementsetname',
                 'Missing one of ElementSetName or ElementName parameter(s)')
 
-        if 'elementsetname' in self.parent.kvp and 'elementname' in self.parent.kvp:
+        if 'elementsetname' in self.parent.kvp and 'elementname' in self.parent.kvp and self.parent.kvp['elementname']:
             # mutually exclusive required
             return self.exceptionreport('NoApplicableCode',
             'elementsetname',
@@ -645,7 +645,7 @@ class Csw3(object):
                     if ofmt.split('/')[0] in self.parent.kvp['outputformat']:
                         LOGGER.debug('FOUND OUTPUT MATCH')
                         formats_match = True
-                if not formats_match:
+                if not formats_match and self.parent.environ['HTTP_ACCEPT'] != '*/*':
                     return self.exceptionreport('InvalidParameterValue',
                     'outputformat', 'HTTP Accept header (%s) and outputformat (%s) must agree' %
                     (self.parent.environ['HTTP_ACCEPT'], self.parent.kvp['outputformat']))
@@ -930,7 +930,8 @@ class Csw3(object):
                 try:
                     if (self.parent.kvp['outputschema'] ==
                         'http://www.opengis.net/cat/csw/3.0' and
-                        'csw:Record' in self.parent.kvp['typenames']):
+                        ('csw:Record' in self.parent.kvp['typenames'] or
+                         'csw30:Record' in self.parent.kvp['typenames'])):
                         # serialize csw:Record inline
                         searchresults.append(self._write_record(
                         res, self.parent.repository.queryables['_all']))
