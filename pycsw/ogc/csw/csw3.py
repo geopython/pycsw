@@ -869,17 +869,14 @@ class Csw3(object):
 
         if int(matched) == 0:
             returned = nextrecord = '0'
+        elif int(matched) < int(self.parent.kvp['startposition']):
+            returned = nextrecord = '0'
+        elif int(matched) <= int(self.parent.kvp['startposition']) + int(self.parent.kvp['maxrecords']) - 1:
+            returned = str(int(matched) - int(self.parent.kvp['startposition']) + 1)
+            nextrecord = '0'
         else:
-            if int(matched) < int(self.parent.kvp['maxrecords']):
-                returned = matched
-                nextrecord = '0'
-            else:
-                returned = str(self.parent.kvp['maxrecords'])
-                if int(self.parent.kvp['startposition']) + int(self.parent.kvp['maxrecords']) >= int(matched):
-                    nextrecord = '0'
-                else:
-                    nextrecord = str(int(self.parent.kvp['startposition']) + \
-                    int(self.parent.kvp['maxrecords']))
+            returned = str(self.parent.kvp['maxrecords'])
+            nextrecord = str(int(self.parent.kvp['startposition']) + int(self.parent.kvp['maxrecords']))
 
         LOGGER.debug('Results: matched: %s, returned: %s, next: %s',
         matched, returned, nextrecord)
