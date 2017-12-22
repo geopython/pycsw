@@ -145,8 +145,6 @@ def _parse_metadata(context, repos, record):
         return [_parse_fgdc(context, repos, exml)]
     elif root == '{%s}TRANSFER' % context.namespaces['gm03']:  # GM03
         return [_parse_gm03(context, repos, exml)]
-    elif root == '{http://www.geocat.ch/2008/che}CHE_MD_Metadata': # GM03 ISO profile
-        return [_parse_iso(context, repos, exml)]
     elif root == '{%s}Record' % context.namespaces['csw']:  # Dublin Core CSW
         return [_parse_dc(context, repos, exml)]
     elif root == '{%s}RDF' % context.namespaces['rdf']:  # Dublin Core RDF
@@ -1214,15 +1212,11 @@ def _parse_gm03(context, repos, exml):
 def _parse_iso(context, repos, exml):
 
     from owslib.iso import MD_Metadata
-    from owslib.iso_che import CHE_MD_Metadata
 
     recobj = repos.dataset()
     links = []
 
-    if exml.tag == '{http://www.geocat.ch/2008/che}CHE_MD_Metadata':
-        md = CHE_MD_Metadata(exml)
-    else:
-        md = MD_Metadata(exml)
+    md = MD_Metadata(exml)
 
     _set(context, recobj, 'pycsw:Identifier', md.identifier)
     _set(context, recobj, 'pycsw:Typename', 'gmd:MD_Metadata')
