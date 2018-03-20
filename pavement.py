@@ -87,7 +87,7 @@ def gen_tests_html():
     """Generate tests/index.html for online testing"""
     with pushd('tests'):
         # ensure manager testsuite is writeable
-        os.chmod(os.path.join('suites', 'manager', 'data'), 0o777)
+        os.chmod(os.path.join('functionaltests', 'suites', 'manager', 'data'), 0o777)
         sh('python gen_html.py > index.html')
 
 
