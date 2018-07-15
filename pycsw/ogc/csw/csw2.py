@@ -1934,7 +1934,7 @@ class Csw2(object):
 
             node2.text = self.parent.request
 
-        if self.parent.async:
+        if self.parent.asynchronous:
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
             self.parent.context.namespaces)).text = self.kvp['requestid']
 

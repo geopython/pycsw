@@ -75,7 +75,7 @@ class Csw(object):
         self.kvp = {}
 
         self.mode = 'csw'
-        self.async = False
+        self.asynchronous = False
         self.soap = False
         self.request = None
         self.exception = False
@@ -539,7 +539,7 @@ class Csw(object):
             if 'responsehandler' in self.kvp:
                 # set flag to process asynchronously
                 import threading
-                self.async = True
+                self.asynchronous = True
                 request_id = self.kvp.get('requestid', None)
                 if request_id is None:
                     import uuid
@@ -552,7 +552,7 @@ class Csw(object):
             elif self.kvp['request'] == 'GetDomain':
                 self.response = self.iface.getdomain()
             elif self.kvp['request'] == 'GetRecords':
-                if self.async:  # process asynchronously
+                if self.asynchronous:  # process asynchronously
                     threading.Thread(target=self.iface.getrecords).start()
                     self.response = self.iface._write_acknowledgement()
                 else:
@@ -564,7 +564,7 @@ class Csw(object):
             elif self.kvp['request'] == 'Transaction':
                 self.response = self.iface.transaction()
             elif self.kvp['request'] == 'Harvest':
-                if self.async:  # process asynchronously
+                if self.asynchronous:  # process asynchronously
                     threading.Thread(target=self.iface.harvest).start()
                     self.response = self.iface._write_acknowledgement()
                 else:
