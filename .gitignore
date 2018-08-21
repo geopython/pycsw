@@ -12,9 +12,14 @@ tests/results
 **.cache
 .coverage
 .tox
+.pytest_cache
 
 # test configurations
 /default.cfg
 
 # pycharm ide
 .idea
+
+# shell files
+.env
+.envrc
