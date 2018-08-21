@@ -466,10 +466,23 @@ def rebuild_db_indexes(database, table):
 
 def optimize_db(context, database, table):
     """Optimize database"""
+    from sqlalchemy.exc import ArgumentError, OperationalError
 
     LOGGER.info('Optimizing database %s', database)
     repos = repository.Repository(database, context, table=table)
-    repos.engine.connect().execute('VACUUM ANALYZE').close()
+    connection = repos.engine.connect()
+    try:
+        # PostgreSQL
+        connection.execution_options(isolation_level="AUTOCOMMIT")
+        connection.execute('VACUUM ANALYZE')
+    except (ArgumentError, OperationalError):
+        # SQLite
+        connection.autocommit = True
+        connection.execute('VACUUM')
+        connection.execute('ANALYZE')
+    finally:
+        connection.close()
+        LOGGER.info('Done')
 
 
 def gen_sitemap(context, database, table, url, output_file):
