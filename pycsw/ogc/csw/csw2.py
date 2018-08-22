@@ -1258,8 +1258,8 @@ class Csw2(object):
             return self.exceptionreport('InvalidParameterValue',
             'resourcetype', 'Invalid resource type parameter: %s.\
             Allowable resourcetype values: %s' % (self.parent.kvp['resourcetype'],
-            ','.join(self.parent.context.model['operations']['Harvest']['parameters']
-            ['ResourceType']['values'])))
+            ','.join(sorted(self.parent.context.model['operations']['Harvest']['parameters']
+            ['ResourceType']['values']))))
 
         if (self.parent.kvp['resourcetype'].find('opengis.net') == -1 and
             self.parent.kvp['resourcetype'].find('urn:geoss:waf') == -1):
