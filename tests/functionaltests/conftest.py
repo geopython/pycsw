@@ -427,7 +427,7 @@ def _initialize_database(repository_url, table_name, data_dir, test_dir):
     if len(os.listdir(data_dir)) > 0:
         print("Loading database data...")
         admin.load_records(context=StaticContext(), database=repository_url,
-                           table=table_name, xml_dirpath=data_dir)
+                           table=table_name, xml_dirpath=data_dir, recursive=True)
 
 
 def _parse_postgresql_repository_url(repository_url):
