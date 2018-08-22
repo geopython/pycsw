@@ -584,6 +584,7 @@ def _parse_wmts(context, repos, record, identifier):
 
 def _parse_wfs(context, repos, record, identifier, version):
 
+    import requests
     from owslib.wfs import WebFeatureService
 
     bboxs = []
@@ -592,6 +593,8 @@ def _parse_wfs(context, repos, record, identifier, version):
 
     try:
         md = WebFeatureService(record, version)
+    except requests.exceptions.HTTPError as err:
+        raise
     except Exception as err:
         if version == '1.1.0':
             md = WebFeatureService(record, '1.0.0')
