@@ -316,6 +316,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
 
     file_list = []
 
+    loaded_files = set()
     if os.path.isfile(xml_dirpath):
         file_list.append(xml_dirpath)
     elif recursive:
@@ -356,12 +357,14 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
             # TODO: do this as CSW Harvest
             try:
                 repo.insert(rec, 'local', util.get_today_and_now())
+                loaded_files.add(recfile)
                 LOGGER.info('Inserted %s', recfile)
             except Exception as err:
                 if force_update:
                     LOGGER.info('Record exists. Updating.')
                     repo.update(rec)
                     LOGGER.info('Updated %s', recfile)
+                    loaded_files.add(recfile)
                 else:
                     if isinstance(err, DBAPIError) and err.args:
                         # Pull a decent database error message and not the full SQL that was run
@@ -369,6 +372,8 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
                         LOGGER.error('ERROR: %s not inserted: %s', recfile, err.args[0])
                     else:
                         LOGGER.error('ERROR: %s not inserted: %s', recfile, err)
+
+    return tuple(loaded_files)
 
 
 def export_records(context, database, table, xml_dirpath):
@@ -384,6 +389,8 @@ def export_records(context, database, table, xml_dirpath):
 
     dirpath = os.path.abspath(xml_dirpath)
 
+    exported_files = set()
+
     if not os.path.exists(dirpath):
         LOGGER.info('Directory %s does not exist.  Creating...', dirpath)
         try:
@@ -398,11 +405,9 @@ def export_records(context, database, table, xml_dirpath):
                     context.md_core_model['mappings']['pycsw:Identifier'])
 
         LOGGER.info('Processing %s', identifier)
-        if identifier.find(':') != -1:  # it's a URN
-            # sanitize identifier
-            LOGGER.info(' Sanitizing identifier')
-            identifier = identifier.split(':')[-1]
 
+        # sanitize identifier
+        identifier = util.secure_filename(identifier)
         # write to XML document
         filename = os.path.join(dirpath, '%s.xml' % identifier)
         try:
@@ -414,10 +419,17 @@ def export_records(context, database, table, xml_dirpath):
             with open(filename, 'w') as xml:
                 xml.write('<?xml version="1.0" encoding="UTF-8"?>\n')
                 xml.write(str_xml)
-
         except Exception as err:
-            LOGGER.exception('Error writing to disk')
-            raise RuntimeError("Error writing to %s" % filename, err)
+            # Something went wrong so skip over this file but log an error
+            LOGGER.exception('Error writing %s to disk', filename)
+            # If we wrote a partial file or created an empty file make sure it is removed
+            if os.path.exists(filename):
+                os.remove(filename)
+            continue
+        else:
+            exported_files.add(filename)
+
+    return tuple(exported_files)
 
 
 def refresh_harvested_records(context, database, table, url):

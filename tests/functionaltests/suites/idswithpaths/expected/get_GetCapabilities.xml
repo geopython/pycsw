@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" updateSequence="PYCSW_UPDATESEQUENCE" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <ows:ServiceIdentification>
+    <ows:Title>pycsw Geospatial Catalogue</ows:Title>
+    <ows:Abstract>pycsw is an OGC CSW server implementation written in Python</ows:Abstract>
+    <ows:Keywords>
+      <ows:Keyword>catalogue</ows:Keyword>
+      <ows:Keyword>discovery</ows:Keyword>
+      <ows:Type codeSpace="ISOTC211/19115">theme</ows:Type>
+    </ows:Keywords>
+    <ows:ServiceType codeSpace="OGC">CSW</ows:ServiceType>
+    <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
+    <ows:ServiceTypeVersion>3.0.0</ows:ServiceTypeVersion>
+    <ows:Fees>None</ows:Fees>
+    <ows:AccessConstraints>None</ows:AccessConstraints>
+  </ows:ServiceIdentification>
+  <ows:ServiceProvider>
+    <ows:ProviderName>pycsw</ows:ProviderName>
+    <ows:ProviderSite xlink:type="simple" xlink:href="http://pycsw.org/"/>
+    <ows:ServiceContact>
+      <ows:IndividualName>Kralidis, Tom</ows:IndividualName>
+      <ows:PositionName>Senior Systems Scientist</ows:PositionName>
+      <ows:ContactInfo>
+        <ows:Phone>
+          <ows:Voice>+01-416-xxx-xxxx</ows:Voice>
+          <ows:Facsimile>+01-416-xxx-xxxx</ows:Facsimile>
+        </ows:Phone>
+        <ows:Address>
+          <ows:DeliveryPoint>TBA</ows:DeliveryPoint>
+          <ows:City>Toronto</ows:City>
+          <ows:AdministrativeArea>Ontario</ows:AdministrativeArea>
+          <ows:PostalCode>M9C 3Z9</ows:PostalCode>
+          <ows:Country>Canada</ows:Country>
+          <ows:ElectronicMailAddress>tomkralidis@gmail.com</ows:ElectronicMailAddress>
+        </ows:Address>
+        <ows:OnlineResource xlink:type="simple" xlink:href="http://kralidis.ca/"/>
+        <ows:HoursOfService>0800h - 1600h EST</ows:HoursOfService>
+        <ows:ContactInstructions>During hours of service.  Off on weekends.</ows:ContactInstructions>
+      </ows:ContactInfo>
+      <ows:Role codeSpace="ISOTC211/19115">pointOfContact</ows:Role>
+    </ows:ServiceContact>
+  </ows:ServiceProvider>
+  <ows:OperationsMetadata>
+    <ows:Operation name="GetCapabilities">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="sections">
+        <ows:Value>Filter_Capabilities</ows:Value>
+        <ows:Value>OperationsMetadata</ows:Value>
+        <ows:Value>ServiceIdentification</ows:Value>
+        <ows:Value>ServiceProvider</ows:Value>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Operation name="DescribeRecord">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="outputFormat">
+        <ows:Value>application/json</ows:Value>
+        <ows:Value>application/xml</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="schemaLanguage">
+        <ows:Value>http://www.w3.org/2001/XMLSchema</ows:Value>
+        <ows:Value>http://www.w3.org/TR/xmlschema-1/</ows:Value>
+        <ows:Value>http://www.w3.org/XML/Schema</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="typeName">
+        <ows:Value>csw:Record</ows:Value>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Operation name="GetDomain">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="ParameterName">
+        <ows:Value>DescribeRecord.outputFormat</ows:Value>
+        <ows:Value>DescribeRecord.schemaLanguage</ows:Value>
+        <ows:Value>DescribeRecord.typeName</ows:Value>
+        <ows:Value>GetCapabilities.sections</ows:Value>
+        <ows:Value>GetRecordById.ElementSetName</ows:Value>
+        <ows:Value>GetRecordById.outputFormat</ows:Value>
+        <ows:Value>GetRecordById.outputSchema</ows:Value>
+        <ows:Value>GetRecords.CONSTRAINTLANGUAGE</ows:Value>
+        <ows:Value>GetRecords.ElementSetName</ows:Value>
+        <ows:Value>GetRecords.outputFormat</ows:Value>
+        <ows:Value>GetRecords.outputSchema</ows:Value>
+        <ows:Value>GetRecords.resultType</ows:Value>
+        <ows:Value>GetRecords.typeNames</ows:Value>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Operation name="GetRecords">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="CONSTRAINTLANGUAGE">
+        <ows:Value>CQL_TEXT</ows:Value>
+        <ows:Value>FILTER</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="ElementSetName">
+        <ows:Value>brief</ows:Value>
+        <ows:Value>full</ows:Value>
+        <ows:Value>summary</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="outputFormat">
+        <ows:Value>application/json</ows:Value>
+        <ows:Value>application/xml</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="outputSchema">
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
+        <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
+        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="resultType">
+        <ows:Value>hits</ows:Value>
+        <ows:Value>results</ows:Value>
+        <ows:Value>validate</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="typeNames">
+        <ows:Value>csw:Record</ows:Value>
+      </ows:Parameter>
+      <ows:Constraint name="SupportedDublinCoreQueryables">
+        <ows:Value>csw:AnyText</ows:Value>
+        <ows:Value>dc:contributor</ows:Value>
+        <ows:Value>dc:creator</ows:Value>
+        <ows:Value>dc:date</ows:Value>
+        <ows:Value>dc:format</ows:Value>
+        <ows:Value>dc:identifier</ows:Value>
+        <ows:Value>dc:language</ows:Value>
+        <ows:Value>dc:publisher</ows:Value>
+        <ows:Value>dc:relation</ows:Value>
+        <ows:Value>dc:rights</ows:Value>
+        <ows:Value>dc:source</ows:Value>
+        <ows:Value>dc:subject</ows:Value>
+        <ows:Value>dc:title</ows:Value>
+        <ows:Value>dc:type</ows:Value>
+        <ows:Value>dct:abstract</ows:Value>
+        <ows:Value>dct:alternative</ows:Value>
+        <ows:Value>dct:modified</ows:Value>
+        <ows:Value>dct:spatial</ows:Value>
+        <ows:Value>ows:BoundingBox</ows:Value>
+      </ows:Constraint>
+    </ows:Operation>
+    <ows:Operation name="GetRecordById">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="ElementSetName">
+        <ows:Value>brief</ows:Value>
+        <ows:Value>full</ows:Value>
+        <ows:Value>summary</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="outputFormat">
+        <ows:Value>application/json</ows:Value>
+        <ows:Value>application/xml</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="outputSchema">
+        <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
+        <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+        <ows:Value>http://www.opengis.net/cat/csw/csdgm</ows:Value>
+        <ows:Value>http://www.w3.org/2005/Atom</ows:Value>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Operation name="GetRepositoryItem">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+        </ows:HTTP>
+      </ows:DCP>
+    </ows:Operation>
+    <ows:Parameter name="service">
+      <ows:Value>CSW</ows:Value>
+    </ows:Parameter>
+    <ows:Parameter name="version">
+      <ows:Value>2.0.2</ows:Value>
+      <ows:Value>3.0.0</ows:Value>
+    </ows:Parameter>
+    <ows:Constraint name="MaxRecordDefault">
+      <ows:Value>10</ows:Value>
+    </ows:Constraint>
+    <ows:Constraint name="PostEncoding">
+      <ows:Value>XML</ows:Value>
+      <ows:Value>SOAP</ows:Value>
+    </ows:Constraint>
+    <ows:Constraint name="XPathQueryables">
+      <ows:Value>allowed</ows:Value>
+    </ows:Constraint>
+  </ows:OperationsMetadata>
+  <ogc:Filter_Capabilities>
+    <ogc:Spatial_Capabilities>
+      <ogc:GeometryOperands>
+        <ogc:GeometryOperand>gml:Point</ogc:GeometryOperand>
+        <ogc:GeometryOperand>gml:LineString</ogc:GeometryOperand>
+        <ogc:GeometryOperand>gml:Polygon</ogc:GeometryOperand>
+        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+      </ogc:GeometryOperands>
+      <ogc:SpatialOperators>
+        <ogc:SpatialOperator name="BBOX"/>
+        <ogc:SpatialOperator name="Beyond"/>
+        <ogc:SpatialOperator name="Contains"/>
+        <ogc:SpatialOperator name="Crosses"/>
+        <ogc:SpatialOperator name="Disjoint"/>
+        <ogc:SpatialOperator name="DWithin"/>
+        <ogc:SpatialOperator name="Equals"/>
+        <ogc:SpatialOperator name="Intersects"/>
+        <ogc:SpatialOperator name="Overlaps"/>
+        <ogc:SpatialOperator name="Touches"/>
+        <ogc:SpatialOperator name="Within"/>
+      </ogc:SpatialOperators>
+    </ogc:Spatial_Capabilities>
+    <ogc:Scalar_Capabilities>
+      <ogc:LogicalOperators/>
+      <ogc:ComparisonOperators>
+        <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
+        <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>
+      </ogc:ComparisonOperators>
+      <ogc:ArithmeticOperators>
+        <ogc:Functions>
+          <ogc:FunctionNames>
+            <ogc:FunctionName nArgs="1">length</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">lower</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">ltrim</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">rtrim</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">trim</ogc:FunctionName>
+            <ogc:FunctionName nArgs="1">upper</ogc:FunctionName>
+          </ogc:FunctionNames>
+        </ogc:Functions>
+      </ogc:ArithmeticOperators>
+    </ogc:Scalar_Capabilities>
+    <ogc:Id_Capabilities>
+      <ogc:EID/>
+      <ogc:FID/>
+    </ogc:Id_Capabilities>
+  </ogc:Filter_Capabilities>
+</csw:Capabilities>
