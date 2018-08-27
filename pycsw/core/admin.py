@@ -310,10 +310,13 @@ FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
 
 def load_records(context, database, table, xml_dirpath, recursive=False, force_update=False):
     """Load metadata records from directory of files to database"""
+    from sqlalchemy.exc import DBAPIError
+
     repo = repository.Repository(database, context, table=table)
 
     file_list = []
 
+    loaded_files = set()
     if os.path.isfile(xml_dirpath):
         file_list.append(xml_dirpath)
     elif recursive:
@@ -334,11 +337,18 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
         # read document
         try:
             exml = etree.parse(recfile, context.parser)
+        except etree.XMLSyntaxError as err:
+            LOGGER.error('XML document "%s" is not well-formed', recfile)
+            continue
         except Exception as err:
-            LOGGER.exception('XML document is not well-formed')
+            LOGGER.exception('XML document "%s" is not well-formed', recfile)
             continue
 
-        record = metadata.parse_record(context, exml, repo)
+        try:
+            record = metadata.parse_record(context, exml, repo)
+        except Exception as err:
+            LOGGER.exception('Could not parse "%s" as an XML record', recfile)
+            continue
 
         for rec in record:
             LOGGER.info('Inserting %s %s into database %s, table %s ....',
@@ -347,14 +357,23 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
             # TODO: do this as CSW Harvest
             try:
                 repo.insert(rec, 'local', util.get_today_and_now())
-                LOGGER.info('Inserted')
-            except RuntimeError as err:
+                loaded_files.add(recfile)
+                LOGGER.info('Inserted %s', recfile)
+            except Exception as err:
                 if force_update:
                     LOGGER.info('Record exists. Updating.')
                     repo.update(rec)
-                    LOGGER.info('Updated')
+                    LOGGER.info('Updated %s', recfile)
+                    loaded_files.add(recfile)
                 else:
-                    LOGGER.error('ERROR: not inserted %s', err)
+                    if isinstance(err, DBAPIError) and err.args:
+                        # Pull a decent database error message and not the full SQL that was run
+                        # since INSERT SQL statements are rather large.
+                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err.args[0])
+                    else:
+                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err)
+
+    return tuple(loaded_files)
 
 
 def export_records(context, database, table, xml_dirpath):
@@ -370,6 +389,8 @@ def export_records(context, database, table, xml_dirpath):
 
     dirpath = os.path.abspath(xml_dirpath)
 
+    exported_files = set()
+
     if not os.path.exists(dirpath):
         LOGGER.info('Directory %s does not exist.  Creating...', dirpath)
         try:
@@ -384,11 +405,9 @@ def export_records(context, database, table, xml_dirpath):
                     context.md_core_model['mappings']['pycsw:Identifier'])
 
         LOGGER.info('Processing %s', identifier)
-        if identifier.find(':') != -1:  # it's a URN
-            # sanitize identifier
-            LOGGER.info(' Sanitizing identifier')
-            identifier = identifier.split(':')[-1]
 
+        # sanitize identifier
+        identifier = util.secure_filename(identifier)
         # write to XML document
         filename = os.path.join(dirpath, '%s.xml' % identifier)
         try:
@@ -400,10 +419,17 @@ def export_records(context, database, table, xml_dirpath):
             with open(filename, 'w') as xml:
                 xml.write('<?xml version="1.0" encoding="UTF-8"?>\n')
                 xml.write(str_xml)
-
         except Exception as err:
-            LOGGER.exception('Error writing to disk')
-            raise RuntimeError("Error writing to %s" % filename, err)
+            # Something went wrong so skip over this file but log an error
+            LOGGER.exception('Error writing %s to disk', filename)
+            # If we wrote a partial file or created an empty file make sure it is removed
+            if os.path.exists(filename):
+                os.remove(filename)
+            continue
+        else:
+            exported_files.add(filename)
+
+    return tuple(exported_files)
 
 
 def refresh_harvested_records(context, database, table, url):
@@ -452,10 +478,23 @@ def rebuild_db_indexes(database, table):
 
 def optimize_db(context, database, table):
     """Optimize database"""
+    from sqlalchemy.exc import ArgumentError, OperationalError
 
     LOGGER.info('Optimizing database %s', database)
     repos = repository.Repository(database, context, table=table)
-    repos.engine.connect().execute('VACUUM ANALYZE').close()
+    connection = repos.engine.connect()
+    try:
+        # PostgreSQL
+        connection.execution_options(isolation_level="AUTOCOMMIT")
+        connection.execute('VACUUM ANALYZE')
+    except (ArgumentError, OperationalError):
+        # SQLite
+        connection.autocommit = True
+        connection.execute('VACUUM')
+        connection.execute('ANALYZE')
+    finally:
+        connection.close()
+        LOGGER.info('Done')
 
 
 def gen_sitemap(context, database, table, url, output_file):

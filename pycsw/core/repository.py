@@ -300,9 +300,7 @@ class Repository(object):
             self.session.commit()
         except Exception as err:
             self.session.rollback()
-            msg = 'Cannot commit to repository'
-            LOGGER.exception(msg)
-            raise RuntimeError(msg)
+            raise
 
     def update(self, record=None, recprops=None, constraint=None):
         ''' Update a record in the repository based on identifier '''

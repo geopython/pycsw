@@ -34,6 +34,7 @@
 import logging
 import uuid
 from six.moves import range
+from six import text_type, binary_type
 from six.moves.urllib.parse import urlparse
 
 from geolinks import sniff_link
@@ -124,7 +125,7 @@ def _set(context, obj, name, value):
 def _parse_metadata(context, repos, record):
     """parse metadata formats"""
 
-    if isinstance(record, str):
+    if isinstance(record, binary_type) or isinstance(record, text_type):
         exml = etree.fromstring(record, context.parser)
     else:  # already serialized to lxml
         if hasattr(record, 'getroot'):  # standalone document
@@ -584,6 +585,7 @@ def _parse_wmts(context, repos, record, identifier):
 
 def _parse_wfs(context, repos, record, identifier, version):
 
+    import requests
     from owslib.wfs import WebFeatureService
 
     bboxs = []
@@ -592,6 +594,8 @@ def _parse_wfs(context, repos, record, identifier, version):
 
     try:
         md = WebFeatureService(record, version)
+    except requests.exceptions.HTTPError as err:
+        raise
     except Exception as err:
         if version == '1.1.0':
             md = WebFeatureService(record, '1.0.0')

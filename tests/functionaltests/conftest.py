@@ -54,6 +54,7 @@ SuiteDirs = namedtuple("SuiteDirs", [
     "post_tests_dir",
     "data_tests_dir",
     "expected_results_dir",
+    "export_tests_dir",
 ])
 
 
@@ -142,6 +143,7 @@ def pytest_generate_tests(metafunc):
                 )
                 arg_values.extend(get_argvalues)
                 test_ids.extend(get_ids)
+
         metafunc.parametrize(
             argnames=["configuration", "request_method", "request_data",
                       "expected_result", "normalize_identifier_fields",],
@@ -149,6 +151,7 @@ def pytest_generate_tests(metafunc):
             indirect=["configuration"],
             ids=test_ids,
         )
+
 
 @pytest.fixture()
 def test_identifier(request):
@@ -195,11 +198,12 @@ def configuration(request, tests_directory, log_level):
     suite_name = config_path.split(os.path.sep)[-2]
     suite_dirs = _get_suite_dirs(suite_name)
     data_dir = suite_dirs.data_tests_dir
+    export_dir = suite_dirs.export_tests_dir
     if data_dir is not None:  # suite has its own database
         repository_url = _get_repository_url(request.config, suite_name,
                                              tests_directory)
     else:  # suite uses the CITE database
-        data_dir = _get_cite_suite_data_dir()
+        data_dir, export_dir = _get_cite_suite_dirs()
         repository_url = _get_repository_url(request.config, "cite",
                                              tests_directory)
     table_name = _get_table_name(suite_name, config, repository_url)
@@ -207,7 +211,8 @@ def configuration(request, tests_directory, log_level):
         _initialize_database(repository_url=repository_url,
                              table_name=table_name,
                              data_dir=data_dir,
-                             test_dir=tests_directory)
+                             test_dir=tests_directory,
+                             export_dir=export_dir)
     config.set("server", "loglevel", log_level)
     config.set("server", "logfile", "")
     config.set("repository", "database", repository_url)
@@ -233,14 +238,16 @@ def fixture_tests_directory(tmpdir_factory):
     return tests_dir
 
 
-def _get_cite_suite_data_dir():
+def _get_cite_suite_dirs():
     """Return the path to the data directory of the CITE test suite."""
     global TESTS_ROOT
     suites_root_dir = os.path.join(TESTS_ROOT, "functionaltests", "suites")
     suite_dir = os.path.join(suites_root_dir, "cite")
     data_tests_dir = os.path.join(suite_dir, "data")
+    export_tests_dir = os.path.join(suite_dir, "export")
     data_dir = data_tests_dir if os.path.isdir(data_tests_dir) else None
-    return data_dir
+    export_dir = export_tests_dir if os.path.isdir(export_tests_dir) else None
+    return data_dir, export_dir
 
 
 def _get_get_parameters(get_tests_dir, expected_tests_dir, config_path,
@@ -354,16 +361,19 @@ def _get_suite_dirs(suite_name):
     data_tests_dir = os.path.join(suite_dir, "data")
     post_tests_dir = os.path.join(suite_dir, "post")
     get_tests_dir = os.path.join(suite_dir, "get")
+    export_tests_dir = os.path.join(suite_dir, "export")
     expected_results_dir = os.path.join(suite_dir, "expected")
     data_dir = data_tests_dir if os.path.isdir(data_tests_dir) else None
     posts_dir = post_tests_dir if os.path.isdir(post_tests_dir) else None
     gets_dir = get_tests_dir if os.path.isdir(get_tests_dir) else None
     expected_dir = (expected_results_dir if os.path.isdir(
         expected_results_dir) else None)
+    export_dir = export_tests_dir if os.path.isdir(export_tests_dir) else None
     return SuiteDirs(get_tests_dir=gets_dir,
                      post_tests_dir=posts_dir,
                      data_tests_dir=data_dir,
-                     expected_results_dir=expected_dir)
+                     expected_results_dir=expected_dir,
+                     export_tests_dir=export_tests_dir)
 
 
 def _get_table_name(suite, config, repository_url):
@@ -394,7 +404,7 @@ def _get_table_name(suite, config, repository_url):
     return result
 
 
-def _initialize_database(repository_url, table_name, data_dir, test_dir):
+def _initialize_database(repository_url, table_name, data_dir, test_dir, export_dir):
     """Initialize database for tests.
 
     This function will create the database and load any test data that
@@ -411,6 +421,8 @@ def _initialize_database(repository_url, table_name, data_dir, test_dir):
         into the database
     test_dir: str
         Directory where the database is to be created, in case of sqlite.
+    export_dir: str
+        Diretory where the exported records are to be saved, if any
 
     """
 
@@ -426,8 +438,30 @@ def _initialize_database(repository_url, table_name, data_dir, test_dir):
                    **extra_kwargs)
     if len(os.listdir(data_dir)) > 0:
         print("Loading database data...")
-        admin.load_records(context=StaticContext(), database=repository_url,
-                           table=table_name, xml_dirpath=data_dir)
+        loaded = admin.load_records(
+            context=StaticContext(),
+            database=repository_url,
+            table=table_name,
+            xml_dirpath=data_dir,
+            recursive=True
+        )
+        admin.optimize_db(context=StaticContext(), database=repository_url, table=table_name)
+        if export_dir is not None:
+            # Attempt to export files
+            exported = admin.export_records(
+                context=StaticContext(),
+                database=repository_url,
+                table=table_name,
+                xml_dirpath=export_dir
+            )
+            if len(loaded) != len(exported):
+                raise ValueError(
+                    "Loaded records (%s) is different from exported records (%s)" %
+                    (len(loaded), len(exported))
+                )
+            # Remove the files that were exported since this was just a test
+            for toremove in exported:
+                os.remove(toremove)
 
 
 def _parse_postgresql_repository_url(repository_url):
