@@ -27,8 +27,8 @@ msgid ""
 "``repository.filter`` configuration option."
 msgstr ""
 "pycsw 有能力执行服务器端存储库或数据库筛选功能，以覆盖所有的CSW请求，目的是"
-"查询元数据存储库中的一个特定子集，从而需部署多个 pycsw 实例，通过 "
-"'repository.filter' 配置选项，以不同的方式指向同一个数据库。"
+"查询元数据存储库中的一个特定子集，从而需部署多个 pycsw 实例，"
+"通过 ``repository.filter`` 配置选项，以不同的方式指向同一个数据库。"
 
 #: ../../repofilters.rst:8
 msgid ""
@@ -38,8 +38,7 @@ msgid ""
 "performance."
 msgstr ""
 "存储库中的筛选器是一种便捷方式，是为了创建子数据库，以免去创建适当数据库视图"
-"的服务器级别的步骤。 对于大型数据库而言，它可能比创建数据库级别的子集要更好"
-"一些。"
+"的服务器级别的步骤。 对于大型数据库而言，它可能比创建数据库级别的子集要更好一些。"
 
 #: ../../repofilters.rst:11
 msgid "Scenario: One Database, Many Views"
@@ -67,75 +66,92 @@ msgstr "摘要"
 
 #: ../../repofilters.rst:1
 msgid "1"
-msgstr "1"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "33"
-msgstr "33"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "foo1"
-msgstr "第一页"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "bar1"
-msgstr "第1条"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "2"
-msgstr "2"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "foo2"
-msgstr "第二页"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "bar2"
-msgstr "第2条"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "3"
-msgstr "3"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "55"
-msgstr "55"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "foo3"
-msgstr "第三页"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "bar3"
-msgstr "第3条"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "4"
-msgstr "4"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "5"
-msgstr "5"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "21"
-msgstr "21"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "foo5"
-msgstr "第五页"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "bar5"
-msgstr "第5条"
+msgstr ""
+
 
 #: ../../repofilters.rst:1
 msgid "foo6"
-msgstr "第六页"
+msgstr ""
 
 #: ../../repofilters.rst:1
 msgid "bar6"
-msgstr "第6条"
+msgstr ""
+
 
 #: ../../repofilters.rst:25
 msgid ""
@@ -143,8 +159,8 @@ msgid ""
 "always process CSW requests against the entire table.  So a CSW "
 "`GetRecords` filter like:"
 msgstr ""
-"若没有``repository.filters``选项，pycsw默认是始终处理整个表的CSW请求。"
-"CSW`GetRecords`过滤如："
+"若没有 ``repository.filters`` 选项，pycsw默认是始终处理整个表的CSW请求。"
+"CSW `GetRecords` 过滤如："
 
 #: ../../repofilters.rst:36
 msgid "...will return:"
@@ -157,13 +173,13 @@ msgid ""
 "``repository.filter`` option:"
 msgstr ""
 "假设你要部署其他pycsw应用实例，此实例来自同一个数据库的元数据，但它只能来自"
-"一个特定子集。在这里，我们设置了``repository.filter``选项："
+"一个特定子集。在这里，我们设置了 ``repository.filter`` 选项："
 
 #: ../../repofilters.rst:52 ../../repofilters.rst:67
 msgid ""
 "The same CSW `GetRecords` filter as per above then yields the following "
 "results:"
-msgstr "依上述所说，同一CSW`GetRecords`过滤器将得到以下结果："
+msgstr "依上述所说，同一CSW `GetRecords` 过滤器将得到以下结果："
 
 #: ../../repofilters.rst:59
 msgid "Another example:"
@@ -175,5 +191,5 @@ msgid ""
 "pycsw core model (see ``pycsw.config.StaticContext.md_core_model`` for the "
 "complete list)."
 msgstr ""
-"该``数据库.过滤器``选项功能是在pycsw核心模式中接收所有核心查询设置（见"
-"``pycsw.config.StaticContext.md_core_model``的完整列表）。"
+"该 ``repository.filter`` 选项功能是在pycsw核心模式中接收所有核心查询设置（见"
+"``pycsw.config.StaticContext.md_core_model`` 的完整列表）。"

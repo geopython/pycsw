@@ -4,13 +4,15 @@ msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-21 21:52+0800\n"
-"PO-Revision-Date: 2016-06-08 11:02+0800\n"
+"PO-Revision-Date: 2018-12-05 11:24+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: ../../introduction.rst:4
 msgid "Introduction"
@@ -28,7 +30,7 @@ msgstr "特性"
 msgid ""
 "certified OGC `Compliant`_ and OGC Reference Implementation for both CSW "
 "2.0.2 and CSW 3.0.0"
-msgstr "认证 OGC `Compliant`_ 与 OGC 参考实现"
+msgstr "CSW 2.0.2与 CSW 3.0.0 认证 OGC `Compliant`_ 与 OGC 参考实现"
 
 #: ../../introduction.rst:12
 msgid "harvesting support for WMS, WFS, WCS, WPS, WAF, CSW, SOS"
@@ -36,7 +38,7 @@ msgstr "WMS、WFS、WCS、WPS、WAF、CSW、SOS得到支持"
 
 #: ../../introduction.rst:13
 msgid "implements `INSPIRE Discovery Services 3.0`_"
-msgstr "实现了 `INSPIRE Discovery Services 3.0`_"
+msgstr "实现了 `INSPIRE Discovery Services 3.0`_ "
 
 #: ../../introduction.rst:14
 msgid "implements `ISO Metadata Application Profile 1.0.0`_"
@@ -44,11 +46,11 @@ msgstr "实现了 `ISO Metadata Application Profile 1.0.0`_"
 
 #: ../../introduction.rst:15
 msgid "implements `FGDC CSDGM Application Profile for CSW 2.0`_"
-msgstr "实现了 `FGDC CSDGM Application Profile for CSW 2.0`_"
+msgstr "实现了 `FGDC CSDGM Application Profile for CSW 2.0`_ "
 
 #: ../../introduction.rst:16
 msgid "implements the Search/Retrieval via URL (`SRU`_) search protocol"
-msgstr "实现了通过URL (`SRU`_) 查找接口进行查找或抓取"
+msgstr "实现了通过URL ( `SRU`_ ) 查找接口进行查找或抓取"
 
 #: ../../introduction.rst:17
 msgid "implements Full Text Search capabilities"
@@ -72,7 +74,7 @@ msgstr "CGI或WSCI部署"
 
 #: ../../introduction.rst:22
 msgid "Python 2 and 3 compatible"
-msgstr ""
+msgstr "Python 2和3兼容"
 
 #: ../../introduction.rst:23
 msgid "simple configuration"
@@ -88,19 +90,19 @@ msgstr "灵活的存储配置"
 
 #: ../../introduction.rst:26
 msgid "`GeoNode`_ connectivity"
-msgstr "连接 `GeoNode`_ "
+msgstr "`GeoNode`_ 的连接"
 
 #: ../../introduction.rst:27
 msgid "`HHypermap`_ connectivity"
-msgstr "连接 `HHypermap`_  "
+msgstr "`HHypermap`_ 的连接"
 
 #: ../../introduction.rst:28
 msgid "`Open Data Catalog`_ connectivity"
-msgstr "连接 `开放数据目录`_"
+msgstr "`Open Data Catalog`_ 的连接"
 
 #: ../../introduction.rst:29
 msgid "`CKAN`_ connectivity"
-msgstr "连接 `CKAN`_  "
+msgstr "`CKAN`_ 的连接"
 
 #: ../../introduction.rst:30
 msgid "federated catalogue distributed searching"
@@ -132,7 +134,7 @@ msgstr "`OGC CSW`_"
 
 #: ../../introduction.rst:40
 msgid "2.0.2, 3.0.0"
-msgstr ""
+msgstr "2.0.2, 3.0.0"
 
 #: ../../introduction.rst:42
 msgid "`OGC Filter`_"
@@ -140,15 +142,15 @@ msgstr "`OGC Filte`_"
 
 #: ../../introduction.rst:42
 msgid "1.1.0, 2.0.0"
-msgstr ""
+msgstr "1.1.0, 2.0.0"
 
 #: ../../introduction.rst:44
 msgid "`OGC OWS Common`_"
-msgstr ""
+msgstr "`OGC OWS Common`_"
 
 #: ../../introduction.rst:44
 msgid "1.0.0, 2.0.0"
-msgstr ""
+msgstr "1.0.0, 2.0.0"
 
 #: ../../introduction.rst:46
 msgid "`OGC GML`_"
@@ -244,7 +246,7 @@ msgstr "1.0"
 
 #: ../../introduction.rst:70
 msgid "`OAI-PMH`_"
-msgstr ""
+msgstr "`OAI-PMH`_"
 
 #: ../../introduction.rst:70
 msgid "2.0"
@@ -320,11 +322,11 @@ msgstr "获取"
 
 #: ../../introduction.rst:1
 msgid "UnHarvest"
-msgstr ""
+msgstr "未收获"
 
 #: ../../introduction.rst:1
 msgid "no"
-msgstr ""
+msgstr "否"
 
 #: ../../introduction.rst:1
 msgid "Transaction"
@@ -386,7 +388,7 @@ msgstr "GM03"
 
 #: ../../introduction.rst:114
 msgid "Supported Sorting Functionality"
-msgstr "支持排序功能 "
+msgstr "支持排序功能"
 
 #: ../../introduction.rst:116
 msgid "ogc:SortBy"
@@ -410,7 +412,7 @@ msgstr "筛选条件"
 
 #: ../../introduction.rst:125
 msgid "Full Text Search"
-msgstr ""
+msgstr "全文检索"
 
 #: ../../introduction.rst:127
 msgid "csw:AnyText"
@@ -555,4 +557,3 @@ msgstr "函数：除去字符串开始和尾部空格"
 #: ../../introduction.rst:176
 msgid "upper"
 msgstr "转成大写"
-

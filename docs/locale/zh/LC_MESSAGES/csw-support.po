@@ -4,27 +4,28 @@
 # This file is distributed under the same license as the pycsw package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.1-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-21 21:02+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2018-12-05 20:36+0800\n"
+"PO-Revision-Date: 2018-12-05 11:18+0800\n"
+"Last-Translator: \n"
+"Language: zh_CN\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.3.4\n"
+"Generated-By: Babel 2.6.0\n"
 
 #: ../../csw-support.rst:4
 msgid "CSW Support"
-msgstr ""
+msgstr "CSW支持"
 
 #: ../../csw-support.rst:7
 msgid "Versions"
-msgstr ""
+msgstr "版本"
 
 #: ../../csw-support.rst:9
 msgid ""
@@ -33,33 +34,37 @@ msgid ""
 "the latest supported version.  That is, pycsw will always behave like a "
 "3.0.0 CSW unless the client explicitly requests a 2.0.2 CSW."
 msgstr ""
+"pycsw默认支持CSW "
+"2.0.2和3.0.0版本。根据CSW规范，返回的默认版本是受支持的最新版本。也就是说，除非客户机明确地请求一个2.0.2 "
+"CSW，否则pycsw的行为始终类似于一个3.0.0 CSW."
 
 #: ../../csw-support.rst:14
 msgid ""
 "The sample URLs below provide examples of how requests behaves against "
 "various/missing/default version parameters."
-msgstr ""
+msgstr "下面的示例 URLs提供了请求对不同/丢失/默认版本参数的行为的示例."
 
 #: ../../csw-support.rst:25
 msgid "Request Examples"
-msgstr ""
+msgstr "请求实例"
 
 #: ../../csw-support.rst:27
+#, fuzzy
 msgid ""
-"The best place to look for sample requests is within the `tests/` "
+"The best place to look for sample requests is within the ``tests/`` "
 "directory, which provides numerous examples of all supported APIs and "
 "requests."
-msgstr ""
+msgstr "查找示例请求的最佳位置是在 ``tests/`` 目录中，该目录提供了所有支持的 APIs和请求的许多示例."
 
 #: ../../csw-support.rst:30
 msgid "Additional examples:"
-msgstr ""
+msgstr "额外的实例:"
 
 #: ../../csw-support.rst:32
 msgid "`Data.gov CSW HowTo v2.0`_"
-msgstr ""
+msgstr "`Data.gov CSW HowTo v2.0`_"
 
 #: ../../csw-support.rst:33
 msgid "`pycsw Quickstart on OSGeoLive`_"
-msgstr ""
+msgstr "`pycsw Quickstart on OSGeoLive`_"
 
