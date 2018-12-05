@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 21:56+0800\n"
+"POT-Creation-Date: 2018-12-05 20:36+0800\n"
 "PO-Revision-Date: 2018-12-05 10:49+0800\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
@@ -18,34 +18,17 @@ msgstr ""
 msgid "pycsw |release| Documentation"
 msgstr "pycsw 发布 文档"
 
-#: ../../index.rst
-msgid "Author"
-msgstr ""
-
 #: ../../index.rst:7
 msgid "Tom Kralidis"
 msgstr "Tom Kralidis"
-
-#: ../../index.rst
-msgid "Contact"
-msgstr ""
 
 #: ../../index.rst:8
 msgid "tomkralidis at gmail.com"
 msgstr "tomkralidis at gmail.com"
 
-#: ../../index.rst
-#, fuzzy
-msgid "Release"
-msgstr "发布"
-
 #: ../../index.rst:9
 msgid "|release|"
 msgstr "发布"
-
-#: ../../index.rst
-msgid "Date"
-msgstr ""
 
 #: ../../index.rst:10
 msgid "|today|"

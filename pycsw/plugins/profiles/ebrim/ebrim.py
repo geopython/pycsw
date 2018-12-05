@@ -133,9 +133,6 @@ class EBRIM(profile.Profile):
             # dump record as is and exit
             return etree.fromstring(util.getqattr(result, queryables['pycsw:XML']['dbcol']), self.context.parser)
 
-        if typename == 'csw:Record':  # transform csw:Record -> rim:RegistryObject model mappings
-            util.transform_mappings(queryables, self.repository['mappings']['csw:Record'])
-
         node = etree.Element(util.nspath_eval('rim:ExtrinsicObject', self.namespaces))
         node.attrib[util.nspath_eval('xsi:schemaLocation', self.context.namespaces)] = \
         '%s %s/csw/2.0.2/profiles/ebrim/1.0/csw-ebrim.xsd' % (self.namespaces['wrs'], self.ogc_schemas_base)

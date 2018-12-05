@@ -127,7 +127,7 @@ class OAIPMH(object):
                     kvpout['outputschema'] = kvp['metadataprefix']
             else:
                 self.metadata_prefix = 'csw-record'
-            LOGGER.info('metadataPrefix: %s', self.metadata_prefix)
+            LOGGER.debug('metadataPrefix: %s', self.metadata_prefix)
             if kvp['verb'] in ['ListRecords', 'ListIdentifiers', 'GetRecord']:
                 kvpout['request'] = 'GetRecords'
                 kvpout['resulttype'] = 'results'
@@ -154,7 +154,7 @@ class OAIPMH(object):
 
 
                 start = end = None
-                LOGGER.info('Scanning temporal parameters')
+                LOGGER.debug('Scanning temporal parameters')
                 if 'from' in kvp:
                     start = 'dc:date >= %s' % kvp['from']
                 if 'until' in kvp:
@@ -181,7 +181,7 @@ class OAIPMH(object):
 
         node = etree.Element(util.nspath_eval('oai:OAI-PMH', self.namespaces), nsmap=self.namespaces)
         node.set(util.nspath_eval('xsi:schemaLocation', self.namespaces), '%s http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd' % self.namespaces['oai'])
-        LOGGER.info(etree.tostring(node))
+        LOGGER.debug(etree.tostring(node))
 
         etree.SubElement(node, util.nspath_eval('oai:responseDate', self.namespaces)).text = util.get_today_and_now()
         etree.SubElement(node, util.nspath_eval('oai:request', self.namespaces), attrib=kvp).text = url
@@ -194,7 +194,7 @@ class OAIPMH(object):
             etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Unknown verb \'%s\'' % kvp['verb']
             return node
 
-        if util.xmltag_split(response.tag) == 'ExceptionReport':
+        if etree.QName(response).localname == 'ExceptionReport':
             etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = response.xpath('//ows:ExceptionText|//ows20:ExceptionText', namespaces=self.context.namespaces)[0].text
             return node
 

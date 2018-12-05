@@ -29,7 +29,7 @@
 # =================================================================
 
 import logging
-from pycsw.core.etree import etree
+from pycsw.core.etree import PARSER
 from pycsw import __version__
 
 LOGGER = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class StaticContext(object):
 
         self.ogc_schemas_base = 'http://schemas.opengis.net'
 
-        self.parser = etree.XMLParser(resolve_entities=False)
+        self.parser = PARSER
 
         self.languages = {
             'en': 'english',
@@ -363,7 +363,7 @@ class StaticContext(object):
                         },
                         'parameters': {
                             'typeNames': {
-                                'values': ['csw:Record']
+                                'values': ['csw:Record', 'csw30:Record']
                             },
                             'outputSchema': {
                                 'values': ['http://www.opengis.net/cat/csw/3.0']

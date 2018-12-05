@@ -1,38 +1,77 @@
 language: python
 
-sudo: required
+cache: pip
+
 dist: trusty
 
-python:
-  - "2.6"
-  - "2.7"
-  - "3.4"
-  - "3.5"
+jobs:
+  include:
 
-#matrix:
-#  allow_failures:
-#    - python: "3.4"
+    - stage: unit-test
+      python: "2.7"
+      env: TOXENV=py27-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m unit
+      after_success: codecov --disable search --flags unittests
+
+    - stage: unit-test
+      python: "3.4"
+      env: TOXENV=py34-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m unit
+      after_success: codecov --disable search --flags unittests
+
+    - stage: unit-test
+      python: "3.5"
+      env: TOXENV=py35-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m unit
+      after_success: codecov --disable search --flags unittests
+
+    - stage: unit-test
+      python: "3.6"
+      env: TOXENV=py36-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m unit
+      after_success: codecov --disable search --flags unittests
+
+    - stage: integration-test
+      python: "2.7"
+      env: TOXENV=py27-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m functional -k 'not harvesting'
+      after_success: codecov --disable search --flags integrationtests
+
+    - stage: integration-test
+      python: "3.4"
+      env: TOXENV=py34-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m functional -k 'not harvesting'
+      after_success: codecov --disable search --flags integrationtests
+
+    - stage: integration-test
+      python: "3.5"
+      env: TOXENV=py35-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m functional -k 'not harvesting'
+      after_success: codecov --disable search --flags integrationtests
+
+    - stage: integration-test
+      python: "3.6"
+      env: TOXENV=py36-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m functional -k 'not harvesting'
+      after_success: codecov --disable search --flags integrationtests
 
 addons:
   apt:
     packages:
-      - libgeos-c1
+      - libgeos-dev
+      - libpq-dev
       - libxml2-dev
+      - libxslt1-dev
+      - libz-dev
 
-before_script:
-  - pycsw-admin.py -c get_sysprof
-
-install:
-  - pip install -r requirements.txt
-  - pip install -r requirements-dev.txt
-  - pip install -r requirements-standalone.txt
-  - python setup.py -q install
-
-script:
-  - paver test
-
-after_script:
-  - paver stop
 
 notifications:
   irc:

@@ -56,7 +56,7 @@ class OpenSearch(object):
     def response_csw2opensearch(self, element, cfg):
         """transform a CSW response into an OpenSearch response"""
 
-        root_tag = util.xmltag_split(element.tag)
+        root_tag = etree.QName(element).localname
         if root_tag == 'ExceptionReport':
             return element
 
@@ -78,7 +78,8 @@ class OpenSearch(object):
     def _csw2_2_os(self):
         """CSW 2.0.2 Capabilities to OpenSearch Description"""
 
-        if util.xmltag_split(self.exml.tag) == 'GetRecordsResponse':
+        operation_name = etree.QName(self.exml).localname
+        if operation_name == 'GetRecordsResponse':
 
             startindex = int(self.exml.xpath('//@nextRecord')[0]) - int(
                         self.exml.xpath('//@numberOfRecordsReturned')[0])
@@ -107,7 +108,7 @@ class OpenSearch(object):
             for rec in self.exml.xpath('//atom:entry',
                         namespaces=self.context.namespaces):
                 node.append(rec)
-        elif util.xmltag_split(self.exml.tag) == 'Capabilities':
+        elif operation_name == 'Capabilities':
             node = etree.Element(util.nspath_eval('os:OpenSearchDescription', self.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('os:ShortName', self.namespaces)).text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, util.nspath_eval('os:LongName', self.namespaces)).text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
@@ -128,7 +129,7 @@ class OpenSearch(object):
             etree.SubElement(node, util.nspath_eval('os:Developer', self.namespaces)).text = self.exml.xpath('//ows:IndividualName', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, util.nspath_eval('os:Context', self.namespaces)).text = self.exml.xpath('//ows:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, util.nspath_eval('os:Attribution', self.namespaces)).text = self.exml.xpath('//ows:ProviderName', namespaces=self.context.namespaces)[0].text
-        elif util.xmltag_split(self.exml.tag) == 'ExceptionReport':
+        elif operation_name == 'ExceptionReport':
             node = self.exml
         else:  # return Description document
             node = etree.Element(util.nspath_eval('os:Description', self.context.namespaces))
@@ -138,7 +139,8 @@ class OpenSearch(object):
     def _csw3_2_os(self):
         """CSW 3.0.0 Capabilities to OpenSearch Description"""
 
-        if util.xmltag_split(self.exml.tag) == 'GetRecordsResponse':
+        response_name = etree.QName(self.exml).localname
+        if response_name == 'GetRecordsResponse':
 
             startindex = int(self.exml.xpath('//@nextRecord')[0]) - int(
                         self.exml.xpath('//@numberOfRecordsReturned')[0])
@@ -177,7 +179,7 @@ class OpenSearch(object):
             for rec in self.exml.xpath('//atom:entry',
                         namespaces=self.context.namespaces):
                 node.append(rec)
-        elif util.xmltag_split(self.exml.tag) == 'Capabilities':
+        elif response_name == 'Capabilities':
             node = etree.Element(util.nspath_eval('os:OpenSearchDescription', self.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('os:ShortName', self.namespaces)).text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text[:16]
             etree.SubElement(node, util.nspath_eval('os:LongName', self.namespaces)).text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text
@@ -187,12 +189,12 @@ class OpenSearch(object):
             # Requirement-022
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/xml')
-            node1.set('template', '%sservice=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
+            node1.set('template', '%sservice=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid?}' % self.bind_url)
 
             # Requirement-023
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/atom+xml')
-            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom%%2Bxml&&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid}' % self.bind_url)
+            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom%%2Bxml&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid?}' % self.bind_url)
 
             node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
             node1.set('type', 'image/vnd.microsoft.icon')
@@ -206,7 +208,7 @@ class OpenSearch(object):
             etree.SubElement(node, util.nspath_eval('os:Developer', self.namespaces)).text = self.exml.xpath('//ows20:IndividualName', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, util.nspath_eval('os:Contact', self.namespaces)).text = self.exml.xpath('//ows20:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, util.nspath_eval('os:Attribution', self.namespaces)).text = self.exml.xpath('//ows20:ProviderName', namespaces=self.context.namespaces)[0].text
-        elif util.xmltag_split(self.exml.tag) == 'ExceptionReport':
+        elif response_name == 'ExceptionReport':
             node = self.exml
         else:  # GetRecordById output
             node = etree.Element(util.nspath_eval('atom:feed',
@@ -269,16 +271,16 @@ def kvp2filterxml(kvp, context):
         else:
             LOGGER.debug('Assuming 4326')
             env.attrib['srsName'] = 'urn:ogc:def:crs:OGC:1.3:CRS84'
-            if not util.validate_4326(bbox_list):
+            if not validate_4326(bbox_list):
                 msg = '4326 coordinates out of range: %s' % bbox_list
-                LOGGER.debug(msg)
+                LOGGER.error(msg)
                 raise RuntimeError(msg)
 
         try:
             el.text = "%s %s" % (bbox_list[0], bbox_list[1])
         except Exception as err:
             errortext = 'Exception: OpenSearch bbox not valid.\nError: %s.' % str(err)
-            LOGGER.debug(errortext)
+            LOGGER.exception(errortext)
         env.append(el)
         el = etree.Element(util.nspath_eval('gml:upperCorner',
                     context.namespaces))
@@ -286,7 +288,7 @@ def kvp2filterxml(kvp, context):
             el.text = "%s %s" % (bbox_list[2], bbox_list[3])
         except Exception as err:
             errortext = 'Exception: OpenSearch bbox not valid.\nError: %s.' % str(err)
-            LOGGER.debug(errortext)
+            LOGGER.exception(errortext)
         env.append(el)
         bbox_element.append(env)
 
@@ -385,7 +387,7 @@ def kvp2filterxml(kvp, context):
         else:
             # Error
             errortext = 'Exception: OpenSearch time not valid: %s.' % str(kvp['time'])
-            LOGGER.debug(errortext)
+            LOGGER.error(errortext)
 
     if par_count == 0:
         return ''
@@ -417,3 +419,14 @@ def kvp2filterxml(kvp, context):
     # Render etree to string XML
     LOGGER.debug(etree.tostring(root, encoding='unicode'))
     return etree.tostring(root, encoding='unicode')
+
+
+def validate_4326(bbox_list):
+    """Helper function to validate 4326."""
+    is_valid = False
+    if ((-180.0 <= float(bbox_list[0]) <= 180.0) and
+            (-90.0 <= float(bbox_list[1]) <= 90.0) and
+            (-180.0 <= float(bbox_list[2]) <= 180.0) and
+            (-90.0 <= float(bbox_list[3]) <= 90.0)):
+        is_valid = True
+    return is_valid

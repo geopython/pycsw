@@ -2,8 +2,10 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -29,7 +31,30 @@
 # =================================================================
 
 import json
-from pycsw.core.util import xml2dict
+
+import xmltodict
+
+
+def xml2dict(xml_string, namespaces):
+    """Convert an xml document to a dictionary.
+
+    Parameters
+    ----------
+    xml_string: str
+        XML representation to convert to a dictionary.
+    namespaces: dict
+        Namespaces used in the ``xml_string`` parameter
+
+    Returns
+    -------
+    ordereddict
+        An ordered dictionary with the contents of the xml data
+
+    """
+
+    namespaces_reverse = dict((v, k) for k, v in namespaces.items())
+    return xmltodict.parse(xml_string, process_namespaces=True,
+                           namespaces=namespaces_reverse)
 
 
 def xml2json(xml_string, namespaces, pretty_print=False):

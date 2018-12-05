@@ -14,6 +14,7 @@ pycsw |release| Documentation
 
    introduction
    installation
+   docker
    configuration
    administration
    csw-support

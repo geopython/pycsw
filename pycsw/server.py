@@ -75,7 +75,7 @@ class Csw(object):
         self.kvp = {}
 
         self.mode = 'csw'
-        self.async = False
+        self.asynchronous = False
         self.soap = False
         self.request = None
         self.exception = False
@@ -101,6 +101,7 @@ class Csw(object):
 
         # load user configuration
         try:
+            LOGGER.info('Loading user configuration')
             if isinstance(rtconfig, SafeConfigParser):  # serialized already
                 self.config = rtconfig
             else:
@@ -114,11 +115,11 @@ class Csw(object):
                     import codecs
                     with codecs.open(rtconfig, encoding='utf-8') as scp:
                         self.config.readfp(scp)
-        except Exception:
+        except Exception as err:
+            msg = 'Could not load configuration'
+            LOGGER.exception('%s %s: %s', msg, rtconfig, err)
             self.response = self.iface.exceptionreport(
-                'NoApplicableCode', 'service',
-                'Error opening configuration %s' % rtconfig
-            )
+                'NoApplicableCode', 'service', msg)
             return
 
         # set server.home safely
@@ -133,8 +134,8 @@ class Csw(object):
 
         log.setup_logger(self.config)
 
-        LOGGER.debug('running configuration %s', rtconfig)
-        LOGGER.debug(str(self.environ['QUERY_STRING']))
+        LOGGER.info('running configuration %s', rtconfig)
+        LOGGER.debug('QUERY_STRING: %s', self.environ['QUERY_STRING'])
 
         # set OGC schemas location
         if not self.config.has_option('server', 'ogc_schemas_base'):
@@ -170,7 +171,8 @@ class Csw(object):
                 lang_code = self.config.get('server', 'language').split('-')[0]
                 self.language['639_code'] = lang_code
                 self.language['text'] = self.context.languages[lang_code]
-            except:
+            except Exception as err:
+                LOGGER.exception('Could not set language: %s', err)
                 pass
 
         LOGGER.debug('Configuration: %s.', self.config)
@@ -188,18 +190,18 @@ class Csw(object):
                     mappings = imp.load_source(modulename, module)
                 else:  # dotted name
                     mappings = __import__(module, fromlist=[''])
-                LOGGER.debug('Loading custom repository mappings '
-                             'from %s.', module)
+                LOGGER.info('Loading custom repository mappings '
+                             'from %s', module)
                 self.context.md_core_model = mappings.MD_CORE_MODEL
                 self.context.refresh_dc(mappings.MD_CORE_MODEL)
             except Exception as err:
+                LOGGER.exception('Could not load custom mappings: %s', err)
                 self.response = self.iface.exceptionreport(
-                    'NoAppliicableCode', 'service',
-                    'Could not load repository.mappings %s' % str(err)
-                )
+                    'NoApplicableCode', 'service',
+                    'Could not load repository.mappings')
 
         # load outputschemas
-        LOGGER.debug('Loading outputschemas.')
+        LOGGER.info('Loading outputschemas')
 
         for osch in pycsw.plugins.outputschemas.__all__:
             output_schema_module = __import__(
@@ -241,7 +243,8 @@ class Csw(object):
             try:
                 query_part = splitquery(self.request)[-1]
                 self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
-            except AttributeError:
+            except AttributeError as err:
+                LOGGER.exception('Could not parse query string')
                 self.kvp = {}
             LOGGER.debug('Request type: GET.  Request:\n%s\n', self.request)
         return self.dispatch()
@@ -269,6 +272,7 @@ class Csw(object):
     def dispatch(self, writer=sys.stdout, write_headers=True):
         """ Handle incoming HTTP request """
 
+        error = 0
         if self.requesttype == 'GET':
             self.kvp = self.normalize_kvp(self.kvp)
             version_202 = ('version' in self.kvp and
@@ -278,21 +282,23 @@ class Csw(object):
             if version_202 or accept_version_202:
                 self.request_version = '2.0.2'
         elif self.requesttype == 'POST':
-            if self.request.find(b'2.0.2') != -1:
+            if self.request.find(b'cat/csw/2.0.2') != -1:
                 self.request_version = '2.0.2'
+            elif self.request.find(b'cat/csw/3.0') != -1:
+                self.request_version = '3.0.0'
 
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
                 self.kvp['mode'] == 'sru'):
             self.mode = 'sru'
             self.request_version = '2.0.2'
-            LOGGER.debug('SRU mode detected; processing request.')
+            LOGGER.info('SRU mode detected; processing request')
             self.kvp = self.sru().request_sru2csw(self.kvp)
 
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
                 self.kvp['mode'] == 'oaipmh'):
             self.mode = 'oaipmh'
             self.request_version = '2.0.2'
-            LOGGER.debug('OAI-PMH mode detected; processing request.')
+            LOGGER.info('OAI-PMH mode detected; processing request.')
             self.oaiargs = dict((k, v) for k, v in self.kvp.items() if k)
             self.kvp = self.oaipmh().request(self.kvp)
 
@@ -313,12 +319,13 @@ class Csw(object):
 
         # generate distributed search model, if specified in config
         if self.config.has_option('server', 'federatedcatalogues'):
-            LOGGER.debug('Configuring distributed search.')
+            LOGGER.info('Configuring distributed search')
 
             constraints['FederatedCatalogues'] = {'values': []}
 
             for fedcat in self.config.get('server',
                                           'federatedcatalogues').split(','):
+                LOGGER.debug('federated catalogue: %s', fedcat)
                 constraints['FederatedCatalogues']['values'].append(fedcat)
 
         for key, value in self.outputschemas.items():
@@ -333,7 +340,7 @@ class Csw(object):
                 harvest_params['ResourceType']['values'].append(
                     value.NAMESPACE)
 
-        LOGGER.debug('Setting MaxRecordDefault')
+        LOGGER.info('Setting MaxRecordDefault')
         if self.config.has_option('server', 'maxrecords'):
             constraints['MaxRecordDefault']['values'] = [
                 self.config.get('server', 'maxrecords')]
@@ -357,8 +364,7 @@ class Csw(object):
                                                          namespaces,
                                                          self.config)
 
-            LOGGER.debug('Profiles loaded: %s.' %
-            list(self.profiles['loaded'].keys()))
+            LOGGER.debug('Profiles loaded: %s' % list(self.profiles['loaded'].keys()))
 
         # init repository
         # look for tablename, set 'records' as default
@@ -380,14 +386,18 @@ class Csw(object):
                 self.repository = rs_cls(self.context, repo_filter)
                 LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
             except Exception as err:
-                self.response = self.iface.exceptionreport(
-                    'NoApplicableCode', 'service',
-                    'Could not load custom repository %s: %s' % (rs, str(err)))
+                msg = 'Could not load custom repository %s: %s' % (rs, err)
+                LOGGER.exception(msg)
+                error = 1
+                code = 'NoApplicableCode'
+                locator = 'service'
+                text = 'Could not initialize repository. Check server logs'
 
         else:  # load default repository
             self.orm = 'sqlalchemy'
             from pycsw.core import repository
             try:
+                LOGGER.info('Loading default repository')
                 self.repository = repository.Repository(
                     self.config.get('repository', 'database'),
                     self.context,
@@ -398,16 +408,17 @@ class Csw(object):
                 LOGGER.debug(
                     'Repository loaded (local): %s.' % self.repository.dbtype)
             except Exception as err:
-                self.response = self.iface.exceptionreport(
-                    'NoApplicableCode', 'service',
-                    'Could not load repository (local): %s' % str(err)
-                )
+                msg = 'Could not load repository (local): %s' % err
+                LOGGER.exception(msg)
+                error = 1
+                code = 'NoApplicableCode'
+                locator = 'service'
+                text = 'Could not initialize repository. Check server logs'
 
         if self.requesttype == 'POST':
-            LOGGER.debug(self.iface.version)
+            LOGGER.debug('HTTP POST request')
+            LOGGER.debug('CSW version: %s', self.iface.version)
             self.kvp = self.iface.parse_postdata(self.request)
-
-        error = 0
 
         if isinstance(self.kvp, str):  # it's an exception
             error = 1
@@ -425,12 +436,12 @@ class Csw(object):
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
                 self.kvp['mode'] == 'opensearch'):
             self.mode = 'opensearch'
-            LOGGER.debug('OpenSearch mode detected; processing request.')
+            LOGGER.info('OpenSearch mode detected; processing request.')
             self.kvp['outputschema'] = 'http://www.w3.org/2005/Atom'
 
         if ((len(self.kvp) == 0 and self.request_version == '3.0.0') or
                 (len(self.kvp) == 1 and 'config' in self.kvp)):
-            LOGGER.debug('Turning on default csw30:Capabilities for base URL')
+            LOGGER.info('Turning on default csw30:Capabilities for base URL')
             self.kvp = {
                 'service': 'CSW',
                 'acceptversions': '3.0.0',
@@ -448,6 +459,12 @@ class Csw(object):
             own_version_integer = util.get_version_integer(
                 self.request_version)
             if self.request_version == '2.0.2':
+                basic_options.append('version')
+            if self.request_version == '3.0.0' and 'version' not in self.kvp and self.requesttype == 'POST':
+                if 'service' not in self.kvp:
+                    self.kvp['service'] = 'CSW'
+                    basic_options.append('service')
+                self.kvp['version'] = self.request_version
                 basic_options.append('version')
 
             for k in basic_options:
@@ -514,6 +531,7 @@ class Csw(object):
                         text = 'Invalid value for request: %s' % request
 
         if error == 1:  # return an ExceptionReport
+            LOGGER.error('basic service options error: %s, %s, %s', code, locator, text)
             self.response = self.iface.exceptionreport(code, locator, text)
 
         else:  # process per the request value
@@ -521,7 +539,7 @@ class Csw(object):
             if 'responsehandler' in self.kvp:
                 # set flag to process asynchronously
                 import threading
-                self.async = True
+                self.asynchronous = True
                 request_id = self.kvp.get('requestid', None)
                 if request_id is None:
                     import uuid
@@ -534,7 +552,7 @@ class Csw(object):
             elif self.kvp['request'] == 'GetDomain':
                 self.response = self.iface.getdomain()
             elif self.kvp['request'] == 'GetRecords':
-                if self.async:  # process asynchronously
+                if self.asynchronous:  # process asynchronously
                     threading.Thread(target=self.iface.getrecords).start()
                     self.response = self.iface._write_acknowledgement()
                 else:
@@ -546,7 +564,7 @@ class Csw(object):
             elif self.kvp['request'] == 'Transaction':
                 self.response = self.iface.transaction()
             elif self.kvp['request'] == 'Harvest':
-                if self.async:  # process asynchronously
+                if self.asynchronous:  # process asynchronously
                     threading.Thread(target=self.iface.harvest).start()
                     self.response = self.iface._write_acknowledgement()
                 else:
@@ -557,17 +575,18 @@ class Csw(object):
                     'Invalid request parameter: %s' % self.kvp['request']
                 )
 
+        LOGGER.info('Request processed')
         if self.mode == 'sru':
-            LOGGER.debug('SRU mode detected; processing response.')
+            LOGGER.info('SRU mode detected; processing response.')
             self.response = self.sru().response_csw2sru(self.response,
                                                         self.environ)
         elif self.mode == 'opensearch':
-            LOGGER.debug('OpenSearch mode detected; processing response.')
+            LOGGER.info('OpenSearch mode detected; processing response.')
             self.response = self.opensearch().response_csw2opensearch(
                 self.response, self.config)
 
         elif self.mode == 'oaipmh':
-            LOGGER.debug('OAI-PMH mode detected; processing response.')
+            LOGGER.info('OAI-PMH mode detected; processing response.')
             self.response = self.oaipmh().response(
                 self.response, self.oaiargs, self.repository,
                 self.config.get('server', 'url')
@@ -614,7 +633,7 @@ class Csw(object):
         xmldecl = ''
         appinfo = ''
 
-        LOGGER.debug('Writing response.')
+        LOGGER.info('Writing response.')
 
         if hasattr(self, 'soap') and self.soap:
             self._gen_soap_wrapper()
@@ -655,7 +674,7 @@ class Csw(object):
 
     def _gen_soap_wrapper(self):
         """ Generate SOAP wrapper """
-        LOGGER.debug('Writing SOAP wrapper.')
+        LOGGER.info('Writing SOAP wrapper.')
         node = etree.Element(
             util.nspath_eval('soapenv:Envelope', self.context.namespaces),
             nsmap=self.context.namespaces
@@ -762,7 +781,11 @@ class Csw(object):
         if self.config.get('manager', 'transactions') != 'true':
             raise RuntimeError('CSW-T interface is disabled')
 
-        ipaddress = self.environ['REMOTE_ADDR']
+        """ get the client first forwarded ip """
+        if 'HTTP_X_FORWARDED_FOR' in self.environ:
+            ipaddress = self.environ['HTTP_X_FORWARDED_FOR'].split(',')[0].strip()
+        else:
+            ipaddress = self.environ['REMOTE_ADDR']
 
         if not self.config.has_option('manager', 'allowed_ips') or \
         (self.config.has_option('manager', 'allowed_ips') and not
@@ -773,7 +796,7 @@ class Csw(object):
 
     def _cql_update_queryables_mappings(self, cql, mappings):
         """ Transform CQL query's properties to underlying DB columns """
-        LOGGER.debug('Raw CQL text = %s.', cql)
+        LOGGER.debug('Raw CQL text = %s', cql)
         LOGGER.debug(str(list(mappings.keys())))
         if cql is not None:
             for key in mappings.keys():
@@ -788,7 +811,7 @@ class Csw(object):
         """ Process response handler """
 
         if self.kvp['responsehandler'] is not None:
-            LOGGER.debug('Processing responsehandler %s.' %
+            LOGGER.info('Processing responsehandler %s' %
                          self.kvp['responsehandler'])
 
             uprh = urlparse(self.kvp['responsehandler'])
@@ -796,7 +819,7 @@ class Csw(object):
             if uprh.scheme == 'mailto':  # email
                 import smtplib
 
-                LOGGER.debug('Email detected.')
+                LOGGER.debug('Email detected')
 
                 smtp_host = 'localhost'
                 if self.config.has_option('server', 'smtp_host'):
@@ -806,7 +829,7 @@ class Csw(object):
                         (self.kvp['request'], xml))
 
                 try:
-                    LOGGER.debug('Sending email.')
+                    LOGGER.info('Sending email')
                     msg = smtplib.SMTP(smtp_host)
                     msg.sendmail(
                         self.config.get('metadata:main', 'contact_email'),
@@ -815,7 +838,7 @@ class Csw(object):
                     msg.quit()
                     LOGGER.debug('Email sent successfully.')
                 except Exception as err:
-                    LOGGER.debug('Error processing email', exc_info=True)
+                    LOGGER.exception('Error processing email')
 
             elif uprh.scheme == 'ftp':
                 import ftplib
@@ -823,7 +846,7 @@ class Csw(object):
                 LOGGER.debug('FTP detected.')
 
                 try:
-                    LOGGER.debug('Sending to FTP server.')
+                    LOGGER.info('Sending to FTP server.')
                     ftp = ftplib.FTP(uprh.hostname)
                     if uprh.username is not None:
                         ftp.login(uprh.username, uprh.password)
@@ -831,7 +854,7 @@ class Csw(object):
                     ftp.quit()
                     LOGGER.debug('FTP sent successfully.')
                 except Exception as err:
-                    LOGGER.error('Error processing FTP', exc_info=True)
+                    LOGGER.exception('Error processing FTP')
 
     @staticmethod
     def normalize_kvp(kvp):

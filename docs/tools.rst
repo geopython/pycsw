@@ -6,16 +6,16 @@ Cataloguing and Metadata Tools
 CSW Clients
 -----------
 
-- `Geoportal CSW Clients <http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_
-- `OWSLib <http://geopython.github.io/OWSLib>`_
+- `Geoportal CSW Clients <https://github.com/Esri/geoportal-server/wiki/Geoportal-CSW-Clients>`_
+- `OWSLib <https://geopython.github.io/OWSLib>`_
 - `MetaSearch <https://hub.qgis.org/wiki/quantum-gis/MetaSearch>`_ (`QGIS <http://qgis.org/>`_ plugin)
 
 CSW Servers
 -----------
 
-- `deegree <http://deegree.org/>`_
+- `deegree <https://deegree.org/>`_
 - `eXcat <http://gdsc.nlr.nl/gdsc/en/tools/excat>`_
-- `GeoNetwork opensource <http://geonetwork-opensource.org/>`_
+- `GeoNetwork opensource <https://geonetwork-opensource.org/>`_
 
 Metadata Editing Tools
 ----------------------

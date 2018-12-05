@@ -1,2 +1,3 @@
 recursive-include pycsw *.xsd
 include *.txt
+include README.rst

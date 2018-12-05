@@ -6,7 +6,7 @@ Installation
 System Requirements
 -------------------
 
-pycsw is written in `Python <http://python.org>`_, and works with (tested) version 2.6, 2.7 and 3.4
+pycsw is written in `Python <http://python.org>`_, and works with (tested) version 2.7, 3.4 and 3.5
 
 pycsw requires the following Python supporting libraries:
 

@@ -1,0 +1,23 @@
+# build artifacts
+*.pyc
+*.egg-info
+build
+dist
+docs/_build
+MANIFEST
+
+# testing artifacts
+tests/index.html
+tests/results
+**.cache
+.coverage
+.tox
+
+# test configurations
+/default.cfg
+
+# git stuff
+.git
+
+# pycharm ide
+.idea

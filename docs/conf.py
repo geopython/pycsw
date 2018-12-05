@@ -41,12 +41,20 @@
 
 import sys, os
 
+try:
+    from unittest.mock import MagicMock
+except ImportError:
+    from mock import Mock as MagicMock
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
 # -- General configuration -----------------------------------------------------
+
+# locale 
+locale_dirs = ['locale/']
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
@@ -325,23 +333,13 @@ epub_copyright = copyright
 # Allow duplicate toc entries.
 #epub_tocdup = True
 
-class Mock(object):
-    def __init__(self, *args, **kwargs):
-        pass
+# mock out imports with C extensions for building on readthedocs.io
 
-    def __call__(self, *args, **kwargs):
-        return Mock()
-
+class Mock(MagicMock):
     @classmethod
     def __getattr__(cls, name):
-        if name in ('__file__', '__path__'):
-            return '/dev/null'
-        elif name[0] == name[0].upper():
-            return Mock
-        else:
-            return Mock()
+            return MagicMock()
 
 MOCK_MODULES = ['shapely']
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
-for mod_name in MOCK_MODULES:
-    sys.modules[mod_name] = Mock()

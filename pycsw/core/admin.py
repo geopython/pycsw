@@ -37,6 +37,7 @@ from glob import glob
 
 from pycsw.core import metadata, repository, util
 from pycsw.core.etree import etree
+from pycsw.core.etree import PARSER
 
 LOGGER = logging.getLogger(__name__)
 
@@ -57,9 +58,9 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
 
     dbase = create_engine(database)
 
-    schema, table = util.sniff_table(table)
+    schema_name, table_name = table.rpartition(".")[::2]
 
-    mdata = MetaData(dbase, schema=schema)
+    mdata = MetaData(dbase, schema=schema_name or None)
     create_postgis_geometry = False
 
     # If PostGIS 2.x detected, do not create sfsql tables.
@@ -104,15 +105,15 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
 
         i = geom.insert()
         i.execute(f_table_catalog='public', f_table_schema='public',
-                  f_table_name=table, f_geometry_column='wkt_geometry',
+                  f_table_name=table_name, f_geometry_column='wkt_geometry',
                   geometry_type=3, coord_dimension=2,
                   srid=4326, geometry_format='WKT')
 
     # abstract metadata information model
 
-    LOGGER.info('Creating table %s', table)
+    LOGGER.info('Creating table %s', table_name)
     records = Table(
-        table, mdata,
+        table_name, mdata,
         # core; nothing happens without these
         Column('identifier', Text, primary_key=True),
         Column('typename', Text,
@@ -216,7 +217,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         AS $$
             import sys
             sys.path.append('%s')
-            from pycsw import util
+            from pycsw.core import util
             return util.get_anytext(xml)
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
@@ -226,8 +227,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         AS $$
             import sys
             sys.path.append('%s')
-            from pycsw import util
-            return util.query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance)
+            from pycsw.core import repository
+            return repository.query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance)
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
             function_update_xpath = '''
@@ -236,8 +237,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         AS $$
             import sys
             sys.path.append('%s')
-            from pycsw import util
-            return util.update_xpath(nsmap, xml, recprops)
+            from pycsw.core import repository
+            return repository.update_xpath(nsmap, xml, recprops)
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
             function_get_geometry_area = '''
@@ -246,8 +247,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         AS $$
             import sys
             sys.path.append('%s')
-            from pycsw import util
-            return util.get_geometry_area(geom)
+            from pycsw.core import repository
+            return repository.get_geometry_area(geom)
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
             function_get_spatial_overlay_rank = '''
@@ -256,8 +257,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         AS $$
             import sys
             sys.path.append('%s')
-            from pycsw import util
-            return util.get_spatial_overlay_rank(target_geom, query_geom)
+            from pycsw.core import repository
+            return repository.get_spatial_overlay_rank(target_geom, query_geom)
             $$ LANGUAGE plpythonu;
         ''' % pycsw_home
             conn.execute(function_get_anytext)
@@ -268,21 +269,21 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
 
     if dbase.name == 'postgresql':
         LOGGER.info('Creating PostgreSQL Free Text Search (FTS) GIN index')
-        tsvector_fts = "alter table %s add column anytext_tsvector tsvector" % table
+        tsvector_fts = "alter table %s add column anytext_tsvector tsvector" % table_name
         conn.execute(tsvector_fts)
-        index_fts = "create index fts_gin_idx on %s using gin(anytext_tsvector)" % table
+        index_fts = "create index fts_gin_idx on %s using gin(anytext_tsvector)" % table_name
         conn.execute(index_fts)
         # This needs to run if records exist "UPDATE records SET anytext_tsvector = to_tsvector('english', anytext)"
-        trigger_fts = "create trigger ftsupdate before insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', 'anytext')" % (table, language)
+        trigger_fts = "create trigger ftsupdate before insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', 'anytext')" % (table_name, language)
         conn.execute(trigger_fts)
 
     if dbase.name == 'postgresql' and create_postgis_geometry:
         # create native geometry column within db
         LOGGER.info('Creating native PostGIS geometry column')
         if postgis_lib_version < '2':
-            create_column_sql = "SELECT AddGeometryColumn('%s', '%s', 4326, 'POLYGON', 2)" % (table, postgis_geometry_column)
+            create_column_sql = "SELECT AddGeometryColumn('%s', '%s', 4326, 'POLYGON', 2)" % (table_name, postgis_geometry_column)
         else:
-            create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table, postgis_geometry_column)
+            create_column_sql = "ALTER TABLE %s ADD COLUMN %s geometry(Geometry,4326);" % (table_name, postgis_geometry_column)
         create_insert_update_trigger_sql = '''
 DROP TRIGGER IF EXISTS %(table)s_update_geometry ON %(table)s;
 DROP FUNCTION IF EXISTS %(table)s_update_geometry();
@@ -298,10 +299,10 @@ $%(table)s_update_geometry$ LANGUAGE plpgsql;
 
 CREATE TRIGGER %(table)s_update_geometry BEFORE INSERT OR UPDATE ON %(table)s
 FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
-    ''' % {'table': table, 'geometry': postgis_geometry_column}
+    ''' % {'table': table_name, 'geometry': postgis_geometry_column}
 
         create_spatial_index_sql = 'CREATE INDEX %(geometry)s_idx ON %(table)s USING GIST (%(geometry)s);' \
-        % {'table': table, 'geometry': postgis_geometry_column}
+        % {'table': table_name, 'geometry': postgis_geometry_column}
 
         conn.execute(create_column_sql)
         conn.execute(create_insert_update_trigger_sql)
@@ -309,10 +310,13 @@ FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
 
 def load_records(context, database, table, xml_dirpath, recursive=False, force_update=False):
     """Load metadata records from directory of files to database"""
+    from sqlalchemy.exc import DBAPIError
+
     repo = repository.Repository(database, context, table=table)
 
     file_list = []
 
+    loaded_files = set()
     if os.path.isfile(xml_dirpath):
         file_list.append(xml_dirpath)
     elif recursive:
@@ -333,11 +337,18 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
         # read document
         try:
             exml = etree.parse(recfile, context.parser)
+        except etree.XMLSyntaxError as err:
+            LOGGER.error('XML document "%s" is not well-formed', recfile)
+            continue
         except Exception as err:
-            LOGGER.warn('XML document is not well-formed: %s', str(err))
+            LOGGER.exception('XML document "%s" is not well-formed', recfile)
             continue
 
-        record = metadata.parse_record(context, exml, repo)
+        try:
+            record = metadata.parse_record(context, exml, repo)
+        except Exception as err:
+            LOGGER.exception('Could not parse "%s" as an XML record', recfile)
+            continue
 
         for rec in record:
             LOGGER.info('Inserting %s %s into database %s, table %s ....',
@@ -346,14 +357,23 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
             # TODO: do this as CSW Harvest
             try:
                 repo.insert(rec, 'local', util.get_today_and_now())
-                LOGGER.info('Inserted')
-            except RuntimeError as err:
+                loaded_files.add(recfile)
+                LOGGER.info('Inserted %s', recfile)
+            except Exception as err:
                 if force_update:
                     LOGGER.info('Record exists. Updating.')
                     repo.update(rec)
-                    LOGGER.info('Updated')
+                    LOGGER.info('Updated %s', recfile)
+                    loaded_files.add(recfile)
                 else:
-                    LOGGER.warn('ERROR: not inserted %s', err)
+                    if isinstance(err, DBAPIError) and err.args:
+                        # Pull a decent database error message and not the full SQL that was run
+                        # since INSERT SQL statements are rather large.
+                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err.args[0])
+                    else:
+                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err)
+
+    return tuple(loaded_files)
 
 
 def export_records(context, database, table, xml_dirpath):
@@ -369,11 +389,14 @@ def export_records(context, database, table, xml_dirpath):
 
     dirpath = os.path.abspath(xml_dirpath)
 
+    exported_files = set()
+
     if not os.path.exists(dirpath):
         LOGGER.info('Directory %s does not exist.  Creating...', dirpath)
         try:
             os.makedirs(dirpath)
         except OSError as err:
+            LOGGER.exception('Could not create directory')
             raise RuntimeError('Could not create %s %s' % (dirpath, err))
 
     for record in records.all():
@@ -382,11 +405,9 @@ def export_records(context, database, table, xml_dirpath):
                     context.md_core_model['mappings']['pycsw:Identifier'])
 
         LOGGER.info('Processing %s', identifier)
-        if identifier.find(':') != -1:  # it's a URN
-            # sanitize identifier
-            LOGGER.info(' Sanitizing identifier')
-            identifier = identifier.split(':')[-1]
 
+        # sanitize identifier
+        identifier = util.secure_filename(identifier)
         # write to XML document
         filename = os.path.join(dirpath, '%s.xml' % identifier)
         try:
@@ -398,9 +419,17 @@ def export_records(context, database, table, xml_dirpath):
             with open(filename, 'w') as xml:
                 xml.write('<?xml version="1.0" encoding="UTF-8"?>\n')
                 xml.write(str_xml)
-
         except Exception as err:
-            raise RuntimeError("Error writing to %s" % filename, err)
+            # Something went wrong so skip over this file but log an error
+            LOGGER.exception('Error writing %s to disk', filename)
+            # If we wrote a partial file or created an empty file make sure it is removed
+            if os.path.exists(filename):
+                os.remove(filename)
+            continue
+        else:
+            exported_files.add(filename)
+
+    return tuple(exported_files)
 
 
 def refresh_harvested_records(context, database, table, url):
@@ -437,7 +466,7 @@ def refresh_harvested_records(context, database, table, url):
                 csw.harvest(source, schema)
                 LOGGER.info(csw.response)
             except Exception as err:
-                LOGGER.warn(err)
+                LOGGER.exception('Could not harvest')
     else:
         LOGGER.info('No harvested records')
 
@@ -449,10 +478,23 @@ def rebuild_db_indexes(database, table):
 
 def optimize_db(context, database, table):
     """Optimize database"""
+    from sqlalchemy.exc import ArgumentError, OperationalError
 
     LOGGER.info('Optimizing database %s', database)
     repos = repository.Repository(database, context, table=table)
-    repos.engine.connect().execute('VACUUM ANALYZE').close()
+    connection = repos.engine.connect()
+    try:
+        # PostgreSQL
+        connection.execution_options(isolation_level="AUTOCOMMIT")
+        connection.execute('VACUUM ANALYZE')
+    except (ArgumentError, OperationalError):
+        # SQLite
+        connection.autocommit = True
+        connection.execute('VACUUM')
+        connection.execute('ANALYZE')
+    finally:
+        connection.close()
+        LOGGER.info('Done')
 
 
 def gen_sitemap(context, database, table, url, output_file):
@@ -506,6 +548,7 @@ def post_xml(url, xml, timeout=30):
         with open(xml) as f:
             return http_post(url=url, request=f.read(), timeout=timeout)
     except Exception as err:
+        LOGGER.exception('HTTP XML POST error')
         raise RuntimeError(err)
 
 
@@ -565,12 +608,12 @@ def validate_xml(xml, xsd):
     LOGGER.info('Validating %s against schema %s', xml, xsd)
 
     schema = etree.XMLSchema(file=xsd)
-    parser = etree.XMLParser(schema=schema, resolve_entities=False)
 
     try:
-        valid = etree.parse(xml, parser)
+        valid = etree.parse(xml, PARSER)
         return 'Valid'
     except Exception as err:
+        LOGGER.exception('Invalid XML')
         raise RuntimeError('ERROR: %s' % str(err))
 
 

@@ -28,9 +28,7 @@
 #
 # =================================================================
 
-import csv
 import os
-from six.moves.urllib.parse import quote
 
 JQUERY_VERSION = '1.9.0'
 
@@ -104,12 +102,12 @@ print('''
                         <select class="xml">
                             <option value="none">Select a CSW Request</option>''')
 
-for root, dirs, files in os.walk('suites'):
+for root, dirs, files in os.walk('functionaltests/suites'):
     if files:
         for sfile in files:
             if os.path.splitext(sfile)[1] in ['.xml']:  # it's a POST request
                 query = '%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)
-                print('                            <option value="tests/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[1], query, query))
+                print('                            <option value="tests/functionaltests/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[1], query, query))
 print('''
                         </select>
                         <input type="button" class="send" value="Send"/>
@@ -133,16 +131,21 @@ print('''
             <ul>
 ''')
 
-for root, dirs, files in os.walk('suites'):
+for root, dirs, files in os.walk('functionaltests/suites'):
     if files:
         for sfile in files:
             if sfile == 'requests.txt':  # it's a list of GET requests
-                with open('%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)) as f:
-                    gets = csv.reader(f)
-                    for row in gets:
-                        baseurl, query_string = row[1].split('?')
-                        query = '%s?%s' % (baseurl.replace('PYCSW_SERVER', '../csw.py'), query_string.replace('&', '&amp;'))
-                        print('<li><a href="%s">%s</a></li>' % (query, row[0]))
+                file_path = os.path.join(root, sfile)
+                with open(file_path) as f:
+                    for line in f:
+                        name, query_string = line.strip().partition(",")[::2]
+                        baseurl = "../csw.py"
+                        query = "{baseurl}?{query_string}".format(
+                            baseurl=baseurl,
+                            query_string=query_string.replace("&", "&amp;")
+                        )
+                        print('<li><a href={query!r}>{name}</a></li>'.format(
+                            query=query, name=name))
 print('''
             </ul>
         <hr/>
