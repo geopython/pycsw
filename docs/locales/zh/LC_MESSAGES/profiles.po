@@ -1,0 +1,253 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010-2015, Tom Kralidis This work is licensed under a
+# Creative Commons Attribution 4.0 International License
+# This file is distributed under the same license as the pycsw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.1-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-05 21:56+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: ../../profiles.rst:4
+msgid "Profile Plugins"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:7
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:35
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:7 ../../profiles.rst:7
+msgid "Overview"
+msgstr ""
+
+#: ../../profiles.rst:9
+msgid ""
+"pycsw allows for the implementation of profiles to the core standard. "
+"Profiles allow specification of additional metadata format types (i.e. "
+"ISO 19139:2007, NASA DIF, INSPIRE, etc.) to the repository, which can be "
+"queried and presented to the client.  pycsw supports a plugin "
+"architecture which allows for runtime loading of Python code."
+msgstr ""
+
+#: ../../profiles.rst:11
+msgid "All profiles must be placed in the ``pycsw/plugins/profiles`` directory."
+msgstr ""
+
+#: ../../profiles.rst:14
+msgid "Requirements"
+msgstr ""
+
+#: ../../profiles.rst:30
+msgid "Abstract Base Class Definition"
+msgstr ""
+
+#: ../../profiles.rst:32
+msgid ""
+"All profile code must be instantiated as a subclass of "
+"``profile.Profile``.  Below is an example to add a ``Foo`` profile:"
+msgstr ""
+
+#: ../../profiles.rst:53
+msgid ""
+"Your profile plugin class (``FooProfile``) must implement all methods as "
+"per ``profile.Profile``.  Profile methods must always return "
+"``lxml.etree.Element`` types, or ``None``."
+msgstr ""
+
+#: ../../profiles.rst:56
+msgid "Enabling Profiles"
+msgstr ""
+
+#: ../../profiles.rst:58
+msgid ""
+"All profiles are disabled by default.  To specify profiles at runtime, "
+"set the ``server.profiles`` value in the :ref:`configuration` to the name"
+" of the package (in the ``pycsw/plugins/profiles`` directory).  To enable"
+" multiple profiles, specify as a comma separated value (see "
+":ref:`configuration`)."
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:27
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:27
+#: ../../profiles.rst:61
+msgid "Testing"
+msgstr ""
+
+#: ../../profiles.rst:63
+msgid ""
+"Profiles must add examples to the :ref:`tests` interface, which must "
+"provide example requests specific to the profile."
+msgstr ""
+
+#: ../../profiles.rst:66
+msgid "Supported Profiles"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:4
+msgid "ISO Metadata Application Profile (1.0.0)"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:8
+msgid ""
+"The ISO Metadata Application Profile (APISO) is a profile of CSW 2.0.2 "
+"which enables discovery of geospatial metadata following ISO 19139:2007 "
+"and ISO 19119:2005/PDAM 1."
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:11
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:40
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:11
+msgid "Configuration"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:13
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:13
+msgid "No extra configuration is required."
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:16
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:16
+msgid "Querying"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:18
+msgid "**typename**: ``gmd:MD_Metadata``"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:19
+msgid "**outputschema**: ``http://www.isotc211.org/2005/gmd``"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:22
+msgid "Enabling APISO Support"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:24
+msgid ""
+"To enable APISO support, add ``apiso`` to ``server.profiles`` as "
+"specified in :ref:`configuration`."
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:29
+msgid ""
+"A testing interface is available in ``tests/index.html`` which contains "
+"tests specific to APISO to demonstrate functionality.  See :ref:`tests` "
+"for more information."
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:32
+msgid "INSPIRE Extension"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:37
+msgid ""
+"APISO includes an extension for enabling `INSPIRE Discovery Services "
+"3.0`_ support.  To enable the INSPIRE extension to APISO, create a "
+"``[metadata:inspire]`` section in the main configuration with ``enabled``"
+" set to ``true``."
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:42
+msgid "**[metadata:inspire]**"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:44
+msgid ""
+"**enabled**: whether to enable the INSPIRE extension (``true`` or "
+"``false``)"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:45
+msgid ""
+"**languages_supported**: supported languages (see "
+"http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, "
+"simpleType ``euLanguageISO6392B``)"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:46
+msgid ""
+"**default_language**: the default language (see "
+"http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, "
+"simpleType ``euLanguageISO6392B``)"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:47
+msgid "**date**: date of INSPIRE metadata offering (in `ISO 8601`_ format)"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:48
+msgid ""
+"**gemet_keywords**: a comma-seperated keyword list of `GEMET INSPIRE "
+"theme keywords`_ about the service (see "
+"http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, "
+"complexType ``inspireTheme_eng``)"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:49
+msgid ""
+"**conformity_service**: the level of INSPIRE conformance for spatial data"
+" sets and services (``conformant``, ``notConformant``, ``notEvaluated``)"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:50
+msgid ""
+"**contact_organization**: the organization name responsible for the "
+"INSPIRE metadata"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:51
+msgid ""
+"**contact_email**: the email address of entity responsible for the "
+"INSPIRE metadata"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/apiso/docs/apiso.rst:52
+msgid ""
+"**temp_extent**: temporal extent of the service (in `ISO 8601`_ format)."
+"  Either a single date (i.e. ``yyyy-mm-dd``), or an extent (i.e. ``yyyy-"
+"mm-dd/yyyy-mm-dd``)"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:4
+msgid "CSW-ebRIM Registry Service - Part 1: ebRIM profile of CSW"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:8
+msgid ""
+"The CSW-ebRIM Registry Service is a profile of CSW 2.0.2 which enables "
+"discovery of geospatial metadata following the ebXML information model."
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:18
+msgid "**typename**: ``rim:RegistryObject``"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:19
+msgid "**outputschema**: ``urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0``"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:22
+msgid "Enabling ebRIM Support"
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:24
+msgid ""
+"To enable ebRIM support, add ``ebrim`` to ``server.profiles`` as "
+"specified in :ref:`configuration`."
+msgstr ""
+
+#: ../../../pycsw/plugins/profiles/ebrim/docs/ebrim.rst:29
+msgid ""
+"A testing interface is available in ``tests/index.html`` which contains "
+"tests specific to ebRIM to demonstrate functionality.  See :ref:`tests` "
+"for more information."
+msgstr ""
+

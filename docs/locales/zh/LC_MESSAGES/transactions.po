@@ -1,0 +1,269 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010-2015, Tom Kralidis This work is licensed under a
+# Creative Commons Attribution 4.0 International License
+# This file is distributed under the same license as the pycsw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.1-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-05 21:56+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: ../../transactions.rst:4 ../../transactions.rst:67
+msgid "Transactions"
+msgstr ""
+
+#: ../../transactions.rst:6
+msgid ""
+"pycsw has the ability to process CSW Harvest and Transaction requests "
+"(CSW-T).  Transactions are disabled by default; to enable, "
+"``manager.transactions`` must be set to ``true``.  Access to "
+"transactional functionality is limited to IP addresses which must be set "
+"in ``manager.allowed_ips``."
+msgstr ""
+
+#: ../../transactions.rst:9
+msgid "Supported Resource Types"
+msgstr ""
+
+#: ../../transactions.rst:11
+msgid ""
+"For transactions and harvesting, pycsw supports the following metadata "
+"resource types by default:"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "Resource Type"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "Namespace"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "Transaction"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "Harvest"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "Dublin Core"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.opengis.net/cat/csw/2.0.2``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "yes"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "FGDC"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.opengis.net/cat/csw/csdgm``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "GM03"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.interlis.ch/INTERLIS2.3``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "ISO 19139"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.isotc211.org/2005/gmd``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "ISO GMI"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.isotc211.org/2005/gmi``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "OGC:CSW 2.0.2"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "OGC:WMS 1.1.1/1.3.0"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.opengis.net/wms``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "OGC:WMTS 1.0.0"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.opengis.net/wmts/1.0``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "OGC:WFS 1.0.0/1.1.0/2.0.0"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.opengis.net/wfs``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "OGC:WCS 1.0.0"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.opengis.net/wcs``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "OGC:WPS 1.0.0"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.opengis.net/wps/1.0.0``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "OGC:SOS 1.0.0"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.opengis.net/sos/1.0``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "OGC:SOS 2.0.0"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``http://www.opengis.net/sos/2.0``"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "`WAF`_"
+msgstr ""
+
+#: ../../transactions.rst:1
+msgid "``urn:geoss:urn``"
+msgstr ""
+
+#: ../../transactions.rst:31
+msgid ""
+"Additional metadata models are supported by enabling the appropriate "
+":ref:`profiles`."
+msgstr ""
+
+#: ../../transactions.rst:35
+msgid ""
+"For transactions to be functional when using SQLite3, the SQLite3 "
+"database file (**and its parent directory**) must be fully writable.  For"
+" example:"
+msgstr ""
+
+#: ../../transactions.rst:44
+msgid ""
+"For CSW-T deployments, it is strongly advised that this directory reside "
+"in an area that is not accessible by HTTP."
+msgstr ""
+
+#: ../../transactions.rst:47
+msgid "Harvesting"
+msgstr ""
+
+#: ../../transactions.rst:51
+msgid ""
+"Your server must be able to make outgoing HTTP requests for this "
+"functionality."
+msgstr ""
+
+#: ../../transactions.rst:53
+msgid ""
+"pycsw supports the CSW-T ``Harvest`` operation.  Records which are "
+"harvested require to setup a cronjob to periodically refresh records in "
+"the local repository.  A sample cronjob is available in ``etc/harvest-"
+"all.cron`` which points to ``pycsw-admin.py`` (you must specify the "
+"correct path to your configuration).  Harvest operation results can be "
+"sent by email (via ``mailto:``) or ftp (via ``ftp://``) if the Harvest "
+"request specifies ``csw:ResponseHandler``."
+msgstr ""
+
+#: ../../transactions.rst:57
+msgid ""
+"For ``csw:ResponseHandler`` values using the ``mailto:`` protocol, you "
+"must have ``server.smtp_host`` set in your :ref:`configuration "
+"<configuration>`."
+msgstr ""
+
+#: ../../transactions.rst:60
+msgid "OGC Web Services"
+msgstr ""
+
+#: ../../transactions.rst:62
+msgid ""
+"When harvesting OGC web services, requests can provide the base URL of "
+"the service as part of the Harvest request.  pycsw will construct a "
+"``GetCapabilities`` request dynamically."
+msgstr ""
+
+#: ../../transactions.rst:64
+msgid ""
+"When harvesting other CSW servers, pycsw pages through the entire CSW in "
+"default increments of 10.  This value can be modified via the "
+"``manager.csw_harvest_pagesize`` :ref:`configuration <configuration>` "
+"option.  It is strongly advised to use the ``csw:ResponseHandler`` "
+"parameter for harvesting large CSW catalogues to prevent HTTP timeouts."
+msgstr ""
+
+#: ../../transactions.rst:69
+msgid ""
+"pycsw supports 3 modes of the ``Transaction`` operation (``Insert``, "
+"``Update``, ``Delete``):"
+msgstr ""
+
+#: ../../transactions.rst:71
+msgid "**Insert**: full XML documents can be inserted as per CSW-T"
+msgstr ""
+
+#: ../../transactions.rst:72
+msgid ""
+"**Update**: updates can be made as full record updates or record "
+"properties against a ``csw:Constraint``"
+msgstr ""
+
+#: ../../transactions.rst:73
+msgid "**Delete**: deletes can be made against a ``csw:Constraint``"
+msgstr ""
+
+#: ../../transactions.rst:75
+msgid ""
+"Transaction operation results can be sent by email (via ``mailto:``) or "
+"ftp (via ``ftp://``) if the Transaction request specifies "
+"``csw:ResponseHandler``."
+msgstr ""
+
+#: ../../transactions.rst:77
+msgid "The :ref:`tests` contain CSW-T request examples."
+msgstr ""
+

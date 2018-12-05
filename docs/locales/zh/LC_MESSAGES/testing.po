@@ -1,0 +1,228 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010-2015, Tom Kralidis This work is licensed under a
+# Creative Commons Attribution 4.0 International License
+# This file is distributed under the same license as the pycsw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.1-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-05 21:56+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: ../../testing.rst:4
+msgid "Testing"
+msgstr ""
+
+#: ../../testing.rst:9
+msgid "OGC CITE"
+msgstr ""
+
+#: ../../testing.rst:11
+msgid ""
+"Compliance benchmarking is done via the OGC `Compliance & "
+"Interoperability Testing & Evaluation Initiative`_.  The pycsw `wiki "
+"<https://github.com/geopython/pycsw/wiki/OGC-CITE-Compliance>`_ documents"
+" testing procedures and status."
+msgstr ""
+
+#: ../../testing.rst:16
+msgid "Tester"
+msgstr ""
+
+#: ../../testing.rst:18
+msgid ""
+"The pycsw tests framework (in ``tests``) is a collection of testsuites to"
+" perform automated regession testing of the codebase.  Test are run "
+"against all pushes to the GitHub repository via `Travis CI`_."
+msgstr ""
+
+#: ../../testing.rst:21
+msgid "Running Locally"
+msgstr ""
+
+#: ../../testing.rst:23
+msgid ""
+"The tests framework can be run from ``tests`` using `Paver`_ (see "
+"``pavement.py``) tasks for convenience:"
+msgstr ""
+
+#: ../../testing.rst:37
+msgid ""
+"The tests perform HTTP GET and POST requests against "
+"``http://localhost:8000``.  The expected output for each test can be "
+"found in ``expected``.  Results are categorized as ``passed``, "
+"``failed``, or ``initialized``.  A summary of results is output at the "
+"end of the run."
+msgstr ""
+
+#: ../../testing.rst:40
+msgid "Failed Tests"
+msgstr ""
+
+#: ../../testing.rst:42
+msgid ""
+"If a given test has failed, the output is saved in ``results``.  The "
+"resulting failure can be analyzed by running ``diff "
+"tests/expected/name_of_test.xml tests/results/name_of_test.xml`` to find "
+"variances.  The Paver task returns a status code which indicates the "
+"number of tests which have failed (i.e. ``echo $?``)."
+msgstr ""
+
+#: ../../testing.rst:45
+msgid "Test Suites"
+msgstr ""
+
+#: ../../testing.rst:47
+msgid ""
+"The tests framework is run against a series of 'suites' (in "
+"``tests/suites``), each of which specifies a given configuration to test "
+"various functionality of the codebase.  Each suite is structured as "
+"follows:"
+msgstr ""
+
+#: ../../testing.rst:49
+msgid "``tests/suites/suite/default.cfg``: the configuration for the suite"
+msgstr ""
+
+#: ../../testing.rst:50
+msgid ""
+"``tests/suites/suite/post``: directory of XML documents for HTTP POST "
+"requests"
+msgstr ""
+
+#: ../../testing.rst:51
+msgid ""
+"``tests/suites/suite/get/requests.txt``: directory and text file of KVP "
+"for HTTP GET requests"
+msgstr ""
+
+#: ../../testing.rst:52
+msgid ""
+"``tests/suites/suite/data``: directory of sample XML data required for "
+"the test suite.  Database and test data are setup/loaded automatically as"
+" part of testing"
+msgstr ""
+
+#: ../../testing.rst:54
+msgid "When the tests are invoked, the following operations are run:"
+msgstr ""
+
+#: ../../testing.rst:56
+msgid "pycsw configuration is set to ``tests/suites/suite/default.cfg``"
+msgstr ""
+
+#: ../../testing.rst:57
+msgid "HTTP POST requests are run against ``tests/suites/suite/post/*.xml``"
+msgstr ""
+
+#: ../../testing.rst:58
+msgid ""
+"HTTP GET requests are run against each request in "
+"``tests/suites/suite/get/requests.txt``"
+msgstr ""
+
+#: ../../testing.rst:60
+msgid ""
+"The CSV format of ``tests/suites/suite/get/requests.txt`` is "
+"``testname,request``, with one line for each test.  The ``testname`` "
+"value is a unique test name (this value sets the name of the output file "
+"in the test results).  The ``request`` value is the HTTP GET request.  "
+"The ``PYCSW_SERVER`` token is replaced at runtime with the URL to the "
+"pycsw install."
+msgstr ""
+
+#: ../../testing.rst:63
+msgid "Adding New Tests"
+msgstr ""
+
+#: ../../testing.rst:65
+msgid "To add tests to an existing suite:"
+msgstr ""
+
+#: ../../testing.rst:67
+msgid "for HTTP POST tests, add XML documents to ``tests/suites/suite/post``"
+msgstr ""
+
+#: ../../testing.rst:68
+msgid ""
+"for HTTP GET tests, add tests (one per line) to "
+"``tests/suites/suite/get/requests.txt``"
+msgstr ""
+
+#: ../../testing.rst:69
+msgid "run ``paver test``"
+msgstr ""
+
+#: ../../testing.rst:71
+msgid "To add a new test suite:"
+msgstr ""
+
+#: ../../testing.rst:73
+msgid "create a new directory under ``tests/suites`` (e.g. ``foo``)"
+msgstr ""
+
+#: ../../testing.rst:74
+msgid "create a new configuration in ``tests/suites/foo/default.cfg``"
+msgstr ""
+
+#: ../../testing.rst:76
+msgid "Ensure that all file paths are relative to ``path/to/pycsw``"
+msgstr ""
+
+#: ../../testing.rst:77
+msgid ""
+"Ensure that ``repository.database`` points to an SQLite3 database called "
+"``tests/suites/foo/data/records.db``.  The database *must* be called "
+"``records.db`` and the directory ``tests/suites/foo/data`` *must* exist"
+msgstr ""
+
+#: ../../testing.rst:79
+msgid "populate HTTP POST requests in ``tests/suites/foo/post``"
+msgstr ""
+
+#: ../../testing.rst:80
+msgid "populate HTTP GET requests in ``tests/suites/foo/get/requests.txt``"
+msgstr ""
+
+#: ../../testing.rst:81
+msgid ""
+"if the testsuite requires test data, create ``tests/suites/foo/data`` are"
+" store XML file there"
+msgstr ""
+
+#: ../../testing.rst:82
+msgid ""
+"run ``paver test`` (or ``paver test -s foo`` to test only the new test "
+"suite)"
+msgstr ""
+
+#: ../../testing.rst:84
+msgid ""
+"The new test suite database will be created automatically and used as "
+"part of tests."
+msgstr ""
+
+#: ../../testing.rst:87
+msgid "Web Testing"
+msgstr ""
+
+#: ../../testing.rst:89
+msgid ""
+"You can also use the pycsw tests via your web browser to perform sample "
+"requests against your pycsw install.  The tests are is located in "
+"``tests/``.  To generate the HTML page:"
+msgstr ""
+
+#: ../../testing.rst:95
+msgid "Then navigate to ``http://host/path/to/pycsw/tests/index.html``."
+msgstr ""
+

@@ -1,0 +1,172 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010-2015, Tom Kralidis This work is licensed under a
+# Creative Commons Attribution 4.0 International License
+# This file is distributed under the same license as the pycsw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pycsw 2.1-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-05 21:56+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: ../../repofilters.rst:4
+msgid "Repository Filters"
+msgstr ""
+
+#: ../../repofilters.rst:6
+msgid ""
+"pycsw has the ability to perform server side repository / database "
+"filters as a means to mask all CSW requests to query against a specific "
+"subset of the metadata repository, thus providing the ability to deploy "
+"multiple pycsw instances pointing to the same database in different ways "
+"via the ``repository.filter`` configuration option."
+msgstr ""
+
+#: ../../repofilters.rst:8
+msgid ""
+"Repository filters are a convenient way to subset your repository at the "
+"server level without the hassle of creating proper database views.  For "
+"large repositories, it may be better to subset at the database level for "
+"performance."
+msgstr ""
+
+#: ../../repofilters.rst:11
+msgid "Scenario: One Database, Many Views"
+msgstr ""
+
+#: ../../repofilters.rst:13
+msgid "Imagine a sample database table of records (subset below for brevity):"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "identifier"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "parentidentifier"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "title"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "abstract"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "1"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "33"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "foo1"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "bar1"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "2"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "foo2"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "bar2"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "3"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "55"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "foo3"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "bar3"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "4"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "5"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "21"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "foo5"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "bar5"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "foo6"
+msgstr ""
+
+#: ../../repofilters.rst:1
+msgid "bar6"
+msgstr ""
+
+#: ../../repofilters.rst:25
+msgid ""
+"A default pycsw instance (with no ``repository.filters`` option) will "
+"always process CSW requests against the entire table.  So a CSW "
+"`GetRecords` filter like:"
+msgstr ""
+
+#: ../../repofilters.rst:36
+msgid "...will return:"
+msgstr ""
+
+#: ../../repofilters.rst:44
+msgid ""
+"Suppose you wanted to deploy another pycsw instance which serves metadata"
+" from the same database, but only from a specific subset.  Here we set "
+"the ``repository.filter`` option:"
+msgstr ""
+
+#: ../../repofilters.rst:52 ../../repofilters.rst:67
+msgid ""
+"The same CSW `GetRecords` filter as per above then yields the following "
+"results:"
+msgstr ""
+
+#: ../../repofilters.rst:59
+msgid "Another example:"
+msgstr ""
+
+#: ../../repofilters.rst:74
+msgid ""
+"The ``repository.filter`` option accepts all core queryables set in the "
+"pycsw core model (see ``pycsw.config.StaticContext.md_core_model`` for "
+"the complete list)."
+msgstr ""
+
