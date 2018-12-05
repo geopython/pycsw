@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.1-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 20:36+0800\n"
+"POT-Creation-Date: 2018-12-05 22:08+0800\n"
 "PO-Revision-Date: 2018-12-05 11:18+0800\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
@@ -51,10 +51,10 @@ msgstr "请求实例"
 #: ../../csw-support.rst:27
 #, fuzzy
 msgid ""
-"The best place to look for sample requests is within the ``tests/`` "
+"The best place to look for sample requests is within the `tests/` "
 "directory, which provides numerous examples of all supported APIs and "
 "requests."
-msgstr "查找示例请求的最佳位置是在 ``tests/`` 目录中，该目录提供了所有支持的 APIs和请求的许多示例."
+msgstr "查找示例请求的最佳位置是在 `tests/` 目录中，该目录提供了所有支持的 APIs和请求的许多示例."
 
 #: ../../csw-support.rst:30
 msgid "Additional examples:"

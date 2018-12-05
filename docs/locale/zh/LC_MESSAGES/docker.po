@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.3-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 20:36+0800\n"
+"POT-Creation-Date: 2018-12-05 22:08+0800\n"
 "PO-Revision-Date: 2018-12-05 09:01+0800\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
@@ -25,7 +25,8 @@ msgstr ""
 
 #: ../../docker.rst:4
 msgid ""
-"pycsw is available as a Docker image. The image is hosted on the `Docker Hub`_."
+"pycsw is available as a Docker image. The image is hosted on the `Docker "
+"Hub`_."
 msgstr "pycsw可用作 Docker图像。图像被寄存在 `Docker Hub`_. 上。"
 
 #: ../../docker.rst:6
@@ -72,12 +73,8 @@ msgstr "使用PYCSW管理"
 #, fuzzy
 msgid ""
 "``pycsw-admin`` can be executed on a running container by using ``docker "
-"exec``:"
+"exec``::"
 msgstr "``pycsw-admin`` 可以在运行的容器上使用 ``docker exec`` 执行： "
-
-#: ../../docker.rst:48
-msgid "docker exec -ti <running-container-id> pycsw-admin.py -h"
-msgstr ""
 
 #: ../../docker.rst:52
 msgid "Running custom pycsw containers"
@@ -94,8 +91,8 @@ msgid ""
 "configuration file is searched at the value of the ``PYCSW_CONFIG`` "
 "environmental variable, which defaults to ``/etc/pycsw/pycsw.cfg``."
 msgstr ""
-"可以为pycsw提供自定义配置文件作为绑定安装或作为docker秘密（在docker群集的情况下）。"
-"配置文件在 ``PYCSW_CONFIG`` 环境变量的值处进行搜索，该环境变量默认为 ``/etc/pycsw/pycsw.cfg`` 。"
+"可以为pycsw提供自定义配置文件作为绑定安装或作为docker秘密（在docker群集的情况下）。配置文件在 ``PYCSW_CONFIG`` "
+"环境变量的值处进行搜索，该环境变量默认为 ``/etc/pycsw/pycsw.cfg`` 。"
 
 #: ../../docker.rst:62
 msgid "Supplying the configuration file via bind mount::"
@@ -116,8 +113,8 @@ msgid ""
 "custom sqlite database path. It should be mounted under "
 "``/var/lib/pycsw``::"
 msgstr ""
-"默认的数据库存储库是用于运行pycsw测试套件的CITE数据库。Docker卷可以用来指定自定义sqlite数据库路径。"
-"它应该安装在 ``/var/lib/pycsw``::"
+"默认的数据库存储库是用于运行pycsw测试套件的CITE数据库。Docker卷可以用来指定自定义sqlite数据库路径。它应该安装在 "
+"``/var/lib/pycsw``::"
 
 #: ../../docker.rst:100
 msgid "PostgreSQL repositories"
@@ -180,8 +177,7 @@ msgid ""
 "Please note that the pycsw image only uses python 3.5 and that it also "
 "does not install pycsw in editable mode. As such it is not possible to "
 "use ``tox``."
-msgstr "请注意，pycsw映像只使用python 3.5，而且它也不以可编辑模式安装pycsw。"
-"因此，不可能使用 ``tox`` ."
+msgstr "请注意，pycsw映像只使用python 3.5，而且它也不以可编辑模式安装pycsw。因此，不可能使用 ``tox`` ."
 
 #: ../../docker.rst:161
 msgid ""
@@ -189,4 +185,7 @@ msgid ""
 "container, after building the docs you may inspect their content "
 "visually, for example by running::"
 msgstr "由于docs目录是从主机绑定到容器中的，所以在构建docs之后，您可以可视化地检查它们的内容，例如，通过运行::"
+
+#~ msgid "docker exec -ti <running-container-id> pycsw-admin.py -h"
+#~ msgstr ""
 

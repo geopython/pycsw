@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 20:36+0800\n"
+"POT-Creation-Date: 2018-12-05 22:08+0800\n"
 "PO-Revision-Date: 2018-12-05 11:33+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -114,8 +114,8 @@ msgid ""
 "tests. The presence of this directory and its contents have the following"
 " meaning for tests:"
 msgstr ""
-"一个可选的 ``data/`` 目录，包含``.xml`` 文件，"
-"其中包含要在运行测试之前加载到套件数据库中的测试数据。该目录及其内容的存在对测试具有以下意义:"
+"一个可选的 ``data/`` 目录，包含 ``.xml`` "
+"文件，其中包含要在运行测试之前加载到套件数据库中的测试数据。该目录及其内容的存在对测试具有以下意义:"
 
 #: ../../testing.rst:62
 msgid ""
@@ -187,7 +187,7 @@ msgstr ""
 
 #: ../../testing.rst:102
 #, fuzzy
-msgid "Functional tests implementation"
+msgid "Functional tests' implementation"
 msgstr "功能测试的实现"
 
 #: ../../testing.rst:104
@@ -314,9 +314,8 @@ msgid ""
 "description of the available parameters by running:"
 msgstr ""
 "这个命令将运行所有测试，并报告成功、失败次数以及运行它们所花费的时间。 `py.test` "
-"命令接受几个额外的参数，这些参数可用于自定义测试的执行。"
-"查看 `pytest's invocation documentation`_，以获得更完整的描述。"
-"您还可以通过运行来获得可用参数的描述："
+"命令接受几个额外的参数，这些参数可用于自定义测试的执行。查看 `pytest's invocation "
+"documentation`_，以获得更完整的描述。您还可以通过运行来获得可用参数的描述："
 
 #: ../../testing.rst:183
 msgid "Running specific suites and test cases"
@@ -387,8 +386,8 @@ msgid ""
 "under test. Set this value to ``debug`` in order to see all debug "
 "messages sent by pycsw while processing a request."
 msgstr ""
-"``--pycsw-loglevel`` 标志 - 设置被测试的pycsw实例的日志级别。"
-"将此值设置为 ``debug`` ，以便查看pycsw在处理请求时发送的所有调试消息."
+"``--pycsw-loglevel`` 标志 - 设置被测试的pycsw实例的日志级别。将此值设置为 ``debug`` "
+"，以便查看pycsw在处理请求时发送的所有调试消息."
 
 #: ../../testing.rst:245
 msgid "Comparing results with difflib instead of XML c14n"
@@ -403,9 +402,9 @@ msgid ""
 "Comparison is made on a line-by-line basis and in case of failure, a "
 "unified diff will be printed to standard output."
 msgstr ""
-"功能测试使用 [XML canonicalisation - XML c14n](https://www.w3.org/TR/xml-c14n/) 将结果与期望值进行比较。"
-"或者，也可以调用py, 使用 ``--functional-prefer-diffs`` "
-"标志进行测试。这将支持基于 Python's ``difflib`` 的比较。在逐行比较的基础上，如果失败,将把统一的差异打印到标准输出."
+"功能测试使用 [XML canonicalisation - XML c14n](https://www.w3.org/TR/xml-c14n/)"
+" 将结果与期望值进行比较。或者，也可以调用py, 使用 ``--functional-prefer-diffs`` 标志进行测试。这将支持基于 "
+"Python's ``difflib`` 的比较。在逐行比较的基础上，如果失败,将把统一的差异打印到标准输出."
 
 #: ../../testing.rst:260
 msgid "Saving test results for disk"
@@ -417,8 +416,8 @@ msgid ""
 "``--functional-save-results-directory`` option. Each result file is named"
 " after the test identifier it has when running with pytest."
 msgstr ""
-"通过使用 ``--functional-save-results-directory`` 选项，"
-"可以将每个功能测试的结果保存到磁盘上。每个结果文件都是根据使用pytest运行时的测试标识符命名的."
+"通过使用 ``--functional-save-results-directory`` "
+"选项，可以将每个功能测试的结果保存到磁盘上。每个结果文件都是根据使用pytest运行时的测试标识符命名的."
 
 #: ../../testing.rst:273
 msgid "Test coverage"
