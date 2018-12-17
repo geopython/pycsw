@@ -21,3 +21,29 @@ pycsw is Open Source, released under an MIT license, and runs on all major
 platforms (Windows, Linux, Mac OS X).
 
 Please read the docs at http://pycsw.org/docs for more information.
+
+
+Installation
+_________________
+
+.. code:: python 
+
+  virtualenv pycswVirtEnv && cd pycswVirtEnv && . bin/activate
+  git clone https://github.com/KathHv/pycsw.git && cd pycsw
+  pip install -e . && pip install -r requirements-standalone.txt
+  python pycsw/wsgi.py
+
+    
+    
+Start virtenv and pycsw again
+___________________
+
+Run in folder where the pycswVirtEnv folder is in:
+
+.. code:: python
+
+ virtualenv pycswVirtEnv && cd pycswVirtEnv && . bin/activate
+ cd pycsw
+ pip install -e . && pip install -r requirements-standalone.txt  
+ python pycsw/wsgi.py
+
