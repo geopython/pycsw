@@ -348,6 +348,7 @@ def _parse_wms(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
     _set(context, serviceobj, 'pycsw:Source', record)
     _set(context, serviceobj, 'pycsw:Format', md.identification.type)
+    _set(context, serviceobj, 'pycsw:VectorRepresentation', md.identification.vectorrepresentation)
     for c in md.contents:
         if md.contents[c].parent is None:
             bbox = md.contents[c].boundingBoxWGS84
@@ -388,17 +389,8 @@ def _parse_wms(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:Title', md.contents[layer].title)
         _set(context, recobj, 'pycsw:Abstract', md.contents[layer].abstract)
         _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[layer].keywords))
-
-        _set(
-            context,
-            recobj,
-            'pycsw:AnyText',
-            util.get_anytext([
-                md.contents[layer].title,
-                md.contents[layer].abstract,
-                ','.join(md.contents[layer].keywords)
-            ])
-        )
+        _set(context, recobj, 'pycsw:VectorRepresentation', md.contents[layer].vectorrepresentation)
+        _set(context, recobj, 'pycsw:AnyText', util.get_anytext([md.contents[layer].title, md.contents[layer].abstract, ','.join(md.contents[layer].keywords)]))
 
         bbox = md.contents[layer].boundingBoxWGS84
         if bbox is not None:
@@ -485,6 +477,7 @@ def _parse_wmts(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
     _set(context, serviceobj, 'pycsw:Source', record)
     _set(context, serviceobj, 'pycsw:Format', md.identification.type)
+    _set(context, serviceobj, 'pycsw:VectorRepresentation', md.identification.vectorrepresentation)
 
     for c in md.contents:
         if md.contents[c].parent is None:
@@ -524,6 +517,9 @@ def _parse_wmts(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
         _set(context, recobj, 'pycsw:Type', 'dataset')
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
+
+        if md.contents[layer].vectorrepresentation:
+            _set(context, recobj, 'pycsw:VectorRepresentation', md.identification.vectorrepresentation)
         if md.contents[layer].title:
              _set(context, recobj, 'pycsw:Title', md.contents[layer].title)
         else:
@@ -655,6 +651,7 @@ def _parse_wfs(context, repos, record, identifier, version):
         _set(context, recobj, 'pycsw:Title', md.contents[featuretype].title)
         _set(context, recobj, 'pycsw:Abstract', md.contents[featuretype].abstract)
         _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[featuretype].keywords))
+        _set(context, recobj, 'pycsw:VectorRepresentation', md.contents[featuretype].vectorrepresentation)
 
         _set(
             context,
@@ -771,6 +768,7 @@ def _parse_wcs(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:Title', md.contents[coverage].title)
         _set(context, recobj, 'pycsw:Abstract', md.contents[coverage].abstract)
         _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[coverage].keywords))
+        _set(context, recobj, 'pycsw:VectorRepresentation', md.contents[coverage].vectorrepresentation)
 
         _set(
             context,
@@ -970,10 +968,11 @@ def _parse_sos(context, repos, record, identifier, version):
         _set(context, recobj, 'pycsw:Schema', schema)
         _set(context, recobj, 'pycsw:MdSource', record)
         _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
-        _set(context, recobj, 'pycsw:Type', 'dataset')
+        _set(context, recobj, 'pycsw:Type', 'dataset') 
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
         _set(context, recobj, 'pycsw:Title', md.contents[offering].description)
         _set(context, recobj, 'pycsw:Abstract', md.contents[offering].description)
+        _set(context, recobj, 'pycsw:VectorRepresentation', md.contents[offering].vectorrepresentation)
         begin = md.contents[offering].begin_position
         end = md.contents[offering].end_position
         _set(context, recobj, 'pycsw:TempExtent_begin',
@@ -1071,6 +1070,11 @@ def _parse_fgdc(context, repos, exml):
     _set(context, recobj, 'pycsw:AccessConstraints', md.idinfo.accconst)
     _set(context, recobj, 'pycsw:OtherConstraints', md.idinfo.useconst)
     _set(context, recobj, 'pycsw:Date', md.metainfo.metd)
+
+
+    if hasattr(md.idinfo, 'vectorrepresentation'):
+        _set(context, recobj, 'pycsw:VectorRepresentation', md.idinfo.vectorrepresentation)
+
 
     if hasattr(md.idinfo, 'spdom') and hasattr(md.idinfo.spdom, 'bbox'):
         bbox = md.idinfo.spdom.bbox
@@ -1172,6 +1176,9 @@ def _parse_gm03(context, repos, exml):
     if hasattr(data, 'format'):
         _set(context, recobj, 'pycsw:Format', data.format.name)
 
+    if hasattr(data, 'vectorrepresentation'):
+        _set(context, recobj, 'pycsw:VectorRepresentation', data.format.vectorrepresentation)
+
     # bbox
     if hasattr(data, 'geographic_bounding_box'):
         try:
@@ -1261,6 +1268,10 @@ def _parse_iso(context, repos, exml):
 
         if len(md.identification.resourcelanguage) > 0:
             _set(context, recobj, 'pycsw:ResourceLanguage', md.identification.resourcelanguage[0])
+
+        if hasattr(md.identification, 'vectorrepresentation'):
+            _set(context, recobj, 'pycsw:VectorRepresentation', md.identification.vectorrepresentation)
+
 
         if hasattr(md.identification, 'bbox'):
             bbox = md.identification.bbox
@@ -1452,6 +1463,7 @@ def _parse_dc(context, repos, exml):
     _set(context, recobj, 'pycsw:Modified', md.modified)
     _set(context, recobj, 'pycsw:Format', md.format)
     _set(context, recobj, 'pycsw:Source', md.source)
+    _set(context, recobj, 'pycsw:VectorRepresentation', md.vectorrepresentation)
 
     for ref in md.references:
         tmp = ',,%s,%s' % (ref['scheme'], ref['url'])

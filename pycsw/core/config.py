@@ -101,7 +101,7 @@ class StaticContext(object):
             'typename': 'pycsw:CoreMetadata',
             'outputschema': 'http://pycsw.org/metadata',
             'mappings': {
-                'pycsw:Identifier': 'identifier',
+                'pycsw:Identifier123': 'identifier',
                 # CSW typename (e.g. csw:Record, md:MD_Metadata)
                 'pycsw:Typename': 'typename',
                 # schema namespace, i.e. http://www.isotc211.org/2005/gmd
@@ -126,6 +126,7 @@ class StaticContext(object):
                 'pycsw:Type': 'type',
                 # geometry, specified in OGC WKT
                 'pycsw:BoundingBox': 'wkt_geometry',
+                'pycsw:VectorRepresentation': 'vector_representation',
                 'pycsw:CRS': 'crs',
                 'pycsw:AlternateTitle': 'title_alternate',
                 'pycsw:RevisionDate': 'date_revision',
@@ -253,6 +254,23 @@ class StaticContext(object):
                             }
                         }
                     },
+                    'GetSimilarRecords': {
+                        'methods': {
+                            'get': True,
+                            'post': True,
+                        },
+                        'parameters': {
+                            'outputSchema': {
+                                'values': ['http://www.opengis.net/cat/csw/2.0.2']
+                            },
+                            'outputFormat': {
+                                'values': ['application/xml', 'application/json']
+                            },
+                            'ElementSetName': {
+                                'values': ['brief', 'summary', 'full']
+                            }
+                        }
+                    },
                     'GetRepositoryItem': {
                         'methods': {
                             'get': True,
@@ -287,7 +305,7 @@ class StaticContext(object):
                         'queryables': {
                             'SupportedDublinCoreQueryables': {
                                 # map Dublin Core queryables to core metadata model
-                                'dc:title':
+                                'dc:title123':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Title']},
                                 'dct:alternative':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:AlternateTitle']},
@@ -297,20 +315,20 @@ class StaticContext(object):
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Keywords']},
                                 'dct:abstract':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Abstract']},
-                                'dc:publisher':
+                                'dc:publisher123':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Publisher']},
-                                'dc:contributor':
+                                'dc:contributor123':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Contributor']},
-                                'dct:modified':
+                                'dct:modified123':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Modified']},
-                                'dc:date':
+                                'dc:date123':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Date']},
                                 'dc:type':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Type']},
                                 'dc:format':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Format']},
-                                'dc:identifier':
-                                {'dbcol': self.md_core_model['mappings']['pycsw:Identifier']},
+                                'dc:identifier123':
+                                {'dbcol': self.md_core_model['mappings']['pycsw:Identifier123']},
                                 'dc:source':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Source']},
                                 'dc:language':
@@ -325,8 +343,12 @@ class StaticContext(object):
                                 # bbox and full text map to internal fixed columns
                                 'ows:BoundingBox':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:BoundingBox']},
+                                'dc:VectorRepresentation':
+                                {'dbcol': self.md_core_model['mappings']['pycsw:VectorRepresentation']},
                                 'csw:AnyText':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:AnyText']},
+                                'furtherText':
+                                {'Hallo Hallo Hallo'},
                             }
                         }
                     }
@@ -382,6 +404,23 @@ class StaticContext(object):
                         }
                     },
                     'GetRecordById': {
+                        'methods': {
+                            'get': True,
+                            'post': True,
+                        },
+                        'parameters': {
+                            'outputSchema': {
+                                'values': ['http://www.opengis.net/cat/csw/3.0']
+                            },
+                            'outputFormat': {
+                                'values': ['application/xml', 'application/json', 'application/atom+xml']
+                            },
+                            'ElementSetName': {
+                                'values': ['brief', 'summary', 'full']
+                            }
+                        }
+                    },
+                    'GetSimilarRecords': {
                         'methods': {
                             'get': True,
                             'post': True,
@@ -526,8 +565,8 @@ class StaticContext(object):
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Type']},
                                 'dc:format':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Format']},
-                                'dc:identifier':
-                                {'dbcol': self.md_core_model['mappings']['pycsw:Identifier']},
+                                'dc:identifier123':
+                                {'dbcol': self.md_core_model['mappings']['pycsw:Identifier123']},
                                 'dc:source':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:Source']},
                                 'dc:language':
@@ -542,6 +581,8 @@ class StaticContext(object):
                                 # bbox and full text map to internal fixed columns
                                 'ows:BoundingBox':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:BoundingBox']},
+                                'dc:VectorRepresentation':
+                                {'dbcol': self.md_core_model['mappings']['pycsw:VectorRepresentation']},
                                 'csw:AnyText':
                                 {'dbcol': self.md_core_model['mappings']['pycsw:AnyText']},
                             }
@@ -585,13 +626,14 @@ class StaticContext(object):
             'dc:date': 'pycsw:Date',
             'dc:type': 'pycsw:Type',
             'dc:format': 'pycsw:Format',
-            'dc:identifier': 'pycsw:Identifier',
+            'dc:identifier123': 'pycsw:Identifier123',
             'dc:source': 'pycsw:Source',
             'dc:language': 'pycsw:Language',
             'dc:relation': 'pycsw:Relation',
             'dc:rights': 'pycsw:AccessConstraints',
             'dct:spatial': 'pycsw:CRS',
             'ows:BoundingBox': 'pycsw:BoundingBox',
+            'dc:VectorRepresentation': 'pycsw:VectorRepresentation',
             'csw:AnyText': 'pycsw:AnyText',
         }
 

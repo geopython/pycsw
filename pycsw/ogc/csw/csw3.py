@@ -633,7 +633,7 @@ class Csw3(object):
             self.parent.kvp['outputschema'])
 
         if 'outputformat' not in self.parent.kvp:
-            self.parent.kvp['outputformat'] = 'application/xml'
+            self.parent.kvp['outputformat'] = 'application/json'
 
         if 'HTTP_ACCEPT' in self.parent.environ:
             LOGGER.debug('Detected HTTP Accept header: %s', self.parent.environ['HTTP_ACCEPT'])
@@ -1040,6 +1040,8 @@ class Csw3(object):
     def getrecordbyid(self, raw=False):
         ''' Handle GetRecordById request '''
 
+        LOGGER.debug("getRecordById")
+
         if 'id' not in self.parent.kvp:
             return self.exceptionreport('MissingParameterValue', 'id',
             'Missing id parameter')
@@ -1048,6 +1050,7 @@ class Csw3(object):
             'Invalid id parameter')
         if 'outputschema' not in self.parent.kvp:
             self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw30']
+
 
         if 'HTTP_ACCEPT' in self.parent.environ:
             LOGGER.debug('Detected HTTP Accept header: %s', self.parent.environ['HTTP_ACCEPT'])
@@ -1064,6 +1067,7 @@ class Csw3(object):
                     'outputformat', 'HTTP Accept header (%s) and outputformat (%s) must agree' %
                     (self.parent.environ['HTTP_ACCEPT'], self.parent.kvp['outputformat']))
             else:
+                
                 for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
                     if ofmt in self.parent.context.model['operations']['GetRecords']['parameters']['outputFormat']['values']:
                         self.parent.kvp['outputformat'] = ofmt
@@ -1152,6 +1156,125 @@ class Csw3(object):
             'No repository item found for \'%s\'' % self.parent.kvp['id'])
 
         return node
+
+
+    def getsimilarrecords(self, raw=False):
+        ''' Handle GetSimilarRecords request '''
+
+        LOGGER.debug("getSimilarRecords")
+        
+        if 'id' not in self.parent.kvp:
+            return self.exceptionreport('MissingParameterValue', 'id',
+            'Missing id parameter')
+        if len(self.parent.kvp['id']) < 1:
+            return self.exceptionreport('InvalidParameterValue', 'id',
+            'Invalid id parameter')
+        if 'outputschema' not in self.parent.kvp:
+            self.parent.kvp['outputschema'] = self.parent.context.namespaces['csw30']
+
+        if 'HTTP_ACCEPT' in self.parent.environ:
+            LOGGER.debug('Detected HTTP Accept header: %s', self.parent.environ['HTTP_ACCEPT'])
+            formats_match = False
+            if 'outputformat' in self.parent.kvp:
+                LOGGER.debug(self.parent.kvp['outputformat'])
+                for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
+                    LOGGER.info('Comparing %s and %s', ofmt, self.parent.kvp['outputformat'])
+                    if ofmt.split('/')[0] in self.parent.kvp['outputformat']:
+                        LOGGER.debug('FOUND OUTPUT MATCH')
+                        formats_match = True
+                if not formats_match:
+                    return self.exceptionreport('InvalidParameterValue',
+                    'outputformat', 'HTTP Accept header (%s) and outputformat (%s) must agree' %
+                    (self.parent.environ['HTTP_ACCEPT'], self.parent.kvp['outputformat']))
+            else:
+                for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
+                    if ofmt in self.parent.context.model['operations']['GetRecords']['parameters']['outputFormat']['values']:
+                        self.parent.kvp['outputformat'] = ofmt
+                        break
+
+        if ('outputformat' in self.parent.kvp and
+            self.parent.kvp['outputformat'] not in
+            self.parent.context.model['operations']['GetSimilarRecords']['parameters']
+            ['outputFormat']['values']):
+            return self.exceptionreport('InvalidParameterValue',
+            'outputformat', 'Invalid outputformat parameter %s' %
+            self.parent.kvp['outputformat'])
+
+        if ('outputschema' in self.parent.kvp and self.parent.kvp['outputschema'] not in
+            self.parent.context.model['operations']['GetSimilarRecords']['parameters']
+            ['outputSchema']['values']):
+            return self.exceptionreport('InvalidParameterValue',
+            'outputschema', 'Invalid outputschema parameter %s' %
+            self.parent.kvp['outputschema'])
+
+        if 'outputformat' in self.parent.kvp:
+            self.parent.contenttype = self.parent.kvp['outputformat']
+            if self.parent.kvp['outputformat'] == 'application/atom+xml':
+                self.parent.kvp['outputschema'] = self.parent.context.namespaces['atom']
+                self.parent.mode = 'opensearch'
+
+        if 'elementsetname' not in self.parent.kvp:
+            self.parent.kvp['elementsetname'] = 'summary'
+        else:
+            if (self.parent.kvp['elementsetname'] not in
+                self.parent.context.model['operations']['GetSimilarRecords']['parameters']
+                ['ElementSetName']['values']):
+                return self.exceptionreport('InvalidParameterValue',
+                'elementsetname', 'Invalid elementsetname parameter %s' %
+                self.parent.kvp['elementsetname'])
+
+        # query repository
+        LOGGER.info('Querying repository with ids: %s', self.parent.kvp['id'])
+        results = self.parent.repository.query_ids([self.parent.kvp['id']])
+
+        if raw:  # GetRepositoryItem request
+            LOGGER.debug('GetRepositoryItem request.')
+            if len(results) > 0:
+                return etree.fromstring(util.getqattr(results[0],
+                self.parent.context.md_core_model['mappings']['pycsw:XML']), self.parent.context.parser)
+
+        for result in results:
+            if (util.getqattr(result,
+            self.parent.context.md_core_model['mappings']['pycsw:Typename']) == 'csw:Record'
+            and self.parent.kvp['outputschema'] ==
+            'http://www.opengis.net/cat/csw/3.0'):
+                # serialize record inline
+                node = self._write_record(
+                result, self.parent.repository.queryables['_all'])
+            elif (self.parent.kvp['outputschema'] ==
+                'http://www.opengis.net/cat/csw/3.0'):
+                # serialize into csw:Record model
+                typename = None
+
+                for prof in self.parent.profiles['loaded']:  # find source typename
+                    if self.parent.profiles['loaded'][prof].typename in \
+                    [util.getqattr(result, self.parent.context.md_core_model['mappings']['pycsw:Typename'])]:
+                        typename = self.parent.profiles['loaded'][prof].typename
+                        break
+
+                if typename is not None:
+                    util.transform_mappings(
+                        self.parent.repository.queryables['_all'],
+                        self.parent.context.model['typenames'][typename][
+                            'mappings']['csw:Record']
+                    )
+
+                node = self._write_record( result, self.parent.repository.queryables['_all'])
+            elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
+                node = self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url'))
+            else:  # it's a profile output
+                node = self.parent.profiles['loaded'][self.parent.kvp['outputschema']].write_record(
+                result, self.parent.kvp['elementsetname'],
+                self.parent.kvp['outputschema'], self.parent.repository.queryables['_all'])
+
+        if raw and len(results) == 0:
+            return None
+
+        if len(results) == 0:
+            return self.exceptionreport('NotFound', 'id',
+            'No repository item found for \'%s\'' % self.parent.kvp['id'])
+
+        return node    
 
     def getrepositoryitem(self):
         ''' Handle GetRepositoryItem request '''
@@ -1504,7 +1627,7 @@ class Csw3(object):
 
         if ('elementname' in self.parent.kvp and
             len(self.parent.kvp['elementname']) > 0):
-            for req_term in ['dc:identifier', 'dc:title']:
+            for req_term in ['dc:identifier123', 'dc:title']:
                 if req_term not in self.parent.kvp['elementname']:
                     value = util.getqattr(recobj, queryables[req_term]['dbcol'])
                     etree.SubElement(record,
@@ -1538,9 +1661,9 @@ class Csw3(object):
                 self.parent.context.md_core_model['mappings']['pycsw:XML']), self.parent.context.parser)
 
             etree.SubElement(record,
-            util.nspath_eval('dc:identifier', self.parent.context.namespaces)).text = \
+            util.nspath_eval('dc:identifier123', self.parent.context.namespaces)).text = \
             util.getqattr(recobj,
-            self.parent.context.md_core_model['mappings']['pycsw:Identifier'])
+            self.parent.context.md_core_model['mappings']['pycsw:Identifier123'])
 
             for i in ['dc:title', 'dc:type']:
                 val = util.getqattr(recobj, queryables[i]['dbcol'])
@@ -1609,6 +1732,7 @@ class Csw3(object):
 
             if bboxel is not None:
                 record.append(bboxel)
+                
 
             if self.parent.kvp['elementsetname'] != 'brief':  # add temporal extent
                 begin = util.getqattr(record, self.parent.context.md_core_model['mappings']['pycsw:TempExtent_begin'])
@@ -1620,6 +1744,11 @@ class Csw3(object):
                         etree.SubElement(record, util.nspath_eval('csw30:begin', self.parent.context.namespaces)).text = begin
                     if end:
                         etree.SubElement(record, util.nspath_eval('csw30:end', self.parent.context.namespaces)).text = end
+
+            #Vector Representation
+            vectorRepresentation = util.getqattr(record, self.parent.context.md_core_model['mappings']['pycsw:VectorRepresentation'])
+            if vectorRepresentation:
+                etree.SubElement(record, util.nspath_eval('dc:VectorRepresentation', self.parent.context.namespaces)).text = vectorRepresentation
 
         return record
 
@@ -1877,6 +2006,28 @@ class Csw3(object):
             tmp = doc.find('.').attrib.get('outputFormat')
             if tmp is not None:
                 request['outputformat'] = tmp
+
+        # GetSimilarRecords
+        if request['request'] == 'GetSimilarRecords':
+            request['id'] = None
+            tmp = doc.find(util.nspath_eval('csw30:Id', self.parent.context.namespaces))
+            if tmp is not None:
+                request['id'] = tmp.text
+
+            tmp = doc.find(util.nspath_eval('csw30:ElementSetName',
+                  self.parent.context.namespaces))
+            request['elementsetname'] = tmp.text if tmp is not None \
+            else 'summary'
+
+            tmp = doc.find('.').attrib.get('outputSchema')
+            request['outputschema'] = tmp if tmp is not None \
+            else self.parent.context.namespaces['csw30']
+
+            tmp = doc.find('.').attrib.get('outputFormat')
+            if tmp is not None:
+                request['outputformat'] = tmp
+
+
 
         # Transaction
         if request['request'] == 'Transaction':
