@@ -37,11 +37,11 @@ msgid ""
 "queries against the local repository."
 msgstr ""
 "pycsw与其它CSW服务器不同的是，它有能力自己实现分布式搜索。此分布式搜索默认为"
-"禁用；若想启用，必须设置 ``server.federatedcatalogues`` 。CSW客户端会发出一个"
-"Getrecords指定性请求 ``csw:DistributedSearch`` ，以及一个可选的 ``hopCount`` "
-"属性（见CSW规范中第10.8.4.13 ）。当启用时，pycsw会搜索所有指定的目录并会将一"
-"组统一的搜索结果返回给客户端。由于此功能的分布式性质，若要查询本地存储库，请"
-"求可能会需要更多的时间来处理。"
+"禁用；若想启用，必须设置 ``server.federatedcatalogues`` 。"
+"CSW客户端会发出一个 ``Getrecords`` 指定性请求 ``csw:DistributedSearch`` ，"
+"以及一个可选的 ``hopCount`` 属性（见CSW规范中第10.8.4.13 ）。"
+"当启用时，pycsw会搜索所有指定的目录并会将一组统一的搜索结果返回给客户端。"
+"由于此功能的分布式性质，若要查询本地存储库，请求可能会需要更多的时间来处理。"
 
 #: ../../distributedsearching.rst:13
 msgid "Scenario: Federated Search"
@@ -64,20 +64,20 @@ msgid ""
 "configurations <alternate-configurations>`, and exposes the additional CSW "
 "endpoint(s) with the following design pattern:"
 msgstr ""
-"pycsw的本功能是靠 :ref:`交替配置<alternate-configurations>` 支持的，并是按"
+"pycsw的本功能是靠 :ref:`交替配置 <alternate-configurations>` 支持的，并是按"
 "以下设计模式来公开其他CSW端点的︰"
 
 #: ../../distributedsearching.rst:19
 msgid "CSW-1: ``http://localhost/pycsw/csw.py?config=CSW-1.cfg``"
-msgstr "CSW-1: ``http://localhost/pycsw/csw.py?config=CSW-1.cfg``"
+msgstr ""
 
 #: ../../distributedsearching.rst:21
 msgid "CSW-2: ``http://localhost/pycsw/csw.py?config=CSW-2.cfg``"
-msgstr "CSW-2: ``http://localhost/pycsw/csw.py?config=CSW-2.cfg``"
+msgstr ""
 
 #: ../../distributedsearching.rst:23
 msgid "CSW-3: ``http://localhost/pycsw/csw.py?config=CSW-3.cfg``"
-msgstr "CSW-3: ``http://localhost/pycsw/csw.py?config=CSW-3.cfg``"
+msgstr ""
 
 #: ../../distributedsearching.rst:25
 msgid ""
@@ -128,7 +128,7 @@ msgid ""
 "``distributedsearch=TRUE``, while specifying an optional ``hopCount``.  "
 "Query network topology:"
 msgstr ""
-"当指定选项``hopCount``时，CSW客户端就会用 ' distributedsearch = TRUE '请求所"
+"当指定选项 ``hopCount`` 时，CSW客户端就会用 ``distributedsearch=TRUE`` 请求所"
 "有的CSW。 查询网络拓扑 ︰"
 
 #: ../../distributedsearching.rst:73

@@ -30,7 +30,7 @@ msgid ""
 "specified with ``mode=oaipmh`` in the base URL for OAI-PMH requests, e.g.:"
 msgstr ""
 "默认情况下是启用OAI-PMH OpenSearch的。 HTTP请求必须在 OAI-PMH要求的基准URL"
-"中指定``mode= oaipmh``，例如："
+"中指定 ``mode= oaipmh``，例如："
 
 #: ../../oaipmh.rst:14
 msgid ""

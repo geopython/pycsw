@@ -3,14 +3,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-21 19:51+0800\n"
-"PO-Revision-Date: 2016-06-08 15:43+0800\n"
+"POT-Creation-Date: 2018-12-03 22:09+0800\n"
+"PO-Revision-Date: 2018-12-05 13:48+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.3.4\n"
+"Generated-By: Babel 2.6.0\n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: ../../tools.rst:4
 msgid "Cataloguing and Metadata Tools"
@@ -22,23 +24,22 @@ msgstr "CSW客户端"
 
 #: ../../tools.rst:9
 msgid ""
-"`Geoportal CSW Clients "
-"<http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_"
+"`Geoportal CSW Clients <https://github.com/Esri/geoportal-server/wiki/"
+"Geoportal-CSW-Clients>`_"
 msgstr ""
-"`Geoportal CSW客户端 "
-"<http://sourceforge.net/apps/mediawiki/geoportal/index.php?title=Geoportal_CSW_Clients>`_"
+"`地球物理CSW客户端 <https://github.com/Esri/geoportal-server/wiki/"
+"Geoportal-CSW-Clients>`_"
 
 #: ../../tools.rst:10
-#, fuzzy
-msgid "`OWSLib <http://geopython.github.io/OWSLib>`_"
-msgstr "OWSLib <http://geopython.github.io/OWSLib>"
+msgid "`OWSLib <https://geopython.github.io/OWSLib>`_"
+msgstr "`OWSLib <https://geopython.github.io/OWSLib>`_"
 
 #: ../../tools.rst:11
 msgid ""
 "`MetaSearch <https://hub.qgis.org/wiki/quantum-gis/MetaSearch>`_ (`QGIS "
 "<http://qgis.org/>`_ plugin)"
 msgstr ""
-" `联合检索<https://hub.qgis.org/wiki/quantum-gis/MetaSearch>`_ （`QGIS "
+"`联合检索 <https://hub.qgis.org/wiki/quantum-gis/MetaSearch>`_ （`QGIS "
 "<http://qgis.org/>`_ 插件）"
 
 #: ../../tools.rst:14
@@ -46,7 +47,8 @@ msgid "CSW Servers"
 msgstr "CSW服务器"
 
 #: ../../tools.rst:16
-msgid "`deegree <http://deegree.org/>`_"
+#, fuzzy
+msgid "`deegree <https://deegree.org/>`_"
 msgstr "`deegree <http://deegree.org/>`_"
 
 #: ../../tools.rst:17
@@ -54,7 +56,8 @@ msgid "`eXcat <http://gdsc.nlr.nl/gdsc/en/tools/excat>`_"
 msgstr "`eXcat <http://gdsc.nlr.nl/gdsc/en/tools/excat>`_"
 
 #: ../../tools.rst:18
-msgid "`GeoNetwork opensource <http://geonetwork-opensource.org/>`_"
+#, fuzzy
+msgid "`GeoNetwork opensource <https://geonetwork-opensource.org/>`_"
 msgstr "`开源地理 <http://geonetwork-opensource.org/>`_"
 
 #: ../../tools.rst:21
@@ -75,17 +78,23 @@ msgstr "`GIMED <http://sourceforge.net/projects/gimed/>`_"
 
 #: ../../tools.rst:26
 msgid ""
-"`Metatools <http://hub.qgis.org/projects/metatools>`_ (`QGIS "
-"<http://qgis.org/>`_ plugin)"
+"`Metatools <http://hub.qgis.org/projects/metatools>`_ (`QGIS <http://qgis."
+"org/>`_ plugin)"
 msgstr ""
-"`Metatools <http://hub.qgis.org/projects/metatools>`_ (`QGIS "
-"<http://qgis.org/>`_ plugin)"
+"`Metatools <http://hub.qgis.org/projects/metatools>`_ (`QGIS <http://qgis."
+"org/>`_ plugin)"
 
 #: ../../tools.rst:27
 msgid ""
-"`QSphere <http://hub.qgis.org/plugins/qsphere>`_ (`QGIS "
-"<http://qgis.org/>`_ plugin)"
+"`QSphere <http://hub.qgis.org/plugins/qsphere>`_ (`QGIS <http://qgis.org/"
+">`_ plugin)"
 msgstr ""
-"`QSphere <http://hub.qgis.org/plugins/qsphere>`_ (`QGIS "
-"<http://qgis.org/>`_ plugin)"
+"`QSphere <http://hub.qgis.org/plugins/qsphere>`_ (`QGIS <http://qgis.org/"
+">`_ plugin)"
 
+#~ msgid ""
+#~ "`Geoportal CSW Clients <http://sourceforge.net/apps/mediawiki/"
+#~ "geoportal/index.php?title=Geoportal_CSW_Clients>`_"
+#~ msgstr ""
+#~ "`Geoportal CSW客户端 <http://sourceforge.net/apps/mediawiki/geoportal/"
+#~ "index.php?title=Geoportal_CSW_Clients>`_"
