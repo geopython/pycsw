@@ -386,12 +386,15 @@ class APISO(profile.Profile):
         is_iso_anyway = False
 
         xml_blob = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:XML'])
-        if caps is None and xml_blob is not None and xml_blob.startswith(b'<gmd:MD_Metadata'):
+        xml_blob_bytes_object = bytes.fromhex(xml_blob[2:]) # Convert long hex value to bytes object (trim \x from start of string so that fromhex works)
+        xml_blob_decoded = xml_blob_bytes_object.decode('utf-8') # Then decode the bytes to unicode string
+
+        if caps is None and xml_blob is not None and xml_blob_decoded.startswith('<gmd:MD_Metadata'): # Removed `b` prefix, as it is checking a str. Also check on new `xml_blob_decoded` variable instead
             is_iso_anyway = True
 
         if (esn == 'full' and (typename == 'gmd:MD_Metadata' or is_iso_anyway)):
             # dump record as is and exit
-            return etree.fromstring(xml_blob, self.context.parser)
+            return etree.fromstring(xml_blob_decoded, self.context.parser) # use new `xml_blob_decoded` variable that stores real unicode string value of the XML.
 
         node = etree.Element(util.nspath_eval('gmd:MD_Metadata', self.namespaces))
         node.attrib[util.nspath_eval('xsi:schemaLocation', self.context.namespaces)] = \
