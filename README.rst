@@ -29,7 +29,7 @@ _________________
 .. code:: python 
 
   virtualenv pycswVirtEnv && cd pycswVirtEnv && . bin/activate
-  git clone https://github.com/KathHv/pycsw.git && cd pycsw
+  git clone https://github.com/bennidietz/pycsw_fork.git && cd pycsw
   pip install -e . && pip install -r requirements-standalone.txt
   python pycsw/wsgi.py
 
