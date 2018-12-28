@@ -335,6 +335,9 @@ class Csw(object):
             get_records_by_id_params = ops['GetRecordById']['parameters']
             get_records_by_id_params['outputSchema']['values'].append(
                 value.NAMESPACE)
+            get_similar_records_params = ops['GetSimilarRecords']['parameters']
+            get_similar_records_params['outputSchema']['values'].append(
+                value.NAMESPACE)    
             if 'Harvest' in ops:
                 harvest_params = ops['Harvest']['parameters']
                 harvest_params['ResourceType']['values'].append(
@@ -559,6 +562,8 @@ class Csw(object):
                     self.response = self.iface.getrecords()
             elif self.kvp['request'] == 'GetRecordById':
                 self.response = self.iface.getrecordbyid()
+            elif self.kvp['request'] == 'GetSimilarRecords':
+                self.response = self.iface.getsimilarrecords()
             elif self.kvp['request'] == 'GetRepositoryItem':
                 self.response = self.iface.getrepositoryitem()
             elif self.kvp['request'] == 'Transaction':
@@ -613,6 +618,10 @@ class Csw(object):
     def getrecordbyid(self, raw=False):
         """ Handle GetRecordById request """
         return self.iface.getrecordbyid(raw)
+
+    def getsimilarrecords(self, raw=False):
+        """ Handle GetSimilarRecords request """
+        return self.iface.getsimilarrecords(raw)
 
     def getrepositoryitem(self):
         """ Handle GetRepositoryItem request """

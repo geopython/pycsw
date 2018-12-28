@@ -5,7 +5,7 @@
   xmlns:dct="http://purl.org/dc/terms/">
     <dc:identifier>urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</dc:identifier>
     <dc:type>http://purl.org/dc/dcmitype/Image</dc:type>
-    <dc:title>Lorem ipsum dolor sit amet</dc:title>
+    <dc:title>Lorem ipsum dolor sit amet bla blil blub</dc:title>
     <dc:format>image/jpeg</dc:format>
     <dct:spatial>IT-FI</dct:spatial>
 </csw:Record>
