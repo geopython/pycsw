@@ -83,7 +83,7 @@ class Csw(object):
         self.profiles = None
         self.manager = False
         self.outputschemas = {}
-        self.mimetype = 'application/xml; charset=UTF-8'
+        self.mimetype = 'application/json; charset=UTF-8'
         self.encoding = 'UTF-8'
         self.pretty_print = 0
         self.domainquerytype = 'list'
@@ -154,7 +154,7 @@ class Csw(object):
         if self.config.has_option('server', 'domainquerytype'):
             self.domainquerytype = self.config.get('server', 'domainquerytype')
 
-        # set XML pretty print
+        # set json pretty print
         if (self.config.has_option('server', 'pretty_print') and
                 self.config.get('server', 'pretty_print') == 'true'):
             self.pretty_print = 1
@@ -332,6 +332,7 @@ class Csw(object):
             get_records_params = ops['GetRecords']['parameters']
             get_records_params['outputSchema']['values'].append(
                 value.NAMESPACE)
+            LOGGER.debug(ops['GetRecordById'])
             get_records_by_id_params = ops['GetRecordById']['parameters']
             get_records_by_id_params['outputSchema']['values'].append(
                 value.NAMESPACE)
@@ -410,6 +411,9 @@ class Csw(object):
                 )
                 LOGGER.debug(
                     'Repository loaded (local): %s.' % self.repository.dbtype)
+                LOGGER.debug("Selbst")
+                LOGGER.debug(
+                    'Repository loaded (local): %s.' % self.repository)
             except Exception as err:
                 msg = 'Could not load repository (local): %s' % err
                 LOGGER.exception(msg)
@@ -562,6 +566,8 @@ class Csw(object):
                     self.response = self.iface.getrecords()
             elif self.kvp['request'] == 'GetRecordById':
                 self.response = self.iface.getrecordbyid()
+                LOGGER.debug("Selbst")
+                LOGGER.debug(self.response)
             elif self.kvp['request'] == 'GetSimilarRecords':
                 self.response = self.iface.getsimilarrecords()
             elif self.kvp['request'] == 'GetRepositoryItem':
@@ -655,6 +661,12 @@ class Csw(object):
                                   pretty_print=self.pretty_print,
                                   encoding='unicode')
 
+
+
+        LOGGER.debug("selbst")
+        
+
+        '''
         if (isinstance(self.kvp, dict) and 'outputformat' in self.kvp and
                 self.kvp['outputformat'] == 'application/json'):
             self.contenttype = self.kvp['outputformat']
@@ -671,10 +683,33 @@ class Csw(object):
             xmldecl = ('<?xml version="1.0" encoding="%s" standalone="no"?>'
                        '\n' % self.encoding)
             appinfo = '<!-- pycsw %s -->\n' % self.context.version
+        '''
+        if (isinstance(self.kvp, dict) and 'outputformat' in self.kvp and
+                (self.kvp['outputformat'] == 'application/xml' or self.kvp['outputformat'] == 'application/XML')):
+            self.contenttype = self.kvp['outputformat']
+            
 
+            xmldecl = ('<?xml version="1.0" encoding="%s" standalone="no"?>'
+                       '\n' % self.encoding)
+            appinfo = '<!-- pycsw %s -->\n' % self.context.version
+
+        else:  # it's json
+            if 'outputformat' in self.kvp:
+                self.contenttype = self.kvp['outputformat']
+            else:
+                self.contenttype = self.mimetype
+
+            from pycsw.core.formats import fmt_json
+            response = fmt_json.xml2json(response,
+                                         self.context.namespaces,
+                                         self.pretty_print)
+        
         if isinstance(self.contenttype, bytes):
             self.contenttype = self.contenttype.decode()
-
+        LOGGER.debug(xmldecl)
+        LOGGER.debug(appinfo)
+        LOGGER.debug(response)
+        response = '{"csw30:SummaryRecord": {"dc:identifier123": "urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2","dc:title": "Lorem ipsum dolor sit amet hallo hallo","dc:type": "http://purl.org/dc/dcmitype/Image","dc:format": "image/jpeg", "hallo": {"hallo": "hallo"}}}'
         s = (u'%s%s%s' % (xmldecl, appinfo, response)).encode(self.encoding)
         LOGGER.debug('Response code: %s',
                      self.context.response_codes[self.status])
