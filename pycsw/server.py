@@ -709,7 +709,7 @@ class Csw(object):
         LOGGER.debug(xmldecl)
         LOGGER.debug(appinfo)
         LOGGER.debug(response)
-        response = '{"csw30:SummaryRecord": {"dc:identifier123": "urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2","dc:title": "Lorem ipsum dolor sit amet hallo hallo","dc:type": "http://purl.org/dc/dcmitype/Image","dc:format": "image/jpeg", "hallo": {"hallo": "hallo"}}}'
+        #response = '{"csw30:SummaryRecord": {"dc:identifier123": "urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2","dc:title": "Lorem ipsum dolor sit amet hallo hallo","dc:type": "http://purl.org/dc/dcmitype/Image","dc:format": "image/jpeg", "hallo": {"hallo": "hallo"}}}'
         s = (u'%s%s%s' % (xmldecl, appinfo, response)).encode(self.encoding)
         LOGGER.debug('Response code: %s',
                      self.context.response_codes[self.status])
