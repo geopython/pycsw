@@ -6,9 +6,15 @@ import dateutil.parser
 
 
 '''
+@author: Carolin Wortmann
+
+
+
 Help functions:
 
     checkValidity:      checks validity for getSimilarityScores inputs
+
+    convertToRadians:   converts degree to radians
 
     getDiagonal:        gets diagonal length of bounding box (from entry as dict)
 
@@ -19,7 +25,24 @@ Help functions:
     getAr/getAres:      calculates area of bouunding box on earth surface
 
 '''
+'''Validitiy Check
+Checks whether entries are valid
+input: 
+    entries:    list of dicts, each dict containing an entry (see bottom for more info)
+    cmp:        single entry as dict
+    n:          number of similar records to be shown
+    e:          weight of extent similarity 
+    d:          weight of datatype similarity
+    l:          weight of location similarity
+    g:          weight of spatial similarity
+    t:          weight of temporal similarity
 
+output:
+    true:       if entries and cmp are all valid entries, n is a natural number, e,d,l,g,t are all 
+                greater or equal 0 and smaller or equal 5
+    false:      else
+    
+'''
 def checkValidity(entries, cmp, n, e, d, l, g, t):
     #entries will be checked during iteration in main function
     #cmp
@@ -36,7 +59,11 @@ def checkValidity(entries, cmp, n, e, d, l, g, t):
 
     return True
 
-
+'''
+Converts value in degree to radians
+input:  value in degree
+output: input value converted to radians
+'''
 def ConvertToRadian(input):
     return input * math.pi/ 180
 
@@ -44,7 +71,13 @@ def ConvertToRadian(input):
 #Calculates diagonal of Bounding Box by use of Haversine Formula
 
 
-# Checken, ob floats etc richtig
+''' Calculation of diagonal length
+Calculates length of bounding box for entry
+input: 
+    entry : record from repository
+output:   
+    diagonal length in m
+'''
 def getDiagonal(entry):
     lon1 = entry["wkt_geometry"][2]
     lon2 = entry["wkt_geometry"][3]
@@ -53,6 +86,15 @@ def getDiagonal(entry):
 
     return gDiag(lat1,lat2,lon1,lon2)
 
+''' Calculate Diagonal - inner function
+Calculates length of line between two points
+input: 
+    lat1, lon1 : coordinates first point
+    lat2, lon2 : coordinates second point
+
+output: 
+    diagonal length in m
+'''
 def gDiag(lat1,lat2,lon1,lon2):
     # convert decimal degrees to radians 
     lon1, lat1, lon2, lat2 = map(ConvertToRadian, [lon1, lat1, lon2, lat2])
@@ -62,14 +104,20 @@ def gDiag(lat1,lat2,lon1,lon2):
     dlat = lat2 - lat1 
     a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
     c = 2 * math.asin(math.sqrt(a)) 
-    r = 6371.0 
+    r = 6378137 
     d = c * r
     if dlon == 0 and dlat == 0:
-        return 0.01
+        return 0
     return d
 
 
-#Get length of temporal interval
+'''Calculate duration
+Calculates the length of temporal interval 
+input:
+    entry : repository record
+output:
+    timedelta
+'''
 def getInterv(entry):
     t1 = entry[0]
     t2 = entry[1]
@@ -77,7 +125,12 @@ def getInterv(entry):
     tdelta = datetime.strptime(t2, frmt) - datetime.strptime(t1, frmt)
     return tdelta
 
-#Calculates center of bbox
+'''Calculate center of bbox
+input:
+    entry : repository record
+output:
+    center of Bounding Box as 2D point
+'''
 def getCenter(entry):
     minLon=entry["wkt_geometry"][2]
     maxLon=entry["wkt_geometry"][3]
@@ -89,8 +142,12 @@ def getCenter(entry):
     return center
 
 
-
-#output in m²
+'''Calculate  - inner function
+input:
+    coordinates : list of coordinates
+output:
+    area size in m²
+'''
 def getArea(coordinates):
     area = 0
 
@@ -104,18 +161,33 @@ def getArea(coordinates):
 
         area = area * 6378137 * 6378137 / 2
     
-
     return abs(area)
 
 
-#
+''' Calculate area
+input: 
+    points : list of coordinates
+output:
+    area of bounding box given by coordinates in m²
+'''
 def getAr(points):
     if (points[0]==points[1]) or (points[2]==points[3]):
         return 0
     return getArea(points)
 
 
-#checks whether corner points of rectangle B are in rectangle A
+'''Points within limits of Bounding Box?
+Checks whether corner points of rectangle B are in rectangle A
+input: 
+    pointsA : list of coordinate points for rectangle A
+    pointsB : list of coordinate points for rectangle B
+output:
+    list of length 4, wherein each represents whether the corresponding point of B is in A (1) or not (0)
+        The points correspond as follow:    index 0 : top left corner (MinLon,MaxLat)
+                                            index 1 : top right corner (MaxLon,MaxLat)
+                                            index 2 : bottom left corner (MinLon,MinLat)
+                                            index 3 : bottom right corner (MaxLon,MinLat)
+'''
 def pointsInBbox(pointsA, pointsB):
     points = [[pointsB[1],pointsB[2]], [pointsB[1],pointsB[3]], [pointsB[0],pointsB[2]], [pointsB[0],pointsB[3]]]
 
@@ -146,18 +218,34 @@ Extent Similarity:
 '''
 
 
-# Similarity of geographical extent
+'''Similarity of geographical extent
+Calculates similarity of geographical extent based on length of diagonals of bounding boxes
+input:
+    entryA, entryB : records from repository which are to be compared
+output:
+    similarityscore (in [0,1])
+
+'''
 def getGeoExtSim(entryA, entryB):
     diagonalA=float(getDiagonal(entryA))
     diagonalB=float(getDiagonal(entryB))
     minV = min(diagonalA, diagonalB)
     maxV = max(diagonalA, diagonalB)
+    if (maxV == 0){
+        return 1
+    }
     sim = float(minV/maxV)
     return sim
 
 
 
-#Similarity of temporal extent
+'''Similarity of temporal extent
+Calculates similarity of geographical extent based on length of diagonals of bounding boxes
+input:
+    entryA, entryB : records from repository which are to be compared
+output:
+    similarityscore (in [0,1])
+'''
 def getTempExtSim(entryA,entryB):
     extA = getInterv(entryA["time"]).total_seconds()
     extB = getInterv(entryB["time"]).total_seconds()
@@ -193,10 +281,14 @@ Location Similarity
 ####### Relation of absolute positions in coordinate systems ########
 #####################################################################
 
-
+'''Similarity of geographic location based on centers
+Calulates similarity based on geographic location of centers of bounding boxes
+input: 
+    entryA, entryB : records from repository which are to be compared
+output:
+    similarityscore (in [0,1])
+'''
 def getCenterGeoSim(entryA, entryB):
-    #centerA= getCenter(entryA)
-    #centerB= getCenter(entryB)
     diagonal = float(getDiagonal([[],[],[entryA[1], entryB[1]]]))
     circumf = 20038
     sim = diagonal/circumf
@@ -226,16 +318,12 @@ def getCenterTempSim(entryA, entryB):
 #########################################################################
 
 
-'''
-Rectangle: (simplified, in reality and also in function the rectangle is on the earth surface and therefor (simplified) on a sphere)
-________________
-|A            B| A (MinLon,MaxLat)
-|              | B (MaxLon,MaxLat)
-|              | C (MinLon,MinLat)
-|              | D (MaxLon,MaxLat)
-|C            D|
-|______________|
-
+'''Calculate similarity based on intersecting area
+Calculates whether two records intersect and, if so, size of intersection area in relation to size of record A
+input:
+    entryA,entryB : records from repository which are to be compares
+output: 
+    similarityscore (in[0,1])
 '''
 
 # Calculate intersection area of both bounding boxes
@@ -312,19 +400,7 @@ def getInterGeoSim(entryA,entryB):
             minLon=minLonB
             unchanged = False
         
-        '''
-        Fall:
-                ______
-                |.....|
-                |.....|
-            ____|_____|___________
-            |...|.....|..........|
-            |...|.....|..........|
-            |___|_____|__________|
-                |.....|
-                |_____|
-    
-        '''
+       # intersection when one rectangle has both min and max Latitude and the other has min and max Longitude
         if unchanged:
             if minLatA<minLatB and maxLatA>maxLatB:
                 maxLat=maxLatB
@@ -350,9 +426,15 @@ def getInterGeoSim(entryA,entryB):
 
 
 
-
+''' Calculate similarity based on temporal intersection
+Calculates whether two temporal intervals overlap, and if so, the relation between the overlap duration and the duration of record A
+input:
+    entryA,entryB : records from repository which are to be compared
+output: 
+    similarityscore (in[0,1])
+'''
 def getInterTempSim(entryA,entryB):
-    #Startwerte der Intervalle von A und B
+    #starting points of intervals A, B
     startA = datetime.strptime(entryA["time"][0])
     endA = datetime.strptime(entryA["time"][1])
     startB = datetime.strptime(entryB["time"][0])
@@ -360,7 +442,7 @@ def getInterTempSim(entryA,entryB):
 
     lengthA=getInterv(entryA["time"]).total_seconds
 
-    #disjunkt
+    #disjunct
     if startA>endB or startB>endA:
         return 0
         
@@ -368,10 +450,10 @@ def getInterTempSim(entryA,entryB):
         #A in B
         if endA<endB:
             return 1
-        #Schnitt, B beginnt vor A
+        #intersection, B starts earlier than A
         else:
             interv = getInterv([startA,endB])
-    #Schnitt, A beginnt vor B
+    #intersection, A starts earlier than B
     elif startB>startA:
         #B in A
         if endB<endA:
@@ -392,6 +474,14 @@ Datatype Similarity
 
 
 '''
+
+'''Similarity calculation of datatype
+Calulates similarity of geographic data types (is raster or vector? and if vector, same type of shape?)
+input:
+    entryA,entryB : records from repository which are to be compared
+output: 
+    similarityscore (in[0,1])
+'''
 def getGeoDatSim(entryA,entryB):
     if entryA["raster"]:
         if entryB["raster"]:
@@ -410,7 +500,14 @@ def getGeoDatSim(entryA,entryB):
     else:
         return 0.8
     
+'''Similarity of temporal data types
+Calculates whether both records have same type of temporal data (interval or point)
+input:
+    entryA,entryB : records from repository which are to be compared
+output: 
+    similarityscore (in[0,1])
 
+'''
 def getTempDatSim(entryA,entryB):
     if entryA["time"][0]==entryA["time"][1]:
         if entryB["time"][0]==entryB["time"][1]:
@@ -424,11 +521,18 @@ def getTempDatSim(entryA,entryB):
 
 
 
-'''
-getIndSim:          combines Geo and Temp Similarites for selected criterium c while taking into consideration weights for geographic and temporal similarity
-                    c=0 for Similarity of extent
-                    c=1 for Similarity of location
-                    c=2 for Similarity of datatype
+'''Comibination of individual similarity scores
+combines Geo and Temp Similarites for selected criterium c while taking into consideration weights for geographic and temporal similarity
+input:
+    entryA,entryB : records from repository which are to be compared
+    c : criterium 
+        c=0 for Similarity of extent
+        c=1 for Similarity of location
+        c=2 for Similarity of datatype
+    g : weight of geographic similarity
+    t : weight of temporal similarity
+output: 
+    similarityscore (in[0,1])        
 '''
 def getIndSim(entryA, entryB, g, t, c):
     if c==0:
@@ -520,3 +624,4 @@ def getSimilarRecords(entries, cmp, n, e, d, l, g, t):
 # Als Übergabe dafür, zu welchem Element similarRecords gesucht werde,n ist denke ich die uuid sinnvoll.
 # Als Rückgabewert wäre dann ein Array da [[uuid, simscore],[uuid, simscore],[uuid, simscore],...]
 # Dann können wir das gut in die API übernehmen.
+
