@@ -73,7 +73,7 @@ setup(
     author_email='tomkralidis@gmail.com',
     maintainer='Tom Kralidis',
     maintainer_email='tomkralidis@gmail.com',
-    url='http://pycsw.org/',
+    url='https://pycsw.org/',
     install_requires=read("requirements.txt").splitlines(),
     packages=find_packages(),
     include_package_data=True,

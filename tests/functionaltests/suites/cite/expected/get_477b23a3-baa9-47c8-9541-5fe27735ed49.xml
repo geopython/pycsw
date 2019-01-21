@@ -17,7 +17,7 @@
   </ows20:ServiceIdentification>
   <ows20:ServiceProvider>
     <ows20:ProviderName>pycsw</ows20:ProviderName>
-    <ows20:ProviderSite xlink:type="simple" xlink:href="http://pycsw.org/"/>
+    <ows20:ProviderSite xlink:type="simple" xlink:href="https://pycsw.org/"/>
     <ows20:ServiceContact>
       <ows20:IndividualName>Kralidis, Tom</ows20:IndividualName>
       <ows20:PositionName>Senior Systems Scientist</ows20:PositionName>

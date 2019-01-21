@@ -124,7 +124,7 @@ class OpenSearch(object):
             node1.set('type', 'image/vnd.microsoft.icon')
             node1.set('width', '16')
             node1.set('height', '16')
-            node1.text = 'http://pycsw.org/img/favicon.ico'
+            node1.text = 'https://pycsw.org/img/favicon.ico'
 
             etree.SubElement(node, util.nspath_eval('os:Developer', self.namespaces)).text = self.exml.xpath('//ows:IndividualName', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, util.nspath_eval('os:Context', self.namespaces)).text = self.exml.xpath('//ows:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
@@ -200,7 +200,7 @@ class OpenSearch(object):
             node1.set('type', 'image/vnd.microsoft.icon')
             node1.set('width', '16')
             node1.set('height', '16')
-            node1.text = 'http://pycsw.org/img/favicon.ico'
+            node1.text = 'https://pycsw.org/img/favicon.ico'
 
             os_query = etree.SubElement(node, util.nspath_eval('os:Query', self.namespaces), role='example')
             os_query.attrib[util.nspath_eval('geo:box', self.namespaces)] = '-180,-90,180,90'
