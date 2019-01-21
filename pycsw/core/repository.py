@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2019  Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -38,7 +38,11 @@ import os
 
 import six
 from shapely.wkt import loads
-from shapely.geos import ReadingError
+try:
+    from shapely.geos import ReadingError as WKTReadingError
+except:
+    from shapely.geos import WKTReadingError
+
 from sqlalchemy import create_engine, func, __version__, select
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
@@ -482,7 +486,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
         else:
             raise RuntimeError(
                 'Invalid spatial query predicate: %s' % predicate)
-    except (AttributeError, ValueError, ReadingError):
+    except (AttributeError, ValueError, WKTReadingError):
         result = False
     return "true" if result else "false"
 
