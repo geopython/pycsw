@@ -1,1 +1,1 @@
-See http://docs.pycsw.org/en/latest/testing.html
+See https://docs.pycsw.org/en/latest/testing.html

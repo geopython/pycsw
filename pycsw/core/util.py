@@ -278,7 +278,7 @@ def http_request(method, url, request=None, timeout=30):
         return http_post(url, request, timeout=timeout)
     else:  # GET
         request = Request(url)
-        request.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
+        request.add_header('User-Agent', 'pycsw (https://pycsw.org/)')
         return urlopen(request, timeout=timeout).read()
 
 

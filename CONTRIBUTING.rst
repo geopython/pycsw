@@ -3,7 +3,7 @@ Contributing to pycsw
 
 The pycsw project openly welcomes contributions (bug reports, bug fixes, code
 enhancements/features, etc.).  This document will outline some guidelines on
-contributing to pycsw.  As well, the pycsw `community <http://pycsw.org/community/>`_ is a great place to
+contributing to pycsw.  As well, the pycsw `community <https://pycsw.org/community/>`_ is a great place to
 get an idea of how to connect and participate in pycsw community and development.
 
 pycsw has the following modes of contribution:
@@ -147,4 +147,4 @@ your own repository to ensure your pycsw repository is up to date with pycsw mas
 .. _`pylint`: http://www.logilab.org/857
 .. _`Sphinx`: http://sphinx-doc.org/
 .. _`developer tasks`: https://github.com/geopython/pycsw/wiki/Developer-Tasks
-.. _`mailing list`: http://pycsw.org/community#mailing-list
+.. _`mailing list`: https://pycsw.org/community#mailing-list
