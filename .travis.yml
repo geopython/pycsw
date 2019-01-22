@@ -2,7 +2,7 @@ language: python
 
 cache: pip
 
-dist: trusty
+dist: xenial
 
 jobs:
   include:
