@@ -8,13 +8,6 @@ jobs:
   include:
 
     - stage: unit-test
-      python: "2.7"
-      env: TOXENV=py27-sqlite
-      install: pip install codecov tox
-      script: tox -- --exitfirst -m unit
-      after_success: codecov --disable search --flags unittests
-
-    - stage: unit-test
       python: "3.4"
       env: TOXENV=py34-sqlite
       install: pip install codecov tox
@@ -34,13 +27,6 @@ jobs:
       install: pip install codecov tox
       script: tox -- --exitfirst -m unit
       after_success: codecov --disable search --flags unittests
-
-    - stage: integration-test
-      python: "2.7"
-      env: TOXENV=py27-sqlite
-      install: pip install codecov tox
-      script: tox -- --exitfirst -m functional -k 'not harvesting'
-      after_success: codecov --disable search --flags integrationtests
 
     - stage: integration-test
       python: "3.4"
