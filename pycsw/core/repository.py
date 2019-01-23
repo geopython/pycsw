@@ -39,9 +39,9 @@ import os
 import six
 from shapely.wkt import loads
 try:
-    from shapely.geos import ReadingError
-except:
     from shapely.errors import ReadingError
+except:
+    from shapely.geos import ReadingError
 
 from sqlalchemy import create_engine, func, __version__, select
 from sqlalchemy.sql import text
