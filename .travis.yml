@@ -77,6 +77,9 @@ jobs:
       script: tox -- --exitfirst -m functional -k 'not harvesting'
       after_success: codecov --disable search --flags integrationtests
 
+before_install:
+    - sudo apt-get update
+
 addons:
   apt:
     packages:
