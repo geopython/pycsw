@@ -184,7 +184,7 @@ class Csw(object):
             try:
                 import imp
                 module = self.config.get('repository', 'mappings')
-                if '/' in module:  # filepath
+                if os.sep in module:  # filepath
                     modulename = '%s' % os.path.splitext(module)[0].replace(
                         os.sep, '.')
                     mappings = imp.load_source(modulename, module)
