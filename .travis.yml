@@ -2,7 +2,7 @@ language: python
 
 cache: pip
 
-dist: trusty
+dist: xenial
 
 jobs:
   include:
@@ -35,6 +35,13 @@ jobs:
       script: tox -- --exitfirst -m unit
       after_success: codecov --disable search --flags unittests
 
+    - stage: unit-test
+      python: "3.7"
+      env: TOXENV=py37-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m unit
+      after_success: codecov --disable search --flags unittests
+
     - stage: integration-test
       python: "2.7"
       env: TOXENV=py27-sqlite
@@ -63,6 +70,20 @@ jobs:
       script: tox -- --exitfirst -m functional -k 'not harvesting'
       after_success: codecov --disable search --flags integrationtests
 
+    - stage: integration-test
+      python: "3.7"
+      env: TOXENV=py37-sqlite
+      install: pip install codecov tox
+      script: tox -- --exitfirst -m functional -k 'not harvesting'
+      after_success: codecov --disable search --flags integrationtests
+
+matrix:
+    allow_failures:
+      - env: TOXENV=py27-sqlite
+
+before_install:
+    - sudo apt-get update
+
 addons:
   apt:
     packages:
@@ -78,3 +99,4 @@ notifications:
     channels:
       - "irc.freenode.org#pycsw"
     use_notice: true
+
