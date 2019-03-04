@@ -77,6 +77,10 @@ jobs:
       script: tox -- --exitfirst -m functional -k 'not harvesting'
       after_success: codecov --disable search --flags integrationtests
 
+matrix:
+    allow_failures:
+      - env: TOXENV=py27-sqlite
+
 before_install:
     - sudo apt-get update
 
