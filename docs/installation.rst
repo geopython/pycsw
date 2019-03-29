@@ -156,6 +156,11 @@ For Windows installs, change the first line of ``csw.py`` to:
 
 .. note::
   The use of ``-u`` is required to properly output gzip-compressed responses.
+  
+.. Tip::
+  
+   `MS4W <https://ms4w.com>`__  (MapServer for Windows) as of its version 4.0 release includes pycsw,
+   Apache's mod_wsgi, Python 3.7, and many other tools, all ready to use out of the box.
 
 Security
 --------
