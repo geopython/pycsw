@@ -19,7 +19,7 @@
    <xsd:include schemaLocation="cswCommon.xsd"/>
    <xsd:include schemaLocation="cswGetRecords.xsd"/>
    <xsd:import namespace="http://www.opengis.net/fes/2.0"
-        schemaLocation="../../filter/2.0/filterAll.xsd"/>
+        schemaLocation="../../../filter/2.0/filterAll.xsd"/>
    <!-- =================================================================== -->
    <!-- REQUEST                                                             -->
    <!-- =================================================================== -->
