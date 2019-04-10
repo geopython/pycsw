@@ -132,7 +132,7 @@ class Csw3(object):
                 updatesequence))
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswGetCapabilities.xsd' % \
+        self.parent.context.namespaces)] = '%s %s/cat/csw/3.0/cswGetCapabilities.xsd' % \
         (self.parent.context.namespaces['csw30'],
          self.parent.config.get('server', 'ogc_schemas_base'))
 
@@ -498,7 +498,7 @@ class Csw3(object):
         self.parent.context.namespaces), nsmap=self.parent.context.namespaces)
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswGetDomain.xsd' % \
+        self.parent.context.namespaces)] = '%s %s/cat/csw/3.0/cswGetDomain.xsd' % \
         (self.parent.context.namespaces['csw30'],
         self.parent.config.get('server', 'ogc_schemas_base'))
 
@@ -889,7 +889,7 @@ class Csw3(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/csw/3.0/cswGetRecordsResponse.xsd' % \
+        '%s %s/cat/csw/3.0/cswGetRecordsResponse.xsd' % \
         (self.parent.context.namespaces['csw30'], self.parent.config.get('server', 'ogc_schemas_base'))
 
         if 'requestid' in self.parent.kvp and self.parent.kvp['requestid'] is not None:
@@ -1683,7 +1683,7 @@ class Csw3(object):
 
         xsd_filename = 'csw%s.xsd' % etree.QName(doc).localname
         schema = os.path.join(self.parent.config.get('server', 'home'),
-        'core', 'schemas', 'ogc', 'csw', '3.0', xsd_filename)
+        'core', 'schemas', 'ogc', 'cat', 'csw', '3.0', xsd_filename)
 
         try:
             # it is virtually impossible to validate a csw:Transaction
@@ -1996,7 +1996,7 @@ class Csw3(object):
         if root:
             node.attrib[util.nspath_eval('xsi:schemaLocation',
             self.parent.context.namespaces)] = \
-            '%s %s/csw/3.0/cswAll.xsd' % (self.parent.context.namespaces['csw30'], \
+            '%s %s/cat/csw/3.0/cswAll.xsd' % (self.parent.context.namespaces['csw30'], \
             self.parent.config.get('server', 'ogc_schemas_base'))
 
         node1 = etree.SubElement(node, util.nspath_eval('csw30:EchoedRequest',
