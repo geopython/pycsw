@@ -386,7 +386,7 @@ class APISO(profile.Profile):
         is_iso_anyway = False
 
         xml_blob = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:XML'])
-        if caps is None and xml_blob is not None and xml_blob.startswith(b'<gmd:MD_Metadata'):
+        if caps is None and xml_blob is not None and xml_blob.startswith('<gmd:MD_Metadata'):
             is_iso_anyway = True
 
         if (esn == 'full' and (typename == 'gmd:MD_Metadata' or is_iso_anyway)):
