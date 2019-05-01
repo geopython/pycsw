@@ -387,6 +387,8 @@ class APISO(profile.Profile):
 
         xml_blob = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:XML'])
 
+        xml_blob_decoded = bytes.fromhex(xml_blob[2:]).decode('utf-8')
+
         if isinstance(xml_blob, bytes):
             iso_string = b'<gmd:MD_Metadata>'
         else:
@@ -397,7 +399,7 @@ class APISO(profile.Profile):
 
         if (esn == 'full' and (typename == 'gmd:MD_Metadata' or is_iso_anyway)):
             # dump record as is and exit
-            return etree.fromstring(xml_blob, self.context.parser)
+            return etree.fromstring(xml_blob_decoded, self.context.parser)
 
         node = etree.Element(util.nspath_eval('gmd:MD_Metadata', self.namespaces))
         node.attrib[util.nspath_eval('xsi:schemaLocation', self.context.namespaces)] = \
