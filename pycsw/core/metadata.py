@@ -1242,8 +1242,11 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:Modified', md.datestamp)
     _set(context, recobj, 'pycsw:Source', md.dataseturi)
     if md.referencesystem is not None:
-        _set(context, recobj, 'pycsw:CRS','urn:ogc:def:crs:EPSG:6.11:%s' %
-        md.referencesystem.code)
+        try:
+            code_ = 'urn:ogc:def:crs:EPSG::%d' % int(md.referencesystem.code)
+        except ValueError:
+            code_ = md.referencesystem.code
+        _set(context, recobj, 'pycsw:CRS', code_)
 
     if hasattr(md, 'identification'):
         _set(context, recobj, 'pycsw:Title', md.identification.title)
