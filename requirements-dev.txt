@@ -9,3 +9,4 @@ pytest-cov==2.4.0
 pytest-flake8==0.8.1
 pytest-timeout==1.2.0
 sphinx
+twine
