@@ -1242,22 +1242,11 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:Modified', md.datestamp)
     _set(context, recobj, 'pycsw:Source', md.dataseturi)
     if md.referencesystem is not None:
-        if md.referencesystem.code.startswith('urn:ogc:def:crs:EPSG:'):
-            crs_pieces = md.referencesystem.code.split(':')
-            if md.referencesystem.version is not None:
-                crs_version = md.referencesystem.version
-            else:
-                crs_version = crs_pieces[5]
-            crs_num_code = crs_pieces[6]
-            crs_str = 'urn:ogc:def:crs:EPSG:%s:%s' % (crs_version, crs_num_code)
-        else:
-            if md.referencesystem.version is not None:
-                crs_version = md.referencesystem.version
-            else:
-                crs_version = ''
-            crs_str = 'urn:ogc:def:crs:EPSG:%s:%s' % (crs_version, md.referencesystem.code)
-
-        _set(context, recobj, 'pycsw:CRS', crs_str)
+        try:
+            code_ = 'urn:ogc:def:crs:EPSG::%d' % int(md.referencesystem.code)
+        except ValueError:
+            code_ = md.referencesystem.code
+        _set(context, recobj, 'pycsw:CRS', code_)
 
     if hasattr(md, 'identification'):
         _set(context, recobj, 'pycsw:Title', md.identification.title)
