@@ -2,7 +2,7 @@
 <!-- PYCSW_VERSION -->
 <oai:OAI-PMH xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
   <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
-  <oai:request metadataprefix="iso19139" verb="ListRecords">http://localhost/pycsw/csw.py?config=tests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
+  <oai:request verb="ListRecords" metadataprefix="iso19139">http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
   <oai:ListRecords>
     <oai:record>
       <oai:header>
@@ -19,7 +19,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Image" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Image</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Image">http://purl.org/dc/dcmitype/Image</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -73,7 +73,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Service" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Service</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Service">http://purl.org/dc/dcmitype/Service</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -140,7 +140,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Text" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Text</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Text">http://purl.org/dc/dcmitype/Text</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -194,7 +194,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Service" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Service</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Service">http://purl.org/dc/dcmitype/Service</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -248,7 +248,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Text" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Text</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Text">http://purl.org/dc/dcmitype/Text</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -302,7 +302,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Image" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Image</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Image">http://purl.org/dc/dcmitype/Image</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -349,7 +349,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -403,7 +403,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -477,7 +477,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
@@ -551,7 +551,7 @@
             <gco:CharacterString/>
           </gmd:language>
           <gmd:hierarchyLevel>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Image" codeSpace="ISOTC211/19115">http://purl.org/dc/dcmitype/Image</gmd:MD_ScopeCode>
+            <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="http://purl.org/dc/dcmitype/Image">http://purl.org/dc/dcmitype/Image</gmd:MD_ScopeCode>
           </gmd:hierarchyLevel>
           <gmd:contact/>
           <gmd:dateStamp>
