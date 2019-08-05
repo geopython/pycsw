@@ -16,9 +16,9 @@
             "@timestamp": "PYCSW_TIMESTAMP"
         },
         "csw:SearchResults": {
-            "@nextRecord": "6",
             "@numberOfRecordsMatched": "12",
             "@numberOfRecordsReturned": "5",
+            "@nextRecord": "6",
             "@recordSchema": "http://www.opengis.net/cat/csw/2.0.2",
             "@elementSet": "full",
             "csw:Record": [
