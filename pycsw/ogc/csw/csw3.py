@@ -742,7 +742,7 @@ class Csw3(object):
             except Exception as err:
                 return self.exceptionreport('InvalidParameterValue', 'bbox', str(err))
 
-            if tmp_filter is not "":
+            if tmp_filter != "":
                 self.parent.kvp['constraint'] = tmp_filter
                 LOGGER.debug('OpenSearch Geo/Time parameters to Filter: %s.', self.parent.kvp['constraint'])
 

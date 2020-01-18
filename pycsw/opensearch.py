@@ -350,7 +350,7 @@ def kvp2filterxml(kvp, context):
                 if time_list == ['', '']:
                     par_count -= 1
                 # One of two is empty
-                elif time_list[1] is '':
+                elif time_list[1] == '':
                     time_element = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo',
                                 context.namespaces))
                     el = etree.Element(util.nspath_eval('ogc:PropertyName',
