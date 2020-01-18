@@ -714,7 +714,7 @@ class Csw2(object):
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
             self.parent.kvp['constraintlanguage'] = 'FILTER'
             tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context)
-            if tmp_filter is not "":
+            if tmp_filter != "":
                 self.parent.kvp['constraint'] = tmp_filter
                 LOGGER.debug('OpenSearch Geo/Time parameters to Filter: %s.', self.parent.kvp['constraint'])
 
