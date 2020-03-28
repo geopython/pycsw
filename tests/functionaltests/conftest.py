@@ -33,7 +33,7 @@ from collections import namedtuple
 import logging
 import os
 import re
-from six.moves import configparser
+import configparser
 
 import apipkg
 import pytest
@@ -192,9 +192,9 @@ def configuration(request, tests_directory, log_level):
     """
 
     config_path = request.param
-    config = configparser.SafeConfigParser()
+    config = configparser.ConfigParser()
     with codecs.open(config_path, encoding="utf-8") as fh:
-        config.readfp(fh)
+        config.read_file(fh)
     suite_name = config_path.split(os.path.sep)[-2]
     suite_dirs = _get_suite_dirs(suite_name)
     data_dir = suite_dirs.data_tests_dir
@@ -383,7 +383,7 @@ def _get_table_name(suite, config, repository_url):
     ----------
     suite: str
         Name of the suite.
-    config: SafeConfigParser
+    config: ConfigParser
         Configuration for the suite.
     repository_url: str
         SQLAlchemy URL for the repository in use.

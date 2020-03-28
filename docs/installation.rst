@@ -6,7 +6,7 @@ Installation
 System Requirements
 -------------------
 
-pycsw is written in `Python <http://python.org>`_, and works with (tested) version 2.7, 3.4 and 3.5
+pycsw is written in `Python <http://python.org>`_, and works with (tested) Python 3.  Python 2 is no longer supported.
 
 pycsw requires the following Python supporting libraries:
 
@@ -15,13 +15,12 @@ pycsw requires the following Python supporting libraries:
 - `pyproj`_ for coordinate transformations
 - `Shapely`_ for spatial query / geometry support
 - `OWSLib`_ for CSW client and metadata parser
-- `six`_ for Python 2/3 compatibility
 - `xmltodict`_ for working with XML similar to working with JSON
 - `geolinks`_ for dealing with geospatial links
 
 .. note::
 
-  You can install these dependencies via `easy_install`_ or `pip`_
+  You can install these dependencies via `pip`_
 
 .. note::
 
@@ -219,7 +218,6 @@ which will publish pycsw to ``http://localhost:8000/``
 .. _`Shapely`: http://toblerity.github.io/shapely/
 .. _`pyproj`: http://code.google.com/p/pyproj/
 .. _`OWSLib`: https://github.com/geopython/OWSLib
-.. _`six`: https://pypi.python.org/pypi/six/
 .. _`xmltodict`: https://github.com/martinblech/xmltodict
 .. _`geolinks`: https://github.com/geopython/geolinks
 .. _`easy_install`: http://packages.python.org/distribute/easy_install.html

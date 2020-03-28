@@ -88,7 +88,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
     else:
         tmp = element
 
-    pvalue_serial = [0]  # in list as python 2 has no nonlocal variable
+    pvalue_serial = [0]
     def assign_param():
         if orm == 'django':
             return '%s'

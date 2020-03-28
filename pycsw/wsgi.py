@@ -55,18 +55,21 @@
 #
 
 import gzip
+from io import BytesIO
 import os
 import sys
 
-import six
-from six.moves import configparser
-from six.moves.urllib.parse import unquote
+import configparser
+from urllib.parse import unquote
 
 from pycsw import server
 
 
 def application(env, start_response):
     """WSGI wrapper"""
+
+    print(env['PATH_INFO'])
+
 
     pycsw_root = get_pycsw_root_path(os.environ, env)
     configuration_path = get_configuration_path(os.environ, env, pycsw_root)
@@ -118,7 +121,7 @@ def compress_response(response, compression_level):
 
     """
 
-    buf = six.BytesIO()
+    buf = BytesIO()
     gzipfile = gzip.GzipFile(mode='wb', fileobj=buf,
                              compresslevel=compression_level)
     gzipfile.write(response)

@@ -33,9 +33,7 @@
 
 import logging
 import uuid
-from six.moves import range
-from six import text_type, binary_type
-from six.moves.urllib.parse import urlparse
+from urllib.parse import urlparse
 
 from geolinks import sniff_link
 from owslib.util import build_get_url
@@ -125,7 +123,7 @@ def _set(context, obj, name, value):
 def _parse_metadata(context, repos, record):
     """parse metadata formats"""
 
-    if isinstance(record, binary_type) or isinstance(record, text_type):
+    if isinstance(record, bytes) or isinstance(record, str):
         exml = etree.fromstring(record, context.parser)
     else:  # already serialized to lxml
         if hasattr(record, 'getroot'):  # standalone document

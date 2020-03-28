@@ -34,8 +34,6 @@ from pycsw.core import config, util
 from pycsw.ogc.csw.csw2 import write_boundingbox
 from pycsw.plugins.profiles import profile
 
-from six import text_type
-
 
 class EBRIM(profile.Profile):
     ''' EBRim class '''
@@ -148,10 +146,10 @@ class EBRIM(profile.Profile):
             etree.SubElement(node, util.nspath_eval('rim:ExternalIdentifier', self.namespaces), value=identifier, identificationScheme='foo', registryObject=str(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Relation'])), id=identifier)
 
             name = etree.SubElement(node, util.nspath_eval('rim:Name', self.namespaces))
-            etree.SubElement(name, util.nspath_eval('rim:LocalizedString', self.namespaces), value=text_type(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Title'])))
+            etree.SubElement(name, util.nspath_eval('rim:LocalizedString', self.namespaces), value=str(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Title'])))
 
             description = etree.SubElement(node, util.nspath_eval('rim:Description', self.namespaces))
-            etree.SubElement(description, util.nspath_eval('rim:LocalizedString', self.namespaces), value=text_type(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Abstract'])))
+            etree.SubElement(description, util.nspath_eval('rim:LocalizedString', self.namespaces), value=str(util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Abstract'])))
 
             val = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:BoundingBox'])
             bboxel = write_boundingbox(val, self.context.namespaces)

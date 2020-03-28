@@ -19,7 +19,6 @@ Features
 - implements Open Archives Initiative Protocol for Metadata Harvesting
 - supports ISO, Dublin Core, DIF, FGDC, Atom and GM03 metadata models
 - CGI or WSGI deployment
-- Python 2 and 3 compatible
 - simple configuration
 - transactional capabilities (CSW-T)
 - flexible repository configuration

@@ -3,5 +3,4 @@ lxml
 OWSLib
 pyproj
 Shapely
-six
 xmltodict
