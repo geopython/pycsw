@@ -322,8 +322,8 @@ Examples:
    # with default arguments
    tox
 
-   # run tests only with python2.7 and using sqlite as backend
-   tox -e py27-sqlite
+   # run tests only with python3.5 and using sqlite as backend
+   tox -e py35 -sqlite
 
    # run only csw30 suite tests with python3.5 and postgresql as backend
    tox -e py35-postgresql -- -k 'csw30'

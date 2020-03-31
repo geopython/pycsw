@@ -36,7 +36,6 @@ import inspect
 import logging
 import os
 
-import six
 from shapely.wkt import loads
 try:
     from shapely.errors import ReadingError
@@ -410,10 +409,8 @@ class Repository(object):
 
 def create_custom_sql_functions(connection):
     """Register custom functions on the database connection."""
-    if six.PY2:
-        inspect_function = inspect.getargspec
-    else:  # python3
-        inspect_function = inspect.getfullargspec
+
+    inspect_function = inspect.getfullargspec
 
     for function_object in [
         query_spatial,
@@ -486,7 +483,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
         else:
             raise RuntimeError(
                 'Invalid spatial query predicate: %s' % predicate)
-    except (AttributeError, ValueError, ReadingError):
+    except (AttributeError, ValueError, ReadingError, TypeError):
         result = False
     return "true" if result else "false"
 
@@ -494,7 +491,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
 def update_xpath(nsmap, xml, recprop):
     """Update XML document XPath values"""
 
-    if isinstance(xml, six.binary_type) or isinstance(xml, six.text_type):
+    if isinstance(xml, bytes) or isinstance(xml, str):
         # serialize to lxml
         xml = etree.fromstring(xml, PARSER)
 

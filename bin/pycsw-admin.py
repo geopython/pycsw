@@ -30,8 +30,7 @@
 #
 # =================================================================
 
-from six.moves import configparser
-from six.moves import input
+import configparser
 import getopt
 import sys
 
@@ -222,16 +221,16 @@ if COMMAND == 'gen_sitemap' and OUTPUT_FILE is None:
     sys.exit(8)
 
 if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
-    SCP = configparser.SafeConfigParser()
+    CP = configparser.ConfigParser()
     with open(CFG) as f:
-        SCP.readfp(f)
+        CP.read_file(f)
 
-    DATABASE = SCP.get('repository', 'database')
-    URL = SCP.get('server', 'url')
-    HOME = SCP.get('server', 'home')
-    METADATA = dict(SCP.items('metadata:main'))
+    DATABASE = CP.get('repository', 'database')
+    URL = CP.get('server', 'url')
+    HOME = CP.get('server', 'home')
+    METADATA = dict(CP.items('metadata:main'))
     try:
-        TABLE = SCP.get('repository', 'table')
+        TABLE = CP.get('repository', 'table')
     except configparser.NoOptionError:
         TABLE = 'records'
 

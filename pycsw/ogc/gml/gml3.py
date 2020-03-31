@@ -28,7 +28,6 @@
 #
 # =================================================================
 
-from six.moves import zip
 import logging
 from owslib import crs
 

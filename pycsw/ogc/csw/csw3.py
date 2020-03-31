@@ -32,9 +32,8 @@ import os
 import sys
 import cgi
 from time import time
-from six.moves.urllib.parse import quote, unquote
-from six import StringIO
-from six.moves.configparser import SafeConfigParser
+from urllib.parse import quote, unquote
+from io import StringIO
 from pycsw.core.etree import etree
 from pycsw.ogc.csw.cql import cql2fes1
 from pycsw import oaipmh, opensearch, sru

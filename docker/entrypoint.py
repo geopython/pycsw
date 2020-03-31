@@ -41,8 +41,7 @@ additional input.
 import argparse
 import logging
 import os
-from six.moves.configparser import SafeConfigParser
-from six.moves.configparser import NoOptionError
+import configparser
 import sys
 from time import sleep
 
@@ -168,11 +167,11 @@ if __name__ == "__main__":
              "Defaults to False."
     )
     args = parser.parse_args()
-    config = SafeConfigParser()
+    config = configparser.ConfigParser()
     config.read(os.getenv("PYCSW_CONFIG"))
     try:
         level = config.get("server", "loglevel").upper()
-    except NoOptionError:
+    except configparser.NoOptionError:
         level = "WARNING"
     logging.basicConfig(level=getattr(logging, level))
     launch_pycsw(config, workers=args.workers, reload=args.reload)

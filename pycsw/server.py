@@ -34,11 +34,9 @@
 
 import logging
 import os
-from six.moves.urllib.parse import parse_qsl
-from six.moves.urllib.parse import splitquery
-from six.moves.urllib.parse import urlparse
-from six import StringIO
-from six.moves.configparser import SafeConfigParser
+from urllib.parse import parse_qsl, splitquery, urlparse
+from io import StringIO
+import configparser
 import sys
 from time import time
 import wsgiref.util
@@ -102,10 +100,10 @@ class Csw(object):
         # load user configuration
         try:
             LOGGER.info('Loading user configuration')
-            if isinstance(rtconfig, SafeConfigParser):  # serialized already
+            if isinstance(rtconfig, configparser.ConfigParser):  # serialized already
                 self.config = rtconfig
             else:
-                self.config = SafeConfigParser()
+                self.config = configparser.ConfigParser()
                 if isinstance(rtconfig, dict):  # dictionary
                     for section, options in rtconfig.items():
                         self.config.add_section(section)
@@ -114,7 +112,7 @@ class Csw(object):
                 else:  # configuration file
                     import codecs
                     with codecs.open(rtconfig, encoding='utf-8') as scp:
-                        self.config.readfp(scp)
+                        self.config.read_file(scp)
         except Exception as err:
             msg = 'Could not load configuration'
             LOGGER.exception('%s %s: %s', msg, rtconfig, err)

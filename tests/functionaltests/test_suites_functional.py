@@ -60,7 +60,7 @@ def test_suites(test_identifier, use_xml_canonicalisation,
 
     Parameters
     ----------
-    configuration: SafeConfigParser
+    configuration: ConfigParser
         The configuration to use with the pycsw server instance under test
     request_method: str
         The HTTP method of the request. Either GET or POST.

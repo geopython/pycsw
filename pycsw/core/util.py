@@ -38,9 +38,8 @@ import datetime
 import logging
 import time
 
-import six
-from six.moves.urllib.request import Request, urlopen
-from six.moves.urllib.parse import urlparse
+from urllib.request import Request, urlopen
+from urllib.parse import urlparse
 from shapely.wkt import loads
 from owslib.util import http_post
 
@@ -341,7 +340,7 @@ def get_anytext(bag):
     if isinstance(bag, list):  # list of words
         return ' '.join([_f for _f in bag if _f]).strip()
     else:  # xml
-        if isinstance(bag, six.binary_type) or isinstance(bag, six.text_type):
+        if isinstance(bag, bytes) or isinstance(bag, str):
             # serialize to lxml
             bag = etree.fromstring(bag, PARSER)
         # get all XML element content
@@ -373,11 +372,10 @@ def secure_filename(filename):
 
     :param filename: the filename to secure
     """
-    if isinstance(filename, six.text_type):
+    if isinstance(filename, str):
         from unicodedata import normalize
         filename = normalize('NFKD', filename).encode('ascii', 'ignore')
-        if not six.PY2:
-            filename = filename.decode('ascii')
+        filename = filename.decode('ascii')
     for sep in os.path.sep, os.path.altsep:
         if sep:
             filename = filename.replace(sep, ' ')
