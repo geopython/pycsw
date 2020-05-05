@@ -1,8 +1,10 @@
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2020 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -26,40 +28,15 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
-FROM alpine:3.4
 
-# There's bug in libxml2 v2.9.4 that prevents using an XMLParser with a schema
-# file.
-#
-# https://bugzilla.gnome.org/show_bug.cgi?id=766834
-#
-# It seems to have been fixed upstream, but the fix has not been released into
-# a new libxml2 version. As a workaround, we are sticking with the previous
-# version, which works fine.
-# This means that we need to use alpine's archives for version 3.1, which are
-# the ones that contain the previous version of libxml2
-#
-# Also, for some unkwnon reason, alpine 3.1 version of libxml2 depends on
-# python2. We'd rather use python3 for pycsw, so we install it too.
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.1/main' >> /etc/apk/repositories \
-  && apk add --no-cache \
-    build-base \
-    ca-certificates \
-    postgresql-dev \
-    python3 \
-    python3-dev \
-    libpq \
-    libxslt-dev \
-    'libxml2<2.9.4' \
-    'libxml2-dev<2.9.4' \
-    wget \
-  && apk add --no-cache \
-    --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
-    --allow-untrusted \
-    geos \
-    geos-dev
+FROM debian:bullseye-slim
 
-RUN adduser -D -u 1000 pycsw
+ENV DEB_PACKAGES="python3 python3-dev python3-pip libpq-dev libxslt-dev libxml2-dev libgeos-dev"
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y ${DEB_PACKAGES}
+
+RUN useradd -ms /bin/bash pycsw
 
 WORKDIR /tmp/pycsw
 
@@ -107,7 +84,6 @@ RUN mkdir /etc/pycsw \
 WORKDIR /home/pycsw
 
 USER pycsw
-
 
 EXPOSE 8000
 
