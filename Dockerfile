@@ -47,6 +47,7 @@ ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
 
 EXPOSE 8000
 COPY docker/min-apk /usr/local/bin/min-apk
+COPY docker/clean-pyc-files /usr/local/bin/clean-pyc-files
 
 RUN min-apk \
     bash \
@@ -89,23 +90,44 @@ RUN apk add --no-cache --virtual .build-deps \
 # I leave the lines below commented
 # for when we want to build from a pycsw repo (or fork)
 #
-RUN git clone https://github.com/geopython/pycsw.git \
-     && cd pycsw \
-     && pip3 install -r requirements.txt \
-     && pip3 install -r requirements-standalone.txt \
-     && pip3 install -r requirements-pg.txt \
-     && python3 setup.py build \
-     && python3 setup.py install \
-     && cp default-sample.cfg default.cfg \
-     && cp docker/entrypoint.py /usr/local/bin/entrypoint.py \
-     && chmod a+x /usr/local/bin/entrypoint.py
+
+COPY \
+  requirements-standalone.txt \
+  requirements-pg.txt \
+  requirements-dev.txt \
+  requirements.txt \
+  ./
+
+RUN pip3 install --upgrade pip setuptools \
+  && pip3 install --requirement requirements.txt \
+  && pip3 install --requirement requirements-standalone.txt \
+  && pip3 install --requirement requirements-pg.txt
+
+COPY pycsw pycsw/
+COPY bin bin/
+COPY setup.py .
+COPY MANIFEST.in .
+COPY VERSION.txt .
+COPY README.rst .
+
+RUN pip3 install .
 
 ADD docker/pycsw.cfg ${PYCSW_CONFIG}
+ADD docker/entrypoint.py /usr/local/bin/entrypoint.py
 
 RUN adduser -D -u 1000 pycsw \
   && mkdir -p /etc/pycsw \
   && mkdir /var/lib/pycsw \
-  && chown pycsw:pycsw /var/lib/pycsw
+  && chown pycsw:pycsw /var/lib/pycsw \
+  && rm -rf /usr/lib/python3*/*/tests \
+  && rm -rf /usr/lib/python3*/ensurepip \
+  && rm -rf /usr/lib/python3*/idlelib \
+  && rm -f /usr/lib/python3*/distutils/command/*exe \
+  && rm -rf /usr/share/man/* \
+  && clean-pyc-files /usr/lib/python3*
+
+COPY tests /home/pycsw
+RUN chown -R pycsw:pycsw /home/pycsw/
 
 WORKDIR /home/pycsw
 
