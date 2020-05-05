@@ -1,7 +1,6 @@
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
-#
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
@@ -26,92 +25,90 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
-FROM alpine:3.4
-
-# There's bug in libxml2 v2.9.4 that prevents using an XMLParser with a schema
-# file.
 #
-# https://bugzilla.gnome.org/show_bug.cgi?id=766834
+# Adapted from pycsw official Dockerfile
 #
-# It seems to have been fixed upstream, but the fix has not been released into
-# a new libxml2 version. As a workaround, we are sticking with the previous
-# version, which works fine.
-# This means that we need to use alpine's archives for version 3.1, which are
-# the ones that contain the previous version of libxml2
+# Contributors:
+#   Massimo Di Stefano
+#   Arnulf Heimsbakk
 #
-# Also, for some unkwnon reason, alpine 3.1 version of libxml2 depends on
-# python2. We'd rather use python3 for pycsw, so we install it too.
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.1/main' >> /etc/apk/repositories \
-  && apk add --no-cache \
-    build-base \
-    ca-certificates \
-    postgresql-dev \
-    python3 \
-    python3-dev \
-    libpq \
-    libxslt-dev \
-    'libxml2<2.9.4' \
-    'libxml2-dev<2.9.4' \
-    wget \
-  && apk add --no-cache \
-    --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
-    --allow-untrusted \
-    geos \
-    geos-dev
+# Note in the instruction above I added some extra packages:
+# git - to clone pycsw repo or install with pip directly form github
+# bash - for interactive docker session
+# postgresql-dev, psycopg2 - for postgres backend
+# parmap - to easy parallelize routines like mmd2iso
+# xmltodict - pythonic way to work on xml
 
-RUN adduser -D -u 1000 pycsw
-
-WORKDIR /tmp/pycsw
-
-COPY \
-  requirements-standalone.txt \
-  requirements-pg.txt \
-  requirements-dev.txt \
-  requirements.txt \
-  ./
-
-RUN pip3 install --upgrade pip setuptools \
-  && pip3 install --requirement requirements.txt \
-  && pip3 install --requirement requirements-standalone.txt \
-  && pip3 install --requirement requirements-pg.txt \
-  && pip3 install gunicorn
-
-COPY pycsw pycsw/
-COPY bin bin/
-COPY setup.py .
-COPY MANIFEST.in .
-COPY VERSION.txt .
-COPY README.rst .
-
-RUN pip3 install .
-
-COPY tests tests/
-COPY docker docker/
+FROM alpine:3.11
+LABEL maintainer="massimods@met.no,aheimsbakk@met.no"
 
 ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+# ENV PYCSW_VERSION=2.4.2
 
-RUN mkdir /etc/pycsw \
-  && mv docker/pycsw.cfg ${PYCSW_CONFIG} \
+EXPOSE 8000
+COPY docker/min-apk /usr/local/bin/min-apk
+
+RUN min-apk \
+    bash \
+    ca-certificates \
+    geos \
+    git \
+    libpq \
+    libxml2 \
+    libxslt \
+    proj \
+    proj-util \
+    python3 \
+    sqlite \
+    wget
+
+RUN apk add --no-cache --virtual .build-deps \
+    build-base \
+    geos-dev \
+    libxml2-dev \
+    libxslt-dev \
+    postgresql-dev \
+    proj-dev \
+    python3-dev \
+  && pip3 install --upgrade pip setuptools \
+  && pip3 install wheel \
+  && pip3 install \
+    gunicorn \
+    lxml \
+    parmap \
+    psycopg2 \
+    sqlalchemy \
+    xmltodict \
+    pyproj \
+  && apk del .build-deps
+
+# this line goes before removing the apk .build-deps
+# && pip3 install pycsw==${PYCSW_VERSION} \
+
+# We are installing pycsw from pip
+# I leave the lines below commented
+# for when we want to build from a pycsw repo (or fork)
+#
+RUN git clone https://github.com/geopython/pycsw.git \
+     && cd pycsw \
+     && pip3 install -r requirements.txt \
+     && pip3 install -r requirements-standalone.txt \
+     && pip3 install -r requirements-pg.txt \
+     && python3 setup.py build \
+     && python3 setup.py install \
+     && cp default-sample.cfg default.cfg \
+     && cp docker/entrypoint.py /usr/local/bin/entrypoint.py \
+     && chmod a+x /usr/local/bin/entrypoint.py
+
+ADD docker/pycsw.cfg ${PYCSW_CONFIG}
+
+RUN adduser -D -u 1000 pycsw \
+  && mkdir -p /etc/pycsw \
   && mkdir /var/lib/pycsw \
-  && chown pycsw:pycsw /var/lib/pycsw \
-  && cp docker/entrypoint.py /usr/local/bin/entrypoint.py \
-  && chmod a+x /usr/local/bin/entrypoint.py \
-  && cp -r tests /home/pycsw \
-  && cp requirements.txt /home/pycsw \
-  && cp requirements-standalone.txt /home/pycsw \
-  && cp requirements-pg.txt /home/pycsw \
-  && cp requirements-dev.txt /home/pycsw \
-  && chown -R pycsw:pycsw /home/pycsw/* \
-  && rm -rf *
+  && chown pycsw:pycsw /var/lib/pycsw
 
 WORKDIR /home/pycsw
 
 USER pycsw
 
-
-EXPOSE 8000
-
-ENTRYPOINT [\
-  "python3", \
-  "/usr/local/bin/entrypoint.py" \
-]
+ENTRYPOINT [ "python3", "/usr/local/bin/entrypoint.py" ]
