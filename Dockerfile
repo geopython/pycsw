@@ -1,9 +1,9 @@
+# =================================================================
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 # Authors: Massimo Di Stefano <epiesasha@me.com>
 #
 # Contributors: Arnulf Heimsbakk <aheimsbakk@met.no>
 #               Tom Kralidis <tomkralidis@gmail.com>
-#
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
@@ -32,6 +32,7 @@
 #
 #
 # =================================================================
+
 FROM alpine:3.11
 LABEL maintainer="massimods@met.no,aheimsbakk@met.no"
 
@@ -111,4 +112,4 @@ EXPOSE 8000
 
 USER pycsw
 
-ENTRYPOINT [ "python3", "/usr/local/bin/entrypoint.py” ]
+ENTRYPOINT [ "python3", "/usr/local/bin/entrypoint.py" ]
