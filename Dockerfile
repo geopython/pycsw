@@ -1,8 +1,13 @@
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 # Authors: Massimo Di Stefano <epiesasha@me.com>
 #
+# Contributors: Arnulf Heimsbakk <aheimsbakk@met.no>
+#               Tom Kralidis <tomkralidis@gmail.com>
+#
+#
 # Copyright (c) 2017 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
+#
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
