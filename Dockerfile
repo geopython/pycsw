@@ -1,8 +1,7 @@
-# =================================================================
-#
+# Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 # Authors: Massimo Di Stefano <epiesasha@me.com>
 #
-#
+# Copyright (c) 2017 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
 #
 # Permission is hereby granted, free of charge, to any person
