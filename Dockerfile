@@ -1,8 +1,13 @@
-# =================================================================
-#
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+# Authors: Massimo Di Stefano <epiesasha@me.com>
+#
+# Contributors: Arnulf Heimsbakk <aheimsbakk@met.no>
+#               Tom Kralidis <tomkralidis@gmail.com>
+#
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2020 Massimo Di Stefano
+#
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -25,43 +30,30 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
+#
 # =================================================================
-FROM alpine:3.4
+FROM alpine:3.11
+LABEL maintainer="massimods@met.no,aheimsbakk@met.no"
 
-# There's bug in libxml2 v2.9.4 that prevents using an XMLParser with a schema
-# file.
-#
-# https://bugzilla.gnome.org/show_bug.cgi?id=766834
-#
-# It seems to have been fixed upstream, but the fix has not been released into
-# a new libxml2 version. As a workaround, we are sticking with the previous
-# version, which works fine.
-# This means that we need to use alpine's archives for version 3.1, which are
-# the ones that contain the previous version of libxml2
-#
-# Also, for some unkwnon reason, alpine 3.1 version of libxml2 depends on
-# python2. We'd rather use python3 for pycsw, so we install it too.
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.1/main' >> /etc/apk/repositories \
-  && apk add --no-cache \
-    build-base \
+ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+
+EXPOSE 8000
+COPY docker/min-apk /usr/local/bin/min-apk
+
+RUN apk add binutils \
+  && min-apk \
+    bash \
     ca-certificates \
-    postgresql-dev \
-    python3 \
-    python3-dev \
-    libpq \
-    libxslt-dev \
-    'libxml2<2.9.4' \
-    'libxml2-dev<2.9.4' \
-    wget \
-  && apk add --no-cache \
-    --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
-    --allow-untrusted \
     geos \
-    geos-dev
-
-RUN adduser -D -u 1000 pycsw
-
-WORKDIR /tmp/pycsw
+    libpq \
+    libxml2 \
+    libxslt \
+    proj \
+    proj-util \
+    python3 \
+    sqlite \
+    wget \
+  && apk del binutils
 
 COPY \
   requirements-standalone.txt \
@@ -70,11 +62,21 @@ COPY \
   requirements.txt \
   ./
 
-RUN pip3 install --upgrade pip setuptools \
+RUN apk add --no-cache --virtual .build-deps \
+    build-base \
+    geos-dev \
+    libxml2-dev \
+    libxslt-dev \
+    postgresql-dev \
+    proj-dev \
+    python3-dev \
+  && pip3 install --upgrade pip setuptools \
+  && pip3 install wheel \
+  && pip3 install gunicorn \
   && pip3 install --requirement requirements.txt \
   && pip3 install --requirement requirements-standalone.txt \
   && pip3 install --requirement requirements-pg.txt \
-  && pip3 install gunicorn
+  && apk del .build-deps
 
 COPY pycsw pycsw/
 COPY bin bin/
@@ -83,35 +85,30 @@ COPY MANIFEST.in .
 COPY VERSION.txt .
 COPY README.rst .
 
-RUN pip3 install .
+RUN pip3 install ./
 
 COPY tests tests/
-COPY docker docker/
 
-ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+ADD docker/pycsw.cfg ${PYCSW_CONFIG}
+ADD docker/entrypoint.py /usr/local/bin/entrypoint.py
 
-RUN mkdir /etc/pycsw \
-  && mv docker/pycsw.cfg ${PYCSW_CONFIG} \
+RUN adduser -D -u 1000 pycsw \
+  && mkdir -p /etc/pycsw \
   && mkdir /var/lib/pycsw \
-  && chown pycsw:pycsw /var/lib/pycsw \
-  && cp docker/entrypoint.py /usr/local/bin/entrypoint.py \
-  && chmod a+x /usr/local/bin/entrypoint.py \
   && cp -r tests /home/pycsw \
-  && cp requirements.txt /home/pycsw \
-  && cp requirements-standalone.txt /home/pycsw \
-  && cp requirements-pg.txt /home/pycsw \
-  && cp requirements-dev.txt /home/pycsw \
+  && chown pycsw:pycsw /var/lib/pycsw \
   && chown -R pycsw:pycsw /home/pycsw/* \
-  && rm -rf *
+  && rm -rf /usr/lib/python3*/*/tests \
+  && rm -rf /usr/lib/python3*/ensurepip \
+  && rm -rf /usr/lib/python3*/idlelib \
+  && rm -f /usr/lib/python3*/distutils/command/*exe \
+  && rm -rf /usr/share/man/* \
+  && find /usr/lib -name  "*.pyc" -o -name "*.pyo" -delete
 
 WORKDIR /home/pycsw
 
-USER pycsw
-
-
 EXPOSE 8000
 
-ENTRYPOINT [\
-  "python3", \
-  "/usr/local/bin/entrypoint.py" \
-]
+USER pycsw
+
+ENTRYPOINT [ "python3", "/usr/local/bin/entrypoint.py” ]
