@@ -197,7 +197,7 @@
           <ows:Value>3.0.0</ows:Value>
         </ows:Parameter>
         <ows:Constraint name="FederatedCatalogues">
-          <ows:Value>http://demo.pycsw.org/gisdata/csw</ows:Value>
+          <ows:Value>https://demo.pycsw.org/gisdata/csw</ows:Value>
         </ows:Constraint>
         <ows:Constraint name="MaxRecordDefault">
           <ows:Value>10</ows:Value>
