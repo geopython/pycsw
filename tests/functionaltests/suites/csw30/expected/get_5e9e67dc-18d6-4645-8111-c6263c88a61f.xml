@@ -108,7 +108,7 @@
       </ows20:Constraint>
       <ows20:Constraint name="FederatedCatalogues">
         <ows20:AllowedValues>
-          <ows20:Value>http://demo.pycsw.org/gisdata/csw</ows20:Value>
+          <ows20:Value>https://demo.pycsw.org/gisdata/csw</ows20:Value>
         </ows20:AllowedValues>
       </ows20:Constraint>
     </ows20:Operation>
@@ -186,7 +186,7 @@
     </ows20:Constraint>
     <ows20:Constraint name="FederatedCatalogues">
       <ows20:AllowedValues>
-        <ows20:Value>http://demo.pycsw.org/gisdata/csw</ows20:Value>
+        <ows20:Value>https://demo.pycsw.org/gisdata/csw</ows20:Value>
       </ows20:AllowedValues>
     </ows20:Constraint>
     <ows20:Constraint name="MaxRecordDefault">
