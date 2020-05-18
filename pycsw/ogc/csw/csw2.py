@@ -1493,9 +1493,9 @@ class Csw2(object):
                     util.nspath_eval('dc:subject',
                     self.parent.context.namespaces), scheme='http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode').text = val
 
-                formats = util.getqattr(recobj, queryables['dc:format']['dbcol'])
-                if formats is not None:
-                    for format_val in formats.split(','):
+                val = util.getqattr(recobj, queryables['dc:format']['dbcol'])
+                if val is not None:
+                    for format_val in val.split(','):
                         etree.SubElement(record,
                         util.nspath_eval('dc:format',
                         self.parent.context.namespaces)).text = format_val
