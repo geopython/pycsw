@@ -91,8 +91,12 @@ def write_record(result, esn, context, url=None):
     # format
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Format'])
     if val is not None:
+        # Add format values if exist
         for format_val in val.split(','):
             etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form', NAMESPACES)).text = format_val
+    else:
+        # Otherwise add empty element
+        etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form', NAMESPACES)).text = val
 
     # iso topic category
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TopicCategory'])
