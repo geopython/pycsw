@@ -130,8 +130,9 @@ def write_record(result, esn, context, url=None):
     # format
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Format'])
     if val:
-        md_format = etree.SubElement(core, util.nspath_eval('gm03:GM03_2_1Core.Core.MD_Format', NAMESPACES))
-        etree.SubElement(md_format, util.nspath_eval('gm03:name', NAMESPACES)).text = val
+        for format_val in val.split(','):
+            md_format = etree.SubElement(core, util.nspath_eval('gm03:GM03_2_1Core.Core.MD_Format', NAMESPACES))
+            etree.SubElement(md_format, util.nspath_eval('gm03:name', NAMESPACES)).text = format_val
 
     # creation date
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:CreationDate'])
@@ -169,9 +170,10 @@ def write_record(result, esn, context, url=None):
     # crs
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:CRS'])
     if val:
-        rs_identifier = etree.SubElement(core, util.nspath_eval('gm03:GM03_2_1Core.Core.RS_Identifier', NAMESPACES))
-        rs_code = etree.SubElement(rs_identifier, util.nspath_eval('gm03:code', NAMESPACES))
-        rs_code.append(_get_pt_freetext(val, language))
+        for crs_val in val.split(','):
+            rs_identifier = etree.SubElement(core, util.nspath_eval('gm03:GM03_2_1Core.Core.RS_Identifier', NAMESPACES))
+            rs_code = etree.SubElement(rs_identifier, util.nspath_eval('gm03:code', NAMESPACES))
+            rs_code.append(_get_pt_freetext(crs_val, language))
 
     # temporal extent
     time_begin = util.getqattr(result, context.md_core_model['mappings']['pycsw:TempExtent_begin'])

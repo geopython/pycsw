@@ -90,7 +90,9 @@ def write_record(result, esn, context, url=None):
 
     # format
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Format'])
-    etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form', NAMESPACES)).text = val
+    if val is not None:
+        for format_val in val.split(','):
+            etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form', NAMESPACES)).text = format_val
 
     # iso topic category
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TopicCategory'])

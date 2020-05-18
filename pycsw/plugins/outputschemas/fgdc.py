@@ -132,9 +132,10 @@ def write_record(recobj, esn, context, url=None):
     stdorder = etree.SubElement(distinfo, 'stdorder')
     digform = etree.SubElement(stdorder, 'digform')
     digtinfo = etree.SubElement(digform, 'digtinfo')
-    val = util.getqattr(recobj, context.md_core_model['mappings']['pycsw:Format']) or ''
-    etree.SubElement(digtinfo, 'formname').text = val
-    etree.SubElement(citeinfo, 'geoform').text = val
+    val = util.getqattr(recobj, context.md_core_model['mappings']['pycsw:Format']) or ""
+    for format_val in val.split(','):
+        etree.SubElement(digtinfo, 'formname').text = format_val
+        etree.SubElement(citeinfo, 'geoform').text = format_val
 
     # source
     lineage = etree.SubElement(node, 'lineage')

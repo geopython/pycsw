@@ -1493,11 +1493,12 @@ class Csw2(object):
                     util.nspath_eval('dc:subject',
                     self.parent.context.namespaces), scheme='http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode').text = val
 
-                val = util.getqattr(recobj, queryables['dc:format']['dbcol'])
-                if val:
-                    etree.SubElement(record,
-                    util.nspath_eval('dc:format',
-                    self.parent.context.namespaces)).text = val
+                formats = util.getqattr(recobj, queryables['dc:format']['dbcol'])
+                if formats is not None:
+                    for format_val in formats.split(','):
+                        etree.SubElement(record,
+                        util.nspath_eval('dc:format',
+                        self.parent.context.namespaces)).text = format_val
 
                 # links
                 rlinks = util.getqattr(recobj,
@@ -1527,9 +1528,10 @@ class Csw2(object):
                         etree.SubElement(record,
                         util.nspath_eval(i, self.parent.context.namespaces)).text = val
                 val = util.getqattr(recobj, queryables['dct:spatial']['dbcol'])
-                if val:
-                    etree.SubElement(record,
-                    util.nspath_eval('dct:spatial', self.parent.context.namespaces), scheme='http://www.opengis.net/def/crs').text = val
+                if val is not None:
+                    for srs in val.split(','):
+                        etree.SubElement(record,
+                        util.nspath_eval('dct:spatial', self.parent.context.namespaces), scheme='http://www.opengis.net/def/crs').text = srs
 
             # always write out ows:BoundingBox
             bboxel = write_boundingbox(getattr(recobj,

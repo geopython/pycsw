@@ -1564,10 +1564,11 @@ class Csw3(object):
                     self.parent.context.namespaces), scheme='http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode').text = val
 
                 val = util.getqattr(recobj, queryables['dc:format']['dbcol'])
-                if val:
-                    etree.SubElement(record,
-                    util.nspath_eval('dc:format',
-                    self.parent.context.namespaces)).text = val
+                if val is not None:
+                    for format_val in val.split(','):
+                        etree.SubElement(record,
+                        util.nspath_eval('dc:format',
+                        self.parent.context.namespaces)).text = format_val
 
                 # links
                 rlinks = util.getqattr(recobj,
@@ -1596,10 +1597,11 @@ class Csw3(object):
                     if val:
                         etree.SubElement(record,
                         util.nspath_eval(i, self.parent.context.namespaces)).text = val
-                val = util.getqattr(recobj, queryables['dct:spatial']['dbcol'])
-                if val:
-                    etree.SubElement(record,
-                    util.nspath_eval('dct:spatial', self.parent.context.namespaces), scheme='http://www.opengis.net/def/crs').text = val
+                spatial_ref_systems = util.getqattr(recobj, queryables['dct:spatial']['dbcol'])
+                if spatial_ref_systems is not None:
+                    for srs_val in spatial_ref_systems.split(','):
+                        etree.SubElement(record,
+                        util.nspath_eval('dct:spatial', self.parent.context.namespaces), scheme='http://www.opengis.net/def/crs').text = srs_val
 
             # always write out ows:BoundingBox
             bboxel = write_boundingbox(getattr(recobj,
