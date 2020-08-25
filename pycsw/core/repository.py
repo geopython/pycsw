@@ -504,7 +504,7 @@ def update_xpath(nsmap, xml, recprop):
                 if node1.text != recprop['value']:  # values differ, update
                     node1.text = recprop['value']
     except Exception as err:
-        print(err)
+        LOGGER.warning(err)
         raise RuntimeError('ERROR: %s' % str(err))
 
     return etree.tostring(xml)
