@@ -1,8 +1,10 @@
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+# Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2020 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -33,9 +35,9 @@
 #
 # Use it with docker-compose or in a docker swarm:
 #
-# docker-compose --file docker-stack.yml --project pycsw up
+# docker-compose up
 #
-# PYCSW_DOCKER_IMAGE=2.1-dev docker stack deploy --compose-file docker-stack.yml pycsw
+# PYCSW_DOCKER_IMAGE=2.1-dev docker stack deploy --compose-file docker-compose.yml pycsw
 #
 
 version: "3"
@@ -45,18 +47,21 @@ services:
   db:
     image: mdillon/postgis:9.6-alpine
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: mypass
       POSTGRES_DB: pycsw
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - db-data:/var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
 
   pycsw:
-    image: geopython/pycsw:${PYCSW_DOCKER_VERSION}
+    image: geopython/pycsw:${PYCSW_DOCKER_IMAGE}
     ports:
       - "8000:8000"
     volumes:
-      - ./docker-stack-pycsw.cfg:/etc/pycsw/pycsw.cfg
+      - ./pycsw.cfg:/etc/pycsw/pycsw.cfg
 
 
 volumes:
