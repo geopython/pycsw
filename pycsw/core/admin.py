@@ -46,7 +46,7 @@ LOGGER = logging.getLogger(__name__)
 def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, postgis_geometry_column='wkb_geometry', extra_columns=[], language='english'):
     """Setup database tables and indexes"""
     from sqlalchemy import Column, create_engine, Integer, MetaData, \
-        Table, Text
+        Table, Text, Unicode
     from sqlalchemy.orm import create_session
 
     LOGGER.info('Creating database %s', database)
@@ -124,7 +124,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         Column('mdsource', Text, default='local', nullable=False,
                index=True),
         Column('insert_date', Text, nullable=False, index=True),
-        Column('xml', Text, nullable=False),
+        Column('xml', Unicode, nullable=False),
         Column('anytext', Text, nullable=False),
         Column('language', Text, index=True),
 
