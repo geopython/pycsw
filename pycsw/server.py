@@ -50,6 +50,16 @@ from pycsw.ogc.csw import csw2, csw3
 
 LOGGER = logging.getLogger(__name__)
 
+class EnvInterpolation(configparser.BasicInterpolation):
+    """
+    Interpolation which expands environment variables in values.
+    from: https://stackoverflow.com/a/49529659
+    """
+
+    def before_get(self, parser, section, option, value, defaults):
+        value = super().before_get(parser, section, option, value, defaults)
+        return os.path.expandvars(value)
+
 
 class Csw(object):
     """ Base CSW server """
@@ -103,7 +113,7 @@ class Csw(object):
             if isinstance(rtconfig, configparser.ConfigParser):  # serialized already
                 self.config = rtconfig
             else:
-                self.config = configparser.ConfigParser()
+                self.config = configparser.ConfigParser(interpolation=EnvInterpolation)
                 if isinstance(rtconfig, dict):  # dictionary
                     for section, options in rtconfig.items():
                         self.config.add_section(section)
