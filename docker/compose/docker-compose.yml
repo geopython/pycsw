@@ -30,12 +30,14 @@
 # =================================================================
 #
 #
-# This docker-stack file demos how to use the pycsw docker image with a
-# postgis database
+# This docker compose file demos how to use the pycsw docker image with a
+# PostgreSQL/PostGIS database.
 #
-# Use it with docker-compose or in a docker swarm:
+# docker-compose usage:
 #
 # docker-compose up
+#
+# docker stack (in a docker swarm):
 #
 # PYCSW_DOCKER_IMAGE=2.1-dev docker stack deploy --compose-file docker-compose.yml pycsw
 #
@@ -45,6 +47,7 @@ version: "3"
 services:
 
   db:
+    container_name: db
     image: mdillon/postgis:9.6-alpine
     environment:
       POSTGRES_USER: postgres
@@ -57,9 +60,10 @@ services:
       - 5432:5432
 
   pycsw:
+    container_name: pycsw
     image: geopython/pycsw:${PYCSW_DOCKER_IMAGE}
     ports:
-      - "8000:8000"
+      - 8000:8000
     volumes:
       - ./pycsw.cfg:/etc/pycsw/pycsw.cfg
 

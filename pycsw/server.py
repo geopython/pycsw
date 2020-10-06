@@ -113,7 +113,8 @@ class Csw(object):
             if isinstance(rtconfig, configparser.ConfigParser):  # serialized already
                 self.config = rtconfig
             else:
-                self.config = configparser.ConfigParser(interpolation=EnvInterpolation)
+                self.config = configparser.ConfigParser(
+                    interpolation=EnvInterpolation)
                 if isinstance(rtconfig, dict):  # dictionary
                     for section, options in rtconfig.items():
                         self.config.add_section(section)
