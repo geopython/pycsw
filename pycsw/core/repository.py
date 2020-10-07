@@ -297,6 +297,10 @@ class Repository(object):
     def insert(self, record, source, insert_date):
         ''' Insert a record into the repository '''
 
+        if isinstance(record.xml, bytes):
+            LOGGER.debug('Decoding bytes to unicode')
+            record.xml = record.xml.decode()
+
         try:
             self.session.begin()
             self.session.add(record)
