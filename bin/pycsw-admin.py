@@ -33,6 +33,7 @@
 from six.moves import configparser
 from six.moves import input
 import getopt
+import logging
 import sys
 
 from pycsw.core import admin, config
@@ -67,6 +68,8 @@ SYNOPSIS
     -f    Filepath to pycsw configuration
 
     -h    Usage message
+
+    -l    Logging level (ERROR, WARNING, INFO, DEBUG)
 
     -o    path to output file
 
@@ -106,6 +109,10 @@ EXAMPLES
         Load metadata record from file into repository
 
         pycsw-admin.py -c load_records -p /path/to/file.xml -f default.cfg
+
+        Load metadata record from file into repository with logging
+
+        pycsw-admin.py -c load_records -p /path/to/file.xml -f default.cfg -l DEBUG
 
     3.) export_records: Dump metadata records from repository into directory
 
@@ -160,13 +167,14 @@ XML = None
 XSD = None
 TIMEOUT = 30
 FORCE_CONFIRM = False
+LOGGING = None
 
 if len(sys.argv) == 1:
     print(usage())
     sys.exit(1)
 
 try:
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:p:ru:x:s:t:y')
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'c:f:ho:l:p:ru:x:s:t:y')
 except getopt.GetoptError as err:
     print('\nERROR: %s' % err)
     print(usage())
@@ -177,6 +185,8 @@ for o, a in OPTS:
         COMMAND = a
     if o == '-f':
         CFG = a
+    if o == '-l':
+        LOGGING = a
     if o == '-o':
         OUTPUT_FILE = a
     if o == '-p':
@@ -208,6 +218,10 @@ if COMMAND not in ['setup_db', 'load_records', 'export_records',
                    'validate_xml', 'delete_records']:
     print('ERROR: invalid command name: %s' % COMMAND)
     sys.exit(5)
+
+if LOGGING is not None and LOGGING not in ['ERROR', 'WARNING', 'INFO', 'DEBUG']:
+    print('ERROR: invalid -l value (should be one of ERROR, WARNING, INFO, DEBUG)')
+    sys.exit(13)
 
 if CFG is None and COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
     print('ERROR: -f <cfg> is a required argument')
@@ -250,6 +264,8 @@ elif COMMAND == 'validate_xml':
         print('ERROR: -s /path/to/file.xsd is a required argument')
         sys.exit(12)
 
+if LOGGING is not None:
+    logging.basicConfig(stream=sys.stdout, level=getattr(logging, LOGGING))
 if COMMAND == 'setup_db':
     try:
         admin.setup_db(DATABASE, TABLE, HOME)
