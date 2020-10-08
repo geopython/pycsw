@@ -48,7 +48,7 @@ services:
 
   db:
     container_name: db
-    image: mdillon/postgis:11-alpine
+    image: postgis/postgis:12-3.0-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: mypass
