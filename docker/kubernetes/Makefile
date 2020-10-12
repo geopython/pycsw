@@ -1,4 +1,6 @@
 
+PYCSW_DOCKER_IMAGE=latest
+
 convert:
 	PYCSW_DOCKER_IMAGE=$(PYCSW_DOCKER_IMAGE) kompose convert --volumes hostPath
 
