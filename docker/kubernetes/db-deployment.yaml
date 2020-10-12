@@ -36,7 +36,7 @@ spec:
           name: db-data
       restartPolicy: Always
       volumes:
-      - hostPath:
-          path: /var/lib/k8s/db-data
-        name: db-data
+      - name: db-data
+        persistentVolumeClaim:
+          claimName: db-data
 status: {}
