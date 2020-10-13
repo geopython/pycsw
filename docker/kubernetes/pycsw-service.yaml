@@ -5,10 +5,10 @@ metadata:
     io.kompose.service: pycsw
   name: pycsw
 spec:
+  type: NodePort
   ports:
-  - name: "8000"
-    port: 8000
-    targetPort: 8000
+    - port: 8000
+      nodePort: 30000
   selector:
     io.kompose.service: pycsw
 status:
