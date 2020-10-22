@@ -22,6 +22,9 @@ remove-volumes:
 	kubectl delete configmap pycsw-config
 	kubectl delete PersistentVolumeClaim db-data
 
+open:
+	minikube service pycsw --url
+
 restart: down up
 
 status:

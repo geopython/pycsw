@@ -1,13 +1,14 @@
 # =================================================================
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 # Authors: Massimo Di Stefano <epiesasha@me.com>
+# Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
 # Contributors: Arnulf Heimsbakk <aheimsbakk@met.no>
 #               Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
-#
+# Copyright (c) 2020 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -34,7 +35,7 @@
 # =================================================================
 
 FROM alpine:3.11
-LABEL maintainer="massimods@met.no,aheimsbakk@met.no"
+LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
 ARG PYCSW_HOME=/tmp/pycsw
 
