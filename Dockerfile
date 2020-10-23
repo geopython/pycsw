@@ -6,7 +6,7 @@
 # Contributors: Arnulf Heimsbakk <aheimsbakk@met.no>
 #               Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2020 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
 # Copyright (c) 2020 Tom Kralidis
 #
@@ -34,66 +34,40 @@
 #
 # =================================================================
 
-FROM alpine:3.11
+FROM python:3.8-slim-buster
 LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
-ARG PYCSW_HOME=/tmp/pycsw
+RUN apt-get update && apt-get install --yes \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
 
-COPY . ${PYCSW_HOME}
+WORKDIR /home/pycsw/pycsw
 
-RUN apk add binutils \
-  && ${PYCSW_HOME}/docker/min-apk \
-    ca-certificates \
-    geos \
-    libpq \
-    libxml2 \
-    libxslt \
-    proj \
-    proj-util \
-    python3 \
-    sqlite \
-  && apk del binutils
+RUN chown --recursive pycsw:pycsw .
 
+# initially copy only the requirements files
+COPY --chown=pycsw \
+    requirements.txt \
+    requirements-standalone.txt \
+    ./
 
-RUN apk add --no-cache --virtual .build-deps \
-    build-base \
-    geos-dev \
-    libxml2-dev \
-    libxslt-dev \
-    postgresql-dev \
-    proj-dev \
-    python3-dev \
-  && pip3 install --upgrade pip setuptools \
-  && pip3 install wheel \
-  && pip3 install gunicorn \
-  && pip3 install --requirement ${PYCSW_HOME}/requirements.txt \
-  && pip3 install --requirement ${PYCSW_HOME}/requirements-standalone.txt \
-  && pip3 install --requirement ${PYCSW_HOME}/requirements-pg.txt \
-  && apk del .build-deps
+RUN python3 -m pip install \
+    --requirement requirements.txt \
+    --requirement requirements-standalone.txt \
+    psycopg2-binary \
+    gunicorn
 
-ADD docker/pycsw.cfg ${PYCSW_CONFIG}
-ADD docker/entrypoint.py /usr/local/bin/entrypoint.py
+COPY --chown=pycsw . .
 
-WORKDIR ${PYCSW_HOME}
-
-RUN pip3 install . \
-  && adduser -D -u 1000 pycsw \
-  && cp -r ${PYCSW_HOME}/tests /home/pycsw \
-  && chown -R pycsw:pycsw /home/pycsw/* \
-  && rm -rf /usr/lib/python3*/*/tests \
-  && rm -rf /usr/lib/python3*/ensurepip \
-  && rm -rf /usr/lib/python3*/idlelib \
-  && rm -f /usr/lib/python3*/distutils/command/*exe \
-  && rm -rf /usr/share/man/* \
-  && rm -fr ${PYCSW_HOME} \
-  && find /usr/lib -name  "*.pyc" -o -name "*.pyo" -delete
+RUN python3 -m pip install --editable .
 
 WORKDIR /home/pycsw
 
 EXPOSE 8000
 
 USER pycsw
+ENV PYCSW_CONFIG=/home/pycsw/pycsw/docker/pycsw.cfg
 
-ENTRYPOINT [ "python3", "/usr/local/bin/entrypoint.py" ]
+ENTRYPOINT [ "python3", "/home/pycsw/pycsw/docker/entrypoint.py" ]
