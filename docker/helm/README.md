@@ -1,4 +1,4 @@
-Chart for the Catalogue Server (CS) bundling all services
+# Helm chart for pycsw services
 
 Debug with:
 
@@ -11,3 +11,6 @@ Deploy with:
 ```bash
 helm install pycsw .
 ```
+
+The server should then be made available at the host/port specified by
+`minikube service pycsw --url`.

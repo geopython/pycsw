@@ -164,6 +164,29 @@ example by running::
 
     firefox docs/_build/html/index.html
 
+Kubernetes
+==========
+
+For `Kubernetes`_ orchestration, run the following in ``docker/kubernetes``:
+
+.. code-block:: bash
+
+  make up
+  make open
+
+
+Helm
+====
+
+For Kubernetes deployment via `Helm`_, run the following in ``docker/helm``:
+
+.. code-block:: bash
+
+  helm install pycsw .
+  minikube service pycsw --url
+
 
 .. _Docker Hub: https://hub.docker.com/r/geopython/pycsw/
 .. _pycsw's github repository: https://github.com/geopython/pycsw/tree/master/docker
+.. _Kubernetes: https://kubernetes.io/
+.. _Helm: https://helm.sh

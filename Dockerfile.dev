@@ -35,7 +35,7 @@
 # =================================================================
 
 FROM alpine:3.11
-LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
+LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tomkralidis@gmail.com"
 
 ARG PYCSW_HOME=/tmp/pycsw
 
@@ -65,12 +65,14 @@ RUN apk add --no-cache --virtual .build-deps \
     postgresql-dev \
     proj-dev \
     python3-dev \
+    libffi-dev \
   && pip3 install --upgrade pip setuptools \
   && pip3 install wheel \
   && pip3 install gunicorn \
   && pip3 install --requirement ${PYCSW_HOME}/requirements.txt \
   && pip3 install --requirement ${PYCSW_HOME}/requirements-standalone.txt \
   && pip3 install --requirement ${PYCSW_HOME}/requirements-pg.txt \
+  && pip3 install --requirement ${PYCSW_HOME}/requirements-dev.txt \
   && apk del .build-deps
 
 ADD docker/pycsw.cfg ${PYCSW_CONFIG}
