@@ -2,6 +2,7 @@
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 # Authors: Massimo Di Stefano <epiesasha@me.com>
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+# Authors: Angelos Tzotsos <gcpp.kalxas@gmail.com>
 #
 # Contributors: Arnulf Heimsbakk <aheimsbakk@met.no>
 #               Tom Kralidis <tomkralidis@gmail.com>
@@ -9,6 +10,7 @@
 # Copyright (c) 2020 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
 # Copyright (c) 2020 Tom Kralidis
+# Copyright (c) 2020 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -43,6 +45,8 @@ RUN apt-get update && apt-get install --yes \
 
 RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
 
+ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+
 WORKDIR /home/pycsw/pycsw
 
 RUN chown --recursive pycsw:pycsw .
@@ -61,6 +65,9 @@ RUN python3 -m pip install \
 
 COPY --chown=pycsw . .
 
+COPY docker/pycsw.cfg ${PYCSW_CONFIG}
+COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
+
 RUN python3 -m pip install --editable .
 
 WORKDIR /home/pycsw
@@ -68,6 +75,5 @@ WORKDIR /home/pycsw
 EXPOSE 8000
 
 USER pycsw
-ENV PYCSW_CONFIG=/home/pycsw/pycsw/docker/pycsw.cfg
 
-ENTRYPOINT [ "python3", "/home/pycsw/pycsw/docker/entrypoint.py" ]
+ENTRYPOINT [ "python3", "/usr/local/bin/entrypoint.py" ]
