@@ -90,6 +90,7 @@ def write_record(result, esn, context, url=None):
             url2 = etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href=linkset[-1], type=linkset[2], title=linkset[1])
             if linkset[2] == 'enclosure':
                 url2.attrib['rel'] = linkset[2]
+                url2.attrib['type'] = 'application/octet-stream'
 
     etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (url, util.getqattr(result, context.md_core_model['mappings']['pycsw:Identifier'])))
 

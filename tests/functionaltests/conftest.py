@@ -202,6 +202,9 @@ def configuration(request, tests_directory, log_level):
     if data_dir is not None:  # suite has its own database
         repository_url = _get_repository_url(request.config, suite_name,
                                              tests_directory)
+    elif suite_name == 'opensearcheo':
+        repository_url = _get_repository_url(request.config, "apiso",
+                                             tests_directory)
     else:  # suite uses the CITE database
         data_dir, export_dir = _get_cite_suite_dirs()
         repository_url = _get_repository_url(request.config, "cite",
