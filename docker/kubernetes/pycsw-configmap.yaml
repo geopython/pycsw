@@ -83,7 +83,7 @@ data:
     # sqlite
     #database=sqlite:////home/pycsw/tests/functionaltests/suites/cite/data/cite.db
     # postgres
-    database=postgresql://postgres:mypass@db/pycsw
+    database=${PYCSW_REPOSITORY_DATABASE_URI}
     # mysql
     #database=mysql://username:password@localhost/pycsw?charset=utf8
     #mappings=path/to/mappings.py
