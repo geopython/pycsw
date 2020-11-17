@@ -50,6 +50,7 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.exc import ProgrammingError
 
 from pycsw.core import admin
+from pycsw.server import EnvInterpolation
 
 logger = logging.getLogger(__name__)
 
@@ -167,7 +168,7 @@ if __name__ == "__main__":
              "Defaults to False."
     )
     args = parser.parse_args()
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(interpolation=EnvInterpolation())
     config.read(os.getenv("PYCSW_CONFIG"))
     try:
         level = config.get("server", "loglevel").upper()
