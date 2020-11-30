@@ -51,6 +51,8 @@ class OpenSearch(object):
 
         self.context = context
         self.context.namespaces.update(self.namespaces)
+        self.context.keep_ns_prefixes.append('geo')
+        self.context.keep_ns_prefixes.append('time')
 
     def response_csw2opensearch(self, element, cfg):
         """transform a CSW response into an OpenSearch response"""
@@ -201,8 +203,7 @@ class OpenSearch(object):
             node1.set('height', '16')
             node1.text = 'https://pycsw.org/img/favicon.ico'
 
-            os_query = etree.SubElement(node, util.nspath_eval('os:Query', self.namespaces), role='example')
-            os_query.attrib[util.nspath_eval('geo:box', self.namespaces)] = '-180,-90,180,90'
+            os_query = etree.SubElement(node, util.nspath_eval('os:Query', self.namespaces), role='example', searchTerms='cat')
 
             etree.SubElement(node, util.nspath_eval('os:Developer', self.namespaces)).text = self.exml.xpath('//ows20:IndividualName', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, util.nspath_eval('os:Contact', self.namespaces)).text = self.exml.xpath('//ows20:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
