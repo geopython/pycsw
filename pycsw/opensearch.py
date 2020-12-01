@@ -51,6 +51,8 @@ class OpenSearch(object):
 
         self.context = context
         self.context.namespaces.update(self.namespaces)
+        self.context.keep_ns_prefixes.append('geo')
+        self.context.keep_ns_prefixes.append('time')
 
     def response_csw2opensearch(self, element, cfg):
         """transform a CSW response into an OpenSearch response"""
@@ -117,7 +119,7 @@ class OpenSearch(object):
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/atom+xml')
             node1.set('method', 'get')
-            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
+            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&start={time:start?}&stop={time:end?}&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
 
             node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
             node1.set('type', 'image/vnd.microsoft.icon')
@@ -188,12 +190,12 @@ class OpenSearch(object):
             # Requirement-022
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/xml')
-            node1.set('template', '%sservice=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid?}' % self.bind_url)
+            node1.set('template', '%sservice=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&start={time:start?}&stop={time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid?}' % self.bind_url)
 
             # Requirement-023
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/atom+xml')
-            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&outputformat=application/atom%%2Bxml&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid?}' % self.bind_url)
+            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&start={time:start?}&stop={time:end?}&outputformat=application/atom%%2Bxml&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid?}' % self.bind_url)
 
             node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
             node1.set('type', 'image/vnd.microsoft.icon')
@@ -201,8 +203,7 @@ class OpenSearch(object):
             node1.set('height', '16')
             node1.text = 'https://pycsw.org/img/favicon.ico'
 
-            os_query = etree.SubElement(node, util.nspath_eval('os:Query', self.namespaces), role='example')
-            os_query.attrib[util.nspath_eval('geo:box', self.namespaces)] = '-180,-90,180,90'
+            os_query = etree.SubElement(node, util.nspath_eval('os:Query', self.namespaces), role='example', searchTerms='cat')
 
             etree.SubElement(node, util.nspath_eval('os:Developer', self.namespaces)).text = self.exml.xpath('//ows20:IndividualName', namespaces=self.context.namespaces)[0].text
             etree.SubElement(node, util.nspath_eval('os:Contact', self.namespaces)).text = self.exml.xpath('//ows20:ElectronicMailAddress', namespaces=self.context.namespaces)[0].text
@@ -233,12 +234,16 @@ class OpenSearch(object):
         return node
 
 
-def kvp2filterxml(kvp, context):
+def kvp2filterxml(kvp, context, profiles):
     ''' transform kvp to filter XML string '''
 
     bbox_element = None
     time_element = None
     anytext_elements = []
+    query_temporal_by_iso = False
+
+    if profiles is not None and 'plugins' in profiles and 'APISO' in profiles['plugins']:
+        query_temporal_by_iso = True
 
     # Count parameters
     par_count = 0
@@ -312,63 +317,108 @@ def kvp2filterxml(kvp, context):
             anytext_element.append(el)
             anytext_elements.append(anytext_element)
 
+    if ('start' in kvp or 'stop' in kvp) and 'time' not in kvp:
+        LOGGER.debug('Detected start/stop in KVP')
+        kvp['time'] = ''
+        if 'start' in kvp and kvp['start'] != '':
+            kvp['time'] = kvp['start'] + '/'
+        if 'stop' in kvp and kvp['stop'] != '':
+            if len(kvp['time']) > 0:
+                kvp['time'] += kvp['stop']
+            else:
+                kvp['time'] = '/' + kvp['stop']
+            LOGGER.debug('new KVP time: {}'.format(kvp['time']))
+
     # time to FilterXML
     if 'time' in kvp and kvp['time'] != '':
         LOGGER.debug('Detected time parameter %s', kvp['time'])
         time_list = kvp['time'].split("/")
-        if (len(time_list) == 2):
-            LOGGER.debug('TIMELIST: %s', time_list)
-            # This is a normal request
-            if '' not in time_list:
+
+        LOGGER.debug('TIMELIST: %s', time_list) 
+
+        if len(time_list) == 2:
+            if '' not in time_list:  # both dates present
                 LOGGER.debug('Both dates present')
-                # Both dates are present
-                time_element = etree.Element(util.nspath_eval('ogc:PropertyIsBetween',
-                            context.namespaces))
-                el = etree.Element(util.nspath_eval('ogc:PropertyName',
-                            context.namespaces))
-                el.text = 'dc:date'
-                time_element.append(el)
-                el = etree.Element(util.nspath_eval('ogc:LowerBoundary',
-                            context.namespaces))
-                el2 = etree.Element(util.nspath_eval('ogc:Literal',
-                            context.namespaces))
-                el2.text = time_list[0]
-                el.append(el2)
-                time_element.append(el)
-                el = etree.Element(util.nspath_eval('ogc:UpperBoundary',
-                            context.namespaces))
-                el2 = etree.Element(util.nspath_eval('ogc:Literal',
-                            context.namespaces))
-                el2.text = time_list[1]
-                el.append(el2)
-                time_element.append(el)
-            else:
+                if query_temporal_by_iso:
+                    LOGGER.debug('Querying by ISO data extent')
+                    time_element = etree.Element(util.nspath_eval('ogc:And',
+                                   context.namespaces))
+    
+                    begin_element = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo',
+                                    context.namespaces))
+                    etree.SubElement(begin_element, util.nspath_eval('ogc:PropertyName',
+                                    context.namespaces)).text = 'apiso:TempExtent_begin'
+                    etree.SubElement(begin_element, util.nspath_eval('ogc:Literal',
+                                     context.namespaces)).text = time_list[0]
+    
+                    end_element = etree.Element(util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo',
+                                  context.namespaces))
+                    etree.SubElement(end_element, util.nspath_eval('ogc:PropertyName',
+                                     context.namespaces)).text = 'apiso:TempExtent_end'
+                    etree.SubElement(end_element, util.nspath_eval('ogc:Literal',
+                                     context.namespaces)).text = time_list[1]
+    
+                    time_element.append(begin_element)
+                    time_element.append(end_element)
+
+                else:
+                    LOGGER.debug('Querying by DC date')
+                    time_element = etree.Element(util.nspath_eval('ogc:PropertyIsBetween',
+                                   context.namespaces))
+                    el = etree.Element(util.nspath_eval('ogc:PropertyName',
+                                       context.namespaces))
+                    el.text = 'dc:date'
+                    time_element.append(el)
+                    el = etree.Element(util.nspath_eval('ogc:LowerBoundary',
+                                       context.namespaces))
+                    el2 = etree.Element(util.nspath_eval('ogc:Literal',
+                                        context.namespaces))
+                    el2.text = time_list[0]
+                    el.append(el2)
+                    time_element.append(el)
+                    el = etree.Element(util.nspath_eval('ogc:UpperBoundary',
+                                context.namespaces))
+                    el2 = etree.Element(util.nspath_eval('ogc:Literal',
+                                context.namespaces))
+                    el2.text = time_list[1]
+                    el.append(el2)
+                    time_element.append(el)
+    
+            else:   # one is empty
+                LOGGER.debug('Querying by open-ended date')
                 if time_list == ['', '']:
                     par_count -= 1
                 # One of two is empty
-                elif time_list[1] == '':
+                elif time_list[1] == '':  # start datetime but no end datetime
                     time_element = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo',
                                 context.namespaces))
                     el = etree.Element(util.nspath_eval('ogc:PropertyName',
                                 context.namespaces))
-                    el.text = 'dc:date'
+                    if query_temporal_by_iso:
+                        el.text = 'apiso:TempExtent_begin'
+                    else:
+                        el.text = 'dc:date'
                     time_element.append(el)
                     el = etree.Element(util.nspath_eval('ogc:Literal',
                                 context.namespaces))
                     el.text = time_list[0]
                     time_element.append(el)
-                else:
+                else:  # end datetime but no start datetime
                     time_element = etree.Element(util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo',
                                 context.namespaces))
                     el = etree.Element(util.nspath_eval('ogc:PropertyName',
                                 context.namespaces))
-                    el.text = 'dc:date'
+                    if query_temporal_by_iso:
+                        el.text = 'apiso:TempExtent_end'
+                    else:
+                        el.text = 'dc:date'
                     time_element.append(el)
                     el = etree.Element(util.nspath_eval('ogc:Literal',
                                 context.namespaces))
                     el.text = time_list[1]
                     time_element.append(el)
         elif ((len(time_list) == 1) and ('' not in time_list)):
+            LOGGER.debug('Querying time instant via dc:date')
             # This is an equal request
             time_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo',
                         context.namespaces))
