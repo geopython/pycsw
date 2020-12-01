@@ -464,7 +464,6 @@ def kvp2filterxml(kvp, context, profiles):
 
     # Render etree to string XML
     LOGGER.debug(etree.tostring(root, encoding='unicode'))
-    print(etree.tostring(root, encoding='unicode'))
     return etree.tostring(root, encoding='unicode')
 
 
