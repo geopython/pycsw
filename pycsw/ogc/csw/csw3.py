@@ -837,7 +837,7 @@ class Csw3(object):
             else:
                 self.parent.kvp['sortby']['order'] = 'ASC'
 
-        if 'startposition' not in self.parent.kvp:
+        if 'startposition' not in self.parent.kvp or not self.parent.kvp['startposition']:
             self.parent.kvp['startposition'] = 1
 
         if 'recordids' in self.parent.kvp and self.parent.kvp['recordids'] != '':
