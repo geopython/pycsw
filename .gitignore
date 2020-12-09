@@ -23,3 +23,6 @@ tests/results
 # shell files
 .env
 .envrc
+
+# vscode ide
+.vscode
