@@ -6,7 +6,7 @@ Installation
 System Requirements
 -------------------
 
-pycsw is written in `Python <http://python.org>`_, and works with (tested) Python 3.  Python 2 is no longer supported.
+pycsw is written in `Python <https://python.org>`_, and works with (tested) Python 3.  Python 2 is no longer supported.
 
 pycsw requires the following Python supporting libraries:
 
@@ -40,14 +40,14 @@ The 4 minute install:
 
   $ virtualenv pycsw && cd pycsw && . bin/activate
   $ git clone https://github.com/geopython/pycsw.git && cd pycsw
-  $ pip install -e . && pip install -r requirements-standalone.txt
+  $ pip3 install -e . && pip3 install -r requirements-standalone.txt
   $ cp default-sample.cfg default.cfg
   $ vi default.cfg
   # adjust paths in
   # - server.home
   # - repository.database
   # set server.url to http://localhost:8000/
-  $ python pycsw/wsgi.py
+  $ python3 pycsw/wsgi.py
   $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
 
 
@@ -79,8 +79,8 @@ The Clean and Proper Way
 .. code-block:: bash
 
   $ git clone git://github.com/geopython/pycsw.git
-  $ python setup.py build
-  $ python setup.py install
+  $ python3 setup.py build
+  $ python3 setup.py install
 
 At this point, pycsw is installed as a library and requires a CGI ``csw.py``
 or WSGI ``pycsw/wsgi.py`` script to be served into your web server environment
@@ -96,7 +96,7 @@ Installing from the Python Package Index (PyPi)
   # easy_install or pip will do the trick
   $ easy_install pycsw
   # or
-  $ pip install pycsw
+  $ pip3 install pycsw
 
 .. _opensuse:
 
@@ -151,10 +151,13 @@ For Windows installs, change the first line of ``csw.py`` to:
 
 .. code-block:: python
 
-  #!/Python27/python -u
+  #!/Users/USERNAME/AppData/Local/Programs/Python/Python36/python -u
 
 .. note::
   The use of ``-u`` is required to properly output gzip-compressed responses.
+
+.. note::
+  ``USERNAME`` should match your username, and the Python version should match with your install (e.g. ``Python36``).
   
 .. Tip::
   
@@ -208,7 +211,7 @@ or use the `WSGI reference implementation`_:
 
 .. code-block:: bash
 
-  $ python ./pycsw/wsgi.py
+  $ python3 ./pycsw/wsgi.py
   Serving on port 8000...
 
 which will publish pycsw to ``http://localhost:8000/``

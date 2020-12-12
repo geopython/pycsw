@@ -47,7 +47,7 @@
 #
 # or invoke this script from the command line:
 #
-# $ python ./pycsw/wsgi.py
+# $ python3 ./pycsw/wsgi.py
 #
 # which will publish pycsw to:
 #
