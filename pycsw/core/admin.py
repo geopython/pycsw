@@ -180,7 +180,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         Column('operatesonidentifier', Text, index=True),
         Column('operatesoname', Text, index=True),
 
-        # additional
+        # inspire
         Column('degree', Text, index=True),
         Column('classification', Text, index=True),
         Column('conditionapplyingtoaccessanduse', Text, index=True),
