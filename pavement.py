@@ -88,7 +88,7 @@ def gen_tests_html():
     with pushd('tests'):
         # ensure manager testsuite is writeable
         os.chmod(os.path.join('functionaltests', 'suites', 'manager', 'data'), 0o777)
-        sh('python gen_html.py > index.html')
+        sh('python3 gen_html.py > index.html')
 
 
 @task
