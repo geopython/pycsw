@@ -81,12 +81,23 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
         "sqlite": handle_sqlite_db,
         "postgresql": handle_postgresql_db,
     }.get(db)
+
+    try:
+        mappings_path = pycsw_config.get("repository", "mappings")
+        logger.debug("Has mappings file")
+    except configparser.NoOptionError as exception:
+        mappings_path = ''
+        logger.debug("Does not have mappings file")
+
+
     logger.debug("Setting up pycsw's data repository...")
     logger.debug("Repository URL: {}".format(db_url))
+    
     db_handler(
         db_url,
         pycsw_config.get("repository", "table"),
-        pycsw_config.get("server", "home")
+        pycsw_config.get("server", "home"),
+        mappings_path
     )
     sys.stdout.flush()
     # we're using --reload-engine=poll because there is a bug with gunicorn
@@ -123,11 +134,11 @@ def handle_sqlite_db(database_url, table_name, pycsw_home):
                        home=pycsw_home)
 
 
-def handle_postgresql_db(database_url, table_name, pycsw_home):
+def handle_postgresql_db(database_url, table_name, pycsw_home, mappings_filpath = ''):
     _wait_for_postgresql_db(database_url)
     try:
         admin.setup_db(database=database_url, table=table_name,
-                       home=pycsw_home)
+                       home=pycsw_home, mappings_filepath=mappings_filpath)
     except ProgrammingError:
         pass  # database tables are already created
 
