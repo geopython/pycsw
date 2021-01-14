@@ -35,6 +35,7 @@
 # steps:
 # - update the 'mappings' dict to the column names of your existing database
 # - set repository.mappings to the location of this file
+# - if new fields are needed add them with the 'pycsw' prefix (to avoid collision with actual profile queryables)
 
 MD_CORE_MODEL = {
     'typename': 'pycsw:CoreMetadata',
