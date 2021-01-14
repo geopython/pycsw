@@ -67,3 +67,4 @@ Supported Profiles
 
 .. include:: ../pycsw/plugins/profiles/apiso/docs/apiso.rst
 .. include:: ../pycsw/plugins/profiles/ebrim/docs/ebrim.rst
+.. include:: ../pycsw/plugins/profiles/base_profile/docs/base_profile.rst
