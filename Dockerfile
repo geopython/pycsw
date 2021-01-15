@@ -39,6 +39,11 @@
 FROM python:3.8-slim-buster
 LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
+# Build arguments
+# add "--build-arg BUILD_DEV_IMAGE=true" to Docker build command when building with test/doc tools
+
+ARG BUILD_DEV_IMAGE="false"
+
 RUN apt-get update && apt-get install --yes \
         ca-certificates \
     && rm -rf /var/lib/apt/lists/*
@@ -55,13 +60,14 @@ RUN chown --recursive pycsw:pycsw .
 COPY --chown=pycsw \
     requirements.txt \
     requirements-standalone.txt \
+    requirements-dev.txt \
     ./
 
 RUN python3 -m pip install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
-    psycopg2-binary \
-    gunicorn
+    psycopg2-binary gunicorn \
+    && if [ "$BUILD_DEV_IMAGE" = "true" ] ; then python3 -m pip install -r requirements-dev.txt; fi
 
 COPY --chown=pycsw . .
 
