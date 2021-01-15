@@ -111,7 +111,13 @@ class APISO(profile.Profile):
                         'apiso:Creator': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="originator"]/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Creator']},
                         'apiso:Publisher': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="publisher"]/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Publisher']},
                         'apiso:Contributor': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="contributor"]/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Contributor']},
-                        'apiso:Relation': {'xpath': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo', 'dbcol': self.context.md_core_model['mappings']['pycsw:Relation']}
+                        'apiso:Relation': {'xpath': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo', 'dbcol': self.context.md_core_model['mappings']['pycsw:Relation']},
+                        # 19115-2
+                        'apiso:Platform': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:identifier', 'dbcol': self.context.md_core_model['mappings']['pycsw:Platform']},
+                        'apiso:Instrument': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:instrument/gmi:MI_Instrument/gmi:identifier', 'dbcol': self.context.md_core_model['mappings']['pycsw:Instrument']},
+                        'apiso:SensorType': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:instrument/gmi:MI_Instrument/gmi:type', 'dbcol': self.context.md_core_model['mappings']['pycsw:SensorType']},
+                        'apiso:CloudCover': {'xpath': 'gmd:contentInfo/gmd:MD_ImageDescription/gmd:cloudCoverPercentage', 'dbcol': self.context.md_core_model['mappings']['pycsw:CloudCover']},
+                        'apiso:Bands': {'xpath': 'gmd:contentInfo/gmd:MD_ImageDescription/gmd:dimension/MD_Band/@id', 'dbcol': self.context.md_core_model['mappings']['pycsw:Bands']},
                     }
                 },
                 'mappings': {

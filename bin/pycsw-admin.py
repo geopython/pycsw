@@ -36,6 +36,7 @@ import logging
 import sys
 
 from pycsw.core import admin, config
+from pycsw.server import EnvInterpolation
 
 CONTEXT = config.StaticContext()
 
@@ -235,7 +236,7 @@ if COMMAND == 'gen_sitemap' and OUTPUT_FILE is None:
     sys.exit(8)
 
 if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
-    CP = configparser.ConfigParser()
+    CP = configparser.ConfigParser(interpolation=EnvInterpolation())
     with open(CFG) as f:
         CP.read_file(f)
 
