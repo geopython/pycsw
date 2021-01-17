@@ -166,7 +166,7 @@ def _get_dbcol_to_xpath_dict(queryables: QueryablesObject):
     dbcol2xpath = {}
 
     for qbl in flatQueryables.values():
-        if qbl.xpath != None and qbl.dbcol != None:
+        if qbl.xpath and qbl.dbcol:
             dbcol2xpath[qbl.dbcol] = qbl.xpath
 
     return dbcol2xpath
