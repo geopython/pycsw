@@ -36,6 +36,22 @@ from pycsw.core.etree import etree
 
 LOGGER = logging.getLogger(__name__)
 
+QUERY_PARAMETERS = [
+    'q',
+    'bbox',
+    'time',
+    'eo:producttype',
+    'eo:platform',
+    'eo:instrument',
+    'eo:sensortype',
+    'eo:cloudcover',
+    'eo:snowcover',
+    'eo:bands',
+    'eo:orbitnumber',
+    'eo:orbitdirection'
+]
+
+
 class OpenSearch(object):
     """OpenSearch wrapper class"""
 
@@ -242,15 +258,15 @@ def kvp2filterxml(kvp, context, profiles):
     anytext_elements = []
     query_temporal_by_iso = False
 
-    eo_product_type_element = None
+    eo_producttype_element = None
     eo_platform_element = None
     eo_instrument_element = None
-    eo_sensor_type_element = None
-    eo_cloud_cover_element = None
-    eo_snow_cover_element = None
+    eo_sensortype_element = None
+    eo_cloudcover_element = None
+    eo_snowcover_element = None
     eo_bands_element = None
-    eo_orbit_number_element = None
-    eo_orbit_direction_element = None
+    eo_orbitnumber_element = None
+    eo_orbitdirection_element = None
 
     if profiles is not None and 'plugins' in profiles and 'APISO' in profiles['plugins']:
         query_temporal_by_iso = True
@@ -445,81 +461,83 @@ def kvp2filterxml(kvp, context, profiles):
             errortext = 'Exception: OpenSearch time not valid: %s.' % str(kvp['time'])
             LOGGER.error(errortext)
 
-    if 'eo:productType' in kvp:
+    LOGGER.debug('Processing EO queryables')
+    if 'eo:producttype' in kvp:
         par_count += 1
-        eo_product_type_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+        eo_producttype_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
             matchCase='false', wildCard='*')
-        etree.SubElement(eo_product_type_element,
+        etree.SubElement(eo_producttype_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
-        etree.SubElement(eo_product_type_element, util.nspath_eval(
-            'ogc:Literal', context.namespaces)).text = '*eo:productType:%s*' % kvp['eo:productType']
+        etree.SubElement(eo_producttype_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*eo:productType:%s*' % kvp['eo:producttype']
 
     if 'eo:platform' in kvp:
         par_count += 1
         eo_platform_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
-        etree.SubElement(eo_product_type_element,
+        etree.SubElement(eo_platform_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Platform'
-        etree.SubElement(eo_product_type_element, util.nspath_eval(
+        etree.SubElement(eo_platform_element, util.nspath_eval(
             'ogc:Literal', context.namespaces)).text = kvp['eo:platform']
 
     if 'eo:instrument' in kvp:
         par_count += 1
         eo_instrument_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
-        etree.SubElement(eo_product_type_element,
+        etree.SubElement(eo_instrument_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Instrument'
-        etree.SubElement(eo_product_type_element, util.nspath_eval(
+        etree.SubElement(eo_instrument_element, util.nspath_eval(
             'ogc:Literal', context.namespaces)).text = kvp['eo:instrument']
 
-    if 'eo:sensorType' in kvp:
+    if 'eo:sensortype' in kvp:
         par_count += 1
-        eo_instrument_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
-        etree.SubElement(eo_product_type_element,
+        eo_sensortype_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
+        etree.SubElement(eo_sensortype_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Instrument'
-        etree.SubElement(eo_product_type_element, util.nspath_eval(
-            'ogc:Literal', context.namespaces)).text = kvp['eo:sensorType']
+        etree.SubElement(eo_sensortype_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = kvp['eo:sensortype']
 
-    if 'eo:cloudCover' in kvp:
+    if 'eo:cloudcover' in kvp:
         par_count += 1
-        eo_instrument_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
-        etree.SubElement(eo_product_type_element,
+        eo_cloudcover_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
+        etree.SubElement(eo_cloudcover_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:CloudCover'
-        etree.SubElement(eo_product_type_element, util.nspath_eval(
-            'ogc:Literal', context.namespaces)).text = kvp['eo:cloudCover']
+        etree.SubElement(eo_cloudcover_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = kvp['eo:cloudcover']
 
-    if 'eo:snowCover' in kvp:
+    if 'eo:snowcover' in kvp:
         par_count += 1
-        eo_product_type_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces))
-        etree.SubElement(eo_product_type_element,
+        eo_snowcover_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces))
+        etree.SubElement(eo_snowcover_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
-        etree.SubElement(eo_product_type_element, util.nspath_eval(
-            'ogc:Literal', context.namespaces)).text = '*eo:snowCover:%s*' % kvp['eo:snowCover']
+        etree.SubElement(eo_snowcover_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*eo:snowCover:%s*' % kvp['eo:snowcover']
 
-    if 'eo:spectralRange' in kvp:
+    if 'eo:spectralrange' in kvp:
         par_count += 1
-        eo_product_type_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+        eo_bands_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
             matchCase='false', wildCard='*')
-        etree.SubElement(eo_product_type_element,
+        etree.SubElement(eo_bands_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Bands'
-        etree.SubElement(eo_product_type_element, util.nspath_eval(
-            'ogc:Literal', context.namespaces)).text = '*%s*' % kvp['eo:spectralRange']
+        etree.SubElement(eo_bands_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*%s*' % kvp['eo:spectralrange']
 
-    if 'eo:orbitNumber' in kvp:
+    if 'eo:orbitnumber' in kvp:
         par_count += 1
-        eo_product_type_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces))
-        etree.SubElement(eo_product_type_element,
+        eo_orbitnumber_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces))
+        etree.SubElement(eo_orbitnumber_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
-        etree.SubElement(eo_product_type_element, util.nspath_eval(
-            'ogc:Literal', context.namespaces)).text = '*eo:orbitNumber:%s*' % kvp['eo:orbitNumber']
+        etree.SubElement(eo_orbitnumber_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*eo:orbitNumber:%s*' % kvp['eo:orbitnumber']
 
-    if 'eo:orbitDirection' in kvp:
+    if 'eo:orbitdirection' in kvp:
         par_count += 1
-        eo_product_type_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+        eo_orbitdirection_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
             matchCase='false', wildCard='*')
-        etree.SubElement(eo_product_type_element,
+        etree.SubElement(eo_orbitdirection_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
-        etree.SubElement(eo_product_type_element, util.nspath_eval(
-            'ogc:Literal', context.namespaces)).text = '*eo:orbitDirection:%s*' % kvp['eo:orbitDirection']
+        etree.SubElement(eo_orbitdirection_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*eo:orbitDirection:%s*' % kvp['eo:orbitdirection']
 
+    LOGGER.info('Query parameter count: %s', par_count)
     if par_count == 0:
         return ''
     elif par_count == 1:
@@ -534,7 +552,7 @@ def kvp2filterxml(kvp, context, profiles):
         elif anytext_elements:
             LOGGER.debug('Adding anytext')
             root.extend(anytext_elements)
-    elif (par_count > 1):
+    elif par_count > 1:
         LOGGER.debug('ogc:And query (%d predicates)', par_count)
         # Since more than 1 parameter, append the AND logical operator
         logical_and = etree.Element(util.nspath_eval('ogc:And',
@@ -546,6 +564,18 @@ def kvp2filterxml(kvp, context, profiles):
         if anytext_elements is not None:
             logical_and.extend(anytext_elements)
         root.append(logical_and)
+
+    if par_count == 1:
+        node_to_append = root
+    elif par_count > 1:
+        node_to_append = logical_and
+
+    LOGGER.debug('Adding EO queryables')
+    for eo_element in [eo_producttype_element, eo_platform_element, eo_instrument_element,
+                       eo_sensortype_element, eo_cloudcover_element, eo_snowcover_element,
+                       eo_bands_element, eo_orbitnumber_element, eo_orbitdirection_element]:
+        if eo_element is not None:
+            node_to_append.append(eo_element)
 
     # Render etree to string XML
     LOGGER.debug(etree.tostring(root, encoding='unicode'))

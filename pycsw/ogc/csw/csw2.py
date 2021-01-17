@@ -709,7 +709,7 @@ class Csw2(object):
                 if int(self.parent.kvp['maxrecords']) > maxrecords_cfg:
                     self.parent.kvp['maxrecords'] = maxrecords_cfg
 
-        if any(x in ['bbox', 'q', 'time'] for x in self.parent.kvp):
+        if any(x in opensearch.QUERY_PARAMETERS for x in self.parent.kvp):
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
             self.parent.kvp['constraintlanguage'] = 'FILTER'
             tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context,
