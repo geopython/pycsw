@@ -1375,7 +1375,7 @@ def _parse_iso(context, repos, exml):
 
                 keywords = _get(context, recobj, 'pycsw:Keywords')
                 if ci.processing_level is not None:
-                    pl_keyword = 'processing-level:' + ci.processing_level
+                    pl_keyword = 'eo:processingLevel:' + ci.processing_level
                     if keywords is None:
                         keywords  = pl_keyword
                     else:
