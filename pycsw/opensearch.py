@@ -465,7 +465,7 @@ def kvp2filterxml(kvp, context, profiles):
     if 'eo:producttype' in kvp:
         par_count += 1
         eo_producttype_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
-            matchCase='false', wildCard='*', singleChar='?')
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
         etree.SubElement(eo_producttype_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
         etree.SubElement(eo_producttype_element, util.nspath_eval(
@@ -514,7 +514,7 @@ def kvp2filterxml(kvp, context, profiles):
     if 'eo:spectralrange' in kvp:
         par_count += 1
         eo_bands_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
-            matchCase='false', wildCard='*', singleChar='?')
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
         etree.SubElement(eo_bands_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Bands'
         etree.SubElement(eo_bands_element, util.nspath_eval(
@@ -531,7 +531,7 @@ def kvp2filterxml(kvp, context, profiles):
     if 'eo:orbitdirection' in kvp:
         par_count += 1
         eo_orbitdirection_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
-            matchCase='false', wildCard='*', singleChar='?')
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
         etree.SubElement(eo_orbitdirection_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
         etree.SubElement(eo_orbitdirection_element, util.nspath_eval(
