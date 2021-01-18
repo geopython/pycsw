@@ -227,7 +227,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         LOGGER.info('Creating PostgreSQL Free Text Search (FTS) GIN index')
         tsvector_fts = "alter table %s add column anytext_tsvector tsvector" % table_name
         conn.execute(tsvector_fts)
-        index_fts = "create index fts_gin_idx on %s using gin(anytext_tsvector)" % table_name
+        index_fts = "create index %s_fts_gin_idx on %s using gin(anytext_tsvector)" % (table_name, table_name)
         conn.execute(index_fts)
         # This needs to run if records exist "UPDATE records SET anytext_tsvector = to_tsvector('english', anytext)"
         trigger_fts = "create trigger ftsupdate before insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', %s)" % (table_name, language, mappings['pycsw:AnyText'])
@@ -257,7 +257,7 @@ CREATE TRIGGER %(table)s_update_geometry BEFORE INSERT OR UPDATE ON %(table)s
 FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
     ''' % {'table': table_name, 'geometry': postgis_geometry_column, 'bounding_box_column': mappings['pycsw:BoundingBox']}
 
-        create_spatial_index_sql = 'CREATE INDEX %(geometry)s_idx ON %(table)s USING GIST (%(geometry)s);' \
+        create_spatial_index_sql = 'CREATE INDEX %(table)s_%(geometry)s_idx ON %(table)s USING GIST (%(geometry)s);' \
         % {'table': table_name, 'geometry': postgis_geometry_column}
 
         conn.execute(create_column_sql)
