@@ -39,5 +39,3 @@ jobs:
       run: codecov --disable search --flags integrationtests
     - name: build docs 🏗️
       run: cd docs && make html
-    - name: run flake8 ⚙️
-      run: flake8 pycsw
