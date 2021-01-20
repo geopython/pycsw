@@ -7,8 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
-        toxenv: [py36-sqlite, py37-sqlite, py38-sqlite]
+        include:
+          - python-version: 3.6
+            toxenv: "py36-sqlite"
+          - python-version: 3.7
+            toxenv: "py37-sqlite"
+          - python-version: 3.8
+            toxenv: "py38-sqlite"
     env:
         TOXENV: ${{ matrix.toxenv }}
     steps:
