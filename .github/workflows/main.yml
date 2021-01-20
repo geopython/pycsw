@@ -24,7 +24,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install requirements 📦
       run: |
-        apt install -y libgeos-dev libpq-dev libxml2-dev libxslt1-dev libz-dev
+        sudo apt install -y libgeos-dev libpq-dev libxml2-dev libxslt1-dev libz-dev
         pip3 install -r requirements.txt
         pip3 install -r requirements-dev.txt
         pip3 install codecov tox
