@@ -74,8 +74,7 @@ COPY --chown=pycsw . .
 COPY docker/pycsw.cfg ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
-RUN python3 -m pip install --editable . && \
-    python3 -m pip install --upgrade https://github.com/geopython/OWSLib/archive/master.zip
+RUN python3 -m pip install --editable .
 
 WORKDIR /home/pycsw
 
