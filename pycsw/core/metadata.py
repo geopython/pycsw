@@ -1391,7 +1391,8 @@ def _parse_iso(context, repos, exml):
             if len(bands) > 0:
                 _set(context, recobj, 'pycsw:Bands', '^'.join(bands))
 
-    if md.acquisition:
+    #if md.acquisition is not None:
+    if hasattr(md, 'acquisition'):
         platform = md.acquisition.platforms[0]
         _set(context, recobj, 'pycsw:Platform', platform.identifier)
 
