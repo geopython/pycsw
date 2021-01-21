@@ -42,12 +42,14 @@ QUERY_PARAMETERS = [
     'q',
     'bbox',
     'time',
+    'eo:processinglevel',
     'eo:producttype',
     'eo:platform',
     'eo:instrument',
     'eo:sensortype',
     'eo:cloudcover',
     'eo:snowcover',
+    'eo:spectralrange',
     'eo:bands',
     'eo:orbitnumber',
     'eo:orbitdirection'
@@ -167,7 +169,7 @@ class OpenSearch(object):
                 'eo:spectralRange': '{eo:spectralRange?}'
             }
 
-            node1.set('template', '%s/%s' % (self.bind_url,
+            node1.set('template', '%s%s' % (self.bind_url,
                 '&'.join('{}={}'.format(*i) for i in kvps.items())))
 
 
@@ -272,7 +274,7 @@ class OpenSearch(object):
                 'eo:spectralRange': '{eo:spectralRange?}'
             }
 
-            node1.set('template', '%s/%s' % (self.bind_url,
+            node1.set('template', '%s%s' % (self.bind_url,
                 '&'.join('{}={}'.format(*i) for i in kvps.items())))
 
             # Requirement-023
@@ -280,7 +282,9 @@ class OpenSearch(object):
             node1.set('type', 'application/atom+xml')
 
             kvps['outputformat'] = 'application/atom%%2Bxml'
-            node1.set('template', '%s/%s' % (self.bind_url,
+            kvps['mode'] = 'opensearch'
+
+            node1.set('template', '%s%s' % (self.bind_url,
                 '&'.join('{}={}'.format(*i) for i in kvps.items())))
 
             node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
@@ -550,12 +554,12 @@ def kvp2filterxml(kvp, context, profiles):
         etree.SubElement(eo_platform_element, util.nspath_eval(
             'ogc:Literal', context.namespaces)).text = kvp['eo:platform']
 
-    if 'eo:processingLevel' in kvp:
+    if 'eo:processinglevel' in kvp:
         par_count += 1
         eo_processinglevel_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
             matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
         etree.SubElement(eo_processinglevel_element,
-           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:ProcessingLevel'
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
         etree.SubElement(eo_processinglevel_element, util.nspath_eval(
             'ogc:Literal', context.namespaces)).text = '*eo:processingLevel:%s*' % kvp['eo:processinglevel']
 
@@ -571,7 +575,7 @@ def kvp2filterxml(kvp, context, profiles):
         par_count += 1
         eo_sensortype_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
         etree.SubElement(eo_sensortype_element,
-           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Instrument'
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:SensorType'
         etree.SubElement(eo_sensortype_element, util.nspath_eval(
             'ogc:Literal', context.namespaces)).text = kvp['eo:sensortype']
 
@@ -585,7 +589,8 @@ def kvp2filterxml(kvp, context, profiles):
 
     if 'eo:snowcover' in kvp:
         par_count += 1
-        eo_snowcover_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces))
+        eo_snowcover_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
         etree.SubElement(eo_snowcover_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
         etree.SubElement(eo_snowcover_element, util.nspath_eval(
@@ -602,7 +607,8 @@ def kvp2filterxml(kvp, context, profiles):
 
     if 'eo:orbitnumber' in kvp:
         par_count += 1
-        eo_orbitnumber_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces))
+        eo_orbitnumber_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
         etree.SubElement(eo_orbitnumber_element,
            util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
         etree.SubElement(eo_orbitnumber_element, util.nspath_eval(

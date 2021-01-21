@@ -7,6 +7,7 @@
       <csw:Value>climatologyMeteorologyAtmosphere</csw:Value>
       <csw:Value>elevation</csw:Value>
       <csw:Value>geoscientificInformation</csw:Value>
+      <csw:Value>imageryBaseMapsEarthCover</csw:Value>
     </csw:ListOfValues>
   </csw:DomainValues>
 </csw:GetDomainResponse>

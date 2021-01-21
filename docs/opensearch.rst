@@ -77,6 +77,9 @@ per the examples below:
   <gmd:keyword>
     <gco:CharacterString>eo:snowCover:0.0</gco:CharacterString>
   </gmd:keyword>
+  <gmd:keyword>
+    <gco:CharacterString>eo:procesingLevel:Level-2A</gco:CharacterString>
+  </gmd:keyword>
  
 .. code-block:: xml
 
@@ -85,6 +88,7 @@ per the examples below:
   <dc:subject>eo:orbitNumber:50</dc:subject>
   <dc:subject>eo:orbitDirection:DESCENDING</dc:subject>
   <dc:subject>eo:snowCover:0.0</dc:subject>
+  <dc:subject>eo:procesingLevel:Level-2A</dc:subject>
 
 
 OpenSearch Temporal Queries Implementation
