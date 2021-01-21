@@ -1,0 +1,41 @@
+name: build ⚙️
+
+on: [ push, pull_request ]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - python-version: 3.6
+            toxenv: "py36-sqlite"
+          - python-version: 3.7
+            toxenv: "py37-sqlite"
+          - python-version: 3.8
+            toxenv: "py38-sqlite"
+    env:
+        TOXENV: ${{ matrix.toxenv }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      name: Setup Python ${{ matrix.python-version }}
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install requirements 📦
+      run: |
+        apt install -y libgeos-dev libpq-dev libxml2-dev libxslt1-dev libz-dev
+        pip3 install -r requirements.txt
+        pip3 install -r requirements-dev.txt
+        pip3 install codecov tox
+        echo "TOXENV => $TOXENV"
+    - name: run unit tests ⚙️
+      run: tox -- --exitfirst -m unit
+    - name: run integration tests ⚙️
+      run: tox -- --exitfirst -m functional -k 'not harvesting'
+    - name: run unit coveralls ⚙️
+      run: codecov --disable search --flags unittests
+    - name: run integration coveralls ⚙️
+      run: codecov --disable search --flags integrationtests
+    - name: build docs 🏗️
+      run: cd docs && make html
