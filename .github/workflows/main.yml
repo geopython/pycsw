@@ -31,11 +31,11 @@ jobs:
         echo "TOXENV => $TOXENV"
     - name: run unit tests ⚙️
       run: tox -- --exitfirst -m unit
-    - name: run integration tests ⚙️
-      run: tox -- --exitfirst -m functional -k 'not harvesting'
+    # - name: run integration tests ⚙️
+      # run: tox -- --exitfirst -m functional -k 'not harvesting'
     - name: run unit coveralls ⚙️
       run: codecov --disable search --flags unittests
-    - name: run integration coveralls ⚙️
-      run: codecov --disable search --flags integrationtests
+    # - name: run integration coveralls ⚙️
+      # run: codecov --disable search --flags integrationtests
     - name: build docs 🏗️
       run: cd docs && make html
