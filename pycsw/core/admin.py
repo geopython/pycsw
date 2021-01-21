@@ -196,7 +196,6 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         Column('sensortype', Text, index=True),
         Column('cloudcover', Text, index=True),
         # bands: format "name,units,min,max[^,,,[^,,,]]"
-        # ref https://github.com/radiantearth/stac-spec/tree/master/extensions/eo#band-object
         Column('bands', Text, index=True),
 
         # distribution
