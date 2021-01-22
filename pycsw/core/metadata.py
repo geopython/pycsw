@@ -36,6 +36,7 @@ import uuid
 from urllib.parse import urlparse
 
 from geolinks import sniff_link
+from owslib.iso import MD_ImageDescription
 from owslib.util import build_get_url
 from shapely.wkt import loads
 from shapely.geometry import MultiPolygon
@@ -115,6 +116,10 @@ def parse_record(context, record, repos=None,
         record = util.http_request('GET', record)
 
     return _parse_metadata(context, repos, record)
+
+def _get(context, obj, name):
+    ''' convenience method to get values '''
+    return getattr(obj, context.md_core_model['mappings'][name])
 
 def _set(context, obj, name, value):
     ''' convenience method to set values '''
@@ -1361,6 +1366,38 @@ def _parse_iso(context, repos, exml):
 
     if hasattr(md, 'contact') and len(md.contact) > 0:
         _set(context, recobj, 'pycsw:ResponsiblePartyRole', md.contact[0].role)
+
+
+    if md.contentinfo:
+        for ci in md.contentinfo:
+            if isinstance(ci, MD_ImageDescription):
+                _set(context, recobj, 'pycsw:CloudCover', ci.cloud_cover)
+
+                keywords = _get(context, recobj, 'pycsw:Keywords')
+                if ci.processing_level is not None:
+                    pl_keyword = 'eo:processingLevel:' + ci.processing_level
+                    if keywords is None:
+                        keywords  = pl_keyword
+                    else:
+                        keywords  += ',' + pl_keyword
+
+                    _set(context, recobj, 'pycsw:Keywords', keywords)
+
+            bands = []
+            for band in ci.bands:
+                band_info = '%s,%s,%s,%s' % (band.id, band.units, band.min, band.max)
+                bands.append(band_info)
+
+            if len(bands) > 0:
+                _set(context, recobj, 'pycsw:Bands', '^'.join(bands))
+
+    if hasattr(md, 'acquisition') and md.acquisition is not None:
+        platform = md.acquisition.platforms[0]
+        _set(context, recobj, 'pycsw:Platform', platform.identifier)
+
+        instrument = platform.instruments[0]
+        _set(context, recobj, 'pycsw:Instrument', instrument.identifier)
+        _set(context, recobj, 'pycsw:SensorType', instrument.type)
 
     LOGGER.info('Scanning for links')
     if hasattr(md, 'distribution'):

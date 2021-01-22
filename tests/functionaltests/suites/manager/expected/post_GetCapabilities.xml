@@ -141,16 +141,21 @@
       </ows:Parameter>
       <ows:Constraint name="AdditionalQueryables">
         <ows:Value>apiso:AccessConstraints</ows:Value>
+        <ows:Value>apiso:Bands</ows:Value>
         <ows:Value>apiso:Classification</ows:Value>
+        <ows:Value>apiso:CloudCover</ows:Value>
         <ows:Value>apiso:ConditionApplyingToAccessAndUse</ows:Value>
         <ows:Value>apiso:Contributor</ows:Value>
         <ows:Value>apiso:Creator</ows:Value>
         <ows:Value>apiso:Degree</ows:Value>
+        <ows:Value>apiso:Instrument</ows:Value>
         <ows:Value>apiso:Lineage</ows:Value>
         <ows:Value>apiso:OtherConstraints</ows:Value>
+        <ows:Value>apiso:Platform</ows:Value>
         <ows:Value>apiso:Publisher</ows:Value>
         <ows:Value>apiso:Relation</ows:Value>
         <ows:Value>apiso:ResponsiblePartyRole</ows:Value>
+        <ows:Value>apiso:SensorType</ows:Value>
         <ows:Value>apiso:SpecificationDate</ows:Value>
         <ows:Value>apiso:SpecificationDateType</ows:Value>
         <ows:Value>apiso:SpecificationTitle</ows:Value>

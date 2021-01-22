@@ -190,6 +190,14 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         Column('specificationdate', Text, index=True),
         Column('specificationdatetype', Text, index=True),
 
+        # eo
+        Column('platform', Text, index=True),
+        Column('instrument', Text, index=True),
+        Column('sensortype', Text, index=True),
+        Column('cloudcover', Text, index=True),
+        # bands: format "name,units,min,max[^,,,[^,,,]]"
+        Column('bands', Text, index=True),
+
         # distribution
         # links: format "name,description,protocol,url[^,,,[^,,,]]"
         Column('links', Text, index=True),

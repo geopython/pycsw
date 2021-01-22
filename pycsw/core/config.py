@@ -163,6 +163,11 @@ class StaticContext(object):
                 'pycsw:Publisher': 'publisher',
                 'pycsw:Contributor': 'contributor',
                 'pycsw:Relation': 'relation',
+                'pycsw:Platform': 'platform',
+                'pycsw:Instrument': 'instrument',
+                'pycsw:SensorType': 'sensortype',
+                'pycsw:CloudCover': 'cloudcover',
+                'pycsw:Bands': 'bands',
                 # links: format "name,description,protocol,url[^,,,[^,,,]]"
                 'pycsw:Links': 'links',
             }
