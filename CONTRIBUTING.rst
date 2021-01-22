@@ -82,7 +82,6 @@ GitHub Commit Guidelines
 
 - enhancements and bug fixes should be identified with a GitHub issue
 - commits should be granular enough for other developers to understand the nature / implications of the change(s)
-- for trivial commits that do not need `Travis CI <https://travis-ci.org/geopython/pycsw>`_ to run, include ``[ci skip]`` as part of the commit message
 - non-trivial Git commits shall be associated with a GitHub issue.  As documentation can always be improved, tickets need not be opened for improving the docs
 - Git commits shall include a description of changes
 - Git commits shall include the GitHub issue number (i.e. ``#1234``) in the Git commit log message

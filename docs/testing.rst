@@ -11,7 +11,7 @@ testing, in order to verify that individual bits of code are working as
 expected.
 
 Tests can be run locally as part of the development cycle. They are also
-run on pycsw's `Travis`_ continuous integration server against all pushes and
+run on pycsw's `GitHub Actions`_ continuous integration setup against all pushes and
 pull requests to the code repository.
 
 
@@ -322,11 +322,11 @@ Examples:
    # with default arguments
    tox
 
-   # run tests only with python3.5 and using sqlite as backend
-   tox -e py35 -sqlite
+   # run tests only with python3.7 and using sqlite as backend
+   tox -e py37 -sqlite
 
-   # run only csw30 suite tests with python3.5 and postgresql as backend
-   tox -e py35-postgresql -- -k 'csw30'
+   # run only csw30 suite tests with python3.7 and postgresql as backend
+   tox -e py37-postgresql -- -k 'csw30'
 
 
 Web Testing
@@ -349,7 +349,7 @@ Then navigate to ``http://host/path/to/pycsw/tests/index.html``.
 .. _`Paver`: http://paver.github.io/paver/
 .. _pytest's invocation documentation: http://docs.pytest.org/en/latest/usage.html
 .. _pytest: http://pytest.org/latest/
-.. _Travis: http://travis-ci.org/geopython/pycsw
+.. _Github Actions: https://github.com/geopython/pycsw/actions
 .. _tox: https://tox.readthedocs.io
 .. _wiki: https://github.com/geopython/pycsw/wiki/OGC-CITE-Compliance
 .. _pytest_generate_tests: http://docs.pytest.org/en/latest/parametrize.html#basic-pytest-generate-tests-example

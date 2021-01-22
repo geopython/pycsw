@@ -1,8 +1,8 @@
 pycsw README
 ============
 
-.. image:: https://travis-ci.org/geopython/pycsw.svg?branch=master
-    :target: https://travis-ci.org/geopython/pycsw
+.. image:: https://github.com/geopython/pycsw/workflows/build%20%E2%9A%99%EF%B8%8F/badge.svg
+    :target: https://github.com/geopython/pycsw/actions
 
 pycsw is an OGC CSW server implementation written in Python.
 
