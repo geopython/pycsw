@@ -145,16 +145,14 @@ def write_record(result, esn, context, url=None):
 
     rlinks = util.getqattr(result, context.md_core_model['mappings']['pycsw:Links'])
     if rlinks:
-        for link in rlinks.split('^'):
-            linkset = link.split(',')
-
+        for link in util.jsonify_links(rlinks):
             url2 = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
 
             urltype = etree.SubElement(url2, util.nspath_eval('dif:URL_Content_Type', NAMESPACES))
-            etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = linkset[2]
+            etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = link['protocol']
 
-            etree.SubElement(url2, util.nspath_eval('dif:URL', NAMESPACES)).text = linkset[-1]
-            etree.SubElement(url2, util.nspath_eval('dif:Description', NAMESPACES)).text = linkset[1]
+            etree.SubElement(url2, util.nspath_eval('dif:URL', NAMESPACES)).text = link['url']
+            etree.SubElement(url2, util.nspath_eval('dif:Description', NAMESPACES)).text = link['description']
 
     etree.SubElement(node, util.nspath_eval('dif:Metadata_Name', NAMESPACES)).text = 'CEOS IDN DIF'
     etree.SubElement(node, util.nspath_eval('dif:Metadata_Version', NAMESPACES)).text = '9.7'

@@ -28,6 +28,7 @@
 #
 # =================================================================
 
+import json
 import os
 import sys
 import cgi
@@ -1575,13 +1576,12 @@ class Csw3(object):
                 self.parent.context.md_core_model['mappings']['pycsw:Links'])
 
                 if rlinks:
-                    links = rlinks.split('^')
-                    for link in links:
-                        linkset = link.split(',')
+                    LOGGER.info('link type: {}'.format(type(rlinks)))
+                    for link in util.jsonify_links(rlinks):
                         etree.SubElement(record,
                         util.nspath_eval('dct:references',
                         self.parent.context.namespaces),
-                        scheme=linkset[2]).text = linkset[-1]
+                        scheme=link['protocol']).text = link['url']
 
                 for i in ['dc:relation', 'dct:modified', 'dct:abstract']:
                     val = util.getqattr(recobj, queryables[i]['dbcol'])

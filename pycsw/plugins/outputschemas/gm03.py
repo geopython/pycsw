@@ -187,19 +187,18 @@ def write_record(result, esn, context, url=None):
     # links
     rlinks = util.getqattr(result, context.md_core_model['mappings']['pycsw:Links'])
     if rlinks:
-        for link in rlinks.split('^'):
-            name, description, protocol, url = link.split(',')
+        for link in util.jsonify_links(rlinks):
             online_resource = etree.SubElement(core, util.nspath_eval('gm03:GM03_2_1Core.Core.OnlineResource', NAMESPACES))
-            if protocol:
-                etree.SubElement(online_resource, util.nspath_eval('gm03:protocol', NAMESPACES)).text = protocol
-            if description:
+            if link['protocol']:
+                etree.SubElement(online_resource, util.nspath_eval('gm03:protocol', NAMESPACES)).text = link['protocol']
+            if link['description']:
                 desc = etree.SubElement(online_resource, util.nspath_eval('gm03:description', NAMESPACES))
-                desc.append(_get_pt_freetext(description, language))
-            if name:
+                desc.append(_get_pt_freetext(link['description'], language))
+            if link['name']:
                 name_el = etree.SubElement(online_resource, util.nspath_eval('gm03:name', NAMESPACES))
-                name_el.append(_get_pt_freetext(name, language))
+                name_el.append(_get_pt_freetext(link['name'], language))
             linkage = etree.SubElement(online_resource, util.nspath_eval('gm03:linkage', NAMESPACES))
-            linkage.append(_get_pt_freeurl(url, language))
+            linkage.append(_get_pt_freeurl(link['url'], language))
 
     return node
 

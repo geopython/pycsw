@@ -168,7 +168,7 @@ class StaticContext(object):
                 'pycsw:SensorType': 'sensortype',
                 'pycsw:CloudCover': 'cloudcover',
                 'pycsw:Bands': 'bands',
-                # links: format "name,description,protocol,url[^,,,[^,,,]]"
+                # links: list of dicts with properties: name, description, protocol, url
                 'pycsw:Links': 'links',
             }
         }

@@ -61,13 +61,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
@@ -134,13 +134,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
@@ -207,13 +207,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
@@ -280,13 +280,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
@@ -353,13 +353,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>

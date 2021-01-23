@@ -673,22 +673,21 @@ class APISO(profile.Profile):
             transopts = etree.SubElement(distinfo2, util.nspath_eval('gmd:transferOptions', self.namespaces))
             dtransopts = etree.SubElement(transopts, util.nspath_eval('gmd:MD_DigitalTransferOptions', self.namespaces))
 
-            for link in rlinks.split('^'):
-                linkset = link.split(',')
+            for link in util.jsonify_links(rlinks):
                 online = etree.SubElement(dtransopts, util.nspath_eval('gmd:onLine', self.namespaces))
                 online2 = etree.SubElement(online, util.nspath_eval('gmd:CI_OnlineResource', self.namespaces))
 
                 linkage = etree.SubElement(online2, util.nspath_eval('gmd:linkage', self.namespaces))
-                etree.SubElement(linkage, util.nspath_eval('gmd:URL', self.namespaces)).text = linkset[-1]
+                etree.SubElement(linkage, util.nspath_eval('gmd:URL', self.namespaces)).text = link['url']
 
                 protocol = etree.SubElement(online2, util.nspath_eval('gmd:protocol', self.namespaces))
-                etree.SubElement(protocol, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[2]
+                etree.SubElement(protocol, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link['protocol']
 
                 name = etree.SubElement(online2, util.nspath_eval('gmd:name', self.namespaces))
-                etree.SubElement(name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[0]
+                etree.SubElement(name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link['name']
 
                 desc = etree.SubElement(online2, util.nspath_eval('gmd:description', self.namespaces))
-                etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[1]
+                etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link['description']
 
         return node
 

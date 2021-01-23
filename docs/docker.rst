@@ -130,7 +130,7 @@ The following instructions set up a fully working development environment::
     docker run \
         --name pycsw-dev \
         --detach \
-        --volume ${PWD}/pycsw:/usr/lib/python3.5/site-packages/pycsw \
+        --volume ${PWD}/pycsw:/usr/lib/python3.7/site-packages/pycsw \
         --volume ${PWD}/docs:/home/pycsw/docs \
         --volume ${PWD}/VERSION.txt:/home/pycsw/VERSION.txt \
         --volume ${PWD}/LICENSE.txt:/home/pycsw/LICENSE.txt \
