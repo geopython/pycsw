@@ -174,7 +174,37 @@ pycsw requires certain repository attributes and semantics to exist in any repos
 The following repository semantics exist if the attributes are specified:
 
 - ``pycsw:Keywords``: comma delimited list of keywords
-- ``pycsw:Links``: structure of links in the format "name,description,protocol,url[^,,,[^,,,]]"
+- ``pycsw:Links``: Text field of JSON list of objects with properties ``name``, ``description``, ``protocol``, ``url``
+
+.. code-block:: javascript
+
+  [
+    {
+        'name': 'foo',
+        'description': 'bar',
+        'protocol': 'OGC:WMS',
+        'url': 'https://example.org/wms'
+    }
+  ]
+
+.. note::
+  The ``pycsw:Links`` field should be a text type, not a JSON object type
+
+- ``pycsw:Bands``: Text field of JSON list of dicts with properties: ``name``, ``units``, ``min``, ``max``
+
+.. code-block:: javascript
+
+  [
+    {
+        'name': 'B1',
+        'units': 'nm',
+        'min': 0.1,
+        'max': 0.333
+    }
+  ]
+
+.. note::
+  The ``pycsw:Bands`` field should be a text type, not a JSON object type
 
 Values of mappings can be derived from the following mechanisms:
 
