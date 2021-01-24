@@ -338,6 +338,36 @@ def test_jsonify_links(linkstr, expected):
      [{
          "keywords": ["foo", "bar", "baz"],
      }]
+    ),
+    ("""
+        [
+          {
+            "keywords": [
+              "foo",
+              "bar",
+              "baz"
+            ],
+            "type": "theme",
+            "vocabulary": {
+              "name": "foo vocab",
+              "url": "https://example.org/my-vocab"
+            }
+          }
+        ]""",
+        [
+          {
+            "keywords": [
+              "foo",
+              "bar",
+              "baz"
+            ],
+            "type": "theme",
+            "vocabulary": {
+              "name": "foo vocab",
+              "url": "https://example.org/my-vocab"
+            }
+          }
+        ]
     )
 ])
 def test_jsonify_keywords(keywords, expected):
