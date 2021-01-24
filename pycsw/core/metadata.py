@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2021 Tom Kralidis
+# Copyright (c) 2017 Tom Kralidis
 # Copyright (c) 2016 James F. Dickens
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -188,14 +188,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
-
-    keywords = [{
-        'keywords': md.identification.keywords
-    }]
-    keywords['theme'] = md.identification.keywords_type
-
-    _set(context, serviceobj, 'pycsw:Keywords', json.dumps(keywords))
-
+    _set(context, serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
     _set(context, serviceobj, 'pycsw:Creator', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
@@ -353,12 +346,7 @@ def _parse_wms(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
-
-    keywords = [{
-        'keywords': md.identification.keywords
-    }]
-
-    _set(context, serviceobj, 'pycsw:Keywords', json.dumps(keywords))
+    _set(context, serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
     _set(context, serviceobj, 'pycsw:Creator', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
@@ -409,12 +397,7 @@ def _parse_wms(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
         _set(context, recobj, 'pycsw:Title', md.contents[layer].title)
         _set(context, recobj, 'pycsw:Abstract', md.contents[layer].abstract)
-
-        keywords = [{
-            'keywords': md.contents[layer].keywords
-        }]
-
-        _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
+        _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[layer].keywords))
 
         _set(
             context,
@@ -510,12 +493,7 @@ def _parse_wmts(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
-
-    keywords = [{
-        'keywords': md.identification.keywords
-    }]
-
-    _set(context, serviceobj, 'pycsw:Keywords', json.dumps(keywords))
+    _set(context, serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
     _set(context, serviceobj, 'pycsw:Creator', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
@@ -575,10 +553,8 @@ def _parse_wmts(context, repos, record, identifier):
         else:
             _set(context, recobj, 'pycsw:Abstract', "")
         if hasattr(md.contents[layer], 'keywords'):  # safeguard against older OWSLib installs
-            keywords = [{
-                'keywords': md.contents[layer].keywords
-            }]
-            _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
+            keywords = ','.join(md.contents[layer].keywords)
+        _set(context, recobj, 'pycsw:Keywords', keywords)
 
         _set(
             context,
@@ -666,12 +642,7 @@ def _parse_wfs(context, repos, record, identifier, version):
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
-
-    keywords = [{
-        'keywords': md.identification.keywords
-    }]
-    _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
-
+    _set(context, serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
     _set(context, serviceobj, 'pycsw:Creator', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
@@ -713,12 +684,7 @@ def _parse_wfs(context, repos, record, identifier, version):
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
         _set(context, recobj, 'pycsw:Title', md.contents[featuretype].title)
         _set(context, recobj, 'pycsw:Abstract', md.contents[featuretype].abstract)
-
-        keywords = [{
-            'keywords': md.contents[featuretype].keywords
-        }]
-
-        _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
+        _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[featuretype].keywords))
 
         _set(
             context,
@@ -802,12 +768,7 @@ def _parse_wcs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
-
-    keywords = [{
-        'keywords': md.identification.keywords
-    }]
-
-    _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
+    _set(context, serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
     _set(context, serviceobj, 'pycsw:Creator', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
@@ -849,12 +810,7 @@ def _parse_wcs(context, repos, record, identifier):
         _set(context, recobj, 'pycsw:ParentIdentifier', identifier)
         _set(context, recobj, 'pycsw:Title', md.contents[coverage].title)
         _set(context, recobj, 'pycsw:Abstract', md.contents[coverage].abstract)
-
-        keywords = [{
-            'keywords': md.contents[coverage].keywords
-        }]
-
-        _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
+        _set(context, recobj, 'pycsw:Keywords', ','.join(md.contents[coverage].keywords))
 
         _set(
             context,
@@ -924,12 +880,7 @@ def _parse_wps(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
-
-    keywords = [{
-        'keywords': md.identification.keywords
-    }]
-
-    _set(context, serviceobj, 'pycsw:Keywords', json.dumps(keywords))
+    _set(context, serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
     _set(context, serviceobj, 'pycsw:Creator', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
@@ -1038,12 +989,7 @@ def _parse_sos(context, repos, record, identifier, version):
     _set(context, serviceobj, 'pycsw:Type', 'service')
     _set(context, serviceobj, 'pycsw:Title', md.identification.title)
     _set(context, serviceobj, 'pycsw:Abstract', md.identification.abstract)
-
-    keywords = [{
-        'keywords': md.identification.keywords
-    }]
-
-    _set(context, serviceobj, 'pycsw:Keywords', json.dumps(keywords))
+    _set(context, serviceobj, 'pycsw:Keywords', ','.join(md.identification.keywords))
     _set(context, serviceobj, 'pycsw:Creator', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
@@ -1108,12 +1054,7 @@ def _parse_sos(context, repos, record, identifier, version):
         anytext.append(md.contents[offering].description)
         anytext.extend(observed_properties)
         _set(context, recobj, 'pycsw:AnyText', util.get_anytext(anytext))
-
-        keywords = [{
-            'keywords': observed_properties
-        }]
-
-        _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
+        _set(context, recobj, 'pycsw:Keywords', ','.join(observed_properties))
 
         bbox = md.contents[offering].bbox
         if bbox is not None:
@@ -1167,10 +1108,8 @@ def _parse_fgdc(context, repos, exml):
 
     if hasattr(md.idinfo, 'keywords'):
         if md.idinfo.keywords.theme:
-            keywords = [{
-                'keywords': md.idinfo.keywords.theme[0]['themekey']
-            }]
-            _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))\
+            _set(context, recobj, 'pycsw:Keywords', \
+            ','.join(md.idinfo.keywords.theme[0]['themekey']))
 
     if hasattr(md.idinfo.timeperd, 'timeinfo'):
         if hasattr(md.idinfo.timeperd.timeinfo, 'rngdates'):
@@ -1341,8 +1280,7 @@ def _parse_gm03(context, repos, exml):
     keywords = []
     for kw in data.keywords:
         keywords.append(get_value_by_language(kw.keyword.pt_group, language))
-
-    _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
+        _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
 
     # contacts
     return recobj
@@ -1354,7 +1292,6 @@ def _parse_iso(context, repos, exml):
 
     recobj = repos.dataset()
     links = []
-    keywords = []
 
     if exml.tag == '{http://www.geocat.ch/2008/che}CHE_MD_Metadata':
         md = CHE_MD_Metadata(exml)
@@ -1381,74 +1318,63 @@ def _parse_iso(context, repos, exml):
             code_ = md.referencesystem.code
         _set(context, recobj, 'pycsw:CRS', code_)
 
-    if hasattr(md, 'identificationinfo'):
-        ident = md.identificationinfo[0]
-        _set(context, recobj, 'pycsw:Title', ident.title)
-        _set(context, recobj, 'pycsw:AlternateTitle', ident.alternatetitle)
-        _set(context, recobj, 'pycsw:Abstract', ident.abstract)
-        _set(context, recobj, 'pycsw:Relation', ident.aggregationinfo)
+    if hasattr(md, 'identification'):
+        _set(context, recobj, 'pycsw:Title', md.identification.title)
+        _set(context, recobj, 'pycsw:AlternateTitle', md.identification.alternatetitle)
+        _set(context, recobj, 'pycsw:Abstract', md.identification.abstract)
+        _set(context, recobj, 'pycsw:Relation', md.identification.aggregationinfo)
 
-        if hasattr(ident, 'temporalextent_start'):
-            _set(context, recobj, 'pycsw:TempExtent_begin', ident.temporalextent_start)
-        if hasattr(ident, 'temporalextent_end'):
-            _set(context, recobj, 'pycsw:TempExtent_end', ident.temporalextent_end)
+        if hasattr(md.identification, 'temporalextent_start'):
+            _set(context, recobj, 'pycsw:TempExtent_begin', md.identification.temporalextent_start)
+        if hasattr(md.identification, 'temporalextent_end'):
+            _set(context, recobj, 'pycsw:TempExtent_end', md.identification.temporalextent_end)
 
-        if len(ident.topiccategory) > 0:
-            _set(context, recobj, 'pycsw:TopicCategory', ident.topiccategory[0])
+        if len(md.identification.topiccategory) > 0:
+            _set(context, recobj, 'pycsw:TopicCategory', md.identification.topiccategory[0])
 
-        if len(ident.resourcelanguage) > 0:
-            _set(context, recobj, 'pycsw:ResourceLanguage', ident.resourcelanguage[0])
+        if len(md.identification.resourcelanguage) > 0:
+            _set(context, recobj, 'pycsw:ResourceLanguage', md.identification.resourcelanguage[0])
 
-        if hasattr(ident, 'bbox'):
-            bbox = ident.bbox
+        if hasattr(md.identification, 'bbox'):
+            bbox = md.identification.bbox
         else:
             bbox = None
 
-        if (hasattr(ident, 'keywords2') and len(ident.keywords2) > 0):
-            for kw in ident.keywords2:
-                keyword_member = {
-                    'keywords': kw.keywords,
-                }
-                if hasattr(kw, 'type'):
-                    keyword_member['type'] = kw.type
-                if hasattr(kw, 'thesaurus'):
-                    keyword_member['vocabulary'] = {
-                        'title': kw.thesaurus['title'],
-                        'url': kw.thesaurus['url']
-                    }
-                keywords.append(keyword_member)
+        if (hasattr(md.identification, 'keywords') and
+            len(md.identification.keywords) > 0):
+            all_keywords = [item for sublist in md.identification.keywords for item in sublist['keywords'] if item is not None]
+            _set(context, recobj, 'pycsw:Keywords', ','.join(all_keywords))
+            _set(context, recobj, 'pycsw:KeywordType', md.identification.keywords[0]['type'])
 
-            _set(context, recobj, 'pycsw:KeywordType', ident.keywords2[0].type)
-
-        if (hasattr(ident, 'creator') and
-            len(ident.creator) > 0):
-            all_orgs = set([item.organization for item in ident.creator if hasattr(item, 'organization') and item.organization is not None])
+        if (hasattr(md.identification, 'creator') and
+            len(md.identification.creator) > 0):
+            all_orgs = set([item.organization for item in md.identification.creator if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Creator', ';'.join(all_orgs))
-        if (hasattr(ident, 'publisher') and
-            len(ident.publisher) > 0):
-            all_orgs = set([item.organization for item in ident.publisher if hasattr(item, 'organization') and item.organization is not None])
+        if (hasattr(md.identification, 'publisher') and
+            len(md.identification.publisher) > 0):
+            all_orgs = set([item.organization for item in md.identification.publisher if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Publisher', ';'.join(all_orgs))
-        if (hasattr(ident, 'contributor') and
-            len(ident.contributor) > 0):
-            all_orgs = set([item.organization for item in ident.contributor if hasattr(item, 'organization') and item.organization is not None])
+        if (hasattr(md.identification, 'contributor') and
+            len(md.identification.contributor) > 0):
+            all_orgs = set([item.organization for item in md.identification.contributor if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Contributor', ';'.join(all_orgs))
 
-        if (hasattr(ident, 'contact') and
-            len(ident.contact) > 0):
-            all_orgs = set([item.organization for item in ident.contact if hasattr(item, 'organization') and item.organization is not None])
+        if (hasattr(md.identification, 'contact') and
+            len(md.identification.contact) > 0):
+            all_orgs = set([item.organization for item in md.identification.contact if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:OrganizationName', ';'.join(all_orgs))
 
-        if len(ident.securityconstraints) > 0:
+        if len(md.identification.securityconstraints) > 0:
             _set(context, recobj, 'pycsw:SecurityConstraints',
-            ident.securityconstraints[0])
-        if len(ident.accessconstraints) > 0:
+            md.identification.securityconstraints[0])
+        if len(md.identification.accessconstraints) > 0:
             _set(context, recobj, 'pycsw:AccessConstraints',
-            ident.accessconstraints[0])
-        if len(ident.otherconstraints) > 0:
-            _set(context, recobj, 'pycsw:OtherConstraints', ident.otherconstraints[0])
+            md.identification.accessconstraints[0])
+        if len(md.identification.otherconstraints) > 0:
+            _set(context, recobj, 'pycsw:OtherConstraints', md.identification.otherconstraints[0])
 
-        if hasattr(ident, 'date'):
-            for datenode in ident.date:
+        if hasattr(md.identification, 'date'):
+            for datenode in md.identification.date:
                 if datenode.type == 'revision':
                     _set(context, recobj, 'pycsw:RevisionDate', datenode.date)
                 elif datenode.type == 'creation':
@@ -1456,23 +1382,23 @@ def _parse_iso(context, repos, exml):
                 elif datenode.type == 'publication':
                     _set(context, recobj, 'pycsw:PublicationDate', datenode.date)
 
-        if hasattr(ident, 'extent') and hasattr(ident.extent, 'description_code'):
-            _set(context, recobj, 'pycsw:GeographicDescriptionCode', ident.extent.description_code)
+        if hasattr(md.identification, 'extent') and hasattr(md.identification.extent, 'description_code'):
+            _set(context, recobj, 'pycsw:GeographicDescriptionCode', md.identification.extent.description_code)
 
-        if len(ident.denominators) > 0:
-            _set(context, recobj, 'pycsw:Denominator', ident.denominators[0])
-        if len(ident.distance) > 0:
-            _set(context, recobj, 'pycsw:DistanceValue', ident.distance[0])
-        if len(ident.uom) > 0:
-            _set(context, recobj, 'pycsw:DistanceUOM', ident.uom[0])
+        if len(md.identification.denominators) > 0:
+            _set(context, recobj, 'pycsw:Denominator', md.identification.denominators[0])
+        if len(md.identification.distance) > 0:
+            _set(context, recobj, 'pycsw:DistanceValue', md.identification.distance[0])
+        if len(md.identification.uom) > 0:
+            _set(context, recobj, 'pycsw:DistanceUOM', md.identification.uom[0])
 
-        if len(ident.classification) > 0:
-            _set(context, recobj, 'pycsw:Classification', ident.classification[0])
-        if len(ident.uselimitation) > 0:
+        if len(md.identification.classification) > 0:
+            _set(context, recobj, 'pycsw:Classification', md.identification.classification[0])
+        if len(md.identification.uselimitation) > 0:
             _set(context, recobj, 'pycsw:ConditionApplyingToAccessAndUse',
-            ident.uselimitation[0])
+            md.identification.uselimitation[0])
 
-    if hasattr(ident, 'format'):
+    if hasattr(md.identification, 'format'):
         _set(context, recobj, 'pycsw:Format', md.distribution.format)
 
     if md.serviceidentification is not None:
@@ -1495,7 +1421,7 @@ def _parse_iso(context, repos, exml):
         #_set(context, recobj, 'pycsw:operatesoname VARCHAR(32),
 
 
-    if hasattr(ident, 'dataquality'):
+    if hasattr(md.identification, 'dataquality'):
         _set(context, recobj, 'pycsw:Degree', md.dataquality.conformancedegree)
         _set(context, recobj, 'pycsw:Lineage', md.dataquality.lineage)
         _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
@@ -1514,11 +1440,15 @@ def _parse_iso(context, repos, exml):
             if isinstance(ci, MD_ImageDescription):
                 _set(context, recobj, 'pycsw:CloudCover', ci.cloud_cover)
 
+                keywords = _get(context, recobj, 'pycsw:Keywords')
                 if ci.processing_level is not None:
                     pl_keyword = 'eo:processingLevel:' + ci.processing_level
-                    keywords.append({
-                        'keywords': [pl_keyword]
-                    })
+                    if keywords is None:
+                        keywords  = pl_keyword
+                    else:
+                        keywords  += ',' + pl_keyword
+
+                    _set(context, recobj, 'pycsw:Keywords', keywords)
 
             bands = []
             for band in ci.bands:
@@ -1580,8 +1510,6 @@ def _parse_iso(context, repos, exml):
 
     if len(links) > 0:
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
-    if len(keywords) > 0:
-        _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
 
     if bbox is not None:
         try:
@@ -1622,10 +1550,7 @@ def _parse_dc(context, repos, exml):
     _set(context, recobj, 'pycsw:Abstract', md.abstract)
 
     if len(md.subjects) > 0 and None not in md.subjects:
-        keywords = [{
-            'keywords': md.subjects
-        }]
-        _set(context, recobj, 'pycsw:Keywords', json.dumps(keywords))
+        _set(context, recobj, 'pycsw:Keywords', ','.join(md.subjects))
 
     _set(context, recobj, 'pycsw:ParentIdentifier', md.ispartof)
     _set(context, recobj, 'pycsw:Relation', md.relation)

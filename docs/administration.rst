@@ -173,29 +173,8 @@ pycsw requires certain repository attributes and semantics to exist in any repos
 
 The following repository semantics exist if the attributes are specified:
 
-- ``pycsw:Keywords``: Text field of JSON list of 0..n dicts with properties ``keywords``, ``type``, ``vocabulary``
-
-.. code-block:: javascript
-
-  [
-    {
-      "keywords": [
-        "foo",
-        "bar",
-        "baz"
-      ],
-      "type": "theme",
-      "vocabulary": {
-        "name": "foo vocab",
-        "url": "https://example.org/my-vocab"
-      }
-    }
-  ]
-
-.. note::
-  The ``pycsw:Keywords`` field should be a text type, not a JSON object type
-
-- ``pycsw:Links``: Text field of JSON list of 0..n dicts with properties ``name``, ``description``, ``protocol``, ``url``
+- ``pycsw:Keywords``: comma delimited list of keywords
+- ``pycsw:Links``: Text field of JSON list of objects with properties ``name``, ``description``, ``protocol``, ``url``
 
 .. code-block:: javascript
 
@@ -211,7 +190,7 @@ The following repository semantics exist if the attributes are specified:
 .. note::
   The ``pycsw:Links`` field should be a text type, not a JSON object type
 
-- ``pycsw:Bands``: Text field of JSON list of 0..n dicts with properties: ``name``, ``units``, ``min``, ``max``
+- ``pycsw:Bands``: Text field of JSON list of dicts with properties: ``name``, ``units``, ``min``, ``max``
 
 .. code-block:: javascript
 

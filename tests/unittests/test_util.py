@@ -249,7 +249,6 @@ def test_ipaddress_in_whitelist(ip, whitelist, expected):
     result = util.ipaddress_in_whitelist(ip, whitelist)
     assert result == expected
 
-
 @pytest.mark.parametrize("linkstr, expected", [
     # old style CSV
     ("roads,my roads,OGC:WMS,http://example.org/wms",
@@ -329,49 +328,4 @@ def test_ipaddress_in_whitelist(ip, whitelist, expected):
 def test_jsonify_links(linkstr, expected):
     result = util.jsonify_links(linkstr)
     assert isinstance(result, list)
-    assert isinstance(result[0], dict)
-    assert result == expected
-
-
-@pytest.mark.parametrize("keywords, expected", [
-    ("foo,bar,baz",
-     [{
-         "keywords": ["foo", "bar", "baz"],
-     }]
-    ),
-    ("""
-        [
-          {
-            "keywords": [
-              "foo",
-              "bar",
-              "baz"
-            ],
-            "type": "theme",
-            "vocabulary": {
-              "name": "foo vocab",
-              "url": "https://example.org/my-vocab"
-            }
-          }
-        ]""",
-        [
-          {
-            "keywords": [
-              "foo",
-              "bar",
-              "baz"
-            ],
-            "type": "theme",
-            "vocabulary": {
-              "name": "foo vocab",
-              "url": "https://example.org/my-vocab"
-            }
-          }
-        ]
-    )
-])
-def test_jsonify_keywords(keywords, expected):
-    result = util.jsonify_keywords(keywords)
-    assert isinstance(result, list)
-    assert isinstance(result[0], dict)
     assert result == expected
