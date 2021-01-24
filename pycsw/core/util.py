@@ -392,17 +392,18 @@ def secure_filename(filename):
 
     return filename
 
+
 def jsonify_links(links):
     """
-    pycsw:Links column data handler.
-    casts old or new style links into JSON objects
+    pycsw:Links column data handler.  Casts old or new style links
+    into JSON objects
     """
     try:
-        LOGGER.debug('JSON link')
-        linkset = json.loads(links)
-        return linkset
+        val = json.loads(links)
+        LOGGER.debug('JSON links')
+        return val
     except json.decoder.JSONDecodeError as err:  # try CSV parsing
-        LOGGER.debug('old style CSV link')
+        LOGGER.debug('old style CSV links')
         json_links = []
         for link in links.split('^'):
             tokens = link.split(',')
@@ -413,3 +414,19 @@ def jsonify_links(links):
                 'url': tokens[3] or None
             })
         return json_links
+
+
+def jsonify_keywords(keywords):
+    """
+    pycsw:Keywords column data handler.  Casts old or new style keywords
+    into JSON objects
+    """
+    try:
+        val = json.loads(keywords)
+        LOGGER.debug('JSON keywords')
+        return val
+    except json.decoder.JSONDecodeError as err:  # try CSV parsing
+        LOGGER.debug('old style CSV keywords')
+        return [{
+            'keywords': keywords.split(',')
+        }]

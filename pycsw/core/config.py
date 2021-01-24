@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2016 Tom Kralidis
+# Copyright (c) 2021 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -117,6 +117,7 @@ class StaticContext(object):
                 'pycsw:Language': 'language',
                 'pycsw:Title': 'title',
                 'pycsw:Abstract': 'abstract',
+                 # text list of 0..n dicts with properties ``keywords``, ``type``, ``vocabulary``
                 'pycsw:Keywords': 'keywords',
                 'pycsw:KeywordType': 'keywordstype',
                 'pycsw:Format': 'format',
@@ -167,9 +168,10 @@ class StaticContext(object):
                 'pycsw:Instrument': 'instrument',
                 'pycsw:SensorType': 'sensortype',
                 'pycsw:CloudCover': 'cloudcover',
+                # bands: text list of 0..n dicts with properties: name, units, min, max
                 'pycsw:Bands': 'bands',
-                # links: list of dicts with properties: name, description, protocol, url
-                'pycsw:Links': 'links',
+                # links: text list of 0..n dicts with properties: name, description, protocol, url
+                'pycsw:Links': 'links'
             }
         }
 
