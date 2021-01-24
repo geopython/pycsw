@@ -1382,7 +1382,7 @@ def _parse_iso(context, repos, exml):
         _set(context, recobj, 'pycsw:CRS', code_)
 
     if hasattr(md, 'identificationinfo'):
-        ident = md.identification[0]
+        ident = md.identificationinfo[0]
         _set(context, recobj, 'pycsw:Title', ident.title)
         _set(context, recobj, 'pycsw:AlternateTitle', ident.alternatetitle)
         _set(context, recobj, 'pycsw:Abstract', ident.abstract)
