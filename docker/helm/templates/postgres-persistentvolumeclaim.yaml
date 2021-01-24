@@ -1,0 +1,15 @@
+{{- $resourceName := print .Release.Name "-postgres-pv" -}}
+{{- with .Values.postgres }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  name: {{ $resourceName }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .volume.storage }}
+status: {}
+{{- end -}}

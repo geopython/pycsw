@@ -1,5 +1,5 @@
-{{- $resourceName := print .Release.Name "-pycsw" }}
-{{- with .Values.pycsw }}
+{{- $resourceName := print .Release.Name "-postgres" -}}
+{{- with .Values.postgres }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,7 +9,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 8000
+  - port: 5432
+    targetPort: 5432
   selector:
     name: {{ $resourceName }}
+status:
+  loadBalancer: {}
 {{- end -}}

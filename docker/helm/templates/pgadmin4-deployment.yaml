@@ -1,0 +1,49 @@
+{{- $resourceName := print .Release.Name "-pgadmin4" }}
+{{- $resourceConfigmap := print .Release.Name "-pgadmin4-configmap" }}
+{{- with .Values -}}
+{{- if .pgadmin4.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: {{ $resourceName }}
+  name: {{ $resourceName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: {{ $resourceName }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: {{ $resourceName }}
+    spec:
+      containers:
+      - env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: {{ .pgadmin4.authentication.default_email }}
+        - name: PGADMIN_DEFAULT_PASSWORD
+          value: {{ .pgadmin4.authentication.default_password }}
+        image: dpage/pgadmin4:latest
+        name: {{ $resourceName }}
+        ports:
+        - containerPort: 80
+        {{- if .postgres.enabled }}
+        volumeMounts:
+        - mountPath: /pgadmin4/servers.json
+          name:  {{ $resourceConfigmap }}
+          subPath: servers.json
+        {{- end }}
+        resources: {}
+      restartPolicy: Always
+      {{- if .postgres.enabled }}
+      volumes:
+      - name: {{ $resourceConfigmap }}
+        configMap:
+          name: {{ $resourceConfigmap }}
+      {{- end }}
+status: {}
+{{- end -}}
+{{- end -}}
