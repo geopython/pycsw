@@ -32,6 +32,7 @@
 #
 # =================================================================
 
+import json
 import os
 import re
 import datetime
@@ -390,3 +391,25 @@ def secure_filename(filename):
         filename = '_' + filename
 
     return filename
+
+def jsonify_links(links):
+    """
+    pycsw:Links column data handler.
+    casts old or new style links into JSON objects
+    """
+    try:
+        LOGGER.debug('JSON link')
+        linkset = json.loads(links)
+        return linkset
+    except json.decoder.JSONDecodeError as err:  # try CSV parsing
+        LOGGER.debug('old style CSV link')
+        json_links = []
+        for link in links.split('^'):
+            tokens = link.split(',')
+            json_links.append({
+                'name': tokens[0] or None,
+                'description': tokens[1] or None,
+                'protocol': tokens[2] or None,
+                'url': tokens[3] or None
+            })
+        return json_links
