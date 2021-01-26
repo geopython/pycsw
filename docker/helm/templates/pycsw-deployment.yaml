@@ -1,38 +1,50 @@
+{{- $resourceName := print .Release.Name "-pycsw" }}
+{{- $resourceConfigmap := print .Release.Name "-pycsw-configmap" }}
+{{- $postgresName := print .Release.Name "-postgres" }}
+{{- with .Values }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    io.kompose.service: pycsw
-  name: pycsw
+    name: {{ $resourceName }}
+  name: {{ $resourceName }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: pycsw
+      name: {{ $resourceName }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        io.kompose.service: pycsw
+        name: {{ $resourceName }}
     spec:
       containers:
       - env:
         - name: PYCSW_SERVER_URL
           value: http://localhost:8000
+        {{- if .postgres.enabled }}
         - name: PYCSW_REPOSITORY_DATABASE_URI
-          value: postgresql://postgres:mypass@db/pycsw
-        image: 'geopython/pycsw:latest'
-        name: pycsw
+          value: postgresql://{{ .postgres.authentication.username }}:{{ .postgres.authentication.password }}@{{ $postgresName }}/{{ .postgres.db_name }}
+        {{- end }}
+        {{- if .pycsw.mappings_py }}
+        - name: PYCSW_MAPPINGS_FILEPATH
+          value: /etc/pycsw/mappings.py
+        {{- end }}
+        image: 'mapcolonies/pycsw:latest'
+        imagePullPolicy: Never
+        name: {{ $resourceName }}
         ports:
         - containerPort: 8000
         resources: {}
         volumeMounts:
         - mountPath: /etc/pycsw
-          name: pycsw-config
+          name: {{ $resourceConfigmap }}
       restartPolicy: Always
       volumes:
-      - name: pycsw-config
+      - name: {{ $resourceConfigmap }}
         configMap:
-          name: pycsw-configmap
+          name: {{ $resourceConfigmap }}
 status: {}
+{{- end -}}
