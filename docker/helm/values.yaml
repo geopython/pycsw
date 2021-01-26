@@ -32,7 +32,7 @@ pycsw:
     #domainquerytype=range
     #domaincounts=true
     #spatial_ranking=true
-    #profiles=apiso
+    profiles=mcgc
 
     [manager]
     transactions=false
@@ -85,68 +85,74 @@ pycsw:
     #contact_email=Email Address
     #temp_extent=YYYY-MM-DD/YYYY-MM-DD
 
-
-  #  In order to change default db columns mapping
-  # mappings_py: |+
-  #   MD_CORE_MODEL = {
-  #     'typename': 'pycsw:CoreMetadata',
-  #     'outputschema': 'http://pycsw.org/metadata',
-  #     'mappings': {
-  #       'pycsw:Identifier': 'identifier',
-  #       'pycsw:Typename': 'typename',
-  #       'pycsw:Schema': 'schema',
-  #       'pycsw:MdSource': 'mdsource',
-  #       'pycsw:InsertDate': 'insert_date',
-  #       'pycsw:XML': 'xml',
-  #       'pycsw:AnyText': 'anytext',
-  #       'pycsw:Language': 'language',
-  #       'pycsw:Title': 'title',
-  #       'pycsw:Abstract': 'abstract',
-  #       'pycsw:Keywords': 'keywords',
-  #       'pycsw:KeywordType': 'keywordstype',
-  #       'pycsw:Format': 'format',
-  #       'pycsw:Source': 'source',
-  #       'pycsw:Date': 'date',
-  #       'pycsw:Modified': 'date_modified',
-  #       'pycsw:Type': 'type',
-  #       'pycsw:BoundingBox': 'wkt_geometry',
-  #       'pycsw:CRS': 'crs',
-  #       'pycsw:AlternateTitle': 'title_alternate',
-  #       'pycsw:RevisionDate': 'date_revision',
-  #       'pycsw:CreationDate': 'date_creation',
-  #       'pycsw:PublicationDate': 'date_publication',
-  #       'pycsw:OrganizationName': 'organization',
-  #       'pycsw:SecurityConstraints': 'securityconstraints',
-  #       'pycsw:ParentIdentifier': 'parentidentifier',
-  #       'pycsw:TopicCategory': 'topicategory',
-  #       'pycsw:ResourceLanguage': 'resourcelanguage',
-  #       'pycsw:GeographicDescriptionCode': 'geodescode',
-  #       'pycsw:Denominator': 'denominator',
-  #       'pycsw:DistanceValue': 'distancevalue',
-  #       'pycsw:DistanceUOM': 'distanceuom',
-  #       'pycsw:TempExtent_begin': 'time_begin',
-  #       'pycsw:TempExtent_end': 'time_end',
-  #       'pycsw:ServiceType': 'servicetype',
-  #       'pycsw:ServiceTypeVersion': 'servicetypeversion',
-  #       'pycsw:Operation': 'operation',
-  #       'pycsw:CouplingType': 'couplingtype',
-  #       'pycsw:OperatesOn': 'operateson',
-  #       'pycsw:OperatesOnIdentifier': 'operatesonidentifier',
-  #       'pycsw:OperatesOnName': 'operatesoname',
-  #       'pycsw:Degree': 'degree',
-  #       'pycsw:AccessConstraints': 'accessconstraints',
-  #       'pycsw:OtherConstraints': 'otherconstraints',
-  #       'pycsw:Classification': 'classification',
-  #       'pycsw:ConditionApplyingToAccessAndUse': 'conditionapplyingtoaccessanduse',
-  #       'pycsw:Lineage': 'lineage',
-  #       'pycsw:ResponsiblePartyRole': 'responsiblepartyrole',
-  #       'pycsw:SpecificationTitle': 'specificationtitle',
-  #       'pycsw:SpecificationDate': 'specificationdate',
-  #       'pycsw:SpecificationDateType': 'specificationdatetype',
-  #       'pycsw:Creator': 'creator',
-  #       'pycsw:Publisher': 'publisher',
-  #       'pycsw:Contributor': 'contributor',
-  #       'pycsw:Relation': 'relation',
-  #       'pycsw:Links': 'links',
-  #     }
-  #   }
+  # In order to change default db columns mapping
+  mappings_py: |+
+    MD_CORE_MODEL = {
+    'typename': 'pycsw:CoreMetadata',
+    'outputschema': 'http://pycsw.org/metadata',
+    'mappings': {
+        # default pycsw fields
+        'pycsw:Identifier': 'identifier',
+        'pycsw:Typename': 'typename',
+        'pycsw:Schema': 'schema',
+        'pycsw:MdSource': 'mdsource',
+        'pycsw:InsertDate': 'insert_date',
+        'pycsw:XML': 'xml',
+        'pycsw:AnyText': 'any_text',
+        'pycsw:Language': 'language',
+        'pycsw:Title': 'title',
+        'pycsw:Abstract': 'abstract',
+        'pycsw:Keywords': 'subject',
+        'pycsw:KeywordType': 'keywordstype',
+        'pycsw:Format': 'format',
+        'pycsw:Source': 'source',
+        'pycsw:Date': 'date',
+        'pycsw:Modified': 'date_modified',
+        'pycsw:Type': 'type',
+        'pycsw:BoundingBox': 'bounding_box',
+        'pycsw:CRS': 'crs',
+        'pycsw:AlternateTitle': 'title_alternate',
+        'pycsw:RevisionDate': 'date_revision',
+        'pycsw:CreationDate': 'created',
+        'pycsw:PublicationDate': 'date_publication',
+        'pycsw:OrganizationName': 'organization',
+        'pycsw:SecurityConstraints': 'securityconstraints',
+        'pycsw:ParentIdentifier': 'parentidentifier',
+        'pycsw:TopicCategory': 'topicategory',
+        'pycsw:ResourceLanguage': 'resourcelanguage',
+        'pycsw:GeographicDescriptionCode': 'geodescode',
+        'pycsw:Denominator': 'denominator',
+        'pycsw:DistanceValue': 'distancevalue',
+        'pycsw:DistanceUOM': 'distanceuom',
+        'pycsw:TempExtent_begin': 'temporal_extent_start',
+        'pycsw:TempExtent_end': 'temporal_extent_end',
+        'pycsw:ServiceType': 'servicetype',
+        'pycsw:ServiceTypeVersion': 'servicetypeversion',
+        'pycsw:Operation': 'operation',
+        'pycsw:CouplingType': 'couplingtype',
+        'pycsw:OperatesOn': 'operateson',
+        'pycsw:OperatesOnIdentifier': 'operatesonidentifier',
+        'pycsw:OperatesOnName': 'operatesoname',
+        'pycsw:Degree': 'degree',
+        'pycsw:AccessConstraints': 'accessconstraints',
+        'pycsw:OtherConstraints': 'otherconstraints',
+        'pycsw:Classification': 'access_rights',
+        'pycsw:ConditionApplyingToAccessAndUse': 'conditionapplyingtoaccessanduse',
+        'pycsw:Lineage': 'lineage',
+        'pycsw:ResponsiblePartyRole': 'responsiblepartyrole',
+        'pycsw:SpecificationTitle': 'specificationtitle',
+        'pycsw:SpecificationDate': 'specificationdate',
+        'pycsw:SpecificationDateType': 'specificationdatetype',
+        'pycsw:Creator': 'creator',
+        'pycsw:Publisher': 'publisher',
+        'pycsw:Contributor': 'contributor',
+        'pycsw:Relation': 'relation',
+        'pycsw:Links': 'references',
+        
+        # added for MCGC profile.
+        'pycsw:region': 'region',
+        'pycsw:sensorName': 'sensor_name',
+        'pycsw:sensorType': 'sensor_type',
+        'pycsw:version': 'version'
+      }
+    }
