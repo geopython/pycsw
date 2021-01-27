@@ -163,7 +163,7 @@ class Repository(object):
                 LOGGER.exception('PostgreSQL+PostGIS+Native not picked up: %s')
 
             # check if a native PostgreSQL FTS GIN index exists
-            result = self.session.execute("select relname from pg_class where relname='fts_gin_idx'").scalar()
+            result = self.session.execute("select relname from pg_class where relname='%s_fts_gin_idx'" % table_name).scalar()
             self.fts = bool(result)
             LOGGER.debug('PostgreSQL FTS enabled: %r', self.fts)
 

@@ -38,6 +38,7 @@ from glob import glob
 from pycsw.core import metadata, repository, util
 from pycsw.core.etree import etree
 from pycsw.core.etree import PARSER
+from pycsw.core import config
 
 LOGGER = logging.getLogger(__name__)
 
@@ -124,112 +125,32 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
             mappings_module = __import__(module, fromlist=[''])
         
         mappings = mappings_module.MD_CORE_MODEL['mappings']
+    else: 
+        context = config.StaticContext()
+        mappings = context.md_core_model['mappings']
 
-        records = Table(table_name, mdata)
+    records = Table(table_name, mdata)
 
-        for key,col_name in mappings.items():
-            if key == 'pycsw:Identifier':
-                col = Column(col_name, Text, primary_key=True)
-            elif key == 'pycsw:Typename':
-                col = Column(col_name, Text, default='csw:Record', nullable=False, index=True)
-            elif key == 'pycsw:Schema':
-                col = Column(col_name, Text, default='http://www.opengis.net/cat/csw/2.0.2', nullable=False, index=True)
-            elif key == 'pycsw:MdSource':
-                col = Column(col_name, Text, default='local', nullable=False, index=True)
-            elif key == 'pycsw:InsertDate': 
-                col = Column(col_name, Text, nullable=False, index=True)
-            elif key == 'pycsw:XML':
-                col = Column(col_name, Unicode, nullable=False)
-            elif key == 'pycsw:AnyText':
-                col = Column(col_name, Text, nullable=False)
-            else:
-                col = Column(col_name, Text, index=True)
-            
-            records.append_column(col)
-    else:
-        records = Table(
-            table_name, mdata,
-            # core; nothing happens without these
-            Column('identifier', Text, primary_key=True),
-            Column('typename', Text,
-                default='csw:Record', nullable=False, index=True),
-            Column('schema', Text,
-                default='http://www.opengis.net/cat/csw/2.0.2', nullable=False,
-                index=True),
-            Column('mdsource', Text, default='local', nullable=False,
-                index=True),
-            Column('insert_date', Text, nullable=False, index=True),
-            Column('xml', Unicode, nullable=False),
-            Column('anytext', Text, nullable=False),
-            Column('language', Text, index=True),
-
-            # identification
-            Column('type', Text, index=True),
-            Column('title', Text, index=True),
-            Column('title_alternate', Text, index=True),
-            Column('abstract', Text, index=True),
-            Column('keywords', Text, index=True),
-            Column('keywordstype', Text, index=True),
-            Column('parentidentifier', Text, index=True),
-            Column('relation', Text, index=True),
-            Column('time_begin', Text, index=True),
-            Column('time_end', Text, index=True),
-            Column('topicategory', Text, index=True),
-            Column('resourcelanguage', Text, index=True),
-
-            # attribution
-            Column('creator', Text, index=True),
-            Column('publisher', Text, index=True),
-            Column('contributor', Text, index=True),
-            Column('organization', Text, index=True),
-
-            # security
-            Column('securityconstraints', Text, index=True),
-            Column('accessconstraints', Text, index=True),
-            Column('otherconstraints', Text, index=True),
-
-            # date
-            Column('date', Text, index=True),
-            Column('date_revision', Text, index=True),
-            Column('date_creation', Text, index=True),
-            Column('date_publication', Text, index=True),
-            Column('date_modified', Text, index=True),
-
-            Column('format', Text, index=True),
-            Column('source', Text, index=True),
-
-            # geospatial
-            Column('crs', Text, index=True),
-            Column('geodescode', Text, index=True),
-            Column('denominator', Text, index=True),
-            Column('distancevalue', Text, index=True),
-            Column('distanceuom', Text, index=True),
-            Column('wkt_geometry', Text),
-
-            # service
-            Column('servicetype', Text, index=True),
-            Column('servicetypeversion', Text, index=True),
-            Column('operation', Text, index=True),
-            Column('couplingtype', Text, index=True),
-            Column('operateson', Text, index=True),
-            Column('operatesonidentifier', Text, index=True),
-            Column('operatesoname', Text, index=True),
-
-            # additional
-            Column('degree', Text, index=True),
-            Column('classification', Text, index=True),
-            Column('conditionapplyingtoaccessanduse', Text, index=True),
-            Column('lineage', Text, index=True),
-            Column('responsiblepartyrole', Text, index=True),
-            Column('specificationtitle', Text, index=True),
-            Column('specificationdate', Text, index=True),
-            Column('specificationdatetype', Text, index=True),
-
-            # distribution
-            # links: format "name,description,protocol,url[^,,,[^,,,]]"
-            Column('links', Text, index=True),
-        )
-
+    for key,col_name in mappings.items():
+        if key == 'pycsw:Identifier':
+            col = Column(col_name, Text, primary_key=True)
+        elif key == 'pycsw:Typename':
+            col = Column(col_name, Text, default='csw:Record', nullable=False, index=True)
+        elif key == 'pycsw:Schema':
+            col = Column(col_name, Text, default='http://www.opengis.net/cat/csw/2.0.2', nullable=False, index=True)
+        elif key == 'pycsw:MdSource':
+            col = Column(col_name, Text, default='local', nullable=False, index=True)
+        elif key == 'pycsw:InsertDate':
+            col = Column(col_name, Text, nullable=False, index=True)
+        elif key == 'pycsw:XML':
+            col = Column(col_name, Unicode, nullable=False)
+        elif key == 'pycsw:AnyText':
+            col = Column(col_name, Text, nullable=False)
+        else:
+            col = Column(col_name, Text, index=True)
+        
+        records.append_column(col)
+    
     # add extra columns that may have been passed via extra_columns
     # extra_columns is a list of sqlalchemy.Column objects
     if extra_columns:
@@ -306,10 +227,10 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         LOGGER.info('Creating PostgreSQL Free Text Search (FTS) GIN index')
         tsvector_fts = "alter table %s add column anytext_tsvector tsvector" % table_name
         conn.execute(tsvector_fts)
-        index_fts = "create index fts_gin_idx on %s using gin(anytext_tsvector)" % table_name
+        index_fts = "create index %s_fts_gin_idx on %s using gin(anytext_tsvector)" % (table_name, table_name)
         conn.execute(index_fts)
         # This needs to run if records exist "UPDATE records SET anytext_tsvector = to_tsvector('english', anytext)"
-        trigger_fts = "create trigger ftsupdate before insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', 'anytext')" % (table_name, language)
+        trigger_fts = "create trigger ftsupdate before insert or update on %s for each row execute procedure tsvector_update_trigger('anytext_tsvector', 'pg_catalog.%s', %s)" % (table_name, language, mappings['pycsw:AnyText'])
         conn.execute(trigger_fts)
 
     if dbase.name == 'postgresql' and create_postgis_geometry:
@@ -324,19 +245,19 @@ DROP TRIGGER IF EXISTS %(table)s_update_geometry ON %(table)s;
 DROP FUNCTION IF EXISTS %(table)s_update_geometry();
 CREATE FUNCTION %(table)s_update_geometry() RETURNS trigger AS $%(table)s_update_geometry$
 BEGIN
-    IF NEW.wkt_geometry IS NULL THEN
+    IF NEW.%(bounding_box_column)s IS NULL THEN
         RETURN NEW;
     END IF;
-    NEW.%(geometry)s := ST_GeomFromText(NEW.wkt_geometry,4326);
+    NEW.%(geometry)s := ST_GeomFromText(NEW.%(bounding_box_column)s,4326);
     RETURN NEW;
 END;
 $%(table)s_update_geometry$ LANGUAGE plpgsql;
 
 CREATE TRIGGER %(table)s_update_geometry BEFORE INSERT OR UPDATE ON %(table)s
 FOR EACH ROW EXECUTE PROCEDURE %(table)s_update_geometry();
-    ''' % {'table': table_name, 'geometry': postgis_geometry_column}
+    ''' % {'table': table_name, 'geometry': postgis_geometry_column, 'bounding_box_column': mappings['pycsw:BoundingBox']}
 
-        create_spatial_index_sql = 'CREATE INDEX %(geometry)s_idx ON %(table)s USING GIST (%(geometry)s);' \
+        create_spatial_index_sql = 'CREATE INDEX %(table)s_%(geometry)s_idx ON %(table)s USING GIST (%(geometry)s);' \
         % {'table': table_name, 'geometry': postgis_geometry_column}
 
         conn.execute(create_column_sql)
