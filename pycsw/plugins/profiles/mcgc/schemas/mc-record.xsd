@@ -15,16 +15,17 @@
    <xsd:import namespace="http://www.opengis.net/cat/csw/3.0" schemaLocation="../../../../core/schemas/ogc/cat/csw/3.0/cswAll.xsd"></xsd:import>
    <xsd:import namespace="http://www.opengis.net/ows/2.0" schemaLocation="../../../../core/schemas/ogc/ows/2.0/owsAll.xsd"/>
 
-   <xsd:element name="version"/>
-   <xsd:element name="region" />
-   <xsd:element name="sensor" type="mc:SensorType" />
-
-   <xsd:complexType name="SensorType">
-      <xsd:sequence>
-         <xsd:element name="name"/>
-         <xsd:element name="type"/>
-      </xsd:sequence>
-   </xsd:complexType>
+   <xsd:element name="id"/>
+   <xsd:element name="name" />
+   <xsd:element name="creationDate" />
+   <xsd:element name="description" />
+   <xsd:element name="geojson" />
+   <xsd:element name="referenceSystem" />
+   <xsd:element name="type" />
+   <xsd:element name="source" />
+   <xsd:element name="category" />
+   <xsd:element name="thumbnail" />
+   <xsd:element name="URI" />
 
    <xsd:element name="MCGCRecord" type="mc:MCGCRecordType" />
    
@@ -39,16 +40,24 @@
       <xsd:complexContent>
          <xsd:extension base="csw30:DCMIRecordType">
             <xsd:sequence>
+               <xsd:element ref="mc:id" />
+               <xsd:element ref="mc:name" />
+               <xsd:element ref="mc:creationDate" />
+               <xsd:element ref="mc:description" />
+               <xsd:element ref="mc:geojson" />
+               <xsd:element ref="mc:referenceSystem" />
+               <xsd:element ref="mc:type" />
+               <xsd:element ref="mc:source" />
+               <xsd:element ref="mc:category" />
+               <xsd:element ref="mc:thumbnail" />
+               <xsd:element ref="mc:URI" />
                <xsd:element name="AnyText" type="csw30:EmptyType"
                             minOccurs="0" maxOccurs="unbounded"/>
                <xsd:element ref="ows:BoundingBox"
                             minOccurs="0" maxOccurs="unbounded"/>
-               <xsd:element name="TemporalExtent"
+               <xsd:element name="imagingTime"
                             type="csw30:TemporalExtentType"
                             minOccurs="0" maxOccurs="unbounded"/>
-               <xsd:element ref="mc:version" />
-               <xsd:element ref="mc:sensor" />
-               <xsd:element ref="mc:region" />
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
