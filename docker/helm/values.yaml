@@ -150,9 +150,8 @@ pycsw:
         'pycsw:Links': 'references',
         
         # added for MCGC profile.
-        'pycsw:region': 'region',
-        'pycsw:sensorName': 'sensor_name',
-        'pycsw:sensorType': 'sensor_type',
-        'pycsw:version': 'version'
+        'pycsw:geojson': 'geojson',
+        'pycsw:category': 'category',
+        'pycsw:thumbnail': 'thumbnail',
       }
     }
