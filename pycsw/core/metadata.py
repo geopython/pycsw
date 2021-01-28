@@ -1435,7 +1435,7 @@ def _parse_iso(context, repos, exml):
         _set(context, recobj, 'pycsw:ResponsiblePartyRole', md.contact[0].role)
 
 
-    if md.contentinfo:
+    if hasattr(md, 'contentinfo') and len(md.contentinfo) > 0:
         for ci in md.contentinfo:
             if isinstance(ci, MD_ImageDescription):
                 _set(context, recobj, 'pycsw:CloudCover', ci.cloud_cover)
