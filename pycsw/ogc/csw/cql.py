@@ -33,11 +33,12 @@ import logging
 from pycsw.core.etree import etree
 from pycsw.core import util
 from pycsw.ogc.fes.fes1 import MODEL as fes1_model
+from pycsw.ogc.fes.fes2 import MODEL as fes2_model
 
 LOGGER = logging.getLogger(__name__)
 
 
-def cql2fes1(cql, namespaces):
+def cql2fes(cql, namespaces, fes_version='1.0'):
     """transforms Common Query Language (CQL) query into OGC fes1 syntax"""
 
     filters = []
@@ -46,17 +47,29 @@ def cql2fes1(cql, namespaces):
 
     LOGGER.debug('CQL: %s', cql)
 
+    if fes_version.startswith('1.0'):
+        element_or = 'ogc:Or'
+        element_and = 'ogc:And'
+        element_filter = 'ogc:Filter'
+        element_propertyname = 'ogc:PropertyName'
+        element_literal = 'ogc:Literal'
+    elif fes_version.startswith('2.0'):
+        element_or = 'fes20:Or'
+        element_and = 'fes20:And'
+        element_filter = 'fes20:Filter'
+        element_propertyname = 'fes20:Literal'
+
     if ' or ' in cql:
-        logical_op = etree.Element(util.nspath_eval('ogc:Or', namespaces))
+        logical_op = etree.Element(util.nspath_eval(element_or, namespaces))
         tmp_list = cql.split(' or ')
     elif ' OR ' in cql:
-        logical_op = etree.Element(util.nspath_eval('ogc:Or', namespaces))
+        logical_op = etree.Element(util.nspath_eval(element_or, namespaces))
         tmp_list = cql.split(' OR ')
     elif ' and ' in cql:
-        logical_op = etree.Element(util.nspath_eval('ogc:And', namespaces))
+        logical_op = etree.Element(util.nspath_eval(element_and, namespaces))
         tmp_list = cql.split(' and ')
     elif ' AND ' in cql:
-        logical_op = etree.Element(util.nspath_eval('ogc:And', namespaces))
+        logical_op = etree.Element(util.nspath_eval(element_and, namespaces))
         tmp_list = cql.split(' AND ')
 
     if tmp_list:
@@ -65,9 +78,9 @@ def cql2fes1(cql, namespaces):
         tmp_list.append(cql)
 
     for t in tmp_list:
-        filters.append(_parse_condition(t))
+        filters.append(_parse_condition(t, fes_version))
 
-    root = etree.Element(util.nspath_eval('ogc:Filter', namespaces))
+    root = etree.Element(util.nspath_eval(element_filter, namespaces))
 
     if logical_op is not None:
         root.append(logical_op)
@@ -77,11 +90,11 @@ def cql2fes1(cql, namespaces):
 
         etree.SubElement(
             condition,
-            util.nspath_eval('ogc:PropertyName', namespaces)).text = flt[1]
+            util.nspath_eval(element_propertyname, namespaces)).text = flt[1]
 
         etree.SubElement(
             condition,
-            util.nspath_eval('ogc:Literal', namespaces)).text = flt[2]
+            util.nspath_eval(element_literal, namespaces)).text = flt[2]
 
         if logical_op is not None:
             logical_op.append(condition)
@@ -94,7 +107,7 @@ def cql2fes1(cql, namespaces):
     return root
 
 
-def _parse_condition(condition):
+def _parse_condition(condition, fes_version='1.0'):
     """parses a single condition"""
 
     LOGGER.debug('condition: %s', condition)
@@ -105,11 +118,16 @@ def _parse_condition(condition):
 
     literal = literal.replace('"', '').replace('\'', '')
 
-    for k, v in fes1_model['ComparisonOperators'].items():
-        if v['opvalue'] == operator:
-            fes1_predicate = k
+    if fes_version.startswith('1.0'):
+        fes_model = fes1_model
+    elif fes_version.startswith('2.0'):
+        fes_model = fes2_model
 
-    LOGGER.debug('parsed condition: %s %s %s', property_name, fes1_predicate,
+    for k, v in fes_model['ComparisonOperators'].items():
+        if v['opvalue'] == operator:
+            fes_predicate = k
+
+    LOGGER.debug('parsed condition: %s %s %s', property_name, fes_predicate,
                  literal)
 
-    return (fes1_predicate, property_name, literal)
+    return (fes_predicate, property_name, literal)

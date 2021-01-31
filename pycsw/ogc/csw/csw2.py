@@ -37,7 +37,7 @@ from urllib.parse import quote, unquote
 from io import StringIO
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
-from pycsw.ogc.csw.cql import cql2fes1
+from pycsw.ogc.csw.cql import cql2fes
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
 from pycsw.core import config, log, metadata, util
@@ -739,7 +739,7 @@ class Csw2(object):
                         LOGGER.debug('CQL: %s', tmp)
                         self.parent.kvp['constraint'] = {}
                         self.parent.kvp['constraint']['type'] = 'filter'
-                        cql = cql2fes1(tmp, self.parent.context.namespaces)
+                        cql = cql2fes(tmp, self.parent.context.namespaces, fes_version='1.0')
                         self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = fes1.parse(cql,
                         self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
@@ -1564,7 +1564,7 @@ class Csw2(object):
             try:
                 LOGGER.info('Transforming CQL into OGC Filter')
                 query['type'] = 'filter'
-                cql = cql2fes1(tmp.text, self.parent.context.namespaces)
+                cql = cql2fes(tmp.text, self.parent.context.namespaces, fes_version='1.0')
                 query['where'], query['values'] = fes1.parse(cql,
                 self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
