@@ -21,10 +21,12 @@ This will return the Description document which can then be `autodiscovered <htt
 OpenSearch Temporal Queries
 ---------------------------
 
-By default, pycsw's OpenSearch temporal support will query the Dublin Core ``dc:date`` property.  To
-enable temporal extent search, set ``profiles=apiso`` which will query the temporal extents of
-a metadata record (``apiso:TempExtent_begin`` and ``apiso:TempExtent_end``).
+By default, pycsw's OpenSearch temporal support will query the Dublin Core ``dc:date`` property as
+a time instant/single point in time.  To enable temporal extent search, set ``profiles=apiso`` which
+will query the temporal extents of a metadata record (``apiso:TempExtent_begin`` and ``apiso:TempExtent_end``).
 
-At the HTTP API level, time is supported via one of ``time=t1/t2`` or ``start=t1&stop=t2``.  If the
-``time`` parameter is present, it will override either/both of the ``start`` and ``stop`` parameters
-respectively.
+At the HTTP API level, time is supported via either ``time=t1/t2`` or ``start=t1&stop=t2``.  If the
+``time`` parameter is present, it will override the ``start`` and ``stop`` parameters respectively.
+
+.. _`OGC OpenSearch Extension for Earth Observation`: http://docs.opengeospatial.org/is/13-026r9/13-026r9.html
+.. _`OGC OpenSearch Geo and Time Extensions 1.0`: http://www.opengeospatial.org/standards/opensearchgeo
