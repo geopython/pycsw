@@ -251,7 +251,6 @@ class OpenSearch(object):
                 'request': 'GetRecords',
                 'elementsetname': 'full',
                 'typenames': 'csw:Record',
-                'resulttype': 'results',
                 'outputformat': 'application/xml',
                 'outputschema': 'http://www.opengis.net/cat/csw/3.0',
                 'recordids': '{geo:uid?}',
@@ -324,7 +323,7 @@ class OpenSearch(object):
         return node
 
 
-def kvp2filterxml(kvp, context, profiles):
+def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
     ''' transform kvp to filter XML string '''
 
     bbox_element = None
