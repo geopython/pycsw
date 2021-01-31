@@ -31,10 +31,30 @@
 # =================================================================
 
 import logging
+from urllib.parse import urlencode
+
 from pycsw.core import util
 from pycsw.core.etree import etree
 
 LOGGER = logging.getLogger(__name__)
+
+QUERY_PARAMETERS = [
+    'q',
+    'bbox',
+    'time',
+    'eo:processinglevel',
+    'eo:producttype',
+    'eo:platform',
+    'eo:instrument',
+    'eo:sensortype',
+    'eo:cloudcover',
+    'eo:snowcover',
+    'eo:spectralrange',
+    'eo:bands',
+    'eo:orbitnumber',
+    'eo:orbitdirection'
+]
+
 
 class OpenSearch(object):
     """OpenSearch wrapper class"""
@@ -44,6 +64,7 @@ class OpenSearch(object):
 
         self.namespaces = {
             'atom': 'http://www.w3.org/2005/Atom',
+            'eo': 'http://a9.com/-/opensearch/extensions/eo/1.0/',
             'geo': 'http://a9.com/-/opensearch/extensions/geo/1.0/',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
             'time': 'http://a9.com/-/opensearch/extensions/time/1.0/'
@@ -52,6 +73,7 @@ class OpenSearch(object):
         self.context = context
         self.context.namespaces.update(self.namespaces)
         self.context.keep_ns_prefixes.append('geo')
+        self.context.keep_ns_prefixes.append('eo')
         self.context.keep_ns_prefixes.append('time')
 
     def response_csw2opensearch(self, element, cfg):
@@ -119,7 +141,39 @@ class OpenSearch(object):
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/atom+xml')
             node1.set('method', 'get')
-            node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&start={time:start?}&stop={time:end?}&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
+
+            kvps = {
+                'mode': 'opensearch',
+                'service': 'CSW',
+                'version': '2.0.2',
+                'request': 'GetRecords',
+                'elementsetname': 'full',
+                'typenames': 'csw:Record',
+                'resulttype': 'results',
+                'q': '{searchTerms?}',
+                'bbox': '{geo:box?}',
+                'time': '{time:start?}/{time:end?}',
+                'start': '{time:start?}',
+                'stop': '{time:end?}',
+                'startposition': '{startIndex?}',
+                'maxrecords': '{count?}',
+                'eo:cloudCover': '{eo:cloudCover?}',
+                'eo:instrument': '{eo:instrument?}',
+                'eo:orbitDirection': '{eo:orbitDirection?}',
+                'eo:orbitNumber': '{eo:orbitNumber?}',
+                'eo:platform': '{eo:platform?}',
+                'eo:processingLevel': '{eo:processingLevel?}',
+                'eo:productType': '{eo:productType?}',
+                'eo:sensorType': '{eo:sensorType?}',
+                'eo:snowCover': '{eo:snowCover?}',
+                'eo:spectralRange': '{eo:spectralRange?}'
+            }
+
+            node1.set('template', '%s%s' % (self.bind_url,
+                '&'.join('{}={}'.format(*i) for i in kvps.items())))
+
+
+            #node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&start={time:start?}&stop={time:end?}&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
 
             node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
             node1.set('type', 'image/vnd.microsoft.icon')
@@ -190,12 +244,47 @@ class OpenSearch(object):
             # Requirement-022
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/xml')
-            node1.set('template', '%sservice=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&start={time:start?}&stop={time:end?}&outputformat=application/xml&outputschema=http://www.opengis.net/cat/csw/3.0&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid?}' % self.bind_url)
+
+            kvps = {
+                'service': 'CSW',
+                'version': '3.0.0',
+                'request': 'GetRecords',
+                'elementsetname': 'full',
+                'typenames': 'csw:Record',
+                'outputformat': 'application/xml',
+                'outputschema': 'http://www.opengis.net/cat/csw/3.0',
+                'recordids': '{geo:uid?}',
+                'q': '{searchTerms?}',
+                'bbox': '{geo:box?}',
+                'time': '{time:start?}/{time:end?}',
+                'start': '{time:start?}',
+                'stop': '{time:end?}',
+                'startposition': '{startIndex?}',
+                'maxrecords': '{count?}',
+                'eo:cloudCover': '{eo:cloudCover?}',
+                'eo:instrument': '{eo:instrument?}',
+                'eo:orbitDirection': '{eo:orbitDirection?}',
+                'eo:orbitNumber': '{eo:orbitNumber?}',
+                'eo:platform': '{eo:platform?}',
+                'eo:processingLevel': '{eo:processingLevel?}',
+                'eo:productType': '{eo:productType?}',
+                'eo:sensorType': '{eo:sensorType?}',
+                'eo:snowCover': '{eo:snowCover?}',
+                'eo:spectralRange': '{eo:spectralRange?}'
+            }
+
+            node1.set('template', '%s%s' % (self.bind_url,
+                '&'.join('{}={}'.format(*i) for i in kvps.items())))
 
             # Requirement-023
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/atom+xml')
-            node1.set('template', '%smode=opensearch&service=CSW&version=3.0.0&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&start={time:start?}&stop={time:end?}&outputformat=application/atom%%2Bxml&startposition={startIndex?}&maxrecords={count?}&recordids={geo:uid?}' % self.bind_url)
+
+            kvps['outputformat'] = 'application/atom%%2Bxml'
+            kvps['mode'] = 'opensearch'
+
+            node1.set('template', '%s%s' % (self.bind_url,
+                '&'.join('{}={}'.format(*i) for i in kvps.items())))
 
             node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
             node1.set('type', 'image/vnd.microsoft.icon')
@@ -241,6 +330,17 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
     time_element = None
     anytext_elements = []
     query_temporal_by_iso = False
+
+    eo_bands_element = None
+    eo_cloudcover_element = None
+    eo_instrument_element = None
+    eo_orbitdirection_element = None
+    eo_orbitnumber_element = None
+    eo_platform_element = None
+    eo_processinglevel_element = None
+    eo_producttype_element = None
+    eo_sensortype_element = None
+    eo_snowcover_element = None
 
     if profiles is not None and 'plugins' in profiles and 'APISO' in profiles['plugins']:
         query_temporal_by_iso = True
@@ -435,6 +535,94 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
             errortext = 'Exception: OpenSearch time not valid: %s.' % str(kvp['time'])
             LOGGER.error(errortext)
 
+    LOGGER.debug('Processing EO queryables')
+    if 'eo:producttype' in kvp:
+        par_count += 1
+        eo_producttype_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
+        etree.SubElement(eo_producttype_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
+        etree.SubElement(eo_producttype_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*eo:productType:%s*' % kvp['eo:producttype']
+
+    if 'eo:platform' in kvp:
+        par_count += 1
+        eo_platform_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
+        etree.SubElement(eo_platform_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Platform'
+        etree.SubElement(eo_platform_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = kvp['eo:platform']
+
+    if 'eo:processinglevel' in kvp:
+        par_count += 1
+        eo_processinglevel_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
+        etree.SubElement(eo_processinglevel_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
+        etree.SubElement(eo_processinglevel_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*eo:processingLevel:%s*' % kvp['eo:processinglevel']
+
+    if 'eo:instrument' in kvp:
+        par_count += 1
+        eo_instrument_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
+        etree.SubElement(eo_instrument_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Instrument'
+        etree.SubElement(eo_instrument_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = kvp['eo:instrument']
+
+    if 'eo:sensortype' in kvp:
+        par_count += 1
+        eo_sensortype_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
+        etree.SubElement(eo_sensortype_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:SensorType'
+        etree.SubElement(eo_sensortype_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = kvp['eo:sensortype']
+
+    if 'eo:cloudcover' in kvp:
+        par_count += 1
+        eo_cloudcover_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
+        etree.SubElement(eo_cloudcover_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:CloudCover'
+        etree.SubElement(eo_cloudcover_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = kvp['eo:cloudcover']
+
+    if 'eo:snowcover' in kvp:
+        par_count += 1
+        eo_snowcover_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
+        etree.SubElement(eo_snowcover_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
+        etree.SubElement(eo_snowcover_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*eo:snowCover:%s*' % kvp['eo:snowcover']
+
+    if 'eo:spectralrange' in kvp:
+        par_count += 1
+        eo_bands_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
+        etree.SubElement(eo_bands_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Bands'
+        etree.SubElement(eo_bands_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*%s*' % kvp['eo:spectralrange']
+
+    if 'eo:orbitnumber' in kvp:
+        par_count += 1
+        eo_orbitnumber_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
+        etree.SubElement(eo_orbitnumber_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
+        etree.SubElement(eo_orbitnumber_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*eo:orbitNumber:%s*' % kvp['eo:orbitnumber']
+
+    if 'eo:orbitdirection' in kvp:
+        par_count += 1
+        eo_orbitdirection_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
+        etree.SubElement(eo_orbitdirection_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:Subject'
+        etree.SubElement(eo_orbitdirection_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*eo:orbitDirection:%s*' % kvp['eo:orbitdirection']
+
+    LOGGER.info('Query parameter count: %s', par_count)
     if par_count == 0:
         return ''
     elif par_count == 1:
@@ -449,7 +637,7 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
         elif anytext_elements:
             LOGGER.debug('Adding anytext')
             root.extend(anytext_elements)
-    elif (par_count > 1):
+    elif par_count > 1:
         LOGGER.debug('ogc:And query (%d predicates)', par_count)
         # Since more than 1 parameter, append the AND logical operator
         logical_and = etree.Element(util.nspath_eval('ogc:And',
@@ -461,6 +649,19 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
         if anytext_elements is not None:
             logical_and.extend(anytext_elements)
         root.append(logical_and)
+
+    if par_count == 1:
+        node_to_append = root
+    elif par_count > 1:
+        node_to_append = logical_and
+
+    LOGGER.debug('Adding EO queryables')
+    for eo_element in [eo_producttype_element, eo_platform_element, eo_instrument_element,
+                       eo_sensortype_element, eo_cloudcover_element, eo_snowcover_element,
+                       eo_bands_element, eo_orbitnumber_element, eo_orbitdirection_element,
+                       eo_processinglevel_element]:
+        if eo_element is not None:
+            node_to_append.append(eo_element)
 
     # Render etree to string XML
     LOGGER.debug(etree.tostring(root, encoding='unicode'))
