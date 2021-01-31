@@ -35,13 +35,13 @@ from time import time
 from urllib.parse import quote, unquote
 from io import StringIO
 from pycsw.core.etree import etree
-from pycsw.ogc.csw.cql import cql2fes1
+from pycsw.ogc.csw.cql import cql2fes
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
 from pycsw.core import config, log, metadata, util
 from pycsw.core.formats.fmt_json import xml2dict
-from pycsw.ogc.fes import fes2
+from pycsw.ogc.fes import fes1, fes2
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -738,7 +738,7 @@ class Csw3(object):
             self.parent.kvp['constraintlanguage'] = 'FILTER'
             try:
                 tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context,
-                                                      self.parent.profiles)
+                                                      self.parent.profiles, fes_version='1.0')
             except Exception as err:
                 return self.exceptionreport('InvalidParameterValue', 'bbox', str(err))
 
@@ -767,7 +767,7 @@ class Csw3(object):
                         LOGGER.debug('CQL: %s', tmp)
                         self.parent.kvp['constraint'] = {}
                         self.parent.kvp['constraint']['type'] = 'filter'
-                        cql = cql2fes1(tmp, self.parent.context.namespaces)
+                        cql = cql2fes(tmp, self.parent.context.namespaces, fes_version='1.0')
                         self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = fes1.parse(cql,
                         self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
@@ -789,7 +789,7 @@ class Csw3(object):
                         self.parent.kvp['constraint'] = {}
                         self.parent.kvp['constraint']['type'] = 'filter'
                         self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = \
-                        fes2.parse(doc,
+                        fes1.parse(doc,
                         self.parent.repository.queryables['_all'],
                         self.parent.repository.dbtype,
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
@@ -1646,8 +1646,8 @@ class Csw3(object):
             try:
                 LOGGER.info('Transforming CQL into OGC Filter')
                 query['type'] = 'filter'
-                cql = cql2fes1(tmp.text, self.parent.context.namespaces)
-                query['where'], query['values'] = fes1.parse(cql,
+                cql = cql2fes(tmp.text, self.parent.context.namespaces, fes_version='2.0')
+                query['where'], query['values'] = fes2.parse(cql,
                 self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                 query['_dict'] = xml2dict(etree.tostring(cql), self.parent.context.namespaces)

@@ -234,7 +234,7 @@ class OpenSearch(object):
         return node
 
 
-def kvp2filterxml(kvp, context, profiles):
+def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
     ''' transform kvp to filter XML string '''
 
     bbox_element = None
