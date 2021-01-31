@@ -251,7 +251,6 @@ class OpenSearch(object):
                 'request': 'GetRecords',
                 'elementsetname': 'full',
                 'typenames': 'csw:Record',
-                'resulttype': 'results',
                 'outputformat': 'application/xml',
                 'outputschema': 'http://www.opengis.net/cat/csw/3.0',
                 'recordids': '{geo:uid?}',
