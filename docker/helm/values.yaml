@@ -1,0 +1,31 @@
+global:
+  namespace: default
+
+db:
+  name: db
+  image: postgis/postgis:12-3.1
+  port: 5432
+  database: pycsw
+  user: postgres
+  pass: mypass
+  pgdata_volume_name: db-data
+  pgdata_volume_path: /var/lib/postgresql/data/pgdata
+  pgdata_volume_size: 500Mi
+  pgdata_volume_access_modes: ReadWriteOnce
+  pgdata_volume_storage_type: standard
+
+pycsw:
+  name: pycsw
+  image: geopython/pycsw:latest
+  container_port: 8000
+  server_url: http://localhost:8000
+  database_uri: postgresql://postgres:mypass@db/pycsw
+  service_type: NodePort
+  service_port: 8000
+  service_port_name: http
+  service_node_port: 30000
+  configmap_name: pycsw-configmap
+  volume_name: pycsw-config
+  volume_path: /etc/pycsw
+
+

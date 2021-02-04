@@ -103,19 +103,5 @@ data:
 
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2020-10-12T20:12:04Z"
-  managedFields:
-  - apiVersion: v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:data:
-        .: {}
-        f:pycsw_config: {}
-    manager: kubectl
-    operation: Update
-    time: "2020-10-12T20:12:04Z"
-  name: pycsw-configmap
-  namespace: default
-  resourceVersion: "192581"
-  selfLink: /api/v1/namespaces/default/configmaps/pycsw-configmap
-  uid: 95a9327a-0091-4f07-abf9-093f59dc3a24
+  name: {{ .Values.pycsw.configmap_name }}
+  namespace: {{ .Values.global.namespace }}
