@@ -1,42 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: {{ .Values.global.namespace }}
   labels:
-    io.kompose.service: db
-  name: db
+    io.kompose.service: {{ .Values.db.name }}
+  name: {{ .Values.db.name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: db
+      io.kompose.service: {{ .Values.db.name }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        io.kompose.service: db
+        io.kompose.service: {{ .Values.db.name }}
     spec:
       containers:
       - env:
         - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata
+          value: {{ .Values.db.pgdata_volume_path }}
         - name: POSTGRES_DB
-          value: pycsw
+          value: {{ .Values.db.database }}
         - name: POSTGRES_PASSWORD
-          value: mypass
+          value: {{ .Values.db.pass }}
         - name: POSTGRES_USER
-          value: postgres
-        image: postgis/postgis:12-3.0-alpine
-        name: db
+          value: {{ .Values.db.user }}
+        image: {{ .Values.db.image }}
+        name: {{ .Values.db.user }}
         ports:
-        - containerPort: 5432
+        - containerPort: {{ .Values.db.port }}
         resources: {}
         volumeMounts:
-        - mountPath: /var/lib/postgresql/data/pgdata
-          name: db-data
+        - mountPath: {{ .Values.db.pgdata_volume_path }}
+          name: {{ .Values.db.pgdata_volume_name }}
       restartPolicy: Always
       volumes:
-      - name: db-data
+      - name: {{ .Values.db.pgdata_volume_name }}
         persistentVolumeClaim:
-          claimName: db-data
+          claimName: {{ .Values.db.pgdata_volume_name }}
 status: {}
