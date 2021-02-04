@@ -20,9 +20,9 @@ spec:
       containers:
       - env:
         - name: PYCSW_SERVER_URL
-          value: {{ .Values.pycsw.server_url }}
+          value: {{ .Values.pycsw.config.server.url }}
         - name: PYCSW_REPOSITORY_DATABASE_URI
-          value: {{ .Values.pycsw.database_uri }}
+          value: {{ .Values.pycsw.config.repository.database }}
         image: {{ .Values.pycsw.image }}
         name: {{ .Values.pycsw.name }}
         ports:
