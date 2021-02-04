@@ -46,7 +46,7 @@ pycsw:
       # spatial_ranking: true
       profiles: apiso
     manager:
-      transactions: false
+      transactions: "false"
       allowed_ips: 127.0.0.1
       # csw_harvest_pagesize: 10
     metadata:
@@ -72,8 +72,13 @@ pycsw:
       contact_hours: Hours of Service
       contact_instructions: During hours of service.  Off on weekends.
       contact_role: pointOfContact
+    repository:
+      database: postgresql://postgres:mypass@db/pycsw
+      table: records
+      # mappings: path/to/mappings.py
+      # filter: type = 'http://purl.org/dc/dcmitype/Dataset'
     inspire:
-      enabled: true
+      enabled: "true"
       languages_supported: eng,gre
       default_language: eng
       date: YYYY-MM-DD
@@ -82,8 +87,4 @@ pycsw:
       contact_name: Organization Name
       contact_email: Email Address
       temp_extent: YYYY-MM-DD/YYYY-MM-DD
-    repository:
-      database: postgresql://postgres:mypass@db/pycsw
-      table: records
-      # mappings: path/to/mappings.py
-      # filter: type = 'http://purl.org/dc/dcmitype/Dataset'
+    
