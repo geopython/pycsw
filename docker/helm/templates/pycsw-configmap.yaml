@@ -1,105 +1,177 @@
 apiVersion: v1
 data:
   pycsw.cfg: |+
-    # =================================================================
-    #
-    # Authors: Tom Kralidis <tomkralidis@gmail.com>
-    #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
-    #
-    # Copyright (c) 2015 Tom Kralidis
-    # Copyright (c) 2017 Ricardo Garcia Silva
-    #
-    # Permission is hereby granted, free of charge, to any person
-    # obtaining a copy of this software and associated documentation
-    # files (the "Software"), to deal in the Software without
-    # restriction, including without limitation the rights to use,
-    # copy, modify, merge, publish, distribute, sublicense, and/or sell
-    # copies of the Software, and to permit persons to whom the
-    # Software is furnished to do so, subject to the following
-    # conditions:
-    #
-    # The above copyright notice and this permission notice shall be
-    # included in all copies or substantial portions of the Software.
-    #
-    # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-    # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-    # NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-    # HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-    # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-    # OTHER DEALINGS IN THE SOFTWARE.
-    #
-    # =================================================================
-
     [server]
-    home=/home/pycsw
-    url=${PYCSW_SERVER_URL}
-    mimetype=application/xml; charset=UTF-8
-    encoding=UTF-8
-    language=en-US
-    maxrecords=10
-    loglevel=DEBUG
-    logfile=
-    #ogc_schemas_base=http://foo
-    #federatedcatalogues=http://catalog.data.gov/csw
-    #pretty_print=true
-    #gzip_compresslevel=8
-    #domainquerytype=range
-    #domaincounts=true
-    #spatial_ranking=true
-    profiles=apiso
+    {{ if .Values.pycsw.config.server.home }}
+    home={{ .Values.pycsw.config.server.home }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.url }}
+    url={{ .Values.pycsw.config.server.url }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.mimetype }}
+    mimetype={{ .Values.pycsw.config.server.mimetype }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.encoding }}
+    encoding={{ .Values.pycsw.config.server.encoding }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.language }}
+    language={{ .Values.pycsw.config.server.language }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.maxrecords }}
+    maxrecords={{ .Values.pycsw.config.server.maxrecords }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.loglevel }}
+    loglevel={{ .Values.pycsw.config.server.loglevel }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.logfile }}
+    logfile={{ .Values.pycsw.config.server.logfile }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.ogc_schemas_base }}
+    ogc_schemas_base={{ .Values.pycsw.config.server.ogc_schemas_base }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.federatedcatalogues }}
+    federatedcatalogues={{ .Values.pycsw.config.server.federatedcatalogues }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.pretty_print }}
+    pretty_print={{ .Values.pycsw.config.server.pretty_print }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.gzip_compresslevel }}
+    gzip_compresslevel={{ .Values.pycsw.config.server.gzip_compresslevel }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.domainquerytype }}
+    domainquerytype={{ .Values.pycsw.config.server.domainquerytype }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.domaincounts }}
+    domaincounts={{ .Values.pycsw.config.server.domaincounts }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.spatial_ranking }}
+    spatial_ranking={{ .Values.pycsw.config.server.spatial_ranking }}
+    {{ end }}
+    {{ if .Values.pycsw.config.server.profiles }}
+    profiles={{ .Values.pycsw.config.server.profiles }}
+    {{ end }}
 
     [manager]
-    transactions=false
-    allowed_ips=127.0.0.1
-    #csw_harvest_pagesize=10
+    {{ if .Values.pycsw.config.manager.transactions }}
+    transactions={{ .Values.pycsw.config.manager.transactions }}
+    {{ end }}
+    {{ if .Values.pycsw.config.manager.allowed_ips }}
+    allowed_ips={{ .Values.pycsw.config.manager.allowed_ips }}
+    {{ end }}
+    {{ if .Values.pycsw.config.manager.csw_harvest_pagesize }}
+    csw_harvest_pagesize={{ .Values.pycsw.config.manager.csw_harvest_pagesize }}
+    {{ end }}
 
     [metadata:main]
-    identification_title=pycsw Geospatial Catalogue
-    identification_abstract=pycsw is an OGC CSW server implementation written in Python
-    identification_keywords=catalogue,discovery,metadata
-    identification_keywords_type=theme
-    identification_fees=None
-    identification_accessconstraints=None
-    provider_name=Organization Name
-    provider_url=https://pycsw.org/
-    contact_name=Lastname, Firstname
-    contact_position=Position Title
-    contact_address=Mailing Address
-    contact_city=City
-    contact_stateorprovince=Administrative Area
-    contact_postalcode=Zip or Postal Code
-    contact_country=Country
-    contact_phone=+xx-xxx-xxx-xxxx
-    contact_fax=+xx-xxx-xxx-xxxx
-    contact_email=Email Address
-    contact_url=Contact URL
-    contact_hours=Hours of Service
-    contact_instructions=During hours of service.  Off on weekends.
-    contact_role=pointOfContact
+    {{ if .Values.pycsw.config.metadata.identification_title }}
+    identification_title={{ .Values.pycsw.config.metadata.identification_title }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.identification_abstract }}
+    identification_abstract={{ .Values.pycsw.config.metadata.identification_abstract }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.identification_keywords }}
+    identification_keywords={{ .Values.pycsw.config.metadata.identification_keywords }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.identification_keywords_type }}
+    identification_keywords_type={{ .Values.pycsw.config.metadata.identification_keywords_type }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.identification_fees }}
+    identification_fees={{ .Values.pycsw.config.metadata.identification_fees }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.identification_accessconstraints }}
+    identification_accessconstraints={{ .Values.pycsw.config.metadata.identification_accessconstraints }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.provider_name }}
+    provider_name={{ .Values.pycsw.config.metadata.provider_name }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.provider_url }}
+    provider_url={{ .Values.pycsw.config.metadata.provider_url }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_name }}
+    contact_name={{ .Values.pycsw.config.metadata.contact_name }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_position }}
+    contact_position={{ .Values.pycsw.config.metadata.contact_position }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_address }}
+    contact_address={{ .Values.pycsw.config.metadata.contact_address }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_city }}
+    contact_city={{ .Values.pycsw.config.metadata.contact_city }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_stateorprovince }}
+    contact_stateorprovince={{ .Values.pycsw.config.metadata.contact_stateorprovince }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_postalcode }}
+    contact_postalcode={{ .Values.pycsw.config.metadata.contact_postalcode }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_country }}
+    contact_country={{ .Values.pycsw.config.metadata.contact_country }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_phone }}
+    contact_phone={{ .Values.pycsw.config.metadata.contact_phone }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_fax }}
+    contact_fax={{ .Values.pycsw.config.metadata.contact_fax }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_email }}
+    contact_email={{ .Values.pycsw.config.metadata.contact_email }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_url }}
+    contact_url={{ .Values.pycsw.config.metadata.contact_url }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_hours }}
+    contact_hours={{ .Values.pycsw.config.metadata.contact_hours }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_instructions }}
+    contact_instructions={{ .Values.pycsw.config.metadata.contact_instructions }}
+    {{ end }}
+    {{ if .Values.pycsw.config.metadata.contact_role }}
+    contact_role={{ .Values.pycsw.config.metadata.contact_role }}
+    {{ end }}
 
     [repository]
-    # sqlite
-    #database=sqlite:////home/pycsw/tests/functionaltests/suites/cite/data/cite.db
-    # postgres
-    database=${PYCSW_REPOSITORY_DATABASE_URI}
-    # mysql
-    #database=mysql://username:password@localhost/pycsw?charset=utf8
-    #mappings=path/to/mappings.py
-    table=records
-    #filter=type = 'http://purl.org/dc/dcmitype/Dataset'
+    {{ if .Values.pycsw.config.repository.database }}
+    database={{ .Values.pycsw.config.repository.database }}
+    {{ end }}
+    {{ if .Values.pycsw.config.repository.mappings }}
+    mappings={{ .Values.pycsw.config.repository.mappings }}
+    {{ end }}
+    {{ if .Values.pycsw.config.repository.table }}
+    table={{ .Values.pycsw.config.repository.table }}
+    {{ end }}
+    {{ if .Values.pycsw.config.repository.filter }}
+    filter={{ .Values.pycsw.config.repository.filter }}
+    {{ end }}
 
     [metadata:inspire]
-    enabled=true
-    languages_supported=eng,gre
-    default_language=eng
-    date=YYYY-MM-DD
-    gemet_keywords=Utility and governmental services
-    conformity_service=notEvaluated
-    contact_name=Organization Name
-    contact_email=Email Address
-    temp_extent=YYYY-MM-DD/YYYY-MM-DD
+    {{ if .Values.pycsw.config.inspire.enabled }}
+    enabled={{ .Values.pycsw.config.repository.enabled }}
+    {{ end }}
+    {{ if .Values.pycsw.config.inspire.languages_supported }}
+    languages_supported={{ .Values.pycsw.config.repository.languages_supported }}
+    {{ end }}
+    {{ if .Values.pycsw.config.inspire.default_language }}
+    default_language={{ .Values.pycsw.config.repository.default_language }}
+    {{ end }}
+    {{ if .Values.pycsw.config.inspire.date }}
+    date={{ .Values.pycsw.config.repository.date }}
+    {{ end }}
+    {{ if .Values.pycsw.config.inspire.gemet_keywords }}
+    gemet_keywords={{ .Values.pycsw.config.repository.gemet_keywords }}
+    {{ end }}
+    {{ if .Values.pycsw.config.inspire.conformity_service }}
+    conformity_service={{ .Values.pycsw.config.repository.conformity_service }}
+    {{ end }}
+    {{ if .Values.pycsw.config.inspire.contact_name }}
+    contact_name={{ .Values.pycsw.config.repository.contact_name }}
+    {{ end }}
+    {{ if .Values.pycsw.config.inspire.contact_email }}
+    contact_email={{ .Values.pycsw.config.repository.contact_email }}
+    {{ end }}
+    {{ if .Values.pycsw.config.inspire.temp_extent }}
+    temp_extent={{ .Values.pycsw.config.repository.temp_extent }}
+    {{ end }}
 
 kind: ConfigMap
 metadata:
