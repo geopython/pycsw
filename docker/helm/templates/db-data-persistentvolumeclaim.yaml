@@ -4,13 +4,15 @@ metadata:
   namespace: {{ .Values.global.namespace }}
   creationTimestamp: null
   labels:
-    io.kompose.service: {{ .Values.db.pgdata_volume_name }}
-  name: {{ .Values.db.pgdata_volume_name }}
+    io.kompose.service: {{ .Values.db.volume_name }}
+  name: {{ .Values.db.volume_name }}
 spec:
-  storageClassName: {{ .Values.db.pgdata_volume_storage_type }}
+  {{ if .Values.db.volume_storage_type }}
+  storageClassName: {{ .Values.db.volume_storage_type }}
+  {{ end }}
   accessModes:
-  - {{ .Values.db.pgdata_volume_access_modes }}
+  - {{ .Values.db.volume_access_modes }}
   resources:
     requests:
-      storage: {{ .Values.db.pgdata_volume_size }}
+      storage: {{ .Values.db.volume_size }}
 status: {}

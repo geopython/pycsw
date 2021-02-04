@@ -20,7 +20,7 @@ spec:
       containers:
       - env:
         - name: PGDATA
-          value: {{ .Values.db.pgdata_volume_path }}
+          value: {{ .Values.db.volume_path }}
         - name: POSTGRES_DB
           value: {{ .Values.db.database }}
         - name: POSTGRES_PASSWORD
@@ -33,11 +33,11 @@ spec:
         - containerPort: {{ .Values.db.port }}
         resources: {}
         volumeMounts:
-        - mountPath: {{ .Values.db.pgdata_volume_path }}
-          name: {{ .Values.db.pgdata_volume_name }}
+        - mountPath: {{ .Values.db.volume_path }}
+          name: {{ .Values.db.volume_name }}
       restartPolicy: Always
       volumes:
-      - name: {{ .Values.db.pgdata_volume_name }}
+      - name: {{ .Values.db.volume_name }}
         persistentVolumeClaim:
-          claimName: {{ .Values.db.pgdata_volume_name }}
+          claimName: {{ .Values.db.volume_name }}
 status: {}
