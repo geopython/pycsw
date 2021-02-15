@@ -333,7 +333,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
                 if mfile.endswith('.xml'):
                     file_list.append(os.path.join(root, mfile))
     else:
-        for rec in glob(os.path.join(xml_dirpath, '*.xml')):
+        for rec in glob(os.path.join(str(xml_dirpath), '*.xml')):
             file_list.append(rec)
 
     total = len(file_list)
