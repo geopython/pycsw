@@ -328,7 +328,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
     if os.path.isfile(str(xml_dirpath)):
         file_list.append(xml_dirpath)
     elif recursive:
-        for root, dirs, files in os.walk(xml_dirpath):
+        for root, dirs, files in os.walk(str(xml_dirpath)):
             for mfile in files:
                 if mfile.endswith('.xml'):
                     file_list.append(os.path.join(root, mfile))
