@@ -25,6 +25,7 @@ jobs:
     - name: Install requirements 📦
       run: |
         sudo apt install -y libgeos-dev libpq-dev libxml2-dev libxslt1-dev libz-dev
+        pip3 install --upgrade setuptools
         pip3 install -r requirements.txt
         pip3 install -r requirements-dev.txt
         pip3 install codecov tox
