@@ -665,7 +665,13 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
 
     # Render etree to string XML
     LOGGER.debug(etree.tostring(root, encoding='unicode'))
-    return etree.tostring(root, encoding='unicode')
+    filterstring = etree.tostring(root, encoding='unicode')
+    if fes_version == '2.0':
+        filterstring = filterstring.replace('PropertyName', 'ValueReference')\
+                                   .replace('xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:fes20="http://www.opengis.net/fes/2.0"')\
+                                   .replace('ogc:', 'fes20:')
+    print(filterstring)
+    return filterstring
 
 
 def validate_4326(bbox_list):

@@ -4,7 +4,7 @@
    xmlns:fes="http://www.opengis.net/fes/2.0"
    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
    elementFormDefault="qualified"
-   version="2.0.2">
+   version="2.0.3">
 
    <xsd:annotation>
       <xsd:documentation>
@@ -13,9 +13,9 @@
          To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
       </xsd:documentation>
    </xsd:annotation>
-   
+
    <xsd:include schemaLocation="filterAll.xsd"/>
-   
+
    <xsd:element name="expression" abstract="true"/>
 
    <xsd:element name="ValueReference" type="xsd:string"

@@ -739,7 +739,7 @@ class Csw3(object):
             self.parent.kvp['constraintlanguage'] = 'FILTER'
             try:
                 tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context,
-                                                      self.parent.profiles, fes_version='1.0')
+                                                      self.parent.profiles, fes_version='2.0')
             except Exception as err:
                 return self.exceptionreport('InvalidParameterValue', 'bbox', str(err))
 
@@ -781,21 +781,25 @@ class Csw3(object):
                     # validate filter XML
                     try:
                         schema = os.path.join(self.parent.config.get('server', 'home'),
-                        'core', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
+                        'core', 'schemas', 'ogc', 'filter', '2.0', 'filter.xsd')
+
                         LOGGER.info('Validating Filter %s.', self.parent.kvp['constraint'])
-                        schema = etree.XMLSchema(file=schema)
-                        parser = etree.XMLParser(schema=schema, resolve_entities=False)
+                        #schema = etree.XMLSchema(file=schema)
+                        #parser = etree.XMLParser(schema=schema, resolve_entities=False)
+                        parser = etree.XMLParser(resolve_entities=False)
                         doc = etree.fromstring(self.parent.kvp['constraint'], parser)
                         LOGGER.debug('Filter is valid XML.')
                         self.parent.kvp['constraint'] = {}
                         self.parent.kvp['constraint']['type'] = 'filter'
                         self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = \
-                        fes1.parse(doc,
+                        fes2.parse(doc,
                         self.parent.repository.queryables['_all'],
                         self.parent.repository.dbtype,
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                         self.parent.kvp['constraint']['_dict'] = xml2dict(etree.tostring(doc), self.parent.context.namespaces)
                     except Exception as err:
+                        import traceback
+                        print(traceback.format_exc())
                         errortext = \
                         'Exception: document not valid.\nError: %s' % str(err)
 
@@ -890,7 +894,7 @@ class Csw3(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/cat/csw/3.0/cswGetRecordsResponse.xsd' % \
+        '%s %s/cat/csw/3.0/cswGetRecords.xsd' % \
         (self.parent.context.namespaces['csw30'], self.parent.config.get('server', 'ogc_schemas_base'))
 
         if 'requestid' in self.parent.kvp and self.parent.kvp['requestid'] is not None:
@@ -971,7 +975,7 @@ class Csw3(object):
 
         if (self.parent.config.has_option('server', 'federatedcatalogues') and
             'distributedsearch' in self.parent.kvp and
-            self.parent.kvp['distributedsearch'] and self.parent.kvp['hopcount'] > 0):
+            self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
 
             LOGGER.debug('DistributedSearch specified (hopCount: %s)',
@@ -985,15 +989,18 @@ class Csw3(object):
                 catalogue: %s', fedcat)
                 try:
                     start_time = time()
-                    remotecsw = CatalogueServiceWeb(fedcat, skip_caps=True)
-                    remotecsw.getrecords2(xml=self.parent.request,
-                                          esn=self.parent.kvp['elementsetname'],
-                                          outputschema=self.parent.kvp['outputschema'])
+
+                    remotecsw = CatalogueServiceWeb(fedcat, version='3.0.0', skip_caps=True)
+                    if self.parent.request.startswith('http'):
+                        self.parent.request = self.parent.request.split('?')[-1]
+                    remotecsw.getrecords(xml=self.parent.request,
+                                         esn=self.parent.kvp['elementsetname'],
+                                         outputschema=self.parent.kvp['outputschema'])
 
                     fsr = etree.SubElement(searchresults, util.nspath_eval(
                         'csw30:FederatedSearchResult',
                          self.parent.context.namespaces),
-                         catalogueURL=fedcat.request)
+                         catalogueURL=fedcat)
 
                     msg = 'Distributed search results from catalogue %s: %s.' % (fedcat, remotecsw.results)
                     LOGGER.debug(msg)
@@ -1003,15 +1010,17 @@ class Csw3(object):
                         'csw30:searchResult', self.parent.context.namespaces),
                         recordSchema=self.parent.kvp['outputschema'],
                         elementSetName=self.parent.kvp['elementsetname'],
-                        numberOfRecordsMatched=fedcat.results['matches'],
-                        numberOfRecordsReturned=fedcat.results['returned'],
-                        nextRecord=fedcat.results['nextrecord'],
+                        numberOfRecordsMatched=str(remotecsw.results['matches']),
+                        numberOfRecordsReturned=str(remotecsw.results['returned']),
+                        nextRecord=str(remotecsw.results['nextrecord']),
                         elapsedTime=str(get_elapsed_time(start_time, time())),
                         status=get_resultset_status(
-                            fedcat.results['matches'],
-                            fedcat.results['nextrecord']))
+                            remotecsw.results['matches'],
+                            remotecsw.results['nextrecord']))
 
-                    search_result.append(remotecsw.records)
+                    for result in remotecsw.records.values():
+                        search_result.append(etree.fromstring(result.xml, self.parent.context.parser))
+
                 except ExceptionReport as err:
                     error_string = 'remote CSW %s returned exception: ' % fedcat
                     searchresults.append(etree.Comment(
@@ -1022,13 +1031,6 @@ class Csw3(object):
                     searchresults.append(etree.Comment(
                     ' %s\n\n%s ' % (error_string, err)))
                     LOGGER.exception(error_string)
-
-#        if len(dsresults) > 0:  # return DistributedSearch results
-#            for resultset in dsresults:
-#                if isinstance(resultset, etree._Comment):
-#                    searchresults.append(resultset)
-#                for rec in resultset:
-#                    searchresults.append(etree.fromstring(resultset[rec].xml, self.parent.context.parser))
 
         searchresults.attrib['elapsedTime'] = str(get_elapsed_time(self.parent.process_time_start, time()))
 
@@ -1470,7 +1472,7 @@ class Csw3(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/csw/2.0.2/CSW-publication.xsd' % (self.parent.context.namespaces['csw'],
+        '%s %s/csw/3.0/cswHarvest.xsd' % (self.parent.context.namespaces['csw30'],
         self.parent.config.get('server', 'ogc_schemas_base'))
 
         node2 = etree.SubElement(node,
