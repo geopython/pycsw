@@ -86,6 +86,21 @@ The The following describes how ``maxRecords`` is handled by the configuration w
 
 .. _alternate-configurations:
 
+Using environment variables in configuration files
+------------------------------------------------------
+
+pycsw configuration supports using system environment variables, which can be helpful
+for deploying into `12 factor <https://12factor.net/>`_ environments for example.
+
+Below is an example of how to integrate system environment variables in pycsw:
+
+.. code-block:: ini
+
+   [repository]
+   database=${PYCSW_REPOSITORY_DATABASE_URI}
+   table=${MY_TABLE}
+
+
 Alternate Configurations
 ------------------------
 
@@ -100,6 +115,9 @@ Some deployments with alternate configurations prefer not to advertise the base 
 
 Environment Variables
 ~~~~~~~~~~~~~~~~~~~~~
+
+Configuration file location
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 One option is using Apache's ``Alias`` and ``SetEnvIf`` directives.  For example, given the base URL ``http://localhost/pycsw/csw.py?config=foo.cfg``, set the following in Apache's ``httpd.conf``:
 
