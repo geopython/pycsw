@@ -781,12 +781,10 @@ class Csw3(object):
                     # validate filter XML
                     try:
                         schema = os.path.join(self.parent.config.get('server', 'home'),
-                        'core', 'schemas', 'ogc', 'filter', '2.0', 'filter.xsd')
-
+                        'core', 'schemas', 'ogc', 'filter', '2.0', '_wrapper.xsd')
                         LOGGER.info('Validating Filter %s.', self.parent.kvp['constraint'])
-                        #schema = etree.XMLSchema(file=schema)
-                        #parser = etree.XMLParser(schema=schema, resolve_entities=False)
-                        parser = etree.XMLParser(resolve_entities=False)
+                        schema = etree.XMLSchema(file=schema)
+                        parser = etree.XMLParser(schema=schema, resolve_entities=False)
                         doc = etree.fromstring(self.parent.kvp['constraint'], parser)
                         LOGGER.debug('Filter is valid XML.')
                         self.parent.kvp['constraint'] = {}
