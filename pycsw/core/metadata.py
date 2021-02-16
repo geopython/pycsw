@@ -1524,7 +1524,7 @@ def _parse_iso(context, repos, exml):
 
 def _parse_dc(context, repos, exml):
 
-    from owslib.csw import CswRecord
+    from owslib.catalogue.csw2 import CswRecord
 
     recobj = repos.dataset()
     links = []
