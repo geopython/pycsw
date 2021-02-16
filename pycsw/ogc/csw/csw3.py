@@ -973,8 +973,15 @@ class Csw3(object):
 
         if (self.parent.config.has_option('server', 'federatedcatalogues') and
             'distributedsearch' in self.parent.kvp and
-            self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
+            self.parent.kvp['distributedsearch']
+            and 'hopcount' in self.parent.kvp and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
+
+#        if all([self.parent.config.has_option('server', 'federatedcatalogues'),
+#                'distributedsearch' in self.parent.kvp,
+#                self.parent.kvp['distributedsearch'],
+#                'hopcount' in self.parent.kvp,
+#                int(self.parent.kvp['hopcount']) > 0]):  # do distributed search
 
             LOGGER.debug('DistributedSearch specified (hopCount: %s)',
             self.parent.kvp['hopcount'])
