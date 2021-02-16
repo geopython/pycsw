@@ -30,9 +30,9 @@ jobs:
         pip3 install codecov tox
         echo "TOXENV => $TOXENV"
     - name: run unit tests ⚙️
-      run: tox -- --exitfirst -m unit
+      run: py.test -m unit
     - name: run integration tests ⚙️
-      run: tox -- --exitfirst -m functional -k 'not harvesting'
+      run: py.test -m functional -k "not harvesting"
     - name: run unit coveralls ⚙️
       run: codecov --disable search --flags unittests
     - name: run integration coveralls ⚙️
