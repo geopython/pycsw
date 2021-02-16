@@ -1,6 +1,6 @@
 geolinks
 lxml
--e git+https://github.com/geopython/OWSLib.git@master#egg=OWSLib
+git+https://github.com/geopython/OWSLib.git@master#egg=OWSLib
 pyproj
 Shapely
 xmltodict
