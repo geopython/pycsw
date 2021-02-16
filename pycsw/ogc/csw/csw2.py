@@ -833,7 +833,7 @@ class Csw2(object):
 
         if (self.parent.config.has_option('server', 'federatedcatalogues') and
             'distributedsearch' in self.parent.kvp and
-            self.parent.kvp['distributedsearch'] and self.parent.kvp['hopcount'] > 0):
+            self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
 
             LOGGER.debug('DistributedSearch specified (hopCount: %s).',
@@ -845,8 +845,10 @@ class Csw2(object):
             self.parent.config.get('server', 'federatedcatalogues').split(','):
                 LOGGER.debug('Performing distributed search on federated \
                 catalogue: %s.', fedcat)
-                remotecsw = CatalogueServiceWeb(fedcat, skip_caps=True)
+                remotecsw = CatalogueServiceWeb(fedcat, version='2.0.2', skip_caps=True)
                 try:
+                    if self.parent.request.startswith(b'http'):
+                        self.parent.request = self.parent.request.split('?')[-1]
                     remotecsw.getrecords2(xml=self.parent.request,
                                           esn=self.parent.kvp['elementsetname'],
                                           outputschema=self.parent.kvp['outputschema'])
