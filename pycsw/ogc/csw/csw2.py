@@ -847,7 +847,7 @@ class Csw2(object):
                 catalogue: %s.', fedcat)
                 remotecsw = CatalogueServiceWeb(fedcat, version='2.0.2', skip_caps=True)
                 try:
-                    if self.parent.request.startswith(b'http'):
+                    if str(self.parent.request).startswith('http'):
                         self.parent.request = self.parent.request.split('?')[-1]
                     remotecsw.getrecords2(xml=self.parent.request,
                                           esn=self.parent.kvp['elementsetname'],

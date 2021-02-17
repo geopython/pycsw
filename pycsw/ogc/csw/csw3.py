@@ -796,8 +796,6 @@ class Csw3(object):
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                         self.parent.kvp['constraint']['_dict'] = xml2dict(etree.tostring(doc), self.parent.context.namespaces)
                     except Exception as err:
-                        import traceback
-                        print(traceback.format_exc())
                         errortext = \
                         'Exception: document not valid.\nError: %s' % str(err)
 
@@ -996,7 +994,7 @@ class Csw3(object):
                     start_time = time()
 
                     remotecsw = CatalogueServiceWeb(fedcat, version='3.0.0', skip_caps=True)
-                    if self.parent.request.startswith('http'):
+                    if str(self.parent.request).startswith('http'):
                         self.parent.request = self.parent.request.split('?')[-1]
                     remotecsw.getrecords(xml=self.parent.request,
                                          esn=self.parent.kvp['elementsetname'],
