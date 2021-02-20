@@ -33,7 +33,7 @@
 import os
 from flask import Flask, Blueprint, make_response, request, send_from_directory
 from pycsw import server
-from pycsw.ogcapi import API
+from pycsw.ogc.api.records import API
 
 CONFIG = None
 
