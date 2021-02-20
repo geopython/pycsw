@@ -82,6 +82,116 @@ def csw():
 
     return response
 
+@BLUEPRINT.route('/openapi')
+def openapi():
+    """
+    OpenAPI endpoint
+
+    :returns: HTTP response
+    """
+    # with open(os.environ.get('PYCSW_OPENAPI'), encoding='utf8') as ff:
+        # openapi = yaml_load(ff)
+
+    headers, status_code, content = api_.openapi(request.headers, request.args,
+                                                 openapi)
+
+    response = make_response(content, status_code)
+
+    if headers:
+        response.headers = headers
+
+    return response
+
+
+@BLUEPRINT.route('/conformance')
+def conformance():
+    """
+    OGC API conformance endpoint
+
+    :returns: HTTP response
+    """
+
+    headers, status_code, content = api_.conformance(request.headers,
+                                                     request.args)
+
+    response = make_response(content, status_code)
+
+    if headers:
+        response.headers = headers
+
+    return response
+
+
+@BLUEPRINT.route('/collections')
+@BLUEPRINT.route('/collections/<collection_id>')
+def collections(collection_id=None):
+    """
+    OGC API collections endpoint
+
+    :param collection_id: collection identifier
+
+    :returns: HTTP response
+    """
+
+    headers, status_code, content = api_.describe_collections(
+        request.headers, request.args, collection_id)
+
+    response = make_response(content, status_code)
+
+    if headers:
+        response.headers = headers
+
+    return response
+
+
+@BLUEPRINT.route('/collections/<collection_id>/queryables')
+def collection_queryables(collection_id=None):
+    """
+    OGC API collections querybles endpoint
+
+    :param collection_id: collection identifier
+
+    :returns: HTTP response
+    """
+
+    headers, status_code, content = api_.get_collection_queryables(
+        request.headers, request.args, collection_id)
+
+    response = make_response(content, status_code)
+
+    if headers:
+        response.headers = headers
+
+    return response
+
+
+@BLUEPRINT.route('/collections/<collection_id>/items')
+@BLUEPRINT.route('/collections/<collection_id>/items/<item_id>')
+def collection_items(collection_id, item_id=None):
+    """
+    OGC API collections items endpoint
+
+    :param collection_id: collection identifier
+    :param item_id: item identifier
+
+    :returns: HTTP response
+    """
+
+    if item_id is None:
+        headers, status_code, content = api_.get_collection_items(
+            request.headers, request.args, collection_id)
+    else:
+        headers, status_code, content = api_.get_collection_item(
+            request.headers, request.args, collection_id, item_id)
+
+    response = make_response(content, status_code)
+
+    if headers:
+        response.headers = headers
+
+    return response
+
+
 APP.register_blueprint(BLUEPRINT)
 
 if __name__ == '__main__':  # run locally, for testing
