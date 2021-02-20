@@ -33,6 +33,20 @@
 import os
 from flask import Flask, Blueprint, make_response, request, send_from_directory
 from pycsw import server
+from pycsw.ogcapi import API
+
+CONFIG = None
+
+api_ = API(CONFIG)
+
+STATIC_FOLDER = 'static'
+if 'templates' in CONFIG['server']:
+    STATIC_FOLDER = CONFIG['server']['templates'].get('static', 'static')
+
+APP = Flask(__name__, static_folder=STATIC_FOLDER, static_url_path='/static')
+APP.url_map.strict_slashes = False
+
+BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC_FOLDER)
 
 @BLUEPRINT.route('/')
 def landing_page():
@@ -52,7 +66,7 @@ def landing_page():
     return response
 
 @BLUEPRINT.route('/csw')
-def landing_page():
+def csw():
     """
     CSW endpoint
 
@@ -67,3 +81,10 @@ def landing_page():
         response.headers = headers
 
     return response
+
+APP.register_blueprint(BLUEPRINT)
+
+if __name__ == '__main__':  # run locally, for testing
+    # setup_logger(CONFIG['logging'])
+    APP.run(debug=True, host=api_.config['server']['bind']['host'],
+            port=api_.config['server']['bind']['port'])
