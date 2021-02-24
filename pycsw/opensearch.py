@@ -42,6 +42,7 @@ QUERY_PARAMETERS = [
     'q',
     'bbox',
     'time',
+    'eo:parentidentifier',
     'eo:processinglevel',
     'eo:producttype',
     'eo:platform',
@@ -161,6 +162,7 @@ class OpenSearch(object):
                 'eo:instrument': '{eo:instrument?}',
                 'eo:orbitDirection': '{eo:orbitDirection?}',
                 'eo:orbitNumber': '{eo:orbitNumber?}',
+                'eo:parentIdentifier': '{eo:parentIdentifier?}',
                 'eo:platform': '{eo:platform?}',
                 'eo:processingLevel': '{eo:processingLevel?}',
                 'eo:productType': '{eo:productType?}',
@@ -265,6 +267,7 @@ class OpenSearch(object):
                 'eo:instrument': '{eo:instrument?}',
                 'eo:orbitDirection': '{eo:orbitDirection?}',
                 'eo:orbitNumber': '{eo:orbitNumber?}',
+                'eo:parentIdentifier': '{eo:parentIdentifier?}',
                 'eo:platform': '{eo:platform?}',
                 'eo:processingLevel': '{eo:processingLevel?}',
                 'eo:productType': '{eo:productType?}',
@@ -331,6 +334,7 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
     anytext_elements = []
     query_temporal_by_iso = False
 
+    eo_parentidentifier_element = None
     eo_bands_element = None
     eo_cloudcover_element = None
     eo_instrument_element = None
@@ -536,6 +540,14 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
             LOGGER.error(errortext)
 
     LOGGER.debug('Processing EO queryables')
+    if 'eo:parentidentifier' in kvp:
+        par_count += 1
+        eo_parentidentifier_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
+        etree.SubElement(eo_parentidentifier_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:ParentIdentifier'
+        etree.SubElement(eo_parentidentifier_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = kvp['eo:parentidentifier']
+
     if 'eo:producttype' in kvp:
         par_count += 1
         eo_producttype_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
@@ -659,7 +671,7 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
     for eo_element in [eo_producttype_element, eo_platform_element, eo_instrument_element,
                        eo_sensortype_element, eo_cloudcover_element, eo_snowcover_element,
                        eo_bands_element, eo_orbitnumber_element, eo_orbitdirection_element,
-                       eo_processinglevel_element]:
+                       eo_processinglevel_element, eo_parentidentifier_element]:
         if eo_element is not None:
             node_to_append.append(eo_element)
 
@@ -670,7 +682,6 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
         filterstring = filterstring.replace('PropertyName', 'ValueReference')\
                                    .replace('xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:fes20="http://www.opengis.net/fes/2.0"')\
                                    .replace('ogc:', 'fes20:')
-    print(filterstring)
     return filterstring
 
 
