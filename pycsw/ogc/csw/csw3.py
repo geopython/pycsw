@@ -970,9 +970,8 @@ class Csw3(object):
                     return self.parent.response
 
         if (self.parent.config.has_option('server', 'federatedcatalogues') and
-            'distributedsearch' in self.parent.kvp and
-            self.parent.kvp['distributedsearch']
-            and 'hopcount' in self.parent.kvp and int(self.parent.kvp['hopcount']) > 0):
+            'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
+            self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
 
 #        if all([self.parent.config.has_option('server', 'federatedcatalogues'),
@@ -996,6 +995,7 @@ class Csw3(object):
                     remotecsw = CatalogueServiceWeb(fedcat, version='3.0.0', skip_caps=True)
                     if str(self.parent.request).startswith('http'):
                         self.parent.request = self.parent.request.split('?')[-1]
+                        self.parent.request = self.parent.request.replace('mode=opensearch', '')
                     remotecsw.getrecords(xml=self.parent.request,
                                          esn=self.parent.kvp['elementsetname'],
                                          outputschema=self.parent.kvp['outputschema'])
