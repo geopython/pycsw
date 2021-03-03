@@ -832,7 +832,7 @@ class Csw2(object):
         dsresults = []
 
         if (self.parent.config.has_option('server', 'federatedcatalogues') and
-            'distributedsearch' in self.parent.kvp and
+            'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
             self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
 
@@ -849,6 +849,7 @@ class Csw2(object):
                 try:
                     if str(self.parent.request).startswith('http'):
                         self.parent.request = self.parent.request.split('?')[-1]
+                        self.parent.request = self.parent.request.replace('mode=opensearch', '')
                     remotecsw.getrecords2(xml=self.parent.request,
                                           esn=self.parent.kvp['elementsetname'],
                                           outputschema=self.parent.kvp['outputschema'])

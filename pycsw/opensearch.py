@@ -68,7 +68,8 @@ class OpenSearch(object):
             'eo': 'http://a9.com/-/opensearch/extensions/eo/1.0/',
             'geo': 'http://a9.com/-/opensearch/extensions/geo/1.0/',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
-            'time': 'http://a9.com/-/opensearch/extensions/time/1.0/'
+            'time': 'http://a9.com/-/opensearch/extensions/time/1.0/',
+#            'georss': 'http://www.georss.org/georss'
         }
 
         self.context = context
@@ -132,6 +133,9 @@ class OpenSearch(object):
             for rec in self.exml.xpath('//atom:entry',
                         namespaces=self.context.namespaces):
                 node.append(rec)
+            for rec in self.exml.xpath('//csw:Record',
+                        namespaces=self.context.namespaces):
+                node.append(self.cswrecord2atom(rec))
         elif operation_name == 'Capabilities':
             node = etree.Element(util.nspath_eval('os:OpenSearchDescription', self.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('os:ShortName', self.namespaces)).text = self.exml.xpath('//ows:Title', namespaces=self.context.namespaces)[0].text
@@ -224,18 +228,24 @@ class OpenSearch(object):
 
             etree.SubElement(node, util.nspath_eval('os:Query', self.context.namespaces), role='request')
 
-            etree.SubElement(node, util.nspath_eval('os:totalResults',
-                        self.context.namespaces)).text = self.exml.xpath(
-                        '//@numberOfRecordsMatched')[0]
+            results_count = int(self.exml.xpath('//@numberOfRecordsMatched')[0])
+            rc = etree.SubElement(node, util.nspath_eval('os:totalResults', self.context.namespaces))
+
             etree.SubElement(node, util.nspath_eval('os:startIndex',
                         self.context.namespaces)).text = str(startindex)
             etree.SubElement(node, util.nspath_eval('os:itemsPerPage',
                         self.context.namespaces)).text = self.exml.xpath(
                         '//@numberOfRecordsReturned')[0]
 
-            for rec in self.exml.xpath('//atom:entry',
-                        namespaces=self.context.namespaces):
+            for rec in self.exml.xpath('//atom:entry', namespaces=self.context.namespaces):
                 node.append(rec)
+            for rec in self.exml.xpath('//csw30:Record', namespaces=self.context.namespaces):
+                node.append(self.cswrecord2atom(rec))
+                results_count += 1
+
+            rc.text = str(results_count)
+
+
         elif response_name == 'Capabilities':
             node = etree.Element(util.nspath_eval('os:OpenSearchDescription', self.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('os:ShortName', self.namespaces)).text = self.exml.xpath('//ows20:Title', namespaces=self.context.namespaces)[0].text[:16]
@@ -324,6 +334,38 @@ class OpenSearch(object):
                 #node.append(rec)
                 node = rec
         return node
+
+    def cswrecord2atom(self, rec):
+        entry = etree.Element(util.nspath_eval('atom:entry', self.namespaces))
+
+        etree.SubElement(entry, util.nspath_eval('atom:id', self.context.namespaces)).text = rec.xpath('dc:identifier', namespaces=self.context.namespaces)[0].text
+        etree.SubElement(entry, util.nspath_eval('dc:identifier', self.context.namespaces)).text = rec.xpath('dc:identifier', namespaces=self.context.namespaces)[0].text
+        etree.SubElement(entry, util.nspath_eval('atom:title', self.context.namespaces)).text = rec.xpath('dc:title', namespaces=self.context.namespaces)[0].text
+        etree.SubElement(entry, util.nspath_eval('atom:updated', self.context.namespaces)).text = rec.xpath('dc:date', namespaces=self.context.namespaces)[0].text
+
+        for s in rec.xpath('dc:subject', namespaces=self.context.namespaces):
+            etree.SubElement(entry, util.nspath_eval('atom:category', self.context.namespaces), term=s.text)
+
+        for d in rec.xpath('dct:references', namespaces=self.context.namespaces):
+            link = etree.SubElement(entry, util.nspath_eval('atom:link', self.context.namespaces))
+            link.text = d.text
+
+            scheme = d.attrib.get('scheme')
+            if scheme is not None:
+                if scheme == 'enclosure':
+                    link.attrib['rel'] = scheme
+                else:
+                    link.attrib['type'] = scheme
+
+        bbox = rec.xpath('ows:BoundingBox|ows20:BoundingBox', namespaces=self.context.namespaces)
+        if bbox is not None:
+            where = etree.SubElement(entry, util.nspath_eval('georss:where', self.context.namespaces))
+            envelope = etree.SubElement(where, util.nspath_eval('gml:Envelope', self.context.namespaces))
+            envelope.attrib['srsName'] = bbox[0].attrib.get('crs')
+            etree.SubElement(envelope, util.nspath_eval('gml:lowerCorner', self.context.namespaces)).text = bbox[0].xpath('ows:LowerCorner|ows20:LowerCorner', namespaces=self.context.namespaces)[0].text
+            etree.SubElement(envelope, util.nspath_eval('gml:upperCorner', self.context.namespaces)).text = bbox[0].xpath('ows:UpperCorner|ows20:UpperCorner', namespaces=self.context.namespaces)[0].text
+
+        return entry
 
 
 def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
@@ -683,7 +725,6 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
                                    .replace('xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:fes20="http://www.opengis.net/fes/2.0"')\
                                    .replace('ogc:', 'fes20:')
     return filterstring
-
 
 def validate_4326(bbox_list):
     """Helper function to validate 4326."""
