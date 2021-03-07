@@ -133,7 +133,7 @@ class OpenSearch(object):
             for rec in self.exml.xpath('//atom:entry',
                         namespaces=self.context.namespaces):
                 node.append(rec)
-            for rec in self.exml.xpath('//csw:Record',
+            for rec in self.exml.xpath('//csw:Record|//csw:BriefRecord|//csw:SummaryRecord',
                         namespaces=self.context.namespaces):
                 node.append(self.cswrecord2atom(rec))
         elif operation_name == 'Capabilities':
@@ -228,23 +228,23 @@ class OpenSearch(object):
 
             etree.SubElement(node, util.nspath_eval('os:Query', self.context.namespaces), role='request')
 
-            results_count = int(self.exml.xpath('//@numberOfRecordsMatched')[0])
-            rc = etree.SubElement(node, util.nspath_eval('os:totalResults', self.context.namespaces))
+            matched = sum(int(x) for x in self.exml.xpath('//@numberOfRecordsMatched'))
+
+            etree.SubElement(node, util.nspath_eval('os:totalResults', self.context.namespaces)).text = str(matched)
 
             etree.SubElement(node, util.nspath_eval('os:startIndex',
                         self.context.namespaces)).text = str(startindex)
-            etree.SubElement(node, util.nspath_eval('os:itemsPerPage',
-                        self.context.namespaces)).text = self.exml.xpath(
-                        '//@numberOfRecordsReturned')[0]
+
+            returned = sum(int(x) for x in self.exml.xpath('//@numberOfRecordsReturned'))
+
+            etree.SubElement(node, util.nspath_eval('os:itemsPerPage', self.context.namespaces)).text = str(returned)
 
             for rec in self.exml.xpath('//atom:entry', namespaces=self.context.namespaces):
+                LOGGER.debug('ADDING ATOM ENTRY')
                 node.append(rec)
-            for rec in self.exml.xpath('//csw30:Record', namespaces=self.context.namespaces):
+
+            for rec in self.exml.xpath('//csw30:Record|//csw30:BriefRecord|//csw30:SummaryRecord', namespaces=self.context.namespaces):
                 node.append(self.cswrecord2atom(rec))
-                results_count += 1
-
-            rc.text = str(results_count)
-
 
         elif response_name == 'Capabilities':
             node = etree.Element(util.nspath_eval('os:OpenSearchDescription', self.namespaces), nsmap=self.namespaces)
@@ -341,7 +341,10 @@ class OpenSearch(object):
         etree.SubElement(entry, util.nspath_eval('atom:id', self.context.namespaces)).text = rec.xpath('dc:identifier', namespaces=self.context.namespaces)[0].text
         etree.SubElement(entry, util.nspath_eval('dc:identifier', self.context.namespaces)).text = rec.xpath('dc:identifier', namespaces=self.context.namespaces)[0].text
         etree.SubElement(entry, util.nspath_eval('atom:title', self.context.namespaces)).text = rec.xpath('dc:title', namespaces=self.context.namespaces)[0].text
-        etree.SubElement(entry, util.nspath_eval('atom:updated', self.context.namespaces)).text = rec.xpath('dc:date', namespaces=self.context.namespaces)[0].text
+
+        dc_date = rec.xpath('dc:date', namespaces=self.context.namespaces)
+        if dc_date:
+            etree.SubElement(entry, util.nspath_eval('atom:updated', self.context.namespaces)).text = dc_date[0].text
 
         for s in rec.xpath('dc:subject', namespaces=self.context.namespaces):
             etree.SubElement(entry, util.nspath_eval('atom:category', self.context.namespaces), term=s.text)
@@ -358,8 +361,8 @@ class OpenSearch(object):
                     link.attrib['type'] = scheme
 
         bbox = rec.xpath('ows:BoundingBox|ows20:BoundingBox', namespaces=self.context.namespaces)
-        if bbox is not None:
-            where = etree.SubElement(entry, util.nspath_eval('georss:where', self.context.namespaces))
+        if bbox:
+            where = etree.SubElement(entry, util.nspath_eval('georss:where', {'georss': 'http://www.georss.org/georss'}))
             envelope = etree.SubElement(where, util.nspath_eval('gml:Envelope', self.context.namespaces))
             envelope.attrib['srsName'] = bbox[0].attrib.get('crs')
             etree.SubElement(envelope, util.nspath_eval('gml:lowerCorner', self.context.namespaces)).text = bbox[0].xpath('ows:LowerCorner|ows20:LowerCorner', namespaces=self.context.namespaces)[0].text
