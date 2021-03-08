@@ -351,12 +351,13 @@ class OpenSearch(object):
 
         for d in rec.xpath('dct:references', namespaces=self.context.namespaces):
             link = etree.SubElement(entry, util.nspath_eval('atom:link', self.context.namespaces))
-            link.text = d.text
+            link.attrib['href'] = d.text
 
             scheme = d.attrib.get('scheme')
             if scheme is not None:
                 if scheme == 'enclosure':
                     link.attrib['rel'] = scheme
+                    link.attrib['type'] = 'application/octet-stream'
                 else:
                     link.attrib['type'] = scheme
 
