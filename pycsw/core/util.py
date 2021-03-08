@@ -32,6 +32,7 @@
 #
 # =================================================================
 
+from configparser import BasicInterpolation
 import json
 import os
 import re
@@ -413,3 +414,14 @@ def jsonify_links(links):
                 'url': tokens[3] or None
             })
         return json_links
+
+
+class EnvInterpolation(BasicInterpolation):
+    """
+    Interpolation which expands environment variables in values.
+    from: https://stackoverflow.com/a/49529659
+    """
+
+    def before_get(self, parser, section, option, value, defaults):
+        value = super().before_get(parser, section, option, value, defaults)
+        return os.path.expandvars(value)
