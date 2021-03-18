@@ -112,6 +112,10 @@ class StaticContext(object):
                 'pycsw:InsertDate': 'insert_date',  # date of insertion
                 # raw XML metadata
                 'pycsw:XML': 'xml',
+                # raw metadata payload, xml to be migrated to this in the future
+                'pycsw:Metadata': 'metadata',
+                # raw metadata payload type, xml as default for now
+                'pycsw:MetadataType': 'metadata_type',
                 # bag of metadata element and attributes ONLY, no XML tages
                 'pycsw:AnyText': 'anytext',
                 'pycsw:Language': 'language',
