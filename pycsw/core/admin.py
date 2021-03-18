@@ -126,6 +126,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         Column('insert_date', Text, nullable=False, index=True),
         Column('xml', Unicode, nullable=False),
         Column('anytext', Text, nullable=False),
+        Column('metadata', Unicode),
+        Column('metadata_type', Text, default='application/xml', nullable=False),
         Column('language', Text, index=True),
 
         # identification
