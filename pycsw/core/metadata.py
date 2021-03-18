@@ -212,6 +212,7 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
 
     _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
+    _set(context, serviceobj, 'pycsw:MetadataType', 'application/xml')
 
     recobjs.append(serviceobj)
 
@@ -378,6 +379,7 @@ def _parse_wms(context, repos, record, identifier):
 
     _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
+    _set(context, serviceobj, 'pycsw:MetadataType', 'application/xml')
 
     recobjs.append(serviceobj)
 
@@ -465,6 +467,7 @@ def _parse_wms(context, repos, record, identifier):
 
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
 
         recobjs.append(recobj)
 
@@ -526,6 +529,7 @@ def _parse_wmts(context, repos, record, identifier):
 
     _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
+    _set(context, serviceobj, 'pycsw:MetadataType', 'application/xml')
 
     recobjs.append(serviceobj)
 
@@ -604,6 +608,7 @@ def _parse_wmts(context, repos, record, identifier):
 
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
 
         recobjs.append(recobj)
 
@@ -727,6 +732,7 @@ def _parse_wfs(context, repos, record, identifier, version):
 
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
 
         recobjs.append(recobj)
 
@@ -910,6 +916,7 @@ def _parse_wps(context, repos, record, identifier):
 
     _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
+    _set(context, serviceobj, 'pycsw:MetadataType', 'application/xml')
 
     recobjs.append(serviceobj)
 
@@ -953,6 +960,7 @@ def _parse_wps(context, repos, record, identifier):
 
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
 
         recobjs.append(recobj)
 
@@ -1066,6 +1074,7 @@ def _parse_sos(context, repos, record, identifier, version):
             bboxs.append(wkt_polygon)
 
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
         recobjs.append(recobj)
 
     # Derive a bbox based on aggregated featuretype bbox values
@@ -1100,6 +1109,7 @@ def _parse_fgdc(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
+    _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', 'en-US')
 
@@ -1205,6 +1215,7 @@ def _parse_gm03(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
+    _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', data.metadata.language)
     _set(context, recobj, 'pycsw:Type', data.metadata.hierarchy_level[0])
@@ -1304,6 +1315,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
+    _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', md.language)
     _set(context, recobj, 'pycsw:Type', md.hierarchy)
@@ -1542,6 +1554,7 @@ def _parse_dc(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
+    _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', md.language)
     _set(context, recobj, 'pycsw:Type', md.type)
