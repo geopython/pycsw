@@ -203,6 +203,19 @@ class Repository(object):
             value_dict['pvalue%d' % num] = value
         return value_dict
 
+    def describe(self):
+        ''' Derive table columns and types '''
+
+        properties = {}
+
+        for i in self.dataset.__table__.columns:
+            properties[i.name] = {
+                'title': i.name,
+                'type': str(i.type),
+            }
+
+        return properties
+
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
 

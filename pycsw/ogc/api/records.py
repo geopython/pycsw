@@ -35,6 +35,7 @@ import logging
 import json
 
 from pycsw import __version__
+from pycsw.core.config import StaticContext
 from pycsw.core.util import EnvInterpolation
 
 LOGGER = logging.getLogger(__name__)
@@ -70,6 +71,29 @@ class API:
             raise
 
         self.config['server']['url'] = self.config['server']['url'].rstrip('/')
+        self.context = StaticContext()
+
+        repo_filter = None
+        if self.config.has_option('repository', 'filter'):
+            repo_filter = self.config.get('repository', 'filter')
+
+        self.orm = 'sqlalchemy'
+        from pycsw.core import repository
+        try:
+            LOGGER.info('Loading default repository')
+            self.repository = repository.Repository(
+                self.config.get('repository', 'database'),
+                self.context,
+                #self.environ.get('local.app_root', None),
+                None,
+                self.config.get('repository', 'table'),
+                repo_filter
+            )
+            LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
+        except Exception as err:
+            msg = f'Could not load repository {err}'
+            LOGGER.exception(msg)
+            raise
 
     def landing_page(self, headers_, format_):
         """
@@ -156,7 +180,7 @@ class API:
         headers_['Content-Type'] = 'application/json'
 
         collection_info = {
-            'id': 'main',
+            'id': 'metadata:main',
             'title': self.config['metadata:main']['identification_title'],
             'description': self.config['metadata:main']['identification_abstract'],
             'itemType': 'record',
@@ -188,5 +212,21 @@ class API:
             }
         else:
             response = collection_info
+
+        return headers_, 200, json.dumps(response)
+
+    def queryables(self, headers_, format_):
+
+        headers_['Content-Type'] = 'application/json'
+
+        properties = self.repository.describe()
+
+        response = {
+            'type': 'object',
+            'title': 'metadata:main',
+            'properties': properties,
+            '$schema': 'http://json-schema.org/draft/2019-09/schema',
+            '$id': f"{self.config['server']['url']}/collections/metadata:main/queryables"
+        }
 
         return headers_, 200, json.dumps(response)
