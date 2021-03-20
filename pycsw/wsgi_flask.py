@@ -48,6 +48,22 @@ APP.url_map.strict_slashes = False
 
 BLUEPRINT = Blueprint('pycsw', __name__)
 
+def get_response(result: tuple):
+    """
+    Creates a Flask Response object and updates matching headers.
+
+    :param result:  The result of the API call.
+                    This should be a tuple of (headers, status, content).
+    :returns:       A Response instance.
+    """
+
+    headers, status, content = result
+    response = make_response(content, status)
+
+    if headers:
+        response.headers = headers
+    return response
+
 
 @BLUEPRINT.route('/')
 def landing_page():
@@ -57,13 +73,7 @@ def landing_page():
     :returns: HTTP response
     """
 
-    headers, status_code, content = api_.landing_page(
-        dict(request.headers), request.args)
-
-    response = make_response(content, status_code)
-    response.headers = headers
-
-    return response
+    return get_response(api_.landing_page(dict(request.headers), request.args))
 
 
 @BLUEPRINT.route('/conformance')
@@ -74,13 +84,7 @@ def conformance():
     :returns: HTTP response
     """
 
-    headers, status_code, content = api_.conformance(
-        dict(request.headers), request.args)
-
-    response = make_response(content, status_code)
-    response.headers = headers
-
-    return response
+    return get_response(api_.conformance(dict(request.headers), request.args))
 
 
 @BLUEPRINT.route('/collections')
@@ -91,13 +95,7 @@ def collections():
     :returns: HTTP response
     """
 
-    headers, status_code, content = api_.collections(
-        dict(request.headers), request.args)
-
-    response = make_response(content, status_code)
-    response.headers = headers
-
-    return response
+    return get_response(api_.collections(dict(request.headers), request.args))
 
 
 @BLUEPRINT.route('/collections/metadata:main')
@@ -108,13 +106,18 @@ def collection():
     :returns: HTTP response
     """
 
-    headers, status_code, content = api_.collections(
-        dict(request.headers), request.args, True)
+    return get_response(api_.collections(dict(request.headers), request.args, True))
 
-    response = make_response(content, status_code)
-    response.headers = headers
 
-    return response
+@BLUEPRINT.route('/collections/metadata:main/queryables')
+def queryables():
+    """
+    OGC API collection queryables endpoint
+
+    :returns: HTTP response
+    """
+
+    return get_response(api_.queryables(dict(request.headers), request.args))
 
 
 @BLUEPRINT.route('/csw')
@@ -124,15 +127,8 @@ def csw():
 
     :returns: HTTP response
     """
-    headers, status_code, content = api_.landing_page(
-        dict(request.headers), request.args)
 
-    response = make_response(content, status_code)
-
-    if headers:
-        response.headers = headers
-
-    return response
+    raise NotImplementedError()
 
 
 APP.register_blueprint(BLUEPRINT)
