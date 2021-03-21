@@ -120,6 +120,17 @@ def queryables():
     return get_response(api_.queryables(dict(request.headers), request.args))
 
 
+@BLUEPRINT.route('/collections/metadata:main/items')
+def items():
+    """
+    OGC API collection items endpoint
+
+    :returns: HTTP response
+    """
+
+    return get_response(api_.items(dict(request.headers), request.args))
+
+
 @BLUEPRINT.route('/csw')
 def csw():
     """
