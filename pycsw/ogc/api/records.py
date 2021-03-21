@@ -34,6 +34,8 @@ from configparser import ConfigParser
 import logging
 import json
 
+from pycql.integrations.sqlalchemy import to_filter, parse
+
 from pycsw import __version__
 from pycsw.core.config import StaticContext
 from pycsw.core.util import EnvInterpolation, jsonify_links, wkt2geom
@@ -91,7 +93,7 @@ class API:
             self.repository = repository.Repository(
                 self.config.get('repository', 'database'),
                 self.context,
-                #self.environ.get('local.app_root', None),
+                # self.environ.get('local.app_root', None),
                 None,
                 self.config.get('repository', 'table'),
                 repo_filter
@@ -101,6 +103,13 @@ class API:
             msg = f'Could not load repository {err}'
             LOGGER.exception(msg)
             raise
+
+        self.query_mappings = {
+            'title': self.repository.dataset.title,
+            'abstract': self.repository.dataset.abstract,
+            'keywords': self.repository.dataset.keywords,
+            'anytext': self.repository.dataset.anytext
+        }
 
     def landing_page(self, headers_, args):
         """
@@ -229,7 +238,6 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-
         headers_['Content-Type'] = 'application/json'
 
         properties = self.repository.describe()
@@ -262,8 +270,37 @@ class API:
             'links': []
         }
 
-        count, records = self.repository.query({})
-        count = int(count)
+        cql_query = None
+
+        if 'cql' in args:
+            LOGGER.debug(f'CQL query specified {args["cql"]}')
+            LOGGER.debug('NOTE: overriding property filters')
+            cql_query = args['cql']
+        else:
+            LOGGER.debug('Transforming property filters into CQL')
+            query_args = []
+            for k, v in args.items():
+                query_args.append(f'{k} = "{v}"')
+
+            cql_query = ' AND '.join(query_args)
+
+        if cql_query is not None:
+            LOGGER.debug('Parsing CQL into AST')
+            ast = parse(cql_query)
+            LOGGER.debug(f'Abstract syntax tree: {ast}')
+
+            LOGGER.debug('Transforming AST into filters')
+            filters = to_filter(ast, self.query_mappings)
+            LOGGER.debug(f'Filter: {filters}')
+
+            query = self.repository.session.query(self.repository.dataset).filter(filters)
+        else:
+            query = self.repository.session.query(self.repository.dataset)
+
+        LOGGER.debug(f'Query: {query}')
+        LOGGER.debug('Querying repository')
+        count = query.count()
+        records = query.limit(self.maxrecords).all()
 
         if count < self.maxrecords:
             returned = count
@@ -277,6 +314,7 @@ class API:
             response['features'].append(record2json(record))
 
         return headers_, 200, json.dumps(response)
+
 
 def record2json(record):
     """
