@@ -1,2 +1,4 @@
 Flask
 PyYAML
+git+git://github.com/geopython/pycql@master#egg=pycql
+dateparser
