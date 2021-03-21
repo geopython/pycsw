@@ -247,6 +247,10 @@ if COMMAND not in ['post_xml', 'get_sysprof', 'validate_xml']:
         TABLE = CP.get('repository', 'table')
     except configparser.NoOptionError:
         TABLE = 'records'
+    try:
+        MAPPINGS = CP.get('repository', 'mappings')
+    except configparser.NoOptionError:
+        MAPPINGS = ''
 
 elif COMMAND not in ['get_sysprof', 'validate_xml']:
     if CSW_URL is None:
@@ -267,7 +271,7 @@ if LOGGING is not None:
     logging.basicConfig(stream=sys.stdout, level=getattr(logging, LOGGING))
 if COMMAND == 'setup_db':
     try:
-        admin.setup_db(DATABASE, TABLE, HOME)
+        admin.setup_db(DATABASE, TABLE, HOME, mappings_filepath=MAPPINGS)
     except Exception as err:
         print(err)
         print('ERROR: DB creation error.  Database tables already exist')

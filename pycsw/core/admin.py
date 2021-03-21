@@ -149,7 +149,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         else:
             col = Column(col_name, Text, index=True)
         
-        records.append_column(col)
+        if not records.columns.has_key(col_name) and col_name != '':
+            records.append_column(col)
     
     # add extra columns that may have been passed via extra_columns
     # extra_columns is a list of sqlalchemy.Column objects
