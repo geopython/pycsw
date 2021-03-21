@@ -33,7 +33,7 @@ spec:
           value: /etc/pycsw/mappings.py
         {{- end }}
         image: {{ .pycsw.image | default "mapcolonies/pycsw:latest" }}
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         name: {{ $resourceName }}
         ports:
         - containerPort: 8000
