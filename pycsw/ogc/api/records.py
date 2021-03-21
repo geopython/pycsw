@@ -36,7 +36,7 @@ import json
 
 from pycsw import __version__
 from pycsw.core.config import StaticContext
-from pycsw.core.util import EnvInterpolation
+from pycsw.core.util import EnvInterpolation, jsonify_links, wkt2geom
 
 LOGGER = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class API:
 
         :param config: configuration dict
 
-        :returns: `pycsw.ogcapi.API` instance
+        :returns: `pycsw.ogc.api.API` instance
         """
 
         # load user configuration
@@ -72,6 +72,13 @@ class API:
 
         self.config['server']['url'] = self.config['server']['url'].rstrip('/')
         self.context = StaticContext()
+
+        LOGGER.debug('Setting maxrecords')
+        try:
+            self.maxrecords = int(self.config['server']['maxrecords'])
+        except KeyError:
+            self.maxrecords = 10
+        LOGGER.debug(f'maxrecords: {self.maxrecords}')
 
         repo_filter = None
         if self.config.has_option('repository', 'filter'):
@@ -95,13 +102,12 @@ class API:
             LOGGER.exception(msg)
             raise
 
-    def landing_page(self, headers_, format_):
+    def landing_page(self, headers_, args):
         """
         Provide API landing page
 
         :param headers_: copy of HEADERS object
-        :param format_: format of requests, pre checked by
-                        pre_process decorator
+        :param args: request parameters
 
         :returns: tuple of headers, status code, content
         """
@@ -137,13 +143,12 @@ class API:
 
         return headers_, 200, json.dumps(response)
 
-    def conformance(self, headers_, format_):
+    def conformance(self, headers_, args):
         """
         Provide API conformance
 
         :param headers_: copy of HEADERS object
-        :param format_: format of requests, pre checked by
-                        pre_process decorator
+        :param args: request parameters
 
         :returns: tuple of headers, status code, content
         """
@@ -165,14 +170,13 @@ class API:
 
         return headers_, 200, json.dumps(response)
 
-    def collections(self, headers_, format_, collection=False):
+    def collections(self, headers_, args, collection=False):
         """
         Provide API collections
 
         :param headers_: copy of HEADERS object
-        :param format_: format of requests, pre checked by
-                        pre_process decorator
-        :param collection_id: collection identifier
+        :param args: request parameters
+        :param collection: `bool` of whether to emit single collection
 
         :returns: tuple of headers, status code, content
         """
@@ -215,7 +219,16 @@ class API:
 
         return headers_, 200, json.dumps(response)
 
-    def queryables(self, headers_, format_):
+    def queryables(self, headers_, args):
+        """
+        Provide collection queryables
+
+        :param headers_: copy of HEADERS object
+        :param args: request parameters
+
+        :returns: tuple of headers, status code, content
+        """
+
 
         headers_['Content-Type'] = 'application/json'
 
@@ -230,3 +243,116 @@ class API:
         }
 
         return headers_, 200, json.dumps(response)
+
+    def items(self, headers_, args):
+        """
+        Provide collection items
+
+        :param headers_: copy of HEADERS object
+        :param args: request parameters
+
+        :returns: tuple of headers, status code, content
+        """
+
+        headers_['Content-Type'] = 'application/json'
+
+        response = {
+            'type': 'FeatureCollection',
+            'features': [],
+            'links': []
+        }
+
+        count, records = self.repository.query({})
+        count = int(count)
+
+        if count < self.maxrecords:
+            returned = count
+        else:
+            returned = self.maxrecords
+
+        response['numberMatched'] = count
+        response['numberReturned'] = returned
+
+        for record in records:
+            response['features'].append(record2json(record))
+
+        return headers_, 200, json.dumps(response)
+
+def record2json(record):
+    """
+    OGC API - Records record generator from core pycsw record model
+
+    :param record: pycsw record object
+
+    :returns: `dict` of record GeoJSON
+    """
+
+    record_dict = {
+        'id': record.identifier,
+        'type': 'Feature',
+        'geometry': None,
+        'properties': {}
+    }
+
+    record_dict['properties']['externalId'] = record.identifier
+
+    record_dict['properties']['record-updated'] = record.insert_date
+
+    if record.type:
+        record_dict['properties']['type'] = record.type
+
+    if record.date_creation:
+        record_dict['properties']['created'] = record.date_creation
+
+    if record.date_modified:
+        record_dict['properties']['updated'] = record.date_modified
+
+    if record.language:
+        record_dict['properties']['language'] = record.language
+
+    if record.title:
+        record_dict['properties']['title'] = record.title
+
+    if record.abstract:
+        record_dict['properties']['description'] = record.abstract
+
+    if record.format:
+        record_dict['properties']['formats'] = [record.format]
+
+    if record.keywords:
+        record_dict['keywords'] = [x for x in record.keywords.split(',')]
+
+    if record.links:
+        record_dict['associations'] = []
+        for link in jsonify_links(record.links):
+            association = {
+                'href': link['url'],
+                'name': link['name'],
+                'description': link['description'],
+                'type': link['protocol'],
+                'rel': link['type']
+            }
+            record_dict['associations'].append(association)
+
+    if record.wkt_geometry:
+        minx, miny, maxx, maxy = wkt2geom(record.wkt_geometry)
+        geometry = {
+            'type': 'Polygon',
+            'coordinates': [[
+                [minx, miny],
+                [minx, maxy],
+                [maxx, maxy],
+                [maxx, miny],
+                [minx, miny]
+            ]]
+        }
+        record_dict['geometry'] = geometry
+
+        record_dict['properties']['extents'] = {
+            'spatial': {
+                'bbox': [[minx, miny, maxx, maxy]],
+                'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
+            }
+        }
+
+    return record_dict
