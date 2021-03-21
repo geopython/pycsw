@@ -132,7 +132,8 @@ class base_profile(Profile):
                 self.typename, self.namespaces))
 
             # Sorted for consistency
-            for dbcol, value in sorted(vars(result).items()):
+            for dbcol in sorted(vars(result).keys()):
+                value = util.getqattr(result, dbcol)
                 if not dbcol.startswith('_') and value is not None:
                     elementName = dbcol2xpath.get(dbcol, None)
                     if elementName is not None:
