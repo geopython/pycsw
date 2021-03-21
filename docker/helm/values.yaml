@@ -9,6 +9,7 @@ postgres:
   pg_data_path: /var/lib/postgresql/data/pgdata
 
 pycsw:
+  image: mapcolonies/pycsw:latest
   pycsw_cfg: |+
     [server]
     home=/home/pycsw

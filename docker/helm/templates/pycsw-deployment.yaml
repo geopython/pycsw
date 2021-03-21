@@ -32,7 +32,7 @@ spec:
         - name: PYCSW_MAPPINGS_FILEPATH
           value: /etc/pycsw/mappings.py
         {{- end }}
-        image: 'mapcolonies/pycsw:latest'
+        image: {{ .pycsw.image | default "mapcolonies/pycsw:latest" }}
         imagePullPolicy: Never
         name: {{ $resourceName }}
         ports:
