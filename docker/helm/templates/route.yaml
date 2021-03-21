@@ -3,6 +3,7 @@
 {{- $releaseName := print .Release.Name "-pycsw" }}
 {{- $pgadmin4Service := print .Release.Name "-pgadmin4" }}
 {{- with .Values -}}
+apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: {{ $.Release.Name }}-web-route
