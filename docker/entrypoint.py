@@ -75,30 +75,30 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     for more information on how to control gunicorn by sending UNIX signals.
     """
 
-    db_url = pycsw_config.get("repository", "database")
-    db = db_url.partition(":")[0].partition("+")[0]
-    db_handler = {
-        "sqlite": handle_sqlite_db,
-        "postgresql": handle_postgresql_db,
-    }.get(db)
+    # db_url = pycsw_config.get("repository", "database")
+    # db = db_url.partition(":")[0].partition("+")[0]
+    # db_handler = {
+    #     "sqlite": handle_sqlite_db,
+    #     "postgresql": handle_postgresql_db,
+    # }.get(db)
 
-    try:
-        mappings_path = pycsw_config.get("repository", "mappings")
-        logger.debug("Has mappings file")
-    except configparser.NoOptionError as exception:
-        mappings_path = ''
-        logger.debug("Does not have mappings file")
+    # try:
+    #     mappings_path = pycsw_config.get("repository", "mappings")
+    #     logger.debug("Has mappings file")
+    # except configparser.NoOptionError as exception:
+    #     mappings_path = ''
+    #     logger.debug("Does not have mappings file")
 
 
-    logger.debug("Setting up pycsw's data repository...")
-    logger.debug("Repository URL: {}".format(db_url))
+    # logger.debug("Setting up pycsw's data repository...")
+    # logger.debug("Repository URL: {}".format(db_url))
     
-    db_handler(
-        db_url,
-        pycsw_config.get("repository", "table"),
-        pycsw_config.get("server", "home"),
-        mappings_path
-    )
+    # db_handler(
+    #     db_url,
+    #     pycsw_config.get("repository", "table"),
+    #     pycsw_config.get("server", "home"),
+    #     mappings_path
+    # )
     sys.stdout.flush()
     # we're using --reload-engine=poll because there is a bug with gunicorn
     # that prevents using inotify together with python3. For more info:
