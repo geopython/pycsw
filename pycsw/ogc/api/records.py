@@ -340,7 +340,54 @@ class API:
 
         return headers_, 200, json.dumps(response)
 
+    def item(self, headers_, args, item):
+        """
+        Provide collection item
+
+        :param headers_: copy of HEADERS object
+        :param args: request parameters
+        :param item: record identifier
+
+        :returns: tuple of headers, status code, content
+        """
+
+        headers_['Content-Type'] = 'application/json'
+
+        format_ = args.get('f', 'json')
+
+        if format_ == 'xml':
+            headers_['Content-Type'] = 'application/xml'
+        elif format_ != 'json':
+            return self.get_exception(
+                400, headers_, 'InvalidParameterValue', 'Invalid format')
+
+        LOGGER.debug(f'Querying repository for item {item}')
+        try:
+            record = self.repository.query_ids([item])[0]
+        except IndexError as err:
+            return self.get_exception(
+                    404, headers_, 'InvalidParameterValue', 'item not found')
+
+        if format_ == 'json':
+            response = record2json(record)
+            return headers_, 200, json.dumps(response)
+        elif format_ == 'xml':
+            response = record.xml
+            return headers_, 200, response
+
+
     def get_exception(self, status, headers, code, description):
+        """
+        Provide exception report
+
+        :param status: `int` of HTTP status code
+        :param headers_: copy of HEADERS object
+        :param code: exception code
+        :param description: exception description
+
+        :returns: tuple of headers, status code, content
+        """
+
         exception = {
             'code': code,
             'description': description
