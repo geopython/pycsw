@@ -131,6 +131,19 @@ def items():
     return get_response(api_.items(dict(request.headers), request.args))
 
 
+@BLUEPRINT.route('/collections/metadata:main/items/<item>')
+def item(item=None):
+    """
+    OGC API collection items endpoint
+
+    :param item: item identifier
+
+    :returns: HTTP response
+    """
+
+    return get_response(api_.item(dict(request.headers), request.args, item))
+
+
 @BLUEPRINT.route('/csw')
 def csw():
     """
