@@ -106,7 +106,7 @@ class API:
 
         self.query_mappings = {
             'title': self.repository.dataset.title,
-            'abstract': self.repository.dataset.abstract,
+            'description': self.repository.dataset.abstract,
             'keywords': self.repository.dataset.keywords,
             'anytext': self.repository.dataset.anytext
         }
@@ -264,6 +264,11 @@ class API:
 
         headers_['Content-Type'] = 'application/json'
 
+        reserved_query_params = [
+            'cql',
+            'limit'
+        ]
+
         response = {
             'type': 'FeatureCollection',
             'features': [],
@@ -274,15 +279,35 @@ class API:
 
         if 'cql' in args:
             LOGGER.debug(f'CQL query specified {args["cql"]}')
-            LOGGER.debug('NOTE: overriding property filters')
             cql_query = args['cql']
-        else:
-            LOGGER.debug('Transforming property filters into CQL')
-            query_args = []
-            for k, v in args.items():
-                query_args.append(f'{k} = "{v}"')
 
+        LOGGER.debug('Transforming property filters into CQL')
+        query_args = []
+        for k, v in args.items():
+            if k not in self.query_mappings and k not in reserved_query_params:
+                return self.get_exception(
+                    400, headers_, 'InvalidParameterValue', f'Invalid property {k}')
+
+            if k not in reserved_query_params:
+                if k == 'anytext':
+                    query_args.append(f'{k} LIKE "%{v}%"')
+                elif k == 'bbox':
+                    query_args.append(f'BBOX(geometry, {v})')
+                else:
+                    query_args.append(f'{k} = "{v}"')
+
+        LOGGER.debug('Evaluating CQL and other specified filtering parameters')
+        if cql_query is not None and query_args:
+            LOGGER.debug('Combining CQL and other specified filtering parameters')
+            cql_query += ' AND ' + ' AND '.join(query_args)
+        elif cql_query is not None and not query_args:
+            LOGGER.debug('Just CQL detected')
+        elif cql_query is None and query_args:
+            LOGGER.debug('Just other specified filtering parameters detected')
             cql_query = ' AND '.join(query_args)
+
+        LOGGER.debug(f'CQL query: {cql_query}')
+        print("CQL", cql_query)
 
         if cql_query is not None:
             LOGGER.debug('Parsing CQL into AST')
@@ -315,6 +340,13 @@ class API:
 
         return headers_, 200, json.dumps(response)
 
+    def get_exception(self, status, headers, code, description):
+        exception = {
+            'code': code,
+            'description': description
+        }
+
+        return headers, status, json.dumps(exception)
 
 def record2json(record):
     """
