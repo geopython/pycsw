@@ -39,6 +39,7 @@ from pycql.integrations.sqlalchemy import to_filter, parse
 from pycsw import __version__
 from pycsw.core.config import StaticContext
 from pycsw.core.util import EnvInterpolation, jsonify_links, wkt2geom
+from pycsw.ogc.api.util import to_json
 
 LOGGER = logging.getLogger(__name__)
 
@@ -105,10 +106,13 @@ class API:
             raise
 
         self.query_mappings = {
+            'type': self.repository.dataset.type,
+            'record-updated': self.repository.dataset.insert_date,
             'title': self.repository.dataset.title,
             'description': self.repository.dataset.abstract,
             'keywords': self.repository.dataset.keywords,
-            'anytext': self.repository.dataset.anytext
+            'anytext': self.repository.dataset.anytext,
+            'bbox': self.repository.dataset.wkt_geometry
         }
 
     def landing_page(self, headers_, args):
@@ -150,7 +154,7 @@ class API:
             }
         ]
 
-        return headers_, 200, json.dumps(response)
+        return headers_, 200, to_json(response)
 
     def conformance(self, headers_, args):
         """
@@ -177,7 +181,7 @@ class API:
             'conformsTo': conf_classes
         }
 
-        return headers_, 200, json.dumps(response)
+        return headers_, 200, to_json(response)
 
     def collections(self, headers_, args, collection=False):
         """
@@ -226,7 +230,7 @@ class API:
         else:
             response = collection_info
 
-        return headers_, 200, json.dumps(response)
+        return headers_, 200, to_json(response)
 
     def queryables(self, headers_, args):
         """
@@ -250,7 +254,7 @@ class API:
             '$id': f"{self.config['server']['url']}/collections/metadata:main/queryables"
         }
 
-        return headers_, 200, json.dumps(response)
+        return headers_, 200, to_json(response)
 
     def items(self, headers_, args):
         """
@@ -284,7 +288,9 @@ class API:
         LOGGER.debug('Transforming property filters into CQL')
         query_args = []
         for k, v in args.items():
-            if k not in self.query_mappings and k not in reserved_query_params:
+            if k in reserved_query_params:
+                continue
+            if k not in self.query_mappings:
                 return self.get_exception(
                     400, headers_, 'InvalidParameterValue', f'Invalid property {k}')
 
@@ -293,6 +299,8 @@ class API:
                     query_args.append(f'{k} LIKE "%{v}%"')
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
+                elif k == 'q':
+                    query_args.append(f'ANYTEXT LIKE "%{v}%"')
                 else:
                     query_args.append(f'{k} = "{v}"')
 
@@ -338,7 +346,7 @@ class API:
         for record in records:
             response['features'].append(record2json(record))
 
-        return headers_, 200, json.dumps(response)
+        return headers_, 200, to_json(response)
 
     def item(self, headers_, args, item):
         """
@@ -370,7 +378,7 @@ class API:
 
         if format_ == 'json':
             response = record2json(record)
-            return headers_, 200, json.dumps(response)
+            return headers_, 200, to_json(response)
         elif format_ == 'xml':
             response = record.xml
             return headers_, 200, response
@@ -393,7 +401,7 @@ class API:
             'description': description
         }
 
-        return headers, status, json.dumps(exception)
+        return headers, status, to_json(exception)
 
 def record2json(record):
     """
