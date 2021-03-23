@@ -30,15 +30,20 @@
 #
 # =================================================================
 
-import os
-import yaml
+import base64
+from datetime import date, datetime, time
+from decimal import Decimal
 import json
 import logging
 import mimetypes
+import os
+import re
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
-from datetime import date, datetime, time
+import yaml
+
+from pycsw import __version__
 
 LOGGER = logging.getLogger(__name__)
 
@@ -50,23 +55,51 @@ TEMPLATES = '{}{}templates'.format(os.path.dirname(
 mimetypes.add_type('text/plain', '.yaml')
 mimetypes.add_type('text/plain', '.yml')
 
-def dategetter(date_property, collection):
+
+def get_typed_value(value):
     """
-    Attempts to obtain a date value from a collection.
-
-    :param date_property: property representing the date
-    :param collection: dictionary to check within
-
-    :returns: `str` (ISO8601) representing the date (allowing
-               for an open interval using null)
+    Derive true type from data value
+    :param value: value
+    :returns: value as a native Python data type
     """
 
-    value = collection.get(date_property, None)
+    try:
+        if '.' in value:  # float?
+            value2 = float(value)
+        elif len(value) > 1 and value.startswith('0'):
+            value2 = value
+        else:  # int?
+            value2 = int(value)
+    except ValueError:  # string (default)?
+        value2 = value
 
-    if value is None:
-        return None
+    return value2
 
-    return value.isoformat()
+
+def json_serial(obj):
+    """
+    helper function to convert to JSON non-default
+    types (source: https://stackoverflow.com/a/22238613)
+    :param obj: `object` to be evaluated
+    :returns: JSON non-default type to `str`
+    """
+
+    if isinstance(obj, (datetime, date, time)):
+        return obj.isoformat()
+    elif isinstance(obj, bytes):
+        try:
+            LOGGER.debug('Returning as UTF-8 decoded bytes')
+            return obj.decode('utf-8')
+        except UnicodeDecodeError:
+            LOGGER.debug('Returning as base64 encoded JSON object')
+            return base64.b64encode(obj)
+    elif isinstance(obj, Decimal):
+        return float(obj)
+
+    msg = '{} type {} not serializable'.format(obj, type(obj))
+    LOGGER.error(msg)
+    raise TypeError(msg)
+
 
 def yaml_load(fh):
     """
@@ -95,6 +128,7 @@ def yaml_load(fh):
 
     return yaml.load(fh, Loader=EnvVarLoader)
 
+
 def to_json(dict_, pretty=False):
     """
     Serialize dict to json
@@ -113,34 +147,6 @@ def to_json(dict_, pretty=False):
     return json.dumps(dict_, default=json_serial,
                       indent=indent)
 
-def format_datetime(value, format_=DATETIME_FORMAT):
-    """
-    Parse datetime as ISO 8601 string; re-present it in particular format
-    for display in HTML
-
-    :param value: `str` of ISO datetime
-    :param format_: `str` of datetime format for strftime
-
-    :returns: string
-    """
-
-    if not isinstance(value, str) or not value.strip():
-        return ''
-
-    return dateutil.parser.isoparse(value).strftime(format_)
-
-def filter_dict_by_key_value(dict_, key, value):
-    """
-    helper function to filter a dict by a dict key
-
-    :param dict_: ``dict``
-    :param key: dict key
-    :param value: dict key value
-
-    :returns: filtered ``dict``
-    """
-
-    return {k: v for (k, v) in dict_.items() if v[key] == value}
 
 def render_j2_template(config, template, data):
     """
@@ -164,18 +170,7 @@ def render_j2_template(config, template, data):
         LOGGER.debug('using default templates: {}'.format(TEMPLATES))
 
     env.filters['to_json'] = to_json
-    env.filters['format_datetime'] = format_datetime
-    env.filters['format_duration'] = format_duration
     env.globals.update(to_json=to_json)
-
-    env.filters['get_path_basename'] = get_path_basename
-    env.globals.update(get_path_basename=get_path_basename)
-
-    env.filters['get_breadcrumbs'] = get_breadcrumbs
-    env.globals.update(get_breadcrumbs=get_breadcrumbs)
-
-    env.filters['filter_dict_by_key_value'] = filter_dict_by_key_value
-    env.globals.update(filter_dict_by_key_value=filter_dict_by_key_value)
 
     try:
         template = env.get_template(template)
@@ -189,4 +184,3 @@ def render_j2_template(config, template, data):
             raise
 
     return template.render(config=config, data=data, version=__version__)
-
