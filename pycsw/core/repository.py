@@ -216,10 +216,15 @@ class Repository(object):
         for i in self.dataset.__table__.columns:
             if i.name in ['anytext', 'metadata', 'metadata_type', 'xml']:
                 continue
+
             properties[i.name] = {
-                'title': i.name,
-                'type': type_mappings[str(i.type)],
+                'title': i.name
             }
+
+            try:
+                properties[i.name]['type'] = type_mappings[str(i.type)]
+            except Exception as err:
+                LOGGER.debug(f'Cannot determine type: {err}')
 
         return properties
 
