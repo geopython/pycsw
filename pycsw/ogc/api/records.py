@@ -268,6 +268,11 @@ class API:
 
         headers_['Content-Type'] = 'application/json'
 
+        common_query_params = [
+            'bbox',
+            'datetime',
+            'q'
+        ]
         reserved_query_params = [
             'cql',
             'limit'
@@ -290,7 +295,7 @@ class API:
         for k, v in args.items():
             if k in reserved_query_params:
                 continue
-            if k not in self.query_mappings:
+            if k not in self.query_mappings and k not in common_query_params:
                 return self.get_exception(
                     400, headers_, 'InvalidParameterValue', f'Invalid property {k}')
 
@@ -300,7 +305,7 @@ class API:
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
                 elif k == 'q':
-                    query_args.append(f'ANYTEXT LIKE "%{v}%"')
+                    query_args.append(f'anytext LIKE "%{v}%"')
                 else:
                     query_args.append(f'{k} = "{v}"')
 
@@ -454,9 +459,11 @@ def record2json(record):
                 'href': link['url'],
                 'name': link['name'],
                 'description': link['description'],
-                'type': link['protocol'],
-                'rel': link['type']
+                'type': link['protocol']
             }
+            if 'type' in link:
+                association['rel'] = link['type']
+
             record_dict['associations'].append(association)
 
     if record.wkt_geometry:
