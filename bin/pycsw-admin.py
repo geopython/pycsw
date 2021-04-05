@@ -36,7 +36,7 @@ import logging
 import sys
 
 from pycsw.core import admin, config
-from pycsw.server import EnvInterpolation
+from pycsw.util import EnvInterpolation
 
 CONTEXT = config.StaticContext()
 
