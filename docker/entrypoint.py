@@ -50,7 +50,7 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.exc import ProgrammingError
 
 from pycsw.core import admin
-from pycsw.util import EnvInterpolation
+from pycsw.core.util import EnvInterpolation
 
 logger = logging.getLogger(__name__)
 
