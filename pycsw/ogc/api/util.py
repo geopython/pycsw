@@ -101,6 +101,15 @@ def json_serial(obj):
     raise TypeError(msg)
 
 
+def match_env_var(value):
+    path_matcher = re.compile(r'.*\$\{([^}^{]+)\}.*')
+    env_var = path_matcher.match(value).group(1)
+    if env_var not in os.environ:
+        raise EnvironmentError('Undefined environment variable in config')
+
+    return env_var
+
+
 def yaml_load(fh):
     """
     serializes a YAML files into a pyyaml object

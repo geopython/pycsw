@@ -32,14 +32,16 @@
 import codecs
 from configparser import ConfigParser
 import logging
-import json
+import os
 
 from pycql.integrations.sqlalchemy import to_filter, parse
 
 from pycsw import __version__
+from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.util import EnvInterpolation, jsonify_links, wkt2geom
-from pycsw.ogc.api.util import to_json
+from pycsw.ogc.api.oapi import gen_oapi
+from pycsw.ogc.api.util import match_env_var, to_json
 
 LOGGER = logging.getLogger(__name__)
 
@@ -48,6 +50,8 @@ HEADERS = {
     'Content-Type': 'application/json',
     'X-Powered-By': 'pycsw {}'.format(__version__)
 }
+
+THISDIR = os.path.dirname(os.path.realpath(__file__))
 
 
 class API:
@@ -73,7 +77,17 @@ class API:
             LOGGER.exception(msg)
             raise
 
-        self.config['server']['url'] = self.config['server']['url'].rstrip('/')
+        log.setup_logger(self.config)
+
+        if self.config['server']['url'].startswith('${'):
+            LOGGER.debug(f"Server URL is an environment variable: {self.config['server']['url']}")
+            url_ = match_env_var(self.config['server']['url'])
+        else:
+            url_ = self.config['server']['url']
+
+        LOGGER.debug(f'Server URL: {url_}')
+        self.config['server']['url'] = url_.rstrip('/')
+
         self.context = StaticContext()
 
         LOGGER.debug('Setting maxrecords')
@@ -147,6 +161,11 @@ class API:
               'title': 'Conformance',
               'href': f"{self.config['server']['url']}/conformance"
             }, {
+              'rel': 'service-desc',
+              'type': 'application/vnd.oai.openapi+json;version=3.0',
+              'title': 'The OpenAPI definition as JSON',
+              'href': f"{self.config['server']['url']}/openapi"
+            }, {
               'rel': 'data',
               'type': 'application/json',
               'title': 'Collections',
@@ -155,6 +174,26 @@ class API:
         ]
 
         return headers_, 200, to_json(response)
+
+    def openapi(self, headers_, args):
+        """
+        Provide API conformance
+
+        :param headers_: copy of HEADERS object
+        :param args: request parameters
+
+        :returns: tuple of headers, status code, content
+        """
+
+        oapi = {}
+
+        headers_['Content-Type'] = 'application/json'
+
+        filepath = f"{THISDIR}/../../core/schemas/ogc/ogcapi/records/part1/1.0/ogcapi-records-1.yaml"
+
+        oapi = gen_oapi(self.config, filepath)
+
+        return headers_, 200, to_json(oapi)
 
     def conformance(self, headers_, args):
         """
@@ -377,7 +416,7 @@ class API:
         LOGGER.debug(f'Querying repository for item {item}')
         try:
             record = self.repository.query_ids([item])[0]
-        except IndexError as err:
+        except IndexError:
             return self.get_exception(
                     404, headers_, 'InvalidParameterValue', 'item not found')
 
@@ -387,7 +426,6 @@ class API:
         elif format_ == 'xml':
             response = record.xml
             return headers_, 200, response
-
 
     def get_exception(self, status, headers, code, description):
         """
@@ -407,6 +445,7 @@ class API:
         }
 
         return headers, status, to_json(exception)
+
 
 def record2json(record):
     """
