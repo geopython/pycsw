@@ -37,16 +37,16 @@ from pycsw.ogc.api.records import API
 
 PYCSW_CONFIG = os.environ.get('PYCSW_CONFIG')
 
-if 'PYCSW_CONFIG' not in os.environ:
+if PYCSW_CONFIG is None:
     raise RuntimeError('PYCSW_CONFIG environment variable not set')
 
 api_ = API(PYCSW_CONFIG)
-
 
 APP = Flask(__name__)
 APP.url_map.strict_slashes = False
 
 BLUEPRINT = Blueprint('pycsw', __name__)
+
 
 def get_response(result: tuple):
     """
@@ -74,6 +74,17 @@ def landing_page():
     """
 
     return get_response(api_.landing_page(dict(request.headers), request.args))
+
+
+@BLUEPRINT.route('/openapi')
+def openapi():
+    """
+    OGC API OpenAPI document endpoint
+
+    :returns: HTTP response
+    """
+
+    return get_response(api_.openapi(dict(request.headers), request.args))
 
 
 @BLUEPRINT.route('/conformance')
@@ -106,7 +117,8 @@ def collection():
     :returns: HTTP response
     """
 
-    return get_response(api_.collections(dict(request.headers), request.args, True))
+    return get_response(api_.collections(dict(request.headers),
+                        request.args, True))
 
 
 @BLUEPRINT.route('/collections/metadata:main/queryables')
