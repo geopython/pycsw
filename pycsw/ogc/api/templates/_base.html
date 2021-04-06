@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="{{ config['server']['encoding'] }}">
+    <title>{% block title %}{{ config['metadata:main']['identification_title'] }} -{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="language" content="{{ config['server']['language'] }}">
+    <meta name="description" content="{{ config['metadata:main']['identification_title'] }}">
+    <meta name="keywords" content="{{ config['metadata:main']['identification_keywords'] }}">
+    <link rel="shortcut icon" href="{{ config['server']['url'] }}/static/favicon.ico" type="image/x-icon">
+    {% for link in data['links'] %}
+      <link rel="{{ link['rel'] }}" type="{{ link['type'] }}" title="{{ link['title'] }}" href="{{ link['href'] }}"/>
+      {% if (link['rel']=="self" and link['type']=="text/html") %}
+      <link rel="canonical" href="{{ link['href'].split('?')[0] }}" />
+      {% endif %}
+    {% endfor %}
+    {% block extrahead %}
+    {% endblock %}
+
+    <style type="text/css">
+      body {
+                background-color: #ffffff;
+                font-family: arial, verdana, sans-serif;
+                text-align: left;
+                float: left;
+      }
+      .flat {
+        border: 0px;
+      }
+      header {
+        display: inline-block;
+      }
+      table {
+        border-width: 2px;
+        border-spacing: 0px;
+        border-style: solid;
+        border-color: black;
+        border-collapse: collapse;
+        background-color: white;
+      }
+        table th {
+        border-width: 4px;
+        padding: 5px;
+        border-style: solid;
+        border-color: gray;
+        background-color: white;
+      }
+        table td {
+        border-width: 4px;
+        padding: 5px;
+        border-style: solid;
+        border-color: gray;
+        background-color: white;
+      }
+      .header-img {
+        float: left;
+        margin: 0px 15px 15px 0px;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a title="pycsw website" href="https://pycsw.org"><img class="header-img" src="https://pycsw.org/img/pycsw-logo-vertical.png" alt="pycsw website" title="pycsw website" width="157" height="240"/></a>
+      <h1>{{ config['metadata:main']['identification_title'] }}</h1>
+    </header>
+
+    <div class="sticky row crumbs">
+      <div class="col-sm-12 col-md-10 col-md-offset-1">
+        {% block crumbs %}
+        <a href="{{ config['server']['url'] }}">Home</a>
+        {% endblock %}
+        <span style="float:right">
+          <a href="{{ data['links'] | map(rel='self') | attr('href') }}?f=json">JSON</a> | <a href="mailto:{{ config['metadata:main']['contact_email'] }}">Contact</a>
+        </span>
+      </div>
+    </div>
+    <hr>
+    <main>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
+          <br/>
+          {% block body %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+    <hr>
+    </main>
+    <footer class="sticky">Powered by <a title="pycsw" href="https://pycsw.org"><img src="{{ config['server']['url'] }}/static/logo-horizontal.png" title="pycsw logo" style="height:24px;vertical-align: middle;"/></a> {{ version }}</footer>
+    {% block extrafoot %}
+    {% endblock %}
+  </body>
+</html>

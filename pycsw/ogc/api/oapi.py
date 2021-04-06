@@ -27,6 +27,7 @@
 #
 # =================================================================
 
+from copy import deepcopy
 import logging
 
 from pycsw.ogc.api.util import yaml_load
@@ -57,6 +58,20 @@ def gen_oapi(config, oapi_filepath):
         'description': 'access to data (records)'
     }]
 
+    oapi['components']['parameters']['f'] = {
+        'name': 'f',
+        'in': 'query',
+        'description': 'Optional output formats',
+        'required': False,
+        'schema': {
+            'type': 'string',
+            'enum': ['json', 'html'],
+            'default': 'json'
+        },
+        'style': 'form',
+        'explode': False
+    }
+
     oapi['info'] = {
         'contact': {
             'email': config.get('metadata:main', 'contact_email'),
@@ -81,6 +96,9 @@ def gen_oapi(config, oapi_filepath):
             'summary': 'Landing page',
             'description': 'Landing page',
             'operationId': 'getLandingPage',
+            'parameters': [
+                {'$ref': '#/components/parameters/f'}
+            ],
             'responses': {
                 '200': {
                     '$ref': '#/components/responses/LandingPage'
@@ -100,6 +118,9 @@ def gen_oapi(config, oapi_filepath):
             'summary': 'Conformance page',
             'description': 'Conformance page',
             'operationId': 'getConformanceDeclaration',
+            'parameters': [
+                {'$ref': '#/components/parameters/f'}
+            ],
             'responses': {
                 '200': {
                     '$ref': '#/components/responses/ConformanceDeclaration'
@@ -119,6 +140,9 @@ def gen_oapi(config, oapi_filepath):
             'summary': 'Collections page',
             'description': 'Collections page',
             'operationId': 'getCollections',
+            'parameters': [
+                {'$ref': '#/components/parameters/f'}
+            ],
             'responses': {
                 '200': {
                     '$ref': '#/components/responses/Collections'
@@ -138,6 +162,9 @@ def gen_oapi(config, oapi_filepath):
             'summary': 'Collection page',
             'description': 'Collection page',
             'operationId': 'getCollectionId',
+            'parameters': [
+                {'$ref': '#/components/parameters/f'}
+            ],
             'responses': {
                 '200': {
                     '$ref': '#/components/responses/Collection'
@@ -167,7 +194,8 @@ def gen_oapi(config, oapi_filepath):
                 {'$ref': '#/components/parameters/q'},
                 {'$ref': '#/components/parameters/type'},
                 {'$ref': '#/components/parameters/externalid'},
-                {'$ref': '#/components/parameters/sortby'}
+                {'$ref': '#/components/parameters/sortby'},
+                {'$ref': '#/components/parameters/f'}
             ],
             'responses': {
                 '200': {
@@ -188,6 +216,9 @@ def gen_oapi(config, oapi_filepath):
 
     oapi['paths']['/collections/metadata:main/items'] = path
 
+    f = deepcopy(oapi['components']['parameters']['f'])
+    f['schema']['enum'].append('xml')
+
     path = {
         'get': {
             'tags': ['Data'],
@@ -195,7 +226,8 @@ def gen_oapi(config, oapi_filepath):
             'description': 'Records item page',
             'operationId': 'getRecord',
             'parameters': [
-                {'$ref': '#/components/parameters/recordId'}
+                {'$ref': '#/components/parameters/recordId'},
+                f
             ],
             'responses': {
                 '200': {

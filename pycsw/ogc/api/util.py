@@ -52,6 +52,8 @@ DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 TEMPLATES = '{}{}templates'.format(os.path.dirname(
     os.path.realpath(__file__)), os.sep)
 
+STATIC = '{}/static'.format(TEMPLATES)
+
 mimetypes.add_type('text/plain', '.yaml')
 mimetypes.add_type('text/plain', '.yml')
 

@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+{% block title %}{{ super() }} Items {% endblock %}
+{% block body %}
+
+<section id="items">
+  <h2>Items</h2>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Identifier</th>
+        <th>Title</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rec in data['features']  %}
+      <tr>
+        <td><a title="{{ rec['properties']['externalId'] }}" href="{{ config['server']['url'] }}/collections/metadata:main/items/{{ rec['properties']['externalId'] }}">{{ rec['properties']['externalId'] }}</a></td>
+        <td>{{ rec['properties']['title'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</section>
+
+{% endblock %}

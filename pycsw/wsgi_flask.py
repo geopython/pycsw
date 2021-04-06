@@ -34,6 +34,7 @@ import os
 from flask import Flask, Blueprint, make_response, request
 
 from pycsw.ogc.api.records import API
+from pycsw.ogc.api.util import STATIC
 
 PYCSW_CONFIG = os.environ.get('PYCSW_CONFIG')
 
@@ -42,10 +43,13 @@ if PYCSW_CONFIG is None:
 
 api_ = API(PYCSW_CONFIG)
 
-APP = Flask(__name__)
+APP = Flask(__name__, static_folder=STATIC, static_url_path='/static')
 APP.url_map.strict_slashes = False
 
-BLUEPRINT = Blueprint('pycsw', __name__)
+BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC, static_url_path='/static')
+
+APP.config['JSONIFY_PRETTYPRINT_REGULAR'] = api_.config['server'].get(
+    'pretty_print', True)
 
 
 def get_response(result: tuple):
