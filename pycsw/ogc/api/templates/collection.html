@@ -1,0 +1,36 @@
+{% extends "_base.html" %}
+{% block title %}{{ super() }} {{ data['title'] }} {% endblock %}
+{% block body %}
+
+<section id="collection">
+  <h2>{{ data['title'] }}</h2>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="name">
+          <a title="{{ data['title'] | striptags | truncate }}" href="{{ config['server']['url'] }}/collections/{{ data.id }}">
+            <span>{{ data['title'] | striptags | truncate }}</span>
+          </a>
+        </td>
+        <td data-label="type">{{ data["itemType"] }}</td>
+        <td data-label="description">
+          {{ data['description'] | striptags | truncate }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+<h3><a title="Queryables" href="{{ config['server']['url'] }}/collections/{{data.id}}/queryables">Queryables</a></h3>
+<h3><a title="Browse items" href="{{ config['server']['url'] }}/collections/{{data.id}}/items">Browse items</a></h3>
+
+</section>
+
+{% endblock %}

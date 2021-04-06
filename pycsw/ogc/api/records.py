@@ -41,7 +41,7 @@ from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.util import EnvInterpolation, jsonify_links, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
-from pycsw.ogc.api.util import match_env_var, to_json
+from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
 
 LOGGER = logging.getLogger(__name__)
 
@@ -129,6 +129,53 @@ class API:
             'bbox': self.repository.dataset.wkt_geometry
         }
 
+    def get_content_type(self, headers, args):
+        """
+        Decipher content type requested
+
+        :param headers: `dict` of HTTP request headers
+        :param args: `dict` of query arguments
+
+        :returns: `str` of response content type
+        """
+
+        content_type = 'application/json'
+
+        format_ = args.get('f')
+
+        if 'text/html' in headers['Accept']:
+            content_type = 'text/html'
+        elif 'application/xml' in headers['Accept']:
+            content_type = 'application/xml'
+
+        if format_ is not None:
+            if format_ == 'json':
+                content_type = 'application/json'
+            elif format_ == 'xml':
+                content_type = 'application/xml'
+            elif format_ == 'html':
+                content_type = 'text/html'
+
+        return content_type
+
+    def get_response(self, headers, template, data):
+        """
+        Provide response
+
+        :param headers: `dict` of HTTP request headers
+        :param template: template filename
+        :param data: `dict` of response data
+
+        :returns: tuple of headers, status code, content
+        """
+
+        if headers['Content-Type'] == 'text/html':
+            content = render_j2_template(self.config, template, data)
+        else:
+            content = to_json(data)
+
+        return headers, 200, content
+
     def landing_page(self, headers_, args):
         """
         Provide API landing page
@@ -139,7 +186,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        headers_['Content-Type'] = 'application/json'
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         response = {
             'links': [],
@@ -158,22 +205,22 @@ class API:
             }, {
               'rel': 'conformance',
               'type': 'application/json',
-              'title': 'Conformance',
-              'href': f"{self.config['server']['url']}/conformance"
+              'title': 'Conformance as JSON',
+              'href': f"{self.config['server']['url']}/conformance?f=json"
             }, {
               'rel': 'service-desc',
               'type': 'application/vnd.oai.openapi+json;version=3.0',
               'title': 'The OpenAPI definition as JSON',
-              'href': f"{self.config['server']['url']}/openapi"
+              'href': f"{self.config['server']['url']}/openapi?f=json"
             }, {
               'rel': 'data',
               'type': 'application/json',
-              'title': 'Collections',
-              'href': f"{self.config['server']['url']}/collections"
+              'title': 'Collections as JSON',
+              'href': f"{self.config['server']['url']}/collections?f=json"
             }
         ]
 
-        return headers_, 200, to_json(response)
+        return self.get_response(headers_, 'landing_page.html', response)
 
     def openapi(self, headers_, args):
         """
@@ -185,15 +232,13 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        oapi = {}
-
-        headers_['Content-Type'] = 'application/json'
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         filepath = f"{THISDIR}/../../core/schemas/ogc/ogcapi/records/part1/1.0/ogcapi-records-1.yaml"
 
-        oapi = gen_oapi(self.config, filepath)
+        response = gen_oapi(self.config, filepath)
 
-        return headers_, 200, to_json(oapi)
+        return self.get_response(headers_, 'openapi.html', response)
 
     def conformance(self, headers_, args):
         """
@@ -205,7 +250,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        headers_['Content-Type'] = 'application/json'
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         conf_classes = [
             'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
@@ -220,7 +265,7 @@ class API:
             'conformsTo': conf_classes
         }
 
-        return headers_, 200, to_json(response)
+        return self.get_response(headers_, 'conformance.html', response)
 
     def collections(self, headers_, args, collection=False):
         """
@@ -233,7 +278,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        headers_['Content-Type'] = 'application/json'
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         collection_info = {
             'id': 'metadata:main',
@@ -269,7 +314,12 @@ class API:
         else:
             response = collection_info
 
-        return headers_, 200, to_json(response)
+        if not collection:
+            template = 'collections.html'
+        else:
+            template = 'collection.html'
+
+        return self.get_response(headers_, template, response)
 
     def queryables(self, headers_, args):
         """
@@ -281,7 +331,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        headers_['Content-Type'] = 'application/json'
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         properties = self.repository.describe()
 
@@ -293,7 +343,7 @@ class API:
             '$id': f"{self.config['server']['url']}/collections/metadata:main/queryables"
         }
 
-        return headers_, 200, to_json(response)
+        return self.get_response(headers_, 'queryables.html', response)
 
     def items(self, headers_, args):
         """
@@ -305,7 +355,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        headers_['Content-Type'] = 'application/json'
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         common_query_params = [
             'bbox',
@@ -314,6 +364,7 @@ class API:
         ]
         reserved_query_params = [
             'cql',
+            'f',
             'limit'
         ]
 
@@ -390,7 +441,7 @@ class API:
         for record in records:
             response['features'].append(record2json(record))
 
-        return headers_, 200, to_json(response)
+        return self.get_response(headers_, 'items.html', response)
 
     def item(self, headers_, args, item):
         """
@@ -403,7 +454,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        headers_['Content-Type'] = 'application/json'
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         format_ = args.get('f', 'json')
 
@@ -420,12 +471,20 @@ class API:
             return self.get_exception(
                     404, headers_, 'InvalidParameterValue', 'item not found')
 
-        if format_ == 'json':
-            response = record2json(record)
-            return headers_, 200, to_json(response)
-        elif format_ == 'xml':
-            response = record.xml
-            return headers_, 200, response
+        if headers_['Content-Type'] == 'application/xml':
+            return headers_, 200, record.xml
+        else:
+            return self.get_response(headers_, 'item.html', record2json(record))
+
+        if headers_['Content-Type'] == 'text/html':
+            content = render_j2_template(
+                self.config, 'item.html', record2json(record))
+        elif headers_['Content-Type'] == 'application/xml':
+            content = record.xml
+        else:  # json
+            content = to_json(record2json(record))
+
+        return headers_, 200, content
 
     def get_exception(self, status, headers, code, description):
         """

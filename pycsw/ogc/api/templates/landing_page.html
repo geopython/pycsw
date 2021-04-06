@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+{% block title %}{{ super() }} Home {% endblock %}
+{% block body %}
+
+<div>
+  <h3>{{ config['metadata:main']['identification_abstract'] }}</h3>
+</div>
+
+<section id="links">
+  <h3><a title="Collections" href="{{ config['server']['url'] }}/collections">Collections</a></h3>
+  <h3>OpenAPI <a title="Swagger" href="{{ config['server']['url'] }}/openapi?f=html">Swagger</a> <a title="JSON" href="{{ config['server']['url'] }}/openapi?f=json">JSON</a></h3>
+  <h3><a title="Conformance" href="{{ config['server']['url'] }}/conformance">Conformance</a></h3>
+</section>
+
+{% endblock %}
