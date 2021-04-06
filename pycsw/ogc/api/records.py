@@ -158,10 +158,11 @@ class API:
 
         return content_type
 
-    def get_response(self, headers, template, data):
+    def get_response(self, status, headers, template, data):
         """
         Provide response
 
+        :param status: `int` of HTTP status
         :param headers: `dict` of HTTP request headers
         :param template: template filename
         :param data: `dict` of response data
@@ -174,7 +175,7 @@ class API:
         else:
             content = to_json(data)
 
-        return headers, 200, content
+        return headers, status, content
 
     def landing_page(self, headers_, args):
         """
@@ -220,7 +221,7 @@ class API:
             }
         ]
 
-        return self.get_response(headers_, 'landing_page.html', response)
+        return self.get_response(200, headers_, 'landing_page.html', response)
 
     def openapi(self, headers_, args):
         """
@@ -238,7 +239,7 @@ class API:
 
         response = gen_oapi(self.config, filepath)
 
-        return self.get_response(headers_, 'openapi.html', response)
+        return self.get_response(200, headers_, 'openapi.html', response)
 
     def conformance(self, headers_, args):
         """
@@ -265,7 +266,7 @@ class API:
             'conformsTo': conf_classes
         }
 
-        return self.get_response(headers_, 'conformance.html', response)
+        return self.get_response(200, headers_, 'conformance.html', response)
 
     def collections(self, headers_, args, collection=False):
         """
@@ -319,7 +320,7 @@ class API:
         else:
             template = 'collection.html'
 
-        return self.get_response(headers_, template, response)
+        return self.get_response(200, headers_, template, response)
 
     def queryables(self, headers_, args):
         """
@@ -343,7 +344,7 @@ class API:
             '$id': f"{self.config['server']['url']}/collections/metadata:main/queryables"
         }
 
-        return self.get_response(headers_, 'queryables.html', response)
+        return self.get_response(200, headers_, 'queryables.html', response)
 
     def items(self, headers_, args):
         """
@@ -363,7 +364,7 @@ class API:
             'q'
         ]
         reserved_query_params = [
-            'cql',
+            'filter',
             'f',
             'limit'
         ]
@@ -376,9 +377,9 @@ class API:
 
         cql_query = None
 
-        if 'cql' in args:
-            LOGGER.debug(f'CQL query specified {args["cql"]}')
-            cql_query = args['cql']
+        if 'filter' in args:
+            LOGGER.debug(f'CQL query specified {args["filter"]}')
+            cql_query = args['filter']
 
         LOGGER.debug('Transforming property filters into CQL')
         query_args = []
@@ -441,7 +442,7 @@ class API:
         for record in records:
             response['features'].append(record2json(record))
 
-        return self.get_response(headers_, 'items.html', response)
+        return self.get_response(200, headers_, 'items.html', response)
 
     def item(self, headers_, args, item):
         """
@@ -466,7 +467,7 @@ class API:
         if headers_['Content-Type'] == 'application/xml':
             return headers_, 200, record.xml
         else:
-            return self.get_response(headers_, 'item.html', record2json(record))
+            return self.get_response(200, headers_, 'item.html', record2json(record))
 
     def get_exception(self, status, headers, code, description):
         """
@@ -485,7 +486,7 @@ class API:
             'description': description
         }
 
-        return headers, status, to_json(exception)
+        return self.get_response(status, headers, 'exception.html', exception)
 
 
 def record2json(record):
