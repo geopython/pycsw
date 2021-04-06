@@ -456,14 +456,6 @@ class API:
 
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
-        format_ = args.get('f', 'json')
-
-        if format_ == 'xml':
-            headers_['Content-Type'] = 'application/xml'
-        elif format_ != 'json':
-            return self.get_exception(
-                400, headers_, 'InvalidParameterValue', 'Invalid format')
-
         LOGGER.debug(f'Querying repository for item {item}')
         try:
             record = self.repository.query_ids([item])[0]
@@ -475,16 +467,6 @@ class API:
             return headers_, 200, record.xml
         else:
             return self.get_response(headers_, 'item.html', record2json(record))
-
-        if headers_['Content-Type'] == 'text/html':
-            content = render_j2_template(
-                self.config, 'item.html', record2json(record))
-        elif headers_['Content-Type'] == 'application/xml':
-            content = record.xml
-        else:  # json
-            content = to_json(record2json(record))
-
-        return headers_, 200, content
 
     def get_exception(self, status, headers, code, description):
         """
