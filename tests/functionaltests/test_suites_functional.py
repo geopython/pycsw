@@ -84,9 +84,14 @@ def test_suites(test_identifier, use_xml_canonicalisation,
 
     request_environment = _prepare_wsgi_test_environment(request_method,
                                                          request_data)
-    pycsw_server = server.Csw(rtconfig=configuration, env=request_environment)
+#    pycsw_server = server.Csw(rtconfig=configuration, env=request_environment)
     encoding = "utf-8"
-    status, raw_contents = pycsw_server.dispatch_wsgi()
+#    status, raw_contents = pycsw_server.dispatch_wsgi()
+
+    from pycsw.ogc.api.records import API
+    pycsw_server = API(configuration)
+
+
     contents = raw_contents.decode(encoding)
     with codecs.open(expected_result, encoding=encoding) as fh:
         expected = fh.read()

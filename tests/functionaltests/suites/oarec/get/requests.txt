@@ -1,0 +1,12 @@
+openapi-json,/openapi?f=json
+landing-page-json,/?f=json
+conformance-json,/conformance?f=json
+collections-json,/collections?f=json
+collection-json,/collections/metadata:main?f=json
+collection-items-queryables-json,/collections/metadata:main/queryables?f=json
+collection-items-json,/collections/metadata:main/items?f=json
+collection-items-limit-json,/collections/metadata:main/items?f=json&limit=1
+collection-items-bbox-json,/collections/metadata:main/items?f=json&bbox=-180,-90,180,90
+collection-items-filter-json,/collections/metadata:main/items?f=json&filter=anytext%20LIKE%20%22%25LOREM%25%22
+collection-item-json,/collections/metadata:main/items/urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd?f=json
+collection-item-xml,/collections/metadata:main/items/urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd?f=xml
