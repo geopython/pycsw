@@ -34,7 +34,9 @@ from configparser import ConfigParser
 import logging
 import os
 
-from pycql.integrations.sqlalchemy import to_filter, parse
+from pycql.integrations.sqlalchemy import parse
+
+from pycsw.core.pycql_evaluate import to_filter
 
 from pycsw import __version__
 from pycsw.core import log
