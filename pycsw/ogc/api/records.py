@@ -428,15 +428,23 @@ class API:
         else:
             query = self.repository.session.query(self.repository.dataset)
 
+        if 'limit' in args:
+            LOGGER.debug('limit specified')
+            limit = int(args['limit'])
+            if limit > self.maxrecords:
+                limit = self.maxrecords
+        else:
+            limit = self.maxrecords
+
         LOGGER.debug(f'Query: {query}')
         LOGGER.debug('Querying repository')
         count = query.count()
-        records = query.limit(self.maxrecords).all()
+        records = query.limit(limit).all()
 
-        if count < self.maxrecords:
+        if count < limit:
             returned = count
         else:
-            returned = self.maxrecords
+            returned = limit
 
         response['numberMatched'] = count
         response['numberReturned'] = returned
