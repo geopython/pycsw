@@ -70,7 +70,12 @@ def application(env, start_response):
 
     print(env['PATH_INFO'])
 
+    status, headers, contents = application_dispatcher(env)
+    start_response(status, list(headers.items()))
+    return [contents]
 
+
+def application_dispatcher(env):
     pycsw_root = get_pycsw_root_path(os.environ, env)
     configuration_path = get_configuration_path(os.environ, env, pycsw_root)
     env['local.app_root'] = pycsw_root
@@ -98,8 +103,7 @@ def application(env, start_response):
         except configparser.NoSectionError:
             print('Could not load user configuration %s' % configuration_path)
 
-    start_response(status, list(headers.items()))
-    return [contents]
+    return status, headers, contents
 
 
 def compress_response(response, compression_level):
