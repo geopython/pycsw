@@ -32,7 +32,7 @@ class MCRaster(base_profile.base_profile):
                         'mc:scale': Queryable(context.md_core_model['mappings']['pycsw:Scale'], 'mc:scale'),
                         'mc:dsc': Queryable(context.md_core_model['mappings']['pycsw:Abstract'], 'mc:dsc'),
                         'mc:boundingBox': Queryable(context.md_core_model['mappings']['pycsw:BoundingBox'], 'mc:geometry'),
-                        'mc:projectName': Queryable(context.md_core_model['mappings']['pycsw:Identifier'], 'mc:id'),
+                        'mc:id': Queryable(context.md_core_model['mappings']['pycsw:Identifier'], 'mc:id'),
                         'mc:version': Queryable(context.md_core_model['mappings']['pycsw:version'], 'mc:version'),
                     }
                 })
