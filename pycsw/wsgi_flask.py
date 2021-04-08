@@ -170,6 +170,7 @@ def csw():
     :returns: HTTP response
     """
 
+    request.environ['PYCSW_IS_CSW'] = True
     status, headers, content = application_dispatcher(request.environ)
 
     return get_response((headers, status, content))
