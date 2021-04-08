@@ -99,6 +99,20 @@ MD_CORE_MODEL = {
         'pycsw:measuredPrecision': 'measured_precision',
         'pycsw:Abstract': 'description',
         'pycsw:Links': 'links',
-        'pycsw:Type': 'type',    
+        'pycsw:Type': 'type', 
+
+        # Added for mc-raster 
+        'pycsw:Source': 'source',
+        'pycsw:SourceName': 'sourceName',
+        'pycsw:UpdateDate': 'updateDate',
+        'pycsw:Resolution': 'resolution',
+        'pycsw:Ep90': 'ep90',
+        'pycsw:sensorType': 'sensorType',
+        'pycsw:Rms': 'rms',
+        'pycsw:Scale': 'scale',
+        'pycsw:Abstract': 'description',
+        'pycsw:BoundingBox': 'wkt_geometry',
+        'pycsw:Identifier': 'identifier',
+        'pycsw:version': 'version',
     }
 }

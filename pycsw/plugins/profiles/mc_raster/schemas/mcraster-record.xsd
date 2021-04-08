@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+   targetNamespace="http://schema.mapcolonies.com"
+   xmlns:mc="http://schema.mapcolonies.com"
+   xmlns:csw30="http://www.opengis.net/cat/csw/3.0"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:dct="http://purl.org/dc/terms/"
+   xmlns:ows="http://www.opengis.net/ows/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   elementFormDefault="qualified"
+   version="1.0.0"
+   id="mcraster">
+
+   <xsd:import namespace="http://www.opengis.net/cat/csw/3.0" schemaLocation="../../../../core/schemas/ogc/cat/csw/3.0/cswAll.xsd"></xsd:import>
+   <xsd:import namespace="http://www.opengis.net/ows/2.0" schemaLocation="../../../../core/schemas/ogc/ows/2.0/owsAll.xsd"/>
+
+
+   <xsd:element name="source"/>
+   <xsd:element name="sourceName" />
+   <xsd:element name="updateDate" />
+   <xsd:element name="resolution" />
+   <xsd:element name="ep90" />
+   <xsd:element name="sensorType" />
+   <xsd:element name="rms" />
+   <xsd:element name="scale" />
+   <xsd:element name="dsc" />
+   <xsd:element name="geometry"  type="ows:BoundingBoxType" />
+   <xsd:element name="id" />
+   <xsd:element name="version" />
+
+
+   <xsd:element name="MCRasterRecord" type="mc:MCRasterRecord" />
+
+   
+   <xsd:complexType name="MCRasterRecord" final="#all">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            This type extends DCMIRecordType to add ows:BoundingBox;
+            it may be used to specify a spatial envelope for the
+            catalogued resource.
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="csw30:DCMIRecordType">
+            <xsd:sequence>
+               <xsd:element ref="mc:source" />
+               <xsd:element ref="mc:sourceName" />
+               <xsd:element ref="mc:updateDate" />
+               <xsd:element ref="mc:resolution" />
+               <xsd:element ref="mc:ep90" />
+               <xsd:element ref="mc:sensorType"/>
+               <xsd:element ref="mc:rms" />
+               <xsd:element ref="mc:scale"/>
+               <xsd:element ref="mc:dsc" />
+               <xsd:element ref="mc:geometry" />
+               <xsd:element ref="mc:id" />
+               <xsd:element ref="mc:version" />
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   
+</xsd:schema>
