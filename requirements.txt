@@ -1,7 +1,6 @@
 geolinks
 lxml
 OWSLib
-pycql
 pyproj
 Shapely
 xmltodict
