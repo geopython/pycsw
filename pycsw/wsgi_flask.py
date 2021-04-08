@@ -162,7 +162,7 @@ def item(item=None):
     return get_response(api_.item(dict(request.headers), request.args, item))
 
 
-@BLUEPRINT.route('/csw')
+@BLUEPRINT.route('/csw', methods=['GET', 'POST'])
 def csw():
     """
     CSW endpoint
