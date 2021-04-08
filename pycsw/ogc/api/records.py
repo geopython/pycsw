@@ -211,6 +211,11 @@ class API:
               'title': 'Conformance as JSON',
               'href': f"{self.config['server']['url']}/conformance?f=json"
             }, {
+              'rel': 'service-doc',
+              'type': 'text/html',
+              'title': 'The OpenAPI definition as HTML',
+              'href': f"{self.config['server']['url']}/openapi?f=html"
+            }, {
               'rel': 'service-desc',
               'type': 'application/vnd.oai.openapi+json;version=3.0',
               'title': 'The OpenAPI definition as JSON',
@@ -220,6 +225,11 @@ class API:
               'type': 'application/json',
               'title': 'Collections as JSON',
               'href': f"{self.config['server']['url']}/collections?f=json"
+            }, {
+              'rel': 'service',
+              'type': 'application/xml',
+              'title': 'CSW 2/3 endpoint',
+              'href': f"{self.config['server']['url']}/csw"
             }
         ]
 
