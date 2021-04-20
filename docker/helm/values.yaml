@@ -1,3 +1,5 @@
+route: 
+  tls: false
 postgres:
   enabled: true
   volume:
@@ -5,16 +7,11 @@ postgres:
   db_name: postgres
   authentication:
     username: postgres
-    password: mypass
+    password: postgres
   pg_data_path: /var/lib/postgresql/data/pgdata
 
-pgadmin4:
-  enabled: true
-  authentication:
-    default_email: pgadmin@mc.com
-    default_password: mypass
-
 pycsw:
+  image: mapcolonies/pycsw:latest
   pycsw_cfg: |+
     [server]
     home=/home/pycsw
@@ -32,7 +29,7 @@ pycsw:
     #domainquerytype=range
     #domaincounts=true
     #spatial_ranking=true
-    #profiles=apiso
+    profiles=mc3d
 
     [manager]
     transactions=false
@@ -85,68 +82,67 @@ pycsw:
     #contact_email=Email Address
     #temp_extent=YYYY-MM-DD/YYYY-MM-DD
 
-
-  #  In order to change default db columns mapping
-  # mappings_py: |+
-  #   MD_CORE_MODEL = {
-  #     'typename': 'pycsw:CoreMetadata',
-  #     'outputschema': 'http://pycsw.org/metadata',
-  #     'mappings': {
-  #       'pycsw:Identifier': 'identifier',
-  #       'pycsw:Typename': 'typename',
-  #       'pycsw:Schema': 'schema',
-  #       'pycsw:MdSource': 'mdsource',
-  #       'pycsw:InsertDate': 'insert_date',
-  #       'pycsw:XML': 'xml',
-  #       'pycsw:AnyText': 'anytext',
-  #       'pycsw:Language': 'language',
-  #       'pycsw:Title': 'title',
-  #       'pycsw:Abstract': 'abstract',
-  #       'pycsw:Keywords': 'keywords',
-  #       'pycsw:KeywordType': 'keywordstype',
-  #       'pycsw:Format': 'format',
-  #       'pycsw:Source': 'source',
-  #       'pycsw:Date': 'date',
-  #       'pycsw:Modified': 'date_modified',
-  #       'pycsw:Type': 'type',
-  #       'pycsw:BoundingBox': 'wkt_geometry',
-  #       'pycsw:CRS': 'crs',
-  #       'pycsw:AlternateTitle': 'title_alternate',
-  #       'pycsw:RevisionDate': 'date_revision',
-  #       'pycsw:CreationDate': 'date_creation',
-  #       'pycsw:PublicationDate': 'date_publication',
-  #       'pycsw:OrganizationName': 'organization',
-  #       'pycsw:SecurityConstraints': 'securityconstraints',
-  #       'pycsw:ParentIdentifier': 'parentidentifier',
-  #       'pycsw:TopicCategory': 'topicategory',
-  #       'pycsw:ResourceLanguage': 'resourcelanguage',
-  #       'pycsw:GeographicDescriptionCode': 'geodescode',
-  #       'pycsw:Denominator': 'denominator',
-  #       'pycsw:DistanceValue': 'distancevalue',
-  #       'pycsw:DistanceUOM': 'distanceuom',
-  #       'pycsw:TempExtent_begin': 'time_begin',
-  #       'pycsw:TempExtent_end': 'time_end',
-  #       'pycsw:ServiceType': 'servicetype',
-  #       'pycsw:ServiceTypeVersion': 'servicetypeversion',
-  #       'pycsw:Operation': 'operation',
-  #       'pycsw:CouplingType': 'couplingtype',
-  #       'pycsw:OperatesOn': 'operateson',
-  #       'pycsw:OperatesOnIdentifier': 'operatesonidentifier',
-  #       'pycsw:OperatesOnName': 'operatesoname',
-  #       'pycsw:Degree': 'degree',
-  #       'pycsw:AccessConstraints': 'accessconstraints',
-  #       'pycsw:OtherConstraints': 'otherconstraints',
-  #       'pycsw:Classification': 'classification',
-  #       'pycsw:ConditionApplyingToAccessAndUse': 'conditionapplyingtoaccessanduse',
-  #       'pycsw:Lineage': 'lineage',
-  #       'pycsw:ResponsiblePartyRole': 'responsiblepartyrole',
-  #       'pycsw:SpecificationTitle': 'specificationtitle',
-  #       'pycsw:SpecificationDate': 'specificationdate',
-  #       'pycsw:SpecificationDateType': 'specificationdatetype',
-  #       'pycsw:Creator': 'creator',
-  #       'pycsw:Publisher': 'publisher',
-  #       'pycsw:Contributor': 'contributor',
-  #       'pycsw:Relation': 'relation',
-  #       'pycsw:Links': 'links',
-  #     }
-  #   }
+  # In order to change default db columns mapping
+  mappings_py: |+
+    MD_CORE_MODEL = {
+      'typename': 'pycsw:CoreMetadata',
+      'outputschema': 'http://pycsw.org/metadata',
+      'mappings': {
+        'pycsw:Identifier': 'identifier',
+        'pycsw:Typename': 'typename',
+        'pycsw:Schema': 'schema',
+        'pycsw:MdSource': 'mdsource',
+        'pycsw:InsertDate': 'insert_date',
+        'pycsw:XML': 'xml',
+        'pycsw:AnyText': 'anytext',
+        'pycsw:Language': 'language',
+        'pycsw:Title': 'title',
+        'pycsw:Abstract': 'abstract',
+        'pycsw:Keywords': 'keywords',
+        'pycsw:KeywordType': 'keywordstype',
+        'pycsw:Format': 'format',
+        'pycsw:Source': 'source',
+        'pycsw:Date': 'date',
+        'pycsw:Modified': 'date_modified',
+        'pycsw:Type': 'type',
+        'pycsw:BoundingBox': 'wkt_geometry',
+        'pycsw:CRS': 'crs',
+        'pycsw:AlternateTitle': 'title_alternate',
+        'pycsw:RevisionDate': 'date_revision',
+        'pycsw:CreationDate': 'date_creation',
+        'pycsw:PublicationDate': 'date_publication',
+        'pycsw:OrganizationName': 'organization',
+        'pycsw:SecurityConstraints': 'securityconstraints',
+        'pycsw:ParentIdentifier': 'parentidentifier',
+        'pycsw:TopicCategory': 'topicategory',
+        'pycsw:ResourceLanguage': 'resourcelanguage',
+        'pycsw:GeographicDescriptionCode': 'geodescode',
+        'pycsw:Denominator': 'denominator',
+        'pycsw:DistanceValue': 'distancevalue',
+        'pycsw:DistanceUOM': 'distanceuom',
+        'pycsw:TempExtent_begin': 'time_begin',
+        'pycsw:TempExtent_end': 'time_end',
+        'pycsw:ServiceType': 'servicetype',
+        'pycsw:ServiceTypeVersion': 'servicetypeversion',
+        'pycsw:Operation': 'operation',
+        'pycsw:CouplingType': 'couplingtype',
+        'pycsw:OperatesOn': 'operateson',
+        'pycsw:OperatesOnIdentifier': 'operatesonidentifier',
+        'pycsw:OperatesOnName': 'operatesoname',
+        'pycsw:Degree': 'degree',
+        'pycsw:AccessConstraints': 'accessconstraints',
+        'pycsw:OtherConstraints': 'otherconstraints',
+        'pycsw:Classification': 'classification',
+        'pycsw:ConditionApplyingToAccessAndUse': 'conditionapplyingtoaccessanduse',
+        'pycsw:Lineage': 'lineage',
+        'pycsw:ResponsiblePartyRole': 'responsiblepartyrole',
+        'pycsw:SpecificationTitle': 'specificationtitle',
+        'pycsw:SpecificationDate': 'specificationdate',
+        'pycsw:SpecificationDateType': 'specificationdatetype',
+        'pycsw:Creator': 'creator',
+        'pycsw:Publisher': 'publisher',
+        'pycsw:Contributor': 'contributor',
+        'pycsw:Relation': 'relation',
+        'pycsw:Links': 'links',
+      }
+    }
