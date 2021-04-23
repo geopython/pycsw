@@ -216,7 +216,7 @@ def _test_xml_result(result, expected, encoding="utf-8"):
     return matches
 
 
-def _test_json_result(result, expected, encoding="utf-8"):
+def _test_json_result(result, expected):
     """Compare the JSON test results with an expected value.
 
     Parameters
@@ -233,8 +233,8 @@ def _test_json_result(result, expected, encoding="utf-8"):
 
     """
 
-    result_dict = json.loads(result, encoding=encoding)
-    expected_dict = json.loads(expected, encoding=encoding)
+    result_dict = json.loads(result)
+    expected_dict = json.loads(expected)
     return result_dict == expected_dict
 
 
