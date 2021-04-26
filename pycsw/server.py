@@ -250,7 +250,11 @@ class Csw(object):
             self.requesttype = 'GET'
             self.request = wsgiref.util.request_uri(self.environ)
             try:
-                query_part = splitquery(self.request)[-1]
+                if '{' in self.request or '%7D' in self.request:
+                    LOGGER.debug('Looks like an OpenSearch URL template')
+                    query_part = self.request.split('?', 1)[-1]
+                else:
+                    query_part = splitquery(self.request)[-1]
                 self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
             except AttributeError as err:
                 LOGGER.exception('Could not parse query string')
