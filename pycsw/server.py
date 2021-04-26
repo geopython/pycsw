@@ -250,7 +250,7 @@ class Csw(object):
             self.requesttype = 'GET'
             self.request = wsgiref.util.request_uri(self.environ)
             try:
-                if '{' in self.request and '}' in self.request:
+                if '{' in self.request or '%7D' in self.request:
                     LOGGER.debug('Looks like an OpenSearch URL template')
                     query_part = self.request.split('?', 1)[-1]
                 else:
