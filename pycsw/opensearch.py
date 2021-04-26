@@ -293,7 +293,7 @@ class OpenSearch(object):
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
             node1.set('type', 'application/atom+xml')
 
-            kvps['outputformat'] = 'application/atom%%2Bxml'
+            kvps['outputformat'] = r'application%2Fatom%2Bxml'
             kvps['mode'] = 'opensearch'
 
             node1.set('template', '%s%s' % (self.bind_url,
