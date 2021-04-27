@@ -638,11 +638,7 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
 
     if 'eo:cloudcover' in kvp:
         par_count += 1
-        eo_cloudcover_element = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
-        etree.SubElement(eo_cloudcover_element,
-           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:CloudCover'
-        etree.SubElement(eo_cloudcover_element, util.nspath_eval(
-            'ogc:Literal', context.namespaces)).text = kvp['eo:cloudcover']
+        eo_cloudcover_element = evaluate_literal(context, 'apiso:CloudCover', kvp['eo:cloudcover'])
 
     if 'eo:snowcover' in kvp:
         par_count += 1
@@ -729,6 +725,115 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
                                    .replace('xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:fes20="http://www.opengis.net/fes/2.0"')\
                                    .replace('ogc:', 'fes20:')
     return filterstring
+
+
+def evaluate_literal(context, pname, pvalue):
+    """
+    Transforms OpenSearch EO mathematical notation
+    to OGC FES syntax
+
+    :param pname: parameter name
+    :param pvalue: parameter value
+
+    :returns: lxml Element of predicate
+    """
+
+    LOGGER.debug('property name: {}'.format(pname))
+    LOGGER.debug('property value: {}'.format(pvalue))
+
+    if pvalue.startswith('{') and pvalue.endswith('}'):
+        # {n1,n2,…} equals to field=n1 OR field=n2 OR …
+        values = pvalue.lstrip('{').rstrip('}').split(',')
+        el = etree.Element(util.nspath_eval('ogc:Or', context.namespaces))
+
+        for value in values:
+            el2 = etree.SubElement(el, util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
+            etree.SubElement(el2, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+            etree.SubElement(el2, util.nspath_eval('ogc:Literal', context.namespaces)).text = value
+
+    elif pvalue.startswith('[') and pvalue.endswith(']'):
+        # [n1,n2] equal to n1 <= field <= n2
+        values = pvalue.lstrip('[').rstrip(']').split(',')
+        el = etree.Element(util.nspath_eval('ogc:And', context.namespaces))
+
+        el2 = etree.SubElement(el, util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo', context.namespaces))
+        etree.SubElement(el2, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el2, util.nspath_eval('ogc:Literal', context.namespaces)).text = values[0]
+
+        el3 = etree.SubElement(el, util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo', context.namespaces))
+        etree.SubElement(el3, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el3, util.nspath_eval('ogc:Literal', context.namespaces)).text = values[1]
+
+    elif pvalue.startswith(']') and pvalue.endswith('['):
+        # ]n1,n2[ equals to n1 < field < n2
+        values = pvalue.lstrip(']').rstrip('[').split(',')
+        el = etree.Element(util.nspath_eval('ogc:And', context.namespaces))
+
+        el2 = etree.SubElement(el, util.nspath_eval('ogc:PropertyIsLessThan', context.namespaces))
+        etree.SubElement(el2, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el2, util.nspath_eval('ogc:Literal', context.namespaces)).text = values[0]
+
+        el3 = etree.SubElement(el, util.nspath_eval('ogc:PropertyIsGreaterThan', context.namespaces))
+        etree.SubElement(el3, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el3, util.nspath_eval('ogc:Literal', context.namespaces)).text = values[1]
+
+    elif pvalue.startswith('['):
+        # [n1 equals to n1<= field
+        el = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo', context.namespaces))
+        etree.SubElement(el, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el, util.nspath_eval('ogc:Literal', context.namespaces)).text = pvalue.lstrip('[')
+
+    elif pvalue.endswith(']'):
+        # n2] equals to field <= n2
+        el = etree.Element(util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo', context.namespaces))
+        etree.SubElement(el, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el, util.nspath_eval('ogc:Literal', context.namespaces)).text = pvalue.rstrip(']')
+
+    elif pvalue.startswith('[') and pvalue.endswith('['):
+        # [n1,n2[ equals to n1 <= field < n2
+        values = pvalue.lstrip('[').rstrip('[').split(',')
+        el = etree.Element(util.nspath_eval('ogc:And', context.namespaces))
+
+        el2 = etree.SubElement(el, util.nspath_eval('ogc:PropertyIsLessThanOrEqualTo', context.namespaces))
+        etree.SubElement(el2, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el2, util.nspath_eval('ogc:Literal', context.namespaces)).text = values[0]
+
+        el3 = etree.SubElement(el, util.nspath_eval('ogc:PropertyIsGreaterThan', context.namespaces))
+        etree.SubElement(el3, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el3, util.nspath_eval('ogc:Literal', context.namespaces)).text = values[1]
+
+    elif pvalue.startswith(']') and pvalue.endswith(']'):
+        # ]n1,n2] equal to n1 < field <= n2
+        values = pvalue.lstrip(']').rstrip(']').split(',')
+        el = etree.Element(util.nspath_eval('ogc:And', context.namespaces))
+
+        el2 = etree.SubElement(el, util.nspath_eval('ogc:PropertyIsLessThan', context.namespaces))
+        etree.SubElement(el2, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el2, util.nspath_eval('ogc:Literal', context.namespaces)).text = values[0]
+
+        el3 = etree.SubElement(el, util.nspath_eval('ogc:PropertyIsGreaterThanOrEqualTo', context.namespaces))
+        etree.SubElement(el3, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el3, util.nspath_eval('ogc:Literal', context.namespaces)).text = values[1]
+
+    elif pvalue.startswith(']'):
+        # ]n1 equals to n1 < field
+        el = etree.Element(util.nspath_eval('ogc:PropertyIsGreaterThan', context.namespaces))
+        etree.SubElement(el, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el, util.nspath_eval('ogc:Literal', context.namespaces)).text = pvalue.lstrip(']')
+
+    elif pvalue.endswith('['):
+        # n2[ equals to field < n2
+        el = etree.Element(util.nspath_eval('ogc:PropertyIsLessThan', context.namespaces))
+        etree.SubElement(el, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el, util.nspath_eval('ogc:Literal', context.namespaces)).text = pvalue.rstrip('[')
+
+    else:
+        # n1 equal to field = n1
+        el = etree.Element(util.nspath_eval('ogc:PropertyIsEqualTo', context.namespaces))
+        etree.SubElement(el, util.nspath_eval('ogc:PropertyName', context.namespaces)).text = pname
+        etree.SubElement(el, util.nspath_eval('ogc:Literal', context.namespaces)).text = pvalue
+
+    return el
 
 def validate_4326(bbox_list):
     """Helper function to validate 4326."""
