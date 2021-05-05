@@ -5,12 +5,13 @@
 <section id="collection">
   <h2>{{ data['title'] }}</h2>
 
-  <table class="striped">
+  <table class="table table-striped table-hover">
     <thead>
       <tr>
         <th>Name</th>
         <th>Type</th>
         <th>Description</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -24,13 +25,13 @@
         <td data-label="description">
           {{ data['description'] | striptags | truncate }}
         </td>
+        <td>
+           <a title="items" href="{{ config['server']['url'] }}/collections/{{ data.id }}/items">items</a>
+           <a title="queryables" href="{{ config['server']['url'] }}/collections/{{ data.id }}/queryables">queryables</a>
+        </td>
       </tr>
     </tbody>
   </table>
-
-<h3><a title="Queryables" href="{{ config['server']['url'] }}/collections/{{data.id}}/queryables">Queryables</a></h3>
-<h3><a title="Browse items" href="{{ config['server']['url'] }}/collections/{{data.id}}/items">Browse items</a></h3>
-
 </section>
 
 {% endblock %}

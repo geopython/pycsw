@@ -2,15 +2,21 @@
 {% block title %}{{ super() }} Home {% endblock %}
 {% block body %}
 
+<section id="links">
 <div>
   <h3>{{ config['metadata:main']['identification_abstract'] }}</h3>
+  <ul class="list-group">
+    <li class="list-group-item list-group-item-action"><a title="Collections" href="{{ config['server']['url'] }}/collections">Collections</a></li>
+    <li class="list-group-item list-group-item-action">OpenAPI
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-action"><a title="Swagger" href="{{ config['server']['url'] }}/openapi?f=html">Swagger</a></li>
+        <li class="list-group-item list-group-item-action"><a title="JSON" href="{{ config['server']['url'] }}/openapi?f=json">JSON</a></li>
+      </ul>
+    </li>
+    <li class="list-group-item list-group-item-action"><a title="Conformance" href="{{ config['server']['url'] }}/conformance">Conformance</a></li>
+    <li class="list-group-item list-group-item-action"><a title="CSW 2/3 endpoint" href="{{ config['server']['url'] }}/csw">CSW 2/3 endpoint</a></li>
+  </ul>
 </div>
-
-<section id="links">
-  <h3><a title="Collections" href="{{ config['server']['url'] }}/collections">Collections</a></h3>
-  <h3>OpenAPI <a title="Swagger" href="{{ config['server']['url'] }}/openapi?f=html">Swagger</a> <a title="JSON" href="{{ config['server']['url'] }}/openapi?f=json">JSON</a></h3>
-  <h3><a title="Conformance" href="{{ config['server']['url'] }}/conformance">Conformance</a></h3>
-  <h3><a title="CSW 2/3 endpoint" href="{{ config['server']['url'] }}/csw">CSW 2/3 endpoint</a></h3>
 </section>
 
 {% endblock %}
