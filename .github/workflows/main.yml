@@ -30,15 +30,11 @@ jobs:
         pip3 install -r requirements.txt
         pip3 install -r requirements-dev.txt
         pip3 install --upgrade https://github.com/geopython/OWSLib/archive/master.zip
-        pip3 install codecov tox
+        pip3 install tox
         echo "TOXENV => $TOXENV"
     - name: run unit tests ⚙️
       run: tox -- --exitfirst -m unit
     - name: run integration tests ⚙️
       run: tox -- --exitfirst -m functional -k 'not harvesting'
-    - name: run unit coveralls ⚙️
-      run: codecov --disable search --flags unittests
-    - name: run integration coveralls ⚙️
-      run: codecov --disable search --flags integrationtests
     - name: build docs 🏗️
       run: cd docs && make html
