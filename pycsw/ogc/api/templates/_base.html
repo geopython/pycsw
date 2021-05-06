@@ -26,12 +26,12 @@
       <a title="pycsw website" href="https://pycsw.org"><img class="header-img" src="https://pycsw.org/img/pycsw-logo-vertical.png" alt="pycsw website" title="pycsw website" height="100"/></a>
       <h1>{{ config['metadata:main']['identification_title'] }}</h1>
     </header>
-    <div class="sticky row crumbs w-75">
+    <div class="container">
       <div class="row w-75">
         {% block crumbs %}
         <a href="{{ config['server']['url'] }}">Home</a>
         {% endblock %}
-        <span style="float:right">
+        <span>
           <a href="{{ data['links'] | map(rel='self') | attr('href') }}?f=json">JSON</a> | <a href="mailto:{{ config['metadata:main']['contact_email'] }}">Contact</a>
         </span>
       </div>
