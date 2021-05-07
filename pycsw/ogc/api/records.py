@@ -33,6 +33,7 @@ import codecs
 from configparser import ConfigParser
 import logging
 import os
+from urllib.parse import urlencode
 
 from pycql.integrations.sqlalchemy import parse
 
@@ -41,7 +42,7 @@ from pycsw.core.pycql_evaluate import to_filter
 from pycsw import __version__
 from pycsw.core import log
 from pycsw.core.config import StaticContext
-from pycsw.core.util import EnvInterpolation, jsonify_links, wkt2geom
+from pycsw.core.util import bind_url, EnvInterpolation, jsonify_links, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
 
@@ -378,7 +379,8 @@ class API:
         reserved_query_params = [
             'filter',
             'f',
-            'limit'
+            'limit',
+            'startindex'
         ]
 
         response = {
@@ -446,21 +448,83 @@ class API:
         else:
             limit = self.maxrecords
 
+        startindex = int(args.get('startindex', 0))
+
         LOGGER.debug(f'Query: {query}')
         LOGGER.debug('Querying repository')
         count = query.count()
-        records = query.limit(limit).all()
+        records = query.limit(limit).offset(startindex).all()
 
-        if count < limit:
-            returned = count
-        else:
-            returned = limit
+        returned = len(records)
 
         response['numberMatched'] = count
         response['numberReturned'] = returned
 
         for record in records:
             response['features'].append(record2json(record))
+
+        LOGGER.debug('Creating links')
+
+        link_args = {**args}
+
+        link_args.pop('f', None)
+
+        if link_args:
+            print(urlencode(link_args))
+            url_base = f"{self.config['server']['url']}?{urlencode(link_args)}"
+        else:
+            url_base = f"{self.config['server']['url']}"
+
+        is_html = headers_['Content-Type'] == 'text/html'
+
+        response['links'].extend([{
+            'rel': 'self' if not is_html else 'alternate',
+            'type': 'application/geo+json',
+            'title': 'This document as GeoJSON',
+            'href': f"{bind_url(url_base)}f=json",
+            'hreflang': self.config['server']['language']
+        }, {
+            'rel': 'self' if is_html else 'alternate',
+            'type': 'text/html',
+            'title': 'This document as HTML',
+            'href': f"{bind_url(url_base)}f=html",
+            'hreflang': self.config['server']['language']
+        }, {
+            'rel': 'collection',
+            'type': 'application/json',
+            'title': 'Collection URL',
+            'href': f"{self.config['server']['url']}/collections/metadata:main",
+            'hreflang': self.config['server']['language']
+        }])
+
+        if startindex > 0:
+            link_args.pop('startindex', None)
+
+            prev = max(0, startindex - limit)
+
+            url_ = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
+
+            response['links'].append(
+                {
+                    'type': 'application/geo+json',
+                    'rel': 'prev',
+                    'title': 'items (prev)',
+                    'href': f"{bind_url(url_)}startindex={prev}",
+                    'hreflang': self.config['server']['language']
+                })
+
+        if returned < count:
+            link_args.pop('startindex', None)
+
+            url_ = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
+
+            response['links'].append({
+                'rel': 'next',
+                'type': 'application/geo+json',
+                'title': 'items (next)',
+                'href': f"{bind_url(url_)}startindex={returned}",
+                'hreflang': self.config['server']['language']
+            })
 
         return self.get_response(200, headers_, 'items.html', response)
 

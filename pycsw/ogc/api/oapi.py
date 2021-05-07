@@ -71,6 +71,19 @@ def gen_oapi(config, oapi_filepath):
         'style': 'form',
         'explode': False
     }
+    oapi['components']['parameters']['startindex'] = {
+        'name': 'startindex',
+        'in': 'query',
+        'description': 'The optional startindex parameter indicates the index within the result set from which the server shall begin presenting results in the response document.  The first element has an index of 0 (default).',  # noqa
+        'required': False,
+        'schema': {
+            'type': 'integer',
+            'minimum': 0,
+            'default': 0
+        },
+        'style': 'form',
+        'explode': False
+    }
 
     oapi['info'] = {
         'contact': {
@@ -195,7 +208,8 @@ def gen_oapi(config, oapi_filepath):
                 {'$ref': '#/components/parameters/type'},
                 {'$ref': '#/components/parameters/externalid'},
                 {'$ref': '#/components/parameters/sortby'},
-                {'$ref': '#/components/parameters/f'}
+                {'$ref': '#/components/parameters/f'},
+                {'$ref': '#/components/parameters/startindex'}
             ],
             'responses': {
                 '200': {
