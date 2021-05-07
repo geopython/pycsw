@@ -31,8 +31,20 @@
         {% block crumbs %}
         <a href="{{ config['server']['url'] }}">Home</a>
         {% endblock %}
-        <span>
-          <a href="{{ data['links'] | map(rel='self') | attr('href') }}?f=json">JSON</a> | <a href="mailto:{{ config['metadata:main']['contact_email'] }}">Contact</a>
+        <span style="float:right">
+          {% set links_found = namespace(json=0) %}
+
+          {% for link in data['links'] %}
+          {% if link['rel'] == 'alternate' and link['type'] and link['type'] in ['application/json', 'application/geo+json'] %}
+          {% set links_found.json = 1 %}
+          <a href="{{ link['href'] }}">JSON</a>
+          {% endif %}
+          {% endfor %}
+
+          {% if links_found.json == 0 %}
+          <a href="?f=json">JSON</a>
+          {% endif %}
+          | <a href="mailto:{{ config['metadata:main']['contact_email'] }}">Contact</a>
         </span>
       </div>
     </div>
