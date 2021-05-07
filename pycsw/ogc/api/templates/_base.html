@@ -23,28 +23,34 @@
   </head>
   <body>
     <header>
-      <a title="pycsw website" href="https://pycsw.org"><img class="header-img" src="https://pycsw.org/img/pycsw-logo-vertical.png" alt="pycsw website" title="pycsw website" height="100"/></a>
+    <div class="container">
+      <div class="col-sm-12 col-md-10 col-md-offset-1">
+        <a title="pycsw website" href="https://pycsw.org"><img class="header-img" src="https://pycsw.org/img/pycsw-logo-vertical.png" alt="pycsw website" title="pycsw website" height="100"/></a>
       <h1>{{ config['metadata:main']['identification_title'] }}</h1>
+      </div>
+    </div>
     </header>
     <div class="container">
-      <div class="row w-75">
-        {% block crumbs %}
-        <a href="{{ config['server']['url'] }}">Home</a>
-        {% endblock %}
-        <span style="float:right">
+      <div class="col-sm-12 col-md-10 col-md-offset-1">
+        <div class="d-flex bd-highlight">
+          {% block crumbs %}
+          <div class="p-2 w-75 bd-highlight"><a href="{{ config['server']['url'] }}">Home</a></div>
+          {% endblock %}
+          <div class="p-2 flex-shrink-1 bd-highlight">
           {% set links_found = namespace(json=0) %}
 
           {% for link in data['links'] %}
-          {% if link['rel'] == 'alternate' and link['type'] and link['type'] in ['application/json', 'application/geo+json'] %}
-          {% set links_found.json = 1 %}
-          <a href="{{ link['href'] }}">JSON</a>
-          {% endif %}
+            {% if link['rel'] == 'alternate' and link['type'] and link['type'] in ['application/json', 'application/geo+json'] %}
+              {% set links_found.json = 1 %}
+              <a href="{{ link['href'] }}">JSON</a>
+            {% endif %}
           {% endfor %}
 
           {% if links_found.json == 0 %}
-          <a href="?f=json">JSON</a>
+            <a href="?f=json">JSON</a>
           {% endif %}
           | <a href="mailto:{{ config['metadata:main']['contact_email'] }}">Contact</a>
+          </div>
         </span>
       </div>
     </div>
