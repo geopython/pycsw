@@ -470,10 +470,9 @@ class API:
         link_args.pop('f', None)
 
         if link_args:
-            print(urlencode(link_args))
-            url_base = f"{self.config['server']['url']}?{urlencode(link_args)}"
+            url_base = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
         else:
-            url_base = f"{self.config['server']['url']}"
+            url_base = f"{self.config['server']['url']}/collections/metadata:main/items"
 
         is_html = headers_['Content-Type'] == 'text/html'
 
