@@ -278,7 +278,7 @@ elif COMMAND == 'load_records':
 elif COMMAND == 'export_records':
     admin.export_records(CONTEXT, DATABASE, TABLE, XML_DIRPATH)
 elif COMMAND == 'rebuild_db_indexes':
-    admin.rebuild_db_indexes(DATABASE, TABLE)
+    admin.rebuild_db_indexes(CONTEXT, DATABASE, TABLE)
 elif COMMAND == 'optimize_db':
     admin.optimize_db(CONTEXT, DATABASE, TABLE)
 elif COMMAND == 'refresh_harvested_records':

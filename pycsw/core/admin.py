@@ -42,8 +42,8 @@ from pycsw.core.etree import PARSER
 LOGGER = logging.getLogger(__name__)
 
 
-
-def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True, postgis_geometry_column='wkb_geometry', extra_columns=[], language='english'):
+def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_functions=True,
+             postgis_geometry_column='wkb_geometry', extra_columns=[], language='english'):
     """Setup database tables and indexes"""
     from sqlalchemy import Column, create_engine, Integer, MetaData, \
         Table, Text, Unicode
@@ -481,9 +481,16 @@ def refresh_harvested_records(context, database, table, url):
         LOGGER.info('No harvested records')
 
 
-def rebuild_db_indexes(database, table):
+def rebuild_db_indexes(context, database, table):
     """Rebuild database indexes"""
-    raise NotImplementedError
+
+    LOGGER.info('Rebuilding database %s, table %s', database, table)
+    repos = repository.Repository(database, context, table=table)
+    connection = repos.engine.connect()
+    connection.autocommit = True
+    connection.execute('REINDEX %s' % table)
+    connection.close()
+    LOGGER.info('Done')
 
 
 def optimize_db(context, database, table):
