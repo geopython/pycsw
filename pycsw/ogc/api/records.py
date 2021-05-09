@@ -512,7 +512,7 @@ class API:
                     'hreflang': self.config['server']['language']
                 })
 
-        if returned < count:
+        if (startindex + returned) < count:
             link_args.pop('startindex', None)
 
             url_ = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
