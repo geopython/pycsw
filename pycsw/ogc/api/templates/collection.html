@@ -1,5 +1,12 @@
 {% extends "_base.html" %}
 {% block title %}{{ super() }} {{ data['title'] }} {% endblock %}
+
+{% block crumbs %}
+{{ super() }} /
+<a href="{{ config['server']['url'] }}/collections">Collections</a> /
+<a href="{{ config['server']['url'] }}/collections/metadata:main">{{ data['title'] }}</a>
+{% endblock %}
+
 {% block body %}
 
 <section id="collection">
