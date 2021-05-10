@@ -17,6 +17,13 @@
 
 {% endblock %}
 
+{% block crumbs %}
+{{ super() }} /
+<a href="{{ config['server']['url'] }}/collections">Collections</a> /
+<a href="{{ config['server']['url'] }}/collections/metadata:main">{{ data['title'] }}</a> /
+<a href="{{ config['server']['url'] }}/collections/metadata:main/items">Items</a>
+{% endblock %}
+
 {% block body %}
 
 <section id="items">

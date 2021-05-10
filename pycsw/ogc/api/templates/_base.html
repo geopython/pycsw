@@ -33,9 +33,11 @@
     <div class="container" style="">
       <div class="col-sm-12 col-md-10 col-md-offset-1" style="background-color: #cee8f9;">
         <div class="d-flex bd-highlight">
+          <div class="p-2 w-75 bd-highlight">
           {% block crumbs %}
-          <div class="p-2 w-75 bd-highlight"><a href="{{ config['server']['url'] }}">Home</a></div>
+          <a href="{{ config['server']['url'] }}">Home</a>
           {% endblock %}
+          </div>
           <div class="p-2 flex-shrink-1 bd-highlight">
           {% set links_found = namespace(json=0) %}
 
@@ -51,7 +53,7 @@
           {% endif %}
           | <a href="mailto:{{ config['metadata:main']['contact_email'] }}">Contact</a>
           </div>
-        </span>
+        </div>
       </div>
     </div>
     <hr>

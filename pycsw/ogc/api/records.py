@@ -351,7 +351,7 @@ class API:
 
         response = {
             'type': 'object',
-            'title': 'metadata:main',
+            'title': self.config['metadata:main']['identification_title'],
             'properties': properties,
             '$schema': 'http://json-schema.org/draft/2019-09/schema',
             '$id': f"{self.config['server']['url']}/collections/metadata:main/queryables"
@@ -525,6 +525,9 @@ class API:
                 'hreflang': self.config['server']['language']
             })
 
+        if headers_['Content-Type'] == 'text/html':
+            response['title'] = self.config['metadata:main']['identification_title']
+
         return self.get_response(200, headers_, 'items.html', response)
 
     def item(self, headers_, args, item):
@@ -549,8 +552,13 @@ class API:
 
         if headers_['Content-Type'] == 'application/xml':
             return headers_, 200, record.xml
-        else:
-            return self.get_response(200, headers_, 'item.html', record2json(record))
+
+        response = record2json(record)
+
+        if headers_['Content-Type'] == 'text/html':
+            response['title'] = self.config['metadata:main']['identification_title']
+
+        return self.get_response(200, headers_, 'item.html', response)
 
     def get_exception(self, status, headers, code, description):
         """
