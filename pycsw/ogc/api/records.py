@@ -229,8 +229,18 @@ class API:
             }, {
               'rel': 'service',
               'type': 'application/xml',
-              'title': 'CSW 2/3 endpoint',
-              'href': f"{self.config['server']['url']}/csw"
+              'title': 'CSW 2 endpoint',
+              'href': f"{self.config['server']['url']}/csw?service=CSW&version=2.0.2&request=GetCapabilities"
+            }, {
+              'rel': 'service',
+              'type': 'application/xml',
+              'title': 'CSW 3 endpoint',
+              'href': f"{self.config['server']['url']}/csw?service=CSW&version=3.0.0&request=GetCapabilities"
+            }, {
+              'rel': 'service',
+              'type': 'application/xml',
+              'title': 'OpenSearch endpoint',
+              'href': f"{self.config['server']['url']}/opensearch"
             }
         ]
 

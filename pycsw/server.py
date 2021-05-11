@@ -129,7 +129,10 @@ class Csw(object):
         )
 
         if 'PYCSW_IS_CSW' in env and env['PYCSW_IS_CSW']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/opensearch')
+        if 'PYCSW_IS_OPENSEARCH' in env and env['PYCSW_IS_OPENSEARCH']:
             self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/csw')
+            self.mode = 'opensearch'
 
         self.context.pycsw_home = self.config.get('server', 'home')
         self.context.url = self.config.get('server', 'url')
