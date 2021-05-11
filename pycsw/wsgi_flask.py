@@ -176,6 +176,20 @@ def csw():
     return get_response((headers, status, content))
 
 
+@BLUEPRINT.route('/opensearch', methods=['GET'])
+def opensearch():
+    """
+    OpenSearch endpoint
+
+    :returns: HTTP response
+    """
+
+    request.environ['PYCSW_IS_OPENSEARCH'] = True
+    status, headers, content = application_dispatcher(request.environ)
+
+    return get_response((headers, status, content))
+
+
 APP.register_blueprint(BLUEPRINT)
 
 if __name__ == '__main__':
