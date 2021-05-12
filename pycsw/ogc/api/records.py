@@ -241,6 +241,16 @@ class API:
               'type': 'application/xml',
               'title': 'OpenSearch endpoint',
               'href': f"{self.config['server']['url']}/opensearch"
+            }, {
+              'rel': 'service',
+              'type': 'application/xml',
+              'title': 'OAI-PMH endpoint',
+              'href': f"{self.config['server']['url']}/oaipmh"
+            }, {
+              'rel': 'service',
+              'type': 'application/xml',
+              'title': 'SRU endpoint',
+              'href': f"{self.config['server']['url']}/sru"
             }
         ]
 

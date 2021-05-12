@@ -296,6 +296,13 @@ class Csw(object):
             elif self.request.find(b'cat/csw/3.0') != -1:
                 self.request_version = '3.0.0'
 
+        if 'PYCSW_IS_OAIPMH' in self.environ and self.environ['PYCSW_IS_OAIPMH']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/oaipmh')
+            self.kvp['mode'] = 'oaipmh'
+        if 'PYCSW_IS_SRU' in self.environ and self.environ['PYCSW_IS_SRU']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/sru')
+            self.kvp['mode'] = 'sru'
+
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
                 self.kvp['mode'] == 'sru'):
             self.mode = 'sru'

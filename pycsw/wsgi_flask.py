@@ -190,6 +190,34 @@ def opensearch():
     return get_response((headers, status, content))
 
 
+@BLUEPRINT.route('/oaipmh', methods=['GET'])
+def oaipmh():
+    """
+    OpenSearch endpoint
+
+    :returns: HTTP response
+    """
+
+    request.environ['PYCSW_IS_OAIPMH'] = True
+    status, headers, content = application_dispatcher(request.environ)
+
+    return get_response((headers, status, content))
+
+
+@BLUEPRINT.route('/sru', methods=['GET'])
+def sru():
+    """
+    OpenSearch endpoint
+
+    :returns: HTTP response
+    """
+
+    request.environ['PYCSW_IS_SRU'] = True
+    status, headers, content = application_dispatcher(request.environ)
+
+    return get_response((headers, status, content))
+
+
 APP.register_blueprint(BLUEPRINT)
 
 if __name__ == '__main__':
