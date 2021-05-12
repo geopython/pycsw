@@ -229,13 +229,13 @@ class API:
             }, {
               'rel': 'service',
               'type': 'application/xml',
-              'title': 'CSW 2 endpoint',
-              'href': f"{self.config['server']['url']}/csw?service=CSW&version=2.0.2&request=GetCapabilities"
+              'title': 'CSW 3.0.0 endpoint',
+              'href': f"{self.config['server']['url']}/csw"
             }, {
               'rel': 'service',
               'type': 'application/xml',
-              'title': 'CSW 3 endpoint',
-              'href': f"{self.config['server']['url']}/csw?service=CSW&version=3.0.0&request=GetCapabilities"
+              'title': 'CSW 2.0.2 endpoint',
+              'href': f"{self.config['server']['url']}/csw?service=CSW&version=2.0.2&request=GetCapabilities"
             }, {
               'rel': 'service',
               'type': 'application/xml',
