@@ -1,4 +1,3 @@
-
 # =================================================================
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 # Authors: Massimo Di Stefano <epiesasha@me.com>
