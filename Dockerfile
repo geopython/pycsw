@@ -1,3 +1,4 @@
+
 # =================================================================
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 # Authors: Massimo Di Stefano <epiesasha@me.com>
@@ -62,8 +63,6 @@ COPY --chown=pycsw \
     requirements-standalone.txt \
     requirements-dev.txt \
     ./
-
-RUN pip install -U pip
 
 RUN python3 -m pip install \
     --requirement requirements.txt \
