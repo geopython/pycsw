@@ -113,6 +113,8 @@ def pytest_generate_tests(metafunc):
         if metafunc.config.getoption("--database-backend") == "postgresql":
             _recreate_postgresql_database(metafunc.config)
         for suite in suite_names:
+            if suite == "oarec":
+                continue
             suite_dir = os.path.join(suites_root_dir, suite)
             config_path = os.path.join(suite_dir, "default.cfg")
             if not os.path.isfile(config_path):
