@@ -127,7 +127,7 @@ def oarec_config():
     config = configparser.ConfigParser()
     config["server"] = {
         "home": ".",
-        "url": "http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/atom/default.cfg",
+        "url": "http://localhost",
         "mimetype": "application/xml;",
         "charset": "UTF-8",
         "encoding": "UTF-8",
