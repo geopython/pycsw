@@ -30,7 +30,7 @@ spec:
         {{- end }}
         {{- if .pycsw.mappings_py }}
         - name: PYCSW_MAPPINGS_FILEPATH
-          value: /etc/pycsw/mappings.py
+          value: /home/pycsw/pycsw/etc/mappings.py
         {{- end }}
         image: {{ .pycsw.image | default "mapcolonies/pycsw:latest" }}
         imagePullPolicy: Always
