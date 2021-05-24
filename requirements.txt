@@ -4,3 +4,6 @@ OWSLib
 pyproj
 Shapely
 xmltodict
+Flask
+pycql
+PyYAML
