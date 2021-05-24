@@ -32,7 +32,7 @@
 #
 # =================================================================
 
-from configparser import BasicInterpolation
+from configparser import BasicInterpolation, ConfigParser
 import json
 import os
 import re
@@ -425,3 +425,18 @@ class EnvInterpolation(BasicInterpolation):
     def before_get(self, parser, section, option, value, defaults):
         value = super().before_get(parser, section, option, value, defaults)
         return os.path.expandvars(value)
+
+
+def parse_ini_config(config_path) -> ConfigParser:
+    """
+    Helper function to parse a .ini configuration file
+
+    :param config_path: filepath
+
+    :returns: ConfigParser object
+    """
+
+    config = ConfigParser(interpolation=EnvInterpolation())
+    with open(config_path, encoding='utf-8') as scp:
+        config.read_file(scp)
+    return config

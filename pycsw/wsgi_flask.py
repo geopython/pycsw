@@ -35,27 +35,22 @@ from pathlib import Path
 
 from flask import Flask, Blueprint, make_response, request
 
-from pycsw.core.util import EnvInterpolation
+from pycsw.core.util import parse_ini_config
 from pycsw.ogc.api.records import API
 from pycsw.ogc.api.util import STATIC
 from pycsw.wsgi import application_dispatcher
 
 
-def _parse_config(config_path: Path) -> ConfigParser:
-    config = ConfigParser(interpolation=EnvInterpolation())
-    with config_path.open(encoding='utf-8') as scp:
-        config.read_file(scp)
-    return config
-
-
 APP = Flask(__name__, static_folder=STATIC, static_url_path='/static')
 APP.url_map.strict_slashes = False
-APP.config['PYCSW_CONFIG'] = _parse_config(Path(os.getenv('PYCSW_CONFIG')))
+APP.config['PYCSW_CONFIG'] = parse_ini_config(Path(os.getenv('PYCSW_CONFIG')))
 APP.config['JSONIFY_PRETTYPRINT_REGULAR'] = APP.config['PYCSW_CONFIG']['server'].get(
     'pretty_print', True)
 
 BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC,
                       static_url_path='/static')
+
+api_ = API(APP.config['PYCSW_CONFIG'])
 
 
 def get_response(result: tuple):
@@ -83,7 +78,6 @@ def landing_page():
     :returns: HTTP response
     """
 
-    api_ = API(APP.config['PYCSW_CONFIG'])
     return get_response(api_.landing_page(dict(request.headers), request.args))
 
 
@@ -95,7 +89,6 @@ def openapi():
     :returns: HTTP response
     """
 
-    api_ = API(APP.config['PYCSW_CONFIG'])
     return get_response(api_.openapi(dict(request.headers), request.args))
 
 
@@ -107,7 +100,6 @@ def conformance():
     :returns: HTTP response
     """
 
-    api_ = API(APP.config['PYCSW_CONFIG'])
     return get_response(api_.conformance(dict(request.headers), request.args))
 
 
@@ -119,7 +111,6 @@ def collections():
     :returns: HTTP response
     """
 
-    api_ = API(APP.config['PYCSW_CONFIG'])
     return get_response(api_.collections(dict(request.headers), request.args))
 
 
@@ -131,7 +122,6 @@ def collection():
     :returns: HTTP response
     """
 
-    api_ = API(APP.config['PYCSW_CONFIG'])
     return get_response(api_.collections(dict(request.headers),
                         request.args, True))
 
@@ -144,7 +134,6 @@ def queryables():
     :returns: HTTP response
     """
 
-    api_ = API(APP.config['PYCSW_CONFIG'])
     return get_response(api_.queryables(dict(request.headers), request.args))
 
 
@@ -156,7 +145,6 @@ def items():
     :returns: HTTP response
     """
 
-    api_ = API(APP.config['PYCSW_CONFIG'])
     return get_response(api_.items(dict(request.headers), request.args))
 
 
@@ -170,7 +158,6 @@ def item(item=None):
     :returns: HTTP response
     """
 
-    api_ = API(APP.config['PYCSW_CONFIG'])
     return get_response(api_.item(dict(request.headers), request.args, item))
 
 

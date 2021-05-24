@@ -1,4 +1,4 @@
-Flask
-PyYAML
-pycql
 dateparser
+Flask
+pycql
+PyYAML

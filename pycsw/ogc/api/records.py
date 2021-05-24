@@ -42,7 +42,7 @@ from pycsw.core.pycql_evaluate import to_filter
 from pycsw import __version__
 from pycsw.core import log
 from pycsw.core.config import StaticContext
-from pycsw.core.util import bind_url, EnvInterpolation, jsonify_links, wkt2geom
+from pycsw.core.util import bind_url, jsonify_links, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
 
@@ -64,7 +64,7 @@ class API:
         """
         constructor
 
-        :param config: PYCSW configuration dict
+        :param config: ConfigParser pycsw configuration dict
 
         :returns: `pycsw.ogc.api.API` instance
         """
@@ -137,10 +137,11 @@ class API:
 
         format_ = args.get('f')
 
-        if 'text/html' in headers['Accept']:
-            content_type = 'text/html'
-        elif 'application/xml' in headers['Accept']:
-            content_type = 'application/xml'
+        if headers:
+            if 'text/html' in headers['Accept']:
+                content_type = 'text/html'
+            elif 'application/xml' in headers['Accept']:
+                content_type = 'application/xml'
 
         if format_ is not None:
             if format_ == 'json':
