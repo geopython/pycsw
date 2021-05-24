@@ -8,12 +8,12 @@ pycsw uses `pytest`_ for managing its automated tests.
 OGC API - Records
 ---------------
 
-Tests for OGC API - Records are located under the ``tests/oarec`` directory. They
+Tests for OGC API - Records are located in ``tests/unittests/test_oarec.pyoarec``. They
 can be run with:
 
 .. code:: bash
 
-   pytest -m oarec
+   pytest tests/unittests/test_oarec.py
 
 
 OGC CSW

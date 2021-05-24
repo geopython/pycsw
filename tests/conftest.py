@@ -46,10 +46,6 @@ def pytest_configure(config):
         "markers",
         "unit: Run only unit tests"
     )
-    config.addinivalue_line(
-        "markers",
-        "oarec: Run only tests pertaining to OGC API Records support"
-    )
 
 
 def pytest_addoption(parser):

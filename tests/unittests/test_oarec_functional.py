@@ -1,15 +1,8 @@
 import json
 import os
 
-import pytest
-
 from pycsw.core.util import parse_ini_config
 from pycsw.ogc.api.records import API
-
-pytestmark = [
-    pytest.mark.functional,
-    pytest.mark.oarec
-]
 
 
 def get_test_file_path(filename):
@@ -18,7 +11,7 @@ def get_test_file_path(filename):
     if os.path.isfile(filename):
         return filename
     else:
-        return f'tests/oarec/{filename}'
+        return f'tests/unittests/{filename}'
 
 
 def test_landing_page():
@@ -31,3 +24,5 @@ def test_landing_page():
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
     assert len(content['links']) == 10
+
+    headers, status, content = api_.landing_page({}, {'f': 'json'})
