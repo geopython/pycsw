@@ -337,13 +337,28 @@ class API:
             response = {
                 'collections': [collection_info]
             }
+            template = 'collections.html'
+            url_base = f"{self.config['server']['url']}/collections"
         else:
             response = collection_info
-
-        if not collection:
-            template = 'collections.html'
-        else:
             template = 'collection.html'
+            url_base = f"{self.config['server']['url']}/collections/metadata:main"
+
+        is_html = headers_['Content-Type'] == 'text/html'
+
+        response['links'] = [{
+            'rel': 'self' if not is_html else 'alternate',
+            'type': 'application/json',
+            'title': 'This document as JSON',
+            'href': f"{url_base}?f=json",
+            'hreflang': self.config['server']['language']
+        }, {
+            'rel': 'self' if is_html else 'alternate',
+            'type': 'text/html',
+            'title': 'This document as HTML',
+            'href': f"{url_base}?f=html",
+            'hreflang': self.config['server']['language']
+        }]
 
         return self.get_response(200, headers_, template, response)
 
@@ -634,7 +649,7 @@ def record2json(record):
         record_dict['properties']['formats'] = [record.format]
 
     if record.keywords:
-        record_dict['keywords'] = [x for x in record.keywords.split(',')]
+        record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
 
     if record.links:
         record_dict['associations'] = []
