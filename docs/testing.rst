@@ -3,7 +3,7 @@
 Testing
 =======
 
-Pycsw uses `pytest`_ for managing its automated tests.
+pycsw uses `pytest`_ for managing its automated tests.
 
 OGC API - Records
 ---------------
