@@ -6,7 +6,7 @@ Repository Plugins
 Overview
 --------
 
-pycsw allows for the implementation of custom repositories in order to connect to a backend different from the pycsw's default.  This is especially useful when downstream applications manage their own metadata model/database/document store and want pycsw to connect to it directly instead of using pycsw's default model, thus creating duplicate repositories which then require syncronization/accounting.  Repository plugins enable a single metadata backend which is independent from the pycsw setup.  pycsw thereby becomes a pure wrapper around a given backend in providing CSW and other APIs atop a given application.
+pycsw allows for the implementation of custom repositories in order to connect to a backend different from the pycsw's default.  This is especially useful when downstream applications manage their own metadata model/database/document store and want pycsw to connect to it directly instead of using pycsw's default model, thus creating duplicate repositories which then require syncronization/accounting.  Repository plugins enable a single metadata backend which is independent from the pycsw setup.  pycsw thereby becomes a pure wrapper around a given backend in providing OARec, CSW and other APIs atop a given application.
 
 All outputschemas must be placed in the ``pycsw/plugins/outputschemas`` directory.
 

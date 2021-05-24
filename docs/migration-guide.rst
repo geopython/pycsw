@@ -6,6 +6,18 @@ pycsw Migration Guide
 This page provides migration support across pycsw versions
 over time to help with pycsw change management.
 
+pycsw 2.x to 3.0 Migration
+--------------------------
+
+- the default endpoint is now powered by ``pycsw/wsgi_flask.py`` (based on Flask),
+  which supports ALL pycsw supported APIs
+- the default endpoint ``/`` is now OARec
+- the CSW endpoint is now ``/csw``
+- the OAI-PMH endpoint is now ``/oaipmh``
+- the OpenSearch endpoint is now ``/opensearch``
+- the SRU endpoint is now ``/sru``
+
+
 pycsw 1.x to 2.0 Migration
 --------------------------
 

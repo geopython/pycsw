@@ -14,7 +14,7 @@ pycsw has the following modes of contribution:
 Code of Conduct
 ---------------
 
-Contributors to this project are expected to act respectfully toward others in accordance with the `OSGeo Code of Conduct <http://www.osgeo.org/code_of_conduct>`_.
+Contributors to this project are expected to act respectfully toward others in accordance with the `OSGeo Code of Conduct <https://www.osgeo.org/code_of_conduct>`_.
 
 Contributions and Licensing
 ---------------------------
@@ -61,7 +61,7 @@ Documentation
 
 - documentation is managed in ``docs/``, in reStructuredText format
 - `Sphinx`_ is used to generate the documentation
-- See the `reStructuredText Primer <http://sphinx-doc.org/rest.html>`_ on rST markup and syntax.
+- See the `reStructuredText Primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_ on rST markup and syntax.
 
 Bugs
 ----
@@ -94,7 +94,7 @@ Coding Guidelines
 
 - pycsw instead of PyCSW, pyCSW, Pycsw
 - always code with `PEP 8`_ conventions
-- always run source code through ``pep8`` and `pylint`_, using all pylint defaults except for ``C0111``.  ``sbin/pycsw-pylint.sh`` is included for convenience
+- always run source code through `flake8`_ and `pylint`_, using all pylint defaults except for ``C0111``.  ``sbin/pycsw-pylint.sh`` is included for convenience
 - for exceptions which make their way to OGC ``ExceptionReport`` XML, always specify the appropriate ``locator`` and ``code`` parameters
 - the pycsw wiki documents `developer tasks`_ for things like releasing documentation, testing, etc.
 
@@ -137,13 +137,10 @@ your own repository to ensure your pycsw repository is up to date with pycsw mas
   git checkout master
   git pull upstream master
 
-.. _`Corporate`: http://www.osgeo.org/sites/osgeo.org/files/Page/corporate_contributor.txt
-.. _`Individual`: http://www.osgeo.org/sites/osgeo.org/files/Page/individual_contributor.txt
 .. _`info@osgeo.org`: mailto:info@osgeo.org
-.. _`OSGeo`: http://www.osgeo.org/content/foundation/legal/licenses.html
-.. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
-.. _`pep8`: http://pypi.python.org/pypi/pep8/
-.. _`pylint`: http://www.logilab.org/857
-.. _`Sphinx`: http://sphinx-doc.org/
+.. _`PEP 8`: https://www.python.org/dev/peps/pep-0008/
+.. _`flake8`: https://gitlab.com/pycqa/flake8
+.. _`pylint`: https://pylint.org
+.. _`Sphinx`: https://www.sphinx-doc.org
 .. _`developer tasks`: https://github.com/geopython/pycsw/wiki/Developer-Tasks
 .. _`mailing list`: https://pycsw.org/community#mailing-list

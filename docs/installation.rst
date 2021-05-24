@@ -6,7 +6,7 @@ Installation
 System Requirements
 -------------------
 
-pycsw is written in `Python <https://python.org>`_, and works with (tested) Python 3.  Python 2 is no longer supported.
+pycsw is written in `Python <https://python.org>`_, and works with (tested) Python 3.
 
 pycsw requires the following Python supporting libraries:
 
@@ -17,6 +17,15 @@ pycsw requires the following Python supporting libraries:
 - `OWSLib`_ for CSW client and metadata parser
 - `xmltodict`_ for working with XML similar to working with JSON
 - `geolinks`_ for dealing with geospatial links
+
+OGC API - Records
+^^^^^^^^^^^^^^^^^
+
+OGC API - Records support additionally requires the following:
+
+- `Flask`_ for pycsw's default OARec endpoint
+- `pycql`_ for CQL parsing
+- `PyYAML`_ for OpenAPI document handling
 
 .. note::
 
@@ -38,17 +47,37 @@ The 4 minute install:
 
 .. code-block:: bash
 
-  $ virtualenv pycsw && cd pycsw && . bin/activate
-  $ git clone https://github.com/geopython/pycsw.git && cd pycsw
-  $ pip3 install -e . && pip3 install -r requirements-standalone.txt
-  $ cp default-sample.cfg default.cfg
-  $ vi default.cfg
+  virtualenv pycsw && cd pycsw && . bin/activate
+  git clone https://github.com/geopython/pycsw.git && cd pycsw
+  pip3 install -e . && pip3 install -r requirements-standalone.txt
+  cp default-sample.cfg default.cfg
+  vi default.cfg
   # adjust paths in
   # - server.home
   # - repository.database
   # set server.url to http://localhost:8000/
-  $ python3 pycsw/wsgi.py
-  $ curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
+  # start server - CSW 2/3, OAI-PMH, OpenSearch, SRU (all endpoints at /)
+  python3 pycsw/wsgi.py
+  curl http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
+
+To enable OGC API - Records as well as the abovementioned search standards:
+
+.. code-block:: bash
+
+  # start server - OARec and all services (various endpoints below)
+  python3 pycsw/wsgi_flask.py
+  # OGC API - Records
+  curl http://localhost:8000/
+  # OGC CSW 3
+  curl http://localhost:8000/csw
+  # OGC CSW 2
+  curl http://localhost:8000/csw?service=CSW&version=2.0.2&request=GetCapabilities
+  # OAI-PMH
+  curl http://localhost:8000/oaipmh
+  # OpenSearch
+  curl http://localhost:8000/opensearch
+  # SRU
+  curl http://localhost:8000/sru
 
 
 The Quick and Dirty Way
@@ -56,7 +85,7 @@ The Quick and Dirty Way
 
 .. code-block:: bash
 
-  $ git clone git://github.com/geopython/pycsw.git
+  git clone https://github.com/geopython/pycsw.git
 
 Ensure that CGI is enabled for the install directory.  For example, on Apache, if pycsw is installed in ``/srv/www/htdocs/pycsw`` (where the URL will be ``http://host/pycsw/csw.py``), add the following to ``httpd.conf``:
 
@@ -78,9 +107,10 @@ The Clean and Proper Way
 
 .. code-block:: bash
 
-  $ git clone git://github.com/geopython/pycsw.git
-  $ python3 setup.py build
-  $ python3 setup.py install
+  git clone https://github.com/geopython/pycsw.git
+  cd pycsw
+  python3 setup.py build
+  python3 setup.py install
 
 At this point, pycsw is installed as a library and requires a CGI ``csw.py``
 or WSGI ``pycsw/wsgi.py`` script to be served into your web server environment
@@ -88,15 +118,12 @@ or WSGI ``pycsw/wsgi.py`` script to be served into your web server environment
 
 .. _pypi:
 
-Installing from the Python Package Index (PyPi)
+Installing from the Python Package Index (PyPI)
 -----------------------------------------------
 
 .. code-block:: bash
 
-  # easy_install or pip will do the trick
-  $ easy_install pycsw
-  # or
-  $ pip3 install pycsw
+  pip3 install pycsw
 
 .. _opensuse:
 
@@ -107,18 +134,18 @@ In order to install the pycsw package in openSUSE Leap (stable distribution), on
 
 .. code-block:: bash
 
-  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_Leap_42.1/ GEO
-  # zypper refresh
-  # zypper install python-pycsw pycsw-cgi
+  zypper -ar https://download.opensuse.org/repositories/Application:/Geo/openSUSE_Leap_15.2/ GEO
+  zypper refresh
+  zypper install python-pycsw pycsw-cgi
 
 
 In order to install the pycsw package in openSUSE Tumbleweed (rolling distribution), one can run the following commands as user ``root``:
 
 .. code-block:: bash
 
-  # zypper -ar http://download.opensuse.org/repositories/Application:/Geo/openSUSE_Tumbleweed/ GEO
-  # zypper refresh
-  # zypper install python-pycsw pycsw-cgi
+  zypper -ar https://download.opensuse.org/repositories/Application:/Geo/openSUSE_Tumbleweed/ GEO
+  zypper refresh
+  zypper install python-pycsw pycsw-cgi
 
 An alternative method is to use the `One-Click Installer <https://software.opensuse.org/package/python-pycsw>`_.
 
@@ -131,15 +158,15 @@ In order to install the most recent pycsw release to an Ubuntu-based distributio
 
 .. code-block:: bash
 
-  # sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
-  # sudo apt-get update
-  # sudo apt-get install python-pycsw pycsw-cgi
+  sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+  sudo apt-get update
+  sudo apt-get install python-pycsw pycsw-cgi
 
 Alternatively, one can use the UbuntuGIS Stable repository which includes older but very well tested versions:
 
-  # sudo add-apt-repository ppa:ubuntugis/ppa
-  # sudo apt-get update
-  # sudo apt-get install python-pycsw pycsw-cgi
+  sudo add-apt-repository ppa:ubuntugis/ppa
+  sudo apt-get update
+  sudo apt-get install python-pycsw pycsw-cgi
 
 .. note::
   Since Ubuntu 16.04 LTS Xenial release, pycsw is included by default in the official Multiverse repository.
@@ -211,20 +238,22 @@ or use the `WSGI reference implementation`_:
 
 .. code-block:: bash
 
-  $ python3 ./pycsw/wsgi.py
+  python3 ./pycsw/wsgi.py
   Serving on port 8000...
 
 which will publish pycsw to ``http://localhost:8000/``
 
-.. _`lxml`: http://lxml.de/
-.. _`SQLAlchemy`: http://www.sqlalchemy.org/
-.. _`Shapely`: http://toblerity.github.io/shapely/
-.. _`pyproj`: http://code.google.com/p/pyproj/
-.. _`OWSLib`: https://github.com/geopython/OWSLib
+.. _`lxml`: https://lxml.de/
+.. _`SQLAlchemy`: https://www.sqlalchemy.org/
+.. _`Shapely`: https://toblerity.github.io/shapely/
+.. _`pyproj`: https://code.google.com/p/pyproj/
+.. _`OWSLib`: https://geopython.github.io/OWSLib
 .. _`xmltodict`: https://github.com/martinblech/xmltodict
 .. _`geolinks`: https://github.com/geopython/geolinks
-.. _`easy_install`: http://packages.python.org/distribute/easy_install.html
-.. _`pip`: http://www.pip-installer.org
-.. _`Web Server Gateway Interface`: http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
+.. _`Flask`: https://flask.palletsprojects.com
+.. _`pycql`: https://github.com/geopython/pycql
+.. _`PyYAML`: https://pyyaml.org
+.. _`pip`: https://pip.pypa.io/en/stable
+.. _`Web Server Gateway Interface`: https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
 .. _`WSGIDaemonProcess`: https://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIDaemonProcess
-.. _`WSGI reference implementation`: http://docs.python.org/library/wsgiref.html
+.. _`WSGI reference implementation`: https://docs.python.org/library/wsgiref.html

@@ -1,4 +1,3 @@
-dateparser
 Flask
 pycql
 PyYAML
