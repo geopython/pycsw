@@ -3,9 +3,24 @@
 Testing
 =======
 
-Pycsw uses `pytest`_ for managing its automated tests. There are a number of
-test suites that perform mostly functional testing. These tests ensure that
-pycsw is compliant with the various supported standards.
+Pycsw uses `pytest`_ for managing its automated tests.
+
+OGC API - Records
+---------------
+
+Tests for OGC API - Records are located under the ``tests/oarec`` directory. They
+can be run with:
+
+.. code:: bash
+
+   pytest -m oarec
+
+
+OGC CSW
+-------
+
+There are a number of test suites that perform mostly functional testing.
+These tests ensure that pycsw is compliant with the various supported standards.
 There is also a growing set of unit tests. These focus on smaller scope 
 testing, in order to verify that individual bits of code are working as
 expected.

@@ -60,25 +60,16 @@ THISDIR = os.path.dirname(os.path.realpath(__file__))
 class API:
     """API object"""
 
-    def __init__(self, config):
+    def __init__(self, config: ConfigParser):
         """
         constructor
 
-        :param config: configuration dict
+        :param config: PYCSW configuration dict
 
         :returns: `pycsw.ogc.api.API` instance
         """
 
-        # load user configuration
-        try:
-            LOGGER.info('Loading user configuration')
-            self.config = ConfigParser(interpolation=EnvInterpolation())
-            with codecs.open(config, encoding='utf-8') as scp:
-                self.config.read_file(scp)
-        except Exception as err:
-            msg = f'Could not load configuration: {err}'
-            LOGGER.exception(msg)
-            raise
+        self.config = config
 
         log.setup_logger(self.config)
 

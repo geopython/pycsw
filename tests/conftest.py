@@ -27,8 +27,11 @@
 #
 # =================================================================
 """pytest configuration file"""
+import configparser
 
 import pytest
+
+from pycsw import wsgi_flask
 
 
 def pytest_configure(config):
@@ -45,6 +48,10 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers",
         "unit: Run only unit tests"
+    )
+    config.addinivalue_line(
+        "markers",
+        "oarec: Run only tests pertaining to OGC API Records support"
     )
 
 
@@ -113,3 +120,80 @@ def log_level(request):
     """
 
     return request.config.getoption("pycsw_loglevel").upper()
+
+
+@pytest.fixture
+def oarec_config():
+    config = configparser.ConfigParser()
+    config["server"] = {
+        "home": ".",
+        "url": "http://localhost",
+        "mimetype": "application/xml;",
+        "charset": "UTF-8",
+        "encoding": "UTF-8",
+        "language": "en-US",
+        "maxrecords": 10,
+        "federatedcatalogues": "http://geo.data.gov/geoportal/csw/discovery",
+        "pretty_print": True,
+    }
+    config["manager"] = {
+        "transactions": False,
+        "allowed_ips": "127.0.0.1",
+    }
+    config["metadata:main"] = {
+        "identification_title": "pycsw Geospatial Catalogue",
+        "identification_abstract": "pycsw is an OGC CSW server implementation written in Python",
+        "identification_keywords": "catalogue,discovery",
+        "identification_keywords_type": "theme",
+        "identification_fees": "None",
+        "identification_accessconstraints": "None",
+        "provider_name": "pycsw",
+        "provider_url": "https://pycsw.org/",
+        "contact_name": "Kralidis, Tom",
+        "contact_position": "Senior Systems Scientist",
+        "contact_address": "TBA",
+        "contact_city": "Toronto",
+        "contact_stateorprovince": "Ontario",
+        "contact_postalcode": "M9C 3Z9",
+        "contact_country": "Canada",
+        "contact_phone": "+01-416-xxx-xxxx",
+        "contact_fax": "+01-416-xxx-xxxx",
+        "contact_email": "tomkralidis@gmail.com",
+        "contact_url": "http://kralidis.ca/",
+        "contact_hours": "0800h - 1600h EST",
+        "contact_instructions": "During hours of service.  Off on weekends.",
+        "contact_role": "pointOfContact",
+    }
+    config["repository"] = {
+        "database": "sqlite:///tests/functionaltests/suites/cite/data/cite.db",
+        "table": "records",
+    }
+    config["metadata:inspire"] = {
+        "enabled": False,
+        "languages_supported": "eng,gre",
+        "default_language": "eng",
+        "date": "2011-03-29",
+        "gemet_keywords": "Utility and governmental services",
+        "conformity_service": "notEvaluated",
+        "contact_name": "National Technical University of Athens",
+        "contact_email": "tzotsos@gmail.com",
+        "temp_extent": "2011-02-01/2011-03-30",
+    }
+    return config
+
+
+@pytest.fixture
+def flask_client():
+    wsgi_flask.APP.config['TESTING'] = True
+    with wsgi_flask.APP.test_client() as client:
+        yield client
+
+
+@pytest.fixture
+def oarec_client(oarec_config):
+    previous_config = wsgi_flask.APP.config.copy()
+    wsgi_flask.APP.config['TESTING'] = True
+    wsgi_flask.APP.config['PYCSW_CONFIG'] = oarec_config
+    with wsgi_flask.APP.test_client() as client:
+        yield client
+    wsgi_flask.APP.config = previous_config
