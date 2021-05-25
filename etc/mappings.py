@@ -70,6 +70,7 @@ MD_CORE_MODEL = {
         'pycsw:Contributor': 'producer_name',
         'pycsw:CreationDate': 'creation_date',
         'pycsw:Date': 'creation_date',
+        'pycsw:Format': 'type',
         'pycsw:Modified': 'update_date',
         'pycsw:UpdateDate': 'update_date',
         'pycsw:IngestionDate': 'ingestion_date',
@@ -80,8 +81,8 @@ MD_CORE_MODEL = {
         'pycsw:sensorType': 'sensor_type',
         'pycsw:Region': 'region',
         'pycsw:footprint': 'footprint_geojson',
+        'pycsw:Source': 'product_name',
         
-        'pycsw:Format': '',
         'pycsw:Relation': '',
         'pycsw:Language': '',
         'pycsw:TopicCategory': '',
