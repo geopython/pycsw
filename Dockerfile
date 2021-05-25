@@ -63,8 +63,6 @@ COPY --chown=pycsw \
     requirements-dev.txt \
     ./
 
-RUN pip install -U pip
-
 RUN python3 -m pip install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
