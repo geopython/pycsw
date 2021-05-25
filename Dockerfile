@@ -60,7 +60,6 @@ RUN chown --recursive pycsw:pycsw .
 COPY --chown=pycsw \
     requirements.txt \
     requirements-standalone.txt \
-    requirements-oarec.txt \
     requirements-dev.txt \
     ./
 
@@ -68,7 +67,6 @@ RUN pip install -U pip && \
     python3 -m pip install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
-    --requirement requirements-oarec.txt \
     psycopg2-binary gunicorn \
     && if [ "$BUILD_DEV_IMAGE" = "true" ] ; then python3 -m pip install -r requirements-dev.txt; fi
 
