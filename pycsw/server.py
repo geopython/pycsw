@@ -250,11 +250,7 @@ class Csw(object):
             self.requesttype = 'GET'
             self.request = wsgiref.util.request_uri(self.environ)
             try:
-                if '{' in self.request or '%7D' in self.request:
-                    LOGGER.debug('Looks like an OpenSearch URL template')
-                    query_part = self.request.split('?', 1)[-1]
-                else:
-                    query_part = splitquery(self.request)[-1]
+                query_part = splitquery(self.request)[-1]
                 self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
             except AttributeError as err:
                 LOGGER.exception('Could not parse query string')
@@ -396,8 +392,16 @@ class Csw(object):
             rs_cls = getattr(rs_mod, rs_clsname)
 
             try:
-                self.repository = rs_cls(self.context, repo_filter)
-                LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
+                connection_done=False
+                max_attempt=0
+                while not connection_done and max_attempt<=5:
+                    try:
+                        self.repository = rs_cls(self.context, repo_filter)
+                        LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
+                        connection_done=True
+                    except:
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempt}')
+                        max_attempt=+1
             except Exception as err:
                 msg = 'Could not load custom repository %s: %s' % (rs, err)
                 LOGGER.exception(msg)
@@ -411,15 +415,23 @@ class Csw(object):
             from pycsw.core import repository
             try:
                 LOGGER.info('Loading default repository')
-                self.repository = repository.Repository(
-                    self.config.get('repository', 'database'),
-                    self.context,
-                    self.environ.get('local.app_root', None),
-                    self.config.get('repository', 'table'),
-                    repo_filter
-                )
-                LOGGER.debug(
-                    'Repository loaded (local): %s.' % self.repository.dbtype)
+                connection_done=False
+                max_attempt=0
+                while not connection_done and max_attempt<=5:
+                    try:
+                        self.repository = repository.Repository(
+                            self.config.get('repository', 'database'),
+                            self.context,
+                            self.environ.get('local.app_root', None),
+                            self.config.get('repository', 'table'),
+                            repo_filter
+                        )
+                        LOGGER.debug(
+                            'Repository loaded (local): %s.' % self.repository.dbtype)
+                        connection_done=True
+                    except:
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempt}')
+                        max_attempt=+1
             except Exception as err:
                 msg = 'Could not load repository (local): %s' % err
                 LOGGER.exception(msg)
