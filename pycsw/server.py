@@ -209,6 +209,12 @@ class Csw(object):
                     'NoApplicableCode', 'service',
                     'Could not load repository.mappings')
 
+        # load user-defined max attempt to retry db connection
+        try:
+            self.max_db_conn_retry_attempt = int(config.get("server", "max_db_conn_retry_attempt"))
+        except configparser.NoOptionError:
+            self.max_db_conn_retry_attempt = 5
+
         # load outputschemas
         LOGGER.info('Loading outputschemas')
 
@@ -411,15 +417,18 @@ class Csw(object):
             from pycsw.core import repository
             try:
                 LOGGER.info('Loading default repository')
-                self.repository = repository.Repository(
-                    self.config.get('repository', 'database'),
-                    self.context,
-                    self.environ.get('local.app_root', None),
-                    self.config.get('repository', 'table'),
-                    repo_filter
-                )
-                LOGGER.debug(
-                    'Repository loaded (local): %s.' % self.repository.dbtype)
+                connection_done = False
+                max_attempt = 0
+                while not connection_done and max_attempt <= self.max_db_conn_retry_attempt:
+                    self.repository = repository.Repository(
+                        self.config.get('repository', 'database'),
+                        self.context,
+                        self.environ.get('local.app_root', None),
+                        self.config.get('repository', 'table'),
+                        repo_filter
+                    )
+                    LOGGER.debug(
+                        'Repository loaded (local): %s.' % self.repository.dbtype)
             except Exception as err:
                 msg = 'Could not load repository (local): %s' % err
                 LOGGER.exception(msg)
