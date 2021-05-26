@@ -211,7 +211,7 @@ class Csw(object):
 
         # load user-defined max attempt to retry db connection
         try:
-            self.max_db_conn_retry_attempt = int(config.get("server", "max_db_conn_retry_attempt"))
+            self.max_db_conn_retry_attempt = int(self.config.get("server", "max_db_conn_retry_attempt"))
         except configparser.NoOptionError:
             self.max_db_conn_retry_attempt = 5
 
