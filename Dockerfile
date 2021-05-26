@@ -63,7 +63,8 @@ COPY --chown=pycsw \
     requirements-dev.txt \
     ./
 
-RUN python3 -m pip install \
+RUN pip install -U pip && \
+    python3 -m pip install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
     psycopg2-binary gunicorn \
