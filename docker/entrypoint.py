@@ -174,5 +174,9 @@ if __name__ == "__main__":
         level = config.get("server", "loglevel").upper()
     except configparser.NoOptionError:
         level = "WARNING"
+    try:
+        workers = int(config.get("server", "workers"))
+    except configparser.NoOptionError:
+        workers = args.workers
     logging.basicConfig(level=getattr(logging, level))
-    launch_pycsw(config, workers=args.workers, reload=args.reload)
+    launch_pycsw(config, workers=workers, reload=args.reload)
