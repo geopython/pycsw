@@ -25,7 +25,6 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **smtp_host**: SMTP host for processing ``csw:ResponseHandler`` parameter via outgoing email requests (default is ``localhost``)
 - **spatial_ranking**: parameter that enables (``true`` or ``false``) ranking of spatial query results as per `K.J. Lanfear 2006 - A Spatial Overlay Ranking Method for a Geospatial Search of Text Objects  <http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf>`_.
 - **workers**: set the number of workers used by the wsgi server when lunching pycsw using the provided docker/entrypoint.py. If not set, it will use 2 workers as Default.
-- **max_db_conn_retry_attempt**: max number of retry attempts when connecting to records-repository database
 
 **[manager]**
 
@@ -65,6 +64,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **mappings**: custom repository mappings (see :ref:`custom_repository`)
 - **source**: the source of this repository only if not local (e.g. :ref:`geonode`, :ref:`odc`).  Supported values are ``geonode``, ``odc``
 - **filter**: server side database filter to apply as mask to all CSW requests (see :ref:`repofilters`)
+- **max_retries**: max number of retry attempts when connecting to records-repository database
 
 .. note::
 

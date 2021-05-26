@@ -211,9 +211,9 @@ class Csw(object):
 
         # load user-defined max attempt to retry db connection
         try:
-            self.max_db_conn_retry_attempt = int(self.config.get("server", "max_db_conn_retry_attempt"))
+            self.max_retries = int(self.config.get("repository", "max_retries"))
         except configparser.NoOptionError:
-            self.max_db_conn_retry_attempt = 5
+            self.max_retries = 5
 
         # load outputschemas
         LOGGER.info('Loading outputschemas')
@@ -419,7 +419,7 @@ class Csw(object):
                 LOGGER.info('Loading default repository')
                 connection_done = False
                 max_attempt = 0
-                while not connection_done and max_attempt <= self.max_db_conn_retry_attempt:
+                while not connection_done and max_attempt <= self.max_retries:
                     self.repository = repository.Repository(
                         self.config.get('repository', 'database'),
                         self.context,
