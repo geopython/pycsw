@@ -115,7 +115,7 @@ class API:
 
         self.query_mappings = {
             'type': self.repository.dataset.type,
-            'record-updated': self.repository.dataset.insert_date,
+            'recordUpdated': self.repository.dataset.insert_date,
             'title': self.repository.dataset.title,
             'description': self.repository.dataset.abstract,
             'keywords': self.repository.dataset.keywords,
@@ -625,7 +625,7 @@ def record2json(record):
 
     record_dict['properties']['externalId'] = record.identifier
 
-    record_dict['properties']['record-updated'] = record.insert_date
+    record_dict['properties']['recordUpdated'] = record.insert_date
 
     if record.type:
         record_dict['properties']['type'] = record.type

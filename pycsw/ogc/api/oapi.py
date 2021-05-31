@@ -206,7 +206,7 @@ def gen_oapi(config, oapi_filepath):
                 {'$ref': '#/components/parameters/limit'},
                 {'$ref': '#/components/parameters/q'},
                 {'$ref': '#/components/parameters/type'},
-                {'$ref': '#/components/parameters/externalid'},
+                {'$ref': '#/components/parameters/externalId'},
                 {'$ref': '#/components/parameters/sortby'},
                 {'$ref': '#/components/parameters/f'},
                 {'$ref': '#/components/parameters/startindex'}

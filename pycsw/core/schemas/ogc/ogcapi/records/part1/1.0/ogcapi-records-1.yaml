@@ -420,11 +420,11 @@ components:
             - type
             - title
           properties:
-            record-created:
+            recordCreated:
               type: string
               description: Date of creation of this record.
               format: date-time
-            record-updated:
+            recordUpdated:
               type: string
               description: The most recent date on which the record was changed.
               format: date-time
@@ -446,7 +446,7 @@ components:
                 Recommended best practice is to use a controlled vocabulary.
               items:
                 type: string
-            keywords-codespace:
+            keywordsCodespace:
               type: string
               description: |-
                 A reference to a controlled vocabulary used for the keywords.
