@@ -8,10 +8,6 @@
         #records-map {
             height: 350px;
         }
-        #items-table {
-            height: 300px;
-            overflow-y: auto;
-        }
     </style>
 
 {% endblock %}
@@ -34,7 +30,7 @@
     <div class="col-lg-6">
       <div id="records-map"></div>
     </div>
-    <div class="col-lg-6" id="items-table">
+    <div class="col-lg-6">
       <table class="table table-striped table-hover" id="items-table-table">
         <thead>
           <tr>
@@ -61,7 +57,7 @@
 
 {% block extrafoot %}
 <script>
-var map = L.map('records-map').setView([45, -75], 5);
+var map = L.map('records-map').setView([0, 0], 1);
 map.addLayer(new L.TileLayer(
     'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
@@ -72,7 +68,10 @@ var geojson_data = {{ data | to_json }};
 var items = new L.GeoJSON(geojson_data);
 
 map.addLayer(items);
-map.fitBounds(items.getBounds());
+var bounds = items.getBounds();
+if (bounds.isValid() === true) {
+    map.fitBounds(bounds);
+}
 
 var highlightStyle = {
     color: 'red',
