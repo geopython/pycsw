@@ -8,7 +8,7 @@ is installed as part of the pycsw install process and should be available in you
 PATH.
 
 .. note::
-  Run ``pycsw-admin.py -h`` to see all administration operations and parameters
+  Run ``pycsw-admin.py --help`` to see all administration operations and parameters
 
 Metadata Repository Setup
 -------------------------
@@ -50,7 +50,7 @@ Setting up the Database
 
 .. code-block:: bash
 
-  pycsw-admin.py -c setup_db -f default.cfg
+  pycsw-admin.py setup_db --config default.cfg
 
 This will create the necessary tables and values for the repository.
 
@@ -74,7 +74,7 @@ Loading Records
 
 .. code-block:: bash
 
-  pycsw-admin.py -c load_records -f default.cfg -p /path/to/records
+  pycsw-admin.py load-records --config default.cfg --path /path/to/records
 
 This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.cfg`` (``repository.database``).  Passing ``-r`` to the script will process ``/path/to/records`` recursively.  Passing ``-y`` to the script will force overwrite existing metadata with the same identifier.  Note that ``-p`` accepts either a directory path or single file.
 
@@ -86,7 +86,7 @@ Exporting the Repository
 
 .. code-block:: bash
 
-  pycsw-admin.py -c export_records -f default.cfg -p /path/to/output_dir
+  pycsw-admin.py export-records --config default.cfg --path /path/to/output_dir
 
 This will write each record in the database specified in ``default.cfg`` (``repository.database``) to an XML document on disk, in directory ``/path/to/output_dir``.
 
@@ -95,8 +95,8 @@ Optimizing the Database
 
 .. code-block:: bash
 
-  pycsw-admin.py -c optimize_db -f default.cfg
-  pycsw-admin.py -c rebuild_db_indexes -f default.cfg
+  pycsw-admin.py optimize-db --config default.cfg
+  pycsw-admin.py rebuild-db-indexes --config default.cfg
 
 .. note::
   This feature is relevant only for PostgreSQL and MySQL
@@ -106,7 +106,7 @@ Deleting Records from the Repository
 
 .. code-block:: bash
 
-  pycsw-admin.py -c delete_records -f default.cfg
+  pycsw-admin.py delete-records --config default.cfg
 
 This will empty the repository of all records.
 
@@ -124,7 +124,7 @@ PostGIS
 
 - pycsw makes use of PostGIS spatial functions and native geometry data type.
 - It is advised to install the PostGIS extension before setting up the pycsw database
-- If PostGIS is detected, the pycsw-admin.py script will create both a native geometry column and a WKT column, as well as a trigger to keep both synchronized
+- If PostGIS is detected, the ``pycsw-admin.py`` script will create both a native geometry column and a WKT column, as well as a trigger to keep both synchronized
 - In case PostGIS gets disabled, pycsw will continue to work with the `WKT`_ column
 - In case of migration from plain PostgreSQL database to PostGIS, the spatial functions of PostGIS will be used automatically
 - When migrating from plain PostgreSQL database to PostGIS, in order to enable native geometry support, a "GEOMETRY" column named "wkb_geometry" needs to be created manually (along with the update trigger in ``pycsw.admin.setup_db``). Also the native geometries must be filled manually from the `WKT`_ field. Next versions of pycsw will automate this process

@@ -78,8 +78,11 @@ setup(
     install_requires=read("requirements.txt").splitlines(),
     packages=find_packages(),
     include_package_data=True,
-    # TODO: replace scripts with entry_points (needs a refactoring of pycsw-admin first)
-    scripts=[os.path.join('bin', 'pycsw-admin.py')],
+    entry_points={
+        'console_scripts': [
+            'pycsw-admin.py=pycsw.core.admin:cli',
+        ]
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',

@@ -35,9 +35,14 @@ import os
 import sys
 from glob import glob
 
+import click
+
+from pycsw import __version__
+from pycsw.core import config as pconfig
 from pycsw.core import metadata, repository, util
 from pycsw.core.etree import etree
 from pycsw.core.etree import PARSER
+from pycsw.core.util import parse_ini_config
 
 LOGGER = logging.getLogger(__name__)
 
@@ -537,20 +542,20 @@ def gen_sitemap(context, database, table, url, output_file):
     LOGGER.info('Found %s records', count)
 
     for rec in records:
-        url = etree.SubElement(urlset,
+        url_ = etree.SubElement(urlset,
                                util.nspath_eval('sitemap:url',
                                                 context.namespaces))
         uri = '%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % \
             (url,
              getattr(rec,
                      context.md_core_model['mappings']['pycsw:Identifier']))
-        etree.SubElement(url,
+        etree.SubElement(url_,
                          util.nspath_eval('sitemap:loc',
                                           context.namespaces)).text = uri
 
     # write to file
     LOGGER.info('Writing to %s', output_file)
-    with open(output_file, 'w') as ofile:
+    with open(output_file, 'wb') as ofile:
         ofile.write(etree.tostring(urlset, pretty_print=1,
                     encoding='utf8', xml_declaration=1))
 
@@ -641,3 +646,246 @@ def delete_records(context, database, table):
 
     repo = repository.Repository(database, context, table=table)
     repo.delete(constraint={'where': '', 'values': []})
+
+
+def cli_option_verbosity(f):
+    def callback(ctx, param, value):
+        if value is not None:
+            logging.basicConfig(stream=sys.stdout,
+                                level=getattr(logging, value))
+        return True
+
+    return click.option('--verbosity', '-v',
+                        type=click.Choice(['ERROR', 'WARNING', 'INFO', 'DEBUG']),
+                        help='Verbosity',
+                        callback=callback)(f)
+
+
+CLI_OPTION_CONFIG = click.option('--config', '-c', required=True,
+                        type=click.Path(exists=True, resolve_path=True),
+                        help='Path to pycsw configuration')
+
+CLI_OPTION_YES = click.option('--yes', '-y', is_flag=True, default=False,
+                              help='Bypass confirmation')
+
+CLI_OPTION_YES_PROMPT = click.option('--yes', '-y', is_flag=True,
+                                     default=False,
+                                     prompt='This will delete all records! Continue?',
+                                     help='Bypass confirmation')
+
+def cli_callbacks(f):
+    f = cli_option_verbosity(f)
+    return f
+
+
+@click.group()
+@click.version_option(version=__version__)
+def cli():
+    pass
+
+
+@click.command('setup-db')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+def cli_setup_db(ctx, config, verbosity):
+    """Create repository tables and indexes"""
+    cfg = parse_ini_config(config)
+    try:
+        setup_db(
+            cfg['repository']['database'],
+            cfg['repository']['table'],
+            cfg['server']['home']
+        )
+    except Exception as err:
+        msg = f'ERROR: Database tables already exist: {err}'
+        raise click.ClickException(msg)
+
+
+@click.command('load-records')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+@click.option('--path', '-p', 'path', required=True,
+              help='File or directory path to metadata records',
+              type=click.Path(exists=True, resolve_path=True, file_okay=True))
+@click.option('--recursive', '-r', is_flag=True,
+              default=False, help='Bypass confirmation')
+@CLI_OPTION_YES
+def cli_load_records(ctx, config, path, recursive, yes, verbosity):
+    """Load metadata records from directory or file into repository"""
+    cfg = parse_ini_config(config)
+    context = pconfig.StaticContext()
+
+    load_records(
+        context,
+        cfg['repository']['database'],
+        cfg['repository']['table'],
+        path,
+        recursive,
+        yes
+    )
+
+
+@click.command('delete-records')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+@CLI_OPTION_YES_PROMPT
+def cli_delete_records(ctx, config, yes, verbosity):
+    """Delete all records from repository"""
+    cfg = parse_ini_config(config)
+    context = pconfig.StaticContext()
+
+    delete_records(
+        context,
+        cfg['repository']['database'],
+        cfg['repository']['table']
+    )
+
+
+
+@click.command('export-records')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+@click.option('--path', '-p', 'path', required=True,
+              help='Directory path to metadata records',
+              type=click.Path(exists=True, resolve_path=True,
+                              writable=True, file_okay=False))
+def cli_export_records(ctx, config, path, verbosity):
+    """Dump metadata records from repository into directory"""
+    cfg = parse_ini_config(config)
+    context = pconfig.StaticContext()
+
+    export_records(
+        context,
+        cfg['repository']['database'],
+        cfg['repository']['table'],
+        path
+    )
+
+
+@click.command('rebuild-db-indexes')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+def cli_rebuild_db_indexes(ctx, config, verbosity):
+    """Rebuild repository database indexes"""
+    cfg = parse_ini_config(config)
+    context = pconfig.StaticContext()
+
+    rebuild_db_indexes(
+        context,
+        cfg['repository']['database'],
+        cfg['repository']['table']
+    )
+
+
+@click.command('optimize-db')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+def cli_optimize_db(ctx, config, verbosity):
+    """Optimize repository database"""
+    cfg = parse_ini_config(config)
+    context = pconfig.StaticContext()
+
+    optimize_db(
+        context,
+        cfg['repository']['database'],
+        cfg['repository']['table']
+    )
+
+
+@click.command('refresh-harvested-records')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+@click.option('--url', '-u', 'url', help='URL of harvest endpoint')
+def cli_refresh_harvested_records(ctx, config, verbosity, url):
+    """Refresh / harvest non-local records in repository"""
+    cfg = parse_ini_config(config)
+    context = pconfig.StaticContext()
+
+    refresh_harvested_records(
+        context,
+        cfg['repository']['database'],
+        cfg['repository']['table'],
+        url
+    )
+
+
+@click.command('gen-sitemap')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+@click.option('--output', '-o', 'output', required=True,
+              help='Filepath to write sitemap',
+              type=click.Path(resolve_path=True, writable=True,
+                              dir_okay=False))
+def cli_gen_sitemap(ctx, config, output, verbosity):
+    """Generate XML Sitemap"""
+    cfg = parse_ini_config(config)
+    context = pconfig.StaticContext()
+
+    gen_sitemap(
+        context,
+        cfg['repository']['database'],
+        cfg['repository']['table'],
+        cfg['server']['url'],
+        output
+    )
+
+@click.command('post-xml')
+@cli_callbacks
+@click.pass_context
+@click.option('--url', '-u', 'url', required=True, help='URL of CSW endpoint')
+@click.option('--xml', '-x', 'xml', required=True,
+              help='XML file to POST',
+              type=click.Path(resolve_path=True, exists=True,
+                              dir_okay=False))
+@click.option('--timeout', '-t', 'timeout', default=30,
+              help='Timeout (in seconds) for HTTP requests')
+def cli_post_xml(ctx, url, xml, timeout, verbosity):
+    """Execute a CSW request via HTTP POST"""
+
+    click.echo(post_xml(url, xml, timeout))
+
+
+@click.command('validate-xml')
+@cli_callbacks
+@click.pass_context
+@click.option('--xml', '-x', 'xml', required=True,
+              help='XML document',
+              type=click.Path(resolve_path=True, exists=True,
+                              dir_okay=False))
+@click.option('--xsd', '-s', 'xsd', required=True,
+              help='XML Schema document',
+              type=click.Path(resolve_path=True, exists=True,
+                              dir_okay=False))
+def cli_validate_xml(ctx, xml, xsd, verbosity):
+    """Validate an XML document against an XML Schema"""
+
+    validate_xml(xml, xsd)
+
+
+@click.command('get-sysprof')
+@click.pass_context
+def cli_get_sysprof(ctx):
+    """Get versions of dependencies"""
+
+    click.echo(get_sysprof())
+
+
+cli.add_command(cli_setup_db)
+cli.add_command(cli_load_records)
+cli.add_command(cli_export_records)
+cli.add_command(cli_delete_records)
+cli.add_command(cli_rebuild_db_indexes)
+cli.add_command(cli_optimize_db)
+cli.add_command(cli_refresh_harvested_records)
+cli.add_command(cli_gen_sitemap)
+cli.add_command(cli_post_xml)
+cli.add_command(cli_get_sysprof)
+cli.add_command(cli_validate_xml)

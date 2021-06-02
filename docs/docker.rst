@@ -39,13 +39,13 @@ with the ``docker logs`` command::
    ``server.logfile=`` in the pycsw configuration file.
 
 
-Using pycsw-admin
------------------
+Using pycsw-admin.py
+--------------------
 
-``pycsw-admin`` can be executed on a running container by
+``pycsw-admin.py`` can be executed on a running container by
 using ``docker exec``::
 
-    docker exec -ti <running-container-id> pycsw-admin.py -h
+    docker exec -ti <running-container-id> pycsw-admin.py --help
 
 
 Running custom pycsw containers
