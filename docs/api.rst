@@ -4,7 +4,7 @@ API
 ===
 
 Python applications can integrate pycsw into their custom workflows.  This
-allows for seamless integate within frameworks like Flask and Django
+allows for seamless integate within frameworks such as Flask and Django.
 
 Below are examples of where using the API (as opposed to the default WSGI/CGI
 services could be used:
@@ -14,9 +14,36 @@ services could be used:
 - authentication or authorization logic
 - forcing CSW version 2.0.2 as default
 
+OARec Flask Example
+-------------------
 
-Simple Flask Example
---------------------
+See https://github.com/geopython/pycsw/blob/master/pycsw/wsgi_flask.py for how
+to implement a Flask wrapper atop all pycsw supported APIs.  Note the use of
+Flask blueprints to enable integration with downstream Flask applications.
+
+Simple Flask blueprint example
+------------------------------
+
+.. code-block:: python
+
+  from flask import Flask, redirect
+
+  from pycsw.wsgi_flask import BLUEPRINT as pycsw_blueprint
+
+  app = Flask(__name__, static_url_path='/static')
+
+  app.url_map.strict_slashes = False
+  app.register_blueprint(pycsw_blueprint, url_prefix='/oapi')
+
+  @app.route('/')
+  def hello_world():
+      return "Hello, World!"
+
+
+In the above example, all pycsw endpoints are made available under ``http://localhost:8000/oapi``.
+
+Simple CSW Flask Example
+------------------------
 
 .. code-block:: python
 

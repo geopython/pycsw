@@ -3,9 +3,24 @@
 Testing
 =======
 
-Pycsw uses `pytest`_ for managing its automated tests. There are a number of
-test suites that perform mostly functional testing. These tests ensure that
-pycsw is compliant with the various supported standards.
+pycsw uses `pytest`_ for managing its automated tests.
+
+OGC API - Records
+-----------------
+
+Tests for OGC API - Records are located in ``tests/unittests/test_oarec.py``. They
+can be run as follows:
+
+.. code:: bash
+
+   pytest tests/unittests/test_oarec.py
+
+
+OGC CSW
+-------
+
+There are a number of test suites that perform mostly functional testing.
+These tests ensure that pycsw is compliant with the various supported standards.
 There is also a growing set of unit tests. These focus on smaller scope 
 testing, in order to verify that individual bits of code are working as
 expected.
@@ -344,12 +359,12 @@ Then navigate to ``http://host/path/to/pycsw/tests/index.html``.
 
 
 
-.. _Compliance & Interoperability Testing & Evaluation Initiative: http://cite.opengeospatial.org/
+.. _Compliance & Interoperability Testing & Evaluation Initiative: https://github.com/opengeospatial/cite/wiki
 .. _functional tests: https://en.wikipedia.org/wiki/Functional_testing
-.. _`Paver`: http://paver.github.io/paver/
-.. _pytest's invocation documentation: http://docs.pytest.org/en/latest/usage.html
-.. _pytest: http://pytest.org/latest/
+.. _`Paver`: https://pythonhosted.org/Paver/
+.. _pytest's invocation documentation: https://docs.pytest.org/en/stable/usage.html
+.. _pytest: https://docs.pytest.org
 .. _Github Actions: https://github.com/geopython/pycsw/actions
 .. _tox: https://tox.readthedocs.io
 .. _wiki: https://github.com/geopython/pycsw/wiki/OGC-CITE-Compliance
-.. _pytest_generate_tests: http://docs.pytest.org/en/latest/parametrize.html#basic-pytest-generate-tests-example
+.. _pytest_generate_tests: #basic-pytest-generate-tests-example

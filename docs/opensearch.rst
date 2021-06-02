@@ -3,7 +3,20 @@
 OpenSearch Support
 ==================
 
-pycsw OpenSearch support is enabled by default.  HTTP requests must be specified with ``mode=opensearch`` in the base URL for OpenSearch requests, e.g.:
+pycsw OpenSearch support is enabled by default.  There are two ways to access OpenSearch
+depending on the deployment pattern chosen.
+
+OARec deployment
+----------------
+
+.. code-block:: bash
+
+  http://localhost:8000/opensearch
+
+CSW legacy deployment
+---------------------
+
+HTTP requests must be specified with ``mode=opensearch`` in the base URL for OpenSearch requests, e.g.:
 
 .. code-block:: bash
 
@@ -101,5 +114,5 @@ will query the temporal extents of a metadata record (``apiso:TempExtent_begin``
 At the HTTP API level, time is supported via either ``time=t1/t2`` or ``start=t1&stop=t2``.  If the
 ``time`` parameter is present, it will override the ``start`` and ``stop`` parameters respectively.
 
-.. _`OGC OpenSearch Extension for Earth Observation`: http://docs.opengeospatial.org/is/13-026r9/13-026r9.html
-.. _`OGC OpenSearch Geo and Time Extensions 1.0`: http://www.opengeospatial.org/standards/opensearchgeo
+.. _`OGC OpenSearch Extension for Earth Observation`: https://docs.ogc.org/is/13-026r9/13-026r9.html
+.. _`OGC OpenSearch Geo and Time Extensions 1.0`: https://www.ogc.org/standards/opensearchgeo

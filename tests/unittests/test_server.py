@@ -33,7 +33,7 @@ import os
 
 import pytest
 
-from pycsw import server
+from pycsw.core.util import EnvInterpolation
 
 pytestmark = pytest.mark.unit
 
@@ -48,7 +48,7 @@ def test_config_env_vars():
     url=${PYCSW_SERVER_URL}
     """
 
-    parser = configparser.ConfigParser(interpolation=server.EnvInterpolation())
+    parser = configparser.ConfigParser(interpolation=EnvInterpolation())
     parser.read_string(cfg)
 
     assert parser['server']['url'] == 'http://localhost:8000'

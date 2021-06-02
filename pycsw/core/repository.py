@@ -203,6 +203,31 @@ class Repository(object):
             value_dict['pvalue%d' % num] = value
         return value_dict
 
+    def describe(self):
+        ''' Derive table columns and types '''
+
+        type_mappings = {
+            'TEXT': 'string',
+            'VARCHAR': 'string'
+        }
+
+        properties = {}
+
+        for i in self.dataset.__table__.columns:
+            if i.name in ['anytext', 'metadata', 'metadata_type', 'xml']:
+                continue
+
+            properties[i.name] = {
+                'title': i.name
+            }
+
+            try:
+                properties[i.name]['type'] = type_mappings[str(i.type)]
+            except Exception as err:
+                LOGGER.debug(f'Cannot determine type: {err}')
+
+        return properties
+
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
 

@@ -50,16 +50,6 @@ from pycsw.ogc.csw import csw2, csw3
 
 LOGGER = logging.getLogger(__name__)
 
-class EnvInterpolation(configparser.BasicInterpolation):
-    """
-    Interpolation which expands environment variables in values.
-    from: https://stackoverflow.com/a/49529659
-    """
-
-    def before_get(self, parser, section, option, value, defaults):
-        value = super().before_get(parser, section, option, value, defaults)
-        return os.path.expandvars(value)
-
 
 class Csw(object):
     """ Base CSW server """
@@ -114,7 +104,7 @@ class Csw(object):
                 self.config = rtconfig
             else:
                 self.config = configparser.ConfigParser(
-                    interpolation=EnvInterpolation())
+                    interpolation=util.EnvInterpolation())
                 if isinstance(rtconfig, dict):  # dictionary
                     for section, options in rtconfig.items():
                         self.config.add_section(section)
@@ -137,6 +127,12 @@ class Csw(object):
             'server', 'home',
             os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
         )
+
+        if 'PYCSW_IS_CSW' in env and env['PYCSW_IS_CSW']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/opensearch')
+        if 'PYCSW_IS_OPENSEARCH' in env and env['PYCSW_IS_OPENSEARCH']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/csw')
+            self.mode = 'opensearch'
 
         self.context.pycsw_home = self.config.get('server', 'home')
         self.context.url = self.config.get('server', 'url')
@@ -299,6 +295,13 @@ class Csw(object):
                 self.request_version = '2.0.2'
             elif self.request.find(b'cat/csw/3.0') != -1:
                 self.request_version = '3.0.0'
+
+        if 'PYCSW_IS_OAIPMH' in self.environ and self.environ['PYCSW_IS_OAIPMH']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/oaipmh')
+            self.kvp['mode'] = 'oaipmh'
+        if 'PYCSW_IS_SRU' in self.environ and self.environ['PYCSW_IS_SRU']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/sru')
+            self.kvp['mode'] = 'sru'
 
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
                 self.kvp['mode'] == 'sru'):

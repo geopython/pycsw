@@ -3,7 +3,7 @@
 Transactions
 ============
 
-pycsw has the ability to process CSW Harvest and Transaction requests (CSW-T).  Transactions are disabled by default; to enable, ``manager.transactions`` must be set to ``true``.  Access to transactional functionality is limited to IP addresses which must be set in ``manager.allowed_ips``.
+pycsw's CSW implementation has the ability to process CSW Harvest and Transaction requests (CSW-T).  Transactions are disabled by default; to enable, ``manager.transactions`` must be set to ``true``.  Access to transactional functionality is limited to IP addresses which must be set in ``manager.allowed_ips``.
 
 Supported Resource Types
 ------------------------
@@ -76,4 +76,4 @@ Transaction operation results can be sent by email (via ``mailto:``) or ftp (via
 
 The :ref:`tests` contain CSW-T request examples.
 
-.. _`WAF`: http://seabass.ieee.org/groups/geoss/index.php?option=com_sir_200&Itemid=157&ID=183
+.. _`WAF`: https://seabass.ieee.org/groups/geoss/index.php?option=com_sir_200&Itemid=157&ID=183

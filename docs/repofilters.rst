@@ -3,7 +3,7 @@
 Repository Filters
 ==================
 
-pycsw has the ability to perform server side repository / database filters as a means to mask all CSW requests to query against a specific subset of the metadata repository, thus providing the ability to deploy multiple pycsw instances pointing to the same database in different ways via the ``repository.filter`` configuration option.
+pycsw has the ability to perform server side repository / database filters as a means to mask all requests to query against a specific subset of the metadata repository, thus providing the ability to deploy multiple pycsw instances pointing to the same database in different ways via the ``repository.filter`` configuration option.
 
 Repository filters are a convenient way to subset your repository at the server level without the hassle of creating proper database views.  For large repositories, it may be better to subset at the database level for performance.
 
@@ -22,7 +22,7 @@ Imagine a sample database table of records (subset below for brevity):
   5,21,foo5,bar5
   5,21,foo6,bar6
 
-A default pycsw instance (with no ``repository.filters`` option) will always process CSW requests against the entire table.  So a CSW `GetRecords` filter like:
+A default pycsw instance (with no ``repository.filters`` option) will always process requests against the entire table.  So a CSW `GetRecords` filter like:
 
 .. code-block:: xml
 

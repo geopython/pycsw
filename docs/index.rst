@@ -17,6 +17,7 @@ pycsw |release| Documentation
    docker
    configuration
    administration
+   oarec-support
    csw-support
    distributedsearching
    sru
