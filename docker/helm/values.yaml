@@ -51,7 +51,7 @@ pycsw:
       # csw_harvest_pagesize: 10
     metadata:
       identification_title: pycsw Geospatial Catalogue
-      identification_abstract: pycsw is an OGC CSW server implementation written in Python
+      identification_abstract: pycsw is an OARec and OGC CSW server implementation written in Python
       identification_keywords: catalogue,discovery,metadata
       identification_keywords_type: theme
       identification_fees: None
