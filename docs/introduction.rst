@@ -3,7 +3,7 @@
 Introduction
 ============
 
-pycsw is an OGC API - Records and CSW server implementation written in Python.
+pycsw is an OARec and OGC CSW server implementation written in Python.
 
 Features
 ========

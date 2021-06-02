@@ -50,7 +50,7 @@ if (os.path.exists('MANIFEST')):
 setup(
     name='pycsw',
     version=read("VERSION.txt"),
-    description='pycsw is an OGC CSW server implementation written in Python',
+    description='pycsw is an OARec and OGC CSW server implementation written in Python',
     long_description=read("README.md"),
     long_description_content_type='text/markdown',
     license='MIT',

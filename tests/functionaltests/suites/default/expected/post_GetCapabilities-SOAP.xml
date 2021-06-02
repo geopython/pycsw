@@ -5,7 +5,7 @@
     <csw:Capabilities version="2.0.2" updateSequence="PYCSW_UPDATESEQUENCE" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
       <ows:ServiceIdentification>
         <ows:Title>pycsw Geospatial Catalogue</ows:Title>
-        <ows:Abstract>pycsw is an OGC CSW server implementation written in Python</ows:Abstract>
+        <ows:Abstract>pycsw is an OARec and OGC CSW server implementation written in Python</ows:Abstract>
         <ows:Keywords>
           <ows:Keyword>catalogue</ows:Keyword>
           <ows:Keyword>discovery</ows:Keyword>

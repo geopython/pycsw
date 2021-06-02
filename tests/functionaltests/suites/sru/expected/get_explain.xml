@@ -14,7 +14,7 @@
         </zr:serverInfo>
         <zr:databaseInfo>
           <zr:title lang="en" primary="true">pycsw Geospatial Catalogue</zr:title>
-          <zr:description lang="en" primary="true">pycsw is an OGC CSW server implementation written in Python</zr:description>
+          <zr:description lang="en" primary="true">pycsw is an OARec and OGC CSW server implementation written in Python</zr:description>
         </zr:databaseInfo>
         <zr:indexInfo>
           <zr:set name="dc" identifier="info:srw/cql-context-set/1/dc-v1.1"/>

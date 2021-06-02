@@ -58,7 +58,7 @@ def test_collections(api):
     assert len(content['links']) == 2
     assert content['id'] == 'metadata:main'
     assert content['title'] == 'pycsw Geospatial Catalogue'
-    assert content['description'] == 'pycsw is an OGC CSW server implementation written in Python'  # noqa
+    assert content['description'] == 'pycsw is an OARec and OGC CSW server implementation written in Python'  # noqa
     assert content['itemType'] == 'record'
 
 
