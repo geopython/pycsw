@@ -49,6 +49,7 @@ data:
     #domaincounts=true
     #spatial_ranking=true
     profiles=apiso
+    #workers=2
 
     [manager]
     transactions=false

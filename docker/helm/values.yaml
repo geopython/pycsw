@@ -45,6 +45,7 @@ pycsw:
       # domaincounts: true
       # spatial_ranking: true
       profiles: apiso
+      # workers: 2
     manager:
       transactions: "false"
       allowed_ips: 127.0.0.1

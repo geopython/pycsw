@@ -18,6 +18,7 @@ data:
 {{ end }}{{ if .Values.pycsw.config.server.domaincounts }}     domaincounts={{ .Values.pycsw.config.server.domaincounts }}
 {{ end }}{{ if .Values.pycsw.config.server.spatial_ranking }}    spatial_ranking={{ .Values.pycsw.config.server.spatial_ranking }}
 {{ end }}{{ if .Values.pycsw.config.server.profiles }}    profiles={{ .Values.pycsw.config.server.profiles }}
+{{ end }}{{ if .Values.pycsw.config.server.workers }}    workers={{ .Values.pycsw.config.server.workers }}
 {{ end }}
     [manager]
 {{ if .Values.pycsw.config.manager.transactions }}    transactions={{ .Values.pycsw.config.manager.transactions }}
