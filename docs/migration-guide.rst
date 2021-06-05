@@ -16,7 +16,11 @@ pycsw 2.x to 3.0 Migration
 - the OAI-PMH endpoint is now ``/oaipmh``
 - the OpenSearch endpoint is now ``/opensearch``
 - the SRU endpoint is now ``/sru``
+- the ``pycsw-admin.py`` syntax has been updated
 
+  - the ``-c`` flag has been replaced by subcommands (i.e. ``pycsw-admin.py -c load_records`` -> ``pycsw-admin.py load-records``)
+  - subcommands have been slugified (i.e. ``load_records`` -> ``load-records``)
+  - consult ``--help`` to use the updated CLI syntax
 
 pycsw 1.x to 2.0 Migration
 --------------------------

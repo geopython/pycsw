@@ -66,7 +66,7 @@ Documentation
 Bugs
 ----
 
-pycsw's `issue tracker <https://github.com/geopython/pycsw/issues>`_ is the place to report bugs or request enhancements. To submit a bug be sure to specify the pycsw version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform. For convenience, you can run ``pycsw-admin.py -c get_sysprof`` and copy/paste the output into your issue.
+pycsw's `issue tracker <https://github.com/geopython/pycsw/issues>`_ is the place to report bugs or request enhancements. To submit a bug be sure to specify the pycsw version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform. For convenience, you can run ``pycsw-admin.py get-sysprof`` and copy/paste the output into your issue.
 
 Forking pycsw
 -------------
