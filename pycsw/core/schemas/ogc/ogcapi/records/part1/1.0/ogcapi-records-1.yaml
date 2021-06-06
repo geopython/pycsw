@@ -139,14 +139,14 @@ components:
           type: string
       explode: false
       style: form
-    externalid:
-      name: externalid
+    externalId:
+      name: externalId
       in: query
       description: |-
-        The optional externalid parameter supports searching by an identifier
+        The optional externalId parameter supports searching by an identifier
         that was not assigned by the catalogue (i.e. an external identifier).
         Only records with an external identifer, as indicated by the value of
-        the externalid core queryable array, that is equal to one of the listed
+        the externalId core queryable array, that is equal to one of the listed
         values shall be selected.
       required: false
       schema:
@@ -524,7 +524,7 @@ components:
                 A statement that concerns all rights not addresses by the
                 license such as a copyright statement.
             extent:
-              $ref: ./extent.yaml
+              $ref: "#/components/schemas/extent"
             associations:
               type: array
               description: |-

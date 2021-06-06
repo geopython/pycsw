@@ -542,13 +542,15 @@ class API:
         if (startindex + returned) < count:
             link_args.pop('startindex', None)
 
+            next_ = startindex + returned
+
             url_ = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
 
             response['links'].append({
                 'rel': 'next',
                 'type': 'application/geo+json',
                 'title': 'items (next)',
-                'href': f"{bind_url(url_)}startindex={returned}",
+                'href': f"{bind_url(url_)}startindex={next_}",
                 'hreflang': self.config['server']['language']
             })
 
