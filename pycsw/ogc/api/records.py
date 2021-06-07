@@ -250,7 +250,7 @@ class API:
 
     def openapi(self, headers_, args):
         """
-        Provide API conformance
+        Provide OpenAPI document / Swagger
 
         :param headers_: copy of HEADERS object
         :param args: request parameters
@@ -259,6 +259,8 @@ class API:
         """
 
         headers_['Content-Type'] = self.get_content_type(headers_, args)
+        if headers_['Content-Type'] == 'application/json':
+            headers_['Content-Type'] = 'application/vnd.oai.openapi+json;version=3.0'
 
         filepath = f"{THISDIR}/../../core/schemas/ogc/ogcapi/records/part1/1.0/ogcapi-records-1.yaml"
 
