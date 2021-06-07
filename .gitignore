@@ -20,6 +20,9 @@ tests/results
 # pycharm ide
 .idea
 
+# venv
+*venv
+
 # shell files
 .env
 .envrc
