@@ -41,6 +41,16 @@ def test_landing_page(api):
     assert status == 200
     assert headers['Content-Type'] == 'text/html'
 
+def test_openapi(api):
+    headers, status, content = api.openapi({}, {'f': 'json'})
+    assert status == 200
+    content = json.loads(content)
+    assert headers['Content-Type'] == 'application/vnd.oai.openapi+json;version=3.0'
+
+    headers, status, content = api.openapi({}, {'f': 'html'})
+    assert status == 200
+    assert headers['Content-Type'] == 'text/html'
+
 
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
