@@ -77,7 +77,6 @@
                <xsd:element ref="mc:horizontalAccuracyCE90" />
                <xsd:element ref="mc:sensorType" />
                <xsd:element ref="mc:region" />
-               <xsd:element ref="mc:footprint" />
                <xsd:element ref="mc:rms" />
                <xsd:element ref="mc:scale" />
             </xsd:sequence>
