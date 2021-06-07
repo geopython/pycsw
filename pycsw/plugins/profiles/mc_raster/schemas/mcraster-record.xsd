@@ -38,6 +38,8 @@
    <xsd:element name="sensor_type" /> 
    <xsd:element name="region" />
    <xsd:element name="footprint_geojson" />
+   <xsd:element name="rms" />
+   <xsd:element name="scale" />
       
 
    <xsd:element name="MCRasterRecord" type="mc:MCRasterRecord" />
@@ -76,6 +78,8 @@
                <xsd:element ref="mc:sensorType" />
                <xsd:element ref="mc:region" />
                <xsd:element ref="mc:footprint" />
+               <xsd:element ref="mc:rms" />
+               <xsd:element ref="mc:scale" />
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
