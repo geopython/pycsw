@@ -402,8 +402,16 @@ class Csw(object):
             rs_cls = getattr(rs_mod, rs_clsname)
 
             try:
-                self.repository = rs_cls(self.context, repo_filter)
-                LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
+                connection_done = False
+                max_attempts = 0
+                while not connection_done and max_attempts <= 5:
+                    try:
+                        self.repository = rs_cls(self.context, repo_filter)
+                        LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
+                        connection_done = True
+                    except:
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}')
+                        max_attempts += 1
             except Exception as err:
                 msg = 'Could not load custom repository %s: %s' % (rs, err)
                 LOGGER.exception(msg)
@@ -420,15 +428,20 @@ class Csw(object):
                 connection_done = False
                 max_attempt = 0
                 while not connection_done and max_attempt <= self.max_retries:
-                    self.repository = repository.Repository(
-                        self.config.get('repository', 'database'),
-                        self.context,
-                        self.environ.get('local.app_root', None),
-                        self.config.get('repository', 'table'),
-                        repo_filter
-                    )
-                    LOGGER.debug(
-                        'Repository loaded (local): %s.' % self.repository.dbtype)
+                    try:
+                        self.repository = repository.Repository(
+                            self.config.get('repository', 'database'),
+                            self.context,
+                            self.environ.get('local.app_root', None),
+                            self.config.get('repository', 'table'),
+                            repo_filter
+                        )
+                        LOGGER.debug(
+                            'Repository loaded (local): %s.' % self.repository.dbtype)
+                        connection_done = True
+                    except:
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}')
+                        max_attempts += 1
             except Exception as err:
                 msg = 'Could not load repository (local): %s' % err
                 LOGGER.exception(msg)
