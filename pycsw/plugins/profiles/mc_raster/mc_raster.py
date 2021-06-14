@@ -47,6 +47,7 @@ class MCRaster(base_profile.base_profile):
                         'mc:keywords': Queryable(context.md_core_model['mappings']['pycsw:Keywords'], 'mc:keywords'),
                         'mc:rms': Queryable(context.md_core_model['mappings']['pycsw:Rms'], 'mc:rms'),
                         'mc:scale': Queryable(context.md_core_model['mappings']['pycsw:Scale'], 'mc:scale'),
+                        'mc:layerPolygonParts': Queryable(context.md_core_model['mappings']['pycsw:layerPolygonParts'], 'mc:layerPolygonParts'),
                     }
                 })
         }

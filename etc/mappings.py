@@ -107,5 +107,6 @@ MD_CORE_MODEL = {
         # Added for mc-raster 
         'pycsw:Rms': 'rms',
         'pycsw:Scale': 'scale',
+        'pycsw:layerPolygonParts': 'layer_polygon_parts',
     }
 }
