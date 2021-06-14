@@ -41,7 +41,7 @@ MD_CORE_MODEL = {
     'typename': 'pycsw:CoreMetadata',
     'outputschema': 'http://pycsw.org/metadata',
     'mappings': {
-        # Needed fot PYCSW
+        # Needed fo PYCSW
         'pycsw:Identifier': 'identifier',
         'pycsw:Typename': 'typename',
         'pycsw:Schema': 'schema',
@@ -107,5 +107,6 @@ MD_CORE_MODEL = {
         # Added for mc-raster 
         'pycsw:Rms': 'rms',
         'pycsw:Scale': 'scale',
+        'pycsw:layerPolygonParts': 'layer_polygon_parts',
     }
 }
