@@ -25,7 +25,7 @@
    <xsd:element name="product_version" />
    <xsd:element name="product_type" />
    <xsd:element name="description" />
-   <xsd:element name="srs" />/pull/9/files
+   <xsd:element name="srs" />
    <xsd:element name="source_end_date" />
    <xsd:element name="resolution" /> 
    <xsd:element name="horizontal_accuracy_ce_90" /> 
