@@ -26,6 +26,12 @@
    <xsd:element name="product_type" />
    <xsd:element name="description" />
    <xsd:element name="srs" />
+   <xsd:element name="srs_name" />
+   <xsd:element name="geometry"  type="ows:BoundingBoxType" />
+   <xsd:element name="creation_date" />
+   <xsd:element name="update_date" />
+   <xsd:element name="ingestion_date" />
+   <xsd:element name="source_start_date" />
    <xsd:element name="source_end_date" />
    <xsd:element name="resolution" /> 
    <xsd:element name="horizontal_accuracy_ce_90" /> 
@@ -74,7 +80,7 @@
                <xsd:element ref="mc:region" />
                <xsd:element ref="mc:rms" />
                <xsd:element ref="mc:scale" />
-               <xsd:element ref="mc:layerPolygonPartscale" />
+               <xsd:element ref="mc:layerPolygonParts" />
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
