@@ -407,7 +407,7 @@ class Csw(object):
             try:
                 connection_done = False
                 max_attempts = 0
-                while not connection_done and max_attempts <= 5:
+                while not connection_done and max_attempts <= self.max_retries:
                     try:
                         self.repository = rs_cls(self.context, repo_filter)
                         LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
@@ -429,8 +429,8 @@ class Csw(object):
             try:
                 LOGGER.info('Loading default repository')
                 connection_done = False
-                max_attempt = 0
-                while not connection_done and max_attempt <= self.max_retries:
+                max_attempts = 0
+                while not connection_done and max_attempts <= self.max_retries:
                     try:
                         self.repository = repository.Repository(
                             self.config.get('repository', 'database'),
