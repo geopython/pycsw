@@ -138,15 +138,22 @@ def queryables():
     return get_response(api_.queryables(dict(request.headers), request.args))
 
 
+@BLUEPRINT.route('/search')
 @BLUEPRINT.route('/collections/metadata:main/items')
 def items():
     """
     OGC API collection items endpoint
+    STAC API items search endpoint
 
     :returns: HTTP response
     """
 
-    return get_response(api_.items(dict(request.headers), request.args))
+    stac_item = False
+
+    if 'search' in request.url_rule.rule:
+        stac_item = True
+
+    return get_response(api_.items(dict(request.headers), request.args, stac_item=stac_item))
 
 
 @BLUEPRINT.route('/collections/metadata:main/items/<item>')

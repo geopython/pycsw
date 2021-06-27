@@ -185,10 +185,16 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         response = {
+            'stac_version': '1.0.0',
+            'id': 'pycsw-catalogue',
+            'type': 'Catalog',
+            'conformsTo': ['https://api.stacspec.org/v1.0.0/core'],
             'links': [],
             'title': self.config['metadata:main']['identification_title'],
             'description':
-                self.config['metadata:main']['identification_abstract']
+                self.config['metadata:main']['identification_abstract'],
+            'keywords':
+                self.config['metadata:main']['identification_keywords'].split(',')
         }
 
         LOGGER.debug('Creating links')
@@ -218,6 +224,16 @@ class API:
               'type': 'application/json',
               'title': 'Collections as JSON',
               'href': f"{self.config['server']['url']}/collections?f=json"
+            }, {
+              'rel': 'search',
+              'type': 'application/json',
+              'title': 'Search collections',
+              'href': f"{self.config['server']['url']}/search"
+            }, {
+              'rel': 'child',
+              'type': 'application/json',
+              'title': 'Main metadata collection',
+              'href': f"{self.config['server']['url']}/collections/metadata:main?f=json"
             }, {
               'rel': 'service',
               'type': 'application/xml',
@@ -388,7 +404,7 @@ class API:
 
         return self.get_response(200, headers_, 'queryables.html', response)
 
-    def items(self, headers_, args):
+    def items(self, headers_, args, stac_item=False):
         """
         Provide collection items
 
@@ -490,7 +506,7 @@ class API:
         response['numberReturned'] = returned
 
         for record in records:
-            response['features'].append(record2json(record))
+            response['features'].append(record2json(record, stac_item=stac_item))
 
         LOGGER.debug('Creating links')
 
@@ -561,7 +577,7 @@ class API:
 
         return self.get_response(200, headers_, 'items.html', response)
 
-    def item(self, headers_, args, item):
+    def item(self, headers_, args, item, stac_item=False):
         """
         Provide collection item
 
@@ -584,7 +600,7 @@ class API:
         if headers_['Content-Type'] == 'application/xml':
             return headers_, 200, record.xml
 
-        response = record2json(record)
+        response = record2json(record, stac_item=stac_item)
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
@@ -611,7 +627,7 @@ class API:
         return self.get_response(status, headers, 'exception.html', exception)
 
 
-def record2json(record):
+def record2json(record, stac_item=False):
     """
     OGC API - Records record generator from core pycsw record model
 
@@ -626,6 +642,10 @@ def record2json(record):
         'geometry': None,
         'properties': {}
     }
+
+    if stac_item:
+        record_dict['stac_version'] = '1.0.0'
+        record_dict['collection'] = 'metadata:main'
 
     record_dict['properties']['externalId'] = record.identifier
 
