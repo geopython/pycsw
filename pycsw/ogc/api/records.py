@@ -29,7 +29,6 @@
 #
 # =================================================================
 
-import codecs
 from configparser import ConfigParser
 import logging
 import os
@@ -55,6 +54,17 @@ HEADERS = {
 }
 
 THISDIR = os.path.dirname(os.path.realpath(__file__))
+
+
+CONFORMANCE_CLASSES = [
+    'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
+    'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
+    'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/core',
+    'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
+    'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
+    'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
+    'https://api.stacspec.org/v1.0.0/core'
+]
 
 
 class API:
@@ -188,7 +198,7 @@ class API:
             'stac_version': '1.0.0',
             'id': 'pycsw-catalogue',
             'type': 'Catalog',
-            'conformsTo': ['https://api.stacspec.org/v1.0.0/core'],
+            'conformsTo': CONFORMANCE_CLASSES,
             'links': [],
             'title': self.config['metadata:main']['identification_title'],
             'description':
@@ -296,17 +306,8 @@ class API:
 
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
-        conf_classes = [
-            'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
-            'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
-            'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/core',
-            'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
-            'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
-            'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html'
-        ]
-
         response = {
-            'conformsTo': conf_classes
+            'conformsTo': CONFORMANCE_CLASSES
         }
 
         return self.get_response(200, headers_, 'conformance.html', response)
