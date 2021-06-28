@@ -576,7 +576,12 @@ class API:
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
 
-        return self.get_response(200, headers_, 'items.html', response)
+        if stac_item:
+            template = 'stac_items.html'
+        else:
+            template = 'items.html'
+
+        return self.get_response(200, headers_, template, response)
 
     def item(self, headers_, args, item, stac_item=False):
         """
