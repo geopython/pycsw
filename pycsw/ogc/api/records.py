@@ -507,7 +507,7 @@ class API:
         response['numberReturned'] = returned
 
         for record in records:
-            response['features'].append(record2json(record, stac_item=stac_item))
+            response['features'].append(record2json(record, stac_item))
 
         LOGGER.debug('Creating links')
 
@@ -515,10 +515,15 @@ class API:
 
         link_args.pop('f', None)
 
-        if link_args:
-            url_base = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
+        if stac_item:
+            fragment = 'search'
         else:
-            url_base = f"{self.config['server']['url']}/collections/metadata:main/items"
+            fragment = 'collections/metadata:main/items'
+
+        if link_args:
+            url_base = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
+        else:
+            url_base = f"{self.config['server']['url']}/{fragment}"
 
         is_html = headers_['Content-Type'] == 'text/html'
 
