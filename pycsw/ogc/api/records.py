@@ -676,19 +676,24 @@ def record2json(record, stac_item=False):
     if record.keywords:
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
 
+    if stac_item:
+        link_key_name = 'links'
+    else:
+        link_key_name = 'associations'
+
     if record.links:
-        record_dict['associations'] = []
+        record_dict[link_key_name] = []
         for link in jsonify_links(record.links):
-            association = {
+            link = {
                 'href': link['url'],
                 'name': link['name'],
                 'description': link['description'],
                 'type': link['protocol']
             }
             if 'type' in link:
-                association['rel'] = link['type']
+                link['rel'] = link['type']
 
-            record_dict['associations'].append(association)
+            record_dict[link_key_name].append(link)
 
     if record.wkt_geometry:
         minx, miny, maxx, maxy = wkt2geom(record.wkt_geometry)
