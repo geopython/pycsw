@@ -552,7 +552,7 @@ class API:
 
             prev = max(0, startindex - limit)
 
-            url_ = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
+            url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
 
             response['links'].append(
                 {
@@ -568,7 +568,7 @@ class API:
 
             next_ = startindex + returned
 
-            url_ = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
+            url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
 
             response['links'].append({
                 'rel': 'next',
