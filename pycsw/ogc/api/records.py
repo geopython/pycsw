@@ -63,7 +63,8 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
-    'https://api.stacspec.org/v1.0.0/core'
+    'https://api.stacspec.org/v1.0.0-beta.2/core',
+    'https://api.stacspec.org/v1.0.0-beta.2/item-search'
 ]
 
 
@@ -147,7 +148,7 @@ class API:
 
         format_ = args.get('f')
 
-        if headers:
+        if headers and 'Accept' in headers:
             if 'text/html' in headers['Accept']:
                 content_type = 'text/html'
             elif 'application/xml' in headers['Accept']:
@@ -686,13 +687,12 @@ def record2json(record, stac_item=False):
     if record.keywords:
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
 
-    if stac_item:
-        link_key_name = 'links'
-    else:
-        link_key_name = 'associations'
-
     if record.links:
-        record_dict[link_key_name] = []
+        if stac_item:
+            rdl = record_dict['links'] = []
+        else:
+            rdl = record_dict['properties']['associations'] = []
+
         for link in jsonify_links(record.links):
             link = {
                 'href': link['url'],
@@ -703,7 +703,7 @@ def record2json(record, stac_item=False):
             if 'type' in link:
                 link['rel'] = link['type']
 
-            record_dict[link_key_name].append(link)
+            rdl.append(link)
 
     if record.wkt_geometry:
         minx, miny, maxx, maxy = wkt2geom(record.wkt_geometry)

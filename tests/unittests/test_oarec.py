@@ -1,5 +1,6 @@
 import json
 import os
+from xml.etree import ElementTree as etree
 
 import pytest
 
@@ -32,7 +33,7 @@ def test_landing_page(api):
 
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
-    assert len(content['links']) == 10
+    assert len(content['links']) == 12
 
     for link in content['links']:
         assert link['href'].startswith(api.config['server']['url'])
@@ -41,11 +42,12 @@ def test_landing_page(api):
     assert status == 200
     assert headers['Content-Type'] == 'text/html'
 
+
 def test_openapi(api):
     headers, status, content = api.openapi({}, {'f': 'json'})
     assert status == 200
     content = json.loads(content)
-    assert headers['Content-Type'] == 'application/vnd.oai.openapi+json;version=3.0'
+    assert headers['Content-Type'] == 'application/vnd.oai.openapi+json;version=3.0'  # noqa
 
     headers, status, content = api.openapi({}, {'f': 'html'})
     assert status == 200
@@ -55,7 +57,7 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 6
+    assert len(content['conformsTo']) == 8
 
 
 def test_collections(api):
@@ -148,3 +150,17 @@ def test_item(api):
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
     params = {'f': 'xml'}
     content = api.item({}, params, item)[2]
+
+    e = etree.fromstring(content)
+
+    element = e.find('{http://purl.org/dc/elements/1.1/}identifier').text
+    assert element == item
+
+    element = e.find('{http://purl.org/dc/elements/1.1/}type').text
+    assert element == 'http://purl.org/dc/dcmitype/Image'
+
+    element = e.find('{http://purl.org/dc/elements/1.1/}title').text
+    assert element == 'Lorem ipsum'
+
+    element = e.find('{http://purl.org/dc/elements/1.1/}subject').text
+    assert element == 'Tourism--Greece'
