@@ -108,5 +108,8 @@ MD_CORE_MODEL = {
         'pycsw:Rms': 'rms',
         'pycsw:Scale': 'scale',
         'pycsw:layerPolygonParts': 'layer_polygon_parts',
+        'pycsw:includedInBests': 'included_in_bests',
+        'pycsw:discretes': 'discretes',
+
     }
 }
