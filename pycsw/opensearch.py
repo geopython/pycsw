@@ -93,7 +93,7 @@ class OpenSearch(object):
 
         self.exml = element
         self.cfg = cfg
-        self.bind_url = util.bind_url(self.cfg.get('server', 'url'))
+        self.bind_url = util.bind_url(self.cfg.get('server', 'url')).replace('/opensearch', '/csw')
 
         if version == '2.0.2':
             return self._csw2_2_os()
