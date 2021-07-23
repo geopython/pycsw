@@ -683,7 +683,7 @@ def record2json(record):
         }
         record_dict['geometry'] = geometry
 
-        record_dict['properties']['extents'] = {
+        record_dict['properties']['extent'] = {
             'spatial': {
                 'bbox': [[minx, miny, maxx, maxy]],
                 'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
