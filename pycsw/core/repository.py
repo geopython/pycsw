@@ -345,6 +345,10 @@ class Repository(object):
             anytext = getattr(self.dataset,
             self.context.md_core_model['mappings']['pycsw:AnyText'])
 
+            if isinstance(record.xml, bytes):
+                LOGGER.debug('Decoding bytes to unicode')
+                record.xml = record.xml.decode()
+
         if recprops is None and constraint is None:  # full update
             LOGGER.debug('full update')
             update_dict = dict([(getattr(self.dataset, key),
