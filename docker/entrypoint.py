@@ -101,7 +101,7 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
         "--access-logfile=-",
         "--error-logfile=-",
         "--workers={}".format(workers),
-        "--timeout={}".format(pycsw_config.get("manager", "timeout")),
+        "--timeout={}".format(pycsw_config.get("server", "timeout")),
         "pycsw.wsgi_flask:APP",
 
     ]

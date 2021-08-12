@@ -50,6 +50,7 @@ data:
     #spatial_ranking=true
     profiles=apiso
     #workers=2
+    timeout=30
 
     [manager]
     transactions=false
