@@ -197,6 +197,7 @@ class API:
 
         response = {
             'stac_version': '1.0.0',
+            'stac_api_version': '1.0.0-beta.3',
             'id': 'pycsw-catalogue',
             'type': 'Catalog',
             'conformsTo': CONFORMANCE_CLASSES,
@@ -406,7 +407,7 @@ class API:
 
         return self.get_response(200, headers_, 'queryables.html', response)
 
-    def items(self, headers_, args, stac_item=False):
+    def items(self, headers_, json_post_data, args, stac_item=False):
         """
         Provide collection items
 
@@ -437,6 +438,16 @@ class API:
         }
 
         cql_query = None
+
+        if stac_item and json_post_data is not None:
+            LOGGER.debug(f'JSON POST data: {json_post_data}')
+            LOGGER.debug('Transforming JSON POST data into request args')
+
+            for p in ['limit', 'bbox', 'datetime']:
+                if p in json_post_data:
+                    args[p] = json_post_data.get(p)
+
+            LOGGER.debug(f'Transformed args: {args}')
 
         if 'filter' in args:
             LOGGER.debug(f'CQL query specified {args["filter"]}')

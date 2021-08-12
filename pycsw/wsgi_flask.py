@@ -64,7 +64,11 @@ def get_response(result: tuple):
     """
 
     headers, status, content = result
+
+    print("CONTENT", content)
+    print("CONTENT", len(content))
     response = make_response(content, status)
+    print(response)
 
     if headers:
         response.headers = headers
@@ -138,7 +142,7 @@ def queryables():
     return get_response(api_.queryables(dict(request.headers), request.args))
 
 
-@BLUEPRINT.route('/search')
+@BLUEPRINT.route('/search', methods=['GET', 'POST'])
 @BLUEPRINT.route('/collections/metadata:main/items')
 def items():
     """
@@ -153,7 +157,7 @@ def items():
     if 'search' in request.url_rule.rule:
         stac_item = True
 
-    return get_response(api_.items(dict(request.headers), request.args, stac_item))
+    return get_response(api_.items(dict(request.headers), request.json, dict(request.args), stac_item))
 
 
 @BLUEPRINT.route('/stac/collections/metadata:main/items/<item>')
