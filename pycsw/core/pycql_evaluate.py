@@ -28,7 +28,7 @@ class FilterEvaluator:
     def __init__(self, field_mapping=None):
         self.field_mapping = field_mapping
 
-    def to_filter(self, node):
+    def to_filter(self, node, dbtype='sqlite'):
         to_filter = self.to_filter
         if isinstance(node, NotConditionNode):
             return filters.negate(to_filter(node.sub_node))
@@ -74,14 +74,24 @@ class FilterEvaluator:
                 to_filter(node.units),
             )
         elif isinstance(node, BBoxPredicateNode):
-            return _bbox(
-                to_filter(node.lhs),
-                to_filter(node.minx),
-                to_filter(node.miny),
-                to_filter(node.maxx),
-                to_filter(node.maxy),
-                to_filter(node.crs),
-            )
+            if dbtype == 'sqlite':
+                return _bbox(
+                    to_filter(node.lhs),
+                    to_filter(node.minx),
+                    to_filter(node.miny),
+                    to_filter(node.maxx),
+                    to_filter(node.maxy),
+                    to_filter(node.crs),
+               )
+            else:
+                return filters.bbox(
+                    to_filter(node.lhs),
+                    to_filter(node.minx),
+                    to_filter(node.miny),
+                    to_filter(node.maxx),
+                    to_filter(node.maxy),
+                    to_filter(node.crs),
+               )
         elif isinstance(node, AttributeExpression):
             return filters.attribute(node.name, self.field_mapping)
 
@@ -96,7 +106,7 @@ class FilterEvaluator:
         return node
 
 
-def to_filter(ast, field_mapping=None):
+def to_filter(ast, dbtype, field_mapping=None):
     """ Helper function to translate ECQL AST to Django Query expressions.
 
         :param ast: the abstract syntax tree
@@ -107,4 +117,4 @@ def to_filter(ast, field_mapping=None):
         :returns: a Django query object
         :rtype: :class:`django.db.models.Q`
     """
-    return FilterEvaluator(field_mapping).to_filter(ast)
+    return FilterEvaluator(field_mapping).to_filter(ast, dbtype)

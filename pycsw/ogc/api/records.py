@@ -493,7 +493,7 @@ class API:
             LOGGER.debug(f'Abstract syntax tree: {ast}')
 
             LOGGER.debug('Transforming AST into filters')
-            filters = to_filter(ast, self.query_mappings)
+            filters = to_filter(ast, self.repository.dbtype, self.query_mappings)
             LOGGER.debug(f'Filter: {filters}')
 
             query = self.repository.session.query(self.repository.dataset).filter(filters)
