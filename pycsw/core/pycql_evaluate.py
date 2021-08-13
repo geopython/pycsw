@@ -21,7 +21,7 @@ from pycsw.core.util import bbox2wktpolygon
 
 def _bbox(lhs, minx, miny, maxx, maxy, crs=4326):
     wkt = bbox2wktpolygon(f'{minx},{miny},{maxx},{maxy}')
-    return text(f"query_spatial(records_wkt_geometry, '{wkt}', 'bbox', 'false') = 'true'")
+    return text(f"query_spatial(wkt_geometry, '{wkt}', 'bbox', 'false') = 'true'")
 
 
 class FilterEvaluator:
