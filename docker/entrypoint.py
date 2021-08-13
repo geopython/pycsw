@@ -95,13 +95,18 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     # https://github.com/benoitc/gunicorn/issues/1477
     #
 
+    try:
+        timeout = pycsw_config.get("server", "timeout")
+    except configparser.NoOptionError:
+        timeout = 30
+
     args = ["--reload", "--reload-engine=poll"] if reload else []
     execution_args = ["gunicorn"] + args + [
         "--bind=0.0.0.0:8000",
         "--access-logfile=-",
         "--error-logfile=-",
         "--workers={}".format(workers),
-        "--timeout={}".format(pycsw_config.get("server", "timeout")),
+        "--timeout={}".format(timeout),
         "pycsw.wsgi_flask:APP",
 
     ]
