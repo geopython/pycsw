@@ -665,7 +665,13 @@ def record2json(record, stac_item=False):
         'id': record.identifier,
         'type': 'Feature',
         'geometry': None,
-        'properties': {}
+        'properties': {
+            'datetime': record.date,
+            'start_datetime': record.time_begin,
+            'end_datetime': record.time_end
+        },
+        'links': [],
+        'assets': {}
     }
 
     if stac_item:
@@ -701,9 +707,7 @@ def record2json(record, stac_item=False):
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
 
     if record.links:
-        if stac_item:
-            rdl = record_dict['links'] = []
-        else:
+        if not stac_item:
             rdl = record_dict['properties']['associations'] = []
 
         for link in jsonify_links(record.links):
