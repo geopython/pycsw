@@ -181,6 +181,8 @@ class API:
         else:
             content = to_json(data)
 
+        headers['Content-Length'] = len(content)
+
         return headers, status, content
 
     def landing_page(self, headers_, args):
