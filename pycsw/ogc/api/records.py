@@ -709,6 +709,8 @@ def record2json(record, stac_item=False):
     if record.links:
         if not stac_item:
             rdl = record_dict['properties']['associations'] = []
+        else:
+            rdl = record_dict['links']
 
         for link in jsonify_links(record.links):
             link = {
