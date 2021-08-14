@@ -59,6 +59,7 @@ THISDIR = os.path.dirname(os.path.realpath(__file__))
 CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
+    'http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
@@ -133,6 +134,9 @@ class API:
             'anytext': self.repository.dataset.anytext,
             'bbox': self.repository.dataset.wkt_geometry
         }
+        if self.repository.dbtype == 'postgresql+postgis+native':
+            self.query_mappings['bbox'] = self.repository.dataset.wkb_geometry
+
 
     def get_content_type(self, headers, args):
         """

@@ -19,9 +19,13 @@ from sqlalchemy import text
 
 from pycsw.core.util import bbox2wktpolygon
 
-def _bbox(lhs, minx, miny, maxx, maxy, crs=4326):
+def _bbox(dbtype, geometry_column, minx, miny, maxx, maxy, crs=4326):
     wkt = bbox2wktpolygon(f'{minx},{miny},{maxx},{maxy}')
-    return text(f"query_spatial(wkt_geometry, '{wkt}', 'bbox', 'false') = 'true'")
+
+    if dbtype == 'postgresql+postgis+native':
+        return text(f"ST_Intersects({geometry_column}, 'SRID=4326;{wkt}')")
+    else:
+        return text(f"query_spatial({geometry_column}, '{wkt}', 'bbox', 'false') = 'true'")
 
 
 class FilterEvaluator:
@@ -74,24 +78,15 @@ class FilterEvaluator:
                 to_filter(node.units),
             )
         elif isinstance(node, BBoxPredicateNode):
-            if dbtype == 'sqlite':
-                return _bbox(
-                    to_filter(node.lhs),
-                    to_filter(node.minx),
-                    to_filter(node.miny),
-                    to_filter(node.maxx),
-                    to_filter(node.maxy),
-                    to_filter(node.crs),
-               )
-            else:
-                return filters.bbox(
-                    to_filter(node.lhs),
-                    to_filter(node.minx),
-                    to_filter(node.miny),
-                    to_filter(node.maxx),
-                    to_filter(node.maxy),
-                    to_filter(node.crs),
-               )
+            return _bbox(
+                dbtype,
+                self.field_mapping['bbox'].key,
+                to_filter(node.minx),
+                to_filter(node.miny),
+                to_filter(node.maxx),
+                to_filter(node.maxy),
+                to_filter(node.crs),
+           )
         elif isinstance(node, AttributeExpression):
             return filters.attribute(node.name, self.field_mapping)
 
