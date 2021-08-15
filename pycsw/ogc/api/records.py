@@ -480,14 +480,14 @@ class API:
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
                 elif k == 'datetime':
-                    if '/' not in k:
+                    if '/' not in v:
                         query_args.append(f'date = "{v}"')
                     else:
                         begin, end = v.split('/')
                         if begin != '..':
-                            query_args.append(f'time_begin >= "{v}"')
+                            query_args.append(f'time_begin >= "{begin}"')
                         if end != '..':
-                            query_args.append(f'time_end <= "{v}"')
+                            query_args.append(f'time_end <= "{end}"')
                 elif k == 'q':
                     query_args.append(f'anytext LIKE "%{v}%"')
                 else:
