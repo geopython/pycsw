@@ -451,7 +451,10 @@ class API:
 
             for p in ['limit', 'bbox', 'datetime']:
                 if p in json_post_data:
-                    args[p] = json_post_data.get(p)
+                    if p == 'bbox':
+                        args[p] = ','.join(map(str, json_post_data.get(p)))
+                    else:
+                        args[p] = json_post_data.get(p)
 
             LOGGER.debug(f'Transformed args: {args}')
 
