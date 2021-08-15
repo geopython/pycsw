@@ -19,14 +19,19 @@ from sqlalchemy import text
 
 from pycsw.core.util import bbox2wktpolygon
 
-def _bbox(lhs, minx, miny, maxx, maxy, crs=4326):
+def _bbox(dbtype, geometry_column, minx, miny, maxx, maxy, crs=4326):
     wkt = bbox2wktpolygon(f'{minx},{miny},{maxx},{maxy}')
-    return text(f"query_spatial(records_wkt_geometry, '{wkt}', 'bbox', 'false') = 'true'")
+
+    if dbtype == 'postgresql+postgis+native':
+        return text(f"ST_Intersects({geometry_column}, 'SRID=4326;{wkt}')")
+    else:
+        return text(f"query_spatial({geometry_column}, '{wkt}', 'bbox', 'false') = 'true'")
 
 
 class FilterEvaluator:
-    def __init__(self, field_mapping=None):
+    def __init__(self, field_mapping=None, dbtype='sqlite'):
         self.field_mapping = field_mapping
+        self._pycsw_dbtype = dbtype
 
     def to_filter(self, node):
         to_filter = self.to_filter
@@ -75,13 +80,14 @@ class FilterEvaluator:
             )
         elif isinstance(node, BBoxPredicateNode):
             return _bbox(
-                to_filter(node.lhs),
+                self._pycsw_dbtype,
+                self.field_mapping['bbox'].key,
                 to_filter(node.minx),
                 to_filter(node.miny),
                 to_filter(node.maxx),
                 to_filter(node.maxy),
                 to_filter(node.crs),
-            )
+           )
         elif isinstance(node, AttributeExpression):
             return filters.attribute(node.name, self.field_mapping)
 
@@ -96,7 +102,7 @@ class FilterEvaluator:
         return node
 
 
-def to_filter(ast, field_mapping=None):
+def to_filter(ast, dbtype, field_mapping=None):
     """ Helper function to translate ECQL AST to Django Query expressions.
 
         :param ast: the abstract syntax tree
@@ -107,4 +113,4 @@ def to_filter(ast, field_mapping=None):
         :returns: a Django query object
         :rtype: :class:`django.db.models.Q`
     """
-    return FilterEvaluator(field_mapping).to_filter(ast)
+    return FilterEvaluator(field_mapping, dbtype).to_filter(ast)

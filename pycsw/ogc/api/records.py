@@ -29,7 +29,6 @@
 #
 # =================================================================
 
-import codecs
 from configparser import ConfigParser
 import logging
 import os
@@ -55,6 +54,19 @@ HEADERS = {
 }
 
 THISDIR = os.path.dirname(os.path.realpath(__file__))
+
+
+CONFORMANCE_CLASSES = [
+    'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
+    'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
+    'http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core',
+    'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/core',
+    'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
+    'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
+    'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
+    'https://api.stacspec.org/v1.0.0-beta.2/core',
+    'https://api.stacspec.org/v1.0.0-beta.2/item-search'
+]
 
 
 class API:
@@ -120,8 +132,14 @@ class API:
             'description': self.repository.dataset.abstract,
             'keywords': self.repository.dataset.keywords,
             'anytext': self.repository.dataset.anytext,
-            'bbox': self.repository.dataset.wkt_geometry
+            'bbox': self.repository.dataset.wkt_geometry,
+            'date': self.repository.dataset.date,
+            'time_begin': self.repository.dataset.time_begin,
+            'time_end': self.repository.dataset.time_end
         }
+        if self.repository.dbtype == 'postgresql+postgis+native':
+            self.query_mappings['bbox'] = self.repository.dataset.wkb_geometry
+
 
     def get_content_type(self, headers, args):
         """
@@ -137,7 +155,7 @@ class API:
 
         format_ = args.get('f')
 
-        if headers:
+        if headers and 'Accept' in headers:
             if 'text/html' in headers['Accept']:
                 content_type = 'text/html'
             elif 'application/xml' in headers['Accept']:
@@ -170,6 +188,8 @@ class API:
         else:
             content = to_json(data)
 
+        headers['Content-Length'] = len(content)
+
         return headers, status, content
 
     def landing_page(self, headers_, args):
@@ -185,10 +205,17 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         response = {
+            'stac_version': '1.0.0',
+            'stac_api_version': '1.0.0-beta.3',
+            'id': 'pycsw-catalogue',
+            'type': 'Catalog',
+            'conformsTo': CONFORMANCE_CLASSES,
             'links': [],
             'title': self.config['metadata:main']['identification_title'],
             'description':
-                self.config['metadata:main']['identification_abstract']
+                self.config['metadata:main']['identification_abstract'],
+            'keywords':
+                self.config['metadata:main']['identification_keywords'].split(',')
         }
 
         LOGGER.debug('Creating links')
@@ -218,6 +245,16 @@ class API:
               'type': 'application/json',
               'title': 'Collections as JSON',
               'href': f"{self.config['server']['url']}/collections?f=json"
+            }, {
+              'rel': 'search',
+              'type': 'application/json',
+              'title': 'Search collections',
+              'href': f"{self.config['server']['url']}/search"
+            }, {
+              'rel': 'child',
+              'type': 'application/json',
+              'title': 'Main metadata collection',
+              'href': f"{self.config['server']['url']}/collections/metadata:main?f=json"
             }, {
               'rel': 'service',
               'type': 'application/xml',
@@ -280,17 +317,8 @@ class API:
 
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
-        conf_classes = [
-            'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
-            'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
-            'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/core',
-            'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
-            'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
-            'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html'
-        ]
-
         response = {
-            'conformsTo': conf_classes
+            'conformsTo': CONFORMANCE_CLASSES
         }
 
         return self.get_response(200, headers_, 'conformance.html', response)
@@ -388,7 +416,7 @@ class API:
 
         return self.get_response(200, headers_, 'queryables.html', response)
 
-    def items(self, headers_, args):
+    def items(self, headers_, json_post_data, args, stac_item=False):
         """
         Provide collection items
 
@@ -420,6 +448,19 @@ class API:
 
         cql_query = None
 
+        if stac_item and json_post_data is not None:
+            LOGGER.debug(f'JSON POST data: {json_post_data}')
+            LOGGER.debug('Transforming JSON POST data into request args')
+
+            for p in ['limit', 'bbox', 'datetime']:
+                if p in json_post_data:
+                    if p == 'bbox':
+                        args[p] = ','.join(map(str, json_post_data.get(p)))
+                    else:
+                        args[p] = json_post_data.get(p)
+
+            LOGGER.debug(f'Transformed args: {args}')
+
         if 'filter' in args:
             LOGGER.debug(f'CQL query specified {args["filter"]}')
             cql_query = args['filter']
@@ -438,6 +479,15 @@ class API:
                     query_args.append(f'{k} LIKE "%{v}%"')
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
+                elif k == 'datetime':
+                    if '/' not in v:
+                        query_args.append(f'date = "{v}"')
+                    else:
+                        begin, end = v.split('/')
+                        if begin != '..':
+                            query_args.append(f'time_begin >= "{begin}"')
+                        if end != '..':
+                            query_args.append(f'time_end <= "{end}"')
                 elif k == 'q':
                     query_args.append(f'anytext LIKE "%{v}%"')
                 else:
@@ -454,7 +504,6 @@ class API:
             cql_query = ' AND '.join(query_args)
 
         LOGGER.debug(f'CQL query: {cql_query}')
-        print("CQL", cql_query)
 
         if cql_query is not None:
             LOGGER.debug('Parsing CQL into AST')
@@ -462,7 +511,7 @@ class API:
             LOGGER.debug(f'Abstract syntax tree: {ast}')
 
             LOGGER.debug('Transforming AST into filters')
-            filters = to_filter(ast, self.query_mappings)
+            filters = to_filter(ast, self.repository.dbtype, self.query_mappings)
             LOGGER.debug(f'Filter: {filters}')
 
             query = self.repository.session.query(self.repository.dataset).filter(filters)
@@ -490,7 +539,7 @@ class API:
         response['numberReturned'] = returned
 
         for record in records:
-            response['features'].append(record2json(record))
+            response['features'].append(record2json(record, stac_item))
 
         LOGGER.debug('Creating links')
 
@@ -498,10 +547,15 @@ class API:
 
         link_args.pop('f', None)
 
-        if link_args:
-            url_base = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
+        if stac_item:
+            fragment = 'search'
         else:
-            url_base = f"{self.config['server']['url']}/collections/metadata:main/items"
+            fragment = 'collections/metadata:main/items'
+
+        if link_args:
+            url_base = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
+        else:
+            url_base = f"{self.config['server']['url']}/{fragment}"
 
         is_html = headers_['Content-Type'] == 'text/html'
 
@@ -530,7 +584,7 @@ class API:
 
             prev = max(0, startindex - limit)
 
-            url_ = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
+            url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
 
             response['links'].append(
                 {
@@ -546,7 +600,7 @@ class API:
 
             next_ = startindex + returned
 
-            url_ = f"{self.config['server']['url']}/collections/metadata:main/items?{urlencode(link_args)}"
+            url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
 
             response['links'].append({
                 'rel': 'next',
@@ -559,9 +613,14 @@ class API:
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
 
-        return self.get_response(200, headers_, 'items.html', response)
+        if stac_item:
+            template = 'stac_items.html'
+        else:
+            template = 'items.html'
 
-    def item(self, headers_, args, item):
+        return self.get_response(200, headers_, template, response)
+
+    def item(self, headers_, args, item, stac_item=False):
         """
         Provide collection item
 
@@ -584,7 +643,7 @@ class API:
         if headers_['Content-Type'] == 'application/xml':
             return headers_, 200, record.xml
 
-        response = record2json(record)
+        response = record2json(record, stac_item=stac_item)
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
@@ -611,7 +670,7 @@ class API:
         return self.get_response(status, headers, 'exception.html', exception)
 
 
-def record2json(record):
+def record2json(record, stac_item=False):
     """
     OGC API - Records record generator from core pycsw record model
 
@@ -624,8 +683,18 @@ def record2json(record):
         'id': record.identifier,
         'type': 'Feature',
         'geometry': None,
-        'properties': {}
+        'properties': {
+            'datetime': record.date,
+            'start_datetime': record.time_begin,
+            'end_datetime': record.time_end
+        },
+        'links': [],
+        'assets': {}
     }
+
+    if stac_item:
+        record_dict['stac_version'] = '1.0.0'
+        record_dict['collection'] = 'metadata:main'
 
     record_dict['properties']['externalId'] = record.identifier
 
@@ -656,18 +725,22 @@ def record2json(record):
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
 
     if record.links:
-        record_dict['associations'] = []
+        if not stac_item:
+            rdl = record_dict['properties']['associations'] = []
+        else:
+            rdl = record_dict['links']
+
         for link in jsonify_links(record.links):
-            association = {
+            link = {
                 'href': link['url'],
                 'name': link['name'],
                 'description': link['description'],
                 'type': link['protocol']
             }
             if 'type' in link:
-                association['rel'] = link['type']
+                link['rel'] = link['type']
 
-            record_dict['associations'].append(association)
+            rdl.append(link)
 
     if record.wkt_geometry:
         minx, miny, maxx, maxy = wkt2geom(record.wkt_geometry)

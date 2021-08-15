@@ -50,6 +50,7 @@ def gen_oapi(config, oapi_filepath):
     with open(oapi_filepath, encoding='utf8') as fh:
         oapi = yaml_load(fh)
 
+    LOGGER.debug('Adding tags')
     oapi['tags'] = [{
         'name': 'Capabilities',
         'description': 'essential characteristics of this API'
@@ -58,6 +59,7 @@ def gen_oapi(config, oapi_filepath):
         'description': 'access to data (records)'
     }]
 
+    LOGGER.debug('Adding parameter components')
     oapi['components']['parameters']['f'] = {
         'name': 'f',
         'in': 'query',
@@ -85,6 +87,7 @@ def gen_oapi(config, oapi_filepath):
         'explode': False
     }
 
+    LOGGER.debug('Adding server info')
     oapi['info'] = {
         'contact': {
             'email': config.get('metadata:main', 'contact_email'),
@@ -101,6 +104,7 @@ def gen_oapi(config, oapi_filepath):
         'description': config.get('metadata:main', 'identification_abstract')
     }]
 
+    LOGGER.debug('Adding paths')
     oapi['paths'] = {}
 
     path = {
@@ -197,8 +201,8 @@ def gen_oapi(config, oapi_filepath):
     path = {
         'get': {
             'tags': ['Data'],
-            'summary': 'Records items page',
-            'description': 'Records items page',
+            'summary': 'Records search items page',
+            'description': 'Records search items page',
             'operationId': 'getRecords',
             'parameters': [
                 {'$ref': '#/components/parameters/bbox'},
@@ -230,6 +234,10 @@ def gen_oapi(config, oapi_filepath):
 
     oapi['paths']['/collections/metadata:main/items'] = path
 
+    path2 = deepcopy(path)
+    path2['get']['operationId'] = 'searchRecords'
+    oapi['paths']['/search'] = path2
+
     f = deepcopy(oapi['components']['parameters']['f'])
     f['schema']['enum'].append('xml')
 
@@ -258,4 +266,5 @@ def gen_oapi(config, oapi_filepath):
     }
 
     oapi['paths']['/collections/metadata:main/items/{recordId}'] = path
+
     return oapi
