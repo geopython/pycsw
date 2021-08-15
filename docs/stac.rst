@@ -30,14 +30,6 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   http://localhost:8000/?f=json
   # landing page as HTML
   http://localhost:8000/?f=html
-  # conformance classes
-  http://localhost:8000/conformance
-  # all collections
-  http://localhost:8000/collections
-  # default collection
-  http://localhost:8000/collections/metadata:main
-  # default collection queryables
-  http://localhost:8000/collections/metadata:main/queryables
 
   # collection queries
   # query parameters can be combined (exclusive/AND)
