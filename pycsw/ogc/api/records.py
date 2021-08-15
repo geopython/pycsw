@@ -132,7 +132,10 @@ class API:
             'description': self.repository.dataset.abstract,
             'keywords': self.repository.dataset.keywords,
             'anytext': self.repository.dataset.anytext,
-            'bbox': self.repository.dataset.wkt_geometry
+            'bbox': self.repository.dataset.wkt_geometry,
+            'date': self.repository.dataset.date,
+            'time_begin': self.repository.dataset.time_begin,
+            'time_end': self.repository.dataset.time_end
         }
         if self.repository.dbtype == 'postgresql+postgis+native':
             self.query_mappings['bbox'] = self.repository.dataset.wkb_geometry
@@ -476,6 +479,15 @@ class API:
                     query_args.append(f'{k} LIKE "%{v}%"')
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
+                elif k == 'datetime':
+                    if '/' not in k:
+                        query_args.append(f'date = "{v}"')
+                    else:
+                        begin, end = v.split('/')
+                        if begin != '..':
+                            query_args.append(f'time_begin >= "{v}"')
+                        if end != '..':
+                            query_args.append(f'time_end <= "{v}"')
                 elif k == 'q':
                     query_args.append(f'anytext LIKE "%{v}%"')
                 else:
@@ -492,7 +504,6 @@ class API:
             cql_query = ' AND '.join(query_args)
 
         LOGGER.debug(f'CQL query: {cql_query}')
-        print("CQL", cql_query)
 
         if cql_query is not None:
             LOGGER.debug('Parsing CQL into AST')

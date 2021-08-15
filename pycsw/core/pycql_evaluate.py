@@ -29,10 +29,11 @@ def _bbox(dbtype, geometry_column, minx, miny, maxx, maxy, crs=4326):
 
 
 class FilterEvaluator:
-    def __init__(self, field_mapping=None):
+    def __init__(self, field_mapping=None, dbtype='sqlite'):
         self.field_mapping = field_mapping
+        self._pycsw_dbtype = dbtype
 
-    def to_filter(self, node, dbtype='sqlite'):
+    def to_filter(self, node):
         to_filter = self.to_filter
         if isinstance(node, NotConditionNode):
             return filters.negate(to_filter(node.sub_node))
@@ -79,7 +80,7 @@ class FilterEvaluator:
             )
         elif isinstance(node, BBoxPredicateNode):
             return _bbox(
-                dbtype,
+                self._pycsw_dbtype,
                 self.field_mapping['bbox'].key,
                 to_filter(node.minx),
                 to_filter(node.miny),
@@ -112,4 +113,4 @@ def to_filter(ast, dbtype, field_mapping=None):
         :returns: a Django query object
         :rtype: :class:`django.db.models.Q`
     """
-    return FilterEvaluator(field_mapping).to_filter(ast, dbtype)
+    return FilterEvaluator(field_mapping, dbtype).to_filter(ast)
