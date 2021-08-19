@@ -211,7 +211,11 @@ class Repository(object):
             'VARCHAR': 'string'
         }
 
-        properties = {}
+        properties = {
+            'geometry' : {
+                '$ref' : 'https://geojson.org/schema/Polygon.json'
+            }
+        }
 
         for i in self.dataset.__table__.columns:
             if i.name in ['anytext', 'metadata', 'metadata_type', 'xml']:
