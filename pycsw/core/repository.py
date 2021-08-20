@@ -160,7 +160,7 @@ class Repository(object):
                 temp_dbtype = 'postgresql+postgis+native'
                 LOGGER.debug('PostgreSQL+PostGIS+Native detected')
             except Exception as err:
-                LOGGER.exception('PostgreSQL+PostGIS+Native not picked up: %s')
+                LOGGER.exception('PostgreSQL+PostGIS+Native not picked up: %s', table_name)
 
             # check if a native PostgreSQL FTS GIN index exists
             result = self.session.execute("select relname from pg_class where relname='fts_gin_idx'").scalar()
