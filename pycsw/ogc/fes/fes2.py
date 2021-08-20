@@ -142,7 +142,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                 LOGGER.debug('Testing existence of fes20:ValueReference')
                 pname = queryables[elem.find(util.nspath_eval('fes20:Function/fes20:ValueReference', nsmap)).text]['dbcol']
             except Exception as err:
-                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('fes20:Function/fes20:ValueReference', nsmap)).text, str(err)))
+                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('fes20:Function/fes20:ValueReference', nsmap)).text, str(err))) from err
 
         else:
             try:
@@ -152,7 +152,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             except Exception as err:
                 raise RuntimeError('Invalid PropertyName: %s.  %s' %
                                    (elem.find(util.nspath_eval('fes20:ValueReference',
-                                   nsmap)).text, str(err)))
+                                   nsmap)).text, str(err))) from err
 
         if (elem.tag != util.nspath_eval('fes20:PropertyIsBetween', nsmap)):
             if elem.tag in [util.nspath_eval('fes20:%s' % n, nsmap) for n in
