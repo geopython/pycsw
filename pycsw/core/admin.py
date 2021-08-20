@@ -353,7 +353,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
         try:
             exml = etree.parse(recfile, context.parser)
         except etree.XMLSyntaxError as err:
-            LOGGER.error('XML document "%s" is not well-formed', recfile)
+            LOGGER.error('XML document "%s" is not well-formed', recfile, exc_info=True)
             continue
         except Exception as err:
             LOGGER.exception('XML document "%s" is not well-formed', recfile)
@@ -384,9 +384,9 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
                     if isinstance(err, DBAPIError) and err.args:
                         # Pull a decent database error message and not the full SQL that was run
                         # since INSERT SQL statements are rather large.
-                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err.args[0])
+                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err.args[0], exc_info=True)
                     else:
-                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err)
+                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err, exc_info=True)
 
     return tuple(loaded_files)
 
