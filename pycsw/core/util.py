@@ -126,7 +126,7 @@ def get_version_integer(version):
         else:
             result = -1
     except AttributeError as err:
-        raise RuntimeError('%s' % str(err))
+        raise RuntimeError('%s' % str(err)) from err
     return result
 
 

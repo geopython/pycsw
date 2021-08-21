@@ -353,7 +353,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
         try:
             exml = etree.parse(recfile, context.parser)
         except etree.XMLSyntaxError as err:
-            LOGGER.error('XML document "%s" is not well-formed', recfile)
+            LOGGER.error('XML document "%s" is not well-formed', recfile, exc_info=True)
             continue
         except Exception as err:
             LOGGER.exception('XML document "%s" is not well-formed', recfile)
@@ -384,9 +384,9 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
                     if isinstance(err, DBAPIError) and err.args:
                         # Pull a decent database error message and not the full SQL that was run
                         # since INSERT SQL statements are rather large.
-                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err.args[0])
+                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err.args[0], exc_info=True)
                     else:
-                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err)
+                        LOGGER.error('ERROR: %s not inserted: %s', recfile, err, exc_info=True)
 
     return tuple(loaded_files)
 
@@ -412,7 +412,7 @@ def export_records(context, database, table, xml_dirpath):
             os.makedirs(dirpath)
         except OSError as err:
             LOGGER.exception('Could not create directory')
-            raise RuntimeError('Could not create %s %s' % (dirpath, err))
+            raise RuntimeError('Could not create %s %s' % (dirpath, err)) from err
 
     for record in records.all():
         identifier = \
@@ -571,7 +571,7 @@ def post_xml(url, xml, timeout=30):
             return http_post(url=url, request=f.read(), timeout=timeout)
     except Exception as err:
         LOGGER.exception('HTTP XML POST error')
-        raise RuntimeError(err)
+        raise RuntimeError(err) from err
 
 
 def get_sysprof():
@@ -636,7 +636,7 @@ def validate_xml(xml, xsd):
         return 'Valid'
     except Exception as err:
         LOGGER.exception('Invalid XML')
-        raise RuntimeError('ERROR: %s' % str(err))
+        raise RuntimeError('ERROR: %s' % str(err)) from err
 
 
 def delete_records(context, database, table):
@@ -699,7 +699,7 @@ def cli_setup_db(ctx, config, verbosity):
         )
     except Exception as err:
         msg = f'ERROR: Database tables already exist: {err}'
-        raise click.ClickException(msg)
+        raise click.ClickException(msg) from err
 
 
 @click.command('load-records')
