@@ -65,10 +65,7 @@ def get_response(result: tuple):
 
     headers, status, content = result
 
-    print("CONTENT", content)
-    print("CONTENT", len(content))
     response = make_response(content, status)
-    print(response)
 
     if headers:
         response.headers = headers

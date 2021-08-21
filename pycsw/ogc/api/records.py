@@ -476,7 +476,7 @@ class API:
 
             if k not in reserved_query_params:
                 if k == 'anytext':
-                    query_args.append(f'{k} LIKE "%{v}%"')
+                    query_args.append(build_anytext(k, v))
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
                 elif k == 'datetime':
@@ -489,7 +489,7 @@ class API:
                         if end != '..':
                             query_args.append(f'time_end <= "{end}"')
                 elif k == 'q':
-                    query_args.append(f'anytext LIKE "%{v}%"')
+                    query_args.append(build_anytext('anytext', v))
                 else:
                     query_args.append(f'{k} = "{v}"')
 
@@ -764,3 +764,24 @@ def record2json(record, stac_item=False):
         }
 
     return record_dict
+
+def build_anytext(name, value):
+    """
+    deconstructs free-text search into CQL predicate
+
+    :param name: property name
+    :param name: property value
+
+    :returns: string of CQL predicate
+    """
+
+    predicates = []
+    tokens = value.split()
+
+    if len(tokens) == 1:  # single term
+        return f'{name} LIKE "%{value}%"'
+
+    for token in tokens:
+        predicates.append(f'{name} LIKE "%{token}%"')
+
+    return ' AND '.join(predicates)
