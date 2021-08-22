@@ -767,12 +767,12 @@ def record2json(record, stac_item=False):
 
 def build_anytext(name, value):
     """
-    deconstructs free-text search into CQL predicate
+    deconstructs free-text search into CQL predicate(s)
 
     :param name: property name
     :param name: property value
 
-    :returns: string of CQL predicate
+    :returns: string of CQL predicate(s)
     """
 
     predicates = []
