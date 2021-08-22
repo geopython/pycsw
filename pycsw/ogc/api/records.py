@@ -784,4 +784,4 @@ def build_anytext(name, value):
     for token in tokens:
         predicates.append(f'{name} LIKE "%{token}%"')
 
-    return ' AND '.join(predicates)
+    return f"({' AND '.join(predicates)})"

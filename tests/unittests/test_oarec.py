@@ -104,6 +104,12 @@ def test_items(api):
     assert content['numberReturned'] == 5
     assert len(content['features']) == content['numberReturned']
 
+    params = {'q': 'Lorem dolor'}
+    content = json.loads(api.items({}, params)[2])
+    assert content['numberMatched'] == 1
+    assert content['numberReturned'] == 1
+    assert len(content['features']) == content['numberReturned']
+
     params = {'bbox': '-50,0,50,80'}
     content = json.loads(api.items({}, params)[2])
     assert content['numberMatched'] == 3
