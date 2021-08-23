@@ -39,6 +39,8 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   http://localhost:8000/collections/metadata:main/items
   # collection query, full text search
   http://localhost:8000/collections/metadata:main/items?q=lorem
+  # collection query, full text search (multiple terms result in an exclusive (AND) search
+  http://localhost:8000/collections/metadata:main/items?q=lorem dolor
   # collection query, spatial query
   http://localhost:8000/collections/metadata:main/items?bbox=-142,42,-52,84
   # collection query, temporal query

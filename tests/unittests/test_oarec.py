@@ -57,7 +57,7 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 8
+    assert len(content['conformsTo']) == 9
 
 
 def test_collections(api):
@@ -89,7 +89,7 @@ def test_queryables(api):
 
 
 def test_items(api):
-    content = json.loads(api.items({}, {})[2])
+    content = json.loads(api.items({}, None, {})[2])
 
     assert content['type'] == 'FeatureCollection'
     assert len(content['links']) == 4
@@ -99,43 +99,49 @@ def test_items(api):
     assert len(content['features']) == content['numberReturned']
 
     params = {'q': 'Lorem'}
-    content = json.loads(api.items({}, params)[2])
+    content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 5
     assert content['numberReturned'] == 5
     assert len(content['features']) == content['numberReturned']
 
+    params = {'q': 'Lorem dolor'}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 1
+    assert content['numberReturned'] == 1
+    assert len(content['features']) == content['numberReturned']
+
     params = {'bbox': '-50,0,50,80'}
-    content = json.loads(api.items({}, params)[2])
+    content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 3
     assert content['numberReturned'] == 3
     assert len(content['features']) == content['numberReturned']
 
     params = {'bbox': '-50,0,50,80', 'q': 'Lorem'}
-    content = json.loads(api.items({}, params)[2])
+    content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 1
     assert content['numberReturned'] == 1
     assert len(content['features']) == content['numberReturned']
 
     params = {'filter': 'title LIKE "%%Lorem%%"'}
-    content = json.loads(api.items({}, params)[2])
+    content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 2
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
     params = {'filter': 'title LIKE "%%Lorem%%"', 'q': 'iPsUm'}
-    content = json.loads(api.items({}, params)[2])
+    content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 2
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
     params = {'limit': 4}
-    content = json.loads(api.items({}, params)[2])
+    content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 12
     assert content['numberReturned'] == 4
     assert len(content['features']) == content['numberReturned']
 
     params = {'limit': 4, 'startindex': 10}
-    content = json.loads(api.items({}, params)[2])
+    content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 12
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
