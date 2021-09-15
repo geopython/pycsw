@@ -23,6 +23,11 @@
     </thead>
     <tbody>
       {% for qname, qinfo in data['properties'].items() %}
+      {% if qname == 'geometry' %}
+      <tr>
+        <td colspan="2"><a href="{{ qinfo['$ref'] }}">{{ qname }}</a></td>
+      </tr>
+      {% else %}
       <tr>
         <td>{{ qname }}</td>
         <td>
@@ -36,6 +41,7 @@
           {% endif %}
         </td>
       </tr>
+      {% endif %}
       {% endfor %}
     </tbody>
   </table>
