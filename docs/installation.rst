@@ -24,7 +24,7 @@ OGC API - Records
 OGC API - Records support additionally requires the following:
 
 - `Flask`_ for pycsw's default OARec endpoint
-- `pycql`_ for CQL parsing
+- `pygeofilter`_ for CQL parsing
 - `PyYAML`_ for OpenAPI document handling
 
 .. note::
@@ -251,7 +251,7 @@ which will publish pycsw to ``http://localhost:8000/``
 .. _`xmltodict`: https://github.com/martinblech/xmltodict
 .. _`geolinks`: https://github.com/geopython/geolinks
 .. _`Flask`: https://flask.palletsprojects.com
-.. _`pycql`: https://github.com/geopython/pycql
+.. _`pygeofilter`: https://github.com/geopython/pygeofilter
 .. _`PyYAML`: https://pyyaml.org
 .. _`pip`: https://pip.pypa.io/en/stable
 .. _`Web Server Gateway Interface`: https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface

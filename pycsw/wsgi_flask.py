@@ -140,7 +140,7 @@ def queryables():
 
 
 @BLUEPRINT.route('/search', methods=['GET', 'POST'])
-@BLUEPRINT.route('/collections/metadata:main/items')
+@BLUEPRINT.route('/collections/metadata:main/items', methods=['GET', 'POST'])
 def items():
     """
     OGC API collection items endpoint

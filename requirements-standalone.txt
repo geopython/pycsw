@@ -1,4 +1,4 @@
 SQLAlchemy
 Flask
-pycql
+pygeofilter
 PyYAML
