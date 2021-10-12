@@ -38,6 +38,7 @@ Standards Support
   :header: Standard,Version(s)
 
   `OGC API - Records - Part 1: Core`_,1.0
+  `OGC API - Features - Part 3: Filtering and the Common Query Language (CQL)`_,draft
   `OGC CSW`_,2.0.2/3.0.0
   `OGC Filter`_,1.1.0/2.0.0
   `OGC OWS Common`_,1.0.0/2.0.0
@@ -59,6 +60,11 @@ OGC API - Records support
 -------------------------
 
 - Part 1: Core
+
+OGC API - Features support
+--------------------------
+
+- Part 3: Filtering and the Common Query Language (CQL)
 
 Supported Output Formats
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -190,6 +196,7 @@ Functions
 - upper
 
 .. _`OGC API - Records - Part 1: Core`: https://ogcapi.ogc.org/records
+.. _`OGC API - Features - Part 3: Filtering and the Common Query Language (CQL)`: http://docs.ogc.org/DRAFTS/19-079.html
 .. _`OGC CSW`: https://www.ogc.org/standards/cat
 .. _`ISO Metadata Application Profile 1.0.0`: https://portal.ogc.org/files/?artifact_id=21460
 .. _`OGC Filter`: https://www.ogc.org/standards/filter

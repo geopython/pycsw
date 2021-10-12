@@ -34,13 +34,13 @@ import logging
 import os
 from urllib.parse import urlencode
 
-from pycql.integrations.sqlalchemy import parse
-
-from pycsw.core.pycql_evaluate import to_filter
+from pygeofilter.parsers.ecql import parse as parse_ecql
+from pygeofilter.parsers.cql_json import parse as parse_cql_json
 
 from pycsw import __version__
 from pycsw.core import log
 from pycsw.core.config import StaticContext
+from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.core.util import bind_url, jsonify_links, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
@@ -60,6 +60,7 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
     'http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core',
+    'http://www.opengis.net/spec/ogcapi-features-3/1.0/req/filter',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
@@ -139,7 +140,6 @@ class API:
         }
         if self.repository.dbtype == 'postgresql+postgis+native':
             self.query_mappings['bbox'] = self.repository.dataset.wkb_geometry
-
 
     def get_content_type(self, headers, args):
         """
@@ -447,6 +447,7 @@ class API:
         }
 
         cql_query = None
+        query_parser = None
 
         if stac_item and json_post_data is not None:
             LOGGER.debug(f'JSON POST data: {json_post_data}')
@@ -506,13 +507,31 @@ class API:
         LOGGER.debug(f'CQL query: {cql_query}')
 
         if cql_query is not None:
+            LOGGER.debug('Detected CQL text')
+            query_parser = parse_ecql
+        elif json_post_data is not None:
+            cql_query = json_post_data
+            LOGGER.debug('Detected CQL JSON; ignoring all other qeury predicates')
+            query_parser = parse_cql_json
+
+        if query_parser is not None:
             LOGGER.debug('Parsing CQL into AST')
-            ast = parse(cql_query)
-            LOGGER.debug(f'Abstract syntax tree: {ast}')
+            try:
+                ast = query_parser(cql_query)
+                LOGGER.debug(f'Abstract syntax tree: {ast}')
+            except Exception as err:
+                msg = f'CQL parsing error: {str(err)}'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
             LOGGER.debug('Transforming AST into filters')
-            filters = to_filter(ast, self.repository.dbtype, self.query_mappings)
-            LOGGER.debug(f'Filter: {filters}')
+            try:
+                filters = to_filter(ast, self.repository.dbtype, self.query_mappings)
+                LOGGER.debug(f'Filter: {filters}')
+            except Exception as err:
+                msg = f'CQL evaluator error: {str(err)}'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
             query = self.repository.session.query(self.repository.dataset).filter(filters)
         else:
@@ -765,6 +784,7 @@ def record2json(record, stac_item=False):
 
     return record_dict
 
+
 def build_anytext(name, value):
     """
     deconstructs free-text search into CQL predicate(s)
@@ -779,9 +799,9 @@ def build_anytext(name, value):
     tokens = value.split()
 
     if len(tokens) == 1:  # single term
-        return f'{name} LIKE "%{value}%"'
+        return f"{name} LIKE '%{value}%'"
 
     for token in tokens:
-        predicates.append(f'{name} LIKE "%{token}%"')
+        predicates.append(f"{name} LIKE '%{token}%'")
 
     return f"({' AND '.join(predicates)})"

@@ -57,7 +57,7 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 9
+    assert len(content['conformsTo']) == 10
 
 
 def test_collections(api):
@@ -122,13 +122,13 @@ def test_items(api):
     assert content['numberReturned'] == 1
     assert len(content['features']) == content['numberReturned']
 
-    params = {'filter': 'title LIKE "%%Lorem%%"'}
+    params = {'filter': "title LIKE '%%Lorem%%'"}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 2
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
-    params = {'filter': 'title LIKE "%%Lorem%%"', 'q': 'iPsUm'}
+    params = {'filter': "title LIKE '%%Lorem%%'", 'q': 'iPsUm'}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 2
     assert content['numberReturned'] == 2
@@ -143,6 +143,24 @@ def test_items(api):
     params = {'limit': 4, 'startindex': 10}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 12
+    assert content['numberReturned'] == 2
+    assert len(content['features']) == content['numberReturned']
+
+    cql_json = {'eq': [{'property': 'title'}, 'Lorem ipsum']}
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 1
+    assert content['numberReturned'] == 1
+    assert len(content['features']) == content['numberReturned']
+
+    cql_json = {'eq': [{'property': 'title'}, 'Lorem ipsum']}
+    content = json.loads(api.items({}, cql_json, {'limit': 0})[2])
+    assert content['numberMatched'] == 1
+    assert content['numberReturned'] == 0
+    assert len(content['features']) == content['numberReturned']
+
+    cql_json = {'like': {'like': [{'property': 'title'}, 'lorem%'], 'nocase': False}}  # noqa
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 2
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
