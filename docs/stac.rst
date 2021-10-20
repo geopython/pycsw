@@ -35,25 +35,25 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   # query parameters can be combined (exclusive/AND)
 
   # collection query, all records
-  http://localhost:8000/search/items
+  http://localhost:8000/search
   # collection query, full text search
-  http://localhost:8000/search/items?q=lorem
+  http://localhost:8000/search?q=lorem
   # collection query, spatial query
-  http://localhost:8000/search/items?bbox=-142,42,-52,84
+  http://localhost:8000/search?bbox=-142,42,-52,84
   # collection query, temporal query
-  http://localhost:8000/search/items?datetime=2001-10-30/2007-10-30
+  http://localhost:8000/search?datetime=2001-10-30/2007-10-30
   # collection query, temporal query, before
-  http://localhost:8000/search/items?datetime=../2007-10-30
+  http://localhost:8000/search?datetime=../2007-10-30
   # collection query, temporal query, after
-  http://localhost:8000/search/items?datetime=2007-10-30/..
+  http://localhost:8000/search?datetime=2007-10-30/..
   # collection query, property query
-  http://localhost:8000/search/items?title=Lorem%20ipsum
+  http://localhost:8000/search?title=Lorem%20ipsum
   # collection query, CQL filter
-  http://localhost:8000/search/items?filter=title like "%lorem%"
+  http://localhost:8000/search?filter=title like "%lorem%"
   # collection query, limiting results
-  http://localhost:8000/search/items?limit=1
+  http://localhost:8000/search?limit=1
   # collection query, paging
-  http://localhost:8000/search/items?limit=10&startindex=10
+  http://localhost:8000/search?limit=10&startindex=10
 
   # collection item as GeoJSON
   http://localhost:8000/collections/metadata:main/items/{itemId}
