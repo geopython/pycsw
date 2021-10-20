@@ -134,6 +134,11 @@ def test_items(api):
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
+    params = {'limit': 0}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['code'] == 'InvalidParameterValue'
+    assert content['description'] == 'Limit must be a positive integer'
+
     params = {'limit': 4}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 12
@@ -153,9 +158,9 @@ def test_items(api):
     assert len(content['features']) == content['numberReturned']
 
     cql_json = {'eq': [{'property': 'title'}, 'Lorem ipsum']}
-    content = json.loads(api.items({}, cql_json, {'limit': 0})[2])
+    content = json.loads(api.items({}, cql_json, {'limit': 1})[2])
     assert content['numberMatched'] == 1
-    assert content['numberReturned'] == 0
+    assert content['numberReturned'] == 1
     assert len(content['features']) == content['numberReturned']
 
     cql_json = {'like': {'like': [{'property': 'title'}, 'lorem%'], 'nocase': False}}  # noqa
