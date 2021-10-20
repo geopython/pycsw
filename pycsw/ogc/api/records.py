@@ -538,8 +538,12 @@ class API:
             query = self.repository.session.query(self.repository.dataset)
 
         if 'limit' in args:
-            LOGGER.debug('limit specified')
             limit = int(args['limit'])
+            LOGGER.debug('limit specified')
+            if limit < 1:
+                msg = 'Limit must be a positive integer'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
             if limit > self.maxrecords:
                 limit = self.maxrecords
         else:
