@@ -54,6 +54,10 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   http://localhost:8000/search?limit=1
   # collection query, paging
   http://localhost:8000/search?limit=10&startindex=10
+  # collection query as JSON (HTTP POST), as curl request
+  curl http://localhost:8000/search --request POST -H "Content-Type: application/json" --data '{"bbox": [-180, -90, 180, 90], "datetime": "2006-03-26"}'
+  # collection query as CQL JSON (HTTP POST), limiting results, as curl request
+  curl http://localhost:8000/search --request POST -H "Content-Type: application/json" --data '{"limit": 1, "bbox": [-180, -90, 180, 90], "datetime": "2006-03-26"}'
 
   # collection item as GeoJSON
   http://localhost:8000/collections/metadata:main/items/{itemId}
