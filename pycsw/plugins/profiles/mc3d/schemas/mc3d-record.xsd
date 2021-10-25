@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema
-   targetNamespace="http://schema.mapcolonies.com"
-   xmlns:mc="http://schema.mapcolonies.com"
+   targetNamespace="http://schema.mapcolonies.com/3d"
+   xmlns:mc="http://schema.mapcolonies.com/3d"
    xmlns:csw30="http://www.opengis.net/cat/csw/3.0"
    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -12,40 +12,10 @@
    version="1.0.0"
    id="mc3d">
 
-   <xsd:import namespace="http://www.opengis.net/cat/csw/3.0" schemaLocation="../../../../core/schemas/ogc/cat/csw/3.0/cswAll.xsd"></xsd:import>
+   <xsd:import namespace="http://www.opengis.net/cat/csw/3.0" schemaLocation="../../../../core/schemas/ogc/cat/csw/3.0/cswAll.xsd"/>
    <xsd:import namespace="http://www.opengis.net/ows/2.0" schemaLocation="../../../../core/schemas/ogc/ows/2.0/owsAll.xsd"/>
-
-
-   <xsd:element name="projectName" />
-   <xsd:element name="id"/>
-   <xsd:element name="name"/>
-   <xsd:element name="version"/>
-   <xsd:element name="centroid" type="ows:PositionType"/>
-   <xsd:element name="footprint" />  <!-- TODO: understend whta to do with this -->
-   <xsd:element name="boundingBox" type="ows:BoundingBoxType"/>
-   <xsd:element name="classification" />
-   <xsd:element name="imagingTime" type="csw30:TemporalExtentType" />
-   <xsd:element name="sensorType" />
-   <xsd:element name="region" />
-   <xsd:element name="nominalResolution" />
-   <xsd:element name="accuracyLE90" />
-   <xsd:element name="horizontalAccuracyCE90" />
-   <xsd:element name="relativeAccuracyLE90" />
-   <xsd:element name="creationDate" />
-   <xsd:element name="productionSystem" />
-   <xsd:element name="producerName" />
-   <xsd:element name="SRS" />
-   <xsd:element name="validationDate" />
-   <xsd:element name="estimatedPrecision" />
-   <xsd:element name="measuredPrecision" />
-   <xsd:element name="description" />
-   <xsd:element name="URI" />
-   <xsd:element name="type" />
-
-
-   <xsd:element name="MC3DRecord" type="mc:MC3DRecordType" />
-
    
+   <xsd:element name="MC3DRecord" type="mc:MC3DRecordType" />   
    <xsd:complexType name="MC3DRecordType" final="#all">
       <xsd:annotation>
          <xsd:documentation xml:lang="en">
@@ -57,34 +27,74 @@
       <xsd:complexContent>
          <xsd:extension base="csw30:DCMIRecordType">
             <xsd:sequence>
-               <xsd:element ref="mc:projectName" />
-               <xsd:element ref="mc:id" />
-               <xsd:element ref="mc:name" />
-               <xsd:element ref="mc:version" />
-               <xsd:element ref="mc:centroid" />
-               <xsd:element ref="mc:footprint" />
-               <xsd:element ref="mc:boundingBox"/>
-               <xsd:element ref="mc:classification" />
-               <xsd:element ref="mc:imagingTime"/>
-               <xsd:element ref="mc:sensorType" />
-               <xsd:element ref="mc:region" />
-               <xsd:element ref="mc:nominalResolution" />
-               <xsd:element ref="mc:accuracyLE90" />
-               <xsd:element ref="mc:horizontalAccuracyCE90" />
-               <xsd:element ref="mc:relativeAccuracyLE90" />
-               <xsd:element ref="mc:creationDate" />
-               <xsd:element ref="mc:producerName" />
-               <xsd:element ref="mc:SRS" />
-               <xsd:element ref="mc:validationDate" />
-               <xsd:element ref="mc:estimatedPrecision" />
-               <xsd:element ref="mc:measuredPrecision" />
-               <xsd:element ref="mc:description" />
-               <xsd:element ref="mc:URI" />
-               <xsd:element ref="mc:type" />
+               <xsd:element name="id"/>
+               <xsd:element name="product_name"/>
+               <xsd:element name="product_version"/>
+               <xsd:element name="product_type"/>
+               <xsd:element name="description" />  <!-- TODO: understend whta to do with this -->
+               <xsd:element name="creation_date"/>
+               <xsd:element name="source_date_start"/>
+               <xsd:element name="source_date_end"/>
+               <xsd:element name="min_resolution_meter" />
+               <xsd:element name="max_resolution_meter" />
+               <xsd:element name="nominal_resolution" />
+               <xsd:element name="max_accuracy_CE90" />
+               <xsd:element name="absolute_accuracy_LEP90" type="xsd:double"/>
+               <xsd:element name="accuracy_SE90" />
+               <xsd:element name="relative_accuracy_LEP90" />
+               <xsd:element name="visual_accuracy" />
+               <xsd:element name="sensors" />
+               <xsd:element name="footprint" />
+               <xsd:element name="height_range_from" />
+               <xsd:element name="height_range_to" />
+               <xsd:element name="srs_id"/>
+               <xsd:element name="srs_name" />
+               <xsd:element name="srs_origin" />
+               <xsd:element name="region" />
+               <xsd:element name="classification" />
+               <xsd:element name="compartmentalization" />
+               <xsd:element name="production_system" />
+               <xsd:element name="producer_name" />
+               <xsd:element name="production_method" />
+               <xsd:element name="min_flight_alt" />
+               <xsd:element name="max_flight_alt" />
+               <xsd:element name="geographic_area" />
+               <xsd:element name="product_bounding_box" />
+               
+               <xsd:element name="URI" />
+               <xsd:element name="type" />
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
    </xsd:complexType>
-
+   
    
 </xsd:schema>
+   
+   <!--
+      <xsd:element name="projectName" />
+      <xsd:element name="id"/>
+      <xsd:element name="name"/>
+      <xsd:element name="version"/>
+      <xsd:element name="centroid" type="ows:PositionType"/>
+      <xsd:element name="footprint" />   TODO: understend whta to do with this 
+      <xsd:element name="boundingBox" type="ows:BoundingBoxType"/>
+      <xsd:element name="classification" />
+      <xsd:element name="imagingTime" type="csw30:TemporalExtentType" />
+      <xsd:element name="sensorType" />
+      <xsd:element name="region" />
+      <xsd:element name="nominalResolution" />
+      <xsd:element name="accuracyLE90" />
+       <xsd:element name="horizontalAccuracyCE90" />
+      <xsd:element name="relativeAccuracyLE90" />
+      <xsd:element name="creationDate" />
+      <xsd:element name="productionSystem" />
+      <xsd:element name="producerName" />
+      <xsd:element name="SRS" />
+      <xsd:element name="validationDate" />
+      <xsd:element name="estimatedPrecision" />
+      <xsd:element name="measuredPrecision" />
+      <xsd:element name="description" />
+      <xsd:element name="URI" />
+      <xsd:element name="type" />
+   --> -->

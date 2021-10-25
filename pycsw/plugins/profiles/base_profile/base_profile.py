@@ -1,4 +1,5 @@
 import os
+import traceback
 from abc import abstractmethod
 from typing import Dict, List
 from pycsw.plugins.profiles.profile import Profile
@@ -114,6 +115,7 @@ class base_profile(Profile):
     def write_record(self, result, esn, outputschema, queryables):
         ''' Return csw:SearchResults child as lxml.etree.Element '''
 
+        
         specialPycswKeys = [constants.PYCSW_BOUNDING_BOX,constants.PYCSW_KEYWORDS,constants.PYCSW_LINKS]
         
         specialDbcols = [queryables[x] for x in specialPycswKeys]
@@ -133,14 +135,19 @@ class base_profile(Profile):
 
             # Sorted for consistency
             for dbcol in sorted(vars(result).keys()):
+
                 value = util.getqattr(result, dbcol)
+
                 if not dbcol.startswith('_') and value is not None:
                     elementName = dbcol2xpath.get(dbcol, None)
+
                     if elementName is not None:
-                        if dbcol not in specialDbcols:   
+                        if dbcol not in specialDbcols:  
+
                             _build_xpath(record, elementName, self.context.namespaces, value)
 
                         elif dbcol == queryables[constants.PYCSW_KEYWORDS]:
+
                             for keyword in value.split(','):
                                 etree.SubElement(record, util.nspath_eval(elementName, self.context.namespaces)).text = keyword
 
@@ -155,7 +162,6 @@ class base_profile(Profile):
                             bbox = write_boundingbox(value, self.context.namespaces)
                             record.append(bbox)
 
-            return record
         
     
 def _get_dbcol_to_xpath_dict(queryables: QueryablesObject):  
@@ -173,10 +179,12 @@ def _get_dbcol_to_xpath_dict(queryables: QueryablesObject):
     return dbcol2xpath
 
 def _build_xpath(node, path, namespaces, text):
+
     components = path.split("/")
     if util.nspath_eval(components[0],namespaces) == node.tag:
         components.pop(0)
     while components:
+
         # take in account positional  indexes in the form /path/para[3] or /path/para[location()=3]
         if "[" in components[0]:
             component, trail = components[0].split("[",1)
@@ -187,6 +195,7 @@ def _build_xpath(node, path, namespaces, text):
 
         components.pop(0)
         found_index = -1
+
         for child in node.getchildren():
             if child.tag == util.nspath_eval(component,namespaces):
                 found_index += 1
@@ -202,7 +211,7 @@ def _build_xpath(node, path, namespaces, text):
                 node.append(new_node)
 
             node = new_node
-    
-    node.text = text
+
+    node.text = str(text)
     return node
     

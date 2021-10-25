@@ -5,7 +5,9 @@ build
 dist
 docs/_build
 MANIFEST
-
+lib
+include
+bin
 # testing artifacts
 tests/index.html
 tests/results
