@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema
-   targetNamespace="http://schema.mapcolonies.com"
-   xmlns:mc="http://schema.mapcolonies.com"
-   xmlns:csw30="http://www.opengis.net/cat/csw/3.0"
-   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:dct="http://purl.org/dc/terms/"
-   xmlns:ows="http://www.opengis.net/ows/2.0"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   elementFormDefault="qualified"
-   version="1.0.0"
-   id="mcraster">
+<xsd:schema targetNamespace="http://schema.mapcolonies.com" xmlns:mc="http://schema.mapcolonies.com" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified" version="1.0.0" id="mcraster">
 
    <xsd:import namespace="http://www.opengis.net/cat/csw/3.0" schemaLocation="../../../../core/schemas/ogc/cat/csw/3.0/cswAll.xsd"></xsd:import>
-   <xsd:import namespace="http://www.opengis.net/ows/2.0" schemaLocation="../../../../core/schemas/ogc/ows/2.0/owsAll.xsd"/>
+   <xsd:import namespace="http://www.opengis.net/ows/2.0" schemaLocation="../../../../core/schemas/ogc/ows/2.0/owsAll.xsd" />
 
-   <xsd:element name="id"/>
+   <xsd:element name="id" />
    <xsd:element name="footprint" />
-   <xsd:element name="boundingBox" type="ows:BoundingBoxType"/>
-   <xsd:element name="type"/>
+   <xsd:element name="boundingBox" type="ows:BoundingBoxType" />
+   <xsd:element name="type" />
    <xsd:element name="classification" />
    <xsd:element name="product_id" />
    <xsd:element name="product_name" />
@@ -27,15 +16,15 @@
    <xsd:element name="description" />
    <xsd:element name="srs" />
    <xsd:element name="srs_name" />
-   <xsd:element name="geometry"  type="ows:BoundingBoxType" />
+   <xsd:element name="geometry" type="ows:BoundingBoxType" />
    <xsd:element name="creation_date" />
    <xsd:element name="update_date" />
    <xsd:element name="ingestion_date" />
    <xsd:element name="source_start_date" />
    <xsd:element name="source_end_date" />
-   <xsd:element name="resolution" /> 
-   <xsd:element name="horizontal_accuracy_ce_90" /> 
-   <xsd:element name="sensor_type" /> 
+   <xsd:element name="resolution" />
+   <xsd:element name="horizontal_accuracy_ce_90" />
+   <xsd:element name="sensor_type" />
    <xsd:element name="region" />
    <xsd:element name="footprint_geojson" />
    <xsd:element name="rms" />
@@ -43,11 +32,11 @@
    <xsd:element name="layer_polygon_parts" />
    <xsd:element name="included_in_bests" />
    <xsd:element name="discretes" />
-      
+
 
    <xsd:element name="MCRasterRecord" type="mc:MCRasterRecord" />
 
-   
+
    <xsd:complexType name="MCRasterRecord" final="#all">
       <xsd:annotation>
          <xsd:documentation xml:lang="en">
@@ -65,30 +54,32 @@
                <xsd:element ref="mc:type" />
                <xsd:element ref="mc:classification" />
                <xsd:element ref="mc:productId" />
-               <xsd:element ref="mc:productName"/>
+               <xsd:element ref="mc:productName" />
                <xsd:element ref="mc:productVersion" />
-               <xsd:element ref="mc:productType"/>
+               <xsd:element ref="mc:productType" />
                <xsd:element ref="mc:description" />
                <xsd:element ref="mc:SRS" />
                <xsd:element ref="mc:SRSName" />
-               <xsd:element ref="mc:creationDate" />
-               <xsd:element ref="mc:updateDate" />
+               <xsd:element ref="mc:creationDateUTC" />
+               <xsd:element ref="mc:updateDateUTC" />
                <xsd:element ref="mc:ingestionDate" />
-               <xsd:element ref="mc:imagingTime_begin" />
-               <xsd:element ref="mc:imagingTime_end" />
-               <xsd:element ref="mc:resolution" />
-               <xsd:element ref="mc:horizontalAccuracyCE90" />
-               <xsd:element ref="mc:sensorType" />
+               <xsd:element ref="mc:imagingTimeBeginUTC" />
+               <xsd:element ref="mc:imagingTimeEndUTC" />
+               <xsd:element ref="mc:maxResolutionDeg" />
+               <xsd:element ref="mc:maxResolutionMeter" />
+               <xsd:element ref="mc:minHorizontalAccuracyCE90" />
+               <xsd:element ref="mc:sensors" />
                <xsd:element ref="mc:region" />
-               <xsd:element ref="mc:rms" />
+               <xsd:element ref="mc:RMS" />
                <xsd:element ref="mc:scale" />
                <xsd:element ref="mc:layerPolygonParts" />
                <xsd:element ref="mc:includedInBests" />
                <xsd:element ref="mc:discretes" />
+               <xsd:element ref="mc:productBBox" />
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
    </xsd:complexType>
 
-   
+
 </xsd:schema>
