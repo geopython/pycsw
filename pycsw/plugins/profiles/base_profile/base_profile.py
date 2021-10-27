@@ -161,7 +161,7 @@ class base_profile(Profile):
                         elif dbcol == queryables[constants.PYCSW_BOUNDING_BOX]:
                             bbox = write_boundingbox(value, self.context.namespaces)
                             record.append(bbox)
-
+            return record
         
     
 def _get_dbcol_to_xpath_dict(queryables: QueryablesObject):  
