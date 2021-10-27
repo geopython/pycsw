@@ -2,16 +2,17 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
+# Triggers a Docker workflow on completion of the "build" workflow but
+# pushes to GitHub Container Registry 
+#
+# Author: Edward Lewis - 2021
 
-name: Create and publish a Docker image to GitHub Container Registry
+name: GHCR
 
 on:
-  push:
-    branches:
-      - master
-  release:
-    types:
-      - released
+  workflow_run:
+    workflows: ["build ⚙️"]
+    types: [completed]
 
 env:
   REGISTRY: ghcr.io
@@ -22,6 +23,7 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       packages: write
       contents: read
@@ -59,3 +61,10 @@ jobs:
 
       - name: Push to CR
         run: docker push ${{ env.FULLCONTAINERNAME }}
+
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Print Test Fail
+        run: echo Tests Failed        
