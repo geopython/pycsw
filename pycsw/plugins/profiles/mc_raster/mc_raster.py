@@ -31,6 +31,7 @@ class MCRaster(base_profile.base_profile):
                         'mc:description': Queryable(context.md_core_model['mappings']['pycsw:Abstract'], 'mc:description'),
                         'mc:creationDateUTC': Queryable(context.md_core_model['mappings']['pycsw:CreationDate'], 'mc:creationDateUTC'),
                         'mc:ingestionDate': Queryable(context.md_core_model['mappings']['pycsw:IngestionDate'], 'mc:ingestionDate'),
+                        'mc:insertDate': Queryable(context.md_core_model['mappings']['pycsw:InsertDate'], 'mc:insertDate'),
                         'mc:updateDateUTC': Queryable(context.md_core_model['mappings']['pycsw:UpdateDate'], 'mc:updateDateUTC'),
                         'mc:imagingTimeBeginUTC': Queryable(context.md_core_model['mappings']['pycsw:TempExtent_begin'], 'mc:imagingTimeBeginUTC'),
                         'mc:imagingTimeEndUTC': Queryable(context.md_core_model['mappings']['pycsw:TempExtent_end'], 'mc:imagingTimeEndUTC'),
