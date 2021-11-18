@@ -20,6 +20,7 @@
    <xsd:element name="creation_date" />
    <xsd:element name="update_date" />
    <xsd:element name="ingestion_date" />
+   <xsd:element name="insert_date" />
    <xsd:element name="source_start_date" />
    <xsd:element name="source_end_date" />
    <xsd:element name="resolution" />
@@ -63,6 +64,7 @@
                <xsd:element ref="mc:creationDateUTC" />
                <xsd:element ref="mc:updateDateUTC" />
                <xsd:element ref="mc:ingestionDate" />
+               <xsd:element ref="mc:insertDate" />
                <xsd:element ref="mc:imagingTimeBeginUTC" />
                <xsd:element ref="mc:imagingTimeEndUTC" />
                <xsd:element ref="mc:maxResolutionDeg" />
