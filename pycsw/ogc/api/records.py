@@ -35,7 +35,7 @@ import os
 from urllib.parse import urlencode
 
 from pygeofilter.parsers.ecql import parse as parse_ecql
-from pygeofilter.parsers.cql_json import parse as parse_cql_json
+from pygeofilter.parsers.cql2_json import parse as parse_cql2_json
 
 from pycsw import __version__
 from pycsw.core import log
@@ -512,7 +512,7 @@ class API:
         elif json_post_data is not None:
             cql_query = json_post_data
             LOGGER.debug('Detected CQL JSON; ignoring all other qeury predicates')
-            query_parser = parse_cql_json
+            query_parser = parse_cql2_json
 
         if query_parser is not None:
             LOGGER.debug('Parsing CQL into AST')
