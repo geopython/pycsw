@@ -106,7 +106,6 @@ def load_profiles(path, cls, profiles):
     ''' load CSW profiles, return dict by class name '''
 
     def look_for_subclass(modulename):
-        print(modulename)
         module = __import__(modulename)
 
         dmod = module.__dict__
