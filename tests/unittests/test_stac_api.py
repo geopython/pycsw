@@ -32,11 +32,11 @@ def test_landing_page(api):
 
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
-    assert len(content['links']) == 12
+    assert len(content['links']) == 14
 
-    assert content['stac_version'] == '1.0.0'
+    assert content['stac_version'] == '1.0.0-beta.4'
     assert content['type'] == 'Catalog'
-    assert len(content['conformsTo']) == 9
+    assert len(content['conformsTo']) == 11
     assert len(content['keywords']) == 3
 
 
@@ -54,11 +54,10 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 9
+    assert len(content['conformsTo']) == 11
 
-    print(content['conformsTo'])
-    assert 'https://api.stacspec.org/v1.0.0-beta.2/core' in content['conformsTo']  # noqa
-    assert 'https://api.stacspec.org/v1.0.0-beta.2/item-search' in content['conformsTo']  # noqa
+    assert 'https://api.stacspec.org/v1.0.0-beta.4/core' in content['conformsTo']  # noqa
+    assert 'https://api.stacspec.org/v1.0.0-beta.4/item-search' in content['conformsTo']  # noqa
 
 
 def test_items(api):
@@ -87,6 +86,26 @@ def test_items(api):
                          True)[2])
     assert len(content['features']) == 1
 
+    content = json.loads(api.items({}, None, {'sortby': 'title'}, True)[2])
+    assert len(content['features']) == 10
+    assert content['features'][5]['properties']['title'] == 'Lorem ipsum'
+
+    content = json.loads(api.items({}, None, {'sortby': '-title'}, True)[2])
+    assert len(content['features']) == 10
+    assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
+
+    params = {'filter': "title LIKE '%%Lorem%%'"}
+    content = json.loads(api.items({}, None, params, True)[2])
+    assert content['numberMatched'] == 2
+    assert content['numberReturned'] == 2
+    assert len(content['features']) == content['numberReturned']
+
+    params = {'filter': "title LIKE '%%Lorem%%'", 'q': 'iPsUm'}
+    content = json.loads(api.items({}, None, params, True)[2])
+    assert content['numberMatched'] == 2
+    assert content['numberReturned'] == 2
+    assert len(content['features']) == content['numberReturned']
+
     # test POST JSON requests
     content = json.loads(api.items({}, {'bbox': [-180, -90, 180, 90]}, {},
                          True)[2])
@@ -100,6 +119,18 @@ def test_items(api):
     content = json.loads(api.items({}, {'datetime': '2006-03-26'}, {},
                          True)[2])
     assert len(content['features']) == 1
+
+    content = json.loads(api.items({},
+                         {'sortby': [{'field': 'title', 'direction': 'asc'}]},
+                         {}, True)[2])
+    assert len(content['features']) == 10
+    assert content['features'][5]['properties']['title'] == 'Lorem ipsum'
+
+    content = json.loads(api.items({},
+                         {'sortby': [{'field': 'title', 'direction': 'desc'}]},
+                         {}, True)[2])
+    assert len(content['features']) == 10
+    assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
 
 
 def test_item(api):

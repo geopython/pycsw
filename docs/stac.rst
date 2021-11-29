@@ -54,8 +54,16 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   http://localhost:8000/search?limit=1
   # collection query, paging
   http://localhost:8000/search?limit=10&startindex=10
+  # collection query, paging and sorting (default ascending)
+  http://localhost:8000/search?limit=10&startindex=10&sortby=title
+  # collection query, paging and sorting (descending)
+  http://localhost:8000/search?limit=10&startindex=10&sortby=-title
   # collection query as JSON (HTTP POST), as curl request
   curl http://localhost:8000/search --request POST -H "Content-Type: application/json" --data '{"bbox": [-180, -90, 180, 90], "datetime": "2006-03-26"}'
+  # collection query as JSON (HTTP POST), as curl request, with sorting (default ascending) 
+  curl http://localhost:8000/search --request POST -H "Content-Type: application/json" --data '{"bbox": [-180, -90, 180, 90], "datetime": "2006-03-26", "sortby": [{"field": "title", "direction": "ascending"}]}'
+  # collection query as JSON (HTTP POST), as curl request, with sorting (descending) 
+  curl http://localhost:8000/search --request POST -H "Content-Type: application/json" --data '{"bbox": [-180, -90, 180, 90], "datetime": "2006-03-26", "sortby": [{"field": "title", "direction": "descending"}]}'
   # collection query as CQL JSON (HTTP POST), limiting results, as curl request
   curl http://localhost:8000/search --request POST -H "Content-Type: application/json" --data '{"limit": 1, "bbox": [-180, -90, 180, 90], "datetime": "2006-03-26"}'
 

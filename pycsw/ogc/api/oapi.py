@@ -86,7 +86,17 @@ def gen_oapi(config, oapi_filepath):
         'style': 'form',
         'explode': False
     }
-
+    oapi['components']['parameters']['filter'] = {
+        'name': 'filter',
+        'in': 'query',
+        'description': 'The optional filter parameter specifies a CQL2 expression to be used for enhanced filtering',  # noqa
+        'required': False,
+        'schema': {
+            'type': 'object',
+        },
+        'style': 'form',
+        'explode': False
+    }
     LOGGER.debug('Adding server info')
     oapi['info'] = {
         'contact': {
@@ -212,6 +222,7 @@ def gen_oapi(config, oapi_filepath):
                 {'$ref': '#/components/parameters/type'},
                 {'$ref': '#/components/parameters/externalId'},
                 {'$ref': '#/components/parameters/sortby'},
+                {'$ref': '#/components/parameters/filter'},
                 {'$ref': '#/components/parameters/f'},
                 {'$ref': '#/components/parameters/startindex'}
             ],

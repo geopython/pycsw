@@ -57,6 +57,10 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   http://localhost:8000/collections/metadata:main/items?limit=1
   # collection query, paging
   http://localhost:8000/collections/metadata:main/items?limit=10&startindex=10
+  # collection query, paging and sorting (default ascending)
+  http://localhost:8000/collections/metadata:main/items?limit=10&startindex=10&sortby=title
+  # collection query, paging and sorting (descending)
+  http://localhost:8000/collections/metadata:main/items?limit=10&startindex=10&sortby=-title
   # collection query as CQL JSON (HTTP POST), as curl request
   curl http://localhost:8000/collections/metadata:main/items --request POST -H "Content-Type: application/json" --data '{ "eq": [{ "property": "title" }, "Lorem ipsum"]}'
   # collection query as CQL JSON (HTTP POST), limiting results, as curl request
