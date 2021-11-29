@@ -1,6 +1,5 @@
 # Triggers a Docker workflow on completion of the "build" workflow but
 # pushes to DockerHub
-# Runs GHC unit tests before DockerHub push.
 #
 # Author: Just van den Broecke & Edward Lewis - 2021
 #
@@ -12,7 +11,7 @@ on:
     types: [completed]
 
 jobs:
-  # Single job now to build Docker Image, run GHC unit tests, and push to DockerHub
+  # Single job now to build Docker Image and push to DockerHub
   on-success:
     name: Build, Test and Push Docker Image to DockerHub
     runs-on: ubuntu-latest
