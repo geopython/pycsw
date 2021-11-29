@@ -65,8 +65,10 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
-    'https://api.stacspec.org/v1.0.0-beta.2/core',
-    'https://api.stacspec.org/v1.0.0-beta.2/item-search'
+    'https://api.stacspec.org/v1.0.0-beta.4/core',
+    'https://api.stacspec.org/v1.0.0-beta.4/item-search',
+    'https://api.stacspec.org/v1.0.0-beta.4/item-search#filter'
+    'https://api.stacspec.org/v1.0.0-beta.4/item-search#sort'
 ]
 
 
@@ -205,8 +207,7 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         response = {
-            'stac_version': '1.0.0',
-            'stac_api_version': '1.0.0-beta.3',
+            'stac_version': '1.0.0-beta.4',
             'id': 'pycsw-catalogue',
             'type': 'Catalog',
             'conformsTo': CONFORMANCE_CLASSES,
@@ -223,6 +224,12 @@ class API:
               'rel': 'self',
               'type': 'application/json',
               'title': 'This document as JSON',
+              'href': f"{self.config['server']['url']}?f=json",
+              'hreflang': self.config['server']['language']
+            }, {
+              'rel': 'root',
+              'type': 'application/json',
+              'title': 'The root URI as JSON',
               'href': f"{self.config['server']['url']}?f=json",
               'hreflang': self.config['server']['language']
             }, {
@@ -280,6 +287,11 @@ class API:
               'type': 'application/xml',
               'title': 'SRU endpoint',
               'href': f"{self.config['server']['url']}/sru"
+            }, {
+              'rel': 'child',
+              'type': 'application/json',
+              'title': 'Main collection',
+              'href': f"{self.config['server']['url']}/collections/metadata:main"
             }
         ]
 
@@ -434,9 +446,10 @@ class API:
             'q'
         ]
         reserved_query_params = [
-            'filter',
             'f',
+            'filter',
             'limit',
+            'sortby',
             'startindex'
         ]
 
@@ -448,6 +461,7 @@ class API:
 
         cql_query = None
         query_parser = None
+        sortby = None
 
         if stac_item and json_post_data is not None:
             LOGGER.debug(f'JSON POST data: {json_post_data}')
@@ -460,6 +474,12 @@ class API:
                     else:
                         args[p] = json_post_data.get(p)
 
+            if 'sortby' in json_post_data:
+                LOGGER.debug('Detected sortby')
+                args['sortby'] = json_post_data['sortby'][0]['field']
+                if json_post_data['sortby'][0].get('direction', 'asc') == 'desc':
+                    args['sortby'] = f"-{args['sortby']}"
+           
             LOGGER.debug(f'Transformed args: {args}')
 
         if 'filter' in args:
@@ -510,11 +530,14 @@ class API:
             LOGGER.debug('Detected CQL text')
             query_parser = parse_ecql
         elif json_post_data is not None:
+            if list(json_post_data.keys()) == ['sortby']:
+                LOGGER.debug('No CQL specified, only query parameters')
+                json_post_data = {}
             cql_query = json_post_data
-            LOGGER.debug('Detected CQL JSON; ignoring all other qeury predicates')
+            LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
             query_parser = parse_cql2_json
 
-        if query_parser is not None:
+        if query_parser is not None and json_post_data != {}:
             LOGGER.debug('Parsing CQL into AST')
             try:
                 ast = query_parser(cql_query)
@@ -536,6 +559,25 @@ class API:
             query = self.repository.session.query(self.repository.dataset).filter(filters)
         else:
             query = self.repository.session.query(self.repository.dataset)
+
+        if 'sortby' in args:
+            LOGGER.debug('sortby specified')
+            sortby = args['sortby']
+
+        if sortby is not None:
+            LOGGER.debug('processing sortby')
+            if sortby.startswith('-'):
+                sortby = sortby.lstrip('-')
+
+            if sortby not in list(self.query_mappings.keys()):
+                msg = 'Invalid sortby property'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+            if args['sortby'].startswith('-'):
+                query = query.order_by(self.query_mappings[sortby].desc())
+            else:
+                query = query.order_by(self.query_mappings[sortby])
 
         if 'limit' in args:
             limit = int(args['limit'])
