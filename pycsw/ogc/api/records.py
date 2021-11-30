@@ -67,7 +67,7 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
     'https://api.stacspec.org/v1.0.0-beta.4/core',
     'https://api.stacspec.org/v1.0.0-beta.4/item-search',
-    'https://api.stacspec.org/v1.0.0-beta.4/item-search#filter'
+    'https://api.stacspec.org/v1.0.0-beta.4/item-search#filter',
     'https://api.stacspec.org/v1.0.0-beta.4/item-search#sort'
 ]
 
