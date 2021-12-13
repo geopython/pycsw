@@ -154,9 +154,16 @@ class base_profile(Profile):
                         elif dbcol == queryables[constants.PYCSW_LINKS]:
                             for link in value.split('^'):
                                 linkComponents = link.split(',')
+                                name = linkComponents[0]
+                                description = linkComponents[1]
                                 scheme = linkComponents[2]
                                 uri = linkComponents[-1]
-                                etree.SubElement(record, util.nspath_eval(elementName, self.context.namespaces), scheme=scheme).text = uri
+                                attributes = {
+                                   'scheme': scheme,
+                                   'name': name,
+                                   'description': description
+                                }
+                                etree.SubElement(record, util.nspath_eval(elementName, self.context.namespaces), attrib=attributes).text = uri
                         
                         elif dbcol == queryables[constants.PYCSW_BOUNDING_BOX]:
                             bbox = write_boundingbox(value, self.context.namespaces)
