@@ -40,7 +40,7 @@ FROM python:3.8-slim-buster
 LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
 RUN apt-get update && apt-get install --yes \
-        ca-certificates \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
@@ -68,6 +68,11 @@ COPY --chown=pycsw . .
 COPY docker/pycsw.cfg ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
+# fix cert permissions in openshift
+RUN mkdir /.postgresql && chmod -R 777 /.postgresql
+COPY docker/cert-start.sh /usr/local/bin/cert-start.sh
+RUN chmod +x /usr/local/bin/cert-start.sh
+
 RUN python3 -m pip install --editable .
 
 WORKDIR /home/pycsw
@@ -76,4 +81,4 @@ EXPOSE 8000
 
 USER pycsw
 
-ENTRYPOINT [ "python3", "/usr/local/bin/entrypoint.py" ]
+ENTRYPOINT [ "/usr/local/bin/cert-start.sh" ]
