@@ -329,3 +329,14 @@ def test_jsonify_links(linkstr, expected):
     result = util.jsonify_links(linkstr)
     assert isinstance(result, list)
     assert result == expected
+
+
+@pytest.mark.parametrize("value, result", [
+    ("foo", False),
+    (None, True),
+    ('', True),
+    (' ', True),
+    ('      ', True),
+])
+def test_is_none_or_empty(value, result):
+    assert util.is_none_or_empty(value) is result
