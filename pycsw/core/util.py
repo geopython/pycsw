@@ -440,3 +440,18 @@ def parse_ini_config(config_path) -> ConfigParser:
     with open(config_path, encoding='utf-8') as scp:
         config.read_file(scp)
     return config
+
+
+def is_none_or_empty(value):
+    """
+    Helper function to detect if value is None or empty
+
+    :param value: value to evaluate
+
+    :returns: bool of whether the value is None or empty
+    """
+
+    if value is None or len(value.strip()) == 0:
+        return True
+
+    return False

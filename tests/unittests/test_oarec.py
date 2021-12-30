@@ -33,7 +33,7 @@ def test_landing_page(api):
 
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
-    assert len(content['links']) == 12
+    assert len(content['links']) == 14
 
     for link in content['links']:
         assert link['href'].startswith(api.config['server']['url'])
@@ -57,7 +57,7 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 10
+    assert len(content['conformsTo']) == 11
 
 
 def test_collections(api):
@@ -151,6 +151,18 @@ def test_items(api):
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
+    params = {'sortby': 'title'}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 12
+    assert content['numberReturned'] == 10
+    assert content['features'][5]['properties']['title'] == 'Lorem ipsum'
+
+    params = {'sortby': '-title'}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 12
+    assert content['numberReturned'] == 10
+    assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
+
     cql_json = {'eq': [{'property': 'title'}, 'Lorem ipsum']}
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 1
@@ -163,7 +175,7 @@ def test_items(api):
     assert content['numberReturned'] == 1
     assert len(content['features']) == content['numberReturned']
 
-    cql_json = {'like': {'like': [{'property': 'title'}, 'lorem%'], 'nocase': False}}  # noqa
+    cql_json = {'like': [{'property': 'title'}, 'lorem%'], 'nocase': False}
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 2
     assert content['numberReturned'] == 2

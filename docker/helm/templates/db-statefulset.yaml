@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   namespace: {{ .Values.global.namespace }}
   labels:
@@ -10,8 +10,9 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: {{ .Values.db.name }}
-  strategy:
-    type: Recreate
+  # strategy:
+  #   type: Recreate
+  serviceName: {{ .Values.db.name }}
   template:
     metadata:
       labels:
@@ -28,7 +29,7 @@ spec:
         - name: POSTGRES_USER
           value: {{ .Values.db.user }}
         image: {{ .Values.db.image }}
-        name: {{ .Values.db.user }}
+        name: {{ .Values.db.name }}
         ports:
         - containerPort: {{ .Values.db.port }}
         resources: {}
@@ -36,8 +37,14 @@ spec:
         - mountPath: {{ .Values.db.volume_path }}
           name: {{ .Values.db.volume_name }}
       restartPolicy: Always
-      volumes:
-      - name: {{ .Values.db.volume_name }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.db.volume_name }}
-status: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.db.volume_name }}
+      spec:
+        storageClassName: {{ .Values.db.volume_storage_type }}
+        accessModes:
+        - {{ .Values.db.volume_access_modes }}
+        resources:
+          requests:
+            storage: {{ .Values.db.volume_size }}
+# status: {}
