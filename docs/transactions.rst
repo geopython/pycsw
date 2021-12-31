@@ -26,7 +26,7 @@ For transactions and harvesting, pycsw supports the following metadata resource 
   OGC:WPS 1.0.0,``http://www.opengis.net/wps/1.0.0``,,yes
   OGC:SOS 1.0.0,``http://www.opengis.net/sos/1.0``,,yes
   OGC:SOS 2.0.0,``http://www.opengis.net/sos/2.0``,,yes
-  `WAF`_,``urn:geoss:urn``,,yes
+  `WAF`_,``urn:geoss:waf``,,yes
 
 Additional metadata models are supported by enabling the appropriate :ref:`profiles`.
 
