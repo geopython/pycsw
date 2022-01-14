@@ -42,7 +42,28 @@
           {% for key, value in data['properties'].items() %}
           <tr>
             <td>{{ key }}</td>
-            <td>{{ value }}</td>
+            {% if key == 'keywords' %}
+              <td>
+                <ul>
+                {% for keyword in value %}
+                  <li>{{ keyword }}</li>
+                {% endfor %}
+                </ul>
+              </td>`
+            {% elif key == 'associations' %}
+              <td>
+                <ul>
+                {% for association in value %}
+                  <li><a href="{{ association['href'] }}" title="{{ association['description'] }}">{{ association['name'] }}</a></li>
+                {% endfor %}
+                </ul>
+              </td>`
+            {% elif key == 'extent' %}
+              <td>Spatial: {{ value['spatial']['bbox'][0] }}</td>
+              {% if value['temporal'] %}<td>Temporal: {{ value['temporal']['interval'][0] }}</td>{% endif %}
+            {% else %}
+              <td>{{ value }}</td>
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>

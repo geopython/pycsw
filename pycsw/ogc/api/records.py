@@ -749,6 +749,7 @@ def record2json(record, stac_item=False):
         'type': 'Feature',
         'geometry': None,
         'properties': {
+            'externalId': [{'value': record.identifier}],
             'datetime': record.date,
             'start_datetime': record.time_begin,
             'end_datetime': record.time_end
