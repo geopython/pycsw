@@ -73,5 +73,18 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   # collection item as XML
   http://localhost:8000/collections/metadata:main/items/{itemId}?f=xml
 
+Virtual Collections
+-------------------
+
+In OGC API - Records, pycsw's global repository is named `metadata:main`, which
+serves all metadata records from a given pycsw configuration.
+
+OGC API - Records support exposes parent metadata as distinct collections,
+reducing the barrier for users querying on a specific collection, for
+multiple collections.  This functionality is implemented by default and does
+not require additional setup/configuration by the user.  More information
+on this feature can be found in `RFC 10: OGC API - Records virtual collections support`_.
+
 
 .. _`OGC API - Records - Part 1: Core, version 1.0`: https://ogcapi.ogc.org/records
+.. _`RFC 10: OGC API - Records virtual collections support`: https://pycsw.org/development/rfc/rfc-10.html

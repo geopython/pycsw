@@ -57,7 +57,7 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 11
+    assert len(content['conformsTo']) == 12
 
 
 def test_collections(api):
@@ -66,8 +66,8 @@ def test_collections(api):
     assert len(content['links']) == 2
     assert len(content['collections']) == 1
 
-    content = json.loads(api.collections({}, {}, True)[2])
-    assert len(content['links']) == 2
+    content = json.loads(api.collections({}, {})[2])['collections'][0]
+    assert len(content['links']) == 3
     assert content['id'] == 'metadata:main'
     assert content['title'] == 'pycsw Geospatial Catalogue'
     assert content['description'] == 'pycsw is an OARec and OGC CSW server implementation written in Python'  # noqa
@@ -184,7 +184,7 @@ def test_items(api):
 
 def test_item(api):
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
-    content = json.loads(api.item({}, {}, item)[2])
+    content = json.loads(api.item({}, {}, 'metadata:main', item)[2])
 
     assert content['id'] == item
     assert content['type'] == 'Feature'
@@ -193,7 +193,7 @@ def test_item(api):
 
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
     params = {'f': 'xml'}
-    content = api.item({}, params, item)[2]
+    content = api.item({}, params, 'metadata:main', item)[2]
 
     e = etree.fromstring(content)
 

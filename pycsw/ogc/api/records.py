@@ -130,6 +130,7 @@ class API:
 
         self.query_mappings = {
             'type': self.repository.dataset.type,
+            'parentidentifier': self.repository.dataset.parentidentifier,
             'recordUpdated': self.repository.dataset.insert_date,
             'title': self.repository.dataset.title,
             'description': self.repository.dataset.abstract,
@@ -335,56 +336,40 @@ class API:
 
         return self.get_response(200, headers_, 'conformance.html', response)
 
-    def collections(self, headers_, args, collection=False):
+    def collections(self, headers_, args):
         """
         Provide API collections
 
         :param headers_: copy of HEADERS object
         :param args: request parameters
-        :param collection: `bool` of whether to emit single collection
 
         :returns: tuple of headers, status code, content
         """
 
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
-        collection_info = {
-            'id': 'metadata:main',
-            'title': self.config['metadata:main']['identification_title'],
-            'description': self.config['metadata:main']['identification_abstract'],
-            'itemType': 'record',
-            'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84',
-            'links': [{
-                'rel': 'collection',
-                'type': 'application/json',
-                'title': 'Collection URL',
-                'href': f"{self.config['server']['url']}/collections/metadata:main",
-                'hreflang': self.config['server']['language']
-            }, {
-                'rel': 'queryables',
-                'type': 'application/json',
-                'title': 'Collection queryables',
-                'href': f"{self.config['server']['url']}/collections/metadata:main/queryables",
-                'hreflang': self.config['server']['language']
-            }, {
-                'rel': 'items',
-                'type': 'application/json',
-                'title': 'Collection items as GeoJSON',
-                'href': f"{self.config['server']['url']}/collections/metadata:main/items",
-                'hreflang': self.config['server']['language']
-            }]
-        }
+        collections = []
 
-        if not collection:
-            response = {
-                'collections': [collection_info]
-            }
-            template = 'collections.html'
-            url_base = f"{self.config['server']['url']}/collections"
-        else:
-            response = collection_info
-            template = 'collection.html'
-            url_base = f"{self.config['server']['url']}/collections/metadata:main"
+        LOGGER.debug('Generating default metadata:main collection')
+        collection_info = self.get_collection_info()
+
+        collections.append(collection_info)
+
+        LOGGER.debug('Generating virtual collections')
+        virtual_collections = self.repository.query_collections()
+
+        for virtual_collection in virtual_collections:
+            virtual_collection_info = self.get_collection_info(
+                virtual_collection.identifier,
+                dict(title=virtual_collection.title,
+                     description=virtual_collection.abstract))
+
+            collections.append(virtual_collection_info)
+
+        response = {
+            'collections': collections
+        }
+        url_base = f"{self.config['server']['url']}/collections"
 
         is_html = headers_['Content-Type'] == 'text/html'
 
@@ -402,14 +387,60 @@ class API:
             'hreflang': self.config['server']['language']
         }]
 
-        return self.get_response(200, headers_, template, response)
+        return self.get_response(200, headers_, 'collections.html', response)
 
-    def queryables(self, headers_, args):
+    def collection(self, headers_, args, collection='metadata:main'):
+        """
+        Provide API collections
+
+        :param headers_: copy of HEADERS object
+        :param args: request parameters
+        :param collection: collection name
+
+        :returns: tuple of headers, status code, content
+        """
+
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
+
+        LOGGER.debug(f'Generating {collection} collection')
+
+        if collection == 'metadata:main':
+            collection_info = self.get_collection_info()
+        else:
+            virtual_collection = self.repository.query_ids([collection])[0]
+            collection_info = self.get_collection_info(
+                virtual_collection.identifier,
+                dict(title=virtual_collection.title,
+                     description=virtual_collection.abstract))
+
+        response = collection_info
+        url_base = f"{self.config['server']['url']}/collections/{collection}"
+
+        is_html = headers_['Content-Type'] == 'text/html'
+
+        response['links'] = [{
+            'rel': 'self' if not is_html else 'alternate',
+            'type': 'application/json',
+            'title': 'This document as JSON',
+            'href': f"{url_base}?f=json",
+            'hreflang': self.config['server']['language']
+        }, {
+            'rel': 'self' if is_html else 'alternate',
+            'type': 'text/html',
+            'title': 'This document as HTML',
+            'href': f"{url_base}?f=html",
+            'hreflang': self.config['server']['language']
+        }]
+
+        return self.get_response(200, headers_, 'collection.html', response)
+
+    def queryables(self, headers_, args, collection='metadata:main'):
         """
         Provide collection queryables
 
         :param headers_: copy of HEADERS object
         :param args: request parameters
+        :param collection: name of collection
 
         :returns: tuple of headers, status code, content
         """
@@ -418,22 +449,32 @@ class API:
 
         properties = self.repository.describe()
 
+        if collection == 'metadata:main':
+            title = self.config['metadata:main']['identification_title']
+        else:
+            title = self.config['metadata:main']['identification_title']
+            virtual_collection = self.repository.query_ids([collection])[0]
+            title = virtual_collection.title
+
         response = {
+            'id': collection,
             'type': 'object',
-            'title': self.config['metadata:main']['identification_title'],
+            'title': title,
             'properties': properties,
             '$schema': 'http://json-schema.org/draft/2019-09/schema',
-            '$id': f"{self.config['server']['url']}/collections/metadata:main/queryables"
+            '$id': f"{self.config['server']['url']}/collections/{collection}/queryables"
         }
 
         return self.get_response(200, headers_, 'queryables.html', response)
 
-    def items(self, headers_, json_post_data, args, stac_item=False):
+    def items(self, headers_, json_post_data, args, collection='metadata:main',
+              stac_item=False):
         """
         Provide collection items
 
         :param headers_: copy of HEADERS object
         :param args: request parameters
+        :param collection: collection name
 
         :returns: tuple of headers, status code, content
         """
@@ -479,7 +520,7 @@ class API:
                 args['sortby'] = json_post_data['sortby'][0]['field']
                 if json_post_data['sortby'][0].get('direction', 'asc') == 'desc':
                     args['sortby'] = f"-{args['sortby']}"
-           
+
             LOGGER.debug(f'Transformed args: {args}')
 
         if 'filter' in args:
@@ -513,6 +554,10 @@ class API:
                     query_args.append(build_anytext('anytext', v))
                 else:
                     query_args.append(f'{k} = "{v}"')
+
+        if collection != 'metadata:main':
+            LOGGER.debug('Adding virtual collection filter')
+            query_args.append(f'parentidentifier = "{collection}"')
 
         LOGGER.debug('Evaluating CQL and other specified filtering parameters')
         if cql_query is not None and query_args:
@@ -615,7 +660,7 @@ class API:
         if stac_item:
             fragment = 'search'
         else:
-            fragment = 'collections/metadata:main/items'
+            fragment = f'collections/{collection}/items'
 
         if link_args:
             url_base = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
@@ -640,7 +685,7 @@ class API:
             'rel': 'collection',
             'type': 'application/json',
             'title': 'Collection URL',
-            'href': f"{self.config['server']['url']}/collections/metadata:main",
+            'href': f"{self.config['server']['url']}/collections/{collection}",
             'hreflang': self.config['server']['language']
         }])
 
@@ -677,6 +722,7 @@ class API:
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
+            response['collection'] = collection
 
         if stac_item:
             template = 'stac_items.html'
@@ -685,12 +731,13 @@ class API:
 
         return self.get_response(200, headers_, template, response)
 
-    def item(self, headers_, args, item, stac_item=False):
+    def item(self, headers_, args, collection, item, stac_item=False):
         """
         Provide collection item
 
         :param headers_: copy of HEADERS object
         :param args: request parameters
+        :param collection: name of collection
         :param item: record identifier
 
         :returns: tuple of headers, status code, content
@@ -712,6 +759,7 @@ class API:
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
+            response['collection'] = collection
 
         return self.get_response(200, headers_, 'item.html', response)
 
@@ -733,6 +781,54 @@ class API:
         }
 
         return self.get_response(status, headers, 'exception.html', exception)
+
+    def get_collection_info(self, collection_name: str = 'metadata:main',
+                            collection_info: dict = {}) -> dict:
+        """
+        Generate collection metadata
+
+        :param collection_name: name of collection
+                                default is 'metadata:main' main collection
+        :param collection_info: `dict` of collecton info
+
+        :returns: `dict` of collection
+        """
+
+        if collection_name == 'metadata:main':
+            id_ = collection_name
+            title = self.config['metadata:main']['identification_title']
+            description = self.config['metadata:main']['identification_abstract']
+        else:
+            id_ = collection_name
+            title = collection_info.get('title')
+            description = collection_info.get('description')
+
+        return {
+            'id': id_,
+            'title': title,
+            'description': description,
+            'itemType': 'record',
+            'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84',
+            'links': [{
+                'rel': 'collection',
+                'type': 'application/json',
+                'title': 'Collection URL',
+                'href': f"{self.config['server']['url']}/collections/{collection_name}",
+                'hreflang': self.config['server']['language']
+            }, {
+                'rel': 'queryables',
+                'type': 'application/json',
+                'title': 'Collection queryables',
+                'href': f"{self.config['server']['url']}/collections/{collection_name}/queryables",
+                'hreflang': self.config['server']['language']
+            }, {
+                'rel': 'items',
+                'type': 'application/json',
+                'title': 'Collection items as GeoJSON',
+                'href': f"{self.config['server']['url']}/collections/{collection_name}/items",
+                'hreflang': self.config['server']['language']
+            }]
+        }
 
 
 def record2json(record, stac_item=False):

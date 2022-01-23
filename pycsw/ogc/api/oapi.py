@@ -190,6 +190,7 @@ def gen_oapi(config, oapi_filepath):
             'description': 'Collection page',
             'operationId': 'getCollectionId',
             'parameters': [
+                {'$ref': '#/components/parameters/collectionId'},
                 {'$ref': '#/components/parameters/f'}
             ],
             'responses': {
@@ -206,7 +207,7 @@ def gen_oapi(config, oapi_filepath):
         }
     }
 
-    oapi['paths']['/collections/metadata:main'] = path
+    oapi['paths']['/collections/{collectionId}'] = path
 
     path = {
         'get': {
@@ -215,6 +216,7 @@ def gen_oapi(config, oapi_filepath):
             'description': 'Records search items page',
             'operationId': 'getRecords',
             'parameters': [
+                {'$ref': '#/components/parameters/collectionId'},
                 {'$ref': '#/components/parameters/bbox'},
                 {'$ref': '#/components/parameters/datetime'},
                 {'$ref': '#/components/parameters/limit'},
@@ -243,7 +245,7 @@ def gen_oapi(config, oapi_filepath):
         }
     }
 
-    oapi['paths']['/collections/metadata:main/items'] = path
+    oapi['paths']['/collections/{collectionId}/items'] = path
 
     path2 = deepcopy(path)
     path2['get']['operationId'] = 'searchRecords'
@@ -259,6 +261,7 @@ def gen_oapi(config, oapi_filepath):
             'description': 'Records item page',
             'operationId': 'getRecord',
             'parameters': [
+                {'$ref': '#/components/parameters/collectionId'},
                 {'$ref': '#/components/parameters/recordId'},
                 f
             ],
@@ -276,6 +279,6 @@ def gen_oapi(config, oapi_filepath):
         }
     }
 
-    oapi['paths']['/collections/metadata:main/items/{recordId}'] = path
+    oapi['paths']['/collections/{collectionId}/items/{recordId}'] = path
 
     return oapi

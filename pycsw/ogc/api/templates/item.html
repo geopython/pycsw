@@ -15,9 +15,9 @@
 {% block crumbs %}
 {{ super() }} /
 <a href="{{ config['server']['url'] }}/collections">Collections</a> /
-<a href="{{ config['server']['url'] }}/collections/metadata:main">{{ data['title'] }}</a> /
-<a href="{{ config['server']['url'] }}/collections/metadata:main/items">Items</a> /
-<a href="{{ config['server']['url'] }}/collections/metadata:main/items/{{ data['id'] }}">{{ data['id'] }}</a>
+<a href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}">{{ data['title'] }}</a> /
+<a href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items">Items</a> /
+<a href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items/{{ data['id'] }}">{{ data['id'] }}</a>
 {% endblock %}
 {% block body %}
 
