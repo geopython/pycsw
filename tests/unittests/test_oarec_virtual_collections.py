@@ -19,15 +19,6 @@ def get_test_file_path(filename):
 
 @pytest.fixture()
 def config():
-    return parse_ini_config(get_test_file_path('oarec-default.cfg'))
-
-
-@pytest.fixture()
-def api(config):
-    return API(config)
-
-@pytest.fixture()
-def config_virtual_collections():
     config = parse_ini_config(get_test_file_path('oarec-default.cfg'))
     database = config['repository']['database']
     config['repository']['database'] = database.replace('cite.db', 'cite-virtual-collections.db')  # noqa
@@ -35,8 +26,8 @@ def config_virtual_collections():
 
 
 @pytest.fixture()
-def api_virtual_collections(config_virtual_collections):
-    return API(config_virtual_collections)
+def api(config):
+    return API(config)
 
 
 def test_landing_page(api):
@@ -76,7 +67,7 @@ def test_collections(api):
     content = json.loads(api.collections({}, {})[2])
 
     assert len(content['links']) == 2
-    assert len(content['collections']) == 1
+    assert len(content['collections']) == 2
 
     content = json.loads(api.collections({}, {})[2])['collections'][0]
     assert len(content['links']) == 3
@@ -205,7 +196,7 @@ def test_item(api):
 
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
     params = {'f': 'xml'}
-    content = api.item({}, params, 'metadata:main', item)[2]
+    content = api.item({}, params, 'metadat:main', item)[2]
 
     e = etree.fromstring(content)
 
