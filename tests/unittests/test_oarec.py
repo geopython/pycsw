@@ -26,18 +26,6 @@ def config():
 def api(config):
     return API(config)
 
-@pytest.fixture()
-def config_virtual_collections():
-    config = parse_ini_config(get_test_file_path('oarec-default.cfg'))
-    database = config['repository']['database']
-    config['repository']['database'] = database.replace('cite.db', 'cite-virtual-collections.db')  # noqa
-    return config
-
-
-@pytest.fixture()
-def api_virtual_collections(config_virtual_collections):
-    return API(config_virtual_collections)
-
 
 def test_landing_page(api):
     headers, status, content = api.landing_page({}, {'f': 'json'})
