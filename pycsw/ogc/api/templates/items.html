@@ -16,8 +16,8 @@
 {% block crumbs %}
 {{ super() }} /
 <a href="{{ config['server']['url'] }}/collections">Collections</a> /
-<a href="{{ config['server']['url'] }}/collections/metadata:main">{{ data['title'] }}</a> /
-<a href="{{ config['server']['url'] }}/collections/metadata:main/items">Items</a>
+<a href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}">{{ data['title'] }}</a> /
+<a href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items">Items</a>
 {% endblock %}
 
 {% block body %}
@@ -50,7 +50,7 @@
       {% else %}
       <button type="button" class="btn btn-sm btn-primary" disabled>Next</button>
       {% endif %}
-      <!--<form id="items-query-form" action="{{ config['server']['url'] }}/collections/metadata:main/items">-->
+      <!--<form id="items-query-form" action="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items">-->
       <form id="items-query-form">
         <input id="q" class="form-control" name="q"/>
       </form>
@@ -65,7 +65,7 @@
           <tbody>
             {% for rec in data['features'] %}
             <tr>
-              <td id="{{ rec['properties']['externalId'] }}"><a title="{{ rec['properties']['title'] }}" href="{{ config['server']['url'] }}/collections/metadata:main/items/{{ rec['properties']['externalId'] }}">{{ rec['properties']['title'] }}</a></td>
+              <td id="{{ rec['properties']['externalId'] }}"><a title="{{ rec['properties']['title'] }}" href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items/{{ rec['properties']['externalId'] }}">{{ rec['properties']['title'] }}</a></td>
               <td>{{ rec['properties']['type'] }}</td>
             </tr>
             {% endfor %}
@@ -140,7 +140,7 @@
 
                 var queryParams = new URLSearchParams(window.location.search);
                 queryParams.set("q", $("#q").val());
-                var new_url = '{{ config['server']['url'] }}/collections/metadata:main/items?' + queryParams.toString();
+                var new_url = '{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items?' + queryParams.toString();
                 window.location = new_url;
             }
         });

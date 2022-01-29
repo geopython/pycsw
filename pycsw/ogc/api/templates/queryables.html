@@ -4,8 +4,8 @@
 {% block crumbs %}
 {{ super() }} /
 <a href="{{ config['server']['url'] }}/collections">Collections</a> /
-<a href="{{ config['server']['url'] }}/collections/metadata:main">{{ data['title'] }}</a> /
-<a href="{{ config['server']['url'] }}/collections/metadata:main/queryables">Queryables</a>
+<a href="{{ config['server']['url'] }}/collections/{{ data['id'] }}">{{ data['title'] }}</a> /
+<a href="{{ config['server']['url'] }}/collections/{{ data['id'] }}/queryables">Queryables</a>
 {% endblock %}
 
 {% block body %}

@@ -241,6 +241,25 @@ class Repository(object):
         query = self.session.query(self.dataset).filter(column.in_(ids))
         return self._get_repo_filter(query).all()
 
+    def query_collections(self):
+        ''' Query for parent collections '''
+
+        column = getattr(self.dataset, \
+        self.context.md_core_model['mappings']['pycsw:ParentIdentifier'])
+
+        collections = self.session.query(column).distinct()
+
+        results = self._get_repo_filter(collections).all()
+
+        ids = [res[0] for res in results if res[0] is not None]
+
+        column = getattr(self.dataset, \
+        self.context.md_core_model['mappings']['pycsw:Identifier'])
+
+        query = self.session.query(self.dataset).filter(column.in_(ids))
+
+        return self._get_repo_filter(query).all()
+
     def query_domain(self, domain, typenames, domainquerytype='list',
         count=False):
         ''' Query by property domain values '''
