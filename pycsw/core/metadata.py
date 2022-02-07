@@ -1479,9 +1479,10 @@ def _parse_iso(context, repos, exml):
         platform = md.acquisition.platforms[0]
         _set(context, recobj, 'pycsw:Platform', platform.identifier)
 
-        instrument = platform.instruments[0]
-        _set(context, recobj, 'pycsw:Instrument', instrument.identifier)
-        _set(context, recobj, 'pycsw:SensorType', instrument.type)
+        if(platform.instruments):
+            instrument = platform.instruments[0]
+            _set(context, recobj, 'pycsw:Instrument', instrument.identifier)
+            _set(context, recobj, 'pycsw:SensorType', instrument.type)
 
     LOGGER.info('Scanning for links')
     if hasattr(md, 'distribution'):
