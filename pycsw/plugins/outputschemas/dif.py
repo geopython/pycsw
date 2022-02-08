@@ -120,7 +120,7 @@ def write_record(result, esn, context, url=None):
         kws = [i for j, i in enumerate(kws) if j not in parameters_indexes]
         for index, kw in enumerate(kws):
             etree.SubElement(node, util.nspath_eval('dif:Keyword', NAMESPACES)).text = kw.strip()
-            
+
     # temporal
     temporal = etree.SubElement(node, util.nspath_eval('dif:Temporal_Coverage', NAMESPACES))
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TempExtent_begin'])
@@ -152,10 +152,6 @@ def write_record(result, esn, context, url=None):
         val = ''
     etree.SubElement(node, util.nspath_eval('dif:Summary', NAMESPACES)).text = val
 
-    # date
-    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:CreationDate'])
-    etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date', NAMESPACES)).text = val
-
     # URL
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Relation'])
     url = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
@@ -175,6 +171,10 @@ def write_record(result, esn, context, url=None):
     etree.SubElement(node, util.nspath_eval('dif:Metadata_Name', NAMESPACES)).text = 'CEOS IDN DIF'
     etree.SubElement(node, util.nspath_eval('dif:Metadata_Version', NAMESPACES)).text = '9.7'
 
+    # date
+    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:CreationDate'])
+    etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date', NAMESPACES)).text = val
+    
     return node
 
 def write_extent(bbox, nsmap):
