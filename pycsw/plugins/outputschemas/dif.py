@@ -154,8 +154,9 @@ def write_record(result, esn, context, url=None):
 
     # URL
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Relation'])
-    url = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
-    etree.SubElement(url, util.nspath_eval('dif:URL', NAMESPACES)).text = val
+    if val:
+        url = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
+        etree.SubElement(url, util.nspath_eval('dif:URL', NAMESPACES)).text = val
 
     rlinks = util.getqattr(result, context.md_core_model['mappings']['pycsw:Links'])
     if rlinks:
@@ -163,10 +164,27 @@ def write_record(result, esn, context, url=None):
             url2 = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
 
             urltype = etree.SubElement(url2, util.nspath_eval('dif:URL_Content_Type', NAMESPACES))
-            etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = link['protocol']
+            if link['protocol'] == 'download':
+                etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'GET DATA'
+            elif link['protocol'] == 'OPENDAP:OPENDAP':
+                etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'GET DATA'
+                etree.SubElement(urltype, util.nspath_eval('dif:Subtype', NAMESPACES)).text = 'OPENDAP DATA (DODS)'
+            elif link['protocol'] == 'OGC:WMS':
+                etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'GET SERVICE'
+                etree.SubElement(urltype, util.nspath_eval('dif:Subtype', NAMESPACES)).text = 'GET WEB MAP SERVICE (WMS)'
+            else:
+                etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'GET DATA'
 
             etree.SubElement(url2, util.nspath_eval('dif:URL', NAMESPACES)).text = link['url']
-            etree.SubElement(url2, util.nspath_eval('dif:Description', NAMESPACES)).text = link['description']
+            if link['description']:
+                etree.SubElement(url2, util.nspath_eval('dif:Description', NAMESPACES)).text = link['description']
+
+    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Source'])
+    if val:
+        url2 = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
+        urltype = etree.SubElement(url2, util.nspath_eval('dif:URL_Content_Type', NAMESPACES))
+        etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'DATASET LANDING PAGE'
+        etree.SubElement(url2, util.nspath_eval('dif:URL', NAMESPACES)).text = val
 
     etree.SubElement(node, util.nspath_eval('dif:Metadata_Name', NAMESPACES)).text = 'CEOS IDN DIF'
     etree.SubElement(node, util.nspath_eval('dif:Metadata_Version', NAMESPACES)).text = '9.7'
@@ -174,7 +192,7 @@ def write_record(result, esn, context, url=None):
     # date
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:CreationDate'])
     etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date', NAMESPACES)).text = val
-    
+
     return node
 
 def write_extent(bbox, nsmap):
