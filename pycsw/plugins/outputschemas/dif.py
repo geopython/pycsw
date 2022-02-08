@@ -92,10 +92,6 @@ def write_record(result, esn, context, url=None):
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Format'])
     etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form', NAMESPACES)).text = val
 
-    # iso topic category
-    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TopicCategory'])
-    etree.SubElement(node, util.nspath_eval('dif:ISO_Topic_Category', NAMESPACES)).text = val
-
     # keywords
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Keywords'])
 
@@ -103,6 +99,10 @@ def write_record(result, esn, context, url=None):
         for kw in val.split(','):
             etree.SubElement(node, util.nspath_eval('dif:Keyword', NAMESPACES)).text = kw
 
+    # iso topic category
+    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TopicCategory'])
+    etree.SubElement(node, util.nspath_eval('dif:ISO_Topic_Category', NAMESPACES)).text = val
+    
     # temporal
     temporal = etree.SubElement(node, util.nspath_eval('dif:Temporal_Coverage', NAMESPACES))
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TempExtent_begin'])
