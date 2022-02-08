@@ -92,17 +92,35 @@ def write_record(result, esn, context, url=None):
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Format'])
     etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form', NAMESPACES)).text = val
 
-    # keywords
+    # keywords dif:Parameters
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Keywords'])
-
     if val:
-        for kw in val.split(','):
-            etree.SubElement(node, util.nspath_eval('dif:Keyword', NAMESPACES)).text = kw
+        kws = val.split(',')
+        parameters_indexes = []
+        for index, kw in enumerate(kws):
+            if "Earth Science".lower() in kw.lower() and len(kw.split(">")) >= 2:
+                values = kw.split(">")
+                parameters = etree.SubElement(node, util.nspath_eval('dif:Parameters', NAMESPACES))  # .text = kw
+                etree.SubElement(parameters, util.nspath_eval('dif:Category', NAMESPACES)).text = values[0].strip().upper()
+                etree.SubElement(parameters, util.nspath_eval('dif:Topic', NAMESPACES)).text = values[1].strip().upper()
+                etree.SubElement(parameters, util.nspath_eval('dif:Term', NAMESPACES)).text = values[2].strip().upper()
+                for i, v in enumerate(values[3:]):
+                    etree.SubElement(parameters, util.nspath_eval(f'dif:Variable_Level_{i + 1}', NAMESPACES)).text = v.strip().upper()
+                parameters_indexes.append(index)
+                # kws.pop(index)
 
     # iso topic category
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TopicCategory'])
     etree.SubElement(node, util.nspath_eval('dif:ISO_Topic_Category', NAMESPACES)).text = val
-    
+
+    # keywords dif:keywords
+    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Keywords'])
+    if val:
+        kws = val.split(',')
+        kws = [i for j, i in enumerate(kws) if j not in parameters_indexes]
+        for index, kw in enumerate(kws):
+            etree.SubElement(node, util.nspath_eval('dif:Keyword', NAMESPACES)).text = kw.strip()
+            
     # temporal
     temporal = etree.SubElement(node, util.nspath_eval('dif:Temporal_Coverage', NAMESPACES))
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TempExtent_begin'])
