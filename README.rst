@@ -20,4 +20,4 @@ metadata and catalogue component of spatial data infrastructures.
 pycsw is Open Source, released under an MIT license, and runs on all major 
 platforms (Windows, Linux, Mac OS X).
 
-Please read the docs at https://pycsw.org/docs for more information.
+Please read the docs at https://pycsw.org/docs for more information!
