@@ -105,7 +105,7 @@ def write_record(result, esn, context, url=None):
                 etree.SubElement(parameters, util.nspath_eval('dif:Topic', NAMESPACES)).text = values[1].strip().upper()
                 etree.SubElement(parameters, util.nspath_eval('dif:Term', NAMESPACES)).text = values[2].strip().upper()
                 for i, v in enumerate(values[3:]):
-                    etree.SubElement(parameters, util.nspath_eval(f'dif:Variable_Level_{i + 1}', NAMESPACES)).text = v.strip().upper()
+                    etree.SubElement(parameters, util.nspath_eval(f'dif:Variable_Level_{i + 1}', NAMESPACES)).text = v.strip()
                 parameters_indexes.append(index)
                 # kws.pop(index)
 
