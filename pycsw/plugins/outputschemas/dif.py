@@ -92,16 +92,34 @@ def write_record(result, esn, context, url=None):
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Format'])
     etree.SubElement(citation, util.nspath_eval('dif:Data_Presentation_Form', NAMESPACES)).text = val
 
+    # keywords dif:Parameters
+    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Keywords'])
+    if val:
+        kws = val.split(',')
+        parameters_indexes = []
+        for index, kw in enumerate(kws):
+            if "Earth Science".lower() in kw.lower() and len(kw.split(">")) >= 2:
+                values = kw.upper().split(">")
+                parameters = etree.SubElement(node, util.nspath_eval('dif:Parameters', NAMESPACES))  # .text = kw
+                etree.SubElement(parameters, util.nspath_eval('dif:Category', NAMESPACES)).text = values[0].strip().upper()
+                etree.SubElement(parameters, util.nspath_eval('dif:Topic', NAMESPACES)).text = values[1].strip().upper()
+                etree.SubElement(parameters, util.nspath_eval('dif:Term', NAMESPACES)).text = values[2].strip().upper()
+                for i, v in enumerate(values[3:]):
+                    etree.SubElement(parameters, util.nspath_eval(f'dif:Variable_Level_{i + 1}', NAMESPACES)).text = v.strip()
+                parameters_indexes.append(index)
+                # kws.pop(index)
+
     # iso topic category
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:TopicCategory'])
     etree.SubElement(node, util.nspath_eval('dif:ISO_Topic_Category', NAMESPACES)).text = val
 
-    # keywords
+    # keywords dif:keywords
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Keywords'])
-
     if val:
-        for kw in val.split(','):
-            etree.SubElement(node, util.nspath_eval('dif:Keyword', NAMESPACES)).text = kw
+        kws = val.split(',')
+        kws = [i for j, i in enumerate(kws) if j not in parameters_indexes]
+        for index, kw in enumerate(kws):
+            etree.SubElement(node, util.nspath_eval('dif:Keyword', NAMESPACES)).text = kw.strip()
 
     # temporal
     temporal = etree.SubElement(node, util.nspath_eval('dif:Temporal_Coverage', NAMESPACES))
@@ -134,30 +152,46 @@ def write_record(result, esn, context, url=None):
         val = ''
     etree.SubElement(node, util.nspath_eval('dif:Summary', NAMESPACES)).text = val
 
-    # date
-    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:CreationDate'])
-    etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date', NAMESPACES)).text = val
-
     # URL
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Relation'])
-    url = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
-    etree.SubElement(url, util.nspath_eval('dif:URL', NAMESPACES)).text = val
+    if val:
+        url = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
+        etree.SubElement(url, util.nspath_eval('dif:URL', NAMESPACES)).text = val
 
     rlinks = util.getqattr(result, context.md_core_model['mappings']['pycsw:Links'])
     if rlinks:
-        for link in rlinks.split('^'):
-            linkset = link.split(',')
-
+        for link in util.jsonify_links(rlinks):
             url2 = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
 
             urltype = etree.SubElement(url2, util.nspath_eval('dif:URL_Content_Type', NAMESPACES))
-            etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = linkset[2]
+            if link['protocol'] == 'download':
+                etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'GET DATA'
+            elif link['protocol'] == 'OPENDAP:OPENDAP':
+                etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'GET DATA'
+                etree.SubElement(urltype, util.nspath_eval('dif:Subtype', NAMESPACES)).text = 'OPENDAP DATA (DODS)'
+            elif link['protocol'] == 'OGC:WMS':
+                etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'GET SERVICE'
+                etree.SubElement(urltype, util.nspath_eval('dif:Subtype', NAMESPACES)).text = 'GET WEB MAP SERVICE (WMS)'
+            else:
+                etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'GET DATA'
 
-            etree.SubElement(url2, util.nspath_eval('dif:URL', NAMESPACES)).text = linkset[-1]
-            etree.SubElement(url2, util.nspath_eval('dif:Description', NAMESPACES)).text = linkset[1]
+            etree.SubElement(url2, util.nspath_eval('dif:URL', NAMESPACES)).text = link['url']
+            if link['description']:
+                etree.SubElement(url2, util.nspath_eval('dif:Description', NAMESPACES)).text = link['description']
+
+    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Source'])
+    if val:
+        url2 = etree.SubElement(node, util.nspath_eval('dif:Related_URL', NAMESPACES))
+        urltype = etree.SubElement(url2, util.nspath_eval('dif:URL_Content_Type', NAMESPACES))
+        etree.SubElement(urltype, util.nspath_eval('dif:Type', NAMESPACES)).text = 'DATASET LANDING PAGE'
+        etree.SubElement(url2, util.nspath_eval('dif:URL', NAMESPACES)).text = val
 
     etree.SubElement(node, util.nspath_eval('dif:Metadata_Name', NAMESPACES)).text = 'CEOS IDN DIF'
     etree.SubElement(node, util.nspath_eval('dif:Metadata_Version', NAMESPACES)).text = '9.7'
+
+    # date
+    val = util.getqattr(result, context.md_core_model['mappings']['pycsw:CreationDate'])
+    etree.SubElement(node, util.nspath_eval('dif:DIF_Creation_Date', NAMESPACES)).text = val
 
     return node
 
