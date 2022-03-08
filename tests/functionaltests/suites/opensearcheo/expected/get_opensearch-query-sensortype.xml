@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:eo="http://a9.com/-/opensearch/extensions/eo/1.0/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:time="http://a9.com/-/opensearch/extensions/time/1.0/">
+  <atom:id>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg</atom:id>
+  <atom:title>pycsw Geospatial Catalogue</atom:title>
+  <atom:author>
+    <atom:name>pycsw</atom:name>
+  </atom:author>
+  <atom:link rel="search" type="application/opensearchdescription+xml" href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities"/>
+  <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+  <os:Query role="request"/>
+  <os:totalResults>1</os:totalResults>
+  <os:startIndex>1</os:startIndex>
+  <os:itemsPerPage>1</os:itemsPerPage>
+  <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:category term="Orthoimagery"/>
+    <atom:category term="Land cover"/>
+    <atom:category term="Geographical names"/>
+    <atom:category term="data set series"/>
+    <atom:category term="processing"/>
+    <atom:category term="eo:productType:S2MSI2A"/>
+    <atom:category term="eo:orbitNumber:50"/>
+    <atom:category term="eo:orbitDirection:DESCENDING"/>
+    <atom:category term="eo:snowCover:0.0"/>
+    <atom:category term="eo:processingLevel:Level-2A"/>
+    <atom:id>S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE</atom:id>
+    <dc:identifier>S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE</dc:identifier>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/" type="application/octet-stream" title="product" rel="enclosure"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R10m/T34SFG_20200902T090559_B02_10m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R10m/T34SFG_20200902T090559_B03_10m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R10m/T34SFG_20200902T090559_B04_10m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R10m/T34SFG_20200902T090559_B08_10m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R10m/T34SFG_20200902T090559_TCI_10m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R10m/T34SFG_20200902T090559_AOT_10m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R10m/T34SFG_20200902T090559_WVP_10m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_B02_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_B03_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_B04_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_B05_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_B06_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_B07_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_B8A_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_B11_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_B12_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_TCI_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_AOT_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_WVP_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R20m/T34SFG_20200902T090559_SCL_20m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B01_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B02_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B03_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B04_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B05_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B06_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B07_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B8A_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B09_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B11_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_B12_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_TCI_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_AOT_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_WVP_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_SCL_60m.jp2" type="image/jp2" title="granule"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE"/>
+    <atom:title>S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE</atom:title>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+    <atom:published>PYCSW_TIMESTAMP</atom:published>
+    <atom:rights>otherRestrictions</atom:rights>
+    <atom:summary>S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE</atom:summary>
+    <georss:where>
+      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <gml:lowerCorner>36.95 22.24</gml:lowerCorner>
+        <gml:upperCorner>37.22 22.32</gml:upperCorner>
+      </gml:Envelope>
+    </georss:where>
+  </atom:entry>
+</atom:feed>

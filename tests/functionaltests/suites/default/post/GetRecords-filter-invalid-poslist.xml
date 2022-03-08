@@ -1,0 +1,26 @@
+<csw:GetRecords
+	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ows="http://www.opengis.net/ows" outputSchema="http://www.opengis.net/cat/csw/2.0.2"
+                  outputFormat="application/xml" version="2.0.2" service="CSW" resultType="results" maxRecords="1000"
+                  xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+	<csw:Query typeNames="csw:Record">
+		<csw:ElementSetName>full</csw:ElementSetName>
+		<csw:Constraint version="1.1.0">
+			<ogc:Filter>
+				<ogc:Intersects>
+					<ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+					<gml:Polygon srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+						<gml:exterior>
+							<gml:LinearRing>
+								<gml:posList srsDimension="2">11 16 49 17 10 10</gml:posList>
+							</gml:LinearRing>
+						</gml:exterior>
+					</gml:Polygon>
+				</ogc:Intersects>
+			</ogc:Filter>
+		</csw:Constraint>
+	</csw:Query>
+</csw:GetRecords>

@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2022 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -81,7 +81,7 @@ master_doc = 'index'
 project = u'pycsw'
 authors = u'Tom Kralidis'
 license = u'This work is licensed under a Creative Commons Attribution 4.0 International License'
-copyright = u'2010-2015, ' + authors + ' ' + license
+copyright = u'2010-2022, ' + authors + ' ' + license
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -161,7 +161,7 @@ html_theme_options = {
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = '_static/favicon.ico'
+html_favicon = '_static/favicon/favicon.ico'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -179,7 +179,7 @@ html_last_updated_fmt = '%Y-%m-%dT%H:%M:%SZ'
 # Custom sidebar templates, maps document names to template names.
 html_sidebars = {
     #'index':'indexsidebar.html',
-    '**':'indexsidebar.html',
+    '**': ['indexsidebar.html']
 }
 
 # Additional templates that should be rendered to pages, maps page names to

@@ -23,11 +23,11 @@ msgstr "pycsw的贡献"
 msgid ""
 "The pycsw project openly welcomes contributions (bug reports, bug fixes, code enhancements/features, "
 "etc.).  This document will outline some guidelines on contributing to pycsw.  As well, the pycsw "
-"`community <http://pycsw.org/community/>`_ is a great place to get an idea of how to connect and "
+"`community <https://pycsw.org/community/>`_ is a great place to get an idea of how to connect and "
 "participate in pycsw community and development."
 msgstr ""
 "Pycsw 项目是开源的，欢迎贡献 （bug 报告、 bug 修复、 代码增强功能等）。 此篇文章将概述pycsw 的一些作"
-"用。 pycsw `community <http://pycsw.org/community/>`_ ，就是提供一些建议，应该如何连接和参与 pycsw 社区，并如何更好地发"
+"用。 pycsw `community <https://pycsw.org/community/>`_ ，就是提供一些建议，应该如何连接和参与 pycsw 社区，并如何更好地发"
 "展。"
 
 #: ../../../CONTRIBUTING.rst:9

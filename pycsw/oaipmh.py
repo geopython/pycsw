@@ -58,44 +58,44 @@ class OAIPMH(object):
             'iso19139': {
                 'namespace': 'http://www.isotc211.org/2005/gmd',
                 'schema': 'http://www.isotc211.org/2005/gmd/gmd.xsd',
-                'identifier': '//gmd:fileIdentifier/gco:CharacterString',
-                'dateStamp': '//gmd:dateStamp/gco:DateTime|//gmd:dateStamp/gco:Date',
-                'setSpec': '//gmd:hierarchyLevel/gmd:MD_ScopeCode'
+                'identifier': './/gmd:fileIdentifier/gco:CharacterString',
+                'dateStamp': './/gmd:dateStamp/gco:DateTime|.//gmd:dateStamp/gco:Date',
+                'setSpec': './/gmd:hierarchyLevel/gmd:MD_ScopeCode'
             },
             'csw-record': {
                 'namespace': 'http://www.opengis.net/cat/csw/2.0.2',
                 'schema': 'http://schemas.opengis.net/csw/2.0.2/record.xsd',
-                'identifier': '//dc:identifier',
-                'dateStamp': '//dct:modified',
-                'setSpec': '//dc:type'
+                'identifier': './/dc:identifier',
+                'dateStamp': './/dct:modified',
+                'setSpec': './/dc:type'
             },
             'fgdc-std': {
                 'namespace': 'http://www.opengis.net/cat/csw/csdgm',
                 'schema': 'http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd',
-                'identifier': '//idinfo/datasetid',
-                'dateStamp': '//metainfo/metd',
-                'setSpec': '//dataset'
+                'identifier': './/idinfo/datasetid',
+                'dateStamp': './/metainfo/metd',
+                'setSpec': './/dataset'
             },
             'oai_dc': {
                 'namespace': '%soai_dc/' % self.namespaces['oai'],
                 'schema': 'http://www.openarchives.org/OAI/2.0/oai_dc.xsd',
-                'identifier': '//dc:identifier',
-                'dateStamp': '//dct:modified',
-                'setSpec': '//dc:type'
+                'identifier': './/dc:identifier',
+                'dateStamp': './/dct:modified',
+                'setSpec': './/dc:type'
             },
             'dif': {
                 'namespace': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
                 'schema': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd',
-                'identifier': '//dif:Entry_ID',
-                'dateStamp': '//dif:Last_DIF_Revision_Date',
+                'identifier': './/dif:Entry_ID',
+                'dateStamp': './/dif:Last_DIF_Revision_Date',
                 'setSpec': '//dataset'
             },
             'gm03': {
                 'namespace': 'http://www.interlis.ch/INTERLIS2.3',
                 'schema': 'http://www.geocat.ch/internet/geocat/en/home/documentation/gm03.parsys.50316.downloadList.86742.DownloadFile.tmp/gm0321.zip',
-                'identifier': '//gm03:DATASECTION//gm03:fileIdentifer',
-                'dateStamp': '//gm03:DATASECTION//gm03:dateStamp',
-                'setSpec': '//dataset'
+                'identifier': './/gm03:DATASECTION//gm03:fileIdentifer',
+                'dateStamp': './/gm03:DATASECTION//gm03:dateStamp',
+                'setSpec': './/dataset'
             }
         }
         self.metadata_sets = {
@@ -245,9 +245,9 @@ class OAIPMH(object):
                 for child in records:
                     recnode = etree.SubElement(verbnode, util.nspath_eval('oai:record', self.namespaces))
                     header = etree.SubElement(recnode, util.nspath_eval('oai:header', self.namespaces))
-                    self._transform_element(header, response, 'oai:identifier')
-                    self._transform_element(header, response, 'oai:dateStamp')
-                    self._transform_element(header, response, 'oai:setSpec')
+                    self._transform_element(header, child, 'oai:identifier')
+                    self._transform_element(header, child, 'oai:dateStamp')
+                    self._transform_element(header, child, 'oai:setSpec')
                     if verb in ['GetRecord', 'ListRecords']:
                         metadata = etree.SubElement(recnode, util.nspath_eval('oai:metadata', self.namespaces))
                         if 'metadataprefix' in kvp and kvp['metadataprefix'] == 'oai_dc':
@@ -274,7 +274,8 @@ class OAIPMH(object):
         """tests for existence of a given xpath, writes out text if exists"""
 
         xpath = self.metadata_formats[self.metadata_prefix][elname.split(':')[1]]
-        if xpath.startswith('//'):
+
+        if xpath.startswith(('.//', '//')):
             value = element.xpath(xpath, namespaces=self.context.namespaces)
             if value:
                 value = value[0].text

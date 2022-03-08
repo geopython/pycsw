@@ -249,4 +249,94 @@ def test_ipaddress_in_whitelist(ip, whitelist, expected):
     result = util.ipaddress_in_whitelist(ip, whitelist)
     assert result == expected
 
+@pytest.mark.parametrize("linkstr, expected", [
+    # old style CSV
+    ("roads,my roads,OGC:WMS,http://example.org/wms",
+     [{
+         "name": "roads",
+         "description": "my roads",
+         "protocol": "OGC:WMS",
+         "url": "http://example.org/wms"
+     }]
+    ),
+    # old style CSV with some empty tokens
+    (",,,http://example.org/wms",
+     [{
+         "name": None,
+         "description": None,
+         "protocol": None,
+         "url": "http://example.org/wms"
+     }]
+    ),
+    # old style CSV with empty tokens
+    (",,,",
+     [{
+         "name": None,
+         "description": None,
+         "protocol": None,
+         "url": None
+     }]
+    ),
+    # old style CSV with 2 links
+    ("roads,my roads,OGC:WMS,http://example.org/wms^roads,my roads,OGC:WFS,http://example.org/wfs",
+     [{
+         "name": "roads",
+         "description": "my roads",
+         "protocol": "OGC:WMS",
+         "url": "http://example.org/wms"
+      },{
+         "name": "roads",
+         "description": "my roads",
+         "protocol": "OGC:WFS",
+         "url": "http://example.org/wfs"
+      }]
+    ),
+    # JSON style
+    ('[{"name": "roads", "description": "my roads", "protocol": "OGC:WMS", "url": "http://example.org/wms"}]',
+     [{
+         "name": "roads",
+         "description": "my roads",
+         "protocol": "OGC:WMS",
+         "url": "http://example.org/wms"
+      }]
+    ),
+    # JSON style with some empty keys
+    ('[{"name": "roads", "description": null, "protocol": "OGC:WMS", "url": "http://example.org/wms"}]',
+     [{
+         "name": "roads",
+         "description": None,
+         "protocol": "OGC:WMS",
+         "url": "http://example.org/wms"
+      }]
+    ),
+    # JSON style with multiple links
+    ('[{"name": "roads", "description": null, "protocol": "OGC:WMS", "url": "http://example.org/wms"},'
+     '{"name": "roads", "description": null, "protocol": "OGC:WFS", "url": "http://example.org/wfs"}]',
+     [{
+         "name": "roads",
+         "description": None,
+         "protocol": "OGC:WMS",
+         "url": "http://example.org/wms"
+      },{
+         "name": "roads",
+         "description": None,
+         "protocol": "OGC:WFS",
+         "url": "http://example.org/wfs"
+      }]
+    )
+])
+def test_jsonify_links(linkstr, expected):
+    result = util.jsonify_links(linkstr)
+    assert isinstance(result, list)
+    assert result == expected
 
+
+@pytest.mark.parametrize("value, result", [
+    ("foo", False),
+    (None, True),
+    ('', True),
+    (' ', True),
+    ('      ', True),
+])
+def test_is_none_or_empty(value, result):
+    assert util.is_none_or_empty(value) is result

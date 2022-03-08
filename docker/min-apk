@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+apk --update add $@ && rm -rf /var/cache/apk/* || false
+
+strip --strip-unneeded --strip-debug /usr/lib/*.a || true

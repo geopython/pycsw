@@ -31,13 +31,13 @@
 #
 # =================================================================
 
+import json
 import logging
 import uuid
-from six.moves import range
-from six import text_type, binary_type
-from six.moves.urllib.parse import urlparse
+from urllib.parse import urlparse
 
 from geolinks import sniff_link
+from owslib.iso import MD_ImageDescription
 from owslib.util import build_get_url
 from shapely.wkt import loads
 from shapely.geometry import MultiPolygon
@@ -118,6 +118,10 @@ def parse_record(context, record, repos=None,
 
     return _parse_metadata(context, repos, record)
 
+def _get(context, obj, name):
+    ''' convenience method to get values '''
+    return getattr(obj, context.md_core_model['mappings'][name])
+
 def _set(context, obj, name, value):
     ''' convenience method to set values '''
     setattr(obj, context.md_core_model['mappings'][name], value)
@@ -125,7 +129,7 @@ def _set(context, obj, name, value):
 def _parse_metadata(context, repos, record):
     """parse metadata formats"""
 
-    if isinstance(record, binary_type) or isinstance(record, text_type):
+    if isinstance(record, bytes) or isinstance(record, str):
         exml = etree.fromstring(record, context.parser)
     else:  # already serialized to lxml
         if hasattr(record, 'getroot'):  # standalone document
@@ -199,12 +203,16 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
     _set(context, serviceobj, 'pycsw:Operation', ','.join([d.name for d in md.operations]))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
-    links = [
-        '%s,OGC-CSW Catalogue Service for the Web,OGC:CSW,%s' % (identifier, md.url)
-    ]
+    links = [{
+        'name': identifier,
+        'description': 'OGC-CSW Catalogue Service for the Web',
+        'protocol': 'OGC:CSW',
+        'url': md.url
+    }]
 
-    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+    _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
+    _set(context, serviceobj, 'pycsw:MetadataType', 'application/xml')
 
     recobjs.append(serviceobj)
 
@@ -362,12 +370,16 @@ def _parse_wms(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
-    links = [
-        '%s,OGC-WMS Web Map Service,OGC:WMS,%s' % (identifier, md.url),
-    ]
+    links = [{
+        'name': identifier,
+        'description': 'OGC-WMS Web Map Service',
+        'protocol': 'OGC:WMS',
+        'url': md.url
+    }]
 
-    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+    _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
+    _set(context, serviceobj, 'pycsw:MetadataType', 'application/xml')
 
     recobjs.append(serviceobj)
 
@@ -441,13 +453,21 @@ def _parse_wms(context, repos, record, identifier):
             'styles': ''
         }
 
-        links = [
-            '%s,OGC-Web Map Service,OGC:WMS,%s' % (md.contents[layer].name, md.url),
-            '%s,Web image thumbnail (URL),WWW:LINK-1.0-http--image-thumbnail,%s' % (md.contents[layer].name, build_get_url(md.url, params))
-        ]
+        links = [{
+            'name': md.contents[layer].name,
+            'description': 'OGC-Web Map Service',
+            'protocol': 'OGC:WMS',
+            'url': md.url
+            }, {
+            'name': md.contents[layer].name,
+            'description': 'Web image thumbnail (URL)',
+            'protocol': 'WWW:LINK-1.0-http--image-thumbnail',
+            'url': build_get_url(md.url, params)
+        }]
 
-        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
 
         recobjs.append(recobj)
 
@@ -500,12 +520,16 @@ def _parse_wmts(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
-    links = [
-        '%s,OGC-WMTS Web Map Service,OGC:WMTS,%s' % (identifier, md.url),
-    ]
+    links = [{
+        'name': identifier,
+        'description': 'OGC-WMTS Web Map Service',
+        'protocol': 'OGC:WMTS',
+        'url': md.url
+    }]
 
-    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+    _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
+    _set(context, serviceobj, 'pycsw:MetadataType', 'application/xml')
 
     recobjs.append(serviceobj)
 
@@ -570,13 +594,21 @@ def _parse_wmts(context, repos, record, identifier):
             'layer': md.contents[layer].name,
         }
 
-        links = [
-           '%s,OGC-Web Map Tile Service,OGC:WMTS,%s' % (md.contents[layer].name, md.url),
-            '%s,Web image thumbnail (URL),WWW:LINK-1.0-http--image-thumbnail,%s' % (md.contents[layer].name, build_get_url(md.url, params))
-        ]
+        links = [{
+           'name': md.contents[layer].name,
+           'description': 'OGC-Web Map Tile Service',
+           'protocol': 'OGC:WMTS',
+           'url': md.url
+           }, {
+           'name': md.contents[layer].name,
+           'description': 'Web image thumbnail (URL)',
+           'protocol': 'WWW:LINK-1.0-http--image-thumbnai',
+           'url': build_get_url(md.url, params)
+        }]
 
-        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
 
         recobjs.append(recobj)
 
@@ -632,11 +664,14 @@ def _parse_wfs(context, repos, record, identifier, version):
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
-    links = [
-        '%s,OGC-WFS Web Feature Service,OGC:WFS,%s' % (identifier, md.url)
-    ]
+    links = [{
+        'name': identifier,
+        'description': 'OGC-WFS Web Feature Service',
+        'protocol': 'OGC:WFS',
+        'url': md.url
+    }]
 
-    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+    _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
 
     # generate record foreach featuretype
 
@@ -683,13 +718,21 @@ def _parse_wfs(context, repos, record, identifier, version):
             'typename': md.contents[featuretype].id,
         }
 
-        links = [
-            '%s,OGC-Web Feature Service,OGC:WFS,%s' % (md.contents[featuretype].id, md.url),
-            '%s,File for download,WWW:DOWNLOAD-1.0-http--download,%s' % (md.contents[featuretype].id, build_get_url(md.url, params))
-        ]
+        links = [{
+            'name': md.contents[featuretype].id,
+            'description': 'OGC-Web Feature Service',
+            'protocol': 'OGC:WFS',
+            'url': md.url
+            }, {
+            'name': md.contents[featuretype].id,
+            'description': 'File for download',
+            'protocol': 'WWW:DOWNLOAD-1.0-http--download',
+            'url': build_get_url(md.url, params)
+        }]
 
-        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
 
         recobjs.append(recobj)
 
@@ -748,11 +791,14 @@ def _parse_wcs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
-    links = [
-        '%s,OGC-WCS Web Coverage Service,OGC:WCS,%s' % (identifier, md.url)
-    ]
+    links = [{
+        'name': identifier,
+        'description': 'OGC-WCS Web Coverage Service',
+        'protocol': 'OGC:WCS',
+        'url': md.url
+    }]
 
-    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+    _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
 
     # generate record foreach coverage
 
@@ -792,11 +838,14 @@ def _parse_wcs(context, repos, record, identifier):
             _set(context, recobj, 'pycsw:DistanceUOM', 'degrees')
             bboxs.append(wkt_polygon)
 
-        links = [
-            '%s,OGC-Web Coverage Service,OGC:WCS,%s' % (md.contents[coverage].id, md.url)
-        ]
+        links = [{
+            'name': md.contents[coverage].id,
+            'description': 'OGC-Web Coverage Service',
+            'protocol': 'OGC:WCS',
+            'url': md.url
+        }]
 
-        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
 
         recobjs.append(recobj)
@@ -853,13 +902,21 @@ def _parse_wps(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join([o.identifier for o in md.processes]))
     _set(context, serviceobj, 'pycsw:CouplingType', 'loose')
 
-    links = [
-        '%s,OGC-WPS Web Processing Service,OGC:WPS,%s' % (identifier, md.url),
-        '%s,OGC-WPS Capabilities service (ver 1.0.0),OGC:WPS-1.1.0-http-get-capabilities,%s' % (identifier, build_get_url(md.url, {'service': 'WPS', 'version': '1.0.0', 'request': 'GetCapabilities'})),
-    ]
+    links = [{
+        'name': identifier,
+        'description': 'OGC-WPS Web Processing Service',
+        'protocol': 'OGC:WPS',
+        'url': md.url
+        }, {
+        'name': identifier,
+        'description': 'OGC-WPS Capabilities service (ver 1.0.0)',
+        'protocol': 'OGC:WPS-1.1.0-http-get-capabilities',
+        'url': build_get_url(md.url, {'service': 'WPS', 'version': '1.0.0', 'request': 'GetCapabilities'})
+    }]
 
-    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+    _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
     _set(context, serviceobj, 'pycsw:XML', caps2iso(serviceobj, md, context))
+    _set(context, serviceobj, 'pycsw:MetadataType', 'application/xml')
 
     recobjs.append(serviceobj)
 
@@ -894,11 +951,16 @@ def _parse_wps(context, repos, record, identifier):
             'identifier': process.identifier
         }
 
-        links.append(
-        '%s,OGC-WPS DescribeProcess service (ver 1.0.0),OGC:WPS-1.0.0-http-describe-process,%s' % (identifier, build_get_url(md.url, {'service': 'WPS', 'version': '1.0.0', 'request': 'DescribeProcess', 'identifier': process.identifier})))
+        links.append({
+            'name': identifier,
+            'description': 'OGC-WPS DescribeProcess service (ver 1.0.0)',
+            'protocol': 'OGC:WPS-1.0.0-http-describe-process',
+            'url': build_get_url(md.url, {'service': 'WPS', 'version': '1.0.0', 'request': 'DescribeProcess', 'identifier': process.identifier})
+        })
 
-        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
 
         recobjs.append(recobj)
 
@@ -952,11 +1014,14 @@ def _parse_sos(context, repos, record, identifier, version):
     _set(context, serviceobj, 'pycsw:OperatesOn', ','.join(list(md.contents)))
     _set(context, serviceobj, 'pycsw:CouplingType', 'tight')
 
-    links = [
-        '%s,OGC-SOS Sensor Observation Service,OGC:SOS,%s' % (identifier, md.url),
-    ]
+    links = [{
+        'name': identifier,
+        'description': 'OGC-SOS Sensor Observation Service',
+        'protocol': 'OGC:SOS',
+        'url': md.url
+    }]
 
-    _set(context, serviceobj, 'pycsw:Links', '^'.join(links))
+    _set(context, serviceobj, 'pycsw:Links', json.dumps(links))
 
     # generate record foreach offering
 
@@ -1009,6 +1074,7 @@ def _parse_sos(context, repos, record, identifier, version):
             bboxs.append(wkt_polygon)
 
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
+        _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
         recobjs.append(recobj)
 
     # Derive a bbox based on aggregated featuretype bbox values
@@ -1043,6 +1109,7 @@ def _parse_fgdc(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
+    _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', 'en-US')
 
@@ -1086,16 +1153,25 @@ def _parse_fgdc(context, repos, exml):
             _set(context, recobj, 'pycsw:Format', md.idinfo.citation.citeinfo['geoform'])
             if md.idinfo.citation.citeinfo['onlink']:
                 for link in md.idinfo.citation.citeinfo['onlink']:
-                    tmp = ',,,%s' % link
-                    links.append(tmp)
+                    links.append({
+                        'name': None,
+                        'description': None,
+                        'protocol': None,
+                        'url': link
+                    })
 
     if hasattr(md, 'distinfo') and hasattr(md.distinfo, 'stdorder'):
         for link in md.distinfo.stdorder['digform']:
             tmp = ',%s,,%s' % (link['name'], link['url'])
-            links.append(tmp)
+            links.append({
+                'name': None,
+                'description': link['name'],
+                'protocol': None,
+                'url': link['url']
+            })
 
     if len(links) > 0:
-        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
 
     if bbox is not None:
         try:
@@ -1139,6 +1215,7 @@ def _parse_gm03(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
+    _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', data.metadata.language)
     _set(context, recobj, 'pycsw:Type', data.metadata.hierarchy_level[0])
@@ -1201,11 +1278,15 @@ def _parse_gm03(context, repos, exml):
             description = get_value_by_language(data.online_resource.description.pt_group, language)
         linkage = get_value_by_language(data.online_resource.linkage.pt_group, language, 'url')
 
-        tmp = '%s,"%s",%s,%s' % (name, description, protocol, linkage)
-        links.append(tmp)
+        links.append({
+            'name': name,
+            'description': description,
+            'protocol': protocol,
+            'url': linkage
+        })
 
     if len(links) > 0:
-        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
 
     keywords = []
     for kw in data.keywords:
@@ -1234,6 +1315,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
+    _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', md.language)
     _set(context, recobj, 'pycsw:Type', md.hierarchy)
@@ -1242,8 +1324,11 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:Modified', md.datestamp)
     _set(context, recobj, 'pycsw:Source', md.dataseturi)
     if md.referencesystem is not None:
-        _set(context, recobj, 'pycsw:CRS','urn:ogc:def:crs:EPSG:6.11:%s' %
-        md.referencesystem.code)
+        try:
+            code_ = 'urn:ogc:def:crs:EPSG::%d' % int(md.referencesystem.code)
+        except ValueError:
+            code_ = md.referencesystem.code
+        _set(context, recobj, 'pycsw:CRS', code_)
 
     if hasattr(md, 'identification'):
         _set(context, recobj, 'pycsw:Title', md.identification.title)
@@ -1361,6 +1446,44 @@ def _parse_iso(context, repos, exml):
     if hasattr(md, 'contact') and len(md.contact) > 0:
         _set(context, recobj, 'pycsw:ResponsiblePartyRole', md.contact[0].role)
 
+
+    if hasattr(md, 'contentinfo') and len(md.contentinfo) > 0:
+        for ci in md.contentinfo:
+            if isinstance(ci, MD_ImageDescription):
+                _set(context, recobj, 'pycsw:CloudCover', ci.cloud_cover)
+
+                keywords = _get(context, recobj, 'pycsw:Keywords')
+                if ci.processing_level is not None:
+                    pl_keyword = 'eo:processingLevel:' + ci.processing_level
+                    if keywords is None:
+                        keywords  = pl_keyword
+                    else:
+                        keywords  += ',' + pl_keyword
+
+                    _set(context, recobj, 'pycsw:Keywords', keywords)
+
+            bands = []
+            for band in ci.bands:
+                band_info = {
+                    'id': band.id,
+                    'units': band.units,
+                    'min': band.min,
+                    'max': band.max
+                }
+                bands.append(band_info)
+
+            if len(bands) > 0:
+                _set(context, recobj, 'pycsw:Bands', json.dumps(bands))
+
+    if hasattr(md, 'acquisition') and md.acquisition is not None:
+        platform = md.acquisition.platforms[0]
+        _set(context, recobj, 'pycsw:Platform', platform.identifier)
+
+        if platform.instruments:
+            instrument = platform.instruments[0]
+            _set(context, recobj, 'pycsw:Instrument', instrument.identifier)
+            _set(context, recobj, 'pycsw:SensorType', instrument.type)
+
     LOGGER.info('Scanning for links')
     if hasattr(md, 'distribution'):
         dist_links = []
@@ -1374,9 +1497,12 @@ def _parse_iso(context, repos, exml):
         for link in dist_links:
             if link.url is not None and link.protocol is None:  # take a best guess
                 link.protocol = sniff_link(link.url)
-            linkstr = '%s,%s,%s,%s' % \
-            (link.name, link.description, link.protocol, link.url)
-            links.append(linkstr)
+            links.append({
+                'name': link.name,
+                'description': link.description,
+                'protocol': link.protocol,
+                'url': link.url
+            })
 
     try:
         LOGGER.debug('Scanning for srv:SV_ServiceIdentification links')
@@ -1385,14 +1511,18 @@ def _parse_iso(context, repos, exml):
                 for sops in sident.operations:
                     for scpt in sops['connectpoint']:
                         LOGGER.debug('adding srv link %s', scpt.url)
-                        linkstr = '%s,%s,%s,%s' % \
-                        (scpt.name, scpt.description, scpt.protocol, scpt.url)
-                        links.append(linkstr)
+                        linkobj = {
+                            'name': scpt.name,
+                            'description': scpt.description,
+                            'protocol': scpt.protocol,
+                            'url': scpt.url
+                        }
+                        links.append(linkobj)
     except Exception as err:  # srv: identification does not exist
         LOGGER.exception('no srv:SV_ServiceIdentification links found')
 
     if len(links) > 0:
-        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
 
     if bbox is not None:
         try:
@@ -1425,6 +1555,7 @@ def _parse_dc(context, repos, exml):
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', md.xml)
+    _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
     _set(context, recobj, 'pycsw:Language', md.language)
     _set(context, recobj, 'pycsw:Type', md.type)
@@ -1454,15 +1585,22 @@ def _parse_dc(context, repos, exml):
     _set(context, recobj, 'pycsw:Source', md.source)
 
     for ref in md.references:
-        tmp = ',,%s,%s' % (ref['scheme'], ref['url'])
-        links.append(tmp)
+        links.append({
+            'name': None,
+            'description': None,
+            'procotcol': ref['scheme'],
+            'url': ref['url'],
+        })
     for uri in md.uris:
-        tmp = '%s,%s,%s,%s' % \
-        (uri['name'], uri['description'], uri['protocol'], uri['url'])
-        links.append(tmp)
+        links.append({
+            'name': uri['name'],
+            'description': uri['description'],
+            'procotcol': uri['protocol'],
+            'url': uri['url'],
+        })
 
     if len(links) > 0:
-        _set(context, recobj, 'pycsw:Links', '^'.join(links))
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
 
     if bbox is not None:
         try:
@@ -1512,4 +1650,4 @@ def bbox_from_polygons(bboxs):
         bstr = ",".join(["{0:.2f}".format(b) for b in multi_pol.bounds])
         return util.bbox2wktpolygon(bstr)
     except Exception as err:
-        raise RuntimeError('Cannot aggregate polygons: %s' % str(err))
+        raise RuntimeError('Cannot aggregate polygons: %s' % str(err)) from err

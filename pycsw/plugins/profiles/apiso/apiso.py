@@ -111,7 +111,13 @@ class APISO(profile.Profile):
                         'apiso:Creator': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="originator"]/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Creator']},
                         'apiso:Publisher': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="publisher"]/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Publisher']},
                         'apiso:Contributor': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="contributor"]/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Contributor']},
-                        'apiso:Relation': {'xpath': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo', 'dbcol': self.context.md_core_model['mappings']['pycsw:Relation']}
+                        'apiso:Relation': {'xpath': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo', 'dbcol': self.context.md_core_model['mappings']['pycsw:Relation']},
+                        # 19115-2
+                        'apiso:Platform': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:identifier', 'dbcol': self.context.md_core_model['mappings']['pycsw:Platform']},
+                        'apiso:Instrument': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:instrument/gmi:MI_Instrument/gmi:identifier', 'dbcol': self.context.md_core_model['mappings']['pycsw:Instrument']},
+                        'apiso:SensorType': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:instrument/gmi:MI_Instrument/gmi:type', 'dbcol': self.context.md_core_model['mappings']['pycsw:SensorType']},
+                        'apiso:CloudCover': {'xpath': 'gmd:contentInfo/gmd:MD_ImageDescription/gmd:cloudCoverPercentage', 'dbcol': self.context.md_core_model['mappings']['pycsw:CloudCover']},
+                        'apiso:Bands': {'xpath': 'gmd:contentInfo/gmd:MD_ImageDescription/gmd:dimension/MD_Band/@id', 'dbcol': self.context.md_core_model['mappings']['pycsw:Bands']},
                     }
                 },
                 'mappings': {
@@ -386,7 +392,15 @@ class APISO(profile.Profile):
         is_iso_anyway = False
 
         xml_blob = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:XML'])
-        if caps is None and xml_blob is not None and xml_blob.startswith(b'<gmd:MD_Metadata'):
+
+        #xml_blob_decoded = bytes.fromhex(xml_blob[2:]).decode('utf-8')
+
+        if isinstance(xml_blob, bytes):
+            iso_string = b'<gmd:MD_Metadata>'
+        else:
+            iso_string = '<gmd:MD_Metadata>'
+
+        if caps is None and xml_blob is not None and xml_blob.startswith(iso_string):
             is_iso_anyway = True
 
         if (esn == 'full' and (typename == 'gmd:MD_Metadata' or is_iso_anyway)):
@@ -659,22 +673,21 @@ class APISO(profile.Profile):
             transopts = etree.SubElement(distinfo2, util.nspath_eval('gmd:transferOptions', self.namespaces))
             dtransopts = etree.SubElement(transopts, util.nspath_eval('gmd:MD_DigitalTransferOptions', self.namespaces))
 
-            for link in rlinks.split('^'):
-                linkset = link.split(',')
+            for link in util.jsonify_links(rlinks):
                 online = etree.SubElement(dtransopts, util.nspath_eval('gmd:onLine', self.namespaces))
                 online2 = etree.SubElement(online, util.nspath_eval('gmd:CI_OnlineResource', self.namespaces))
 
                 linkage = etree.SubElement(online2, util.nspath_eval('gmd:linkage', self.namespaces))
-                etree.SubElement(linkage, util.nspath_eval('gmd:URL', self.namespaces)).text = linkset[-1]
+                etree.SubElement(linkage, util.nspath_eval('gmd:URL', self.namespaces)).text = link['url']
 
                 protocol = etree.SubElement(online2, util.nspath_eval('gmd:protocol', self.namespaces))
-                etree.SubElement(protocol, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[2]
+                etree.SubElement(protocol, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link['protocol']
 
                 name = etree.SubElement(online2, util.nspath_eval('gmd:name', self.namespaces))
-                etree.SubElement(name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[0]
+                etree.SubElement(name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link['name']
 
                 desc = etree.SubElement(online2, util.nspath_eval('gmd:description', self.namespaces))
-                etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[1]
+                etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link['description']
 
         return node
 

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    io.kompose.service: {{ .Values.pycsw.name }}
+  name: {{ .Values.pycsw.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: {{ .Values.pycsw.name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: {{ .Values.pycsw.name }}
+    spec:
+      containers:
+      - env:
+        - name: PYCSW_SERVER_URL
+          value: {{ .Values.pycsw.config.server.url }}
+        - name: PYCSW_REPOSITORY_DATABASE_URI
+          value: {{ .Values.pycsw.config.repository.database }}
+        image: {{ .Values.pycsw.image }}
+        name: {{ .Values.pycsw.name }}
+        ports:
+        - containerPort: {{ .Values.pycsw.container_port }}
+        resources: {}
+        volumeMounts:
+        - mountPath: {{ .Values.pycsw.volume_path }}
+          name: {{ .Values.pycsw.volume_name }}
+      restartPolicy: Always
+      volumes:
+      - name: {{ .Values.pycsw.volume_name }}
+        configMap:
+          name: {{ .Values.pycsw.configmap_name }}

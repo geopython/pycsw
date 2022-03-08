@@ -1,14 +1,26 @@
 Docker
 ======
 
-pycsw is available as a Docker image. The image is hosted on the `Docker Hub`_.
+Installation
+------------
 
-Assuming you already have docker installed, you can get a pycsw instance up
-and running by issuing the following command::
+pycsw  provides an official `Docker`_ image which is made available on both the `geopython Docker Hub`_ and our `GitHub Container Registry`_. 
 
-    docker run -p 8000:8000 geopython/pycsw
+Either ``IMAGE`` can be called with the ``docker`` command, ``geopython/pycsw`` from DockerHub or ``ghcr.io/geophython/pycsw`` from the GitHub Container Registry. Examples below use ``geopython/pygeoapi``. 
 
-Docker will retrieve the pycsw image from Docker Hub (if needed) and then
+Assuming you already have docker installed, you can get a pycsw instance up and running run with the default built-in configuration:
+
+.. code-block:: bash
+
+   docker run -p 8000:8000 geopython/pycsw 
+   
+   # or
+   
+   docker run -p 8000:8000 ghcr.io/geopython/pycsw
+
+...then browse to http://localhost:8000
+   
+Docker will retrieve the pycsw image (if needed) and then
 start a new container listening on port 8000.
 
 The default configuration will run pycsw with an sqlite repository backend
@@ -39,13 +51,13 @@ with the ``docker logs`` command::
    ``server.logfile=`` in the pycsw configuration file.
 
 
-Using pycsw-admin
------------------
+Using pycsw-admin.py
+--------------------
 
-``pycsw-admin`` can be executed on a running container by
+``pycsw-admin.py`` can be executed on a running container by
 using ``docker exec``::
 
-    docker exec -ti <running-container-id> pycsw-admin.py -h
+    docker exec -ti <running-container-id> pycsw-admin.py --help
 
 
 Running custom pycsw containers
@@ -130,7 +142,7 @@ The following instructions set up a fully working development environment::
     docker run \
         --name pycsw-dev \
         --detach \
-        --volume ${PWD}/pycsw:/usr/lib/python3.5/site-packages/pycsw \
+        --volume ${PWD}/pycsw:/usr/lib/python3.7/site-packages/pycsw \
         --volume ${PWD}/docs:/home/pycsw/docs \
         --volume ${PWD}/VERSION.txt:/home/pycsw/VERSION.txt \
         --volume ${PWD}/LICENSE.txt:/home/pycsw/LICENSE.txt \
@@ -164,6 +176,31 @@ example by running::
 
     firefox docs/_build/html/index.html
 
+Kubernetes
+==========
 
-.. _Docker Hub: https://hub.docker.com/r/geopython/pycsw/
+For `Kubernetes`_ orchestration, run the following in ``docker/kubernetes``:
+
+.. code-block:: bash
+
+  make up
+  make open
+
+
+Helm
+====
+
+For Kubernetes deployment via `Helm`_, run the following in ``docker/helm``:
+
+.. code-block:: bash
+
+  helm install pycsw .
+  minikube service pycsw --url
+
+
+.. _`Docker`: https://www.docker.com
+.. _`geopython Docker Hub`: https://hub.docker.com/r/geopython/pycsw
+.. _`GitHub Container Registry`: https://github.com/geopython/pycsw/pkgs/container/pycsw
 .. _pycsw's github repository: https://github.com/geopython/pycsw/tree/master/docker
+.. _Kubernetes: https://kubernetes.io/
+.. _Helm: https://helm.sh

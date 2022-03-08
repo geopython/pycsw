@@ -1,0 +1,54 @@
+name: build ⚙️
+
+on: 
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'  
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'  
+  release:
+    types:
+      - released
+
+jobs:
+  main:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        include:
+          - python-version: 3.6
+            toxenv: "py36-sqlite"
+          - python-version: 3.7
+            toxenv: "py37-sqlite"
+          - python-version: 3.8
+            toxenv: "py38-sqlite"
+          - python-version: 3.9
+            toxenv: "py39-sqlite"
+    env:
+        TOXENV: ${{ matrix.toxenv }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      name: Setup Python ${{ matrix.python-version }}
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install requirements 📦
+      run: |
+        sudo apt install -y libgeos-dev libpq-dev libxml2-dev libxslt1-dev libz-dev
+        pip3 install -r requirements.txt
+        pip3 install -r requirements-standalone.txt
+        pip3 install -r requirements-dev.txt
+        pip3 install --upgrade https://github.com/geopython/OWSLib/archive/master.zip
+        pip3 install tox
+        echo "TOXENV => $TOXENV"
+    - name: run unit tests ⚙️
+      run: tox -- --exitfirst -m unit
+    - name: run integration tests ⚙️
+      run: tox -- --exitfirst -m functional -k 'not harvesting'
+    - name: build docs 🏗️
+      run: cd docs && make html

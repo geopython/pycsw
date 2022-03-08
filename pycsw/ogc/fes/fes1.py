@@ -88,7 +88,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
     else:
         tmp = element
 
-    pvalue_serial = [0]  # in list as python 2 has no nonlocal variable
+    pvalue_serial = [0]
     def assign_param():
         if orm == 'django':
             return '%s'
@@ -123,7 +123,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                 LOGGER.debug('Testing existence of ogc:PropertyName')
                 pname = queryables[elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text]['dbcol']
             except Exception as err:
-                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err)))
+                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err))) from err
 
         else:
             try:
@@ -133,7 +133,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             except Exception as err:
                 raise RuntimeError('Invalid PropertyName: %s.  %s' %
                                    (elem.find(util.nspath_eval('ogc:PropertyName',
-                                   nsmap)).text, str(err)))
+                                   nsmap)).text, str(err))) from err
 
         if (elem.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
             if elem.tag in [util.nspath_eval('ogc:%s' % n, nsmap) for n in

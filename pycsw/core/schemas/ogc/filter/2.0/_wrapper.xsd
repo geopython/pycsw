@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.opengis.net/fes/2.0" elementFormDefault="qualified" xmlns:smil="http://www.w3.org/2001/SMIL20/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml">
+  <xs:include schemaLocation="./filter.xsd"/>
+  <xs:import namespace="http://www.opengis.net/gml" schemaLocation="../../gml/3.1.1/base/gml.xsd"/>
+</xs:schema>

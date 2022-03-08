@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    io.kompose.service: {{ .Values.db.name }}
+  name: {{ .Values.db.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: {{ .Values.db.name }}
+  # strategy:
+  #   type: Recreate
+  serviceName: {{ .Values.db.name }}
+  template:
+    metadata:
+      labels:
+        io.kompose.service: {{ .Values.db.name }}
+    spec:
+      containers:
+      - env:
+        - name: PGDATA
+          value: {{ .Values.db.volume_path }}
+        - name: POSTGRES_DB
+          value: {{ .Values.db.database }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.db.pass }}
+        - name: POSTGRES_USER
+          value: {{ .Values.db.user }}
+        image: {{ .Values.db.image }}
+        name: {{ .Values.db.name }}
+        ports:
+        - containerPort: {{ .Values.db.port }}
+        resources: {}
+        volumeMounts:
+        - mountPath: {{ .Values.db.volume_path }}
+          name: {{ .Values.db.volume_name }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.db.volume_name }}
+      spec:
+        storageClassName: {{ .Values.db.volume_storage_type }}
+        accessModes:
+        - {{ .Values.db.volume_access_modes }}
+        resources:
+          requests:
+            storage: {{ .Values.db.volume_size }}
+# status: {}

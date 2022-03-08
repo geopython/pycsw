@@ -3,7 +3,7 @@ Contributing to pycsw
 
 The pycsw project openly welcomes contributions (bug reports, bug fixes, code
 enhancements/features, etc.).  This document will outline some guidelines on
-contributing to pycsw.  As well, the pycsw `community <http://pycsw.org/community/>`_ is a great place to
+contributing to pycsw.  As well, the pycsw `community <https://pycsw.org/community/>`_ is a great place to
 get an idea of how to connect and participate in pycsw community and development.
 
 pycsw has the following modes of contribution:
@@ -14,7 +14,7 @@ pycsw has the following modes of contribution:
 Code of Conduct
 ---------------
 
-Contributors to this project are expected to act respectfully toward others in accordance with the `OSGeo Code of Conduct <http://www.osgeo.org/code_of_conduct>`_.
+Contributors to this project are expected to act respectfully toward others in accordance with the `OSGeo Code of Conduct <https://www.osgeo.org/code_of_conduct>`_.
 
 Contributions and Licensing
 ---------------------------
@@ -61,12 +61,12 @@ Documentation
 
 - documentation is managed in ``docs/``, in reStructuredText format
 - `Sphinx`_ is used to generate the documentation
-- See the `reStructuredText Primer <http://sphinx-doc.org/rest.html>`_ on rST markup and syntax.
+- See the `reStructuredText Primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_ on rST markup and syntax.
 
 Bugs
 ----
 
-pycsw's `issue tracker <https://github.com/geopython/pycsw/issues>`_ is the place to report bugs or request enhancements. To submit a bug be sure to specify the pycsw version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform. For convenience, you can run ``pycsw-admin.py -c get_sysprof`` and copy/paste the output into your issue.
+pycsw's `issue tracker <https://github.com/geopython/pycsw/issues>`_ is the place to report bugs or request enhancements. To submit a bug be sure to specify the pycsw version you are using, the appropriate component, a description of how to reproduce the bug, as well as what version of Python and platform. For convenience, you can run ``pycsw-admin.py get-sysprof`` and copy/paste the output into your issue.
 
 Forking pycsw
 -------------
@@ -82,7 +82,6 @@ GitHub Commit Guidelines
 
 - enhancements and bug fixes should be identified with a GitHub issue
 - commits should be granular enough for other developers to understand the nature / implications of the change(s)
-- for trivial commits that do not need `Travis CI <https://travis-ci.org/geopython/pycsw>`_ to run, include ``[ci skip]`` as part of the commit message
 - non-trivial Git commits shall be associated with a GitHub issue.  As documentation can always be improved, tickets need not be opened for improving the docs
 - Git commits shall include a description of changes
 - Git commits shall include the GitHub issue number (i.e. ``#1234``) in the Git commit log message
@@ -95,7 +94,7 @@ Coding Guidelines
 
 - pycsw instead of PyCSW, pyCSW, Pycsw
 - always code with `PEP 8`_ conventions
-- always run source code through ``pep8`` and `pylint`_, using all pylint defaults except for ``C0111``.  ``sbin/pycsw-pylint.sh`` is included for convenience
+- always run source code through `flake8`_ and `pylint`_, using all pylint defaults except for ``C0111``.  ``sbin/pycsw-pylint.sh`` is included for convenience
 - for exceptions which make their way to OGC ``ExceptionReport`` XML, always specify the appropriate ``locator`` and ``code`` parameters
 - the pycsw wiki documents `developer tasks`_ for things like releasing documentation, testing, etc.
 
@@ -138,13 +137,10 @@ your own repository to ensure your pycsw repository is up to date with pycsw mas
   git checkout master
   git pull upstream master
 
-.. _`Corporate`: http://www.osgeo.org/sites/osgeo.org/files/Page/corporate_contributor.txt
-.. _`Individual`: http://www.osgeo.org/sites/osgeo.org/files/Page/individual_contributor.txt
 .. _`info@osgeo.org`: mailto:info@osgeo.org
-.. _`OSGeo`: http://www.osgeo.org/content/foundation/legal/licenses.html
-.. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
-.. _`pep8`: http://pypi.python.org/pypi/pep8/
-.. _`pylint`: http://www.logilab.org/857
-.. _`Sphinx`: http://sphinx-doc.org/
+.. _`PEP 8`: https://www.python.org/dev/peps/pep-0008/
+.. _`flake8`: https://gitlab.com/pycqa/flake8
+.. _`pylint`: https://pylint.org
+.. _`Sphinx`: https://www.sphinx-doc.org
 .. _`developer tasks`: https://github.com/geopython/pycsw/wiki/Developer-Tasks
-.. _`mailing list`: http://pycsw.org/community#mailing-list
+.. _`mailing list`: https://pycsw.org/community#mailing-list

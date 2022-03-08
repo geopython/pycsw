@@ -28,7 +28,6 @@
 #
 # =================================================================
 
-from six.moves import zip
 import logging
 from owslib import crs
 
@@ -42,14 +41,24 @@ TYPES = ['gml:Point', 'gml:LineString', 'gml:Polygon', 'gml:Envelope']
 DEFAULT_SRS = crs.Crs('urn:x-ogc:def:crs:EPSG:6.11:4326')
 
 
-def _poslist2wkt(poslist, axisorder):
+def _poslist2wkt(poslist, axisorder, geomtype):
     """Repurpose gml:posList into WKT aware list"""
 
     tmp = poslist.split()
     poslist2 = []
 
-    xlist = tmp[1::2]
-    ylist = tmp[::2]
+    if geomtype == 'polygon':
+       len_ = 8
+    elif geomtype == 'line':
+       len_ = 4
+
+    if len(tmp) < len_:
+        msg = 'Invalid number of coordinates in geometry'
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    xlist = tmp[::2]
+    ylist = tmp[1::2]
 
     if axisorder == 'yx':
         for i, j in zip(ylist, xlist):
@@ -135,7 +144,8 @@ class Geometry(object):
                                Missing gml:posList')
         else:
             self.wkt = 'LINESTRING(%s)' % _poslist2wkt(tmp.text,
-                                                       self.crs.axisorder)
+                                                       self.crs.axisorder,
+                                                       'line')
 
     def _get_polygon(self):
         """Parse gml:Polygon"""
@@ -148,7 +158,8 @@ class Geometry(object):
                                Missing gml:posList')
         else:
             self.wkt = 'POLYGON((%s))' % _poslist2wkt(tmp.text,
-                                                      self.crs.axisorder)
+                                                      self.crs.axisorder,
+                                                      'polygon')
 
     def _get_envelope(self):
         """Parse gml:Envelope"""

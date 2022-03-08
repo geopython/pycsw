@@ -10,12 +10,12 @@
       <dc:subject></dc:subject>
       <dct:references scheme="OGC:WMS">http://webservices.nationalatlas.gov/wms/1million</dct:references>
       <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://webservices.nationalatlas.gov/wms/1million?version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
-      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
-      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
-      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
-      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
-      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
-      <dct:references scheme="None">http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references>http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references>http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references>http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references>http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references>http://webservices.nationalatlas.gov/wms/1million</dct:references>
+      <dct:references>http://webservices.nationalatlas.gov/wms/1million</dct:references>
       <dc:source>http://demo.pycsw.org/services/csw</dc:source>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
         <ows:LowerCorner>18.92 -179.13</ows:LowerCorner>
@@ -37,9 +37,9 @@
       <dc:subject>land</dc:subject>
       <dct:references scheme="OGC:WMS">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
       <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=%2Fhome%2Fwms%2Fdata%2Fmapfiles%2Flakestsi.map&amp;version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
-      <dct:references scheme="None">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
-      <dct:references scheme="None">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
-      <dct:references scheme="None">http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
+      <dct:references>http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
+      <dct:references>http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
+      <dct:references>http://wms.ssec.wisc.edu/cgi-bin/mapserv?map=/home/wms/data/mapfiles/lakestsi.map</dct:references>
       <dct:abstract>General: This server hosts a set of experimental OGC Web Services of remote sensing data products for use in a broad range of both desktop and mobile device clients.</dct:abstract>
       <dc:source>http://demo.pycsw.org/services/csw</dc:source>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
@@ -54,12 +54,12 @@
       <dc:subject>EU-DEM</dc:subject>
       <dct:references scheme="OGC:WMS">http://data.eox.at/eudem_ows</dct:references>
       <dct:references scheme="OGC:WMS-1.1.1-http-get-capabilities">http://data.eox.at/eudem_ows?version=1.1.1&amp;request=GetCapabilities&amp;service=WMS</dct:references>
-      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
-      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
-      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
-      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
-      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
-      <dct:references scheme="None">http://data.eox.at/eudem_ows</dct:references>
+      <dct:references>http://data.eox.at/eudem_ows</dct:references>
+      <dct:references>http://data.eox.at/eudem_ows</dct:references>
+      <dct:references>http://data.eox.at/eudem_ows</dct:references>
+      <dct:references>http://data.eox.at/eudem_ows</dct:references>
+      <dct:references>http://data.eox.at/eudem_ows</dct:references>
+      <dct:references>http://data.eox.at/eudem_ows</dct:references>
       <dct:abstract>Produced using Copernicus data and information funded by the European Union - EU-DEM layers.</dct:abstract>
       <dc:source>http://demo.pycsw.org/services/csw</dc:source>
       <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">

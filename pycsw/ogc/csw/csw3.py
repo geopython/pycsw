@@ -28,21 +28,21 @@
 #
 # =================================================================
 
+import json
 import os
 import sys
 import cgi
 from time import time
-from six.moves.urllib.parse import quote, unquote
-from six import StringIO
-from six.moves.configparser import SafeConfigParser
+from urllib.parse import quote, unquote
+from io import StringIO
 from pycsw.core.etree import etree
-from pycsw.ogc.csw.cql import cql2fes1
+from pycsw.ogc.csw.cql import cql2fes
 from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
 from pycsw.core import config, log, metadata, util
 from pycsw.core.formats.fmt_json import xml2dict
-from pycsw.ogc.fes import fes2
+from pycsw.ogc.fes import fes1, fes2
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -132,7 +132,7 @@ class Csw3(object):
                 updatesequence))
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswGetCapabilities.xsd' % \
+        self.parent.context.namespaces)] = '%s %s/cat/csw/3.0/cswGetCapabilities.xsd' % \
         (self.parent.context.namespaces['csw30'],
          self.parent.config.get('server', 'ogc_schemas_base'))
 
@@ -498,7 +498,7 @@ class Csw3(object):
         self.parent.context.namespaces), nsmap=self.parent.context.namespaces)
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
-        self.parent.context.namespaces)] = '%s %s/csw/3.0/cswGetDomain.xsd' % \
+        self.parent.context.namespaces)] = '%s %s/cat/csw/3.0/cswGetDomain.xsd' % \
         (self.parent.context.namespaces['csw30'],
         self.parent.config.get('server', 'ogc_schemas_base'))
 
@@ -734,15 +734,16 @@ class Csw3(object):
                 if int(self.parent.kvp['maxrecords']) > maxrecords_cfg:
                     self.parent.kvp['maxrecords'] = maxrecords_cfg
 
-        if any(x in ['bbox', 'q', 'time'] for x in self.parent.kvp):
+        if any(x in opensearch.QUERY_PARAMETERS for x in self.parent.kvp):
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
             self.parent.kvp['constraintlanguage'] = 'FILTER'
             try:
-                tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context)
+                tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context,
+                                                      self.parent.profiles, fes_version='2.0')
             except Exception as err:
                 return self.exceptionreport('InvalidParameterValue', 'bbox', str(err))
 
-            if tmp_filter is not "":
+            if tmp_filter != "":
                 self.parent.kvp['constraint'] = tmp_filter
                 LOGGER.debug('OpenSearch Geo/Time parameters to Filter: %s.', self.parent.kvp['constraint'])
 
@@ -767,7 +768,7 @@ class Csw3(object):
                         LOGGER.debug('CQL: %s', tmp)
                         self.parent.kvp['constraint'] = {}
                         self.parent.kvp['constraint']['type'] = 'filter'
-                        cql = cql2fes1(tmp, self.parent.context.namespaces)
+                        cql = cql2fes(tmp, self.parent.context.namespaces, fes_version='1.0')
                         self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = fes1.parse(cql,
                         self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
@@ -780,7 +781,7 @@ class Csw3(object):
                     # validate filter XML
                     try:
                         schema = os.path.join(self.parent.config.get('server', 'home'),
-                        'core', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
+                        'core', 'schemas', 'ogc', 'filter', '2.0', '_wrapper.xsd')
                         LOGGER.info('Validating Filter %s.', self.parent.kvp['constraint'])
                         schema = etree.XMLSchema(file=schema)
                         parser = etree.XMLParser(schema=schema, resolve_entities=False)
@@ -837,7 +838,7 @@ class Csw3(object):
             else:
                 self.parent.kvp['sortby']['order'] = 'ASC'
 
-        if 'startposition' not in self.parent.kvp:
+        if 'startposition' not in self.parent.kvp or not self.parent.kvp['startposition']:
             self.parent.kvp['startposition'] = 1
 
         if 'recordids' in self.parent.kvp and self.parent.kvp['recordids'] != '':
@@ -889,7 +890,7 @@ class Csw3(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/csw/3.0/cswGetRecordsResponse.xsd' % \
+        '%s %s/cat/csw/3.0/cswGetRecords.xsd' % \
         (self.parent.context.namespaces['csw30'], self.parent.config.get('server', 'ogc_schemas_base'))
 
         if 'requestid' in self.parent.kvp and self.parent.kvp['requestid'] is not None:
@@ -969,9 +970,15 @@ class Csw3(object):
                     return self.parent.response
 
         if (self.parent.config.has_option('server', 'federatedcatalogues') and
-            'distributedsearch' in self.parent.kvp and
-            self.parent.kvp['distributedsearch'] and self.parent.kvp['hopcount'] > 0):
+            'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
+            self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
+
+#        if all([self.parent.config.has_option('server', 'federatedcatalogues'),
+#                'distributedsearch' in self.parent.kvp,
+#                self.parent.kvp['distributedsearch'],
+#                'hopcount' in self.parent.kvp,
+#                int(self.parent.kvp['hopcount']) > 0]):  # do distributed search
 
             LOGGER.debug('DistributedSearch specified (hopCount: %s)',
             self.parent.kvp['hopcount'])
@@ -984,15 +991,19 @@ class Csw3(object):
                 catalogue: %s', fedcat)
                 try:
                     start_time = time()
-                    remotecsw = CatalogueServiceWeb(fedcat, skip_caps=True)
-                    remotecsw.getrecords2(xml=self.parent.request,
-                                          esn=self.parent.kvp['elementsetname'],
-                                          outputschema=self.parent.kvp['outputschema'])
+
+                    remotecsw = CatalogueServiceWeb(fedcat, version='3.0.0', skip_caps=True)
+                    if str(self.parent.request).startswith('http'):
+                        self.parent.request = self.parent.request.split('?')[-1]
+                        self.parent.request = self.parent.request.replace('mode=opensearch', '')
+                    remotecsw.getrecords(xml=self.parent.request,
+                                         esn=self.parent.kvp['elementsetname'],
+                                         outputschema=self.parent.kvp['outputschema'])
 
                     fsr = etree.SubElement(searchresults, util.nspath_eval(
                         'csw30:FederatedSearchResult',
                          self.parent.context.namespaces),
-                         catalogueURL=fedcat.request)
+                         catalogueURL=fedcat)
 
                     msg = 'Distributed search results from catalogue %s: %s.' % (fedcat, remotecsw.results)
                     LOGGER.debug(msg)
@@ -1002,15 +1013,17 @@ class Csw3(object):
                         'csw30:searchResult', self.parent.context.namespaces),
                         recordSchema=self.parent.kvp['outputschema'],
                         elementSetName=self.parent.kvp['elementsetname'],
-                        numberOfRecordsMatched=fedcat.results['matches'],
-                        numberOfRecordsReturned=fedcat.results['returned'],
-                        nextRecord=fedcat.results['nextrecord'],
+                        numberOfRecordsMatched=str(remotecsw.results['matches']),
+                        numberOfRecordsReturned=str(remotecsw.results['returned']),
+                        nextRecord=str(remotecsw.results['nextrecord']),
                         elapsedTime=str(get_elapsed_time(start_time, time())),
                         status=get_resultset_status(
-                            fedcat.results['matches'],
-                            fedcat.results['nextrecord']))
+                            remotecsw.results['matches'],
+                            remotecsw.results['nextrecord']))
 
-                    search_result.append(remotecsw.records)
+                    for result in remotecsw.records.values():
+                        search_result.append(etree.fromstring(result.xml, self.parent.context.parser))
+
                 except ExceptionReport as err:
                     error_string = 'remote CSW %s returned exception: ' % fedcat
                     searchresults.append(etree.Comment(
@@ -1021,13 +1034,6 @@ class Csw3(object):
                     searchresults.append(etree.Comment(
                     ' %s\n\n%s ' % (error_string, err)))
                     LOGGER.exception(error_string)
-
-#        if len(dsresults) > 0:  # return DistributedSearch results
-#            for resultset in dsresults:
-#                if isinstance(resultset, etree._Comment):
-#                    searchresults.append(resultset)
-#                for rec in resultset:
-#                    searchresults.append(etree.fromstring(resultset[rec].xml, self.parent.context.parser))
 
         searchresults.attrib['elapsedTime'] = str(get_elapsed_time(self.parent.process_time_start, time()))
 
@@ -1469,7 +1475,7 @@ class Csw3(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
-        '%s %s/csw/2.0.2/CSW-publication.xsd' % (self.parent.context.namespaces['csw'],
+        '%s %s/csw/3.0/cswHarvest.xsd' % (self.parent.context.namespaces['csw30'],
         self.parent.config.get('server', 'ogc_schemas_base'))
 
         node2 = etree.SubElement(node,
@@ -1575,13 +1581,12 @@ class Csw3(object):
                 self.parent.context.md_core_model['mappings']['pycsw:Links'])
 
                 if rlinks:
-                    links = rlinks.split('^')
-                    for link in links:
-                        linkset = link.split(',')
+                    LOGGER.info('link type: {}'.format(type(rlinks)))
+                    for link in util.jsonify_links(rlinks):
                         etree.SubElement(record,
                         util.nspath_eval('dct:references',
                         self.parent.context.namespaces),
-                        scheme=linkset[2]).text = linkset[-1]
+                        scheme=link['protocol']).text = link['url']
 
                 for i in ['dc:relation', 'dct:modified', 'dct:abstract']:
                     val = util.getqattr(recobj, queryables[i]['dbcol'])
@@ -1646,8 +1651,8 @@ class Csw3(object):
             try:
                 LOGGER.info('Transforming CQL into OGC Filter')
                 query['type'] = 'filter'
-                cql = cql2fes1(tmp.text, self.parent.context.namespaces)
-                query['where'], query['values'] = fes1.parse(cql,
+                cql = cql2fes(tmp.text, self.parent.context.namespaces, fes_version='2.0')
+                query['where'], query['values'] = fes2.parse(cql,
                 self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                 query['_dict'] = xml2dict(etree.tostring(cql), self.parent.context.namespaces)
@@ -1683,7 +1688,7 @@ class Csw3(object):
 
         xsd_filename = 'csw%s.xsd' % etree.QName(doc).localname
         schema = os.path.join(self.parent.config.get('server', 'home'),
-        'core', 'schemas', 'ogc', 'csw', '3.0', xsd_filename)
+        'core', 'schemas', 'ogc', 'cat', 'csw', '3.0', xsd_filename)
 
         try:
             # it is virtually impossible to validate a csw:Transaction
@@ -1996,7 +2001,7 @@ class Csw3(object):
         if root:
             node.attrib[util.nspath_eval('xsi:schemaLocation',
             self.parent.context.namespaces)] = \
-            '%s %s/csw/3.0/cswAll.xsd' % (self.parent.context.namespaces['csw30'], \
+            '%s %s/cat/csw/3.0/cswAll.xsd' % (self.parent.context.namespaces['csw30'], \
             self.parent.config.get('server', 'ogc_schemas_base'))
 
         node1 = etree.SubElement(node, util.nspath_eval('csw30:EchoedRequest',

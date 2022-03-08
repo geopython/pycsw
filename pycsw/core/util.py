@@ -32,15 +32,16 @@
 #
 # =================================================================
 
+from configparser import BasicInterpolation, ConfigParser
+import json
 import os
 import re
 import datetime
 import logging
 import time
 
-import six
-from six.moves.urllib.request import Request, urlopen
-from six.moves.urllib.parse import urlparse
+from urllib.request import Request, urlopen
+from urllib.parse import urlparse
 from shapely.wkt import loads
 from owslib.util import http_post
 
@@ -125,7 +126,7 @@ def get_version_integer(version):
         else:
             result = -1
     except AttributeError as err:
-        raise RuntimeError('%s' % str(err))
+        raise RuntimeError('%s' % str(err)) from err
     return result
 
 
@@ -278,7 +279,7 @@ def http_request(method, url, request=None, timeout=30):
         return http_post(url, request, timeout=timeout)
     else:  # GET
         request = Request(url)
-        request.add_header('User-Agent', 'pycsw (http://pycsw.org/)')
+        request.add_header('User-Agent', 'pycsw (https://pycsw.org/)')
         return urlopen(request, timeout=timeout).read()
 
 
@@ -341,7 +342,7 @@ def get_anytext(bag):
     if isinstance(bag, list):  # list of words
         return ' '.join([_f for _f in bag if _f]).strip()
     else:  # xml
-        if isinstance(bag, six.binary_type) or isinstance(bag, six.text_type):
+        if isinstance(bag, bytes) or isinstance(bag, str):
             # serialize to lxml
             bag = etree.fromstring(bag, PARSER)
         # get all XML element content
@@ -373,11 +374,10 @@ def secure_filename(filename):
 
     :param filename: the filename to secure
     """
-    if isinstance(filename, six.text_type):
+    if isinstance(filename, str):
         from unicodedata import normalize
         filename = normalize('NFKD', filename).encode('ascii', 'ignore')
-        if not six.PY2:
-            filename = filename.decode('ascii')
+        filename = filename.decode('ascii')
     for sep in os.path.sep, os.path.altsep:
         if sep:
             filename = filename.replace(sep, ' ')
@@ -392,3 +392,66 @@ def secure_filename(filename):
         filename = '_' + filename
 
     return filename
+
+def jsonify_links(links):
+    """
+    pycsw:Links column data handler.
+    casts old or new style links into JSON objects
+    """
+    try:
+        LOGGER.debug('JSON link')
+        linkset = json.loads(links)
+        return linkset
+    except json.decoder.JSONDecodeError as err:  # try CSV parsing
+        LOGGER.debug('old style CSV link')
+        json_links = []
+        for link in links.split('^'):
+            tokens = link.split(',')
+            json_links.append({
+                'name': tokens[0] or None,
+                'description': tokens[1] or None,
+                'protocol': tokens[2] or None,
+                'url': tokens[3] or None
+            })
+        return json_links
+
+
+class EnvInterpolation(BasicInterpolation):
+    """
+    Interpolation which expands environment variables in values.
+    from: https://stackoverflow.com/a/49529659
+    """
+
+    def before_get(self, parser, section, option, value, defaults):
+        value = super().before_get(parser, section, option, value, defaults)
+        return os.path.expandvars(value)
+
+
+def parse_ini_config(config_path) -> ConfigParser:
+    """
+    Helper function to parse a .ini configuration file
+
+    :param config_path: filepath
+
+    :returns: ConfigParser object
+    """
+
+    config = ConfigParser(interpolation=EnvInterpolation())
+    with open(config_path, encoding='utf-8') as scp:
+        config.read_file(scp)
+    return config
+
+
+def is_none_or_empty(value):
+    """
+    Helper function to detect if value is None or empty
+
+    :param value: value to evaluate
+
+    :returns: bool of whether the value is None or empty
+    """
+
+    if value is None or len(value.strip()) == 0:
+        return True
+
+    return False

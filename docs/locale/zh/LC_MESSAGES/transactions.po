@@ -161,7 +161,7 @@ msgid "`WAF`_"
 msgstr ""
 
 #: ../../transactions.rst:1
-msgid "``urn:geoss:urn``"
+msgid "``urn:geoss:waf``"
 msgstr ""
 
 #: ../../transactions.rst:31

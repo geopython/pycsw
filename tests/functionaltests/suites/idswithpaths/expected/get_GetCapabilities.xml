@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" updateSequence="PYCSW_UPDATESEQUENCE" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+<csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" updateSequence="PYCSW_UPDATESEQUENCE" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <ows:ServiceIdentification>
     <ows:Title>pycsw Geospatial Catalogue</ows:Title>
-    <ows:Abstract>pycsw is an OGC CSW server implementation written in Python</ows:Abstract>
+    <ows:Abstract>pycsw is an OARec and OGC CSW server implementation written in Python</ows:Abstract>
     <ows:Keywords>
       <ows:Keyword>catalogue</ows:Keyword>
       <ows:Keyword>discovery</ows:Keyword>
@@ -17,7 +17,7 @@
   </ows:ServiceIdentification>
   <ows:ServiceProvider>
     <ows:ProviderName>pycsw</ows:ProviderName>
-    <ows:ProviderSite xlink:type="simple" xlink:href="http://pycsw.org/"/>
+    <ows:ProviderSite xlink:type="simple" xlink:href="https://pycsw.org/"/>
     <ows:ServiceContact>
       <ows:IndividualName>Kralidis, Tom</ows:IndividualName>
       <ows:PositionName>Senior Systems Scientist</ows:PositionName>
@@ -45,8 +45,8 @@
     <ows:Operation name="GetCapabilities">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="sections">
@@ -59,8 +59,8 @@
     <ows:Operation name="DescribeRecord">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
@@ -79,8 +79,8 @@
     <ows:Operation name="GetDomain">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ParameterName">
@@ -102,8 +102,8 @@
     <ows:Operation name="GetRecords">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="CONSTRAINTLANGUAGE">
@@ -159,8 +159,8 @@
     <ows:Operation name="GetRecordById">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ElementSetName">
@@ -183,7 +183,7 @@
     <ows:Operation name="GetRepositoryItem">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/idswithpaths/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/idswithpaths/default.cfg"/>
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>

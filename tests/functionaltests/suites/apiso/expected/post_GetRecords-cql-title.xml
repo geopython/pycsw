@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
-  <csw:SearchResults nextRecord="0" numberOfRecordsMatched="5" numberOfRecordsReturned="5" recordSchema="http://www.isotc211.org/2005/gmd" elementSet="brief">
+  <csw:SearchResults numberOfRecordsMatched="5" numberOfRecordsReturned="5" nextRecord="0" recordSchema="http://www.isotc211.org/2005/gmd" elementSet="brief">
     <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
       <gmd:fileIdentifier>
         <gco:CharacterString>a2744b0c-becd-426a-95a8-46e9850ccc6d</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+        <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
         <gmd:MD_DataIdentification id="a2744b0c-becd-426a-95a8-46e9850ccc6d">
@@ -23,7 +23,7 @@
                     <gco:Date>2009-10-07</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
+                    <gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -61,13 +61,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
@@ -81,7 +81,7 @@
         <gco:CharacterString>0dc824a6-b555-46c1-bd7b-bc66cb91a70f</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+        <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
         <gmd:MD_DataIdentification id="0dc824a6-b555-46c1-bd7b-bc66cb91a70f">
@@ -96,7 +96,7 @@
                     <gco:Date>2009-10-07</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
+                    <gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -134,13 +134,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
@@ -154,7 +154,7 @@
         <gco:CharacterString>42c8e55a-2bf6-476d-a7c9-be3bcd697f13</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+        <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
         <gmd:MD_DataIdentification id="42c8e55a-2bf6-476d-a7c9-be3bcd697f13">
@@ -169,7 +169,7 @@
                     <gco:Date>2009-10-07</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
+                    <gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -207,13 +207,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
@@ -227,7 +227,7 @@
         <gco:CharacterString>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+        <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
         <gmd:MD_DataIdentification id="c3bf29d4-d60a-4959-a415-2c03fb0d4aef">
@@ -242,7 +242,7 @@
                     <gco:Date>2009-10-07</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
+                    <gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -280,13 +280,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
@@ -300,7 +300,7 @@
         <gco:CharacterString>b8cc2388-5d0a-43d8-9473-0e86dd0396da</gco:CharacterString>
       </gmd:fileIdentifier>
       <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+        <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
       </gmd:hierarchyLevel>
       <gmd:identificationInfo>
         <gmd:MD_DataIdentification id="b8cc2388-5d0a-43d8-9473-0e86dd0396da">
@@ -315,7 +315,7 @@
                     <gco:Date>2009-10-07</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</gmd:CI_DateTypeCode>
+                    <gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -353,13 +353,13 @@
                     <gmd:URL>http://www.ypaat.gr</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:name>
                   <gmd:description>
-                    <gco:CharacterString>None</gco:CharacterString>
+                    <gco:CharacterString/>
                   </gmd:description>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>

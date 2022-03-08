@@ -66,17 +66,17 @@ MODEL = {
         'DWithin', 'Equals', 'Intersects', 'Overlaps', 'Touches', 'Within']
     },
     'ComparisonOperators': {
-        'ogc:PropertyIsBetween': {'opname': 'PropertyIsBetween', 'opvalue': 'and'},
-        'ogc:PropertyIsEqualTo': {'opname': 'PropertyIsEqualTo', 'opvalue': '='},
-        'ogc:PropertyIsGreaterThan': {'opname': 'PropertyIsGreaterThan', 'opvalue': '>'},
-        'ogc:PropertyIsGreaterThanOrEqualTo': {
+        'fes20:PropertyIsBetween': {'opname': 'PropertyIsBetween', 'opvalue': 'and'},
+        'fes20:PropertyIsEqualTo': {'opname': 'PropertyIsEqualTo', 'opvalue': '='},
+        'fes20:PropertyIsGreaterThan': {'opname': 'PropertyIsGreaterThan', 'opvalue': '>'},
+        'fes20:PropertyIsGreaterThanOrEqualTo': {
             'opname': 'PropertyIsGreaterThanOrEqualTo', 'opvalue': '>='},
-        'ogc:PropertyIsLessThan': {'opname': 'PropertyIsLessThan', 'opvalue': '<'},
-        'ogc:PropertyIsLessThanOrEqualTo': {
+        'fes20:PropertyIsLessThan': {'opname': 'PropertyIsLessThan', 'opvalue': '<'},
+        'fes20:PropertyIsLessThanOrEqualTo': {
             'opname': 'PropertyIsLessThanOrEqualTo', 'opvalue': '<='},
-        'ogc:PropertyIsLike': {'opname': 'PropertyIsLike', 'opvalue': 'like'},
-        'ogc:PropertyIsNotEqualTo': {'opname': 'PropertyIsNotEqualTo', 'opvalue': '!='},
-        'ogc:PropertyIsNull': {'opname': 'PropertyIsNull', 'opvalue': 'is null'},
+        'fes20:PropertyIsLike': {'opname': 'PropertyIsLike', 'opvalue': 'like'},
+        'fes20:PropertyIsNotEqualTo': {'opname': 'PropertyIsNotEqualTo', 'opvalue': '!='},
+        'fes20:PropertyIsNull': {'opname': 'PropertyIsNull', 'opvalue': 'is null'},
     },
     'Functions': {
         'length': {'returns': 'xs:string'},
@@ -98,7 +98,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
     boq = None
     is_pg = dbtype.startswith('postgresql')
 
-    tmp = element.xpath('ogc:And|ogc:Or|ogc:Not', namespaces=nsmap)
+    tmp = element.xpath('fes20:And|fes20:Or|fes20:Not', namespaces=nsmap)
     if len(tmp) > 0:  # this is binary logic query
         element_name = etree.QName(tmp[0]).localname
         boq = ' %s ' % element_name.lower()
@@ -107,7 +107,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
     else:
         tmp = element
 
-    pvalue_serial = [0]  # in list as python 2 has no nonlocal variable
+    pvalue_serial = [0]
     def assign_param():
         if orm == 'django':
             return '%s'
@@ -130,32 +130,32 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             singlechar = '_'
 
         if (elem.xpath('child::*')[0].tag ==
-                util.nspath_eval('ogc:Function', nsmap)):
-            LOGGER.debug('ogc:Function detected')
+                util.nspath_eval('fes20:Function', nsmap)):
+            LOGGER.debug('fes20:Function detected')
             if (elem.xpath('child::*')[0].attrib['name'] not in
                     MODEL['Functions']):
-                raise RuntimeError('Invalid ogc:Function: %s' %
+                raise RuntimeError('Invalid fes20:Function: %s' %
                                    (elem.xpath('child::*')[0].attrib['name']))
             fname = elem.xpath('child::*')[0].attrib['name']
 
             try:
-                LOGGER.debug('Testing existence of ogc:PropertyName')
-                pname = queryables[elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text]['dbcol']
+                LOGGER.debug('Testing existence of fes20:ValueReference')
+                pname = queryables[elem.find(util.nspath_eval('fes20:Function/fes20:ValueReference', nsmap)).text]['dbcol']
             except Exception as err:
-                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err)))
+                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('fes20:Function/fes20:ValueReference', nsmap)).text, str(err))) from err
 
         else:
             try:
-                LOGGER.debug('Testing existence of ogc:PropertyName')
+                LOGGER.debug('Testing existence of fes20:ValueReference')
                 pname = queryables[elem.find(
-                    util.nspath_eval('ogc:PropertyName', nsmap)).text]['dbcol']
+                    util.nspath_eval('fes20:ValueReference', nsmap)).text]['dbcol']
             except Exception as err:
                 raise RuntimeError('Invalid PropertyName: %s.  %s' %
-                                   (elem.find(util.nspath_eval('ogc:PropertyName',
-                                   nsmap)).text, str(err)))
+                                   (elem.find(util.nspath_eval('fes20:ValueReference',
+                                   nsmap)).text, str(err))) from err
 
-        if (elem.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
-            if elem.tag in [util.nspath_eval('ogc:%s' % n, nsmap) for n in
+        if (elem.tag != util.nspath_eval('fes20:PropertyIsBetween', nsmap)):
+            if elem.tag in [util.nspath_eval('fes20:%s' % n, nsmap) for n in
                 MODEL['SpatialOperators']['values']]:
                 boolean_true = '\'true\''
                 boolean_false = '\'false\''
@@ -165,7 +165,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
 
                 return "%s = %s" % (_get_spatial_operator(queryables['pycsw:BoundingBox'], elem, dbtype, nsmap), boolean_true)
             else:
-                pval = elem.find(util.nspath_eval('ogc:Literal', nsmap)).text
+                pval = elem.find(util.nspath_eval('fes20:Literal', nsmap)).text
 
         com_op = _get_comparison_operator(elem)
         LOGGER.debug('Comparison operator: %s', com_op)
@@ -180,13 +180,13 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                 pname == anytext):
             com_op = 'ilike' if is_pg else 'like'
 
-        if (elem.tag == util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
+        if (elem.tag == util.nspath_eval('fes20:PropertyIsBetween', nsmap)):
             com_op = 'between'
             lower_boundary = elem.find(
-                util.nspath_eval('ogc:LowerBoundary/ogc:Literal',
+                util.nspath_eval('fes20:LowerBoundary/fes20:Literal',
                                  nsmap)).text
             upper_boundary = elem.find(
-                util.nspath_eval('ogc:UpperBoundary/ogc:Literal',
+                util.nspath_eval('fes20:UpperBoundary/fes20:Literal',
                                  nsmap)).text
             expression = "%s %s %s and %s" % \
                            (pname, com_op, assign_param(), assign_param())
@@ -251,28 +251,28 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             boolean_true = 'true'
             boolean_false = 'false'
 
-        if child.tag == util.nspath_eval('ogc:Not', nsmap):
-            LOGGER.debug('ogc:Not query detected')
+        if child.tag == util.nspath_eval('fes20:Not', nsmap):
+            LOGGER.debug('fes20:Not query detected')
             child_not = child.xpath('child::*')[0]
             if child_not.tag in \
-                [util.nspath_eval('ogc:%s' % n, nsmap) for n in
+                [util.nspath_eval('fes20:%s' % n, nsmap) for n in
                     MODEL['SpatialOperators']['values']]:
-                LOGGER.debug('ogc:Not / spatial operator detected: %s', child.tag)
+                LOGGER.debug('fes20:Not / spatial operator detected: %s', child.tag)
                 queries.append("%s = %s" %
                                (_get_spatial_operator(
                                    queryables['pycsw:BoundingBox'],
                                    child.xpath('child::*')[0], dbtype, nsmap),
                                    boolean_false))
             else:
-                LOGGER.debug('ogc:Not / comparison operator detected: %s', child.tag)
+                LOGGER.debug('fes20:Not / comparison operator detected: %s', child.tag)
                 queries.append('not %s' % _get_comparison_expression(child_not))
 
         elif child.tag in \
-            [util.nspath_eval('ogc:%s' % n, nsmap) for n in
+            [util.nspath_eval('fes20:%s' % n, nsmap) for n in
                 MODEL['SpatialOperators']['values']]:
             LOGGER.debug('spatial operator detected: %s', child.tag)
             if boq is not None and boq == ' not ':
-                # for ogc:Not spatial queries in PostGIS we must explictly
+                # for fes20:Not spatial queries in PostGIS we must explictly
                 # test that pycsw:BoundingBox is null as well
                 # TODO: Do we need the same for 'postgresql+postgis+native'???
                 if dbtype == 'postgresql+postgis+wkt':
@@ -293,8 +293,8 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                                    queryables['pycsw:BoundingBox'],
                                    child, dbtype, nsmap), boolean_true))
 
-        elif child.tag == util.nspath_eval('ogc:FeatureId', nsmap):
-            LOGGER.debug('ogc:FeatureId filter detected')
+        elif child.tag == util.nspath_eval('fes20:FeatureId', nsmap):
+            LOGGER.debug('fes20:FeatureId filter detected')
             queries.append("%s = %s" % (queryables['pycsw:Identifier'], assign_param()))
             values.append(child.attrib.get('fid'))
         else:  # comparison operator
@@ -317,18 +317,18 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
 
 def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_column='wkb_geometry'):
     """return the spatial predicate function"""
-    property_name = element.find(util.nspath_eval('ogc:PropertyName', nsmap))
-    distance = element.find(util.nspath_eval('ogc:Distance', nsmap))
+    property_name = element.find(util.nspath_eval('fes20:ValueReference', nsmap))
+    distance = element.find(util.nspath_eval('fes20:Distance', nsmap))
 
     distance = 'false' if distance is None else distance.text
 
     LOGGER.debug('Scanning for spatial property name')
 
     if property_name is None:
-        raise RuntimeError('Missing ogc:PropertyName in spatial filter')
+        raise RuntimeError('Missing fes20:ValueReference in spatial filter')
     if (property_name.text.find('BoundingBox') == -1 and
             property_name.text.find('Envelope') == -1):
-        raise RuntimeError('Invalid ogc:PropertyName in spatial filter: %s' %
+        raise RuntimeError('Invalid fes20:ValueReference in spatial filter: %s' %
                            property_name.text)
 
     geometry = gml3.Geometry(element, nsmap)
@@ -406,10 +406,10 @@ def _get_comparison_operator(element):
     """return the SQL operator based on Filter query"""
 
     element_name = etree.QName(element).localname
-    return MODEL['ComparisonOperators']['ogc:%s' % element_name]['opvalue']
+    return MODEL['ComparisonOperators']['fes20:%s' % element_name]['opvalue']
 
 def set_spatial_ranking(geometry):
-    """Given that we have a spatial query in ogc:Filter we check the type of geometry
+    """Given that we have a spatial query in fes20:Filter we check the type of geometry
     and set the ranking variables"""
 
     if util.ranking_enabled:

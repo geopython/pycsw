@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csw30:GetRecords xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:fes="http://www.opengis.net/fes/2.0" version="3.0.0" service="CSW" startPosition="1" maxRecords="10">
+    <csw30:Query typeNames="csw30:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
+        <csw30:ElementSetName>full</csw30:ElementSetName>
+        <csw30:Constraint version="2.0">
+            <fes:Filter>
+                    <fes:PropertyIsLike wildCard="%" singleChar="#" escapeChar="!">
+                        <fes:ValueReference>csw:AnyText</fes:ValueReference>
+                        <fes:Literal>%lorem%</fes:Literal>
+                    </fes:PropertyIsLike>
+            </fes:Filter>
+        </csw30:Constraint>
+    </csw30:Query>
+</csw30:GetRecords>

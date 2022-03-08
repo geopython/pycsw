@@ -47,7 +47,7 @@
 #
 # or invoke this script from the command line:
 #
-# $ python ./pycsw/wsgi.py
+# $ python3 ./pycsw/wsgi.py
 #
 # which will publish pycsw to:
 #
@@ -55,12 +55,12 @@
 #
 
 import gzip
+from io import BytesIO
 import os
 import sys
 
-import six
-from six.moves import configparser
-from six.moves.urllib.parse import unquote
+import configparser
+from urllib.parse import unquote
 
 from pycsw import server
 
@@ -68,6 +68,14 @@ from pycsw import server
 def application(env, start_response):
     """WSGI wrapper"""
 
+    print(env['PATH_INFO'])
+
+    status, headers, contents = application_dispatcher(env)
+    start_response(status, list(headers.items()))
+    return [contents]
+
+
+def application_dispatcher(env):
     pycsw_root = get_pycsw_root_path(os.environ, env)
     configuration_path = get_configuration_path(os.environ, env, pycsw_root)
     env['local.app_root'] = pycsw_root
@@ -95,8 +103,7 @@ def application(env, start_response):
         except configparser.NoSectionError:
             print('Could not load user configuration %s' % configuration_path)
 
-    start_response(status, list(headers.items()))
-    return [contents]
+    return status, headers, contents
 
 
 def compress_response(response, compression_level):
@@ -118,7 +125,7 @@ def compress_response(response, compression_level):
 
     """
 
-    buf = six.BytesIO()
+    buf = BytesIO()
     gzipfile = gzip.GzipFile(mode='wb', fileobj=buf,
                              compresslevel=compression_level)
     gzipfile.write(response)

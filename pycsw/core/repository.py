@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2019  Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -36,9 +36,12 @@ import inspect
 import logging
 import os
 
-import six
 from shapely.wkt import loads
-from shapely.geos import ReadingError
+try:
+    from shapely.errors import ReadingError
+except:
+    from shapely.geos import ReadingError
+
 from sqlalchemy import create_engine, func, __version__, select
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
@@ -68,7 +71,7 @@ class Repository(object):
         '''
         if url not in clazz._engines:
             LOGGER.info('creating new engine: %s', url)
-            engine = create_engine('%s' % url, echo=False)
+            engine = create_engine('%s' % url, echo=False, pool_pre_ping=True)
 
             # load SQLite query bindings
             # This can be directly bound via events
@@ -157,7 +160,7 @@ class Repository(object):
                 temp_dbtype = 'postgresql+postgis+native'
                 LOGGER.debug('PostgreSQL+PostGIS+Native detected')
             except Exception as err:
-                LOGGER.exception('PostgreSQL+PostGIS+Native not picked up: %s')
+                LOGGER.exception('PostgreSQL+PostGIS+Native not picked up: %s', table_name)
 
             # check if a native PostgreSQL FTS GIN index exists
             result = self.session.execute("select relname from pg_class where relname='fts_gin_idx'").scalar()
@@ -200,6 +203,35 @@ class Repository(object):
             value_dict['pvalue%d' % num] = value
         return value_dict
 
+    def describe(self):
+        ''' Derive table columns and types '''
+
+        type_mappings = {
+            'TEXT': 'string',
+            'VARCHAR': 'string'
+        }
+
+        properties = {
+            'geometry' : {
+                '$ref' : 'https://geojson.org/schema/Polygon.json'
+            }
+        }
+
+        for i in self.dataset.__table__.columns:
+            if i.name in ['anytext', 'metadata', 'metadata_type', 'xml']:
+                continue
+
+            properties[i.name] = {
+                'title': i.name
+            }
+
+            try:
+                properties[i.name]['type'] = type_mappings[str(i.type)]
+            except Exception as err:
+                LOGGER.debug(f'Cannot determine type: {err}')
+
+        return properties
+
     def query_ids(self, ids):
         ''' Query by list of identifiers '''
 
@@ -207,6 +239,25 @@ class Repository(object):
         self.context.md_core_model['mappings']['pycsw:Identifier'])
 
         query = self.session.query(self.dataset).filter(column.in_(ids))
+        return self._get_repo_filter(query).all()
+
+    def query_collections(self):
+        ''' Query for parent collections '''
+
+        column = getattr(self.dataset, \
+        self.context.md_core_model['mappings']['pycsw:ParentIdentifier'])
+
+        collections = self.session.query(column).distinct()
+
+        results = self._get_repo_filter(collections).all()
+
+        ids = [res[0] for res in results if res[0] is not None]
+
+        column = getattr(self.dataset, \
+        self.context.md_core_model['mappings']['pycsw:Identifier'])
+
+        query = self.session.query(self.dataset).filter(column.in_(ids))
+
         return self._get_repo_filter(query).all()
 
     def query_domain(self, domain, typenames, domainquerytype='list',
@@ -294,6 +345,10 @@ class Repository(object):
     def insert(self, record, source, insert_date):
         ''' Insert a record into the repository '''
 
+        if isinstance(record.xml, bytes):
+            LOGGER.debug('Decoding bytes to unicode')
+            record.xml = record.xml.decode()
+
         try:
             self.session.begin()
             self.session.add(record)
@@ -313,6 +368,10 @@ class Repository(object):
             anytext = getattr(self.dataset,
             self.context.md_core_model['mappings']['pycsw:AnyText'])
 
+            if isinstance(record.xml, bytes):
+                LOGGER.debug('Decoding bytes to unicode')
+                record.xml = record.xml.decode()
+
         if recprops is None and constraint is None:  # full update
             LOGGER.debug('full update')
             update_dict = dict([(getattr(self.dataset, key),
@@ -328,7 +387,7 @@ class Repository(object):
                 self.session.rollback()
                 msg = 'Cannot commit to repository'
                 LOGGER.exception(msg)
-                raise RuntimeError(msg)
+                raise RuntimeError(msg) from err
         else:  # update based on record properties
             LOGGER.debug('property based update')
             try:
@@ -363,7 +422,7 @@ class Repository(object):
                 self.session.rollback()
                 msg = 'Cannot commit to repository'
                 LOGGER.exception(msg)
-                raise RuntimeError(msg)
+                raise RuntimeError(msg) from err
 
     def delete(self, constraint):
         ''' Delete a record from the repository '''
@@ -393,7 +452,7 @@ class Repository(object):
             self.session.rollback()
             msg = 'Cannot commit to repository'
             LOGGER.exception(msg)
-            raise RuntimeError(msg)
+            raise RuntimeError(msg) from err
 
         return rows
 
@@ -406,10 +465,8 @@ class Repository(object):
 
 def create_custom_sql_functions(connection):
     """Register custom functions on the database connection."""
-    if six.PY2:
-        inspect_function = inspect.getargspec
-    else:  # python3
-        inspect_function = inspect.getfullargspec
+
+    inspect_function = inspect.getfullargspec
 
     for function_object in [
         query_spatial,
@@ -482,7 +539,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
         else:
             raise RuntimeError(
                 'Invalid spatial query predicate: %s' % predicate)
-    except (AttributeError, ValueError, ReadingError):
+    except (AttributeError, ValueError, ReadingError, TypeError):
         result = False
     return "true" if result else "false"
 
@@ -490,7 +547,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
 def update_xpath(nsmap, xml, recprop):
     """Update XML document XPath values"""
 
-    if isinstance(xml, six.binary_type) or isinstance(xml, six.text_type):
+    if isinstance(xml, bytes) or isinstance(xml, str):
         # serialize to lxml
         xml = etree.fromstring(xml, PARSER)
 
@@ -503,8 +560,8 @@ def update_xpath(nsmap, xml, recprop):
                 if node1.text != recprop['value']:  # values differ, update
                     node1.text = recprop['value']
     except Exception as err:
-        print(err)
-        raise RuntimeError('ERROR: %s' % str(err))
+        LOGGER.warning('update_xpath error', exc_info=True)
+        raise RuntimeError('ERROR: %s' % str(err)) from err
 
     return etree.tostring(xml)
 
@@ -543,7 +600,7 @@ def get_spatial_overlay_rank(target_geometry, query_geometry):
                 LOGGER.debug('Spatial Rank: %s', str(((X/Q)**kq)*((X/T)**kt)))
                 return str(((X/Q)**kq)*((X/T)**kt))
         except Exception as err:
-            LOGGER.warning('Cannot derive spatial overlay ranking %s', err)
+            LOGGER.warning('Cannot derive spatial overlay ranking', exc_info=True)
             return '0'
     return '0'
 

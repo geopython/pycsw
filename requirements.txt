@@ -1,7 +1,7 @@
-geolinks==0.2.0
-lxml==3.6.2
-OWSLib==0.16.0
-pyproj==1.9.5.1
-Shapely==1.5.17
-six==1.10.0
-xmltodict==0.10.2
+click
+geolinks
+lxml
+OWSLib
+pyproj
+Shapely
+xmltodict

@@ -79,8 +79,8 @@ msgid "Installing from Source"
 msgstr "从源代码安装"
 
 #: ../../installation.rst:33
-msgid "`Download <http://pycsw.org/download>`_ the latest stable version or fetch from Git."
-msgstr "`下载 <http: pycsw.org/download>`_ 最新稳定版本，或从 Git 获取。"
+msgid "`Download <https://pycsw.org/download>`_ the latest stable version or fetch from Git."
+msgstr "`下载 <https://pycsw.org/download>`_ 最新稳定版本，或从 Git 获取。"
 
 #: ../../installation.rst:36
 msgid "For Developers and the Truly Impatient"

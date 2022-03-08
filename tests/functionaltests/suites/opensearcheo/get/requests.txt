@@ -1,0 +1,17 @@
+opensearch-description-document,mode=opensearch&service=CSW&version=3.0.0&request=GetCapabilities
+opensearch-query-time-extent,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&time=2009/2015
+opensearch-query-start-stop-extent,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&start=2009&stop=2015
+opensearch-query-start-stop-extent,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&start=2009&stop=2015
+opensearch-query-cloudcover,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:cloudCover=0.082857
+opensearch-query-cloudcover-lt,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:cloudCover=20[
+opensearch-query-cloudcover-gt,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:cloudCover=]20
+opensearch-query-cloudcover-lt-gt,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:cloudCover=]0,1[
+opensearch-query-instrument,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:instrument=INS-NOBS
+opensearch-query-orbitdirection,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:orbitDirection=DESCENDING
+opensearch-query-orbitnumber,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:orbitNumber=50
+opensearch-query-processinglevel,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:processingLevel=Level-2A
+opensearch-query-platform,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:platform=Sentinel-2B
+opensearch-query-producttype,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:productType=S2MSI2A
+opensearch-query-sensortype,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:sensorType=S2MSI2A
+opensearch-query-snowcover,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:snowCover=0.0
+opensearch-query-spectralrange,mode=opensearch&service=CSW&version=3.0.0&request=GetRecords&typenames=csw:Record&elementset=full&eo:spectralRange=B1

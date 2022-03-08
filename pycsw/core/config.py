@@ -112,6 +112,10 @@ class StaticContext(object):
                 'pycsw:InsertDate': 'insert_date',  # date of insertion
                 # raw XML metadata
                 'pycsw:XML': 'xml',
+                # raw metadata payload, xml to be migrated to this in the future
+                'pycsw:Metadata': 'metadata',
+                # raw metadata payload type, xml as default for now
+                'pycsw:MetadataType': 'metadata_type',
                 # bag of metadata element and attributes ONLY, no XML tages
                 'pycsw:AnyText': 'anytext',
                 'pycsw:Language': 'language',
@@ -163,7 +167,12 @@ class StaticContext(object):
                 'pycsw:Publisher': 'publisher',
                 'pycsw:Contributor': 'contributor',
                 'pycsw:Relation': 'relation',
-                # links: format "name,description,protocol,url[^,,,[^,,,]]"
+                'pycsw:Platform': 'platform',
+                'pycsw:Instrument': 'instrument',
+                'pycsw:SensorType': 'sensortype',
+                'pycsw:CloudCover': 'cloudcover',
+                'pycsw:Bands': 'bands',
+                # links: list of dicts with properties: name, description, protocol, url
                 'pycsw:Links': 'links',
             }
         }

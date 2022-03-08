@@ -34,11 +34,9 @@
 
 import logging
 import os
-from six.moves.urllib.parse import parse_qsl
-from six.moves.urllib.parse import splitquery
-from six.moves.urllib.parse import urlparse
-from six import StringIO
-from six.moves.configparser import SafeConfigParser
+from urllib.parse import parse_qsl, splitquery, urlparse
+from io import StringIO
+import configparser
 import sys
 from time import time
 import wsgiref.util
@@ -102,10 +100,11 @@ class Csw(object):
         # load user configuration
         try:
             LOGGER.info('Loading user configuration')
-            if isinstance(rtconfig, SafeConfigParser):  # serialized already
+            if isinstance(rtconfig, configparser.ConfigParser):  # serialized already
                 self.config = rtconfig
             else:
-                self.config = SafeConfigParser()
+                self.config = configparser.ConfigParser(
+                    interpolation=util.EnvInterpolation())
                 if isinstance(rtconfig, dict):  # dictionary
                     for section, options in rtconfig.items():
                         self.config.add_section(section)
@@ -114,7 +113,7 @@ class Csw(object):
                 else:  # configuration file
                     import codecs
                     with codecs.open(rtconfig, encoding='utf-8') as scp:
-                        self.config.readfp(scp)
+                        self.config.read_file(scp)
         except Exception as err:
             msg = 'Could not load configuration'
             LOGGER.exception('%s %s: %s', msg, rtconfig, err)
@@ -128,6 +127,12 @@ class Csw(object):
             'server', 'home',
             os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
         )
+
+        if 'PYCSW_IS_CSW' in env and env['PYCSW_IS_CSW']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/csw')
+        if 'PYCSW_IS_OPENSEARCH' in env and env['PYCSW_IS_OPENSEARCH']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/opensearch')
+            self.mode = 'opensearch'
 
         self.context.pycsw_home = self.config.get('server', 'home')
         self.context.url = self.config.get('server', 'url')
@@ -184,7 +189,7 @@ class Csw(object):
             try:
                 import imp
                 module = self.config.get('repository', 'mappings')
-                if '/' in module:  # filepath
+                if os.sep in module:  # filepath
                     modulename = '%s' % os.path.splitext(module)[0].replace(
                         os.sep, '.')
                     mappings = imp.load_source(modulename, module)
@@ -199,6 +204,12 @@ class Csw(object):
                 self.response = self.iface.exceptionreport(
                     'NoApplicableCode', 'service',
                     'Could not load repository.mappings')
+
+        # load user-defined max attempt to retry db connection
+        try:
+            self.max_retries = int(self.config.get("repository", "max_retries"))
+        except configparser.NoOptionError:
+            self.max_retries = 5
 
         # load outputschemas
         LOGGER.info('Loading outputschemas')
@@ -241,7 +252,11 @@ class Csw(object):
             self.requesttype = 'GET'
             self.request = wsgiref.util.request_uri(self.environ)
             try:
-                query_part = splitquery(self.request)[-1]
+                if '{' in self.request or '%7D' in self.request:
+                    LOGGER.debug('Looks like an OpenSearch URL template')
+                    query_part = self.request.split('?', 1)[-1]
+                else:
+                    query_part = splitquery(self.request)[-1]
                 self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
             except AttributeError as err:
                 LOGGER.exception('Could not parse query string')
@@ -286,6 +301,13 @@ class Csw(object):
                 self.request_version = '2.0.2'
             elif self.request.find(b'cat/csw/3.0') != -1:
                 self.request_version = '3.0.0'
+
+        if 'PYCSW_IS_OAIPMH' in self.environ and self.environ['PYCSW_IS_OAIPMH']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/oaipmh')
+            self.kvp['mode'] = 'oaipmh'
+        if 'PYCSW_IS_SRU' in self.environ and self.environ['PYCSW_IS_SRU']:
+            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/sru')
+            self.kvp['mode'] = 'sru'
 
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
                 self.kvp['mode'] == 'sru'):
@@ -383,8 +405,16 @@ class Csw(object):
             rs_cls = getattr(rs_mod, rs_clsname)
 
             try:
-                self.repository = rs_cls(self.context, repo_filter)
-                LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
+                connection_done = False
+                max_attempts = 0
+                while not connection_done and max_attempts <= self.max_retries:
+                    try:
+                        self.repository = rs_cls(self.context, repo_filter)
+                        LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
+                        connection_done = True
+                    except:
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}')
+                        max_attempts += 1
             except Exception as err:
                 msg = 'Could not load custom repository %s: %s' % (rs, err)
                 LOGGER.exception(msg)
@@ -398,15 +428,23 @@ class Csw(object):
             from pycsw.core import repository
             try:
                 LOGGER.info('Loading default repository')
-                self.repository = repository.Repository(
-                    self.config.get('repository', 'database'),
-                    self.context,
-                    self.environ.get('local.app_root', None),
-                    self.config.get('repository', 'table'),
-                    repo_filter
-                )
-                LOGGER.debug(
-                    'Repository loaded (local): %s.' % self.repository.dbtype)
+                connection_done = False
+                max_attempts = 0
+                while not connection_done and max_attempts <= self.max_retries:
+                    try:
+                        self.repository = repository.Repository(
+                            self.config.get('repository', 'database'),
+                            self.context,
+                            self.environ.get('local.app_root', None),
+                            self.config.get('repository', 'table'),
+                            repo_filter
+                        )
+                        LOGGER.debug(
+                            'Repository loaded (local): %s.' % self.repository.dbtype)
+                        connection_done = True
+                    except:
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}')
+                        max_attempts += 1
             except Exception as err:
                 msg = 'Could not load repository (local): %s' % err
                 LOGGER.exception(msg)

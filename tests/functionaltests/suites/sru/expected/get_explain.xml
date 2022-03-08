@@ -7,17 +7,17 @@
     <sru:recordSchema>http://explain.z3950.org/dtd/2.1/</sru:recordSchema>
     <sru:recordData>
       <zr:explain>
-        <zr:serverInfo method="GET POST SOAP" protocol="SRU" transport="http" version="1.1">
+        <zr:serverInfo protocol="SRU" version="1.1" transport="http" method="GET POST SOAP">
           <zr:host>PYCSW_HOST</zr:host>
           <zr:port>PYCSW_PORT</zr:port>
           <zr:database>pycsw</zr:database>
         </zr:serverInfo>
         <zr:databaseInfo>
           <zr:title lang="en" primary="true">pycsw Geospatial Catalogue</zr:title>
-          <zr:description lang="en" primary="true">pycsw is an OGC CSW server implementation written in Python</zr:description>
+          <zr:description lang="en" primary="true">pycsw is an OARec and OGC CSW server implementation written in Python</zr:description>
         </zr:databaseInfo>
         <zr:indexInfo>
-          <zr:set identifier="info:srw/cql-context-set/1/dc-v1.1" name="dc"/>
+          <zr:set name="dc" identifier="info:srw/cql-context-set/1/dc-v1.1"/>
           <zr:index id="62">
             <zr:title>abstract</zr:title>
             <zr:map>
@@ -115,7 +115,7 @@
           </zr:index>
         </zr:indexInfo>
         <zr:schemaInfo>
-          <zr:schema identifier="info:srw/schema/1/dc-v1.1" name="dc">
+          <zr:schema name="dc" identifier="info:srw/schema/1/dc-v1.1">
             <zr:title>Simple Dublin Core</zr:title>
           </zr:schema>
         </zr:schemaInfo>

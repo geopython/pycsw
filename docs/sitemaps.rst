@@ -7,8 +7,8 @@ XML Sitemaps
 
 .. code-block:: bash
 
-  $ pycsw-admin.py -c gen_sitemap -f default.cfg -o sitemap.xml
+  pycsw-admin.py gen-sitemap --config default.cfg --output sitemap.xml
 
 The ``sitemap.xml`` file should be saved to an an area on your web server (parallel to or above your pycsw install location) to enable web crawlers to index your repository. 
 
-.. _`XML Sitemaps`: http://www.sitemaps.org/
+.. _`XML Sitemaps`: https://www.sitemaps.org/index.html

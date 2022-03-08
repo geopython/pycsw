@@ -33,12 +33,11 @@
 import os
 import sys
 import cgi
-from six.moves.urllib.parse import quote, unquote
-from six import StringIO
-from six.moves.configparser import SafeConfigParser
+from urllib.parse import quote, unquote
+from io import StringIO
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
-from pycsw.ogc.csw.cql import cql2fes1
+from pycsw.ogc.csw.cql import cql2fes
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
 from pycsw.core import config, log, metadata, util
@@ -710,11 +709,12 @@ class Csw2(object):
                 if int(self.parent.kvp['maxrecords']) > maxrecords_cfg:
                     self.parent.kvp['maxrecords'] = maxrecords_cfg
 
-        if any(x in ['bbox', 'q', 'time'] for x in self.parent.kvp):
+        if any(x in opensearch.QUERY_PARAMETERS for x in self.parent.kvp):
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
             self.parent.kvp['constraintlanguage'] = 'FILTER'
-            tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context)
-            if tmp_filter is not "":
+            tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context,
+                                                  self.parent.profiles)
+            if tmp_filter != "":
                 self.parent.kvp['constraint'] = tmp_filter
                 LOGGER.debug('OpenSearch Geo/Time parameters to Filter: %s.', self.parent.kvp['constraint'])
 
@@ -739,7 +739,7 @@ class Csw2(object):
                         LOGGER.debug('CQL: %s', tmp)
                         self.parent.kvp['constraint'] = {}
                         self.parent.kvp['constraint']['type'] = 'filter'
-                        cql = cql2fes1(tmp, self.parent.context.namespaces)
+                        cql = cql2fes(tmp, self.parent.context.namespaces, fes_version='1.0')
                         self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = fes1.parse(cql,
                         self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
@@ -808,7 +808,7 @@ class Csw2(object):
             else:
                 self.parent.kvp['sortby']['order'] = 'ASC'
 
-        if 'startposition' not in self.parent.kvp:
+        if 'startposition' not in self.parent.kvp or not self.parent.kvp['startposition']:
             self.parent.kvp['startposition'] = 1
 
         # query repository
@@ -832,8 +832,8 @@ class Csw2(object):
         dsresults = []
 
         if (self.parent.config.has_option('server', 'federatedcatalogues') and
-            'distributedsearch' in self.parent.kvp and
-            self.parent.kvp['distributedsearch'] and self.parent.kvp['hopcount'] > 0):
+            'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
+            self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
 
             LOGGER.debug('DistributedSearch specified (hopCount: %s).',
@@ -845,8 +845,11 @@ class Csw2(object):
             self.parent.config.get('server', 'federatedcatalogues').split(','):
                 LOGGER.debug('Performing distributed search on federated \
                 catalogue: %s.', fedcat)
-                remotecsw = CatalogueServiceWeb(fedcat, skip_caps=True)
+                remotecsw = CatalogueServiceWeb(fedcat, version='2.0.2', skip_caps=True)
                 try:
+                    if str(self.parent.request).startswith('http'):
+                        self.parent.request = self.parent.request.split('?')[-1]
+                        self.parent.request = self.parent.request.replace('mode=opensearch', '')
                     remotecsw.getrecords2(xml=self.parent.request,
                                           esn=self.parent.kvp['elementsetname'],
                                           outputschema=self.parent.kvp['outputschema'])
@@ -1505,13 +1508,13 @@ class Csw2(object):
                 self.parent.context.md_core_model['mappings']['pycsw:Links'])
 
                 if rlinks:
-                    links = rlinks.split('^')
-                    for link in links:
-                        linkset = link.split(',')
-                        etree.SubElement(record,
-                        util.nspath_eval('dct:references',
-                        self.parent.context.namespaces),
-                        scheme=linkset[2]).text = linkset[-1]
+                    for link in util.jsonify_links(rlinks):
+                        ref = etree.SubElement(record, util.nspath_eval('dct:references',
+                            self.parent.context.namespaces))
+                        if link['protocol']:
+                            ref.attrib['scheme'] = link['protocol']
+
+                        ref.text = link['url']
 
                 for i in ['dc:relation', 'dct:modified', 'dct:abstract']:
                     val = util.getqattr(recobj, queryables[i]['dbcol'])
@@ -1564,7 +1567,7 @@ class Csw2(object):
             try:
                 LOGGER.info('Transforming CQL into OGC Filter')
                 query['type'] = 'filter'
-                cql = cql2fes1(tmp.text, self.parent.context.namespaces)
+                cql = cql2fes(tmp.text, self.parent.context.namespaces, fes_version='1.0')
                 query['where'], query['values'] = fes1.parse(cql,
                 self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
@@ -1936,7 +1939,7 @@ class Csw2(object):
 
         if self.parent.asynchronous:
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
-            self.parent.context.namespaces)).text = self.kvp['requestid']
+            self.parent.context.namespaces)).text = self.parent.kvp['requestid']
 
         return node
 

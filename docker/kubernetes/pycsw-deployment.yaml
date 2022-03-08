@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: pycsw
+  name: pycsw
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: pycsw
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: pycsw
+    spec:
+      containers:
+      - env:
+        - name: PYCSW_SERVER_URL
+          value: http://localhost:8000
+        - name: PYCSW_REPOSITORY_DATABASE_URI
+          value: postgresql://postgres:mypass@db/pycsw
+        image: 'geopython/pycsw:latest'
+        name: pycsw
+        ports:
+        - containerPort: 8000
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/pycsw
+          name: pycsw-config
+      restartPolicy: Always
+      volumes:
+      - name: pycsw-config
+        configMap:
+          name: pycsw-configmap
+status: {}

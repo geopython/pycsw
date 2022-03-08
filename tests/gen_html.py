@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
@@ -105,9 +105,9 @@ print('''
 for root, dirs, files in os.walk('functionaltests/suites'):
     if files:
         for sfile in files:
-            if os.path.splitext(sfile)[1] in ['.xml']:  # it's a POST request
+            if os.path.splitext(sfile)[1] in ['.xml'] and 'post' in root:  # it's a POST request
                 query = '%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)
-                print('                            <option value="tests/functionaltests/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[1], query, query))
+                print('                            <option value="tests/functionaltests/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[2], query, query))
 print('''
                         </select>
                         <input type="button" class="send" value="Send"/>

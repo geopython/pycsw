@@ -19,7 +19,7 @@ msgid "Introduction"
 msgstr "引言"
 
 #: ../../introduction.rst:6
-msgid "pycsw is an OGC CSW server implementation written in Python."
+msgid "pycsw is an OARec and OGC CSW server implementation written in Python."
 msgstr "pycsw是使用 Python 语言实现的 OGC CSW 服务。"
 
 #: ../../introduction.rst:9
