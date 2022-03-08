@@ -31,7 +31,7 @@ class MC3D(base_profile.base_profile):
                         'mc:description': Queryable(context.md_core_model['mappings']['pycsw:abstract'], 'mc:description'),
                         'mc:creationDateUTC': Queryable(context.md_core_model['mappings']['pycsw:creationDate'], 'mc:creationDateUTC'),
                         'mc:imagingTimeBeginUTC': Queryable(context.md_core_model['mappings']['pycsw:tempExtentBegin'], 'mc:imagingTimeBeginUTC'),
-                        'mc:imagingTimeEndUTC': Queryable(context.md_core_model['mappings']['pycsw:tempExtentBegin'], 'mc:imagingTimeEndUTC'),
+                        'mc:imagingTimeEndUTC': Queryable(context.md_core_model['mappings']['pycsw:tempExtentEnd'], 'mc:imagingTimeEndUTC'),
                         'mc:minResolutionMeter': Queryable(context.md_core_model['mappings']['pycsw:minResolution'], 'mc:minResolutionMeter'),
                         'mc:maxResolutionMeter': Queryable(context.md_core_model['mappings']['pycsw:maxResolution'], 'mc:maxResolutionMeter'),
                         'mc:nominalResolution': Queryable(context.md_core_model['mappings']['pycsw:nominalResolution'], 'mc:nominalResolution'),
