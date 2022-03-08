@@ -3,37 +3,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 17:33+0800\n"
+"POT-Creation-Date: 2022-03-08 22:54+0800\n"
 "PO-Revision-Date: 2018-12-05 13:41+0800\n"
 "Last-Translator: \n"
-"Language-Team: \n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.3.4\n"
 "Language: zh\n"
-"X-Generator: Poedit 2.0.6\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
 
 #: ../../transactions.rst:4 ../../transactions.rst:67
 msgid "Transactions"
 msgstr "事务"
 
 #: ../../transactions.rst:6
+#, fuzzy
 msgid ""
-"pycsw has the ability to process CSW Harvest and Transaction requests (CSW-T).  Transactions are disabled by default; to enable, "
-"``manager.transactions`` must be set to ``true``.  Access to transactional functionality is limited to IP addresses which must be "
-"set in ``manager.allowed_ips``."
+"pycsw's CSW implementation has the ability to process CSW Harvest and "
+"Transaction requests (CSW-T).  Transactions are disabled by default; to "
+"enable, ``manager.transactions`` must be set to ``true``.  Access to "
+"transactional functionality is limited to IP addresses which must be set "
+"in ``manager.allowed_ips``."
 msgstr ""
-"pycsw可获取CSW和事务请求（CSW-T）。"
-"事务在默认情况下是禁用的； 要启用， ``manager.transactions`` 必须设置为值 ``true`` 。"
-" 进入事务后，功能仅可以设置IP地址，IP地址必须在 ``manager.allowed_ips`` 中。"
+"pycsw可获取CSW和事务请求（CSW-T）。事务在默认情况下是禁用的； 要启用， ``manager.transactions`` "
+"必须设置为值 ``true`` 。 进入事务后，功能仅可以设置IP地址，IP地址必须在 ``manager.allowed_ips`` 中。"
 
 #: ../../transactions.rst:9
 msgid "Supported Resource Types"
 msgstr "支持的源类型"
 
 #: ../../transactions.rst:11
-msgid "For transactions and harvesting, pycsw supports the following metadata resource types by default:"
+msgid ""
+"For transactions and harvesting, pycsw supports the following metadata "
+"resource types by default:"
 msgstr "对于事务和获限，pycsw默认支持以下元数据源类型："
 
 #: ../../transactions.rst:1
@@ -165,17 +169,22 @@ msgid "``urn:geoss:waf``"
 msgstr ""
 
 #: ../../transactions.rst:31
-msgid "Additional metadata models are supported by enabling the appropriate :ref:`profiles`."
+msgid ""
+"Additional metadata models are supported by enabling the appropriate "
+":ref:`profiles`."
 msgstr "其它元数据模型，请参考 :ref:`profiles` 。"
 
 #: ../../transactions.rst:35
 msgid ""
-"For transactions to be functional when using SQLite3, the SQLite3 database file (**and its parent directory**) must be fully "
-"writable.  For example:"
+"For transactions to be functional when using SQLite3, the SQLite3 "
+"database file (**and its parent directory**) must be fully writable.  For"
+" example:"
 msgstr "当使用sqlite3时，sqlite3的数据库文件（及其母目录）一定得完整可写的。例如："
 
 #: ../../transactions.rst:44
-msgid "For CSW-T deployments, it is strongly advised that this directory reside in an area that is not accessible by HTTP."
+msgid ""
+"For CSW-T deployments, it is strongly advised that this directory reside "
+"in an area that is not accessible by HTTP."
 msgstr "对于CSW-T部署，强烈建议在此目录驻留一定区域，此区域是HTTP访问不到的。"
 
 #: ../../transactions.rst:47
@@ -183,27 +192,34 @@ msgid "Harvesting"
 msgstr "获取"
 
 #: ../../transactions.rst:51
-msgid "Your server must be able to make outgoing HTTP requests for this functionality."
+msgid ""
+"Your server must be able to make outgoing HTTP requests for this "
+"functionality."
 msgstr "你的服务器必须能够使此功能传出HTTP请求。"
 
 #: ../../transactions.rst:53
 msgid ""
-"pycsw supports the CSW-T ``Harvest`` operation.  Records which are harvested require to setup a cronjob to periodically refresh "
-"records in the local repository.  A sample cronjob is available in ``etc/harvest-all.cron`` which points to ``pycsw-admin.py`` "
-"(you must specify the correct path to your configuration).  Harvest operation results can be sent by email (via ``mailto:``) or "
-"ftp (via ``ftp://``) if the Harvest request specifies ``csw:ResponseHandler``."
+"pycsw supports the CSW-T ``Harvest`` operation.  Records which are "
+"harvested require to setup a cronjob to periodically refresh records in "
+"the local repository.  A sample cronjob is available in ``etc/harvest-"
+"all.cron`` which points to ``pycsw-admin.py`` (you must specify the "
+"correct path to your configuration).  Harvest operation results can be "
+"sent by email (via ``mailto:``) or ftp (via ``ftp://``) if the Harvest "
+"request specifies ``csw:ResponseHandler``."
 msgstr ""
-"pycsw支持CSW-T ``Harvest`` 操作。获取的记录需要设置一个cronjob来定期刷新本地数据库记录。在 ``etc/harvest-all.cron`` 中，样本"
-"cronjob是可以利用到的，此样本cronjob指向 ``pycsw-admin.py`` （必须指定一个配置的正确路径）。如果获取请求指定为 ``CSW："
-"ResponseHandler`` ，其获取的结果会由电子邮件（通过 ``mailto`` ）或是ftp（通过``FTP://`` ）发送."
+"pycsw支持CSW-T ``Harvest`` 操作。获取的记录需要设置一个cronjob来定期刷新本地数据库记录。在 ``etc"
+"/harvest-all.cron`` 中，样本cronjob是可以利用到的，此样本cronjob指向 ``pycsw-admin.py`` "
+"（必须指定一个配置的正确路径）。如果获取请求指定为 ``CSW：ResponseHandler`` ，其获取的结果会由电子邮件（通过 "
+"``mailto`` ）或是ftp（通过``FTP://`` ）发送."
 
 #: ../../transactions.rst:57
 msgid ""
-"For ``csw:ResponseHandler`` values using the ``mailto:`` protocol, you must have ``server.smtp_host`` set in your :ref:"
-"`configuration <configuration>`."
+"For ``csw:ResponseHandler`` values using the ``mailto:`` protocol, you "
+"must have ``server.smtp_host`` set in your :ref:`configuration "
+"<configuration>`."
 msgstr ""
-"对于使用 ``mailto:`` 协议的 ``csw:ResponseHandler`` 值，你必须在你的 :ref:`configuration <configuration>` 设定 ``server."
-"smtp_host``."
+"对于使用 ``mailto:`` 协议的 ``csw:ResponseHandler`` 值，你必须在你的 :ref:`configuration"
+" <configuration>` 设定 ``server.smtp_host``."
 
 #: ../../transactions.rst:60
 msgid "OGC Web Services"
@@ -211,21 +227,27 @@ msgstr "OGC Web服务"
 
 #: ../../transactions.rst:62
 msgid ""
-"When harvesting OGC web services, requests can provide the base URL of the service as part of the Harvest request.  pycsw will "
-"construct a ``GetCapabilities`` request dynamically."
+"When harvesting OGC web services, requests can provide the base URL of "
+"the service as part of the Harvest request.  pycsw will construct a "
+"``GetCapabilities`` request dynamically."
 msgstr "当获取OGC Web服务时，可以请求提供服务的基本URL作为获取的一部分。 pycsw将动态地创建``GetCapabilities``请求。"
 
 #: ../../transactions.rst:64
 msgid ""
-"When harvesting other CSW servers, pycsw pages through the entire CSW in default increments of 10.  This value can be modified "
-"via the ``manager.csw_harvest_pagesize`` :ref:`configuration <configuration>` option.  It is strongly advised to use the ``csw:"
-"ResponseHandler`` parameter for harvesting large CSW catalogues to prevent HTTP timeouts."
+"When harvesting other CSW servers, pycsw pages through the entire CSW in "
+"default increments of 10.  This value can be modified via the "
+"``manager.csw_harvest_pagesize`` :ref:`configuration <configuration>` "
+"option.  It is strongly advised to use the ``csw:ResponseHandler`` "
+"parameter for harvesting large CSW catalogues to prevent HTTP timeouts."
 msgstr ""
-"当获取其它CSW服务器时，pycsw页面就默认在10这个值上。可以在 ``manager.csw_harvest_pagesize`` 程序中将此值修改，请参照 :ref:"
-"`configuration <configuration>` 选项。强烈建议使用 ``CSW：ResponseHandler`` 参数为收获大的CSW目录，以防止HTTP超时。"
+"当获取其它CSW服务器时，pycsw页面就默认在10这个值上。可以在 ``manager.csw_harvest_pagesize`` "
+"程序中将此值修改，请参照 :ref:`configuration <configuration>` 选项。强烈建议使用 "
+"``CSW：ResponseHandler`` 参数为收获大的CSW目录，以防止HTTP超时。"
 
 #: ../../transactions.rst:69
-msgid "pycsw supports 3 modes of the ``Transaction`` operation (``Insert``, ``Update``, ``Delete``):"
+msgid ""
+"pycsw supports 3 modes of the ``Transaction`` operation (``Insert``, "
+"``Update``, ``Delete``):"
 msgstr "pycsw支持 ``Transaction`` 操作（ ``Insert`` ， ``Update`` ， ``Delete`` ）的3种模式："
 
 #: ../../transactions.rst:71
@@ -233,7 +255,9 @@ msgid "**Insert**: full XML documents can be inserted as per CSW-T"
 msgstr "**Insert**：完整的XML文档可以用CSW-T插入"
 
 #: ../../transactions.rst:72
-msgid "**Update**: updates can be made as full record updates or record properties against a ``csw:Constraint``"
+msgid ""
+"**Update**: updates can be made as full record updates or record "
+"properties against a ``csw:Constraint``"
 msgstr "**Update**：针对``CSW：Constraint``，可做到完整记录的更新与记录属性的更新"
 
 #: ../../transactions.rst:73
@@ -242,10 +266,14 @@ msgstr "删除：针对``CSW：Constraint``进行删除"
 
 #: ../../transactions.rst:75
 msgid ""
-"Transaction operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) if the Transaction request specifies "
+"Transaction operation results can be sent by email (via ``mailto:``) or "
+"ftp (via ``ftp://``) if the Transaction request specifies "
 "``csw:ResponseHandler``."
-msgstr "若事务请求指定于``csw:ResponseHandler``，可通过email ( ``mailto:``) 或ftp（``FTP：//``）发送事务操作的结果."
+msgstr ""
+"若事务请求指定于``csw:ResponseHandler``，可通过email ( ``mailto:``) "
+"或ftp（``FTP：//``）发送事务操作的结果."
 
 #: ../../transactions.rst:77
 msgid "The :ref:`tests` contain CSW-T request examples."
 msgstr "参考： :ref:`tests` ，包含有CSW-T 请求示例。"
+

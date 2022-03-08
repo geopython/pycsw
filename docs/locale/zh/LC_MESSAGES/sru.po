@@ -3,16 +3,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"POT-Creation-Date: 2022-03-08 22:54+0800\n"
 "PO-Revision-Date: 2016-06-08 15:29+0800\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "Last-Translator: \n"
-"Language-Team: \n"
 "Language: zh_CN\n"
-"X-Generator: Poedit 1.8.7\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
 
 #: ../../sru.rst:4
 msgid "Search/Retrieval via URL (SRU) Support"
@@ -23,17 +23,33 @@ msgid ""
 "pycsw supports the `Search/Retrieval via URL`_ search protocol "
 "implementation as per subclause 8.4 of the OpenGIS Catalogue Service "
 "Implementation Specification."
-msgstr ""
-"pycsw支持 `Search/Retrieval via URL`_ 的搜索协议，参照的是OpenGIS目录服务实现规范的分条例8.4。"
+msgstr "pycsw支持 `Search/Retrieval via URL`_ 的搜索协议，参照的是OpenGIS目录服务实现规范的分条例8.4。"
 
 #: ../../sru.rst:8
 msgid ""
-"SRU support is enabled by default.  HTTP GET requests must be specified "
-"with ``mode=sru`` for SRU requests, e.g.:"
+"SRU support is enabled by default.  There are two ways to access SRU "
+"depending on the deployment pattern chosen."
 msgstr ""
-"SRU支持默认情况下启用。 HTTP GET请求必须用 ``mode=sru`` 特化SRU要求，例如："
 
-#: ../../sru.rst:14
+#: ../../sru.rst:12
+msgid "OARec deployment"
+msgstr ""
+
+#: ../../sru.rst:19
+msgid "CSW legacy deployment"
+msgstr ""
+
+#: ../../sru.rst:21
+#, fuzzy
 msgid ""
-"See http://www.loc.gov/standards/sru/simple.html for example SRU requests."
+"HTTP GET requests must be specified with ``mode=sru`` for SRU requests, "
+"e.g.:"
+msgstr "SRU支持默认情况下启用。 HTTP GET请求必须用 ``mode=sru`` 特化SRU要求，例如："
+
+#: ../../sru.rst:27
+#, fuzzy
+msgid ""
+"See https://www.loc.gov/standards/sru/misc/simple.html for example SRU "
+"requests."
 msgstr "参见 http://www.loc.gov/standards/sru/simple.html SRU 请求的示例。"
+

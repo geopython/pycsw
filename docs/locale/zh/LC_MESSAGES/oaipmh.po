@@ -3,16 +3,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-23 21:42+0800\n"
+"POT-Creation-Date: 2022-03-08 22:54+0800\n"
 "PO-Revision-Date: 2016-06-07 15:16+0800\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "Last-Translator: \n"
-"Language-Team: \n"
 "Language: zh_CN\n"
-"X-Generator: Poedit 1.8.7\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
 
 #: ../../oaipmh.rst:4
 msgid "OAI-PMH Support"
@@ -26,16 +26,32 @@ msgstr "pycsw支持 `元数据获取的开放式档案协议`_ （OAI-PMH）标�
 
 #: ../../oaipmh.rst:8
 msgid ""
-"OAI-PMH OpenSearch support is enabled by default.  HTTP requests must be "
-"specified with ``mode=oaipmh`` in the base URL for OAI-PMH requests, e.g.:"
+"OAI-PMH OpenSearch support is enabled by default.  There are two ways to "
+"access OAI-PMH depending on the deployment pattern chosen."
 msgstr ""
-"默认情况下是启用OAI-PMH OpenSearch的。 HTTP请求必须在 OAI-PMH要求的基准URL"
-"中指定 ``mode= oaipmh``，例如："
 
-#: ../../oaipmh.rst:14
+#: ../../oaipmh.rst:12
+msgid "OARec deployment"
+msgstr ""
+
+#: ../../oaipmh.rst:19
+msgid "CSW legacy deployment"
+msgstr ""
+
+#: ../../oaipmh.rst:21
+#, fuzzy
+msgid ""
+"HTTP requests must be specified with ``mode=oaipmh`` in the base URL for "
+"OAI-PMH requests, e.g.:"
+msgstr ""
+"默认情况下是启用OAI-PMH OpenSearch的。 HTTP请求必须在 OAI-PMH要求的基准URL中指定 ``mode= "
+"oaipmh``，例如："
+
+#: ../../oaipmh.rst:27
 msgid ""
 "See http://www.openarchives.org/OAI/openarchivesprotocol.html for more "
 "information on OAI-PMH as well as request / reponse examples."
 msgstr ""
-"见 http://www.openarchives.org/OAI/openarchivesprotocol.html，是关于OAI-PMH"
-"以及更多信息请求及回应的例子。"
+"见 http://www.openarchives.org/OAI/openarchivesprotocol.html，是关于OAI-"
+"PMH以及更多信息请求及回应的例子。"
+

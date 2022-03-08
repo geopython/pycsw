@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 20:36+0800\n"
+"POT-Creation-Date: 2022-03-08 22:54+0800\n"
 "PO-Revision-Date: 2016-06-08 11:03+0800\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
@@ -12,7 +12,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.6.0\n"
+"Generated-By: Babel 2.8.0\n"
 
 #: ../../opensearch.rst:4
 msgid "OpenSearch Support"
@@ -20,11 +20,47 @@ msgstr "OpenSearch支撑"
 
 #: ../../opensearch.rst:6
 msgid ""
+"pycsw OpenSearch support is enabled by default.  There are two ways to "
+"access OpenSearch depending on the deployment pattern chosen."
+msgstr ""
+
+#: ../../opensearch.rst:10
+msgid "OARec deployment"
+msgstr ""
+
+#: ../../opensearch.rst:17
+msgid "CSW legacy deployment"
+msgstr ""
+
+#: ../../opensearch.rst:19
+#, fuzzy
+msgid ""
+"HTTP requests must be specified with ``mode=opensearch`` in the base URL "
+"for OpenSearch requests, e.g.:"
+msgstr "HTTP请求必须在OpenSearch要求的基准URL中指 定 ``mode=opensearch`` ，例如："
+
+#: ../../opensearch.rst:25
+#, fuzzy
+msgid ""
+"This will return the Description document which can then be "
+"`autodiscovered "
+"<https://github.com/dewitt/opensearch/blob/master/opensearch-1-1-draft-6.md#Autodiscovery>`_."
+msgstr ""
+"将返回描述文档，此文档可以 `autodiscovered "
+"<http://www.opensearch.org/Specifications/OpenSearch/1.1#Autodiscovery>`_"
+" 。"
+
+#: ../../opensearch.rst:28
+msgid "OGC OpenSearch Geo and Time Extensions 1.0"
+msgstr ""
+
+#: ../../opensearch.rst:30
+msgid ""
 "pycsw supports the `OGC OpenSearch Geo and Time Extensions 1.0`_ standard"
 " via the following conformance classes:"
 msgstr "pycsw通过以下分类支持 `OGC OpenSearch地理和时间扩展1.0`_ 标准："
 
-#: ../../opensearch.rst:8
+#: ../../opensearch.rst:32
 msgid ""
 "Core (GeoSpatial Service) ``{searchTerms}``, ``{geo:box}``, "
 "``{startIndex}``, ``{count}``"
@@ -32,27 +68,116 @@ msgstr ""
 "核心（地理空间服务） ``{searchTerms}`` ， ``{geo:box}`` ，``{startIndex}`` ， "
 "``{count}`` "
 
-#: ../../opensearch.rst:9
+#: ../../opensearch.rst:33
 msgid "Temporal Search core ``{time:start}``, ``{time:end}``"
 msgstr "时间搜索核心 ``{time:start}`` ，  ``{time:end}`` "
 
-#: ../../opensearch.rst:11
+#: ../../opensearch.rst:36 ../../opensearch.rst:50
+msgid "Supported Query Parameters"
+msgstr ""
+
+#: ../../opensearch.rst:38
+msgid "``q``"
+msgstr ""
+
+#: ../../opensearch.rst:39
+msgid "``time``"
+msgstr ""
+
+#: ../../opensearch.rst:40
+msgid "``bbox``"
+msgstr ""
+
+#: ../../opensearch.rst:43
+msgid "OGC OpenSearch Extension for Earth Observation"
+msgstr ""
+
+#: ../../opensearch.rst:45
 #, fuzzy
 msgid ""
-"OpenSearch support is enabled by default.  HTTP requests must be "
-"specified with ``mode=opensearch`` in the base URL for OpenSearch "
-"requests, e.g.:"
-msgstr "HTTP请求必须在OpenSearch要求的基准URL中指 定 ``mode=opensearch`` ，例如："
+"pycsw supports the `OGC OpenSearch Extension for Earth Observation`_ "
+"standard via the following conformance classes:"
+msgstr "pycsw通过以下分类支持 `OGC OpenSearch地理和时间扩展1.0`_ 标准："
 
-#: ../../opensearch.rst:17
-msgid ""
-"This will return the Description document which can then be "
-"`autodiscovered "
-"<http://www.opensearch.org/Specifications/OpenSearch/1.1#Autodiscovery>`_."
+#: ../../opensearch.rst:47
+msgid "Core"
 msgstr ""
-"将返回描述文档，此文档可以 `autodiscovered "
-"<http://www.opensearch.org/Specifications/OpenSearch/1.1#Autodiscovery>`_"
-" 。"
+
+#: ../../opensearch.rst:52
+msgid "``eo:cloudCover``"
+msgstr ""
+
+#: ../../opensearch.rst:53
+msgid "``eo:instrument``"
+msgstr ""
+
+#: ../../opensearch.rst:54 ../../opensearch.rst:71
+msgid "``eo:orbitDirection``"
+msgstr ""
+
+#: ../../opensearch.rst:55 ../../opensearch.rst:70
+msgid "``eo:orbitNumber``"
+msgstr ""
+
+#: ../../opensearch.rst:56
+msgid "``eo:platform``"
+msgstr ""
+
+#: ../../opensearch.rst:57 ../../opensearch.rst:73
+msgid "``eo:processingLevel``"
+msgstr ""
+
+#: ../../opensearch.rst:58 ../../opensearch.rst:69
+msgid "``eo:productType``"
+msgstr ""
+
+#: ../../opensearch.rst:59
+msgid "``eo:sensorType``"
+msgstr ""
+
+#: ../../opensearch.rst:60 ../../opensearch.rst:72
+msgid "``eo:snowCover``"
+msgstr ""
+
+#: ../../opensearch.rst:61
+msgid "``eo:spectralRange``"
+msgstr ""
+
+#: ../../opensearch.rst:64
+msgid "Mapping of non-19115 Queryable Mappings"
+msgstr ""
+
+#: ../../opensearch.rst:66
+msgid ""
+"The following queryables are implemented as faceted keywords given they "
+"are not implemented in generic geospatial metadata standards:"
+msgstr ""
+
+#: ../../opensearch.rst:75
+msgid ""
+"This means metadata ingested into pycsw must have these fields "
+"implemented as keywords, as per the examples below:"
+msgstr ""
+
+#: ../../opensearch.rst:108
+msgid "OpenSearch Temporal Queries Implementation"
+msgstr ""
+
+#: ../../opensearch.rst:110
+msgid ""
+"By default, pycsw's OpenSearch temporal support will query the Dublin "
+"Core ``dc:date`` property as a time instant/single point in time.  To "
+"enable temporal extent search, set ``profiles=apiso`` which will query "
+"the temporal extents of a metadata record (``apiso:TempExtent_begin`` and"
+" ``apiso:TempExtent_end``)."
+msgstr ""
+
+#: ../../opensearch.rst:114
+msgid ""
+"At the HTTP API level, time is supported via either ``time=t1/t2`` or "
+"``start=t1&stop=t2``.  If the ``time`` parameter is present, it will "
+"override the ``start`` and ``stop`` parameters respectively."
+msgstr ""
 
 #~ msgid "OpenSearch support is enabled by default."
 #~ msgstr "OpenSearch启动是默认的。"
