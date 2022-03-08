@@ -99,7 +99,7 @@ def write_record(result, esn, context, url=None):
         parameters_indexes = []
         for index, kw in enumerate(kws):
             if "Earth Science".lower() in kw.lower() and len(kw.split(">")) >= 2:
-                values = kw.split(">")
+                values = kw.upper().split(">")
                 parameters = etree.SubElement(node, util.nspath_eval('dif:Parameters', NAMESPACES))  # .text = kw
                 etree.SubElement(parameters, util.nspath_eval('dif:Category', NAMESPACES)).text = values[0].strip().upper()
                 etree.SubElement(parameters, util.nspath_eval('dif:Topic', NAMESPACES)).text = values[1].strip().upper()
