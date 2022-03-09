@@ -53,11 +53,11 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   # collection query, limiting results
   http://localhost:8000/search?limit=1
   # collection query, paging
-  http://localhost:8000/search?limit=10&startindex=10
+  http://localhost:8000/search?limit=10&offset=10
   # collection query, paging and sorting (default ascending)
-  http://localhost:8000/search?limit=10&startindex=10&sortby=title
+  http://localhost:8000/search?limit=10&offset=10&sortby=title
   # collection query, paging and sorting (descending)
-  http://localhost:8000/search?limit=10&startindex=10&sortby=-title
+  http://localhost:8000/search?limit=10&offset=10&sortby=-title
   # collection query as JSON (HTTP POST), as curl request
   curl http://localhost:8000/search --request POST -H "Content-Type: application/json" --data '{"bbox": [-180, -90, 180, 90], "datetime": "2006-03-26"}'
   # collection query as JSON (HTTP POST), as curl request, with sorting (default ascending) 

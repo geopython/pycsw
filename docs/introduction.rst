@@ -85,7 +85,7 @@ Paging
 ^^^^^^
 
 - limit
-- startindex
+- offset
 
 CSW Support
 -----------
