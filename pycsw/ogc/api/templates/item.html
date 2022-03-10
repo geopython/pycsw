@@ -49,7 +49,15 @@
                   <li>{{ keyword }}</li>
                 {% endfor %}
                 </ul>
-              </td>`
+              </td>
+            {% elif key == 'themes' %}
+              <td>
+                <ul>
+                {% for concept in value['concepts'] %}
+                  <li>{{ concept }}</li>
+                {% endfor %}
+                </ul>
+              </td>
             {% elif key == 'associations' %}
               <td>
                 <ul>
