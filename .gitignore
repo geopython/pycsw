@@ -23,3 +23,6 @@ tests/results
 # shell files
 .env
 .envrc
+
+# compiled file for *.po.
+*.mo
