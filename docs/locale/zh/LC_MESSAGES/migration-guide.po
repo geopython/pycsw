@@ -9,30 +9,30 @@ msgstr ""
 "Project-Id-Version: pycsw 2.1-dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-08 22:54+0800\n"
-"PO-Revision-Date: 2018-12-05 10:31+0800\n"
+"PO-Revision-Date: 2022-03-09 13:40+0800\n"
 "Last-Translator: \n"
-"Language: zh_CN\n"
 "Language-Team: \n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.8.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: ../../migration-guide.rst:4
 msgid "pycsw Migration Guide"
-msgstr "pycsw迁移向导"
+msgstr "pycsw 迁移指南"
 
 #: ../../migration-guide.rst:6
 msgid ""
 "This page provides migration support across pycsw versions over time to "
 "help with pycsw change management."
-msgstr "这个页面提供了pycsw跨版本管理的支持."
+msgstr "此页面提供跨 pycsw 版本的迁移支持，以帮助进行 pycsw 变更管理。"
 
 #: ../../migration-guide.rst:10
-#, fuzzy
 msgid "pycsw 2.x to 3.0 Migration"
-msgstr "pycsw 1.x到2.0的迁移"
+msgstr "pycsw 2.x 到 3.0 的迁移"
 
 #: ../../migration-guide.rst:12
 msgid ""
@@ -42,54 +42,62 @@ msgid ""
 "of ``requirements.txt`` to install Flask along with other standalone "
 "requirements"
 msgstr ""
+"独立部署的默认端点现在由 ``pycsw/wsgi_flask.py``（基于 Flask）提供支持，"
+"它支持所有 pycsw 支持的 API。确保在 ``requirements.txt`` 之上使用 "
+"``requirements-standalone.txt`` 来安装 Flask 以及其他独立需求"
 
 #: ../../migration-guide.rst:13
 msgid ""
 "the previously used ``pycsw/wsgi.py`` can still be used for CSW only "
-"deployments or for applications that need to integrate pycsw as a library"
-" (e.g. Django applications). PyPI installations still use "
+"deployments or for applications that need to integrate pycsw as a "
+"library (e.g. Django applications). PyPI installations still use "
 "``requirements.txt`` which does not install Flask by default"
 msgstr ""
+"以前使用的 ``pycsw/wsgi.py`` 仍然可以用于仅 CSW 部署或需要将 pycsw 集成为"
+"库的应用程序（例如 Django 应用程序）。PyPI 安装仍然使用``requirements."
+"txt``，默认情况下不安装 Flask"
 
 #: ../../migration-guide.rst:14
 msgid "the default endpoint ``/`` is now OARec"
-msgstr ""
+msgstr "默认端点 ``/`` 现在是 OARec"
 
 #: ../../migration-guide.rst:15
 msgid "the CSW endpoint is now ``/csw``"
-msgstr ""
+msgstr "CSW 端点现在是 ``/csw``"
 
 #: ../../migration-guide.rst:16
 msgid "the OAI-PMH endpoint is now ``/oaipmh``"
-msgstr ""
+msgstr "OAI-PMH 端点现在是 ``/oaipmh``"
 
 #: ../../migration-guide.rst:17
 msgid "the OpenSearch endpoint is now ``/opensearch``"
-msgstr ""
+msgstr "OpenSearch 端点现在是 ``/opensearch``"
 
 #: ../../migration-guide.rst:18
 msgid "the SRU endpoint is now ``/sru``"
-msgstr ""
+msgstr "SRU 端点现在是 ``/sru``"
 
 #: ../../migration-guide.rst:19
 msgid "the ``pycsw-admin.py`` syntax has been updated"
-msgstr ""
+msgstr "pycsw-admin.py 语法已更新"
 
 #: ../../migration-guide.rst:21
 msgid ""
-"the ``-c`` flag has been replaced by subcommands (i.e. ``pycsw-admin.py "
-"-c load_records`` -> ``pycsw-admin.py load-records``)"
+"the ``-c`` flag has been replaced by subcommands (i.e. ``pycsw-admin.py -"
+"c load_records`` -> ``pycsw-admin.py load-records``)"
 msgstr ""
+"``-c`` 标志已被子命令替换（即 ``pycsw-admin.py -c load_records`` -> "
+"``pycsw-admin.py load-records``）"
 
 #: ../../migration-guide.rst:22
 msgid ""
 "subcommands have been slugified (i.e. ``load_records`` -> ``load-"
 "records``)"
-msgstr ""
+msgstr "子命令已被 slugified（即 ``load_records`` -> ``load-records``）"
 
 #: ../../migration-guide.rst:23
 msgid "consult ``--help`` to use the updated CLI syntax"
-msgstr ""
+msgstr "请参阅 ``--help`` 以使用更新的 CLI 语法"
 
 #: ../../migration-guide.rst:26
 msgid "pycsw 1.x to 2.0 Migration"
@@ -100,12 +108,13 @@ msgid ""
 "the default CSW version is now 3.0.0.  CSW clients need to explicitly "
 "specify ``version=2.0.2`` for CSW 2 behaviour.  Also, pycsw "
 "administrators can use a WSGI wrapper to the pycsw API to force "
-"``version=2.0.2`` on init of ``pycsw.server.Csw`` from the server.  See "
-":ref:`csw-support` for more information."
+"``version=2.0.2`` on init of ``pycsw.server.Csw`` from the server.  See :"
+"ref:`csw-support` for more information."
 msgstr ""
-"缺省的CSW版本是 3.0.0。 CSW 客户端需要显式地声明 ``version=2.0.2`` 来使用 CSW "
-"2的行为。另外，pycsw管理器可能通过在服务器端通过 ``pycsw.server.Csw`` 初始化来使用强制的 pycsw "
-"``version=2.0.2``。 查看 :ref:`csw-support` 来获取更多的信息."
+"默认的 CSW 版本现在是 3.0.0。CSW 客户端需要为 CSW 2 行为显式指定 "
+"``version=2.0.2``。此外，pycsw 管理员可以使用 pycsw API 的 WSGI 包装器来"
+"强制从服务器初始化 ``pycsw.server.Csw`` 的``version=2.0.2``。更多信息参"
+"见:ref:`csw-support`。"
 
 #: ../../migration-guide.rst:33
 msgid ""
@@ -114,10 +123,9 @@ msgid ""
 "additionally return the HTTP status code along with the response as a "
 "list"
 msgstr ""
-"``pycsw.server.Csw.dispatch_wsgi()`` "
-"以前将响应内容作为字符串返回。2.0.0引入了兼容性中断，以附加地将HTTP状态代码和响应作为列表返回"
+"``pycsw.server.Csw.dispatch_wsgi()`` 之前将响应内容作为字符串返回。2.0.0 "
+"引入了一个兼容性中断，以额外返回 HTTP 状态代码以及响应作为列表"
 
 #: ../../migration-guide.rst:58
 msgid "See :ref:`api` for more information."
-msgstr "查看 :ref:`api` 来获取更多的信息。"
-
+msgstr "更多信息参见:ref:`api`。"

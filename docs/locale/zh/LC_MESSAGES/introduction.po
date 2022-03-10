@@ -4,15 +4,16 @@ msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-08 22:54+0800\n"
-"PO-Revision-Date: 2018-12-05 11:24+0800\n"
+"PO-Revision-Date: 2022-03-09 11:22+0800\n"
 "Last-Translator: \n"
-"Language: zh_CN\n"
 "Language-Team: \n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.8.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: ../../introduction.rst:4
 msgid "Introduction"
@@ -20,7 +21,7 @@ msgstr "引言"
 
 #: ../../introduction.rst:6
 msgid "pycsw is an OARec and OGC CSW server implementation written in Python."
-msgstr "pycsw是使用 Python 语言实现的 OGC CSW 服务。"
+msgstr "pycsw 是用 Python 编写的 OARec 和 OGC CSW 服务器实现。"
 
 #: ../../introduction.rst:9
 msgid "Features"
@@ -28,7 +29,7 @@ msgstr "特性"
 
 #: ../../introduction.rst:11
 msgid "implements `OGC API - Records - Part 1: Core`_"
-msgstr ""
+msgstr "实现`OGC API - 记录 - 第 1 部分：核心`_"
 
 #: ../../introduction.rst:12
 msgid ""
@@ -42,7 +43,7 @@ msgstr "WMS、WFS、WCS、WPS、WAF、CSW、SOS得到支持"
 
 #: ../../introduction.rst:14
 msgid "implements `INSPIRE Discovery Services 3.0`_"
-msgstr "实现了 `INSPIRE Discovery Services 3.0`_ "
+msgstr "实现了 `INSPIRE Discovery Services 3.0`_"
 
 #: ../../introduction.rst:15
 msgid "implements `ISO Metadata Application Profile 1.0.0`_"
@@ -130,7 +131,7 @@ msgstr "版本"
 
 #: ../../introduction.rst:1
 msgid "`OGC API - Records - Part 1: Core`_"
-msgstr ""
+msgstr "`OGC API - Records - Part 1: Core`_"
 
 #: ../../introduction.rst:1
 msgid "1.0"
@@ -141,37 +142,36 @@ msgid ""
 "`OGC API - Features - Part 3: Filtering and the Common Query Language "
 "(CQL)`_"
 msgstr ""
+"`OGC API - Features - Part 3: Filtering and the Common Query Language "
+"(CQL)`_"
 
 #: ../../introduction.rst:1
 msgid "draft"
-msgstr ""
+msgstr "草稿"
 
 #: ../../introduction.rst:1
 msgid "`OGC CSW`_"
 msgstr "`OGC CSW`_"
 
 #: ../../introduction.rst:1
-#, fuzzy
 msgid "2.0.2/3.0.0"
-msgstr "2.0.2, 3.0.0"
+msgstr "2.0.2/3.0.0"
 
 #: ../../introduction.rst:1
 msgid "`OGC Filter`_"
 msgstr "`OGC Filte`_"
 
 #: ../../introduction.rst:1
-#, fuzzy
 msgid "1.1.0/2.0.0"
-msgstr "1.1.0, 2.0.0"
+msgstr "1.1.0/2.0.0"
 
 #: ../../introduction.rst:1
 msgid "`OGC OWS Common`_"
 msgstr "`OGC OWS Common`_"
 
 #: ../../introduction.rst:1
-#, fuzzy
 msgid "1.0.0/2.0.0"
-msgstr "1.0.0, 2.0.0"
+msgstr "1.0.0/2.0.0"
 
 #: ../../introduction.rst:1
 msgid "`OGC GML`_"
@@ -271,74 +271,71 @@ msgstr "2.0"
 
 #: ../../introduction.rst:60
 msgid "OGC API - Records support"
-msgstr ""
+msgstr "OGC API - 记录支持"
 
 #: ../../introduction.rst:62
 msgid "Part 1: Core"
-msgstr ""
+msgstr "第 1 部分：核心"
 
 #: ../../introduction.rst:65
 msgid "OGC API - Features support"
-msgstr ""
+msgstr "OGC API - 功能支持"
 
 #: ../../introduction.rst:67
 msgid "Part 3: Filtering and the Common Query Language (CQL)"
-msgstr ""
+msgstr "第 3 部分：过滤和通用查询语言 (CQL)"
 
 #: ../../introduction.rst:70 ../../introduction.rst:118
 msgid "Supported Output Formats"
 msgstr "支持的输出格式"
 
 #: ../../introduction.rst:72
-#, fuzzy
 msgid "JSON (default)"
-msgstr "XML （默认值）"
+msgstr "JSON（默认）"
 
 #: ../../introduction.rst:73
 msgid "XML"
-msgstr ""
+msgstr "XML"
 
 #: ../../introduction.rst:76 ../../introduction.rst:142
 msgid "Supported Filters"
-msgstr "筛选条件"
+msgstr "支持的过滤器"
 
 #: ../../introduction.rst:78
 msgid "q"
-msgstr ""
+msgstr "q"
 
 #: ../../introduction.rst:79
 msgid "datetime"
-msgstr ""
+msgstr "时区"
 
 #: ../../introduction.rst:80
 msgid "filter (CQL)"
-msgstr ""
+msgstr "过滤器 (CQL)"
 
 #: ../../introduction.rst:81
 msgid "bbox"
-msgstr ""
+msgstr "bbox"
 
 #: ../../introduction.rst:82
 msgid "all properties (``property=value``)"
-msgstr ""
+msgstr "所有属性（``property=value``）"
 
 #: ../../introduction.rst:85
 msgid "Paging"
-msgstr ""
+msgstr "分页"
 
 #: ../../introduction.rst:87
-#, fuzzy
 msgid "limit"
-msgstr "函数：除去字符串开始的空格"
+msgstr "限度"
 
 #: ../../introduction.rst:88
 msgid "startindex"
-msgstr ""
+msgstr "startindex"
 
 #: ../../introduction.rst:91
-#, fuzzy
 msgid "CSW Support"
-msgstr "支持"
+msgstr "CSW支持"
 
 #: ../../introduction.rst:94
 msgid "Supported Operations"
@@ -366,7 +363,7 @@ msgstr "功能"
 
 #: ../../introduction.rst:1
 msgid "mandatory"
-msgstr "必填"
+msgstr "强制性的"
 
 #: ../../introduction.rst:1
 msgid "yes"
@@ -426,8 +423,8 @@ msgstr "POST (XML) / SOAP"
 
 #: ../../introduction.rst:111
 msgid ""
-"Asynchronous processing supported for GetRecords and Harvest requests "
-"(via ``csw:ResponseHandler``)"
+"Asynchronous processing supported for GetRecords and Harvest requests (via "
+"``csw:ResponseHandler``)"
 msgstr "异步处理支持 GetRecords 和获取请求 （通过 ' csw:ResponseHandler ')"
 
 #: ../../introduction.rst:115
@@ -624,20 +621,19 @@ msgstr "低于"
 
 #: ../../introduction.rst:193
 msgid "ltrim"
-msgstr "函数：除去字符串开始的空格"
+msgstr "ltrim"
 
 #: ../../introduction.rst:194
 msgid "rtrim"
-msgstr "函数：除去字符串尾部空格"
+msgstr "rtrim"
 
 #: ../../introduction.rst:195
 msgid "trim"
-msgstr "函数：除去字符串开始和尾部空格"
+msgstr "trim"
 
 #: ../../introduction.rst:196
 msgid "upper"
-msgstr "转成大写"
+msgstr "上部"
 
 #~ msgid "Python 2 and 3 compatible"
 #~ msgstr "Python 2和3兼容"
-

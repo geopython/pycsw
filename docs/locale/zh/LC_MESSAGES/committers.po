@@ -4,16 +4,16 @@ msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-28 11:27+0800\n"
-"PO-Revision-Date: 2018-12-05 13:52+0800\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.3.4\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"PO-Revision-Date: 2022-03-09 09:50+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_CN\n"
-"X-Generator: Poedit 2.0.6\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Generated-By: Babel 2.3.4\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: ../../committers.rst:4
 msgid "Committers"
@@ -33,19 +33,19 @@ msgstr "联系方式/邮件"
 
 #: ../../../COMMITTERS.txt:2
 msgid "Area(s)"
-msgstr ""
+msgstr "区域"
 
 #: ../../../COMMITTERS.txt:4
 msgid "tomkralidis"
-msgstr ""
+msgstr "tomkralidis"
 
 #: ../../../COMMITTERS.txt:4
 msgid "Tom Kralidis"
-msgstr ""
+msgstr "Tom Kralidis"
 
 #: ../../../COMMITTERS.txt:4
 msgid "tomkralidis at gmail.com"
-msgstr ""
+msgstr "tomkralidis at gmail.com"
 
 #: ../../../COMMITTERS.txt:4 ../../../COMMITTERS.txt:7
 msgid "Overall"
@@ -53,31 +53,31 @@ msgstr "总计"
 
 #: ../../../COMMITTERS.txt:5
 msgid "kalxas"
-msgstr ""
+msgstr "kalxas"
 
 #: ../../../COMMITTERS.txt:5
 msgid "Angelos Tzotsos"
-msgstr ""
+msgstr "Angelos Tzotsos"
 
 #: ../../../COMMITTERS.txt:5
 msgid "tzotsos at gmail.com"
-msgstr ""
+msgstr "tzotsos at gmail.com"
 
 #: ../../../COMMITTERS.txt:5
 msgid "INSPIRE, APISO profiles, Packaging"
-msgstr ""
+msgstr "INSPIRE, APISO profiles, Packaging"
 
 #: ../../../COMMITTERS.txt:6
 msgid "adamhinz"
-msgstr ""
+msgstr "adamhinz"
 
 #: ../../../COMMITTERS.txt:6
 msgid "Adam Hinz"
-msgstr ""
+msgstr "Adam Hinz"
 
 #: ../../../COMMITTERS.txt:6
 msgid "hinz dot adam at gmail.com"
-msgstr ""
+msgstr "hinz dot adam at gmail.com"
 
 #: ../../../COMMITTERS.txt:6
 msgid "WSGI/Server Deployment"
@@ -85,12 +85,12 @@ msgstr "WSGI/服务器部署"
 
 #: ../../../COMMITTERS.txt:7
 msgid "ricardogsilva"
-msgstr ""
+msgstr "ricardogsilva"
 
 #: ../../../COMMITTERS.txt:7
 msgid "Ricardo Garcia Silva"
-msgstr ""
+msgstr "Ricardo Garcia Silva"
 
 #: ../../../COMMITTERS.txt:7
 msgid "ricardo.garcia.silva at gmail.com"
-msgstr ""
+msgstr "ricardo.garcia.silva at gmail.com"

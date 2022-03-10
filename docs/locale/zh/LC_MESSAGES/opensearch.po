@@ -4,15 +4,16 @@ msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-08 22:54+0800\n"
-"PO-Revision-Date: 2016-06-08 11:03+0800\n"
+"PO-Revision-Date: 2022-03-09 13:56+0800\n"
 "Last-Translator: \n"
-"Language: zh_CN\n"
 "Language-Team: \n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.8.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: ../../opensearch.rst:4
 msgid "OpenSearch Support"
@@ -23,154 +24,164 @@ msgid ""
 "pycsw OpenSearch support is enabled by default.  There are two ways to "
 "access OpenSearch depending on the deployment pattern chosen."
 msgstr ""
+"pycsw OpenSearch 支持默认启用。 根据选择的部署模式，有两种访问 "
+"OpenSearch 的方法。"
 
 #: ../../opensearch.rst:10
 msgid "OARec deployment"
-msgstr ""
+msgstr "OARec 部署"
 
 #: ../../opensearch.rst:17
 msgid "CSW legacy deployment"
-msgstr ""
+msgstr "CSW 遗留部署"
 
 #: ../../opensearch.rst:19
-#, fuzzy
 msgid ""
 "HTTP requests must be specified with ``mode=opensearch`` in the base URL "
 "for OpenSearch requests, e.g.:"
-msgstr "HTTP请求必须在OpenSearch要求的基准URL中指 定 ``mode=opensearch`` ，例如："
+msgstr ""
+"HTTP请求必须在OpenSearch要求的基准URL中指定 ``mode=opensearch`` ，例如："
 
 #: ../../opensearch.rst:25
-#, fuzzy
 msgid ""
 "This will return the Description document which can then be "
-"`autodiscovered "
-"<https://github.com/dewitt/opensearch/blob/master/opensearch-1-1-draft-6.md#Autodiscovery>`_."
+"`autodiscovered <https://github.com/dewitt/opensearch/blob/master/"
+"opensearch-1-1-draft-6.md#Autodiscovery>`_."
 msgstr ""
-"将返回描述文档，此文档可以 `autodiscovered "
-"<http://www.opensearch.org/Specifications/OpenSearch/1.1#Autodiscovery>`_"
-" 。"
+"这将返回描述文档 `autodiscovered <https://github.com/dewitt/opensearch/"
+"blob/master/opensearch-1-1-draft-6.md#Autodiscovery>`_。"
 
 #: ../../opensearch.rst:28
 msgid "OGC OpenSearch Geo and Time Extensions 1.0"
-msgstr ""
+msgstr "OGC OpenSearch 地理和时间扩展 1.0"
 
 #: ../../opensearch.rst:30
 msgid ""
-"pycsw supports the `OGC OpenSearch Geo and Time Extensions 1.0`_ standard"
-" via the following conformance classes:"
-msgstr "pycsw通过以下分类支持 `OGC OpenSearch地理和时间扩展1.0`_ 标准："
+"pycsw supports the `OGC OpenSearch Geo and Time Extensions 1.0`_ "
+"standard via the following conformance classes:"
+msgstr ""
+"pycsw 通过以下一致性类支持 `OGC OpenSearch Geo and Time Extensions 1.0`_ "
+"标准："
 
 #: ../../opensearch.rst:32
 msgid ""
 "Core (GeoSpatial Service) ``{searchTerms}``, ``{geo:box}``, "
 "``{startIndex}``, ``{count}``"
 msgstr ""
-"核心（地理空间服务） ``{searchTerms}`` ， ``{geo:box}`` ，``{startIndex}`` ， "
-"``{count}`` "
+"核心（地理空间服务） ``{searchTerms}`` ， ``{geo:box}`` ，``{startIndex}"
+"`` ， ``{count}``"
 
 #: ../../opensearch.rst:33
 msgid "Temporal Search core ``{time:start}``, ``{time:end}``"
-msgstr "时间搜索核心 ``{time:start}`` ，  ``{time:end}`` "
+msgstr "时间搜索核心 ``{time:start}`` ， ``{time:end}``"
 
 #: ../../opensearch.rst:36 ../../opensearch.rst:50
 msgid "Supported Query Parameters"
-msgstr ""
+msgstr "支持的查询参数"
 
 #: ../../opensearch.rst:38
 msgid "``q``"
-msgstr ""
+msgstr "``q``"
 
 #: ../../opensearch.rst:39
 msgid "``time``"
-msgstr ""
+msgstr "``time``"
 
 #: ../../opensearch.rst:40
 msgid "``bbox``"
-msgstr ""
+msgstr "``bbox``"
 
 #: ../../opensearch.rst:43
 msgid "OGC OpenSearch Extension for Earth Observation"
-msgstr ""
+msgstr "用于地球观测的 OGC OpenSearch 扩展"
 
 #: ../../opensearch.rst:45
-#, fuzzy
 msgid ""
 "pycsw supports the `OGC OpenSearch Extension for Earth Observation`_ "
 "standard via the following conformance classes:"
-msgstr "pycsw通过以下分类支持 `OGC OpenSearch地理和时间扩展1.0`_ 标准："
+msgstr ""
+"pycsw 通过以下一致性类支持 `OGC OpenSearch Extension for Earth "
+"Observation`_ 标准："
 
 #: ../../opensearch.rst:47
 msgid "Core"
-msgstr ""
+msgstr "核心"
 
 #: ../../opensearch.rst:52
 msgid "``eo:cloudCover``"
-msgstr ""
+msgstr "``eo:cloudCover``"
 
 #: ../../opensearch.rst:53
 msgid "``eo:instrument``"
-msgstr ""
+msgstr "``eo:instrument``"
 
 #: ../../opensearch.rst:54 ../../opensearch.rst:71
 msgid "``eo:orbitDirection``"
-msgstr ""
+msgstr "``eo:orbitDirection``"
 
 #: ../../opensearch.rst:55 ../../opensearch.rst:70
 msgid "``eo:orbitNumber``"
-msgstr ""
+msgstr "``eo:orbitNumber``"
 
 #: ../../opensearch.rst:56
 msgid "``eo:platform``"
-msgstr ""
+msgstr "``eo:platform``"
 
 #: ../../opensearch.rst:57 ../../opensearch.rst:73
 msgid "``eo:processingLevel``"
-msgstr ""
+msgstr "``eo:processingLevel``"
 
 #: ../../opensearch.rst:58 ../../opensearch.rst:69
 msgid "``eo:productType``"
-msgstr ""
+msgstr "``eo:productType``"
 
 #: ../../opensearch.rst:59
 msgid "``eo:sensorType``"
-msgstr ""
+msgstr "``eo:sensorType``"
 
 #: ../../opensearch.rst:60 ../../opensearch.rst:72
 msgid "``eo:snowCover``"
-msgstr ""
+msgstr "``eo:snowCover``"
 
 #: ../../opensearch.rst:61
 msgid "``eo:spectralRange``"
-msgstr ""
+msgstr "``eo:spectralRange``"
 
 #: ../../opensearch.rst:64
 msgid "Mapping of non-19115 Queryable Mappings"
-msgstr ""
+msgstr "非 19115 可查询映射的映射"
 
 #: ../../opensearch.rst:66
 msgid ""
 "The following queryables are implemented as faceted keywords given they "
 "are not implemented in generic geospatial metadata standards:"
 msgstr ""
+"鉴于以下可查询对象未在通用地理空间元数据标准中实现，它们被实现为分面关键"
+"字："
 
 #: ../../opensearch.rst:75
 msgid ""
 "This means metadata ingested into pycsw must have these fields "
 "implemented as keywords, as per the examples below:"
 msgstr ""
+"这意味着提取到 pycsw 中的元数据必须将这些字段实现为关键字，如下例所示："
 
 #: ../../opensearch.rst:108
 msgid "OpenSearch Temporal Queries Implementation"
-msgstr ""
+msgstr "OpenSearch 时态查询实现"
 
 #: ../../opensearch.rst:110
 msgid ""
 "By default, pycsw's OpenSearch temporal support will query the Dublin "
 "Core ``dc:date`` property as a time instant/single point in time.  To "
 "enable temporal extent search, set ``profiles=apiso`` which will query "
-"the temporal extents of a metadata record (``apiso:TempExtent_begin`` and"
-" ``apiso:TempExtent_end``)."
+"the temporal extents of a metadata record (``apiso:TempExtent_begin`` "
+"and ``apiso:TempExtent_end``)."
 msgstr ""
+"默认情况下，pycsw 的 OpenSearch 时间支持将查询 Dublin Core ``dc:date`` 属"
+"性作为时间瞬间/单个时间点。要启用时间范围搜索，请设置 "
+"``profiles=apiso``，它将查询元数据记录的时间范围（ （``apiso:"
+"TempExtent_begin``和 ``apiso:TempExtent_end``）。"
 
 #: ../../opensearch.rst:114
 msgid ""
@@ -178,7 +189,8 @@ msgid ""
 "``start=t1&stop=t2``.  If the ``time`` parameter is present, it will "
 "override the ``start`` and ``stop`` parameters respectively."
 msgstr ""
+"在 HTTP API 级别，时间通过 ``time=t1/t2`` 或 ``start=t1&stop=t2`` 来支"
+"持。如果存在 ``time`` 参数，将分别覆盖 ``start`` 和 ``stop`` 参数。"
 
 #~ msgid "OpenSearch support is enabled by default."
 #~ msgstr "OpenSearch启动是默认的。"
-

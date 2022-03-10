@@ -9,15 +9,16 @@ msgstr ""
 "Project-Id-Version: pycsw 2.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-08 22:54+0800\n"
-"PO-Revision-Date: 2016-06-07 10:59+0800\n"
+"PO-Revision-Date: 2022-03-09 11:25+0800\n"
 "Last-Translator: \n"
-"Language: zh_TW\n"
 "Language-Team: \n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.8.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: ../../json.rst:4
 msgid "JSON Support"
@@ -25,17 +26,17 @@ msgstr "对JSON的支持"
 
 #: ../../json.rst:7
 msgid "OARec"
-msgstr ""
+msgstr "OARec"
 
 #: ../../json.rst:9
 msgid ""
 "pycsw fully supports the OARec JSON conformance class, which is the "
 "default representation provided."
-msgstr ""
+msgstr "pycsw 完全支持 OARec JSON 一致性类，这是提供的默认表示。"
 
 #: ../../json.rst:13
 msgid "CSW"
-msgstr ""
+msgstr "CSW"
 
 #: ../../json.rst:15
 msgid ""
@@ -43,6 +44,6 @@ msgid ""
 "``GetRecordById`` requests.  Adding ``outputFormat=application/json`` to "
 "your CSW request will return the response as a JSON representation."
 msgstr ""
-"pycsw 对JSON 的支持包括 ``DescribeRecord``, ``GetRecords`` 和 ``GetRecordById`` "
-"的请求。  在你的CSW请示中添加 ``outputFormat=application/json`` 会返回JSON格式表达的响应。"
-
+"pycsw 对JSON 的支持包括 ``DescribeRecord``, ``GetRecords`` 和 "
+"``GetRecordById`` 的请求。 在CSW请示中添加 ``outputFormat=application/"
+"json`` 会返回JSON格式表达的响应。"

@@ -4,55 +4,58 @@
 # This file is distributed under the same license as the pycsw package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: pycsw 3.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-08 22:54+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2022-03-09 14:31+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.8.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: ../../stac.rst:4
 msgid "SpatioTemporal Asset Catalog (STAC) API Support"
-msgstr ""
+msgstr "时空资产目录 (STAC) API 支持"
 
 #: ../../stac.rst:7
 msgid "Versions"
-msgstr ""
+msgstr "版本"
 
 #: ../../stac.rst:9
 msgid ""
-"pycsw supports `SpatioTemporal Asset Catalog API version 1.0.0-beta2`_ by"
-" default."
+"pycsw supports `SpatioTemporal Asset Catalog API version 1.0.0-beta2`_ "
+"by default."
 msgstr ""
+"pycsw 默认支持 `SpatioTemporal Asset Catalog API version 1.0.0-beta2`_。"
 
 #: ../../stac.rst:11
 msgid "pycsw implements provides STAC support in the following manner:"
-msgstr ""
+msgstr "pycsw 实现以下列方式提供 STAC 支持："
 
 #: ../../stac.rst:13
 msgid "a pycsw repository is equivalent to a STAC collection"
-msgstr ""
+msgstr "pycsw 存储库相当于一个 STAC 集合"
 
 #: ../../stac.rst:14
 msgid "pycsw metadata records are equivalent to STAC items"
-msgstr ""
+msgstr "pycsw 元数据记录等同于 STAC 项"
 
 #: ../../stac.rst:16
 msgid ""
 "The STAC specification is designed with the same principles as OGC API - "
 "Records."
-msgstr ""
+msgstr "STAC 规范的设计原则与 OGC API - Records 相同。"
 
 #: ../../stac.rst:19
 msgid "Request Examples"
-msgstr ""
+msgstr "请求示例"
 
 #: ../../stac.rst:21
 msgid ""
@@ -61,4 +64,6 @@ msgid ""
 "developer experience/adoption. JSON and HTML output formats are both "
 "supported via the ``f`` parameter."
 msgstr ""
-
+"作为 CSW 的 OGC 继任者，OARec 是一种范式变革，其根源在于降低准入门槛、成"
+"为 webby/web 并专注于开发人员体验/采用。JSON 和 HTML 输出格式都通过 "
+"``f`` 参数支持。"
