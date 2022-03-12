@@ -206,12 +206,12 @@ class Geometry(object):
         vertices = []
 
         try:
-            proj_src = pyproj.Proj(init='epsg:%s' % src)
+            proj_src = pyproj.Proj('epsg:%s' % src)
         except:
             raise RuntimeError('Invalid source projection')
 
         try:
-            proj_dst = pyproj.Proj(init='epsg:%s' % dest)
+            proj_dst = pyproj.Proj('epsg:%s' % dest)
         except:
             raise RuntimeError('Invalid destination projection')
 
