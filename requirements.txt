@@ -2,6 +2,6 @@ click
 geolinks
 lxml
 OWSLib
-pyproj
+pyproj < 3.3.0
 Shapely
 xmltodict
