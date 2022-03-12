@@ -208,7 +208,7 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         response = {
-            'stac_version': '1.0.0-beta.4',
+            'stac_version': '1.0.0',
             'id': 'pycsw-catalogue',
             'type': 'Catalog',
             'conformsTo': CONFORMANCE_CLASSES,
