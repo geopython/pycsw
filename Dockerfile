@@ -44,7 +44,7 @@ LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
 ARG BUILD_DEV_IMAGE="false"
 
-RUN apt-get update && apt-get install --yes \
+RUN apt-get update && apt-get install --yes --allow-downgrades \
         ca-certificates libexpat1=2.2.6-2+deb10u1 \
     && rm -rf /var/lib/apt/lists/*
 
