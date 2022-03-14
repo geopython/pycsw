@@ -39,7 +39,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install requirements 📦
       run: |
-        sudo apt install -y libgeos-dev libpq-dev libxml2-dev libxslt1-dev libz-dev
+        sudo apt install -y --allow-downgrades libgeos-dev libpq-dev libxml2-dev libxslt1-dev libz-dev libexpat1=2.2.9-1build1
         pip3 install -r requirements.txt
         pip3 install -r requirements-standalone.txt
         pip3 install -r requirements-dev.txt
