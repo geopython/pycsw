@@ -145,7 +145,7 @@ def test_items(api):
     assert content['numberReturned'] == 4
     assert len(content['features']) == content['numberReturned']
 
-    params = {'limit': 4, 'startindex': 10}
+    params = {'limit': 4, 'offset': 10}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 12
     assert content['numberReturned'] == 2

@@ -208,7 +208,7 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         response = {
-            'stac_version': '1.0.0-beta.4',
+            'stac_version': '1.0.0',
             'id': 'pycsw-catalogue',
             'type': 'Catalog',
             'conformsTo': CONFORMANCE_CLASSES,
@@ -491,7 +491,7 @@ class API:
             'filter',
             'limit',
             'sortby',
-            'startindex'
+            'offset'
         ]
 
         response = {
@@ -636,12 +636,12 @@ class API:
         else:
             limit = self.maxrecords
 
-        startindex = int(args.get('startindex', 0))
+        offset = int(args.get('offset', 0))
 
         LOGGER.debug(f'Query: {query}')
         LOGGER.debug('Querying repository')
         count = query.count()
-        records = query.limit(limit).offset(startindex).all()
+        records = query.limit(limit).offset(offset).all()
 
         returned = len(records)
 
@@ -689,10 +689,10 @@ class API:
             'hreflang': self.config['server']['language']
         }])
 
-        if startindex > 0:
-            link_args.pop('startindex', None)
+        if offset > 0:
+            link_args.pop('offset', None)
 
-            prev = max(0, startindex - limit)
+            prev = max(0, offset - limit)
 
             url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
 
@@ -701,14 +701,14 @@ class API:
                     'type': 'application/geo+json',
                     'rel': 'prev',
                     'title': 'items (prev)',
-                    'href': f"{bind_url(url_)}startindex={prev}",
+                    'href': f"{bind_url(url_)}offset={prev}",
                     'hreflang': self.config['server']['language']
                 })
 
-        if (startindex + returned) < count:
-            link_args.pop('startindex', None)
+        if (offset + returned) < count:
+            link_args.pop('offset', None)
 
-            next_ = startindex + returned
+            next_ = offset + returned
 
             url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
 
@@ -716,7 +716,7 @@ class API:
                 'rel': 'next',
                 'type': 'application/geo+json',
                 'title': 'items (next)',
-                'href': f"{bind_url(url_)}startindex={next_}",
+                'href': f"{bind_url(url_)}offset={next_}",
                 'hreflang': self.config['server']['language']
             })
 

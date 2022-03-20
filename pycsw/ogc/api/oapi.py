@@ -73,10 +73,10 @@ def gen_oapi(config, oapi_filepath):
         'style': 'form',
         'explode': False
     }
-    oapi['components']['parameters']['startindex'] = {
-        'name': 'startindex',
+    oapi['components']['parameters']['offset'] = {
+        'name': 'offset',
         'in': 'query',
-        'description': 'The optional startindex parameter indicates the index within the result set from which the server shall begin presenting results in the response document.  The first element has an index of 0 (default).',  # noqa
+        'description': 'The optional offset parameter indicates the index within the result set from which the server shall begin presenting results in the response document.  The first element has an index of 0 (default).',  # noqa
         'required': False,
         'schema': {
             'type': 'integer',
@@ -226,7 +226,7 @@ def gen_oapi(config, oapi_filepath):
                 {'$ref': '#/components/parameters/sortby'},
                 {'$ref': '#/components/parameters/filter'},
                 {'$ref': '#/components/parameters/f'},
-                {'$ref': '#/components/parameters/startindex'}
+                {'$ref': '#/components/parameters/offset'}
             ],
             'responses': {
                 '200': {
