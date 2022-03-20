@@ -51,6 +51,9 @@ def xml2dict(xml_string, namespaces):
         An ordered dictionary with the contents of the xml data
 
     """
+    if isinstance(xml_string, bytes):
+        'if `xml_string` is encoded as UTF-8.'
+        xml_string = xml_string.decode()
 
     namespaces_reverse = dict((v, k) for k, v in namespaces.items())
     return xmltodict.parse(xml_string, process_namespaces=True,
