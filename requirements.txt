@@ -4,3 +4,4 @@ OWSLib
 pyproj
 Shapely
 xmltodict
+wsgicors==0.7.0

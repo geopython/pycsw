@@ -1,2 +1,6 @@
 .gitattributes export-ignore
 .gitignore export-ignore
+#prevent git from chaning line endings of sh file to /r/n on windows systems
+*.sh		text eol=lf
+*.ini		text eol=lf
+*.py		text eol=lf

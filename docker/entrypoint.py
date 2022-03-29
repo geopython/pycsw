@@ -112,7 +112,7 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
         "--access-logfile=-",
         "--error-logfile=-",
         "--workers={}".format(workers),
-        "pycsw.wsgi",
+        "pycsw.cors",
 
     ]
     logger.debug("Launching pycsw with {} ...".format(" ".join(execution_args)))
