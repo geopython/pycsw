@@ -197,7 +197,7 @@ class Geometry(object):
     def transform(self, src, dest):
         """transform coordinates from one CRS to another"""
 
-        from pyproj import Transformer
+        import pyproj
         from shapely.geometry import Point, LineString, Polygon
         from shapely.wkt import loads
 
@@ -206,21 +206,26 @@ class Geometry(object):
         vertices = []
 
         try:
-            proj_src = 'epsg:%s' % src
-            proj_dst = 'epsg:%s' % dest
-            transformer = Transformer.from_crs(proj_src, proj_dst, always_xy=True)
+            proj_src = pyproj.Proj('epsg:%s' % src)
         except:
-            raise RuntimeError('Invalid projection transformation')
+            raise RuntimeError('Invalid source projection')
+
+        try:
+            proj_dst = pyproj.Proj('epsg:%s' % dest)
+        except:
+            raise RuntimeError('Invalid destination projection')
 
         geom = loads(self.wkt)
 
         if geom.type == 'Point':
-            newgeom = Point(transformer.transform(geom.x, geom.y))
+            newgeom = Point(pyproj.transform(proj_src, proj_dst,
+                            geom.x, geom.y))
             wkt2 = newgeom.wkt
 
         elif geom.type == 'LineString':
             for vertice in list(geom.coords):
-                newgeom = transformer.transform(vertice[0], vertice[1])
+                newgeom = pyproj.transform(proj_src, proj_dst,
+                                           vertice[0], vertice[1])
                 vertices.append(newgeom)
 
             linestring = LineString(vertices)
@@ -229,7 +234,8 @@ class Geometry(object):
 
         elif geom.type == 'Polygon':
             for vertice in list(geom.exterior.coords):
-                newgeom = transformer.transform(vertice[0], vertice[1])
+                newgeom = pyproj.transform(proj_src, proj_dst,
+                                           vertice[0], vertice[1])
                 vertices.append(newgeom)
 
             polygon = Polygon(vertices)
