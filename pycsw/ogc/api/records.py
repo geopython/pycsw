@@ -208,7 +208,7 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         response = {
-            'stac_version': '1.0.0',
+            'stac_version': '1.0.0-beta.4',
             'id': 'pycsw-catalogue',
             'type': 'Catalog',
             'conformsTo': CONFORMANCE_CLASSES,
@@ -555,7 +555,7 @@ class API:
                 else:
                     query_args.append(f'{k} = "{v}"')
 
-        if collection != 'metadata:main':
+        if collection != 'metadata:main' and not stac_item:
             LOGGER.debug('Adding virtual collection filter')
             query_args.append(f'parentidentifier = "{collection}"')
 
@@ -855,7 +855,7 @@ def record2json(record, stac_item=False):
     }
 
     if stac_item:
-        record_dict['stac_version'] = '1.0.0'
+        record_dict['stac_version'] = '1.0.0-beta.4'
         record_dict['collection'] = 'metadata:main'
 
     record_dict['properties']['externalId'] = record.identifier
