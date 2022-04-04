@@ -32,3 +32,4 @@ tests/results
 
 # visual studio code workspace
 *.code-workspace
+.vscode/settings.json
