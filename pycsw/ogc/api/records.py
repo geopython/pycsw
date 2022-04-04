@@ -131,6 +131,7 @@ class API:
         self.query_mappings = {
             'type': self.repository.dataset.type,
             'parentidentifier': self.repository.dataset.parentidentifier,
+            'collections': self.repository.dataset.parentidentifier,
             'recordUpdated': self.repository.dataset.insert_date,
             'title': self.repository.dataset.title,
             'description': self.repository.dataset.abstract,
@@ -503,6 +504,8 @@ class API:
         cql_query = None
         query_parser = None
         sortby = None
+        limit = None
+        collections = []
 
         if stac_item and json_post_data is not None:
             LOGGER.debug(f'JSON POST data: {json_post_data}')
@@ -555,7 +558,7 @@ class API:
                 else:
                     query_args.append(f'{k} = "{v}"')
 
-        if collection != 'metadata:main':
+        if collection != 'metadata:main' and not stac_item:
             LOGGER.debug('Adding virtual collection filter')
             query_args.append(f'parentidentifier = "{collection}"')
 
@@ -575,9 +578,19 @@ class API:
             LOGGER.debug('Detected CQL text')
             query_parser = parse_ecql
         elif json_post_data is not None:
-            if list(json_post_data.keys()) == ['sortby']:
+            if 'limit' in json_post_data:
+                limit = json_post_data.pop('limit')
+            if 'sortby' in json_post_data:
+                sortby = json_post_data.pop('sortby')
+            if 'collections' in json_post_data:
+                collections = json_post_data.pop('collections')
+            if not json_post_data:
                 LOGGER.debug('No CQL specified, only query parameters')
                 json_post_data = {}
+            if not json_post_data and collections and collections != ['metadata:main']:
+                json_post_data = {'eq': [{'property': 'parentidentifier'}, collections[0]]}
+
+
             cql_query = json_post_data
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
             query_parser = parse_cql2_json
@@ -624,7 +637,7 @@ class API:
             else:
                 query = query.order_by(self.query_mappings[sortby])
 
-        if 'limit' in args:
+        if limit is None and 'limit' in args:
             limit = int(args['limit'])
             LOGGER.debug('limit specified')
             if limit < 1:
