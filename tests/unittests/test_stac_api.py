@@ -56,8 +56,8 @@ def test_conformance(api):
 
     assert len(content['conformsTo']) == 12
 
-    assert 'https://api.stacspec.org/v1.0.0/core' in content['conformsTo']  # noqa
-    assert 'https://api.stacspec.org/v1.0.0/item-search' in content['conformsTo']  # noqa
+    assert 'https://api.stacspec.org/v1.0.0-beta.4/core' in content['conformsTo']  # noqa
+    assert 'https://api.stacspec.org/v1.0.0-beta.4/item-search' in content['conformsTo']  # noqa
 
 
 def test_items(api):
