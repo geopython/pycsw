@@ -65,10 +65,10 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
-    'https://api.stacspec.org/v1.0.0-beta.4/core',
-    'https://api.stacspec.org/v1.0.0-beta.4/item-search',
-    'https://api.stacspec.org/v1.0.0-beta.4/item-search#filter',
-    'https://api.stacspec.org/v1.0.0-beta.4/item-search#sort'
+    'https://api.stacspec.org/v1.0.0/core',
+    'https://api.stacspec.org/v1.0.0/item-search',
+    'https://api.stacspec.org/v1.0.0/item-search#filter',
+    'https://api.stacspec.org/v1.0.0/item-search#sort'
 ]
 
 
@@ -131,6 +131,7 @@ class API:
         self.query_mappings = {
             'type': self.repository.dataset.type,
             'parentidentifier': self.repository.dataset.parentidentifier,
+            'collections': self.repository.dataset.parentidentifier,
             'recordUpdated': self.repository.dataset.insert_date,
             'title': self.repository.dataset.title,
             'description': self.repository.dataset.abstract,
@@ -208,7 +209,7 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         response = {
-            'stac_version': '1.0.0-beta.4',
+            'stac_version': '1.0.0',
             'id': 'pycsw-catalogue',
             'type': 'Catalog',
             'conformsTo': CONFORMANCE_CLASSES,
@@ -503,6 +504,8 @@ class API:
         cql_query = None
         query_parser = None
         sortby = None
+        limit = None
+        collections = []
 
         if stac_item and json_post_data is not None:
             LOGGER.debug(f'JSON POST data: {json_post_data}')
@@ -575,9 +578,19 @@ class API:
             LOGGER.debug('Detected CQL text')
             query_parser = parse_ecql
         elif json_post_data is not None:
-            if list(json_post_data.keys()) == ['sortby']:
+            if 'limit' in json_post_data:
+                limit = json_post_data.pop('limit')
+            if 'sortby' in json_post_data:
+                sortby = json_post_data.pop('sortby')
+            if 'collections' in json_post_data:
+                collections = json_post_data.pop('collections')
+            if not json_post_data:
                 LOGGER.debug('No CQL specified, only query parameters')
                 json_post_data = {}
+            if not json_post_data and collections and collections != ['metadata:main']:
+                json_post_data = {'eq': [{'property': 'parentidentifier'}, collections[0]]}
+
+
             cql_query = json_post_data
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
             query_parser = parse_cql2_json
@@ -624,7 +637,7 @@ class API:
             else:
                 query = query.order_by(self.query_mappings[sortby])
 
-        if 'limit' in args:
+        if limit is None and 'limit' in args:
             limit = int(args['limit'])
             LOGGER.debug('limit specified')
             if limit < 1:
@@ -855,7 +868,7 @@ def record2json(record, stac_item=False):
     }
 
     if stac_item:
-        record_dict['stac_version'] = '1.0.0-beta.4'
+        record_dict['stac_version'] = '1.0.0'
         record_dict['collection'] = 'metadata:main'
 
     record_dict['properties']['externalId'] = record.identifier

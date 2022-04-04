@@ -34,7 +34,7 @@ def test_landing_page(api):
     assert status == 200
     assert len(content['links']) == 14
 
-    assert content['stac_version'] == '1.0.0-beta.4'
+    assert content['stac_version'] == '1.0.0'
     assert content['type'] == 'Catalog'
     assert len(content['conformsTo']) == 12
     assert len(content['keywords']) == 3
@@ -56,8 +56,8 @@ def test_conformance(api):
 
     assert len(content['conformsTo']) == 12
 
-    assert 'https://api.stacspec.org/v1.0.0-beta.4/core' in content['conformsTo']  # noqa
-    assert 'https://api.stacspec.org/v1.0.0-beta.4/item-search' in content['conformsTo']  # noqa
+    assert 'https://api.stacspec.org/v1.0.0/core' in content['conformsTo']  # noqa
+    assert 'https://api.stacspec.org/v1.0.0/item-search' in content['conformsTo']  # noqa
 
 
 def test_items(api):
@@ -67,7 +67,7 @@ def test_items(api):
 
     record = content['features'][0]
 
-    assert record['stac_version'] == '1.0.0-beta.4'
+    assert record['stac_version'] == '1.0.0'
     assert record['collection'] == 'metadata:main'
 
     assert 'associations' not in record['properties']
@@ -138,5 +138,5 @@ def test_item(api):
     content = json.loads(api.item({}, {}, 'metadata:main', item, True)[2])
 
     assert content['id'] == item
-    assert content['stac_version'] == '1.0.0-beta.4'
+    assert content['stac_version'] == '1.0.0'
     assert content['collection'] == 'metadata:main'
