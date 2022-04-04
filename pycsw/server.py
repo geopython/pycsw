@@ -256,7 +256,7 @@ class Csw(object):
                     LOGGER.debug('Looks like an OpenSearch URL template')
                     query_part = self.request.split('?', 1)[-1]
                 else:
-                    query_part = urlparse(self.request)[-1].query
+                    query_part = urlparse(self.request).query
                 self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
             except AttributeError as err:
                 LOGGER.exception('Could not parse query string')
