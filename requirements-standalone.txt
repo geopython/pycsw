@@ -2,4 +2,3 @@ SQLAlchemy
 Flask
 pygeofilter
 PyYAML
-Werkzeug<2.1.0

@@ -161,7 +161,8 @@ def items(collection='metadata:main'):
     if 'search' in request.url_rule.rule:
         stac_item = True
 
-    return get_response(api_.items(dict(request.headers), request.json, dict(request.args),
+    return get_response(api_.items(dict(request.headers),
+                        request.get_json(silent=True), dict(request.args),
                         collection, stac_item))
 
 
