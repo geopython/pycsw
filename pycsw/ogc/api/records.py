@@ -140,7 +140,10 @@ class API:
             'bbox': self.repository.dataset.wkt_geometry,
             'date': self.repository.dataset.date,
             'time_begin': self.repository.dataset.time_begin,
-            'time_end': self.repository.dataset.time_end
+            'time_end': self.repository.dataset.time_end,
+            'platform': self.repository.dataset.platform,
+            'instrument': self.repository.dataset.instrument,
+            'sensortype': self.repository.dataset.sensortype
         }
         if self.repository.dbtype == 'postgresql+postgis+native':
             self.query_mappings['bbox'] = self.repository.dataset.wkb_geometry
@@ -449,6 +452,11 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         properties = self.repository.describe()
+        properties2 = {}
+
+        for key, value in properties.items():
+            if key in self.query_mappings or key == 'geometry':
+                properties2[key] = value
 
         if collection == 'metadata:main':
             title = self.config['metadata:main']['identification_title']
@@ -461,7 +469,7 @@ class API:
             'id': collection,
             'type': 'object',
             'title': title,
-            'properties': properties,
+            'properties': properties2,
             '$schema': 'http://json-schema.org/draft/2019-09/schema',
             '$id': f"{self.config['server']['url']}/collections/{collection}/queryables"
         }
@@ -589,7 +597,6 @@ class API:
                 json_post_data = {}
             if not json_post_data and collections and collections != ['metadata:main']:
                 json_post_data = {'eq': [{'property': 'parentidentifier'}, collections[0]]}
-
 
             cql_query = json_post_data
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
