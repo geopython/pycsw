@@ -110,6 +110,30 @@ class API:
         if self.config.has_option('repository', 'filter'):
             repo_filter = self.config.get('repository', 'filter')
 
+
+        if self.config.has_option('repository', 'mappings'):
+            # override default repository mappings
+            try:
+                import imp
+                module = self.config.get('repository', 'mappings')
+                if os.sep in module:  # filepath
+                    modulename = '%s' % os.path.splitext(module)[0].replace(
+                        os.sep, '.')
+                    mappings = imp.load_source(modulename, module)
+                else:  # dotted name
+                    mappings = __import__(module, fromlist=[''])
+                LOGGER.info('Loading custom repository mappings '
+                            'from %s', module)
+                self.context.md_core_model = mappings.MD_CORE_MODEL
+                self.context.refresh_dc(mappings.MD_CORE_MODEL)
+            except Exception as err:
+                LOGGER.exception('Could not load custom mappings: %s', err)
+                self.response = self.iface.exceptionreport(
+                    'NoApplicableCode', 'service',
+                    'Could not load repository.mappings')
+
+
+
         self.orm = 'sqlalchemy'
         from pycsw.core import repository
         try:
