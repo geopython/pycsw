@@ -111,15 +111,29 @@ class Repository(object):
 
         schema_name, table_name = table.rpartition(".")[::2]
 
+        default_table_args = {
+            "autoload": True,
+            "schema": schema_name or None
+        }
+        column_constraints = context.md_core_model.get("column_constraints")
+
+        # Note: according to the sqlalchemy docs available here:
+        #
+        # https://docs.sqlalchemy.org/en/14/orm/declarative_tables.html#declarative-table-configuration
+        #
+        # the __table_args__ attribute can either be a tuple or a dict
+        if column_constraints is not None:
+            table_args = tuple((*column_constraints, default_table_args))
+        else:
+            table_args = default_table_args
+
+        print(f"{table_args=}")
         self.dataset = type(
             'dataset',
             (base,),
             {
                 "__tablename__": table_name,
-                "__table_args__": {
-                    "autoload": True,
-                    "schema": schema_name or None,
-                },
+                "__table_args__": table_args,
             }
         )
 
