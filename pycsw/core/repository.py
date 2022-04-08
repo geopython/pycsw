@@ -127,7 +127,6 @@ class Repository(object):
         else:
             table_args = default_table_args
 
-        print(f"{table_args=}")
         self.dataset = type(
             'dataset',
             (base,),
