@@ -107,7 +107,9 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     #
 
     args = ["--reload", "--reload-engine=poll"] if reload else []
-    execution_args = ["gunicorn"] + args + [
+    log_format_str = os.getenv("LOG_FORMAT")
+    log_format =[ "--access-logformat='{}'".format(log_format_str)] if log_format_str else []
+    execution_args = ["gunicorn"] + args + log_format + [
         "--bind=0.0.0.0:8000",
         "--access-logfile=-",
         "--error-logfile=-",
