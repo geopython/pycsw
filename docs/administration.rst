@@ -134,7 +134,9 @@ PostGIS
 Mapping to an Existing Repository
 ---------------------------------
 
-pycsw supports publishing metadata from an existing repository.  To enable this functionality, the default database mappings must be modified to represent the existing database columns mapping to the abstract core model (the default mappings are in ``pycsw/config.py:MD_CORE_MODEL``).
+pycsw supports publishing metadata from an existing repository.  To enable this functionality, the default database
+mappings must be modified to represent the existing database columns mapping to the abstract core model (the default
+mappings are in ``pycsw/core/config.py:StaticContext.md_core_model``).
 
 To override the default settings:
 
@@ -217,8 +219,96 @@ Values of mappings can be derived from the following mechanisms:
 
 Further information is provided in ``pycsw/config.py:MD_CORE_MODEL``.
 
+
+Using a SQL View as the repository table
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If your pre-existing database stores information in a normalized fashion, *i.e.* distributed on multiple tables rather
+than on a single table (which is what pycsw expects by default), you have the option to create a DB view and use that
+as pycsw's repository.
+
+As a practical example, lets say you have a `CKAN`_ project which you would like to also provide pycsw integration with.
+CKAN stores dataset-related information over multiple tables:
+
+- ``package`` - has base metadata fields for each dataset;
+- ``package_extra`` - additional custom metadata fields, depending on the user's metadata schema;
+- ``package_tag`` - dataset_related keywords;
+- ``tag`` - dataset_related keywords;
+- ``group`` - details about a dataset's owner organization;
+- etc.
+
+One way to adapt such a DB structure to be able to integrate with pycsw is to create a `PostgreSQL Materialized View`_.
+For example:
+
+.. code-block:: SQL
+    CREATE MATERIALIZED VIEW IF NOT EXISTS my_pycsw_view AS
+        WITH cte_extras AS (
+            SELECT
+                   p.id,
+                   p.title,
+                   g.title AS org_name,
+                   json_object_agg(pe.key, pe.value) AS extras,
+                   array_agg(DISTINCT t.name) AS tags
+                   -- remaining columns omitted for brevity
+            FROM package AS p
+                JOIN package_extra AS pe ON p.id = pe.package_id
+                JOIN "group" AS g ON p.owner_org = g.id
+                JOIN package_tag AS pt ON p.id = pt.package_id
+                JOIN tag AS t on pt.tag_id = t.id
+            WHERE p.state = 'active'
+             AND p.private = false
+            GROUP BY p.id, g.title
+        )
+        SELECT
+               c.id AS identifier,
+               c.title AS title,
+               c.org_name AS organization,
+               ST_GeomFromGeoJSON(c.extras->>'spatial')::geometry(Polygon, 4326) AS geom,
+               c.extras->>'reference_date' AS date,
+               concat_ws(', ', VARIADIC c.tags) AS keywords
+               -- remaining columns omitted for brevity
+        FROM cte_extras AS c
+    WITH DATA;
+
+Creating this SQL view in the database means that all we now have the CKAN dataset information all on a single flat
+table, ready for pycsw to integrate with.
+
+A crucial setup that is required in order for SQL Views to be usable by pycsw is to include the additional
+``column_constraints`` property in your custom mappings. This property is used to specify which column(s) should
+function as the primary key of the SQL View:
+
+.. code-block:: python
+
+    # contents of my_custom_pycsw_mappings.py
+    from sqlalchemy.schema import PrimaryKeyConstraint
+
+    MD_CORE_MODEL = {
+        "column_constraints": (PrimaryKeyConstraint("identifier"),),
+        "typename": "pycsw:CoreMetadata",
+        "outputschema": "http://pycsw.org/metadata",
+        "mappings": {
+            "pycsw:Identifier": "identifier",
+            # remaining mappings omitted for brevity
+
+The above code snippet demonstrates how you could instruct sqlalchemy, which is what pycsw uses to interface with
+the DB, that the ``identifier`` column of the SQL view should be assumed to be the primary key of the table.
+
+Finally, we can configure pycsw with the path to the custom mappings and the name of the SQL view:
+
+.. code-block:: ini
+
+    # file: pycsw.cfg
+
+    [repository]
+    database=postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
+    mappings=/path/to/my_custom_pycsw_mappings.py
+    table=my_pycsw_view
+
+
 .. _`GDAL`: https://www.gdal.org
 .. _`OGC SFSQL`: https://www.ogc.org/standards/sfs
 .. _`WKT`: https://en.wikipedia.org/wiki/Well-known_text
 .. _`EWKT`: https://en.wikipedia.org/wiki/Well-known_text#Variations
 .. _`PostgreSQL Full Text Search`: https://www.postgresql.org/docs/current/textsearch.html
+.. _`CKAN`: https://ckan.org/
+.. _`PostgreSQL Materialized View`: https://www.postgresql.org/docs/current/sql-creatematerializedview.html

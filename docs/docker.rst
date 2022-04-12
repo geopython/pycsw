@@ -156,17 +156,17 @@ The following instructions set up a fully working development environment::
     docker exec \
         -ti \
         --user root \
-        pycsw-dev pip3 install -r requirements-dev.txt
+        pycsw-dev pip3 install -r pycsw/requirements-dev.txt
 
     # run tests (for example unit tests)
-    docker exec -ti pycsw-dev py.test -m unit
+    docker exec -ti pycsw-dev pytest -m unit pycsw
 
     # build docs
-    docker exec -ti pycsw-dev sh -c "cd docs && make html"
+    docker exec -ti pycsw-dev sh -c "cd pycsw/docs && make html"
 
 .. note::
 
-   Please note that the pycsw image only uses python 3.5 and that it also does
+   Please note that the pycsw image only uses python 3.8 and that it also does
    not install pycsw in editable mode. As such it is not possible to
    use ``tox``.
 
