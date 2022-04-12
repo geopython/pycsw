@@ -184,22 +184,13 @@ class Csw(object):
         LOGGER.debug('Model: %s.', self.context.model)
 
         # load user-defined mappings if they exist
-        if self.config.has_option('repository', 'mappings'):
-            # override default repository mappings
-            try:
-                import imp
-                module = self.config.get('repository', 'mappings')
-                if os.sep in module:  # filepath
-                    modulename = '%s' % os.path.splitext(module)[0].replace(
-                        os.sep, '.')
-                    mappings = imp.load_source(modulename, module)
-                else:  # dotted name
-                    mappings = __import__(module, fromlist=[''])
-                LOGGER.info('Loading custom repository mappings '
-                             'from %s', module)
-                self.context.md_core_model = mappings.MD_CORE_MODEL
-                self.context.refresh_dc(mappings.MD_CORE_MODEL)
-            except Exception as err:
+        custom_mappings_path = self.config.get('repository', 'mappings')
+        if custom_mappings_path is not None:
+            md_core_model = util.load_custom_repo_mappings(custom_mappings_path)
+            if md_core_model is not None:
+                self.context.md_core_model = md_core_model
+                self.context.refresh_dc(md_core_model)
+            else:
                 LOGGER.exception('Could not load custom mappings: %s', err)
                 self.response = self.iface.exceptionreport(
                     'NoApplicableCode', 'service',
