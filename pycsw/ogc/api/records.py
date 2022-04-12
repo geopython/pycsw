@@ -110,7 +110,7 @@ class API:
         if self.config.has_option('repository', 'filter'):
             repo_filter = self.config.get('repository', 'filter')
 
-        custom_mappings_path = self.config.get('repository', 'mappings')
+        custom_mappings_path = self.config.get('repository', 'mappings', None)
         if custom_mappings_path is not None:
             md_core_model = load_custom_repo_mappings(custom_mappings_path)
             if md_core_model is not None:

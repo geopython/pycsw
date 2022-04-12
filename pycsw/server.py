@@ -184,7 +184,7 @@ class Csw(object):
         LOGGER.debug('Model: %s.', self.context.model)
 
         # load user-defined mappings if they exist
-        custom_mappings_path = self.config.get('repository', 'mappings')
+        custom_mappings_path = self.config.get('repository', 'mappings', None)
         if custom_mappings_path is not None:
             md_core_model = util.load_custom_repo_mappings(custom_mappings_path)
             if md_core_model is not None:
