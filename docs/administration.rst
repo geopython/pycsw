@@ -241,34 +241,35 @@ One way to adapt such a DB structure to be able to integrate with pycsw is to cr
 For example:
 
 .. code-block:: SQL
-    CREATE MATERIALIZED VIEW IF NOT EXISTS my_pycsw_view AS
-        WITH cte_extras AS (
-            SELECT
-                   p.id,
-                   p.title,
-                   g.title AS org_name,
-                   json_object_agg(pe.key, pe.value) AS extras,
-                   array_agg(DISTINCT t.name) AS tags
-                   -- remaining columns omitted for brevity
-            FROM package AS p
-                JOIN package_extra AS pe ON p.id = pe.package_id
-                JOIN "group" AS g ON p.owner_org = g.id
-                JOIN package_tag AS pt ON p.id = pt.package_id
-                JOIN tag AS t on pt.tag_id = t.id
-            WHERE p.state = 'active'
-             AND p.private = false
-            GROUP BY p.id, g.title
-        )
-        SELECT
-               c.id AS identifier,
-               c.title AS title,
-               c.org_name AS organization,
-               ST_GeomFromGeoJSON(c.extras->>'spatial')::geometry(Polygon, 4326) AS geom,
-               c.extras->>'reference_date' AS date,
-               concat_ws(', ', VARIADIC c.tags) AS keywords
-               -- remaining columns omitted for brevity
-        FROM cte_extras AS c
-    WITH DATA;
+
+  CREATE MATERIALIZED VIEW IF NOT EXISTS my_pycsw_view AS
+      WITH cte_extras AS (
+          SELECT
+                 p.id,
+                 p.title,
+                 g.title AS org_name,
+                 json_object_agg(pe.key, pe.value) AS extras,
+                 array_agg(DISTINCT t.name) AS tags
+                 -- remaining columns omitted for brevity
+          FROM package AS p
+              JOIN package_extra AS pe ON p.id = pe.package_id
+              JOIN "group" AS g ON p.owner_org = g.id
+              JOIN package_tag AS pt ON p.id = pt.package_id
+              JOIN tag AS t on pt.tag_id = t.id
+          WHERE p.state = 'active'
+           AND p.private = false
+          GROUP BY p.id, g.title
+      )
+      SELECT
+             c.id AS identifier,
+             c.title AS title,
+             c.org_name AS organization,
+             ST_GeomFromGeoJSON(c.extras->>'spatial')::geometry(Polygon, 4326) AS geom,
+             c.extras->>'reference_date' AS date,
+             concat_ws(', ', VARIADIC c.tags) AS keywords
+             -- remaining columns omitted for brevity
+      FROM cte_extras AS c
+  WITH DATA;
 
 Creating this SQL view in the database means that all we now have the CKAN dataset information all on a single flat
 table, ready for pycsw to integrate with.
