@@ -33,12 +33,17 @@
 # =================================================================
 
 from configparser import BasicInterpolation, ConfigParser
+from pathlib import Path
+import importlib
+import importlib.util
 import json
 import os
 import re
 import datetime
 import logging
+import sys
 import time
+import typing
 
 from urllib.request import Request, urlopen
 from urllib.parse import urlparse
@@ -455,3 +460,34 @@ def is_none_or_empty(value):
         return True
 
     return False
+
+
+def programmatic_import(target_module: str) -> typing.Optional[typing.Any]:
+    result = None
+    target_module_path = Path(target_module)
+    if target_module_path.is_file():
+        module_name = target_module_path.stem
+        # this is an adaptation of the Python docs on using importlib to import a
+        # filepath:
+        # https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
+        spec = importlib.util.spec_from_file_location(
+            module_name, target_module_path)
+        if spec is not None:
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[module_name] = module
+            spec.loader.exec_module(module)
+            result = module
+    else:
+        try:
+            result = importlib.import_module(target_module)
+        except ModuleNotFoundError:
+            pass
+    return result
+
+
+def load_custom_repo_mappings(repository_mappings: str) -> typing.Optional[typing.Dict]:
+    imported_mappings_module = programmatic_import(repository_mappings)
+    result = None
+    if imported_mappings_module is not None:
+        result = getattr(imported_mappings_module, "MD_CORE_MODEL", None)
+    return result

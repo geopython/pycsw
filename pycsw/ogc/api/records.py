@@ -41,7 +41,7 @@ from pycsw import __version__
 from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.pygeofilter_evaluate import to_filter
-from pycsw.core.util import bind_url, jsonify_links, wkt2geom
+from pycsw.core.util import bind_url, jsonify_links, load_custom_repo_mappings, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
 
@@ -109,6 +109,15 @@ class API:
         repo_filter = None
         if self.config.has_option('repository', 'filter'):
             repo_filter = self.config.get('repository', 'filter')
+
+        custom_mappings_path = self.config.get('repository', 'mappings', fallback=None)
+        if custom_mappings_path is not None:
+            md_core_model = load_custom_repo_mappings(custom_mappings_path)
+            if md_core_model is not None:
+                self.context.md_core_model = md_core_model
+            else:
+                LOGGER.exception(
+                    'Could not load custom mappings: %s', custom_mappings_path)
 
         self.orm = 'sqlalchemy'
         from pycsw.core import repository

@@ -31,6 +31,7 @@
 import datetime as dt
 import os
 import time
+from pathlib import Path
 
 import mock
 import pytest
@@ -340,3 +341,24 @@ def test_jsonify_links(linkstr, expected):
 ])
 def test_is_none_or_empty(value, result):
     assert util.is_none_or_empty(value) is result
+
+
+@pytest.mark.parametrize("import_path, expected_attribute", [
+    pytest.param("itertools", "count", id="import from stdlib"),
+    pytest.param("pycsw.core.admin", "setup_db", id="dotted path import from pycsw"),
+    pytest.param(__file__, "test_programmatic_import", id="filesystem path import"),
+])
+def test_programmatic_import(import_path, expected_attribute):
+    imported_module = util.programmatic_import(import_path)
+    assert getattr(imported_module, expected_attribute)
+
+
+@pytest.mark.parametrize("invalid_import_path", [
+    "dummy",
+    "dummy.submodule",
+    "/non-existent/path",
+    str(Path(__file__).parent / "invalid_path"),
+])
+def test_programmatic_import_with_invalid_path(invalid_import_path):
+    result = util.programmatic_import(invalid_import_path)
+    assert result is None
