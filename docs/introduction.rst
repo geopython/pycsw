@@ -44,6 +44,7 @@ Standards Support
   `OGC OWS Common`_,1.0.0/2.0.0
   `OGC GML`_,3.1.1
   `OGC SFSQL`_,1.2.1
+  `OGC GeoRSS`_,1.0
   `Dublin Core`_,1.1
   `SOAP`_,1.2
   `ISO 19115`_,2003
@@ -205,6 +206,7 @@ Functions
 .. _`OGC SFSQL`: https://www.ogc.org/standards/sfs
 .. _`Dublin Core`: https://www.dublincore.org/
 .. _`OGC CITE CSW`: https://github.com/opengeospatial/ets-csw202
+.. _`OGC GeoRSS`: http://docs.opengeospatial.org/cs/17-002r1/17-002r1.html
 .. _`SOAP`: https://www.w3.org/TR/soap/
 .. _`INSPIRE Discovery Services 3.0`: https://inspire.jrc.ec.europa.eu/documents/Network_Services/TechnicalGuidance_DiscoveryServices_v3.0.pdf
 .. _`ISO 19115`: https://www.iso.org/iso/catalogue_detail.htm?csnumber=26020
