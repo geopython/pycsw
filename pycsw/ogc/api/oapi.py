@@ -97,6 +97,17 @@ def gen_oapi(config, oapi_filepath):
         'style': 'form',
         'explode': False
     }
+    oapi['components']['parameters']['filter'] = {
+        'name': 'vendorSpecificParameters',
+        'in': 'query',
+        'description': 'Additional "free-form" parameters that are not explicitly defined',  # noqa
+        'schema': {
+            'type': 'object',
+            'additionalProperties': True
+        },
+        'style': 'form'
+    }
+
     LOGGER.debug('Adding server info')
     oapi['info'] = {
         'contact': {
@@ -226,7 +237,8 @@ def gen_oapi(config, oapi_filepath):
                 {'$ref': '#/components/parameters/sortby'},
                 {'$ref': '#/components/parameters/filter'},
                 {'$ref': '#/components/parameters/f'},
-                {'$ref': '#/components/parameters/offset'}
+                {'$ref': '#/components/parameters/offset'},
+                {'$ref': '#/components/parameters/vendorSpecificParameters'}
             ],
             'responses': {
                 '200': {
