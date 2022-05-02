@@ -166,19 +166,19 @@ def test_items(api):
     assert content['numberReturned'] == 10
     assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
 
-    cql_json = {'eq': [{'property': 'title'}, 'Lorem ipsum']}
+    cql_json = {'op': '=', 'args': [{'property': 'title'}, 'Lorem ipsum']}
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 1
     assert content['numberReturned'] == 1
     assert len(content['features']) == content['numberReturned']
 
-    cql_json = {'eq': [{'property': 'title'}, 'Lorem ipsum']}
+    cql_json = {'op': '=', 'args': [{'property': 'title'}, 'Lorem ipsum']}
     content = json.loads(api.items({}, cql_json, {'limit': 1})[2])
     assert content['numberMatched'] == 1
     assert content['numberReturned'] == 1
     assert len(content['features']) == content['numberReturned']
 
-    cql_json = {'like': [{'property': 'title'}, 'lorem%'], 'nocase': False}
+    cql_json = {'op': 'like', 'args': [{'property': 'title'}, 'lorem%']}
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 2
     assert content['numberReturned'] == 2

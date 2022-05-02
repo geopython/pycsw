@@ -552,9 +552,6 @@ class API:
         for k, v in args.items():
             if k in reserved_query_params:
                 continue
-            if k not in self.query_mappings and k not in common_query_params:
-                return self.get_exception(
-                    400, headers_, 'InvalidParameterValue', f'Invalid property {k}')
 
             if k not in reserved_query_params:
                 if k == 'anytext':
