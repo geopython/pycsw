@@ -31,6 +31,7 @@ from sqlalchemy import text
 
 from pygeofilter import ast
 from pygeofilter.backends.evaluator import handle
+from pygeofilter.backends.sqlalchemy import filters
 from pygeofilter.backends.sqlalchemy.evaluate import SQLAlchemyFilterEvaluator
 
 from pycsw.core.util import bbox2wktpolygon
@@ -53,6 +54,15 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
             return text(f"ST_Intersects({geometry}, 'SRID={crs};{wkt}')")
         else:
             return text(f"query_spatial({geometry}, '{wkt}', 'bbox', 'false') = 'true'")  # noqa
+
+    @handle(ast.Like)
+    def like(self, node, lhs):
+        return filters.like(
+            lhs,
+            node.pattern,
+            node.nocase,
+            node.not_,
+        )
 
 
 def to_filter(ast, dbtype, field_mapping=None):
