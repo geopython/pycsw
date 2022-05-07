@@ -97,7 +97,7 @@ def gen_oapi(config, oapi_filepath):
         'style': 'form',
         'explode': False
     }
-    oapi['components']['parameters']['filter'] = {
+    oapi['components']['parameters']['vendorSpecificParameters'] = {
         'name': 'vendorSpecificParameters',
         'in': 'query',
         'description': 'Additional "free-form" parameters that are not explicitly defined',  # noqa
