@@ -968,9 +968,9 @@ def build_anytext(name, value):
     tokens = value.split()
 
     if len(tokens) == 1:  # single term
-        return f"{name} LIKE '%{value}%'"
+        return f"{name} ILIKE '%{value}%'"
 
     for token in tokens:
-        predicates.append(f"{name} LIKE '%{token}%'")
+        predicates.append(f"{name} ILIKE '%{token}%'")
 
     return f"({' AND '.join(predicates)})"

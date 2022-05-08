@@ -42,7 +42,7 @@ try:
 except:
     from shapely.geos import ReadingError
 
-from sqlalchemy import create_engine, func, __version__, select
+from sqlalchemy import create_engine, event, func, __version__, select
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import create_session
@@ -56,6 +56,11 @@ LOGGER = logging.getLogger(__name__)
 
 class Repository(object):
     _engines = {}
+
+    def _set_pragmas(self, dbapi_con, con_record):
+        if self.dbtype in ['sqlite', 'sqlite3']:
+            LOGGER.debug('Normalizing SQLite3 LIKE to be case-sensitive')
+            dbapi_con.execute('PRAGMA case_sensitive_like = true')
 
     @classmethod
     def create_engine(clazz, url):
@@ -102,6 +107,9 @@ class Repository(object):
                        'sqlite:///%s%s' % (app_root, os.sep))
 
         self.engine = Repository.create_engine('%s' % database)
+        self.dbtype = self.engine.name
+
+        event.listen(self.engine, 'connect', self._set_pragmas)
 
         base = declarative_base(bind=self.engine)
 
@@ -135,8 +143,6 @@ class Repository(object):
                 "__table_args__": table_args,
             }
         )
-
-        self.dbtype = self.engine.name
 
         self.session = create_session(self.engine)
 
@@ -189,6 +195,7 @@ class Repository(object):
             if not __version__ >= '0.7':
                 self.connection = self.engine.raw_connection()
                 create_custom_sql_functions(self.connection)
+            self.session.execute("PRAGMA case_sensitive_like=true")
 
         LOGGER.info('setting repository queryables')
         # generate core queryables db and obj bindings

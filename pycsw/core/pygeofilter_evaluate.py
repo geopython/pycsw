@@ -55,15 +55,6 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
         else:
             return text(f"query_spatial({geometry}, '{wkt}', 'bbox', 'false') = 'true'")  # noqa
 
-    @handle(ast.Like)
-    def like(self, node, lhs):
-        return filters.like(
-            lhs,
-            node.pattern,
-            node.nocase,
-            node.not_,
-        )
-
 
 def to_filter(ast, dbtype, field_mapping=None):
     return PycswFilterEvaluator(field_mapping, dbtype).evaluate(ast)
