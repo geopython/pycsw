@@ -49,7 +49,7 @@ print('''
                 border: 0px;
             }
         </style>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-%s.min.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-%s.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('.xml').change(function() {
@@ -150,8 +150,8 @@ print('''
             </ul>
         <hr/>
         <footer>
-            <a href="http://validator.w3.org/check?verbose=1&amp;uri=referer" title="Valid HTML 5!"><img class="flat" src="http://www.w3.org/html/logo/downloads/HTML5_Badge_32.png" alt="Valid HTML 5!" height="32" width="32"/></a>
-            <a href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS!"><img class="flat" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!" height="31" width="88"/></a>
+            <a href="https://validator.w3.org/check?verbose=1&amp;uri=referer" title="Valid HTML 5!"><img class="flat" src="https://www.w3.org/html/logo/downloads/HTML5_Badge_32.png" alt="Valid HTML 5!" height="32" width="32"/></a>
+            <a href="https://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS!"><img class="flat" src="https://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!" height="31" width="88"/></a>
         </footer>
     </body>
 </html>
