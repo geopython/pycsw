@@ -558,6 +558,8 @@ class API:
                     query_args.append(build_anytext(k, v))
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
+                elif k == 'keywords':
+                    query_args.append(f"keywords ILIKE '%{v}%'")
                 elif k == 'datetime':
                     if '/' not in v:
                         query_args.append(f'date = "{v}"')
