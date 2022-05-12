@@ -27,6 +27,8 @@
 #
 # =================================================================
 
+import logging
+
 from sqlalchemy import text
 
 from pygeofilter import ast
@@ -36,6 +38,8 @@ from pygeofilter.backends.sqlalchemy.evaluate import SQLAlchemyFilterEvaluator
 
 from pycsw.core.util import bbox2wktpolygon
 
+LOGGER = logging.getLogger(__name__)
+
 
 class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
     def __init__(self, field_mapping=None, dbtype='sqlite'):
@@ -44,6 +48,7 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
 
     @handle(ast.BBox)
     def bbox(self, node, lhs):
+        LOGGER.debug('Overriding BBOX filter handling')
         geometry = self.field_mapping['bbox'].key
         crs = node.crs or 4326
 
@@ -54,6 +59,22 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
             return text(f"ST_Intersects({geometry}, 'SRID={crs};{wkt}')")
         else:
             return text(f"query_spatial({geometry}, '{wkt}', 'bbox', 'false') = 'true'")  # noqa
+
+    @handle(ast.Like)
+    def ilike(self, node, lhs):
+        LOGGER.debug('Overriding ILIKE filter handling')
+        if (str(lhs.prop) == 'dataset.anytext' and
+                self._pycsw_dbtype.startswith('postgres')):
+            LOGGER.debug('Kicking into PostgreSQL FTS mode')
+            return text(f"plainto_tsquery('english', '{node.pattern}') @@ anytext_tsvector")  # noqa
+        else:
+            LOGGER.debug('Default ILIKE behaviour')
+            return filters.like(
+                lhs,
+                node.pattern,
+                not node.nocase,
+                node.not_,
+            )
 
 
 def to_filter(ast, dbtype, field_mapping=None):
