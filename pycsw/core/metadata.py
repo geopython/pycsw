@@ -1588,14 +1588,14 @@ def _parse_dc(context, repos, exml):
         links.append({
             'name': None,
             'description': None,
-            'procotcol': ref['scheme'],
+            'protocol': ref['scheme'],
             'url': ref['url'],
         })
     for uri in md.uris:
         links.append({
             'name': uri['name'],
             'description': uri['description'],
-            'procotcol': uri['protocol'],
+            'protocol': uri['protocol'],
             'url': uri['url'],
         })
 
