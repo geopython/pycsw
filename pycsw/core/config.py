@@ -121,6 +121,7 @@ class StaticContext(object):
                 'pycsw:Language': 'language',
                 'pycsw:Title': 'title',
                 'pycsw:Abstract': 'abstract',
+                'pycsw:Edition': 'edition',
                 'pycsw:Keywords': 'keywords',
                 'pycsw:KeywordType': 'keywordstype',
                 'pycsw:Format': 'format',
