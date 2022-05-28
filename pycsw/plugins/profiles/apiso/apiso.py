@@ -65,6 +65,7 @@ class APISO(profile.Profile):
                         'apiso:Subject': {'xpath': 'gmd:identificationInfo/gmd:MD_Identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'dbcol': self.context.md_core_model['mappings']['pycsw:Keywords']},
                         'apiso:Title': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Title']},
                         'apiso:Abstract': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Abstract']},
+                        'apiso:Edition': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:edition/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Edition']},
                         'apiso:Format': {'xpath': 'gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Format']},
                         'apiso:Identifier': {'xpath': 'gmd:fileIdentifier/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Identifier']},
                         'apiso:Modified': {'xpath': 'gmd:dateStamp/gco:Date', 'dbcol': self.context.md_core_model['mappings']['pycsw:Modified']},
@@ -544,6 +545,12 @@ class APISO(profile.Profile):
         tmp3 = etree.SubElement(tmp2, util.nspath_eval('gmd:CI_Citation', self.namespaces))
         tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title', self.namespaces))
         etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val
+
+        # edition
+        val = util.getqattr(result, queryables['apiso:Edition']['dbcol'])
+        if val is not None:
+            tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:edition', self.namespaces))
+            etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val
 
         # creation date
         val = util.getqattr(result, queryables['apiso:CreationDate']['dbcol'])

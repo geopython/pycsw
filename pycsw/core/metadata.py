@@ -1332,6 +1332,7 @@ def _parse_iso(context, repos, exml):
 
     if hasattr(md, 'identification'):
         _set(context, recobj, 'pycsw:Title', md.identification.title)
+        _set(context, recobj, 'pycsw:Edition', md.identification.edition)
         _set(context, recobj, 'pycsw:AlternateTitle', md.identification.alternatetitle)
         _set(context, recobj, 'pycsw:Abstract', md.identification.abstract)
         _set(context, recobj, 'pycsw:Relation', md.identification.aggregationinfo)

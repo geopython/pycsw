@@ -190,6 +190,7 @@
         <ows:Value>apiso:Denominator</ows:Value>
         <ows:Value>apiso:DistanceUOM</ows:Value>
         <ows:Value>apiso:DistanceValue</ows:Value>
+        <ows:Value>apiso:Edition</ows:Value>
         <ows:Value>apiso:Format</ows:Value>
         <ows:Value>apiso:GeographicDescriptionCode</ows:Value>
         <ows:Value>apiso:HasSecurityConstraints</ows:Value>
