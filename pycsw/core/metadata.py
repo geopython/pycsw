@@ -129,6 +129,10 @@ def _set(context, obj, name, value):
 def _parse_metadata(context, repos, record):
     """parse metadata formats"""
 
+    if isinstance(record, dict):  # JSON
+        LOGGER.debug('Record is JSON based')
+        return [_parse_json_record(context, repos, record)]
+
     if isinstance(record, bytes) or isinstance(record, str):
         exml = etree.fromstring(record, context.parser)
     else:  # already serialized to lxml
@@ -1613,6 +1617,70 @@ def _parse_dc(context, repos, exml):
         _set(context, recobj, 'pycsw:BoundingBox', None)
 
     return recobj
+
+
+def _parse_json_record(context, repos, record):
+    """Parse JSON record"""
+
+    if 'http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core' in record.get('conformsTo', []):
+        LOGGER.debug('Parsing OGC API - Records record model')
+        return _parse_oarec_record(context, repos, record)
+#    TODO: implement STAC record handling
+#    elif 'stac_version' in record:
+#        LOGGER.debug('Parsing STAC Item')
+#        return _parse_oarec_record(context, repos, record)
+
+
+def _parse_oarec_record(context, repos, record):
+    """Parse OARec record"""
+
+    conformance = 'http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core'
+
+    recobj = repos.dataset()
+    keywords = []
+    links = []
+
+    _set(context, recobj, 'pycsw:Identifier', record['id'])
+    _set(context, recobj, 'pycsw:Typename', 'csw:Record')
+    _set(context, recobj, 'pycsw:Schema', conformance)
+    _set(context, recobj, 'pycsw:MdSource', 'local')
+    _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
+    _set(context, recobj, 'pycsw:XML', '')  # FIXME: transform into XML? or not, to validate
+    _set(context, recobj, 'pycsw:Metadata', json.dumps(record))
+    _set(context, recobj, 'pycsw:MetadataType', 'application/json')
+    _set(context, recobj, 'pycsw:AnyText', ' '.join(util.get_anytext_from_dict(record)))
+    _set(context, recobj, 'pycsw:Language', record['properties'].get('language'))
+    _set(context, recobj, 'pycsw:Type', record['properties']['type'])
+    _set(context, recobj, 'pycsw:Title', record['properties']['title'])
+    _set(context, recobj, 'pycsw:Abstract', record['properties'].get('description'))
+
+    if 'keywords' in record['properties']:
+        keywords = record['properties']['keywords']
+
+    if 'themes' in record['properties']:
+        for theme in record['properties']['themes']:
+            keywords.extend(theme['concepts'])
+
+    if 'links' in record:
+        for link in record['links']:
+            links.append({
+                'name': link['rel'],
+                'description': link['title'],
+                'protocol': link['type'],
+                'url': link['href']
+            })
+
+    if links:
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
+
+    if keywords:
+        _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
+
+    _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry'])))
+
+    if 'temporal' in record['properties'].get('extent', []):
+        _set(context, recobj, 'pycsw:TempExtent_begin', record['properties']['extent']['temporal']['interval'][0])
+        _set(context, recobj, 'pycsw:TempExtent_end', record['properties']['extent']['temporal']['interval'][1])
 
 
 def caps2iso(record, caps, context):

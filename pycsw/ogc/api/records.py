@@ -868,6 +868,10 @@ def record2json(record, stac_item=False):
     :returns: `dict` of record GeoJSON
     """
 
+    if record.metadata_type == 'application/json':
+       LOGGER.debug('Returning native JSON representation')
+       return json.loads(record.metadata)
+
     record_dict = {
         'id': record.identifier,
         'type': 'Feature',

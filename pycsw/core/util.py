@@ -179,6 +179,19 @@ def wktenvelope2bbox(envelope):
     return bbox
 
 
+def geojson_geometry2bbox(geometry):
+    """returns bbox string of GeoJSON geometry"""
+
+    geom_type = geometry.get('type')
+    coords = geometry.get('coordinates')
+
+    if geom_type == 'Point':
+        bbox = '%s,%s,%s,%s' % (coords[0], coords[1], coords[0], coords[1])
+    elif geom_type == 'Polygon':
+        bbox = '%s,%s,%s,%s' % (coords[0][0][0], coords[0][0][1], coords[0][2][0], coords[0][2][1])
+
+    return bbox
+
 def wkt2geom(ewkt, bounds=True):
     """Return Shapely geometry object based on WKT/EWKT
 
@@ -352,6 +365,19 @@ def get_anytext(bag):
             bag = etree.fromstring(bag, PARSER)
         # get all XML element content
         return ' '.join([value.strip() for value in bag.xpath('//text()')])
+
+# https://stackoverflow.com/a/39234154
+def get_anytext_from_dict(dict_):
+    """
+    generate bag of text for free text searches
+    accepts dict
+    """
+
+    for key, value in dict_.items():
+        if isinstance(value, dict):
+            yield from get_anytext_dict(value)
+        else:
+            yield value
 
 
 # https://github.com/pallets/werkzeug/blob/778f482d1ac0c9e8e98f774d2595e9074e6984d7/werkzeug/utils.py#L253
