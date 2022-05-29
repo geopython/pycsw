@@ -32,6 +32,7 @@ pycsw |release| Documentation
    profiles
    repositories
    outputschemas
+   xslt
    geonode
    hhypermap
    odc
