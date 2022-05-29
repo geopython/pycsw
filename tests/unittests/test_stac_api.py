@@ -70,8 +70,6 @@ def test_items(api):
     assert record['stac_version'] == '1.0.0'
     assert record['collection'] == 'metadata:main'
 
-    assert 'associations' not in record['properties']
-
     # test GET KVP requests
     content = json.loads(api.items({}, None, {'bbox': '-180,-90,180,90'},
                          stac_item=True)[2])
