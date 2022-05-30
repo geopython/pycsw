@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw30:GetRecordById service="CSW" version="3.0.0" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/cat/csw/3.0/cswAll.xsd">
+   <csw30:Id>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</csw30:Id>
+</csw30:GetRecordById>

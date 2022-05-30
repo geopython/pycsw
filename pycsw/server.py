@@ -88,6 +88,7 @@ class Csw(object):
         self.orm = 'django'
         self.language = {'639_code': 'en', 'text': 'english'}
         self.process_time_start = time()
+        self.xslts = []
 
         # define CSW implementation object (default CSW3)
         self.iface = csw3.Csw3(server_csw=self)
@@ -191,7 +192,7 @@ class Csw(object):
                 self.context.md_core_model = md_core_model
                 self.context.refresh_dc(md_core_model)
             else:
-                LOGGER.exception('Could not load custom mappings: %s', err)
+                LOGGER.exception('Could not load custom mappings: %s')
                 self.response = self.iface.exceptionreport(
                     'NoApplicableCode', 'service',
                     'Could not load repository.mappings')
@@ -213,6 +214,18 @@ class Csw(object):
 
         LOGGER.debug('Outputschemas loaded: %s.', self.outputschemas)
         LOGGER.debug('Namespaces: %s', self.context.namespaces)
+
+        LOGGER.info('Loading XSLT transformations')
+
+        xslt_defs = [x for x in self.config.sections() if x.startswith('xslt:')]
+
+        for x in xslt_defs:
+            LOGGER.debug('Loading XSLT %s' % x)
+            input_os, output_os = x.split(':', 1)[-1].split(',')
+            self.xslts.append({
+                x: self.config.get(x, 'xslt')
+            })
+        # TODO: add output schemas to namespace prefixes
 
     def expand_path(self, path):
         """ return safe path for WSGI environments """
@@ -884,6 +897,34 @@ class Csw(object):
                     LOGGER.debug('FTP sent successfully.')
                 except Exception as err:
                     LOGGER.exception('Error processing FTP')
+
+    def _render_xslt(self, res):
+        ''' Validate and render XSLT '''
+
+        LOGGER.debug('Rendering XSLT')
+        try: 
+            input_os = res.schema
+            output_os = self.kvp['outputschema']
+
+            xslt_id = 'xslt:%s,%s' % (input_os, output_os)
+            xslt_dict = next(d for i, d in enumerate(self.xslts) if xslt_id in d)
+
+            LOGGER.debug('XSLT ID: %s' % xslt_id)
+            LOGGER.debug('Found matching XSLT transformation')
+
+            xslt = xslt_dict[xslt_id]
+
+            transform = etree.XSLT(etree.parse(xslt))
+            doc = etree.fromstring(res.xml, self.context.parser)
+            result_tree = transform(doc).getroot()
+            return result_tree
+        except StopIteration:
+            LOGGER.debug('No matching XSLT found')
+            pass 
+        except Exception as err: 
+            LOGGER.warning('XSLT transformation failed: %s' % str(err))
+            raise RuntimeError()
+
 
     @staticmethod
     def normalize_kvp(kvp):

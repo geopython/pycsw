@@ -927,47 +927,59 @@ class Csw3(object):
             self.parent.kvp['startposition'], max1)
 
             for res in results:
-                try:
-                    if (self.parent.kvp['outputschema'] ==
-                        'http://www.opengis.net/cat/csw/3.0' and
-                        ('csw:Record' in self.parent.kvp['typenames'] or
-                         'csw30:Record' in self.parent.kvp['typenames'])):
-                        # serialize csw:Record inline
-                        searchresults.append(self._write_record(
-                        res, self.parent.repository.queryables['_all']))
-                    elif (self.parent.kvp['outputschema'] ==
-                        'http://www.opengis.net/cat/csw/3.0' and
-                        'csw:Record' not in self.parent.kvp['typenames']):
-                        # serialize into csw:Record model
+                node_ = None
+                if self.parent.xslts:
+                    try:
+                        node_ = self.parent._render_xslt(res)
+                    except Exception as err:
+                        self.parent.response = self.exceptionreport(
+                        'NoApplicableCode', 'service',
+                        'XSLT transformation failed. Check server logs for errors')
+                        return self.parent.response
+                if node_ is not None:
+                    searchresults.append(node_)
+                else:
+                    try:
+                        if (self.parent.kvp['outputschema'] ==
+                            'http://www.opengis.net/cat/csw/3.0' and
+                            ('csw:Record' in self.parent.kvp['typenames'] or
+                             'csw30:Record' in self.parent.kvp['typenames'])):
+                            # serialize csw:Record inline
+                            searchresults.append(self._write_record(
+                            res, self.parent.repository.queryables['_all']))
+                        elif (self.parent.kvp['outputschema'] ==
+                            'http://www.opengis.net/cat/csw/3.0' and
+                            'csw:Record' not in self.parent.kvp['typenames']):
+                            # serialize into csw:Record model
 
-                        for prof in self.parent.profiles['loaded']:
-                            # find source typename
-                            if self.parent.profiles['loaded'][prof].typename in \
-                            self.parent.kvp['typenames']:
-                                typename = self.parent.profiles['loaded'][prof].typename
-                                break
+                            for prof in self.parent.profiles['loaded']:
+                                # find source typename
+                                if self.parent.profiles['loaded'][prof].typename in \
+                                self.parent.kvp['typenames']:
+                                    typename = self.parent.profiles['loaded'][prof].typename
+                                    break
 
-                        util.transform_mappings(
-                            self.parent.repository.queryables['_all'],
-                            self.parent.context.model['typenames'][typename][
-                                'mappings']['csw:Record']
-                        )
+                            util.transform_mappings(
+                                self.parent.repository.queryables['_all'],
+                                self.parent.context.model['typenames'][typename][
+                                    'mappings']['csw:Record']
+                            )
 
-                        searchresults.append(self._write_record(
-                        res, self.parent.repository.queryables['_all']))
-                    elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
-                        searchresults.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(res, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url')))
-                    else:  # use profile serializer
-                        searchresults.append(
-                        self.parent.profiles['loaded'][self.parent.kvp['outputschema']].\
-                        write_record(res, self.parent.kvp['elementsetname'],
-                        self.parent.kvp['outputschema'],
-                        self.parent.repository.queryables['_all']))
-                except Exception as err:
-                    self.parent.response = self.exceptionreport(
-                    'NoApplicableCode', 'service',
-                    'Record serialization failed: %s' % str(err))
-                    return self.parent.response
+                            searchresults.append(self._write_record(
+                            res, self.parent.repository.queryables['_all']))
+                        elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
+                            searchresults.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(res, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url')))
+                        else:  # use profile serializer
+                            searchresults.append(
+                            self.parent.profiles['loaded'][self.parent.kvp['outputschema']].\
+                            write_record(res, self.parent.kvp['elementsetname'],
+                            self.parent.kvp['outputschema'],
+                            self.parent.repository.queryables['_all']))
+                    except Exception as err:
+                        self.parent.response = self.exceptionreport(
+                        'NoApplicableCode', 'service',
+                        'Record serialization failed: %s' % str(err))
+                        return self.parent.response
 
         if (self.parent.config.has_option('server', 'federatedcatalogues') and
             'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
@@ -1117,38 +1129,50 @@ class Csw3(object):
                 self.parent.context.md_core_model['mappings']['pycsw:XML']), self.parent.context.parser)
 
         for result in results:
-            if (util.getqattr(result,
-            self.parent.context.md_core_model['mappings']['pycsw:Typename']) == 'csw:Record'
-            and self.parent.kvp['outputschema'] ==
-            'http://www.opengis.net/cat/csw/3.0'):
-                # serialize record inline
-                node = self._write_record(
-                result, self.parent.repository.queryables['_all'])
-            elif (self.parent.kvp['outputschema'] ==
+            node_ = None
+            if self.parent.xslts:
+                try:
+                    node_ = self.parent._render_xslt(result)
+                except Exception as err:
+                    self.parent.response = self.exceptionreport(
+                    'NoApplicableCode', 'service',
+                    'XSLT transformation failed. Check server logs for errors %s' % str(err))
+                    return self.parent.response
+            if node_ is not None:
+                node = node_
+            else:
+                if (util.getqattr(result,
+                self.parent.context.md_core_model['mappings']['pycsw:Typename']) == 'csw:Record'
+                and self.parent.kvp['outputschema'] ==
                 'http://www.opengis.net/cat/csw/3.0'):
-                # serialize into csw:Record model
-                typename = None
+                    # serialize record inline
+                    node = self._write_record(
+                    result, self.parent.repository.queryables['_all'])
+                elif (self.parent.kvp['outputschema'] ==
+                    'http://www.opengis.net/cat/csw/3.0'):
+                    # serialize into csw:Record model
+                    typename = None
 
-                for prof in self.parent.profiles['loaded']:  # find source typename
-                    if self.parent.profiles['loaded'][prof].typename in \
-                    [util.getqattr(result, self.parent.context.md_core_model['mappings']['pycsw:Typename'])]:
-                        typename = self.parent.profiles['loaded'][prof].typename
-                        break
+                    for prof in self.parent.profiles['loaded']:  # find source typename
+                        if self.parent.profiles['loaded'][prof].typename in \
+                        [util.getqattr(result, self.parent.context.md_core_model['mappings']['pycsw:Typename'])]:
+                            typename = self.parent.profiles['loaded'][prof].typename
+                            break
 
-                if typename is not None:
-                    util.transform_mappings(
-                        self.parent.repository.queryables['_all'],
-                        self.parent.context.model['typenames'][typename][
-                            'mappings']['csw:Record']
-                    )
+                    if typename is not None:
+                        util.transform_mappings(
+                            self.parent.repository.queryables['_all'],
+                            self.parent.context.model['typenames'][typename][
+                                'mappings']['csw:Record']
+                        )
 
-                node = self._write_record( result, self.parent.repository.queryables['_all'])
-            elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
-                node = self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url'))
-            else:  # it's a profile output
-                node = self.parent.profiles['loaded'][self.parent.kvp['outputschema']].write_record(
-                result, self.parent.kvp['elementsetname'],
-                self.parent.kvp['outputschema'], self.parent.repository.queryables['_all'])
+                    node = self._write_record( result, self.parent.repository.queryables['_all'])
+                elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
+                    node = self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url'))
+                else:  # it's a profile output
+                    node = self.parent.profiles['loaded'][self.parent.kvp['outputschema']].write_record(
+                    result, self.parent.kvp['elementsetname'],
+                    self.parent.kvp['outputschema'], self.parent.repository.queryables['_all'])
 
         if raw and len(results) == 0:
             return None
