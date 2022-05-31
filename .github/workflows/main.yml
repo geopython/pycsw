@@ -29,7 +29,7 @@ jobs:
         with:
           azure-devops-project-url: https://dev.azure.com/Libot-Mipui-Org/pycsw
           azure-pipeline-name: 'build-and-push-to-ACR'
-          azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+          azure-devops-token: ${{ secrets.AZURE_TOKEN_NEW }}
   security:
     runs-on: ubuntu-latest
     steps:
