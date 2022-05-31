@@ -41,44 +41,45 @@ LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
 RUN apt-get update && apt-get install --yes \
     ca-certificates \
+    build-essential \ 
+    gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
-RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
-
-ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
-
-WORKDIR /home/pycsw/pycsw
-
-RUN chown --recursive pycsw:pycsw .
-
-# initially copy only the requirements files
-COPY --chown=pycsw \
-    requirements.txt \
+COPY requirements.txt \
     requirements-standalone.txt \
     ./
 
 RUN python3 -m pip install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
-    psycopg2-binary \
-    gunicorn
+    psycopg2-binary
 
-COPY --chown=pycsw . .
+ADD uwsgi.ini /settings/uwsgi.default.ini
 
+ENV \
+    # WSGI parameters
+    PYCSW_WSGI_PROCESSES=6 \
+    PYCSW_WSGI_THREADS=10 \
+    PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+
+WORKDIR /home/pycsw
+
+COPY . .
 COPY docker/pycsw.cfg ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
 # fix cert permissions in openshift
 RUN mkdir /.postgresql && chmod -R 777 /.postgresql
-COPY docker/cert-start.sh /usr/local/bin/cert-start.sh
-RUN chmod +x /usr/local/bin/cert-start.sh
 
 RUN python3 -m pip install --editable .
 
-WORKDIR /home/pycsw
+COPY docker/uwsgi-start.sh /usr/local/bin/uwsgi-start.sh
+RUN chgrp -R 0 /home/pycsw /settings /usr/local/bin/uwsgi-start.sh && \
+    chmod -R g=u /home/pycsw /settings /usr/local/bin/uwsgi-start.sh
 
 EXPOSE 8000
 
+RUN useradd -ms /bin/bash pycsw && usermod -a -G root pycsw
 USER pycsw
 
-ENTRYPOINT [ "/usr/local/bin/cert-start.sh" ]
+ENTRYPOINT [ "/usr/local/bin/uwsgi-start.sh" ]
