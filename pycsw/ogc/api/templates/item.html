@@ -58,11 +58,11 @@
                 {% endfor %}
                 </ul>
               </td>
-            {% elif key == 'associations' %}
+            {% elif key == 'links' %}
               <td>
                 <ul>
-                {% for association in value %}
-                  <li><a href="{{ association['href'] }}" title="{{ association['description'] }}">{{ association['name'] }}</a></li>
+                {% for link in value %}
+                  <li><a href="{{ link['href'] }}" title="{{ link['description'] }}">{{ link['name'] }}</a></li>
                 {% endfor %}
                 </ul>
               </td>`
