@@ -145,6 +145,7 @@ class API:
             'title': self.repository.dataset.title,
             'description': self.repository.dataset.abstract,
             'keywords': self.repository.dataset.keywords,
+            'edition': self.repository.dataset.edition,
             'anytext': self.repository.dataset.anytext,
             'bbox': self.repository.dataset.wkt_geometry,
             'date': self.repository.dataset.date,
