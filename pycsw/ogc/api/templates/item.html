@@ -58,14 +58,6 @@
                 {% endfor %}
                 </ul>
               </td>
-            {% elif key == 'links' %}
-              <td>
-                <ul>
-                {% for link in value %}
-                  <li><a href="{{ link['href'] }}" title="{{ link['description'] }}">{{ link['name'] }}</a></li>
-                {% endfor %}
-                </ul>
-              </td>`
             {% elif key == 'extent' %}
               <td>Spatial: {{ value['spatial']['bbox'][0] }}</td>
               {% if value['temporal'] %}<td>Temporal: {{ value['temporal']['interval'][0] }}</td>{% endif %}
@@ -74,6 +66,15 @@
             {% endif %}
           </tr>
           {% endfor %}
+          <tr>
+            <td>Links</td>
+            <td>
+              <ul>
+                {% for link in data['links'] %}
+                <li><a href="{{ link['href'] }}" title="{{ link['description'] }}">{{ link['name'] }}</a></li>
+                {% endfor %}
+              </ul>
+          </tr>
         </tbody>
       </table>
     </div>
