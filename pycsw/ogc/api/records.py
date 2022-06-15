@@ -30,6 +30,7 @@
 # =================================================================
 
 from configparser import ConfigParser
+import json
 import logging
 import os
 from urllib.parse import urlencode
@@ -500,11 +501,6 @@ class API:
 
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
-        common_query_params = [
-            'bbox',
-            'datetime',
-            'q'
-        ]
         reserved_query_params = [
             'f',
             'filter',
@@ -870,8 +866,8 @@ def record2json(record, stac_item=False):
     """
 
     if record.metadata_type == 'application/json':
-       LOGGER.debug('Returning native JSON representation')
-       return json.loads(record.metadata)
+        LOGGER.debug('Returning native JSON representation')
+        return json.loads(record.metadata)
 
     record_dict = {
         'id': record.identifier,
@@ -923,16 +919,18 @@ def record2json(record, stac_item=False):
         rdl = record_dict['links']
 
         for link in jsonify_links(record.links):
-            link = {
+            link2 = {
                 'href': link['url'],
                 'name': link['name'],
                 'description': link['description'],
                 'type': link['protocol']
             }
-            if 'type' in link:
-                link['rel'] = link['type']
+            if 'rel' in link:
+                link2['rel'] = link['rel']
+            elif 'type' in link and 'rel' not in link:
+                link2['rel'] = link['type']
 
-            rdl.append(link)
+            rdl.append(link2)
 
     if record.wkt_geometry:
         minx, miny, maxx, maxy = wkt2geom(record.wkt_geometry)
