@@ -1506,7 +1506,8 @@ def _parse_iso(context, repos, exml):
                 'name': link.name,
                 'description': link.description,
                 'protocol': link.protocol,
-                'url': link.url
+                'url': link.url,
+                'function': link.function
             })
 
     try:
