@@ -927,8 +927,8 @@ def record2json(record, stac_item=False):
             }
             if 'rel' in link:
                 link2['rel'] = link['rel']
-            elif 'type' in link and 'rel' not in link:
-                link2['rel'] = link['type']
+            elif 'function' in link:
+                link2['rel'] = link['function']
 
             rdl.append(link2)
 
