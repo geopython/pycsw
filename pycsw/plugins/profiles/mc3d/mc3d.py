@@ -58,6 +58,7 @@ class MC3D(base_profile.base_profile):
                         'mc:maxFlightAlt': Queryable(context.md_core_model['mappings']['pycsw:maxFlightAlt'], 'mc:maxFlightAlt'),
                         'mc:geographicArea': Queryable(context.md_core_model['mappings']['pycsw:geographicArea'], 'mc:geographicArea'),
                         'mc:productBBox': Queryable(context.md_core_model['mappings']['pycsw:productBBox'], 'mc:productBBox'),
+                        'mc:updateDateUTC': Queryable(context.md_core_model['mappings']['pycsw:updateDate'], 'mc:updateDateUTC'),
 
                         'mc:links': Queryable(context.md_core_model['mappings']['pycsw:Links'], 'mc:links'),
                         'mc:type': Queryable(context.md_core_model['mappings']['pycsw:Type'], 'mc:type'),
