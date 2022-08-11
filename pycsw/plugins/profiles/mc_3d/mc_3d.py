@@ -12,7 +12,7 @@ class MC3D(base_profile.base_profile):
         main_namespace = 'http://schema.mapcolonies.com/3d'
 
         schemas_pathes = [['plugins', 'profiles',
-                           'mc3d', 'schemas', 'mc3d-record.xsd']]
+                           'mc_3d', 'schemas', 'mc3d-record.xsd']]
 
         added_namespaces = {
             prefix: main_namespace
@@ -30,15 +30,15 @@ class MC3D(base_profile.base_profile):
                         'mc:productType': Queryable(context.md_core_model['mappings']['pycsw:productType'], 'mc:productType'),
                         'mc:description': Queryable(context.md_core_model['mappings']['pycsw:abstract'], 'mc:description'),
                         'mc:creationDateUTC': Queryable(context.md_core_model['mappings']['pycsw:creationDate'], 'mc:creationDateUTC'),
+                        'mc:updateDateUTC': Queryable(context.md_core_model['mappings']['pycsw:updateDate'], 'mc:updateDateUTC'),
                         'mc:imagingTimeBeginUTC': Queryable(context.md_core_model['mappings']['pycsw:tempExtentBegin'], 'mc:imagingTimeBeginUTC'),
                         'mc:imagingTimeEndUTC': Queryable(context.md_core_model['mappings']['pycsw:tempExtentEnd'], 'mc:imagingTimeEndUTC'),
                         'mc:minResolutionMeter': Queryable(context.md_core_model['mappings']['pycsw:minResolution'], 'mc:minResolutionMeter'),
                         'mc:maxResolutionMeter': Queryable(context.md_core_model['mappings']['pycsw:maxResolution'], 'mc:maxResolutionMeter'),
-                        'mc:nominalResolution': Queryable(context.md_core_model['mappings']['pycsw:nominalResolution'], 'mc:nominalResolution'),
                         'mc:maxHorizontalAccuracyCE90': Queryable(context.md_core_model['mappings']['pycsw:horizontalAccuracyCE90'], 'mc:maxHorizontalAccuracyCE90'),
-                        'mc:accuracyLEP90': Queryable(context.md_core_model['mappings']['pycsw:accuracyLE90'], 'mc:accuracyLEP90'),
+                        'mc:accuracyLE90': Queryable(context.md_core_model['mappings']['pycsw:accuracyLE90'], 'mc:accuracyLE90'),
                         'mc:accuracySE90': Queryable(context.md_core_model['mappings']['pycsw:accuracySE90'], 'mc:accuracySE90'),
-                        'mc:relativeAccuracyLE90': Queryable(context.md_core_model['mappings']['pycsw:relativeAccuracyLE90'], 'mc:relativeAccuracyLE90'),
+                        'mc:relativeAccuracySE90': Queryable(context.md_core_model['mappings']['pycsw:relativeAccuracySE90'], 'mc:relativeAccuracySE90'),
                         'mc:visualAccuracy': Queryable(context.md_core_model['mappings']['pycsw:visualAccuracy'], 'mc:visualAccuracy'),
                         'mc:sensors': Queryable(context.md_core_model['mappings']['pycsw:sensorType'], 'mc:sensors'),
                         'mc:footprint': Queryable(context.md_core_model['mappings']['pycsw:footprint'], 'mc:footprint'),
@@ -46,29 +46,28 @@ class MC3D(base_profile.base_profile):
                         'mc:heightRangeTo': Queryable(context.md_core_model['mappings']['pycsw:heightRangeTo'], 'mc:heightRangeTo'),
                         'mc:SRS': Queryable(context.md_core_model['mappings']['pycsw:CRS'], 'mc:SRS'),
                         'mc:SRSName': Queryable(context.md_core_model['mappings']['pycsw:CRSName'], 'mc:SRSName'),
-                        'mc:SRSOrigin': Queryable(context.md_core_model['mappings']['pycsw:CRSOrigin'], 'mc:SRSOrigin'),
                         'mc:region': Queryable(context.md_core_model['mappings']['pycsw:region'], 'mc:region'),
                         'mc:classification': Queryable(context.md_core_model['mappings']['pycsw:classification'], 'mc:classification'),
-                        'mc:compartmentalization': Queryable(context.md_core_model['mappings']['pycsw:compartmentalization'], 'mc:compartmentalization'),
                         'mc:productionSystem': Queryable(context.md_core_model['mappings']['pycsw:productionSystem'], 'mc:productionSystem'),
                         'mc:productionSystemVersion': Queryable(context.md_core_model['mappings']['pycsw:productionSystemVersion'], 'mc:productionSystemVersion'),
                         'mc:producerName': Queryable(context.md_core_model['mappings']['pycsw:creator'], 'mc:producerName'),
-                        'mc:productionMethod': Queryable(context.md_core_model['mappings']['pycsw:productionMethod'], 'mc:productionMethod'),
                         'mc:minFlightAlt': Queryable(context.md_core_model['mappings']['pycsw:minFlightAlt'], 'mc:minFlightAlt'),
                         'mc:maxFlightAlt': Queryable(context.md_core_model['mappings']['pycsw:maxFlightAlt'], 'mc:maxFlightAlt'),
                         'mc:geographicArea': Queryable(context.md_core_model['mappings']['pycsw:geographicArea'], 'mc:geographicArea'),
                         'mc:productBBox': Queryable(context.md_core_model['mappings']['pycsw:productBBox'], 'mc:productBBox'),
-                        'mc:updateDateUTC': Queryable(context.md_core_model['mappings']['pycsw:updateDate'], 'mc:updateDateUTC'),
+                        'mc:productSource': Queryable(context.md_core_model['mappings']['pycsw:productSource'], 'mc:productSource'),
+                        'mc:productStatus': Queryable(context.md_core_model['mappings']['pycsw:productStatus'], 'mc:productStatus'),
 
                         'mc:links': Queryable(context.md_core_model['mappings']['pycsw:Links'], 'mc:links'),
                         'mc:type': Queryable(context.md_core_model['mappings']['pycsw:Type'], 'mc:type'),
                         'mc:boundingBox': Queryable(context.md_core_model['mappings']['pycsw:BoundingBox'], 'mc:boundingBox'),
                         'mc:keywords': Queryable(context.md_core_model['mappings']['pycsw:Keywords'], 'mc:keywords'),
+                        'mc:insertDate': Queryable(context.md_core_model['mappings']['pycsw:InsertDate'], 'mc:insertDate'),
                     }
                 })
         }
 
-        super().__init__(name='mc3d',
+        super().__init__(name='mc_3d',
                          version='1.0.0',
                          title='Map Colonies 3D profile of CSW',
                          url='https://github.com/MapColonies',

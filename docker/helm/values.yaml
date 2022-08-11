@@ -29,7 +29,7 @@ pycsw:
     #domainquerytype=range
     #domaincounts=true
     #spatial_ranking=true
-    profiles=mc3d
+    profiles=mc_3d
 
     [manager]
     transactions=false
