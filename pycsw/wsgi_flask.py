@@ -161,13 +161,17 @@ def items(collection='metadata:main'):
     if 'search' in request.url_rule.rule:
         stac_item = True
 
-    return get_response(api_.items(dict(request.headers),
-                        request.get_json(silent=True), dict(request.args),
-                        collection, stac_item))
+    if request.method == 'POST' and request.content_type is not None:
+        return get_response(
+            api_.manage_collection_item(request, 'create', collection_id))
+    else:
+        return get_response(api_.items(dict(request.headers),
+                            request.get_json(silent=True), dict(request.args),
+                            collection, stac_item))
 
 
 @BLUEPRINT.route('/stac/collections/<collection>/items/<item>')
-@BLUEPRINT.route('/collections/<collection>/items/<item>')
+@BLUEPRINT.route('/collections/<collection>/items/<item>', methods=['GET', 'PUT', 'DELETE'])
 def item(collection='metadata:main', item=None):
     """
     OGC API collection items endpoint
@@ -183,8 +187,15 @@ def item(collection='metadata:main', item=None):
     if 'stac' in request.url_rule.rule:
         stac_item = True
 
-    return get_response(api_.item(dict(request.headers), request.args,
-                        collection, item, stac_item))
+    if request.method == 'PUT':
+        return get_response(
+            api_.manage_collection_item(request, 'update', item, request.get_json(silent=True)))
+    elif request.method == 'DELETE':
+        return get_response(
+            api_.manage_collection_item(request, 'delete', item)
+    else:
+        return get_response(api_.item(dict(request.headers), request.args,
+                            collection, item, stac_item))
 
 
 @BLUEPRINT.route('/csw', methods=['GET', 'POST'])

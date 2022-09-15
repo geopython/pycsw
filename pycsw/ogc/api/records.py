@@ -62,6 +62,7 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
     'http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-features-3/1.0/req/filter',
+    'http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete',  # noqa
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
@@ -787,6 +788,37 @@ class API:
             response['collection'] = collection
 
         return self.get_response(200, headers_, 'item.html', response)
+
+
+    def manage_collection_item(self, action='create', data=None):
+        """
+        :param action: action (create, update, delete)
+        :param action: raw data / payload
+
+        :returns: tuple of headers, status code, content
+        """
+
+        if self.config.get('manager', 'transactions') != 'true':
+            return self.get_exception(
+                    405, headers_, 'InvalidParameterValue',
+                    'transactions not allowed')
+
+        if action in ['create', 'update'] and not request.data:
+            msg = 'No data found'
+            LOGGER.error(msg)
+            return self.get_exception(
+                400, headers, 'InvalidParameterValue', msg)
+
+        elif action == 'update':
+            LOGGER.debug(f'Querying repository for item {item}')
+            try:
+                record = self.repository.query_ids([item])[0]
+            except IndexError:
+                return self.get_exception(
+                    404, headers_, 'InvalidParameterValue', 'item exists')
+
+        elif action == 'delete':
+
 
     def get_exception(self, status, headers, code, description):
         """
