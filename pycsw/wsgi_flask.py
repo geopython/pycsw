@@ -156,14 +156,19 @@ def items(collection='metadata:main'):
     :returns: HTTP response
     """
 
+    data = None
     stac_item = False
 
     if 'search' in request.url_rule.rule:
         stac_item = True
 
     if request.method == 'POST' and request.content_type is not None:
+        if 'json' in request.content_type:  # JSON grammar
+            data = request.get_json(silent=True)
+        elif 'xml' in request.content_type:  # XML jgrammar
+            data = request.data
         return get_response(api_.manage_collection_item(dict(request.headers),
-                            'create', data=request.get_json(silent=True)))
+                            'create', data=data))
     else:
         return get_response(api_.items(dict(request.headers),
                             request.get_json(silent=True), dict(request.args),

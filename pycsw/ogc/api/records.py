@@ -203,7 +203,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        if headers['Content-Type'] == 'text/html':
+        if headers.get('Content-Type') == 'text/html':
             content = render_j2_template(self.config, template, data)
         else:
             content = to_json(data)
@@ -676,7 +676,7 @@ class API:
         response['numberReturned'] = returned
 
         for record in records:
-            response['features'].append(record2json(record, self.config['server']['url'], collection, stac_item))
+            response['features'].append(record2json(record, stac_item))
 
         LOGGER.debug('Creating links')
 
@@ -782,7 +782,7 @@ class API:
         if headers_['Content-Type'] == 'application/xml':
             return headers_, 200, record.xml
 
-        response = record2json(record, self.config['server']['url'], collection, stac_item)
+        response = record2json(record, stac_item=stac_item)
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
@@ -810,8 +810,7 @@ class API:
             return self.get_exception(
                 400, headers_, 'InvalidParameterValue', msg)
 
-        if action == 'create':
-            LOGGER.debug('Creating new record')
+        if action in ['create', 'update']:
             try:
                 record = parse_record(self.context, data, self.repository)[0]
             except Exception as err:
@@ -824,6 +823,16 @@ class API:
                 LOGGER.exception(msg)
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
+        if action == 'create':
+            LOGGER.debug('Creating new record')
+            LOGGER.debug(f'Querying repository for item {item}')
+            try:
+                _ = self.repository.query_ids([record.identifier])[0]
+                return self.get_exception(
+                    404, headers_, 'InvalidParameterValue', 'item exists')
+            except Exception:
+                LOGGER.debug('Identifier does not exist')
+
             # insert new record
             try:
                 self.repository.insert(record, 'local', get_today_and_now())
@@ -832,18 +841,34 @@ class API:
                 LOGGER.exception(msg)
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
+            code = 201
+            response = {}
+
         elif action == 'update':
             LOGGER.debug(f'Querying repository for item {item}')
             try:
-                _ = self.repository.query_ids([item])[0]
-                return self.get_exception(
-                    404, headers_, 'InvalidParameterValue', 'item exists')
-            except IndexError:
-                LOGGER.debug('Identifier exists')
+                _ = self.repository.query_ids([record.identifier])[0]
+            except Exception:
+                msg = 'Identifier does not exist'
+                LOGGER.debug(msg)
+                return self.get_exception(404, headers_, 'InvalidParameterValue', msg)
 
-#        elif action == 'delete':
+            _ = self.repository.update(record)
 
-        return self.get_response(200, headers_, 'item.html', "tom")
+            code = 204
+            response = {}
+
+        elif action == 'delete':
+            constraint = {
+                'where': 'identifier = \'%s\'' % item,
+                'values': [item]
+            }
+            _ = self.repository.delete(constraint)
+
+            code = 200
+            response = {}
+
+        return self.get_response(code, headers_, None, response)
 
     def get_exception(self, status, headers, code, description):
         """
@@ -913,14 +938,11 @@ class API:
         }
 
 
-def record2json(record, url, collection, stac_item=False):
+def record2json(record, stac_item=False):
     """
     OGC API - Records record generator from core pycsw record model
 
     :param record: pycsw record object
-    :param url: server URL
-    :param collection: collection id
-    :stac_item: whether the result should be a STAC item (default False)
 
     :returns: `dict` of record GeoJSON
     """
@@ -934,6 +956,7 @@ def record2json(record, url, collection, stac_item=False):
         'type': 'Feature',
         'geometry': None,
         'properties': {
+            'externalIds': [{'value': record.identifier}],
             'datetime': record.date,
             'start_datetime': record.time_begin,
             'end_datetime': record.time_end
@@ -989,13 +1012,6 @@ def record2json(record, url, collection, stac_item=False):
 
             rdl.append(link2)
 
-    record_dict['links'].append({
-        'rel': 'self',
-        'type': 'application/json',
-        'title': 'Collection',
-        'href': f"{url}/collections/{collection}?f=json"
-    })
-
     if record.wkt_geometry:
         minx, miny, maxx, maxy = wkt2geom(record.wkt_geometry)
         geometry = {
@@ -1009,6 +1025,13 @@ def record2json(record, url, collection, stac_item=False):
             ]]
         }
         record_dict['geometry'] = geometry
+
+        record_dict['properties']['extent'] = {
+            'spatial': {
+                'bbox': [[minx, miny, maxx, maxy]],
+                'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
+            }
+        }
 
     return record_dict
 
