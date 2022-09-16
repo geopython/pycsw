@@ -59,38 +59,27 @@ def setup_logger(config=None):
 
     logfile = None
     loglevel = 'NOTSET'
+    logging_handlers = []
 
-    if config.has_option('server', 'loglevel'):
-        loglevel = config.get('server', 'loglevel')
+    loglevel = config.get('server', 'loglevel', fallback=loglevel)
 
-        if loglevel not in LOGLEVELS.keys():
-            raise RuntimeError(
-                'Invalid server configuration (server.loglevel).')
-
-        if not config.has_option('server', 'logfile'):
-            raise RuntimeError(
-                'Invalid server configuration (server.loglevel set,\
-                but server.logfile missing).')
-
-    if config.has_option('server', 'logfile'):
-        if not config.has_option('server', 'loglevel'):
-            raise RuntimeError(
-                'Invalid server configuration (server.logfile set,\
-                but server.loglevel missing).')
-
-        logfile = config.get('server', 'logfile')
-
-    if loglevel != 'NOTSET' and logfile is None:
+    if loglevel not in LOGLEVELS.keys():
         raise RuntimeError(
-            'Invalid server configuration \
-            (server.loglevel set, but server.logfile is not).')
+            'Invalid server configuration (server.loglevel).')
 
-    # Setup logging globally (not only for the pycsw module)
-    # based on the parameters passed.
-    logging.basicConfig(level=LOGLEVELS[loglevel],
-                        filename=logfile,
-                        datefmt=TIME_FORMAT,
-                        format=MSG_FORMAT)
+    if loglevel != 'NOTSET':
+        if config.has_option('server', 'logfile'):
+            logfile = config.get('server', 'logfile')
+            logging_handlers.append(logging.FileHandler(logfile))
+        else:  # stdout
+            logging_handlers.append(logging.StreamHandler())
+
+        # Setup logging globally (not only for the pycsw module)
+        # based on the parameters passed.
+        logging.basicConfig(level=LOGLEVELS[loglevel],
+                            format=MSG_FORMAT,
+                            datefmt=TIME_FORMAT,
+                            handlers=logging_handlers)
 
     LOGGER.info('Logging initialized (level: %s).', loglevel)
 

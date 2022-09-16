@@ -214,7 +214,6 @@ def configuration(request, tests_directory, log_level):
                              test_dir=tests_directory,
                              export_dir=export_dir)
     config.set("server", "loglevel", log_level)
-    config.set("server", "logfile", "")
     config.set("repository", "database", repository_url)
     config.set("repository", "table", table_name)
     return config
