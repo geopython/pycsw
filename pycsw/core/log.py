@@ -59,15 +59,13 @@ def setup_logger(config=None):
 
     logfile = None
     loglevel = 'NOTSET'
-
     logging_handlers = []
 
-    if config.has_option('server', 'loglevel'):
-        loglevel = config.get('server', 'loglevel')
+    loglevel = config.get('server', 'loglevel', fallback=loglevel)
 
-        if loglevel not in LOGLEVELS.keys():
-            raise RuntimeError(
-                'Invalid server configuration (server.loglevel).')
+    if loglevel not in LOGLEVELS.keys():
+        raise RuntimeError(
+            'Invalid server configuration (server.loglevel).')
 
     if loglevel != 'NOTSET':
         if config.has_option('server', 'logfile'):
