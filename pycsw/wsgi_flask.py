@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2021 Tom Kralidis
+# Copyright (c) 2022 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -29,7 +29,6 @@
 #
 # =================================================================
 
-from configparser import ConfigParser
 import os
 from pathlib import Path
 import sys
@@ -45,8 +44,9 @@ from pycsw.wsgi import application_dispatcher
 APP = Flask(__name__, static_folder=STATIC, static_url_path='/static')
 APP.url_map.strict_slashes = False
 APP.config['PYCSW_CONFIG'] = parse_ini_config(Path(os.getenv('PYCSW_CONFIG')))
-APP.config['JSONIFY_PRETTYPRINT_REGULAR'] = APP.config['PYCSW_CONFIG']['server'].get(
-    'pretty_print', True)
+
+pretty_print = APP.config['PYCSW_CONFIG']['server'].get('pretty_print', True)
+APP.config['JSONIFY_PRETTYPRINT_REGULAR'] = pretty_print
 
 BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC,
                       static_url_path='/static')
@@ -162,8 +162,8 @@ def items(collection='metadata:main'):
         stac_item = True
 
     if request.method == 'POST' and request.content_type is not None:
-        return get_response(
-            api_.manage_collection_item(request, 'create', collection_id))
+        return get_response(api_.manage_collection_item(dict(request.headers),
+                            'create', data=request.get_json(silent=True)))
     else:
         return get_response(api_.items(dict(request.headers),
                             request.get_json(silent=True), dict(request.args),
@@ -171,7 +171,8 @@ def items(collection='metadata:main'):
 
 
 @BLUEPRINT.route('/stac/collections/<collection>/items/<item>')
-@BLUEPRINT.route('/collections/<collection>/items/<item>', methods=['GET', 'PUT', 'DELETE'])
+@BLUEPRINT.route('/collections/<collection>/items/<item>',
+                 methods=['GET', 'PUT', 'DELETE'])
 def item(collection='metadata:main', item=None):
     """
     OGC API collection items endpoint
@@ -189,10 +190,12 @@ def item(collection='metadata:main', item=None):
 
     if request.method == 'PUT':
         return get_response(
-            api_.manage_collection_item(request, 'update', item, request.get_json(silent=True)))
+            api_.manage_collection_item(
+                dict(request.headers), 'update', item,
+                data=request.get_json(silent=True)))
     elif request.method == 'DELETE':
         return get_response(
-            api_.manage_collection_item(request, 'delete', item)
+            api_.manage_collection_item(dict(request.headers), 'delete', item))
     else:
         return get_response(api_.item(dict(request.headers), request.args,
                             collection, item, stac_item))
@@ -262,5 +265,3 @@ if __name__ == '__main__':
         port = int(sys.argv[1])
     print(f'Serving on port {port}')
     APP.run(debug=True, host='0.0.0.0', port=port)
-
-

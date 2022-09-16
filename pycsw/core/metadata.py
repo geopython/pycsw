@@ -1649,7 +1649,9 @@ def _parse_oarec_record(context, repos, record):
     _set(context, recobj, 'pycsw:XML', '')  # FIXME: transform into XML? or not, to validate
     _set(context, recobj, 'pycsw:Metadata', json.dumps(record))
     _set(context, recobj, 'pycsw:MetadataType', 'application/json')
-    _set(context, recobj, 'pycsw:AnyText', ' '.join(util.get_anytext_from_dict(record)))
+
+    _set(context, recobj, 'pycsw:AnyText', ' '.join([str(t) for t in util.get_anytext_from_obj(record)]))
+
     _set(context, recobj, 'pycsw:Language', record['properties'].get('language'))
     _set(context, recobj, 'pycsw:Type', record['properties']['type'])
     _set(context, recobj, 'pycsw:Title', record['properties']['title'])
@@ -1682,6 +1684,8 @@ def _parse_oarec_record(context, repos, record):
     if 'temporal' in record['properties'].get('extent', []):
         _set(context, recobj, 'pycsw:TempExtent_begin', record['properties']['extent']['temporal']['interval'][0])
         _set(context, recobj, 'pycsw:TempExtent_end', record['properties']['extent']['temporal']['interval'][1])
+
+    return recobj
 
 
 def caps2iso(record, caps, context):

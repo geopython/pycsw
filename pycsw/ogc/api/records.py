@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2021 Tom Kralidis
+# Copyright (c) 2022 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -41,8 +41,9 @@ from pygeofilter.parsers.cql2_json import parse as parse_cql2_json
 from pycsw import __version__
 from pycsw.core import log
 from pycsw.core.config import StaticContext
+from pycsw.core.metadata import parse_record
 from pycsw.core.pygeofilter_evaluate import to_filter
-from pycsw.core.util import bind_url, jsonify_links, load_custom_repo_mappings, wkt2geom
+from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
 
@@ -789,11 +790,11 @@ class API:
 
         return self.get_response(200, headers_, 'item.html', response)
 
-
-    def manage_collection_item(self, action='create', data=None):
+    def manage_collection_item(self, headers_, action='create', item=None, data=None):
         """
         :param action: action (create, update, delete)
-        :param action: raw data / payload
+        :param item: record identifier
+        :param data: raw data / payload
 
         :returns: tuple of headers, status code, content
         """
@@ -803,22 +804,46 @@ class API:
                     405, headers_, 'InvalidParameterValue',
                     'transactions not allowed')
 
-        if action in ['create', 'update'] and not request.data:
+        if action in ['create', 'update'] and data is None:
             msg = 'No data found'
             LOGGER.error(msg)
             return self.get_exception(
-                400, headers, 'InvalidParameterValue', msg)
+                400, headers_, 'InvalidParameterValue', msg)
+
+        if action == 'create':
+            LOGGER.debug('Creating new record')
+            try:
+                record = parse_record(self.context, data, self.repository)[0]
+            except Exception as err:
+                msg = f'Failed to parse data: {err}'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+            if not hasattr(record, 'identifier'):
+                msg = 'Record requires an identifier'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+            # insert new record
+            try:
+                self.repository.insert(record, 'local', get_today_and_now())
+            except Exception as err:
+                msg = f'Record creation failed: {err}'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
         elif action == 'update':
             LOGGER.debug(f'Querying repository for item {item}')
             try:
-                record = self.repository.query_ids([item])[0]
-            except IndexError:
+                _ = self.repository.query_ids([item])[0]
                 return self.get_exception(
                     404, headers_, 'InvalidParameterValue', 'item exists')
+            except IndexError:
+                LOGGER.debug('Identifier exists')
 
-        elif action == 'delete':
+#        elif action == 'delete':
 
+        return self.get_response(200, headers_, 'item.html', "tom")
 
     def get_exception(self, status, headers, code, description):
         """

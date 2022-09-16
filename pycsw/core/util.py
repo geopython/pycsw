@@ -366,18 +366,26 @@ def get_anytext(bag):
         # get all XML element content
         return ' '.join([value.strip() for value in bag.xpath('//text()')])
 
+
 # https://stackoverflow.com/a/39234154
-def get_anytext_from_dict(dict_):
+def get_anytext_from_obj(obj):
     """
     generate bag of text for free text searches
-    accepts dict
-    """
+    accepts dict, list or string
+    """ 
 
-    for key, value in dict_.items():
-        if isinstance(value, dict):
-            yield from get_anytext_dict(value)
-        else:
-            yield value
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            if isinstance(value, (list, dict)):
+                yield from get_anytext_from_obj(value)
+            else:
+                yield value
+    elif isinstance(obj, list):
+        for value in obj:
+            if isinstance(value, (list, dict)):
+                yield from get_anytext_from_obj(value)
+            else:
+                yield value
 
 
 # https://github.com/pallets/werkzeug/blob/778f482d1ac0c9e8e98f774d2595e9074e6984d7/werkzeug/utils.py#L253
