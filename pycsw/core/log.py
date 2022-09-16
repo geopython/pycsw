@@ -29,6 +29,7 @@
 # =================================================================
 
 import logging
+import sys
 
 LOGGER = logging.getLogger(__name__)
 
@@ -68,9 +69,8 @@ def setup_logger(config=None):
                 'Invalid server configuration (server.loglevel).')
 
         if not config.has_option('server', 'logfile'):
-            raise RuntimeError(
-                'Invalid server configuration (server.loglevel set,\
-                but server.logfile missing).')
+            logging.basicConfig(level=LOGLEVELS[loglevel], datefmt=TIME_FORMAT,
+                                format=MSG_FORMAT, stream=sys.stdout)
 
     if config.has_option('server', 'logfile'):
         if not config.has_option('server', 'loglevel'):
@@ -80,17 +80,12 @@ def setup_logger(config=None):
 
         logfile = config.get('server', 'logfile')
 
-    if loglevel != 'NOTSET' and logfile is None:
-        raise RuntimeError(
-            'Invalid server configuration \
-            (server.loglevel set, but server.logfile is not).')
-
-    # Setup logging globally (not only for the pycsw module)
-    # based on the parameters passed.
-    logging.basicConfig(level=LOGLEVELS[loglevel],
-                        filename=logfile,
-                        datefmt=TIME_FORMAT,
-                        format=MSG_FORMAT)
+        # Setup logging globally (not only for the pycsw module)
+        # based on the parameters passed.
+        logging.basicConfig(level=LOGLEVELS[loglevel],
+                            filename=logfile,
+                            datefmt=TIME_FORMAT,
+                            format=MSG_FORMAT)
 
     LOGGER.info('Logging initialized (level: %s).', loglevel)
 
