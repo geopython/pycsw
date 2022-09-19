@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2022 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
