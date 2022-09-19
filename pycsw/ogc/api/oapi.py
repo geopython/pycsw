@@ -55,8 +55,8 @@ def gen_oapi(config, oapi_filepath):
         'name': 'Capabilities',
         'description': 'essential characteristics of this API'
         }, {
-        'name': 'Data',
-        'description': 'access to data (records)'
+        'name': 'Metadata',
+        'description': 'access to metadata (records)'
     }]
 
     LOGGER.debug('Adding parameter components')
@@ -222,7 +222,7 @@ def gen_oapi(config, oapi_filepath):
 
     path = {
         'get': {
-            'tags': ['Data'],
+            'tags': ['metadata'],
             'summary': 'Records search items page',
             'description': 'Records search items page',
             'operationId': 'getRecords',
@@ -257,6 +257,33 @@ def gen_oapi(config, oapi_filepath):
         }
     }
 
+    if config.get('manager', 'transactions') == 'true':
+        LOGGER.debug('Transactions enabled; adding post')
+
+        path['post'] = {
+            'summary': 'Adds Records items',
+            'description': 'Adds Records items',
+            'tags': ['metadata'],
+            'operationId': 'addRecord',
+            'consumes': ['application/json', 'application/xml'],
+            'produces': ['application/json'],
+            'parameters': [{
+                'in': 'body',
+                'name': 'body',
+                'description': 'Adds item to collection',
+                'required': True,
+            }],
+            'responses': {
+                '201': {'description': 'Successful creation'},
+                '400': {
+                    '$ref': '{}#/components/responses/InvalidParameter'
+                },
+                '500': {
+                    '$ref': '{}#/components/responses/ServerError'
+                }
+            }
+        }
+
     oapi['paths']['/collections/{collectionId}/items'] = path
 
     path2 = deepcopy(path)
@@ -268,7 +295,7 @@ def gen_oapi(config, oapi_filepath):
 
     path = {
         'get': {
-            'tags': ['Data'],
+            'tags': ['metadata'],
             'summary': 'Records item page',
             'description': 'Records item page',
             'operationId': 'getRecord',
@@ -290,6 +317,58 @@ def gen_oapi(config, oapi_filepath):
             }
         }
     }
+
+    if config.get('manager', 'transactions') == 'true':
+        LOGGER.debug('Transactions enabled; adding put/delete')
+
+        path['put'] = {
+            'summary': 'Updates Records items',
+            'description': 'Updates Records items',
+            'tags': ['metadata'],
+            'operationId': 'updateRecord',
+            'consumes': ['application/json', 'application/xml'],
+            'produces': ['application/json'],
+            'parameters': [
+                {'$ref': '#/components/parameters/collectionId'},
+                {'$ref': '#/components/parameters/recordId'},
+                {
+                    'in': 'body',
+                    'name': 'body',
+                    'description': 'Updates item to collection',
+                    'required': True,
+                }
+            ],
+            'responses': {
+                '204': {'description': 'Successful update'},
+                '400': {
+                    '$ref': '{}#/components/responses/InvalidParameter'
+                },
+                '500': {
+                    '$ref': '{}#/components/responses/ServerError'
+                }
+            }
+        }
+
+        path['delete'] = {
+            'summary': 'Deletes Records items',
+            'description': 'Deletes Records items',
+            'tags': ['metadata'],
+            'operationId': 'deleteRecord',
+            'produces': ['application/json'],
+            'parameters': [
+                {'$ref': '#/components/parameters/collectionId'},
+                {'$ref': '#/components/parameters/recordId'},
+            ],
+            'responses': {
+                '204': {'description': 'Successful delete'},
+                '400': {
+                    '$ref': '{}#/components/responses/InvalidParameter'
+                },
+                '500': {
+                    '$ref': '{}#/components/responses/ServerError'
+                }
+            }
+        }
 
     oapi['paths']['/collections/{collectionId}/items/{recordId}'] = path
 
