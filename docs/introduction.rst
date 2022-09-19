@@ -21,7 +21,7 @@ Features
 - supports ISO, Dublin Core, DIF, FGDC, Atom and GM03 metadata models
 - CGI or WSGI deployment
 - simple configuration
-- transactional capabilities (CSW-T)
+- transactional capabilities (OGC API - Records and CSW-T)
 - flexible repository configuration
 - `GeoNode`_ connectivity
 - `HHypermap`_ connectivity
@@ -39,6 +39,7 @@ Standards Support
 
   `OGC API - Records - Part 1: Core`_,1.0
   `OGC API - Features - Part 3: Filtering and the Common Query Language (CQL)`_,draft
+  "`OGC API - Features - Part 4: Create, Replace, Update and Delete`_",draft
   `OGC CSW`_,2.0.2/3.0.0
   `OGC Filter`_,1.1.0/2.0.0
   `OGC OWS Common`_,1.0.0/2.0.0
@@ -66,6 +67,7 @@ OGC API - Features support
 --------------------------
 
 - Part 3: Filtering and the Common Query Language (CQL)
+- Part 4: Create, Replace, Update and Delete
 
 Supported Output Formats
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -224,3 +226,4 @@ Functions
 .. _`Compliant`: https://www.ogc.org/resource/products/details/?pid=1374
 .. _`OAI-PMH`: https://www.openarchives.org/pmh/
 .. _`GM03`: https://www.geocat.admin.ch/en/dokumentation/gm03.html
+.. _`OGC API - Features - Part 4: Create, Replace, Update and Delete`: https://cnn.com
