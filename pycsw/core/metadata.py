@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2017 Tom Kralidis
+# Copyright (c) 2022 Tom Kralidis
 # Copyright (c) 2016 James F. Dickens
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -1626,10 +1626,9 @@ def _parse_json_record(context, repos, record):
     if 'http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core' in record.get('conformsTo', []):
         LOGGER.debug('Parsing OGC API - Records record model')
         return _parse_oarec_record(context, repos, record)
-#    TODO: implement STAC record handling
-#    elif 'stac_version' in record:
-#        LOGGER.debug('Parsing STAC Item')
-#        return _parse_oarec_record(context, repos, record)
+    elif 'stac_version' in record:
+        LOGGER.debug('Parsing STAC Item')
+        return _parse_oarec_record(context, repos, record)
 
 
 def _parse_oarec_record(context, repos, record):
@@ -1684,6 +1683,54 @@ def _parse_oarec_record(context, repos, record):
     if 'temporal' in record['properties'].get('extent', []):
         _set(context, recobj, 'pycsw:TempExtent_begin', record['properties']['extent']['temporal']['interval'][0])
         _set(context, recobj, 'pycsw:TempExtent_end', record['properties']['extent']['temporal']['interval'][1])
+
+    return recobj
+
+
+def _parse_stac_item_record(context, repos, record):
+    """Parse STAC Item"""
+
+    conformance = 'https://github.com/radiantearth/stac-spec/tree/master/item-spec/item-spec.md'
+
+    recobj = repos.dataset()
+    keywords = []
+    links = []
+
+    _set(context, recobj, 'pycsw:Identifier', record['id'])
+    _set(context, recobj, 'pycsw:Typename', 'stac:Item')
+    _set(context, recobj, 'pycsw:Schema', conformance)
+    _set(context, recobj, 'pycsw:MdSource', 'local')
+    _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
+    _set(context, recobj, 'pycsw:XML', '')  # FIXME: transform into XML? or not, to validate
+    _set(context, recobj, 'pycsw:Metadata', json.dumps(record))
+    _set(context, recobj, 'pycsw:MetadataType', 'application/json')
+    _set(context, recobj, 'pycsw:AnyText', ' '.join([str(t) for t in util.get_anytext_from_obj(record)]))
+    _set(context, recobj, 'pycsw:Type', 'item')
+    _set(context, recobj, 'pycsw:Title', record['properties'].get('title'))
+    _set(context, recobj, 'pycsw:Abstract', record['properties'].get('description'))
+
+    if 'keywords' in record['properties']:
+        keywords = record['properties']['keywords']
+        _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
+
+    if 'assets' in record:
+        for link in record['assets']:
+            links.append({
+                'name': link['rel'],
+                'description': link['title'],
+                'protocol': link['type'],
+                'url': link['href']
+            })
+
+    if links:
+        _set(context, recobj, 'pycsw:Links', json.dumps(links))
+
+    _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry'])))
+
+    if 'start_datetime' in record['properties']:
+        _set(context, recobj, 'pycsw:TempExtent_begin', record['properties']['start_datetime'])
+    if 'end_datetime' in record['properties']:
+        _set(context, recobj, 'pycsw:TempExtent_end', record['properties']['end_datetime'])
 
     return recobj
 
