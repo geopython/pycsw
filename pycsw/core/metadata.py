@@ -1631,11 +1631,11 @@ def _parse_json_record(context, repos, record):
         LOGGER.debug('Parsing STAC Item')
         recobj = _parse_stac_item(context, repos, record)
 
-        atom_xml = atom.write_record(recobj, 'full', context)
+    atom_xml = atom.write_record(recobj, 'full', context)
 
-        _set(context, recobj, 'pycsw:XML', etree.tostring(atom_xml))
+    _set(context, recobj, 'pycsw:XML', etree.tostring(atom_xml))
 
-        return recobj
+    return recobj
 
 
 def _parse_oarec_record(context, repos, record):
