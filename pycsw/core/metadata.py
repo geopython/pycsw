@@ -44,6 +44,7 @@ from shapely.geometry import MultiPolygon
 
 from pycsw.core.etree import etree
 from pycsw.core import util
+from pycsw.plugins.outputschemas import atom
 
 LOGGER = logging.getLogger(__name__)
 
@@ -1625,10 +1626,16 @@ def _parse_json_record(context, repos, record):
 
     if 'http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core' in record.get('conformsTo', []):
         LOGGER.debug('Parsing OGC API - Records record model')
-        return _parse_oarec_record(context, repos, record)
+        recobj = _parse_oarec_record(context, repos, record)
     elif 'stac_version' in record:
         LOGGER.debug('Parsing STAC Item')
-        return _parse_oarec_record(context, repos, record)
+        recobj = _parse_stac_item(context, repos, record)
+
+        atom_xml = atom.write_record(recobj, 'full', context)
+
+        _set(context, recobj, 'pycsw:XML', etree.tostring(atom_xml))
+
+        return recobj
 
 
 def _parse_oarec_record(context, repos, record):
@@ -1687,7 +1694,7 @@ def _parse_oarec_record(context, repos, record):
     return recobj
 
 
-def _parse_stac_item_record(context, repos, record):
+def _parse_stac_item(context, repos, record):
     """Parse STAC Item"""
 
     conformance = 'https://github.com/radiantearth/stac-spec/tree/master/item-spec/item-spec.md'
@@ -1714,12 +1721,12 @@ def _parse_stac_item_record(context, repos, record):
         _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
 
     if 'assets' in record:
-        for link in record['assets']:
+        for key, link in record['assets'].items():
             links.append({
-                'name': link['rel'],
-                'description': link['title'],
-                'protocol': link['type'],
-                'url': link['href']
+                'name': link.get('rel'),
+                'description': link.get('title'),
+                'protocol': link.get('type'),
+                'url': link.get('href')
             })
 
     if links:
