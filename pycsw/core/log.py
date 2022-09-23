@@ -60,6 +60,7 @@ def setup_logger(config=None):
     logfile = None
     loglevel = 'NOTSET'
     logging_handlers = []
+    to_stdout = False
 
     loglevel = config.get('server', 'loglevel', fallback=loglevel)
 
@@ -70,8 +71,14 @@ def setup_logger(config=None):
     if loglevel != 'NOTSET':
         if config.has_option('server', 'logfile'):
             logfile = config.get('server', 'logfile')
-            logging_handlers.append(logging.FileHandler(logfile))
+            if logfile.strip() != '':
+                logging_handlers.append(logging.FileHandler(logfile))
+            else:  # stdout
+                to_stdout = True
         else:  # stdout
+            to_stdout = True
+
+        if to_stdout:
             logging_handlers.append(logging.StreamHandler())
 
         # Setup logging globally (not only for the pycsw module)

@@ -36,7 +36,7 @@ pycsw:
       language: en-US
       maxrecords: 10
       loglevel: DEBUG
-      logfile: " "
+      # logfile: " "
       # ogc_schemas_base: http://foo
       # federatedcatalogues: http://catalog.data.gov/csw
       # pretty_print: true
