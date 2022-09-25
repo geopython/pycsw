@@ -65,7 +65,7 @@
           <tbody>
             {% for rec in data['features'] %}
             <tr>
-              <td id="{{ rec['properties']['externalId'] }}"><a title="{{ rec['properties']['title'] }}" href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items/{{ rec['properties']['externalId'] }}">{{ rec['properties']['title'] }}</a></td>
+              <td id="{{ rec['id'] }}"><a title="{{ rec['properties']['title'] }}" href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items/{{ rec['id'] }}">{{ rec['properties']['title'] }}</a></td>
               <td>{{ rec['properties']['type'] }}</td>
             </tr>
             {% endfor %}
