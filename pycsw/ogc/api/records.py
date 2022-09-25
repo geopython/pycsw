@@ -959,7 +959,6 @@ def record2json(record, url, collection, stac_item=False):
         'type': 'Feature',
         'geometry': None,
         'properties': {
-            'externalIds': [{'value': record.identifier}],
             'datetime': record.date,
             'start_datetime': record.time_begin,
             'end_datetime': record.time_end
@@ -1035,13 +1034,6 @@ def record2json(record, url, collection, stac_item=False):
             ]]
         }
         record_dict['geometry'] = geometry
-
-        record_dict['properties']['extent'] = {
-            'spatial': {
-                'bbox': [[minx, miny, maxx, maxy]],
-                'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
-            }
-        }
 
     return record_dict
 
