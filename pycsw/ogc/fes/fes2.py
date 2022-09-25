@@ -188,8 +188,14 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             upper_boundary = elem.find(
                 util.nspath_eval('fes20:UpperBoundary/fes20:Literal',
                                  nsmap)).text
+
+            if pname == queryables['pycsw:CloudCover']:
+                LOGGER.debug("Casting queryables['pycsw:CloudCover'] as float")
+                pname = 'cast(%s as float)' % pname
+
             expression = "%s %s %s and %s" % \
                            (pname, com_op, assign_param(), assign_param())
+
             values.append(lower_boundary)
             values.append(upper_boundary)
         else:
@@ -221,6 +227,11 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                                   (anytext, language, assign_param()))
                 else:
                     LOGGER.debug('PostgreSQL non-FTS specific search')
+
+                    if pname == queryables['pycsw:CloudCover']:
+                        LOGGER.debug("Casting queryables['pycsw:CloudCover'] as float")
+                        pname = 'cast(%s as float)' % pname
+
                     expression = "%s is null or not %s %s %s" % \
                                    (pname, pname, com_op, assign_param())
             else:
@@ -233,6 +244,11 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                                   (language, assign_param()))
                 else:
                     LOGGER.debug('PostgreSQL non-FTS specific search')
+
+                    if pname == queryables['pycsw:CloudCover']:
+                        LOGGER.debug("Casting queryables['pycsw:CloudCover'] as float")
+                        pname = 'cast(%s as float)' % pname
+
                     expression = "%s %s %s" % (pname, com_op, assign_param())
 
         return expression
