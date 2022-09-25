@@ -42,6 +42,8 @@ QUERY_PARAMETERS = [
     'q',
     'bbox',
     'time',
+    'start',
+    'stop',
     'eo:parentidentifier',
     'eo:processinglevel',
     'eo:producttype',
@@ -242,7 +244,7 @@ class OpenSearch(object):
             etree.SubElement(node, util.nspath_eval('os:itemsPerPage', self.context.namespaces)).text = str(returned)
 
             for rec in self.exml.xpath('//atom:entry', namespaces=self.context.namespaces):
-                LOGGER.debug('ADDING ATOM ENTRY')
+                LOGGER.debug('Adding Atom entry')
                 node.append(rec)
 
             for rec in self.exml.xpath('//csw30:Record|//csw30:BriefRecord|//csw30:SummaryRecord', namespaces=self.context.namespaces):
@@ -381,6 +383,7 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
     time_element = None
     anytext_elements = []
     query_temporal_by_iso = False
+    start_stop_elements_only = False
 
     eo_parentidentifier_element = None
     eo_bands_element = None
@@ -470,6 +473,7 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
             anytext_elements.append(anytext_element)
 
     if ('start' in kvp or 'stop' in kvp) and 'time' not in kvp:
+        start_stop_elements_only = True
         LOGGER.debug('Detected start/stop in KVP')
         kvp['time'] = ''
         if 'start' in kvp and kvp['start'] != '':
@@ -586,6 +590,9 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
             # Error
             errortext = 'Exception: OpenSearch time not valid: %s.' % str(kvp['time'])
             LOGGER.error(errortext)
+
+    if time_element is not None and start_stop_elements_only:
+        par_count += 1
 
     LOGGER.debug('Processing EO queryables')
     if not util.is_none_or_empty(kvp.get('eo:parentidentifier')):
@@ -720,12 +727,14 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
             node_to_append.append(eo_element)
 
     # Render etree to string XML
-    LOGGER.debug(etree.tostring(root, encoding='unicode'))
     filterstring = etree.tostring(root, encoding='unicode')
     if fes_version == '2.0':
         filterstring = filterstring.replace('PropertyName', 'ValueReference')\
                                    .replace('xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:fes20="http://www.opengis.net/fes/2.0"')\
                                    .replace('ogc:', 'fes20:')
+
+    LOGGER.debug(filterstring)
+
     return filterstring
 
 

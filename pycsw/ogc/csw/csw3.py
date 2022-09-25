@@ -643,7 +643,7 @@ class Csw3(object):
                 for ofmt in self.parent.environ['HTTP_ACCEPT'].split(','):
                     LOGGER.info('Comparing %s and %s', ofmt, self.parent.kvp['outputformat'])
                     if ofmt.split('/')[0] in self.parent.kvp['outputformat']:
-                        LOGGER.debug('FOUND OUTPUT MATCH')
+                        LOGGER.debug('Found output match')
                         formats_match = True
                 if not formats_match and self.parent.environ['HTTP_ACCEPT'] != '*/*':
                     return self.exceptionreport('InvalidParameterValue',

@@ -9,23 +9,91 @@
   <atom:link rel="search" type="application/opensearchdescription+xml" href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities"/>
   <atom:updated>PYCSW_TIMESTAMP</atom:updated>
   <os:Query role="request"/>
-  <os:totalResults>18</os:totalResults>
+  <os:totalResults>12</os:totalResults>
   <os:startIndex>1</os:startIndex>
   <os:itemsPerPage>10</os:itemsPerPage>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category term="Geographic viewer (humanGeographicViewer)"/>
-    <atom:category term="administration"/>
-    <atom:id>3e9a8c05</atom:id>
-    <dc:identifier>3e9a8c05</dc:identifier>
-    <atom:link href="http://aiolos.survey.ntua.gr/geoserver/wms"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=3e9a8c05"/>
-    <atom:title>test Title</atom:title>
+    <atom:category term="Elevation"/>
+    <atom:id>a2744b0c-becd-426a-95a8-46e9850ccc6d</atom:id>
+    <dc:identifier>a2744b0c-becd-426a-95a8-46e9850ccc6d</dc:identifier>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=a2744b0c-becd-426a-95a8-46e9850ccc6d"/>
+    <atom:title>DTM</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
-    <atom:summary>test Abstract</atom:summary>
+    <atom:rights>otherRestrictions</atom:rights>
+    <atom:summary>DTM</atom:summary>
     <georss:where>
       <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-        <gml:lowerCorner>34.8 19.37</gml:lowerCorner>
-        <gml:upperCorner>41.75 29.61</gml:upperCorner>
+        <gml:lowerCorner>34.0 19.0</gml:lowerCorner>
+        <gml:upperCorner>42.0 30.0</gml:upperCorner>
+      </gml:Envelope>
+    </georss:where>
+  </atom:entry>
+  <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:category term="Elevation"/>
+    <atom:id>0dc824a6-b555-46c1-bd7b-bc66cb91a70f</atom:id>
+    <dc:identifier>0dc824a6-b555-46c1-bd7b-bc66cb91a70f</dc:identifier>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=0dc824a6-b555-46c1-bd7b-bc66cb91a70f"/>
+    <atom:title>DTM</atom:title>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+    <atom:rights>otherRestrictions</atom:rights>
+    <atom:summary>DTM</atom:summary>
+    <georss:where>
+      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <gml:lowerCorner>34.0 19.0</gml:lowerCorner>
+        <gml:upperCorner>42.0 30.0</gml:upperCorner>
+      </gml:Envelope>
+    </georss:where>
+  </atom:entry>
+  <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:category term="Elevation"/>
+    <atom:id>42c8e55a-2bf6-476d-a7c9-be3bcd697f13</atom:id>
+    <dc:identifier>42c8e55a-2bf6-476d-a7c9-be3bcd697f13</dc:identifier>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=42c8e55a-2bf6-476d-a7c9-be3bcd697f13"/>
+    <atom:title>DTM</atom:title>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+    <atom:rights>otherRestrictions</atom:rights>
+    <atom:summary>DTM</atom:summary>
+    <georss:where>
+      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <gml:lowerCorner>34.0 19.0</gml:lowerCorner>
+        <gml:upperCorner>42.0 30.0</gml:upperCorner>
+      </gml:Envelope>
+    </georss:where>
+  </atom:entry>
+  <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:category term="Elevation"/>
+    <atom:id>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</atom:id>
+    <dc:identifier>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</dc:identifier>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=c3bf29d4-d60a-4959-a415-2c03fb0d4aef"/>
+    <atom:title>DTM</atom:title>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+    <atom:rights>otherRestrictions</atom:rights>
+    <atom:summary>DTM</atom:summary>
+    <georss:where>
+      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <gml:lowerCorner>34.0 19.0</gml:lowerCorner>
+        <gml:upperCorner>42.0 30.0</gml:upperCorner>
+      </gml:Envelope>
+    </georss:where>
+  </atom:entry>
+  <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:category term="Elevation"/>
+    <atom:id>b8cc2388-5d0a-43d8-9473-0e86dd0396da</atom:id>
+    <dc:identifier>b8cc2388-5d0a-43d8-9473-0e86dd0396da</dc:identifier>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=b8cc2388-5d0a-43d8-9473-0e86dd0396da"/>
+    <atom:title>DTM</atom:title>
+    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
+    <atom:rights>otherRestrictions</atom:rights>
+    <atom:summary>DTM</atom:summary>
+    <georss:where>
+      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <gml:lowerCorner>34.0 19.0</gml:lowerCorner>
+        <gml:upperCorner>42.0 30.0</gml:upperCorner>
       </gml:Envelope>
     </georss:where>
   </atom:entry>
@@ -99,91 +167,18 @@
   </atom:entry>
   <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
     <atom:category term="Orthoimagery"/>
-    <atom:id>de53e931-778a-4792-94ad-9fe507aca483</atom:id>
-    <dc:identifier>de53e931-778a-4792-94ad-9fe507aca483</dc:identifier>
+    <atom:id>437ae0a2-06e2-4015-b296-a66e7f407bf2</atom:id>
+    <dc:identifier>437ae0a2-06e2-4015-b296-a66e7f407bf2</dc:identifier>
     <atom:link href="http://www.ypaat.gr"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=de53e931-778a-4792-94ad-9fe507aca483"/>
-    <atom:title>Ortho</atom:title>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=437ae0a2-06e2-4015-b296-a66e7f407bf2"/>
+    <atom:title>Aerial Photos</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
-    <atom:published>2000-01-01</atom:published>
     <atom:rights>otherRestrictions</atom:rights>
-    <atom:summary>Ortho</atom:summary>
+    <atom:summary>Aerial Photos</atom:summary>
     <georss:where>
       <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-        <gml:lowerCorner>39.76 21.48</gml:lowerCorner>
-        <gml:upperCorner>39.79 21.53</gml:upperCorner>
-      </gml:Envelope>
-    </georss:where>
-  </atom:entry>
-  <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category term="Orthoimagery"/>
-    <atom:id>4a5109d7-9ce5-4197-a423-b5fa8c426dee</atom:id>
-    <dc:identifier>4a5109d7-9ce5-4197-a423-b5fa8c426dee</dc:identifier>
-    <atom:link href="http://www.ypaat.gr"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=4a5109d7-9ce5-4197-a423-b5fa8c426dee"/>
-    <atom:title>Ortho</atom:title>
-    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
-    <atom:published>2000-01-01</atom:published>
-    <atom:rights>otherRestrictions</atom:rights>
-    <atom:summary>Ortho</atom:summary>
-    <georss:where>
-      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-        <gml:lowerCorner>39.68 21.53</gml:lowerCorner>
-        <gml:upperCorner>39.71 21.58</gml:upperCorner>
-      </gml:Envelope>
-    </georss:where>
-  </atom:entry>
-  <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category term="Orthoimagery"/>
-    <atom:id>5f37e0f8-4fb1-4637-b959-b415058bdb68</atom:id>
-    <dc:identifier>5f37e0f8-4fb1-4637-b959-b415058bdb68</dc:identifier>
-    <atom:link href="http://www.ypaat.gr"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=5f37e0f8-4fb1-4637-b959-b415058bdb68"/>
-    <atom:title>Ortho</atom:title>
-    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
-    <atom:published>2000-01-01</atom:published>
-    <atom:rights>otherRestrictions</atom:rights>
-    <atom:summary>Ortho</atom:summary>
-    <georss:where>
-      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-        <gml:lowerCorner>39.71 21.53</gml:lowerCorner>
-        <gml:upperCorner>39.74 21.58</gml:upperCorner>
-      </gml:Envelope>
-    </georss:where>
-  </atom:entry>
-  <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category term="Orthoimagery"/>
-    <atom:id>f99cc358-f379-4e79-ab1e-cb2f7709f594</atom:id>
-    <dc:identifier>f99cc358-f379-4e79-ab1e-cb2f7709f594</dc:identifier>
-    <atom:link href="http://www.ypaat.gr"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=f99cc358-f379-4e79-ab1e-cb2f7709f594"/>
-    <atom:title>Ortho</atom:title>
-    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
-    <atom:published>2000-01-01</atom:published>
-    <atom:rights>otherRestrictions</atom:rights>
-    <atom:summary>Ortho</atom:summary>
-    <georss:where>
-      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-        <gml:lowerCorner>39.73 21.53</gml:lowerCorner>
-        <gml:upperCorner>39.76 21.57</gml:upperCorner>
-      </gml:Envelope>
-    </georss:where>
-  </atom:entry>
-  <atom:entry xmlns:georss="http://www.georss.org/georss" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
-    <atom:category term="Orthoimagery"/>
-    <atom:id>ae200a05-2800-40b8-b85d-8f8d007b9e30</atom:id>
-    <dc:identifier>ae200a05-2800-40b8-b85d-8f8d007b9e30</dc:identifier>
-    <atom:link href="http://www.ypaat.gr"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=ae200a05-2800-40b8-b85d-8f8d007b9e30"/>
-    <atom:title>Ortho</atom:title>
-    <atom:updated>PYCSW_TIMESTAMP</atom:updated>
-    <atom:published>2000-01-01</atom:published>
-    <atom:rights>otherRestrictions</atom:rights>
-    <atom:summary>Ortho</atom:summary>
-    <georss:where>
-      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-        <gml:lowerCorner>39.76 21.53</gml:lowerCorner>
-        <gml:upperCorner>39.79 21.57</gml:upperCorner>
+        <gml:lowerCorner>24.0 20.0</gml:lowerCorner>
+        <gml:upperCorner>40.0 38.0</gml:upperCorner>
       </gml:Envelope>
     </georss:where>
   </atom:entry>
