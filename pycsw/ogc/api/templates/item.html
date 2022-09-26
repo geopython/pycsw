@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% block title %}{{ super() }} {{ data['properties']['externalId'] }} {% endblock %}
+{% block title %}{{ super() }} {{ data['id'] }} {% endblock %}
 {% block extrahead %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
@@ -23,7 +23,7 @@
 
 <section id="item">
 
-<h2>{{ data['properties']['externalId'] }}</h2>
+<h2>{{ data['id'] }}</h2>
 
 <div class="container-fluid">
   <div class="row">

@@ -674,7 +674,7 @@ class API:
         response['numberReturned'] = returned
 
         for record in records:
-            response['features'].append(record2json(record, stac_item))
+            response['features'].append(record2json(record, self.config['server']['url'], collection, stac_item))
 
         LOGGER.debug('Creating links')
 
@@ -780,7 +780,7 @@ class API:
         if headers_['Content-Type'] == 'application/xml':
             return headers_, 200, record.xml
 
-        response = record2json(record, stac_item=stac_item)
+        response = record2json(record, self.config['server']['url'], collection, stac_item)
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
@@ -856,11 +856,14 @@ class API:
         }
 
 
-def record2json(record, stac_item=False):
+def record2json(record, url, collection, stac_item=False):
     """
     OGC API - Records record generator from core pycsw record model
 
     :param record: pycsw record object
+    :param url: server URL
+    :param collection: collection id
+    :stac_item: whether the result should be a STAC item (default False)
 
     :returns: `dict` of record GeoJSON
     """
@@ -874,7 +877,6 @@ def record2json(record, stac_item=False):
         'type': 'Feature',
         'geometry': None,
         'properties': {
-            'externalId': [{'value': record.identifier}],
             'datetime': record.date,
             'start_datetime': record.time_begin,
             'end_datetime': record.time_end
@@ -886,8 +888,6 @@ def record2json(record, stac_item=False):
     if stac_item:
         record_dict['stac_version'] = '1.0.0'
         record_dict['collection'] = 'metadata:main'
-
-    record_dict['properties']['externalId'] = record.identifier
 
     record_dict['properties']['recordUpdated'] = record.insert_date
 
@@ -932,6 +932,13 @@ def record2json(record, stac_item=False):
 
             rdl.append(link2)
 
+    record_dict['links'].append({
+        'rel': 'self',
+        'type': 'application/json',
+        'title': 'Collection',
+        'href': f"{url}/collections/{collection}?f=json"
+    })
+
     if record.wkt_geometry:
         minx, miny, maxx, maxy = wkt2geom(record.wkt_geometry)
         geometry = {
@@ -945,13 +952,6 @@ def record2json(record, stac_item=False):
             ]]
         }
         record_dict['geometry'] = geometry
-
-        record_dict['properties']['extent'] = {
-            'spatial': {
-                'bbox': [[minx, miny, maxx, maxy]],
-                'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
-            }
-        }
 
     return record_dict
 
