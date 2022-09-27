@@ -1,7 +1,7 @@
 .. _transactions:
 
-Transactions
-============
+Transactions using CSW
+======================
 
 pycsw's CSW implementation has the ability to process CSW Harvest and Transaction requests (CSW-T).  Transactions are disabled by default; to enable, ``manager.transactions`` must be set to ``true``.  Access to transactional functionality is limited to IP addresses which must be set in ``manager.allowed_ips``.
 
@@ -63,8 +63,8 @@ When harvesting OGC web services, requests can provide the base URL of the servi
 
 When harvesting other CSW servers, pycsw pages through the entire CSW in default increments of 10.  This value can be modified via the ``manager.csw_harvest_pagesize`` :ref:`configuration <configuration>` option.  It is strongly advised to use the ``csw:ResponseHandler`` parameter for harvesting large CSW catalogues to prevent HTTP timeouts.
 
-Transactions
-------------
+Transaction operations
+----------------------
 
 pycsw supports 3 modes of the ``Transaction`` operation (``Insert``, ``Update``, ``Delete``):
 
@@ -77,3 +77,42 @@ Transaction operation results can be sent by email (via ``mailto:``) or ftp (via
 The :ref:`tests` contain CSW-T request examples.
 
 .. _`WAF`: https://seabass.ieee.org/groups/geoss/index.php?option=com_sir_200&Itemid=157&ID=183
+
+Transactions using OGC API - Records
+====================================
+
+pycsw's OGC API - Records support provides transactional capabilities via the `OGC API - Features - Part 4: Create, Replace, Update and Delete`_ draft specification,
+which follows RESTful patterns for insert/update/delete of resources.
+
+Supported Resource Types
+------------------------
+
+All resource types supported by CSW Transactions are supported via OGC API - Records transactional workflow.  Note that the HTTP ``Content-Type``
+header MUST be set according to the media type of the given resource (i.e. ``application/json``, ``application/xml``, etc.).
+
+Transaction operations
+----------------------
+
+The below examples demonstrate transactional workflow using pycsw's OGC API - Records endpoint:
+
+.. code-block:: bash
+
+   # insert GeoJSON metadata
+   curl -v -H "Content-Type: application/geo+json" -XPOST http://localhost:8000/collections/metadata:main/items -d @foorecord.json
+
+   # update metadata
+   curl -v -H "Content-Type: application/geo+json" -XPUT http://localhost:8000/collections/metadata:main/items/foorecord -d @foorecord.json
+
+   # delete metadata
+   curl -v -XDELETE http://localhost:8000/collections/metadata:main/items/foorecord
+
+   # insert XML metadata
+   curl -v -H "Content-Type: application/xml" -XPOST http://localhost:8000/collections/metadata:main/items -d @foorecord.xml
+
+Harvesting
+----------
+
+Harvesting is not yet supported via OGC API - Records.
+
+
+.. _`OGC API - Features - Part 4: Create, Replace, Update and Delete`: https://docs.ogc.org/DRAFTS/20-002.html

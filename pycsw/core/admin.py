@@ -30,6 +30,7 @@
 #
 # =================================================================
 
+import json
 import logging
 import os
 import sys
@@ -341,7 +342,8 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
                 if mfile.endswith('.xml'):
                     file_list.append(os.path.join(root, mfile))
     else:
-        for rec in glob(os.path.join(xml_dirpath, '*.xml')):
+        files = glob(os.path.join(xml_dirpath, '*.xml')) + glob(os.path.join(xml_dirpath, '*.json'))
+        for rec in files:
             file_list.append(rec)
 
     total = len(file_list)
@@ -349,10 +351,14 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
 
     for recfile in sorted(file_list):
         counter += 1
+        metadata_record = None
         LOGGER.info('Processing file %s (%d of %d)', recfile, counter, total)
         # read document
         try:
-            exml = etree.parse(recfile, context.parser)
+            with open(recfile) as fh:
+                metadata_record = json.load(fh)
+        except json.decoder.JSONDecodeError as err:
+            metadata_record = etree.parse(recfile, context.parser)
         except etree.XMLSyntaxError as err:
             LOGGER.error('XML document "%s" is not well-formed', recfile, exc_info=True)
             continue
@@ -361,7 +367,7 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
             continue
 
         try:
-            record = metadata.parse_record(context, exml, repo)
+            record = metadata.parse_record(context, metadata_record, repo)
         except Exception as err:
             LOGGER.exception('Could not parse "%s" as an XML record', recfile)
             continue
@@ -425,7 +431,18 @@ def export_records(context, database, table, xml_dirpath):
         # sanitize identifier
         identifier = util.secure_filename(identifier)
         # write to XML document
-        filename = os.path.join(dirpath, '%s.xml' % identifier)
+
+        metadata_type = \
+            getattr(record,
+                    context.md_core_model['mappings']['pycsw:MetadataType'])
+
+        if 'json' in metadata_type:
+            extension = 'json'
+        else:
+            extension = 'xml'
+
+        filename = os.path.join(dirpath, '%s.%s' % (identifier, extension))
+
         try:
             LOGGER.info('Writing to file %s', filename)
             if hasattr(record.xml, 'decode'):

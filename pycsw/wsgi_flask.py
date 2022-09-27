@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2021 Tom Kralidis
+# Copyright (c) 2022 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -29,7 +29,6 @@
 #
 # =================================================================
 
-from configparser import ConfigParser
 import os
 from pathlib import Path
 import sys
@@ -45,8 +44,9 @@ from pycsw.wsgi import application_dispatcher
 APP = Flask(__name__, static_folder=STATIC, static_url_path='/static')
 APP.url_map.strict_slashes = False
 APP.config['PYCSW_CONFIG'] = parse_ini_config(Path(os.getenv('PYCSW_CONFIG')))
-APP.config['JSONIFY_PRETTYPRINT_REGULAR'] = APP.config['PYCSW_CONFIG']['server'].get(
-    'pretty_print', True)
+
+pretty_print = APP.config['PYCSW_CONFIG']['server'].get('pretty_print', True)
+APP.config['JSONIFY_PRETTYPRINT_REGULAR'] = pretty_print
 
 BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC,
                       static_url_path='/static')
@@ -156,18 +156,28 @@ def items(collection='metadata:main'):
     :returns: HTTP response
     """
 
+    data = None
     stac_item = False
 
     if 'search' in request.url_rule.rule:
         stac_item = True
 
-    return get_response(api_.items(dict(request.headers),
-                        request.get_json(silent=True), dict(request.args),
-                        collection, stac_item))
+    if request.method == 'POST' and request.content_type is not None:
+        if 'json' in request.content_type:  # JSON grammar
+            data = request.get_json(silent=True)
+        elif 'xml' in request.content_type:  # XML jgrammar
+            data = request.data
+        return get_response(api_.manage_collection_item(dict(request.headers),
+                            'create', data=data))
+    else:
+        return get_response(api_.items(dict(request.headers),
+                            request.get_json(silent=True), dict(request.args),
+                            collection, stac_item))
 
 
 @BLUEPRINT.route('/stac/collections/<collection>/items/<item>')
-@BLUEPRINT.route('/collections/<collection>/items/<item>')
+@BLUEPRINT.route('/collections/<collection>/items/<item>',
+                 methods=['GET', 'PUT', 'DELETE'])
 def item(collection='metadata:main', item=None):
     """
     OGC API collection items endpoint
@@ -183,8 +193,17 @@ def item(collection='metadata:main', item=None):
     if 'stac' in request.url_rule.rule:
         stac_item = True
 
-    return get_response(api_.item(dict(request.headers), request.args,
-                        collection, item, stac_item))
+    if request.method == 'PUT':
+        return get_response(
+            api_.manage_collection_item(
+                dict(request.headers), 'update', item,
+                data=request.get_json(silent=True)))
+    elif request.method == 'DELETE':
+        return get_response(
+            api_.manage_collection_item(dict(request.headers), 'delete', item))
+    else:
+        return get_response(api_.item(dict(request.headers), request.args,
+                            collection, item, stac_item))
 
 
 @BLUEPRINT.route('/csw', methods=['GET', 'POST'])
@@ -251,5 +270,3 @@ if __name__ == '__main__':
         port = int(sys.argv[1])
     print(f'Serving on port {port}')
     APP.run(debug=True, host='0.0.0.0', port=port)
-
-
