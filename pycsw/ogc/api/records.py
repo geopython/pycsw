@@ -1015,9 +1015,11 @@ def record2json(record, url, collection, stac_item=False):
             rdl.append(link2)
 
     record_dict['links'].append({
-        'rel': 'self',
+        'rel': 'collection',
         'type': 'application/json',
         'title': 'Collection',
+        'name': 'collection',
+        'description': 'Collection',
         'href': f"{url}/collections/{collection}?f=json"
     })
 
