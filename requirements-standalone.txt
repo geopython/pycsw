@@ -2,3 +2,4 @@ SQLAlchemy
 Flask
 pygeofilter
 PyYAML
+pygeoif==0.7
