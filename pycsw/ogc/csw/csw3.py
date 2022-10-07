@@ -1607,10 +1607,11 @@ class Csw3(object):
                 if rlinks:
                     LOGGER.info('link type: {}'.format(type(rlinks)))
                     for link in util.jsonify_links(rlinks):
-                        etree.SubElement(record,
-                        util.nspath_eval('dct:references',
-                        self.parent.context.namespaces),
-                        scheme=link['protocol']).text = link['url']
+                        ref = etree.SubElement(record, util.nspath_eval('dct:references',
+                            self.parent.context.namespaces))
+                        if link['protocol']:
+                            ref.attrib['scheme'] = link['protocol']
+                        ref.text = link['url']
 
                 for i in ['dc:relation', 'dct:modified', 'dct:abstract']:
                     val = util.getqattr(recobj, queryables[i]['dbcol'])
