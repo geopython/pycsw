@@ -136,9 +136,11 @@ class OpenSearch(object):
 
             for rec in self.exml.xpath('//atom:entry',
                         namespaces=self.context.namespaces):
+                LOGGER.debug('Adding Atom entry')
                 node.append(rec)
             for rec in self.exml.xpath('//csw:Record|//csw:BriefRecord|//csw:SummaryRecord',
                         namespaces=self.context.namespaces):
+                LOGGER.debug('Converting CSW Record to Atom entry')
                 node.append(self.cswrecord2atom(rec))
         elif operation_name == 'Capabilities':
             node = etree.Element(util.nspath_eval('os:OpenSearchDescription', self.namespaces), nsmap=self.namespaces)
@@ -248,6 +250,7 @@ class OpenSearch(object):
                 node.append(rec)
 
             for rec in self.exml.xpath('//csw30:Record|//csw30:BriefRecord|//csw30:SummaryRecord', namespaces=self.context.namespaces):
+                LOGGER.debug('Converting CSW Record to Atom entry')
                 node.append(self.cswrecord2atom(rec))
 
         elif response_name == 'Capabilities':

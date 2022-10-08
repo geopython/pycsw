@@ -91,11 +91,10 @@ def write_record(result, esn, context, url=None):
                 url2.attrib['title'] = link['description']
 
             if link['protocol']:
-                if link['protocol'] == 'enclosure':
-                    url2.attrib['rel'] = link['protocol']
-                    url2.attrib['type'] = 'application/octet-stream'
-                else:
-                    url2.attrib['type'] = link['protocol']
+                url2.attrib['type'] = link['protocol']
+
+            if link['function']:
+                url2.attrib['rel'] = link['function']
 
     etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (url, util.getqattr(result, context.md_core_model['mappings']['pycsw:Identifier'])))
 
