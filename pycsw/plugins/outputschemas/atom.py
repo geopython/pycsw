@@ -87,13 +87,13 @@ def write_record(result, esn, context, url=None):
         for link in util.jsonify_links(rlinks):
             url2 = etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href=link['url'])
 
-            if link['description']:
+            if link.get('description') != None:
                 url2.attrib['title'] = link['description']
 
-            if link['protocol']:
+            if link.get('protocol') != None:
                 url2.attrib['type'] = link['protocol']
 
-            if link['function']:
+            if link.get('function') != None:
                 url2.attrib['rel'] = link['function']
 
     etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (url, util.getqattr(result, context.md_core_model['mappings']['pycsw:Identifier'])))

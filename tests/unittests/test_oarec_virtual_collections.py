@@ -60,7 +60,7 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 12
+    assert len(content['conformsTo']) == 13
 
 
 def test_collections(api):
@@ -85,7 +85,7 @@ def test_queryables(api):
     assert content['$id'] == 'http://localhost/pycsw/oarec/collections/metadata:main/queryables'  # noqa
     assert content['$schema'] == 'http://json-schema.org/draft/2019-09/schema'
 
-    assert len(content['properties']) == 11
+    assert len(content['properties']) == 12
 
     assert 'geometry' in content['properties']
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
