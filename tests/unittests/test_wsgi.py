@@ -37,6 +37,7 @@ from pycsw import wsgi
 
 pytestmark = pytest.mark.unit
 
+
 @pytest.mark.parametrize("process_env, wsgi_env, fake_dir, expected", [
     ({}, None, "dummy", "dummy"),
     ({"PYCSW_ROOT": "this"}, None, "dummy", "this"),
