@@ -86,7 +86,7 @@ def test_xml2dict():
         "ows": "http://www.opengis.net/ows/2.0",
         "xsi": "http://www.w3.org/2001/xmlschema-instance",
         "dc": "http://purl.org/dc/elements/1.1/",
-        "dct":"http://purl.org/dc/terms/",
+        "dct": "http://purl.org/dc/terms/",
     }
     result = fmt_json.xml2dict(xml_string=xml, namespaces=namespaces)
     assert result["csw:GetRecordsResponse"]["csw:SearchResults"][

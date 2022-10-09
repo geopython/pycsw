@@ -86,6 +86,7 @@ def test_get_version_integer_invalid_version(invalid_version):
     with pytest.raises(RuntimeError):
         util.get_version_integer(invalid_version)
 
+
 @pytest.mark.parametrize("xpath_expression, expected", [
     ("ns1:first", "{something}first"),
     ("ns1:first/ns2:second", "{something}first/{other}second"),
@@ -114,6 +115,7 @@ def test_nspath_eval_invalid_element():
             }
         )
 
+
 @pytest.mark.parametrize("envelope, expected", [
     ("ENVELOPE (-180,180,90,-90)", "-180,-90,180,90"),
     (" ENVELOPE(-180,180,90,-90)", "-180,-90,180,90"),
@@ -122,6 +124,7 @@ def test_nspath_eval_invalid_element():
 def test_wktenvelope2bbox(envelope, expected):
     result = util.wktenvelope2bbox(envelope)
     assert result == expected
+
 
 # TODO - Add more WKT cases for other geometry types
 @pytest.mark.parametrize("wkt, bounds, expected", [
@@ -192,8 +195,8 @@ def test_getqattr_link():
 
 
 def test_getqattr_invalid():
-        result = util.getqattr(dt.date(2017, 1, 1), "name")
-        assert result is None
+    result = util.getqattr(dt.date(2017, 1, 1), "name")
+    assert result is None
 
 
 def test_http_request_post():
@@ -250,6 +253,7 @@ def test_ipaddress_in_whitelist(ip, whitelist, expected):
     result = util.ipaddress_in_whitelist(ip, whitelist)
     assert result == expected
 
+
 @pytest.mark.parametrize("linkstr, expected", [
     # old style CSV
     ("roads,my roads,OGC:WMS,http://example.org/wms",
@@ -285,7 +289,7 @@ def test_ipaddress_in_whitelist(ip, whitelist, expected):
          "description": "my roads",
          "protocol": "OGC:WMS",
          "url": "http://example.org/wms"
-      },{
+      }, {
          "name": "roads",
          "description": "my roads",
          "protocol": "OGC:WFS",
@@ -303,28 +307,28 @@ def test_ipaddress_in_whitelist(ip, whitelist, expected):
     ),
     # JSON style with some empty keys
     ('[{"name": "roads", "description": null, "protocol": "OGC:WMS", "url": "http://example.org/wms"}]',
-     [{
-         "name": "roads",
-         "description": None,
-         "protocol": "OGC:WMS",
-         "url": "http://example.org/wms"
-      }]
+        [{
+            "name": "roads",
+            "description": None,
+            "protocol": "OGC:WMS",
+            "url": "http://example.org/wms"
+        }]
     ),
     # JSON style with multiple links
     ('[{"name": "roads", "description": null, "protocol": "OGC:WMS", "url": "http://example.org/wms"},'
      '{"name": "roads", "description": null, "protocol": "OGC:WFS", "url": "http://example.org/wfs"}]',
-     [{
-         "name": "roads",
-         "description": None,
-         "protocol": "OGC:WMS",
-         "url": "http://example.org/wms"
-      },{
-         "name": "roads",
-         "description": None,
-         "protocol": "OGC:WFS",
-         "url": "http://example.org/wfs"
-      }]
-    )
+        [{
+            "name": "roads",
+            "description": None,
+            "protocol": "OGC:WMS",
+            "url": "http://example.org/wms"
+         }, {
+            "name": "roads",
+            "description": None,
+            "protocol": "OGC:WFS",
+            "url": "http://example.org/wfs"
+        }]
+     )
 ])
 def test_jsonify_links(linkstr, expected):
     result = util.jsonify_links(linkstr)
