@@ -1729,12 +1729,21 @@ def _parse_stac_item(context, repos, record):
 
     if 'assets' in record:
         for key, link in record['assets'].items():
-            links.append({
-                'name': link.get('rel'),
-                'description': link.get('title'),
-                'protocol': link.get('type'),
+            new_link = {
                 'url': link.get('href')
-            })
+            }
+
+            if link.get('title') is not None:
+                new_link['name'] = link.get('title')
+                new_link['description'] = link.get('title')
+            if link.get('type') is not None:
+                new_link['protocol'] = link.get('type')
+            if link.get('rel') is not None:
+                new_link['function'] = link.get('rel')
+            else:
+                new_link['function'] = 'enclosure'
+
+            links.append(new_link)
 
     if links:
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
