@@ -1672,12 +1672,19 @@ def _parse_oarec_record(context, repos, record):
 
     if 'links' in record:
         for link in record['links']:
-            links.append({
-                'name': link['rel'],
-                'description': link['title'],
-                'protocol': link['type'],
-                'url': link['href']
-            })
+            new_link = {
+                'url': link.get('href')
+            }
+
+            if link.get('title') != None:
+                new_link['name'] = link.get('title')
+                new_link['description'] = link.get('title')
+            if link.get('type') != None:
+                new_link['protocol'] = link.get('type')
+            if link.get('rel') != None:
+                new_link['function'] = link.get('rel')
+
+            links.append(new_link)
 
     if links:
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
