@@ -1676,12 +1676,12 @@ def _parse_oarec_record(context, repos, record):
                 'url': link.get('href')
             }
 
-            if link.get('title') != None:
+            if link.get('title') is not None:
                 new_link['name'] = link.get('title')
                 new_link['description'] = link.get('title')
-            if link.get('type') != None:
+            if link.get('type') is not None:
                 new_link['protocol'] = link.get('type')
-            if link.get('rel') != None:
+            if link.get('rel') is not None:
                 new_link['function'] = link.get('rel')
 
             links.append(new_link)
