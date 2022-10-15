@@ -201,7 +201,7 @@ py.test allows tagging tests with markers. These can be used to selectively run
 some tests. pycsw uses two markers:
 
 * ``unit`` - run only inut tests
-* ``functional``- run onyl functional tests
+* ``functional``- run only functional tests
 
 Markers can be specified by using the ``-m <marker_name>`` flag.
 
@@ -260,7 +260,7 @@ Comparing results with difflib instead of XML c14n
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The functional tests compare results with their expected values by using
-[XML canonicalisation - XML c14n](https://www.w3.org/TR/xml-c14n/).
+`XML canonicalisation - XML c14n`_.
 Alternatively, you can call py.test with the ``--functional-prefer-diffs``
 flag. This will enable comparison based on Python's ``difflib``. Comparison
 is made on a line-by-line basis and in case of failure, a unified diff will
@@ -368,3 +368,4 @@ Then navigate to ``http://host/path/to/pycsw/tests/index.html``.
 .. _tox: https://tox.readthedocs.io
 .. _wiki: https://github.com/geopython/pycsw/wiki/OGC-CITE-Compliance
 .. _pytest_generate_tests: #basic-pytest-generate-tests-example
+.. _XML canonicalisation - XML c14n: https://www.w3.org/TR/xml-c14n/

@@ -34,7 +34,7 @@ import logging
 
 from pycsw.core import util
 from pycsw.core.etree import etree
-from pycsw.ogc.gml import gml3
+from pycsw.ogc.gml import gml32
 
 LOGGER = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ MODEL = {
         ]
     },
     'GeometryOperands': {
-        'values': gml3.TYPES
+        'values': gml32.TYPES
     },
     'SpatialOperators': {
         'values': ['BBOX', 'Beyond', 'Contains', 'Crosses', 'Disjoint',
@@ -347,7 +347,7 @@ def _get_spatial_operator(geomattr, element, dbtype, nsmap, postgis_geometry_col
         raise RuntimeError('Invalid fes20:ValueReference in spatial filter: %s' %
                            property_name.text)
 
-    geometry = gml3.Geometry(element, nsmap)
+    geometry = gml32.Geometry(element, nsmap)
 
     #make decision to apply spatial ranking to results
     set_spatial_ranking(geometry)

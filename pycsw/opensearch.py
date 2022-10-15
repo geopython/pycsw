@@ -734,7 +734,9 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
     if fes_version == '2.0':
         filterstring = filterstring.replace('PropertyName', 'ValueReference')\
                                    .replace('xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:fes20="http://www.opengis.net/fes/2.0"')\
-                                   .replace('ogc:', 'fes20:')
+                                   .replace('ogc:', 'fes20:')\
+                                   .replace('xmlns:gml311="http://www.opengis.net/gml"', 'xmlns:gml32="http://www.opengis.net/gml/3.2"')\
+                                   .replace('gml311:', 'gml32:')
 
     LOGGER.debug(filterstring)
 

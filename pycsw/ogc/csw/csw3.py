@@ -1711,7 +1711,7 @@ class Csw3(object):
             util.nspath_eval('soapenv:Body',
             self.parent.context.namespaces)).xpath('child::*')[0]
 
-        xsd_filename = 'csw%s.xsd' % etree.QName(doc).localname
+        xsd_filename = '_wrapper.xsd'
         schema = os.path.join(self.parent.config.get('server', 'home'),
         'core', 'schemas', 'ogc', 'cat', 'csw', '3.0', xsd_filename)
 
