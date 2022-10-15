@@ -1584,6 +1584,8 @@ class Csw2(object):
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                 query['_dict'] = xml2dict(etree.tostring(tmp), self.parent.context.namespaces)
             except Exception as err:
+                import traceback
+                print(traceback.format_exc())
                 return 'Invalid Filter request: %s' % err
 
         tmp = element.find(util.nspath_eval('csw:CqlText', self.parent.context.namespaces))

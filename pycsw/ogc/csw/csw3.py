@@ -1668,6 +1668,7 @@ class Csw3(object):
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                 query['_dict'] = xml2dict(etree.tostring(tmp), self.parent.context.namespaces)
             except Exception as err:
+                import traceback; print(traceback.format_exc())
                 return 'Invalid Filter request: %s' % err
 
         tmp = element.find(util.nspath_eval('csw30:CqlText', self.parent.context.namespaces))
@@ -1711,7 +1712,7 @@ class Csw3(object):
             util.nspath_eval('soapenv:Body',
             self.parent.context.namespaces)).xpath('child::*')[0]
 
-        xsd_filename = 'csw%s.xsd' % etree.QName(doc).localname
+        xsd_filename = '_wrapper.xsd'
         schema = os.path.join(self.parent.config.get('server', 'home'),
         'core', 'schemas', 'ogc', 'cat', 'csw', '3.0', xsd_filename)
 
