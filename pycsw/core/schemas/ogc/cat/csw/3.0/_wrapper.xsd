@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+this XSD is added by pycsw for lxml/libxml2 validation against a single schema target
+
+See https://github.com/geopython/pycsw/issues/796 for more information
+
+-->
+
+<xs:schema targetNamespace="http://www.opengis.net/cat/csw/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="cswAll.xsd"/>
+    <xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../../../gml/3.2.1/gml.xsd"/>
+</xs:schema>

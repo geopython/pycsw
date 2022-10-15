@@ -80,6 +80,7 @@ class StaticContext(object):
             'gm03': 'http://www.interlis.ch/INTERLIS2.3',
             'gmd': 'http://www.isotc211.org/2005/gmd',
             'gml': 'http://www.opengis.net/gml',
+            'gml32': 'http://www.opengis.net/gml/3.2',
             'ogc': 'http://www.opengis.net/ogc',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
             'ows': 'http://www.opengis.net/ows',
@@ -94,7 +95,7 @@ class StaticContext(object):
         }
 
         self.keep_ns_prefixes = [
-            'csw', 'dc', 'dct', 'gmd', 'gml', 'ows', 'xs'
+            'csw', 'dc', 'dct', 'gmd', 'gml', 'gml32', 'ows', 'xs'
         ]
 
         self.md_core_model = {
@@ -496,7 +497,7 @@ class StaticContext(object):
                         'values': ['TRUE']
                     },
                     'http://www.opengis.net/spec/csw/3.0/conf/SupportedGMLVersions': {
-                        'values': ['http://www.opengis.net/gml']
+                        'values': ['http://www.opengis.net/gml/3.2']
                     },
                     'http://www.opengis.net/spec/csw/3.0/conf/DefaultSortingAlgorithm': {
                         'values': ['TRUE']
