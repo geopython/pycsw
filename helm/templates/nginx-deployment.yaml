@@ -1,0 +1,154 @@
+{{- if .Values.nginx.enabled -}}
+{{- $chartName := include "pycsw.name" . -}}
+{{- $cloudProviderDockerRegistryUrl := include "pycsw.cloudProviderDockerRegistryUrl" . -}}
+{{- $cloudProviderImagePullSecretName := include "pycsw.cloudProviderImagePullSecretName" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ $chartName }}-nginx
+  annotations: 
+    collectord.io/index: {{ quote .Values.splunkIndex }}
+  labels:
+    app: {{ .Release.Name }}-{{ $chartName }}
+    component: nginx-deployment
+    environment: {{ .Values.environment }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.nginx.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ $chartName }}
+      release: {{ .Release.Name }}
+      run: {{ .Release.Name }}-nginx
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ $chartName }}
+        release: {{ .Release.Name }}
+        run: {{ .Release.Name }}-nginx
+      # Autodiscover annotations should be here
+      # https://github.com/elastic/beats/issues/7914
+      annotations:
+        co.elastic.logs/enabled: 'true'
+        co.elastic.logs/module: 'nginx'
+        co.elastic.logs/fileset.stdout: 'access'
+        co.elastic.logs/fileset.stderr: 'error'
+        {{- if .Values.resetOnConfigChange }}
+        checksum/nginx-configmap: {{ include (print $.Template.BasePath "/nginx-configmap.yaml") . | sha256sum }}
+        checksum/envoy-configmap: {{ include (print $.Template.BasePath "/envoy-configmap.yaml") . | sha256sum }}
+        {{- end }}
+    spec:
+    {{- if $cloudProviderImagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ $cloudProviderImagePullSecretName | quote }}
+    {{- end }}
+      volumes:
+        {{- if .Values.rasterCommon.authentication.opa.enabled }}
+        - name: opa-policy
+          secret:
+            secretName: {{ .Release.Name }}-{{ $chartName }}-opa
+        - name: proxy-config
+          configMap:
+            name: {{ .Release.Name }}-{{ $chartName }}-envoy
+        - name: jwt-public-keys
+          secret:
+            secretName: {{ .Values.global.authentication.jwtPublicKeySecretName }}
+        {{- end }}
+        - name: nginx-config
+          configMap:
+            name: {{ .Release.Name }}-{{ $chartName }}-nginx-configmap
+            items:
+            - key: "NGINX_CONFIG"
+              path: "nginx.conf"
+        - name: nginx-root-config
+          configMap:
+            name: {{ .Release.Name }}-{{ $chartName }}-nginx-configmap
+            items:
+            - key: "NGINX_ROOT_CONFIG"
+              path: "nginx.conf"
+      containers:
+        ## Nginx Deployment
+        - name: {{ .Release.Name }}-{{ $chartName }}-nginx
+          {{- with .Values.nginx.image }}
+          image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ .tag }}
+          {{- end }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          volumeMounts:
+          - mountPath: "/etc/nginx/conf.d"
+            name: nginx-config
+            readOnly: true
+          - mountPath: "/etc/nginx/nginx.conf"
+            name: nginx-root-config
+            subPath: nginx.conf
+            readOnly: true
+          ports:
+            - name: http
+              containerPort: {{ .Values.nginx.targetPort }}
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            httpGet:
+              path: /liveness
+              port: {{ .Values.nginx.targetPort }}
+          {{- if .Values.nginx.resources.enabled }}
+          resources:
+            {{- toYaml .Values.nginx.resources.value | nindent 12 }}
+          {{- end }}
+        {{- if .Values.rasterCommon.authentication.opa.enabled }}
+        - name: envoy
+          image: "{{ .Values.envoy.image }}:{{ .Values.envoy.imageTag }}"
+          volumeMounts:
+          - readOnly: true
+            mountPath: /config
+            name: proxy-config
+          - name: jwt-public-keys
+            readOnly: true
+            mountPath: /keys/mapColonies.jwks
+            subPath: mapColonies.jwks
+          args:
+          - "envoy"
+          - "--config-path"
+          - "/config/envoy.yaml"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          {{- if .Values.envoy.resources.enabled }}
+          resources:
+            {{- toYaml .Values.envoy.resources.value | nindent 12 }}
+          {{- end }}
+        - name: opa
+          image: "{{ .Values.opa.image }}:{{ .Values.opa.imageTag }}"
+          volumeMounts:
+          - readOnly: true
+            mountPath: /policy
+            name: opa-policy
+          args:
+          - "run"
+          - "--server"
+          - "--addr=0.0.0.0:8181"
+          - "--diagnostic-addr=0.0.0.0:8282"
+          - "--set=plugins.envoy_ext_authz_grpc.add=:{{ .Values.opa.imageTag }}"
+          - "--set=plugins.envoy_ext_authz_grpc.path=envoy/authz/allow"
+          {{- if .Values.opa.enableLogging }}
+          - "--set=decision_logs.console=true"
+          {{- end }}
+          - "/policy/policy.rego"
+          {{- if .Values.opa.resources.enabled }}
+          resources:
+            {{- toYaml .Values.opa.resources.value | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /health?plugins
+              port: 8282
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health?plugins
+              port: 8282
+            initialDelaySeconds: 5
+            periodSeconds: 30
+        {{- end }}
+{{- end }}

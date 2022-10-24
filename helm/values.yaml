@@ -1,0 +1,172 @@
+global:
+  cloudProvider: {}
+  tracing: {}
+  metrics: {}
+  environment: {}
+  authentication:
+    jwtPublicKeySecretName: map-colonies-jwks
+
+enabled: true
+environment: development
+replicaCount: 5
+initialDelaySeconds: 60
+resetOnConfigChange: true
+splunkIndex: ''
+
+cloudProvider:
+  dockerRegistryUrl: my-registry-url.io
+  imagePullSecretName: 'my-registry-secret'
+  flavor: openshift
+
+authentication:
+  ca:
+    enabled: false
+    useExternal: false
+    externalSecretName: ''
+  ssl:
+    enabled: false
+    useExternal: false
+    externalSecretName: ''
+
+caSecretName: ''
+caPath: '/usr/local/share/ca-certificates'
+caKey: 'ca.crt'
+
+rasterCommon:
+  authentication:
+    opa:
+      enabled: true
+      customHeaderName: "x-api-key"
+  ca:
+    secretName: ''
+    path: '/usr/local/share/ca-certificates'
+    key: 'ca.crt'
+  db:
+    host: "localhost"
+    name: "raster"
+    port: 5432
+    sslEnabled: false
+    rejectUnauthorized: true
+    secrets:
+      useExternal: true
+      externalSecretName: ''
+      caFileKey: "caFileKey"
+      certFileKey: "certFileKey"
+      keyFileKey: "keyFileKey"
+
+
+image:
+  repository: pycsw
+  tag: 'latest'
+
+servicePort: 8080
+internalServicePort: 80
+pycswPort: 8000
+nodePort: 30018
+
+env:
+  loglevel: WARNING
+  maxrecords: null
+  logfile: ''
+  profiles: mc_raster
+  logFormat: >-
+    %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+    %({x-forwarded-for}i)s %(L)s
+  uwsgi:
+    processes: 6
+    threads: 10
+  cors:
+    enabled: true
+    allowedOrigin: '*'
+    allowedHeaders: ''
+  db:
+    schema: RasterCatalogManager
+    requirePassword: true
+  tracing:
+    enabled: false
+    url: http://localhost:55681/v1/trace
+  metrics:
+    enabled: false
+    url: http://localhost:55681/v1/metrics
+
+resources:
+  enabled: true
+  value:
+    limits:
+      cpu: 2
+      memory: 1200Mi
+    requests:
+      cpu: 2
+      memory: 1200Mi
+
+nginx:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: nginx
+    tag: 'merge' 
+  port: 8080
+  internalServicePort: 80
+  targetPort: 8080
+  nodePort: 30001
+  resources:
+    enabled: true
+    value:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+opa:
+  image: openpolicyagent/opa
+  imageTag: 0.29.4-envoy-3
+  port: 9191
+  enableLogging: false
+  resources:
+    enabled: true
+    value:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+envoy:
+  image: envoyproxy/envoy
+  imageTag: v1.20.7
+  port: 6565
+  maxRequestBytes: 8192
+  requestedDomain: raster
+  resources:
+    enabled: true
+    value:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi        
+
+route:
+  enabled: true
+  path: /api/raster/v1
+  host: 
+  https: true
+  timeout:
+    enabled: false # defaults to 30s by openshift
+    duration: 60s # supported units (us, ms, s, m, h, d)
+  useCert: false
+
+ingress:
+  enabled: false
+  type: 'nginx-org' # supported values: 'nginx-org' | 'nginx-kubernetes'
+  path: /api/raster/v1
+  host: 'localhost'
+  cors:
+    enabled: true
+    origin: '*'
+  tls: 
+    enabled: true
+    useExternal: ''

@@ -1,0 +1,44 @@
+
+{{- if .Values.nginx.enabled -}}
+{{- $releaseName := .Release.Name -}}
+{{- $chartName := include "pycsw.name" . -}}
+{{- $cloudProviderFlavor := include "pycsw.cloudProviderFlavor" . -}}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $releaseName }}-{{ $chartName }}-nginx
+  labels:
+    app: {{ $releaseName }}-{{ $chartName }}
+    component: nginx-service
+    environment: {{ .Values.environment }}
+    release: {{ .Release.Name }}
+spec:
+  # In case cloudProavider=azure
+  {{- if eq $cloudProviderFlavor "azure" }}
+  type: ClusterIP
+  {{- end }}
+  # In case cloudProvider=minikube
+  {{- if eq $cloudProviderFlavor "minikube" }}
+  type: NodePort
+  {{- end }}
+  ports:
+    - port: {{ .Values.nginx.port }}
+      targetPort: {{ .Values.nginx.targetPort }}
+      protocol: TCP
+      name: internal
+      # internal
+    {{- if .Values.rasterCommon.authentication.opa.enabled }}
+    - port: {{ .Values.nginx.internalServicePort }}
+      targetPort: {{ .Values.envoy.port }}
+      protocol: TCP
+      name: external
+    {{- end }}
+      {{- if eq $cloudProviderFlavor "minikube" }}
+      nodePort: {{ .Values.nginx.nodePort }}
+      {{- end }}
+  selector:
+    app: {{ $releaseName }}-{{ $chartName }}
+    release: {{ .Release.Name }}
+    run: {{ .Release.Name }}-nginx
+{{- end }}
