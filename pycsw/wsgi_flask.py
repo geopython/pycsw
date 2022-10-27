@@ -162,10 +162,10 @@ def items(collection='metadata:main'):
     if 'search' in request.url_rule.rule:
         stac_item = True
 
-    if request.method == 'POST' and request.content_type is not None:
-        if 'json' in request.content_type:  # JSON grammar
+    if request.method == 'POST' and request.content_type not in [None, 'application/json']:
+        if request.content_type == 'application/geo+json':  # JSON grammar
             data = request.get_json(silent=True)
-        elif 'xml' in request.content_type:  # XML jgrammar
+        elif 'xml' in request.content_type:  # XML grammar
             data = request.data
         return get_response(api_.manage_collection_item(dict(request.headers),
                             'create', data=data))
