@@ -31,7 +31,7 @@
 #
 # =================================================================
 
-import json
+import json, jsons
 import logging
 import uuid
 from urllib.parse import urlparse
@@ -1383,6 +1383,7 @@ def _parse_iso(context, repos, exml):
             len(md.identification.contact) > 0):
             all_orgs = set([item.organization for item in md.identification.contact if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:OrganizationName', ';'.join(all_orgs))
+            _set(context, recobj, 'pycsw:Contacts', jsons.dumps(md.identification.contact))
 
         if len(md.identification.securityconstraints) > 0:
             _set(context, recobj, 'pycsw:SecurityConstraints',

@@ -210,6 +210,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         # distribution
         # links: JSON list of dicts with properties: name, description, protocol, url
         Column('links', Text, index=True),
+        # contacts: JSON list of dicts with owslib contact properties, name, organization, email, role, etc. 
+        Column('contacts', Text, index=True),
     )
 
     # add extra columns that may have been passed via extra_columns
