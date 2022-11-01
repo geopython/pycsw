@@ -50,7 +50,7 @@ Setting up the Database
 
 .. code-block:: bash
 
-  pycsw-admin.py setup_db --config default.cfg
+  pycsw-admin.py -c setup_db -f default.cfg
 
 This will create the necessary tables and values for the repository.
 
@@ -74,7 +74,7 @@ Loading Records
 
 .. code-block:: bash
 
-  pycsw-admin.py load-records --config default.cfg --path /path/to/records
+  pycsw-admin.py -c load_records -f default.cfg -p /path/to/records
 
 This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.cfg`` (``repository.database``).  Passing ``-r`` to the script will process ``/path/to/records`` recursively.  Passing ``-y`` to the script will force overwrite existing metadata with the same identifier.  Note that ``-p`` accepts either a directory path or single file.
 
@@ -86,7 +86,7 @@ Exporting the Repository
 
 .. code-block:: bash
 
-  pycsw-admin.py export-records --config default.cfg --path /path/to/output_dir
+  pycsw-admin.py -c export_records -f default.cfg -p /path/to/output_dir
 
 This will write each record in the database specified in ``default.cfg`` (``repository.database``) to an XML document on disk, in directory ``/path/to/output_dir``.
 
@@ -95,8 +95,8 @@ Optimizing the Database
 
 .. code-block:: bash
 
-  pycsw-admin.py optimize-db --config default.cfg
-  pycsw-admin.py rebuild-db-indexes --config default.cfg
+  pycsw-admin.py -c optimize_db -f default.cfg
+  pycsw-admin.py -c rebuild_db_indexes -f default.cfg
 
 .. note::
   This feature is relevant only for PostgreSQL and MySQL
@@ -106,7 +106,7 @@ Deleting Records from the Repository
 
 .. code-block:: bash
 
-  pycsw-admin.py delete-records --config default.cfg
+  pycsw-admin.py -c delete_records -f default.cfg
 
 This will empty the repository of all records.
 
