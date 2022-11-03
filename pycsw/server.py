@@ -55,12 +55,8 @@ class Csw(object):
     """ Base CSW server """
     def __init__(self, rtconfig=None, env=None, version='3.0.0'):
         """ Initialize CSW """
-
-        if not env:
-            self.environ = os.environ
-        else:
-            self.environ = env
-
+        
+        self.environ = env or os.environ
         self.context = config.StaticContext()
 
         # Lazy load this when needed
@@ -129,9 +125,9 @@ class Csw(object):
             os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
         )
 
-        if 'PYCSW_IS_CSW' in env and env['PYCSW_IS_CSW']:
+        if 'PYCSW_IS_CSW' in self.environ and self.environ['PYCSW_IS_CSW']:
             self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/csw')
-        if 'PYCSW_IS_OPENSEARCH' in env and env['PYCSW_IS_OPENSEARCH']:
+        if 'PYCSW_IS_OPENSEARCH' in self.environ and self.environ['PYCSW_IS_OPENSEARCH']:
             self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/opensearch')
             self.mode = 'opensearch'
 
