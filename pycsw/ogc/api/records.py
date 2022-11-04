@@ -966,9 +966,10 @@ def record2json(record, url, collection, stac_item=False):
     }
 
     # todo; for keywords with a scheme use the theme property
-    themes=[]
-    themes.append({'concepts': [record.topicategory],
-                   'scheme': 'https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_TopicCategoryCode'})
+    themes = []
+    if record.topicategory:
+        themes.append({'concepts': [record.topicategory],
+                       'scheme': 'https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_TopicCategoryCode'})
     record_dict['properties']['themes'] = themes
 
     # owslib currently only supports gco:CharacterString for this property, see https://github.com/geopython/OWSLib/issues/839
@@ -1013,7 +1014,7 @@ def record2json(record, url, collection, stac_item=False):
         rcnt = []
         for cnt in json.loads(record.contacts):
             rcnt.append({
-                'name': '{0} - {1}'.format(cnt.get('name',''),cnt.get('organization','')),
+                'name': ' - '.join(filter(None,[cnt['name'], cnt['organization']])),
                 'positionName': cnt['position'],
                 'roles': [
                     {'name':cnt['role']}

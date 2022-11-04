@@ -1,5 +1,4 @@
 click
-jsons
 geolinks
 lxml
 OWSLib
