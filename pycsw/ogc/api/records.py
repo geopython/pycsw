@@ -986,6 +986,10 @@ def record2json(record, url, collection, stac_item=False):
     if record.language:
         record_dict['properties']['language'] = record.language
 
+    #externalids: [{scheme:xxx, value:yyy}]
+    if record.source:
+        record_dict['properties']['externalIds'] = [{'value': record.source}]
+
     if record.title:
         record_dict['properties']['title'] = record.title
 
@@ -1008,9 +1012,11 @@ def record2json(record, url, collection, stac_item=False):
                 'description': link['description'],
                 'type': link['protocol']
             }
-            if 'rel' in link:
+            if 'rel' in link.keys():
                 link2['rel'] = link['rel']
-            elif 'function' in link:
+            elif link['protocol'] == 'WWW:LINK-1.0-http--image-thumbnail':
+                link2['rel'] = 'preview'
+            elif 'function' in link.keys():
                 link2['rel'] = link['function']
 
             rdl.append(link2)
@@ -1021,7 +1027,7 @@ def record2json(record, url, collection, stac_item=False):
         'title': 'Collection',
         'name': 'collection',
         'description': 'Collection',
-        'href': f"{url}/collections/{collection}?f=json"
+        'href': f"{url}/collections/{collection}"
     })
 
     if record.wkt_geometry:

@@ -58,6 +58,14 @@
                 {% endfor %}
                 </ul>
               </td>
+            {% elif key == 'externalIds' %}
+            <td>
+              <ul>
+                {% for id in value %}
+                <li>{{ id['scheme'] | urlize }} {{ id['value'] | urlize }}</li>
+                {% endfor %}
+              </ul>
+            </td>
             {% elif key == 'extent' %}
               <td>Spatial: {{ value['spatial']['bbox'][0] }}</td>
               {% if value['temporal'] %}<td>Temporal: {{ value['temporal']['interval'][0] }}</td>{% endif %}

@@ -1322,7 +1322,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:XML', md.xml)
     _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
     _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
-    _set(context, recobj, 'pycsw:Language', md.language)
+    _set(context, recobj, 'pycsw:Language', md.language or md.languagecode)
     _set(context, recobj, 'pycsw:Type', md.hierarchy)
     _set(context, recobj, 'pycsw:ParentIdentifier', md.parentidentifier)
     _set(context, recobj, 'pycsw:Date', md.datestamp)
@@ -1352,6 +1352,8 @@ def _parse_iso(context, repos, exml):
 
         if len(md.identification.resourcelanguage) > 0:
             _set(context, recobj, 'pycsw:ResourceLanguage', md.identification.resourcelanguage[0])
+        elif len(md.identification.resourcelanguagecode) > 0:
+            _set(context, recobj, 'pycsw:ResourceLanguage', md.identification.resourcelanguagecode[0])
 
         if hasattr(md.identification, 'bbox'):
             bbox = md.identification.bbox
@@ -1527,6 +1529,15 @@ def _parse_iso(context, repos, exml):
                         links.append(linkobj)
     except Exception as err:  # srv: identification does not exist
         LOGGER.exception('no srv:SV_ServiceIdentification links found')
+
+    if hasattr(md.identification, 'graphicoverview'):
+        for thumb in  md.identification.graphicoverview:
+            links.append({
+                'name': 'preview',
+                'description': 'Web image thumbnail (URL)',
+                'protocol': 'WWW:LINK-1.0-http--image-thumbnail',
+                'url': thumb
+            })
 
     if len(links) > 0:
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
