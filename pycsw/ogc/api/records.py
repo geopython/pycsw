@@ -1035,6 +1035,20 @@ def record2json(record, url, collection, stac_item=False):
             })
         record_dict['properties']['providers'] = rcnt
 
+    if record.themes:
+        ogcapiThemes = []
+        # for each concept in scheme, prefer uri over label
+        for theme in [t for t in json.loads(record.themes)
+                      if t['thesaurus'] is not None 
+                      and t['thesaurus']['title'] is not None
+                      and t['keywords'] is not None 
+                      and len(t['keywords']) > 0]:
+            ogcapiThemes.append({
+                'scheme': theme['thesaurus'].get('url',theme['thesaurus'].get('title','')),
+                'concepts': [c for c in theme.get('keywords',[]) if c not in [None,""]]
+            })
+        record_dict['properties']['themes'] = ogcapiThemes
+
     if record.links:
         rdl = record_dict['links']
 

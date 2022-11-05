@@ -50,16 +50,18 @@
                 {% endfor %}
                 </ul>
               </td>
-            {% elif key == 'themes' %}
-              <td>
-                {% for theme in value %}
-                  <b>{{ theme['scheme'] }}</b>
-                  <ul>
-                  {% for concept in theme['concepts'] %}
-                    <li>{{ concept }}</li>
-                  {% endfor %}
-                  </ul>
+
+            {% elif key == 'themes' %} 
+              <td> 
+              {% for theme in value %}
+             
+                <b>{{ theme['scheme'] }}</b>
+                <ul>
+                {% for concept in theme['concepts'] %}
+                  <li>{{ concept }}</li>
                 {% endfor %}
+                </ul>
+              {% endfor %}
               </td>
             {% elif key == 'externalIds' %}
               <td>

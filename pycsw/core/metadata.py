@@ -1365,6 +1365,10 @@ def _parse_iso(context, repos, exml):
             all_keywords = [item for sublist in md.identification.keywords for item in sublist['keywords'] if item is not None]
             _set(context, recobj, 'pycsw:Keywords', ','.join(all_keywords))
             _set(context, recobj, 'pycsw:KeywordType', md.identification.keywords[0]['type'])
+            _set(context, recobj, 'pycsw:Themes', 
+                 # OWSlib currently stores keywords extended with thesaurus in keywords2, see https://github.com/geopython/OWSLib/issues/301
+                 json.dumps([t for t in md.identification.keywords2 if t['thesaurus'] is not None], 
+                            default=lambda o: o.__dict__))
 
         if (hasattr(md.identification, 'creator') and
             len(md.identification.creator) > 0):
