@@ -569,7 +569,8 @@ class API:
                         if end != '..':
                             query_args.append(f'time_end <= "{end}"')
                 elif k == 'q':
-                    query_args.append(build_anytext('anytext', v))
+                    if v not in [None,'']:
+                        query_args.append(build_anytext('anytext', v))
                 else:
                     query_args.append(f'{k} = "{v}"')
 
