@@ -45,7 +45,7 @@ from pycsw.core.metadata import parse_record
 from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
-from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
+from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json, merge_qs
 
 LOGGER = logging.getLogger(__name__)
 
@@ -1048,22 +1048,70 @@ def record2json(record, url, collection, stac_item=False):
 
     if record.links:
         rdl = record_dict['links']
-
         for link in jsonify_links(record.links):
-            link2 = {
-                'href': link['url'],
-                'name': link['name'],
+            link2 = {   
+                'type': link['protocol'],
                 'description': link['description'],
-                'type': link['protocol']
-            }
-            if 'rel' in link:
-                link2['rel'] = link['rel']
-            elif link['protocol'] == 'WWW:LINK-1.0-http--image-thumbnail':
-                link2['rel'] = 'preview'
-            elif 'function' in link:
-                link2['rel'] = link['function']
+                'title': link['name'],
+                'href': link['url']
+                }
+            if link['protocol']:
+                if 'OGC:WMS' in link['protocol'].upper():
+                    link2['rel'] = 'map'
+                    link2['templated'] = 'true'
+                    # assumes link['url'] includes '&layers=...', else link['name'] contains layername(s) 
+                    link2['href'] = merge_qs(link['url'], { 
+                            'request': 'GetMap', 'service': 'WMS',   
+                            'width': '{width}', 'height': '{height}', 'bbox': '{bbox}'}, {
+                            'version': '1.3.0', 'crs': 'epsg:4326', 
+                            'layers': link['name'], 'format': 'image/png'})
+                    link2['variables'] = {
+                            'bbox': {
+                                'type': 'array', 
+                                'items': {'type': 'number', 'format': 'double'},
+                                'minItems': 4, 'maxItems': 4
+                                },
+                            'width': {'type': 'number', 'format': 'integer'},
+                            'height': {'type': 'number', 'format': 'integer'}
+                            }
+                    link2['type'] = 'image/png'
+                    
+                elif 'OGC:WMTS' in link['protocol'].upper():
+                    link2['rel'] = 'map'
+                    link2['templated'] = 'true'
+                    link2['href'] = merge_qs(link['url'], { 
+                        'service': 'WMTS', 'request': 'GetTile', 'version': '1.0.0',
+                        'TileMatrix': '{TileMatrix}', 'TileRow': '{TileRow}', 'TileCol': '{TileCol}'}, {
+                        'TileMatrixSet': 'default', 'Layer': link['name'], 
+                        'Style': 'default', 'Format': 'image/png'})
+                    link2['variables'] = { 
+                        'TileMatrix': {'type': 'number', 'format': 'integer'},
+                        'TileRow': {'type': 'number', 'format': 'integer'},
+                        'TileCol': {'type': 'number', 'format': 'integer'}
+                    }
+                    link2['type'] = 'image/png'
+                    
+                elif 'OGC:WFS' in link['protocol'].upper():   
+                    link2['rel'] = 'map'
+                    link2['templated'] = 'true'
+                    link2['href'] = merge_qs(link['url'], {
+                        'version': '2.0.0', 'request': 'GetFeature', 'service': 'WFS', 'count': '{count}'}, {
+                        'typenames': link['name'], 'srsName': 'urn:ogc:def:crs:EPSG::4326',
+                        'outputFormat':'application/gml+xml'})
+                    link2['variables'] = { 
+                        'count': {'type': 'number', 'format': 'integer'}}
+                    link2['type'] = 'application/gml+xml'
 
-            rdl.append(link2)
+                #elif 'OSGEO:TMS' in link['protocol'].upper():
+                #elif 'OGC:CSW' in link['protocol'].upper():   
+                #elif 'OGC:WCS' in link['protocol'].upper():   
+
+                elif 'rel' in link:
+                    link2['rel'] = link['rel']
+                elif 'function' in link:
+                    link2['rel'] = link['function']
+
+                rdl.append(link2)
 
     record_dict['links'].append({
         'rel': 'collection',

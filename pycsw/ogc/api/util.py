@@ -38,6 +38,7 @@ import logging
 import mimetypes
 import os
 import re
+from urllib.parse import urlparse, parse_qsl, urlencode
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
@@ -139,6 +140,28 @@ def yaml_load(fh):
 
     return yaml.load(fh, Loader=EnvVarLoader)
 
+def merge_qs(url, req, opt):
+    """
+    Merge required and optional parameters into a  querystring.
+    Typically replaces https://example.com/mapserver?map=foo.map&service=wms&request=GetCapabilities&layers=trees for
+    https://example.com/mapserver?map=foo.map&service=WMS&request=GetMap&version=1.3.0&layers=trees&bbox={bbox}&format=...
+    
+    :param url: The original url to be substituted 
+    :param req: These arguments will be sustituted
+    :param opt: These arguments are substituted if they don't exist
+
+    :returns: url
+    """
+
+    parsed_url = urlparse(url)
+    args = dict(parse_qsl(parsed_url.query))
+    for k,v in req.items():
+        args[k] = v
+    for k,v in opt.items():
+        if k not in args.keys() or args[k] == '':
+            args[k] = v
+
+    return url.split('?')[0] + '?' + urlencode(args)
 
 def to_json(dict_, pretty=False):
     """
