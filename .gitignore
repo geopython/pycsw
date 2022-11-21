@@ -31,3 +31,6 @@ tests/results
 
 # vscode ide
 .vscode
+
+# helm values
+helm/*/local.yaml

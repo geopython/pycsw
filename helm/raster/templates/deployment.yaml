@@ -1,0 +1,212 @@
+{{- $releaseName := .Release.Name -}}
+{{- $chartName := include "pycsw.name" . -}}
+{{- $cloudProviderFlavor := include "pycsw.cloudProviderFlavor" . -}}
+{{- $cloudProviderDockerRegistryUrl := include "pycsw.cloudProviderDockerRegistryUrl" . -}}
+{{- $cloudProviderImagePullSecretName := include "pycsw.cloudProviderImagePullSecretName" . -}}
+{{ $caSecretName := ternary .Values.authentication.ca.externalSecretName (printf "%s%s" .Release.Name "-root-ca") .Values.authentication.ca.useExternal }}
+{{ $sslSecretName := ternary .Values.authentication.ssl.externalSecretName (printf "%s%s" .Release.Name "-open-ssl") .Values.authentication.ssl.useExternal }}
+{{ $postgresSecretName := ternary .Values.rasterCommon.db.secrets.externalSecretName (printf "%s%s" .Release.Name "-postgres-secret") .Values.rasterCommon.db.secrets.useExternal }}
+{{- $imageTag := include "pycsw.tag" . -}}
+
+{{- if .Values.enabled -}}
+
+{{- if .Values.authentication.ca.enabled }}
+{{- if and .Values.authentication.ca.useExternal (not .Values.authentication.ca.externalSecretName) }}
+{{- fail "When using external ca secret the value for .Values.authentication.ca.externalSecretName should be set" }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.authentication.ssl.enabled }}
+{{- if and .Values.authentication.ssl.useExternal (not .Values.authentication.ssl.externalSecretName) }}
+{{- fail "When using external ssl secret the value for .Values.authentication.ssl.externalSecretName should be set" }}
+{{- end }}
+{{- end }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $releaseName }}-{{ $chartName }}
+  labels:
+    app: {{ $chartName }}
+    component: {{ $chartName }}
+    environment: {{ include "pycsw.environment" . }}
+    release: {{ $releaseName }}
+    {{- include "pycsw.labels" . | nindent 4 }}
+  annotations:
+    collectord.io/index: {{ quote .Values.splunkIndex }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $chartName }}
+      release: {{ $releaseName }}
+      run: {{ $releaseName }}-{{ $chartName }}
+      {{- include "pycsw.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: {{ $chartName }}
+        release: {{ $releaseName }}
+        run: {{ $releaseName }}-{{ $chartName }}
+        {{- include "pycsw.selectorLabels" . | nindent 8 }}
+      {{- if .Values.resetOnConfigChange }}
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      {{- end }}
+    spec:
+    {{- if $cloudProviderImagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ $cloudProviderImagePullSecretName | quote }}
+    {{- end }}
+      containers:
+        - name: {{ $releaseName }}-{{ $chartName }}-deployment
+          {{- with .Values.image }}
+          image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ $imageTag }}
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.rasterCommon.ca.secretName }}
+            - mountPath: {{ printf "%s/%s" .Values.rasterCommon.ca.path .Values.rasterCommon.ca.key | quote }}
+              name: root-ca
+              subPath: {{ quote .Values.caKey }}
+            {{- end }}
+            {{- if .Values.authentication.ca.enabled }}
+            - name: root-ca
+              mountPath: "/usr/local/share/ca-certificates"
+            {{- end }}
+            {{- if .Values.authentication.ssl.enabled }}
+            - name: open-ssl
+              mountPath: "/etc/ssl/openssl.cnf"
+              subPath: "openssl.cnf"
+            {{- end }}
+            - name: pyscw-config
+              mountPath: /etc/pycsw/pycsw.cfg
+              subPath: pycsw.cfg
+            - name: pyscw-mappings
+              mountPath: /etc/pycsw/mappings.py
+              subPath: mappings.py
+            - mountPath: "/pycsw/uwsgi.ini"
+              name: uwsgi-config
+              subPath: uwsgi.ini
+            {{- if .Values.rasterCommon.db.sslEnabled }}
+            {{- if .Values.rasterCommon.db.secrets.caFileKey }}
+            - name: ca-file
+              mountPath: /certs/ca.crt
+              subPath: ca.pem
+            {{- end }}
+            {{- if .Values.rasterCommon.db.secrets.keyFileKey }}
+            - name: key-file
+              mountPath: /certs/key.pem
+              subPath: key.pem
+            {{- end }}
+            {{- if .Values.rasterCommon.db.secrets.certFileKey }}
+            - name: cert-file
+              mountPath: /certs/cert.pem
+              subPath: cert.pem
+            {{- end }}
+            {{- end }}
+          env:
+            {{- if .Values.rasterCommon.ca.secretName }}
+            - name: REQUESTS_CA_BUNDLE
+              value: {{ printf "%s/%s" .Values.caPath .Values.caKey | quote }}
+            - name: NODE_EXTRA_CA_CERTS
+              value: {{ printf "%s/%s" .Values.caPath .Values.caKey | quote }}
+            {{- end }}
+            {{- if .Values.authentication.ca.enabled }}
+            - name: REQUESTS_CA_BUNDLE
+              value: '/usr/local/share/ca-certificates/ca.crt'
+            {{- end }}
+            - name: PYCSW_SERVER_URL
+              value: http://localhost:8000
+            - name: PYCSW_MAPPINGS_FILEPATH
+              value: /etc/pycsw/mappings.py
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $postgresSecretName }}
+                  key: username
+            {{- if .Values.env.db.requirePassword }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $postgresSecretName }}
+                  key: password
+            {{- end }}
+            - name: POSTGRES_CERTS_MOUNT_PATH
+              value: /certs
+            - name: POSTGRES_CERT_FILE_NAME
+              value: cert.pem
+            - name: POSTGRES_KEY_FILE_NAME
+              value: key.pem
+          envFrom:
+            - configMapRef:
+                name: {{ $releaseName }}-{{ $chartName }}-configmap
+          ports:
+            - name: http
+              containerPort: {{ .Values.pycswPort }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /csw?service=CSW&request=GetCapabilities&version=3.0.0
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+          {{- if .Values.resources.enabled }}
+          resources:
+            {{- toYaml .Values.resources.value | nindent 12 }}
+          {{- end }}
+      volumes:
+        {{- if .Values.rasterCommon.ca.secretName }}
+        - name: root-ca
+          secret:
+            secretName: {{ .Values.rasterCommon.ca.secretName }}
+        {{- end }}
+        {{- if .Values.authentication.ssl.enabled }}
+        - name: open-ssl
+          secret:
+            secretName: {{ $sslSecretName }}
+        {{- end }}
+        - name: pyscw-config
+          configMap:
+              name: {{ .Release.Name }}-{{ $chartName }}-configmap
+              items:
+              - key: "pycsw.cfg"
+                path: "pycsw.cfg"
+        - name: pyscw-mappings
+          configMap:
+              name: {{ .Release.Name }}-{{ $chartName }}-configmap
+              items:
+              - key: "mappings.py"
+                path: "mappings.py"
+        - name: uwsgi-config
+          configMap:
+            name: {{ .Release.Name }}-{{ $chartName }}-configmap
+            items:
+            - key: "uwsgi.ini"
+              path: "uwsgi.ini"
+        {{- if .Values.rasterCommon.db.sslEnabled }}
+        {{- if .Values.rasterCommon.db.secrets.caFileKey }}
+        - name: ca-file
+          secret:
+            secretName: {{ $postgresSecretName }}
+            items:
+              - key: {{ .Values.rasterCommon.db.secrets.caFileKey }}
+                path: ca.pem
+        {{- end }}
+        {{- if .Values.rasterCommon.db.secrets.keyFileKey }}
+        - name: key-file
+          secret:
+            secretName: {{ $postgresSecretName }}
+            items:
+              - key: {{ .Values.rasterCommon.db.secrets.keyFileKey }}
+                path: key.pem
+        {{- end }}
+        {{- if .Values.rasterCommon.db.secrets.certFileKey }}
+        - name: cert-file
+          secret:
+            secretName: {{ $postgresSecretName }}
+            items:
+              - key: {{ .Values.rasterCommon.db.secrets.certFileKey }}
+                path: cert.pem
+        {{- end }}
+        {{- end }}
+{{- end -}}

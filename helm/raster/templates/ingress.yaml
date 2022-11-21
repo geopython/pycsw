@@ -1,0 +1,35 @@
+{{- $releaseName := .Release.Name -}}
+{{- $chartName := include "pycsw.name" . -}}
+{{- if and (.Values.enabled) (.Values.ingress.enabled) -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $releaseName }}-{{ $chartName }}-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    {{- if eq .Values.ingress.type "nginx-org" }}
+    nginx.org/mergeable-ingress-type: "minion"
+    nginx.org/rewrites: 'serviceName={{ $releaseName }}-{{ $chartName }} rewrite=/'
+    {{- end }}
+    {{- if eq .Values.ingress.type "nginx-kubernetes" }}
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    {{- end }} 
+spec:
+{{- if .Values.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host | quote }}
+    secretName: ingress-tls-secret
+  {{- end }}
+  rules:
+  - http:
+      paths:
+      - path: {{ .Values.ingress.path }}{{- if eq .Values.ingress.type "nginx-kubernetes" }}(.*){{- end }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $releaseName }}-{{ $chartName }}
+            port:
+              number: {{ .Values.nginx.port }}
+    host: {{ .Values.ingress.host | quote }}
+{{- end -}}
