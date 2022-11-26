@@ -1027,8 +1027,6 @@ def record2json(record, url, collection, stac_item=False):
         'href': f"{url}/collections/{collection}"
     })
 
-    print(vars(record))
-
     if record.wkt_geometry:
         minx, miny, maxx, maxy = wkt2geom(record.wkt_geometry)
         geometry = {
@@ -1041,24 +1039,16 @@ def record2json(record, url, collection, stac_item=False):
                 [minx, miny]
             ]]
         }
-        record_dict['extent'] = {
-            'spatial': { 
-                'bbox': [minx, miny, maxx, maxy],
-                'crs': 'http://www.opengis.net/def/crs/OGC/1.3/CRS84' }
-        }
         record_dict['geometry'] = geometry
 
     if record.time_begin or record.time_end:
-        if 'extent' not in record_dict:
-            record_dict['extent'] = {}
-        record_dict['extent']['temporal'] = {
-            'interval': [],
-            'trs': 'http://www.opengis.net/def/uom/ISO-8601/0/Gregorian' }
-        if record.time_begin:
-            record_dict['extent']['temporal']['interval'].append(record.time_begin)
-        if record.time_end:
-            record_dict['extent']['temporal']['interval'].append(record.time_end)
-
+        if record.time_end not in [None, '']:
+            if record.time_begin not in [None, '']:
+                record_dict['time'] = [record.time_begin, record.time_end]
+            else:
+                record_dict['time'] = record.time_end
+        else:
+            record_dict['time'] = record.time_begin
 
     return record_dict
 
