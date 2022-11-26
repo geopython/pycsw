@@ -1679,6 +1679,8 @@ def _parse_oarec_record(context, repos, record):
             if link.get('title') is not None:
                 new_link['name'] = link.get('title')
                 new_link['description'] = link.get('title')
+            if link.get('description') is not None:
+                new_link['description'] = link.get('description')
             if link.get('type') is not None:
                 new_link['protocol'] = link.get('type')
             if link.get('rel') is not None:
@@ -1726,6 +1728,24 @@ def _parse_stac_item(context, repos, record):
     if 'keywords' in record['properties']:
         keywords = record['properties']['keywords']
         _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
+
+    if 'links' in record:
+        for link in record['links']:
+            new_link = {
+                'url': link.get('href')
+            }
+
+            if link.get('title') is not None:
+                new_link['name'] = link.get('title')
+                new_link['description'] = link.get('title')
+            if link.get('description') is not None:
+                new_link['description'] = link.get('description')
+            if link.get('type') is not None:
+                new_link['protocol'] = link.get('type')
+            if link.get('rel') is not None:
+                new_link['function'] = link.get('rel')
+
+            links.append(new_link)
 
     if 'assets' in record:
         for key, link in record['assets'].items():
