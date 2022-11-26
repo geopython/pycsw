@@ -71,7 +71,17 @@
             <td>
               <ul>
                 {% for link in data['links'] %}
-                <li><a href="{{ link['href'] }}" title="{{ link['description'] }}">{{ link['name'] }}</a></li>
+                  {% if link['name'] %}
+                    {% if link['description'] %}
+                      <li><a href="{{ link['href'] }}" title="{{ link['description'] }}">{{ link['name'] }}</a></li>
+                    {% else %}
+                      <li><a href="{{ link['href'] }}" title="{{ link['name'] }}">{{ link['name'] }}</a></li>
+                    {% endif %}
+                  {% elif link['description'] %}
+                    <li><a href="{{ link['href'] }}" title="{{ link['description'] }}">{{ link['description'] }}</a></li>
+                  {% else %}
+                    <li><a href="{{ link['href'] }}" title="{{ link['rel'] }}">{{ link['rel'] }}</a></li>
+                  {% endif %}
                 {% endfor %}
               </ul>
           </tr>
@@ -81,7 +91,7 @@
             <td>
               <ul>
                 {% for key, value in data['assets'].items() %}
-                  {%if value['title'] %}
+                  {% if value['title'] %}
                     <li><a href="{{ value['href'] }}" title="{{ value['title'] }}">{{ key }}</a></li>
                   {% else %}
                     <li><a href="{{ value['href'] }}" title="{{ key }}">{{ key }}</a></li>
