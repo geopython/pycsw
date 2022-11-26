@@ -75,6 +75,21 @@
                 {% endfor %}
               </ul>
           </tr>
+          {% if 'assets' in data %}
+          <tr>
+            <td>Assets</td>
+            <td>
+              <ul>
+                {% for key, value in data['assets'].items() %}
+                  {%if value['title'] %}
+                    <li><a href="{{ value['href'] }}" title="{{ value['title'] }}">{{ key }}</a></li>
+                  {% else %}
+                    <li><a href="{{ value['href'] }}" title="{{ key }}">{{ key }}</a></li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+          </tr>
+          {% endif %}
         </tbody>
       </table>
     </div>
