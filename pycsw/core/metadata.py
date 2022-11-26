@@ -1755,6 +1755,9 @@ def _parse_stac_item(context, repos, record):
     if 'end_datetime' in record['properties']:
         _set(context, recobj, 'pycsw:TempExtent_end', record['properties']['end_datetime'])
 
+    if 'collection' in record:
+        _set(context, recobj, 'pycsw:ParentIdentifier', record['collection'])
+
     return recobj
 
 
