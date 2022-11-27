@@ -972,9 +972,10 @@ def record2json(record, url, collection, stac_item=False):
                        'scheme': 'https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_TopicCategoryCode'})
     record_dict['properties']['themes'] = themes
 
-    # owslib currently only supports gco:CharacterString for this property, see https://github.com/geopython/OWSLib/issues/839
     if record.otherconstraints:
-        record_dict['properties']['license'] = record.otherconstraints.join('; ')
+        if isinstance(record.otherconstraints, str):
+            record.otherconstraints = [record.otherconstraints]
+        record_dict['properties']['license'] = ", ".join(record.otherconstraints)
 
     if stac_item:
         record_dict['stac_version'] = '1.0.0'

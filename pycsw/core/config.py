@@ -176,7 +176,7 @@ class StaticContext(object):
                 'pycsw:Bands': 'bands',
                 # links: list of dicts with properties: name, description, protocol, url
                 'pycsw:Links': 'links',
-                # contacts: list of dicts with properties: name, description, protocol, url
+                # contacts: list of dicts with properties: name, organization, address, postcode, city, region, country, email, phone, fax, onlineresource, position, role
                 'pycsw:Contacts': 'contacts',
             }
         }
