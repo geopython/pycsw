@@ -959,11 +959,8 @@ def record2json(record, url, collection, stac_item=False):
         'id': record.identifier,
         'type': 'Feature',
         'geometry': None,
-        'properties': {
-            'datetime': record.date,
-            'start_datetime': record.time_begin,
-            'end_datetime': record.time_end
-        },
+        'time': record.date,
+        'properties': {},
         'links': [],
         'assets': {}
     }
@@ -985,6 +982,10 @@ def record2json(record, url, collection, stac_item=False):
 
     if record.language:
         record_dict['properties']['language'] = record.language
+
+    #externalids: [{scheme:xxx, value:yyy}]
+    if record.source:
+        record_dict['properties']['externalIds'] = [{'value': record.source}]
 
     if record.title:
         record_dict['properties']['title'] = record.title
@@ -1010,6 +1011,8 @@ def record2json(record, url, collection, stac_item=False):
             }
             if 'rel' in link:
                 link2['rel'] = link['rel']
+            elif link['protocol'] == 'WWW:LINK-1.0-http--image-thumbnail':
+                link2['rel'] = 'preview'
             elif 'function' in link:
                 link2['rel'] = link['function']
 
@@ -1021,7 +1024,7 @@ def record2json(record, url, collection, stac_item=False):
         'title': 'Collection',
         'name': 'collection',
         'description': 'Collection',
-        'href': f"{url}/collections/{collection}?f=json"
+        'href': f"{url}/collections/{collection}"
     })
 
     if record.wkt_geometry:
@@ -1037,6 +1040,15 @@ def record2json(record, url, collection, stac_item=False):
             ]]
         }
         record_dict['geometry'] = geometry
+
+    if record.time_begin or record.time_end:
+        if record.time_end not in [None, '']:
+            if record.time_begin not in [None, '']:
+                record_dict['time'] = [record.time_begin, record.time_end]
+            else:
+                record_dict['time'] = record.time_end
+        else:
+            record_dict['time'] = record.time_begin
 
     return record_dict
 

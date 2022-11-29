@@ -33,10 +33,12 @@
     <dct:references>http://oos.soest.hawaii.edu/erddap/tabledap/nss06_agg.graph?time%2Ctemperature&amp;.draw=lines</dct:references>
     <dct:references>http://pacioos.org/focus/waterquality/wq_fsm.php</dct:references>
     <dct:references>http://oos.soest.hawaii.edu/thredds/dodsC/pacioos/nss/ns06agg</dct:references>
+    <dct:references scheme="WWW:LINK-1.0-http--image-thumbnail">http://pacioos.org/metadata/browse/NS06agg.png</dct:references>
     <dc:relation></dc:relation>
     <dct:modified>2014-04-16</dct:modified>
     <dct:abstract>The nearshore sensors are part of the Pacific Islands Ocean Observing System (PacIOOS) and are designed to measure a variety of ocean parameters at fixed point locations. NS06 is located at the dock in Pohnpei lagoon and is mounted to the bottom in about 1 meter of water. The instrument is a Sea-Bird Electronics model 16+ V2 coupled with a WET Labs ECO-FLNTUS combination sensor.</dct:abstract>
     <dc:date>2014-04-16</dc:date>
+    <dc:language>eng</dc:language>
     <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
       <ows:LowerCorner>6.96 158.22</ows:LowerCorner>
       <ows:UpperCorner>6.96 158.22</ows:UpperCorner>
