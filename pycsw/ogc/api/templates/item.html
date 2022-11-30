@@ -58,7 +58,13 @@
                 <b>{{ theme['scheme'] }}</b>
                 <ul>
                 {% for concept in theme['concepts'] %}
-                  <li>{{ concept }}</li>
+                  <li>
+                    {% if concept['url'] %}
+                      <a href="{{ concept['url'] }}">{{ concept['name'] or concept['url'] }}</a>
+                    {% else %}
+                      {{ concept['name'] }}
+                    {% endif %}
+                  </li>
                 {% endfor %}
                 </ul>
               {% endfor %}
