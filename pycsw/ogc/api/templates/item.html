@@ -52,20 +52,41 @@
               </td>
             {% elif key == 'themes' %}
               <td>
-                <ul>
-                {% for concept in value['concepts'] %}
-                  <li>{{ concept }}</li>
+                {% for theme in value %}
+                  <b>{{ theme['scheme'] }}</b>
+                  <ul>
+                  {% for concept in theme['concepts'] %}
+                    <li>{{ concept }}</li>
+                  {% endfor %}
+                  </ul>
                 {% endfor %}
-                </ul>
               </td>
             {% elif key == 'externalIds' %}
-            <td>
-              <ul>
-                {% for id in value %}
-                <li>{{ id['scheme'] | urlize }} {{ id['value'] | urlize }}</li>
-                {% endfor %}
-              </ul>
-            </td>
+              <td>
+                <ul>
+                  {% for id in value %}
+                  <li>{{ id['scheme'] | urlize }} {{ id['value'] | urlize }}</li>
+                  {% endfor %}
+                </ul>
+              </td>
+            {% elif key == 'providers' %}
+              <td>
+                {% for cnt in data['properties']['providers'] %}
+                {{ cnt['name'] }} ({{ cnt.get('roles',[{}])[0].get('name','') }}/{{ cnt['positionName'] }})<br/>
+                  {% for k,e in cnt['contactInfo'].get('phone',{}).items() %}
+                    {% if e %}{{ k }}: {{ e }}<br/>{% endif %}
+                  {% endfor %}
+                  {% for k,e in cnt['contactInfo'].get('email',{}).items() %}
+                    {% if e not in [None,''] %}{{ k }}: {{ e | urlize }}<br/>{% endif %}
+                  {% endfor %}
+                  {% for k,e in cnt['contactInfo'].get('address',{}).items() %}
+                    {{ k }}: {% for a,b in e.items() %}{% if b %}{{ b }}, {% endif %}{% endfor %}<br/>
+                  {% endfor %}
+                  {% if cnt['contactInfo']['url'] %}
+                    <a href="{{ cnt['contactInfo']['url'] | urlize }}">{{ cnt['url'] }}</a>
+                  {% endif %} 
+                {% endfor %} 
+              </td>
             {% else %}
               <td>{{ value }}</td>
             {% endif %}

@@ -1383,6 +1383,7 @@ def _parse_iso(context, repos, exml):
             len(md.identification.contact) > 0):
             all_orgs = set([item.organization for item in md.identification.contact if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:OrganizationName', ';'.join(all_orgs))
+            _set(context, recobj, 'pycsw:Contacts', json.dumps(md.identification.contact, default=lambda o: o.__dict__))
 
         if len(md.identification.securityconstraints) > 0:
             _set(context, recobj, 'pycsw:SecurityConstraints',

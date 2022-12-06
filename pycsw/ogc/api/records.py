@@ -965,6 +965,18 @@ def record2json(record, url, collection, stac_item=False):
         'assets': {}
     }
 
+    # todo; for keywords with a scheme use the theme property
+    themes = []
+    if record.topicategory:
+        themes.append({'concepts': [record.topicategory],
+                       'scheme': 'https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_TopicCategoryCode'})
+    record_dict['properties']['themes'] = themes
+
+    if record.otherconstraints:
+        if isinstance(record.otherconstraints, str):
+            record.otherconstraints = [record.otherconstraints]
+        record_dict['properties']['license'] = ", ".join(record.otherconstraints)
+
     if stac_item:
         record_dict['stac_version'] = '1.0.0'
         record_dict['collection'] = 'metadata:main'
@@ -998,6 +1010,30 @@ def record2json(record, url, collection, stac_item=False):
 
     if record.keywords:
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
+    
+    if record.contacts:
+        rcnt = []
+        for cnt in json.loads(record.contacts):
+            rcnt.append({
+                'name': ' - '.join(filter(None,[cnt['name'], cnt['organization']])),
+                'positionName': cnt['position'],
+                'roles': [
+                    {'name':cnt['role']}
+                ],
+                'contactInfo': {
+                    'phone': {'work': cnt['phone']},
+                    'email': {'work':cnt['email']},
+                    'address': {'work': { 
+                            'deliveryPoint': cnt['address'],
+                            'city': cnt['city'],
+                            'administrativeArea': cnt['region'],
+                            'postalCode': cnt['postcode'],
+                            'country': cnt['country'],
+                    }},
+                    'url': cnt['onlineresource']
+                }   
+            })
+        record_dict['properties']['providers'] = rcnt
 
     if record.links:
         rdl = record_dict['links']
