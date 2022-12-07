@@ -144,6 +144,7 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
         Column('edition', Text, index=True),
         Column('keywords', Text, index=True),
         Column('keywordstype', Text, index=True),
+        Column('themes', Text, index=True),
         Column('parentidentifier', Text, index=True),
         Column('relation', Text, index=True),
         Column('time_begin', Text, index=True),

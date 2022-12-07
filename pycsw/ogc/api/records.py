@@ -1035,6 +1035,17 @@ def record2json(record, url, collection, stac_item=False):
             })
         record_dict['properties']['providers'] = rcnt
 
+    if record.themes:
+        ogcapiThemes = []
+        # For a scheme, prefer uri over label
+        # OWSlib currently uses .keywords_object for keywords with url, see https://github.com/geopython/OWSLib/pull/765
+        for theme in json.loads(record.themes):
+            ogcapiThemes.append({
+                'scheme': theme['thesaurus'].get('url',theme['thesaurus'].get('title','')),
+                'concepts': [c for c in theme.get('keywords_object',[]) if c not in [None,""]]
+            })
+        record_dict['properties']['themes'] = ogcapiThemes
+
     if record.links:
         rdl = record_dict['links']
 
