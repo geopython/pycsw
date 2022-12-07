@@ -50,8 +50,8 @@ def setup_db(database, table, home, create_sfsql_tables=True, create_plpythonu_f
     from sqlalchemy.orm import create_session
 
     LOGGER.info('Creating database %s', database)
-    if database.startswith('sqlite'):
-        dbtype, filepath = database.split('sqlite:///')
+    if database.startswith('sqlite:///'):
+        _, filepath = database.split('sqlite:///')
         dirname = os.path.dirname(filepath)
         if not os.path.exists(dirname):
             raise RuntimeError('SQLite directory %s does not exist' % dirname)
