@@ -80,7 +80,15 @@
             {% elif key == 'providers' %}
               <td>
                 {% for cnt in data['properties']['providers'] %}
-                {{ cnt['name'] }} ({{ cnt.get('roles',[{}])[0].get('name','') }}/{{ cnt['positionName'] }})<br/>
+                  {% if 'name' in cnt and cnt['name'] not in [None,''] %}
+                    {{ cnt['name'] }} <br/>
+                  {% endif %}
+                  {% if 'roles' in cnt and cnt['roles'] is not string %}
+                  Role: {{ cnt['roles'] | map(attribute='name') | join(',') }} <br/>
+                  {% endif %}
+                  {% if 'positionName' in cnt and cnt['positionName'] not in [None,''] %}
+                  Position: {{ cnt['positionName'] }})<br/>
+                  {% endif %}
                   {% for k,e in cnt['contactInfo'].get('phone',{}).items() %}
                     {% if e %}{{ k }}: {{ e }}<br/>{% endif %}
                   {% endfor %}
