@@ -55,7 +55,7 @@ from pycsw.core.util import EnvInterpolation
 logger = logging.getLogger(__name__)
 
 
-def launch_pycsw(pycsw_config, workers=2, reload=False):
+def launch_pycsw(pycsw_config, workers=2, flask_app=True, reload=False):
     """Launch pycsw.
 
     Main function of this entrypoint script. It will read pycsw's config file
@@ -74,26 +74,29 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
 
     for more information on how to control gunicorn by sending UNIX signals.
     """
-
-    db_url = pycsw_config.get("repository", "database")
-    db = db_url.partition(":")[0].partition("+")[0]
-    db_handler = {
-        "sqlite": handle_sqlite_db,
-        "postgresql": handle_postgresql_db,
-    }.get(db)
-    logger.debug("Setting up pycsw's data repository...")
-    logger.debug("Repository URL: {}".format(db_url))
-    db_handler(
-        db_url,
-        pycsw_config.get("repository", "table"),
-        pycsw_config.get("server", "home")
-    )
-    sys.stdout.flush()
-    # we're using --reload-engine=poll because there is a bug with gunicorn
-    # that prevents using inotify together with python3. For more info:
-    #
-    # https://github.com/benoitc/gunicorn/issues/1477
-    #
+    if flask_app == "True":
+        db_url = pycsw_config.get("repository", "database")
+        db = db_url.partition(":")[0].partition("+")[0]
+        db_handler = {
+            "sqlite": handle_sqlite_db,
+            "postgresql": handle_postgresql_db,
+        }.get(db)
+        logger.debug("Setting up pycsw's data repository...")
+        logger.debug("Repository URL: {}".format(db_url))
+        db_handler(
+            db_url,
+            pycsw_config.get("repository", "table"),
+            pycsw_config.get("server", "home")
+        )
+        sys.stdout.flush()
+        # we're using --reload-engine=poll because there is a bug with gunicorn
+        # that prevents using inotify together with python3. For more info:
+        #
+        # https://github.com/benoitc/gunicorn/issues/1477
+        #
+        python_app="pycsw.wsgi_flask:APP"
+    else:
+        python_app="pycsw.wsgi"
 
     try:
         timeout = pycsw_config.get("server", "timeout")
@@ -107,7 +110,7 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
         "--error-logfile=-",
         "--workers={}".format(workers),
         "--timeout={}".format(timeout),
-        "pycsw.wsgi_flask:APP",
+        python_app,
 
     ]
     logger.debug("Launching pycsw with {} ...".format(" ".join(execution_args)))
@@ -166,6 +169,13 @@ if __name__ == "__main__":
         help="Number of workers to use by the gunicorn server. Defaults to 2."
     )
     parser.add_argument(
+        "--flask-app",
+        default="True",
+        choices=("True", "False"),
+        help="Start the WSGI Flask app, default: True"
+             "if False, run only the CSW service endpoint"
+    )
+    parser.add_argument(
         "-r",
         "--reload",
         action="store_true",
@@ -184,5 +194,9 @@ if __name__ == "__main__":
         workers = int(config.get("server", "workers"))
     except configparser.NoOptionError:
         workers = args.workers
+    try:
+        flask_app = config.get("server", "flask_app")
+    except configparser.NoOptionError:
+        flask_app = args.flask_app
     logging.basicConfig(level=getattr(logging, level))
-    launch_pycsw(config, workers=workers, reload=args.reload)
+    launch_pycsw(config, flask_app=flask_app, workers=workers, reload=args.reload)
