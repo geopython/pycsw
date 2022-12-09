@@ -89,17 +89,19 @@
                   {% if 'positionName' in cnt and cnt['positionName'] not in [None,''] %}
                   Position: {{ cnt['positionName'] }})<br/>
                   {% endif %}
-                  {% for k,e in cnt['contactInfo'].get('phone',{}).items() %}
-                    {% if e %}{{ k }}: {{ e }}<br/>{% endif %}
-                  {% endfor %}
-                  {% for k,e in cnt['contactInfo'].get('email',{}).items() %}
-                    {% if e not in [None,''] %}{{ k }}: {{ e | urlize }}<br/>{% endif %}
-                  {% endfor %}
-                  {% for k,e in cnt['contactInfo'].get('address',{}).items() %}
-                    {{ k }}: {% for a,b in e.items() %}{% if b %}{{ b }}, {% endif %}{% endfor %}<br/>
-                  {% endfor %}
-                  {% if cnt['contactInfo']['url'] %}
-                    <a href="{{ cnt['contactInfo']['url'] | urlize }}">{{ cnt['url'] }}</a>
+                  {% if 'contactInfo' in cnt and cnt['contactInfo'] is not string %}
+                    {% for k,e in cnt['contactInfo'].get('phone',{}).items() %}
+                      {% if e %}{{ k }}: {{ e }}<br/>{% endif %}
+                    {% endfor %}
+                    {% for k,e in cnt['contactInfo'].get('email',{}).items() %}
+                      {% if e not in [None,''] %}{{ k }}: {{ e | urlize }}<br/>{% endif %}
+                    {% endfor %}
+                    {% for k,e in cnt['contactInfo'].get('address',{}).items() %}
+                      {{ k }}: {% for a,b in e.items() %}{% if b %}{{ b }}, {% endif %}{% endfor %}<br/>
+                    {% endfor %}
+                    {% if cnt['contactInfo']['url'] %}
+                      {{ cnt['contactInfo']['url'].get('href','') | urlize }}
+                    {% endif %} 
                   {% endif %} 
                 {% endfor %} 
               </td>

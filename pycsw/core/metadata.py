@@ -1137,9 +1137,21 @@ def _parse_fgdc(context, repos, exml):
         _set(context, recobj, 'pycsw:Creator', md.idinfo.origin)
         _set(context, recobj, 'pycsw:Publisher',  md.idinfo.origin)
         _set(context, recobj, 'pycsw:Contributor', md.idinfo.origin)
-
+    
+    contacts = []
     if hasattr(md.idinfo, 'ptcontac'):
         _set(context, recobj, 'pycsw:OrganizationName', md.idinfo.ptcontac.cntorg)
+        contacts.append(fgdccontact2iso(md.idinfo.ptcontac, 'pointOfContact'))
+    
+    if hasattr(md.metainfo, 'metc'):
+        contacts.append(fgdccontact2iso(md.metainfo.metc, 'pointOfContact'))
+    
+    if hasattr(md.distinfo, 'distrib'):
+        contacts.append(fgdccontact2iso(md.distinfo.distrib, 'distributor'))
+    
+    if len(contacts) > 0:
+        _set(context, recobj, 'pycsw:Contacts', json.dumps(contacts))
+
     _set(context, recobj, 'pycsw:AccessConstraints', md.idinfo.accconst)
     _set(context, recobj, 'pycsw:OtherConstraints', md.idinfo.useconst)
     _set(context, recobj, 'pycsw:Date', md.metainfo.metd)
@@ -1799,6 +1811,21 @@ def _parse_stac_item(context, repos, record):
 
     return recobj
 
+def fgdccontact2iso(cnt, role='pointOfContact'):
+    """Creates a iso format contact (owslib style) from fgdc format"""
+
+    return {'name': cnt.cntper, 
+            'organization': cnt.cntorg, 
+            'position': cnt.cntpos, 
+            'phone': cnt.voice, 
+            'address': cnt.address, 
+            'city': cnt.city, 
+            'region': cnt.state,
+            'postcode': cnt.postal, 
+            'country': cnt.country, 
+            'email': cnt.email, 
+            'role': role
+    }
 
 def caps2iso(record, caps, context):
     """Creates ISO metadata from Capabilities XML"""
