@@ -21,14 +21,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - python-version: 3.6
-            toxenv: "py36-sqlite"
           - python-version: 3.7
             toxenv: "py37-sqlite"
           - python-version: 3.8
             toxenv: "py38-sqlite"
           - python-version: 3.9
             toxenv: "py39-sqlite"
+          - python-version: 3.10
+            toxenv: "py310-sqlite"
     env:
         TOXENV: ${{ matrix.toxenv }}
     steps:
