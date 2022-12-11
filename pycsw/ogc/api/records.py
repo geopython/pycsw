@@ -62,16 +62,16 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
     'http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core',
-    'http://www.opengis.net/spec/ogcapi-features-3/1.0/req/filter',
+    'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/filter',
     'http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete',  # noqa
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
-    'https://api.stacspec.org/v1.0.0-rc.1/core',
-    'https://api.stacspec.org/v1.0.0-rc.1/item-search',
-    'https://api.stacspec.org/v1.0.0-rc.1/item-search#filter',
-    'https://api.stacspec.org/v1.0.0-rc.1/item-search#sort'
+    'http://www.opengis.net/spec/cql2/1.0/conf/basic-cql2',
+    'https://api.stacspec.org/v1.0.0-rc.2/core',
+    'https://api.stacspec.org/v1.0.0-rc.2/item-search',
+    'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features#sort'
 ]
 
 
@@ -569,7 +569,7 @@ class API:
                         if end != '..':
                             query_args.append(f'time_end <= "{end}"')
                 elif k == 'q':
-                    if v not in [None,'']:
+                    if v not in [None, '']:
                         query_args.append(build_anytext('anytext', v))
                 else:
                     query_args.append(f'{k} = "{v}"')
@@ -995,7 +995,6 @@ def record2json(record, url, collection, stac_item=False):
     if record.language:
         record_dict['properties']['language'] = record.language
 
-    #externalids: [{scheme:xxx, value:yyy}]
     if record.source:
         record_dict['properties']['externalIds'] = [{'value': record.source}]
 
@@ -1010,28 +1009,30 @@ def record2json(record, url, collection, stac_item=False):
 
     if record.keywords:
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
-    
+
     if record.contacts:
         rcnt = []
         for cnt in json.loads(record.contacts):
             rcnt.append({
-                'name': ' - '.join(filter(None,[cnt.get('name',''), cnt.get('organization','')])),
-                'positionName': cnt.get('position',''),
+                'name': ' - '.join(filter(None, [cnt['name'], cnt['organization']])),
+                'positionName': cnt['position'],
                 'roles': [
-                    {'name':cnt.get('role','')}
+                    {'name': cnt['role']}
                 ],
                 'contactInfo': {
-                    'phone': {'work': cnt.get('phone','')},
-                    'email': {'work':cnt.get('email','')},
-                    'address': {'work': { 
-                            'deliveryPoint': cnt.get('address',''),
-                            'city': cnt.get('city',''),
-                            'administrativeArea': cnt.get('region',''),
-                            'postalCode': cnt.get('postcode',''),
-                            'country': cnt.get('country',''),
-                    }},
-                    'url': {'href': cnt.get('onlineresource',{}).get('url','')}
-                }   
+                    'phone': {'work': cnt['phone']},
+                    'email': {'work': cnt['email']},
+                    'address': {
+                        'work': {
+                            'deliveryPoint': cnt['address'],
+                            'city': cnt['city'],
+                            'administrativeArea': cnt['region'],
+                            'postalCode': cnt['postcode'],
+                            'country': cnt['country'],
+                        }
+                    },
+                    'url': cnt['onlineresource']
+                }
             })
         record_dict['properties']['providers'] = rcnt
 
@@ -1041,8 +1042,8 @@ def record2json(record, url, collection, stac_item=False):
         # OWSlib currently uses .keywords_object for keywords with url, see https://github.com/geopython/OWSLib/pull/765
         for theme in json.loads(record.themes):
             ogcapiThemes.append({
-                'scheme': theme['thesaurus'].get('url',theme['thesaurus'].get('title','')),
-                'concepts': [c for c in theme.get('keywords_object',[]) if c not in [None,""]]
+                'scheme': theme['thesaurus'].get('url', theme['thesaurus'].get('title', '')),
+                'concepts': [c for c in theme.get('keywords_object', []) if c not in [None, '']]
             })
         record_dict['properties']['themes'] = ogcapiThemes
 
