@@ -89,8 +89,8 @@ def test_conformance(api):
 
     assert len(content['conformsTo']) == 13
 
-    assert 'https://api.stacspec.org/v1.0.0-rc.1/core' in content['conformsTo']  # noqa
-    assert 'https://api.stacspec.org/v1.0.0-rc.1/item-search' in content['conformsTo']  # noqa
+    assert 'https://api.stacspec.org/v1.0.0-rc.2/core' in content['conformsTo']  # noqa
+    assert 'https://api.stacspec.org/v1.0.0-rc.2/item-search' in content['conformsTo']  # noqa
 
 
 def test_items(api):
@@ -117,11 +117,15 @@ def test_items(api):
                          stac_item=True)[2])
     assert len(content['features']) == 1
 
-    content = json.loads(api.items({}, None, {'sortby': 'title'}, stac_item=True)[2])
+    content = json.loads(api.items({}, None, {'sortby': 'title'},
+                         stac_item=True)[2])
+
     assert len(content['features']) == 10
     assert content['features'][5]['properties']['title'] == 'Lorem ipsum'
 
-    content = json.loads(api.items({}, None, {'sortby': '-title'}, stac_item=True)[2])
+    content = json.loads(api.items({}, None, {'sortby': '-title'},
+                         stac_item=True)[2])
+
     assert len(content['features']) == 10
     assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
 
