@@ -1657,7 +1657,7 @@ def _parse_json_record(context, repos, record):
         recobj = _parse_oarec_record(context, repos, record)
     elif 'stac_version' in record:
         LOGGER.debug('Parsing STAC Item')
-        recobj = _parse_stac_item(context, repos, record)
+        recobj = _parse_stac_resource(context, repos, record)
 
     atom_xml = atom.write_record(recobj, 'full', context)
 
@@ -1731,17 +1731,42 @@ def _parse_oarec_record(context, repos, record):
     return recobj
 
 
-def _parse_stac_item(context, repos, record):
-    """Parse STAC Item"""
+def _parse_stac_resource(context, repos, record):
+    """Parse STAC resource"""
 
-    conformance = 'https://github.com/radiantearth/stac-spec/tree/master/item-spec/item-spec.md'
+    # Detect what kind of STAC resource this is
+    stac_type = record.get('type','Feature')
+    if stac_type == 'Feature':
+        conformance = 'https://github.com/radiantearth/stac-spec/tree/master/item-spec/item-spec.md'
+        typename = 'stac:Item'
+        type = 'item'
+        title = record['properties'].get('title')
+        abstract = record['properties'].get('description')
+        bbox_wkt = util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry']))
+    elif stac_type == 'Collection':
+        conformance = 'https://github.com/radiantearth/stac-spec/tree/master/collection-spec/collection-spec.md'
+        typename = 'stac:Collection'
+        type = 'collection'
+        title = record.get('title')
+        abstract = record.get('description')
+        if 'extent' in record and 'spatial' in record['extent']:
+            bbox_wkt = util.bbox2wktpolygon(record['extent']['spatial']['bbox'][0])
+        else:
+            bbox_wkt = None
+    elif stac_type == 'Catalog':
+        conformance = 'https://github.com/radiantearth/stac-spec/tree/master/catalog-spec/catalog-spec.md'
+        typename = 'stac:Catalog'
+        type = 'catalog'
+        title = record.get('title')
+        abstract = record.get('description')
+        bbox_wkt = None
 
     recobj = repos.dataset()
     keywords = []
     links = []
 
     _set(context, recobj, 'pycsw:Identifier', record['id'])
-    _set(context, recobj, 'pycsw:Typename', 'stac:Item')
+    _set(context, recobj, 'pycsw:Typename', typename)
     _set(context, recobj, 'pycsw:Schema', conformance)
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
@@ -1749,13 +1774,10 @@ def _parse_stac_item(context, repos, record):
     _set(context, recobj, 'pycsw:Metadata', json.dumps(record))
     _set(context, recobj, 'pycsw:MetadataType', 'application/json')
     _set(context, recobj, 'pycsw:AnyText', ' '.join([str(t) for t in util.get_anytext_from_obj(record)]))
-    _set(context, recobj, 'pycsw:Type', 'item')
-    _set(context, recobj, 'pycsw:Title', record['properties'].get('title'))
-    _set(context, recobj, 'pycsw:Abstract', record['properties'].get('description'))
-
-    if 'keywords' in record['properties']:
-        keywords = record['properties']['keywords']
-        _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
+    _set(context, recobj, 'pycsw:Type', type)
+    _set(context, recobj, 'pycsw:Title', title)
+    _set(context, recobj, 'pycsw:Abstract', abstract)
+    _set(context, recobj, 'pycsw:BoundingBox', bbox_wkt)
 
     if 'links' in record:
         for link in record['links']:
@@ -1796,18 +1818,27 @@ def _parse_stac_item(context, repos, record):
     if links:
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
 
-    _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry'])))
+    if stac_type == 'Feature':
+        if 'keywords' in record['properties']:
+            keywords = record['properties']['keywords']
+            _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
 
-    if 'start_datetime' in record['properties']:
-        _set(context, recobj, 'pycsw:TempExtent_begin', record['properties']['start_datetime'])
-    if 'end_datetime' in record['properties']:
-        _set(context, recobj, 'pycsw:TempExtent_end', record['properties']['end_datetime'])
+        if 'start_datetime' in record['properties']:
+            _set(context, recobj, 'pycsw:TempExtent_begin', record['properties']['start_datetime'])
 
-    if 'eo:cloud_cover' in record['properties']:
-        _set(context, recobj, 'pycsw:CloudCover', record['properties']['eo:cloud_cover'])
+        if 'end_datetime' in record['properties']:
+            _set(context, recobj, 'pycsw:TempExtent_end', record['properties']['end_datetime'])
 
-    if 'collection' in record:
-        _set(context, recobj, 'pycsw:ParentIdentifier', record['collection'])
+        if 'eo:cloud_cover' in record['properties']:
+            _set(context, recobj, 'pycsw:CloudCover', record['properties']['eo:cloud_cover'])
+
+        if 'collection' in record:
+            _set(context, recobj, 'pycsw:ParentIdentifier', record['collection'])
+
+    if stac_type == 'Collection':
+        if 'keywords' in record:
+            keywords = record['keywords']
+            _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
 
     return recobj
 
