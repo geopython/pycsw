@@ -1656,7 +1656,7 @@ def _parse_json_record(context, repos, record):
         LOGGER.debug('Parsing OGC API - Records record model')
         recobj = _parse_oarec_record(context, repos, record)
     elif 'stac_version' in record:
-        LOGGER.debug('Parsing STAC Item')
+        LOGGER.debug('Parsing STAC resource')
         recobj = _parse_stac_resource(context, repos, record)
 
     atom_xml = atom.write_record(recobj, 'full', context)
@@ -1734,9 +1734,9 @@ def _parse_oarec_record(context, repos, record):
 def _parse_stac_resource(context, repos, record):
     """Parse STAC resource"""
 
-    # Detect what kind of STAC resource this is
     stac_type = record.get('type','Feature')
     if stac_type == 'Feature':
+        LOGGER.debug('Parsing STAC Item')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/item-spec/item-spec.md'
         typename = 'stac:Item'
         type = 'item'
@@ -1744,6 +1744,7 @@ def _parse_stac_resource(context, repos, record):
         abstract = record['properties'].get('description')
         bbox_wkt = util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry']))
     elif stac_type == 'Collection':
+        LOGGER.debug('Parsing STAC Collection')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/collection-spec/collection-spec.md'
         typename = 'stac:Collection'
         type = 'collection'
@@ -1754,6 +1755,7 @@ def _parse_stac_resource(context, repos, record):
         else:
             bbox_wkt = None
     elif stac_type == 'Catalog':
+        LOGGER.debug('Parsing STAC Catalog')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/catalog-spec/catalog-spec.md'
         typename = 'stac:Catalog'
         type = 'catalog'
