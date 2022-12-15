@@ -1751,7 +1751,8 @@ def _parse_stac_resource(context, repos, record):
         title = record.get('title')
         abstract = record.get('description')
         if 'extent' in record and 'spatial' in record['extent']:
-            bbox_wkt = util.bbox2wktpolygon(record['extent']['spatial']['bbox'][0])
+            bbox_csv = ','.join(str(t) for t in record['extent']['spatial']['bbox'][0])
+            bbox_wkt = util.bbox2wktpolygon(bbox_csv)
         else:
             bbox_wkt = None
     elif stac_type == 'Catalog':
