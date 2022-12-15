@@ -39,77 +39,78 @@
           </tr>
         </thead>
         <tbody>
-          {% for key, value in data['properties'].items() %}
-          <tr>
-            <td>{{ key }}</td>
-            {% if key == 'keywords' %}
-              <td>
-                <ul>
-                {% for keyword in value %}
-                  <li>{{ keyword }}</li>
-                {% endfor %}
-                </ul>
-              </td>
-
-            {% elif key == 'themes' %} 
-              <td> 
-              {% for theme in value %}
-             
-                <b>{{ theme['scheme'] }}</b>
-                <ul>
-                {% for concept in theme['concepts'] %}
-                  <li>
-                    {% if concept['url'] %}
-                      <a href="{{ concept['url'] }}">{{ concept['name'] or concept['url'] }}</a>
-                    {% else %}
-                      {{ concept['name'] }}
-                    {% endif %}
-                  </li>
-                {% endfor %}
-                </ul>
-              {% endfor %}
-              </td>
-            {% elif key == 'externalIds' %}
-              <td>
-                <ul>
-                  {% for id in value %}
-                  <li>{{ id['scheme'] | urlize }} {{ id['value'] | urlize }}</li>
+          {% if 'properties' in data %}
+            {% for key, value in data['properties'].items() %}
+            <tr>
+              <td>{{ key }}</td>
+              {% if key == 'keywords' %}
+                <td>
+                  <ul>
+                  {% for keyword in value %}
+                    <li>{{ keyword }}</li>
                   {% endfor %}
-                </ul>
-              </td>
-            {% elif key == 'providers' %}
-              <td>
-                {% for cnt in data['properties']['providers'] %}
-                  {% if 'name' in cnt and cnt['name'] not in [None,''] %}
-                    {{ cnt['name'] }} <br/>
-                  {% endif %}
-                  {% if 'roles' in cnt and cnt['roles'] is not string %}
-                  Role: {{ cnt['roles'] | map(attribute='name') | join(',') }} <br/>
-                  {% endif %}
-                  {% if 'positionName' in cnt and cnt['positionName'] not in [None,''] %}
-                  Position: {{ cnt['positionName'] }})<br/>
-                  {% endif %}
-                  {% if 'contactInfo' in cnt and cnt['contactInfo'] is not string %}
-                    {% for k,e in cnt['contactInfo'].get('phone',{}).items() %}
-                      {% if e %}{{ k }}: {{ e }}<br/>{% endif %}
+                  </ul>
+                </td>
+
+              {% elif key == 'themes' %}
+                <td>
+                {% for theme in value %}
+                  <b>{{ theme['scheme'] }}</b>
+                  <ul>
+                  {% for concept in theme['concepts'] %}
+                    <li>
+                      {% if concept['url'] %}
+                        <a href="{{ concept['url'] }}">{{ concept['name'] or concept['url'] }}</a>
+                      {% else %}
+                        {{ concept['name'] }}
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                  </ul>
+                {% endfor %}
+                </td>
+              {% elif key == 'externalIds' %}
+                <td>
+                  <ul>
+                    {% for id in value %}
+                    <li>{{ id['scheme'] | urlize }} {{ id['value'] | urlize }}</li>
                     {% endfor %}
-                    {% for k,e in cnt['contactInfo'].get('email',{}).items() %}
-                      {% if e not in [None,''] %}{{ k }}: {{ e | urlize }}<br/>{% endif %}
-                    {% endfor %}
-                    {% for k,e in cnt['contactInfo'].get('address',{}).items() %}
-                      {{ k }}: {% for a,b in e.items() %}{% if b %}{{ b }}, {% endif %}{% endfor %}<br/>
-                    {% endfor %}
-                    {% if cnt['contactInfo']['url'] %}
-                      {{ cnt['contactInfo']['url'].get('href','') | urlize }}
-                    {% endif %} 
-                  {% endif %} 
-                {% endfor %} 
-              </td>
-            {% else %}
-              <td>{{ value }}</td>
-            {% endif %}
-          </tr>
-          {% endfor %}
+                  </ul>
+                </td>
+              {% elif key == 'providers' %}
+                <td>
+                  {% for cnt in data['properties']['providers'] %}
+                    {% if 'name' in cnt and cnt['name'] not in [None,''] %}
+                      {{ cnt['name'] }} <br/>
+                    {% endif %}
+                    {% if 'roles' in cnt and cnt['roles'] is not string %}
+                    Role: {{ cnt['roles'] | map(attribute='name') | join(',') }} <br/>
+                    {% endif %}
+                    {% if 'positionName' in cnt and cnt['positionName'] not in [None,''] %}
+                    Position: {{ cnt['positionName'] }})<br/>
+                    {% endif %}
+                    {% if 'contactInfo' in cnt and cnt['contactInfo'] is not string %}
+                      {% for k,e in cnt['contactInfo'].get('phone',{}).items() %}
+                        {% if e %}{{ k }}: {{ e }}<br/>{% endif %}
+                      {% endfor %}
+                      {% for k,e in cnt['contactInfo'].get('email',{}).items() %}
+                        {% if e not in [None,''] %}{{ k }}: {{ e | urlize }}<br/>{% endif %}
+                      {% endfor %}
+                      {% for k,e in cnt['contactInfo'].get('address',{}).items() %}
+                        {{ k }}: {% for a,b in e.items() %}{% if b %}{{ b }}, {% endif %}{% endfor %}<br/>
+                      {% endfor %}
+                      {% if cnt['contactInfo']['url'] %}
+                        {{ cnt['contactInfo']['url'].get('href','') | urlize }}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </td>
+              {% else %}
+                <td>{{ value }}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          {% endif%}
           {% if data['time'] %}
           <tr>
             <td>Temporal</td>
