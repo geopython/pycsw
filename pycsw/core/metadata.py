@@ -1734,12 +1734,12 @@ def _parse_oarec_record(context, repos, record):
 def _parse_stac_resource(context, repos, record):
     """Parse STAC resource"""
 
-    stac_type = record.get('type','Feature')
+    stac_type = record.get('type', 'Feature')
     if stac_type == 'Feature':
         LOGGER.debug('Parsing STAC Item')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/item-spec/item-spec.md'
         typename = 'stac:Item'
-        type = 'item'
+        stype = 'item'
         title = record['properties'].get('title')
         abstract = record['properties'].get('description')
         bbox_wkt = util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry']))
@@ -1747,7 +1747,7 @@ def _parse_stac_resource(context, repos, record):
         LOGGER.debug('Parsing STAC Collection')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/collection-spec/collection-spec.md'
         typename = 'stac:Collection'
-        type = 'collection'
+        stype = 'collection'
         title = record.get('title')
         abstract = record.get('description')
         if 'extent' in record and 'spatial' in record['extent']:
@@ -1758,7 +1758,7 @@ def _parse_stac_resource(context, repos, record):
         LOGGER.debug('Parsing STAC Catalog')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/catalog-spec/catalog-spec.md'
         typename = 'stac:Catalog'
-        type = 'catalog'
+        stype = 'catalog'
         title = record.get('title')
         abstract = record.get('description')
         bbox_wkt = None
@@ -1776,7 +1776,7 @@ def _parse_stac_resource(context, repos, record):
     _set(context, recobj, 'pycsw:Metadata', json.dumps(record))
     _set(context, recobj, 'pycsw:MetadataType', 'application/json')
     _set(context, recobj, 'pycsw:AnyText', ' '.join([str(t) for t in util.get_anytext_from_obj(record)]))
-    _set(context, recobj, 'pycsw:Type', type)
+    _set(context, recobj, 'pycsw:Type', stype)
     _set(context, recobj, 'pycsw:Title', title)
     _set(context, recobj, 'pycsw:Abstract', abstract)
     _set(context, recobj, 'pycsw:BoundingBox', bbox_wkt)
