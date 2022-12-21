@@ -357,6 +357,12 @@ def _parse_wms(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
+
+    contacts = [vars(md.provider.contact)]
+    contacts[0]['role'] = 'pointOfContact'
+    _set(context, serviceobj, 'pycsw:Contacts', 
+         json.dumps(contacts,default=lambda o: o.__dict__))
+
     _set(context, serviceobj, 'pycsw:AccessConstraints', md.identification.accessconstraints)
     _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
     _set(context, serviceobj, 'pycsw:Source', record)
@@ -430,6 +436,9 @@ def _parse_wms(context, repos, record, identifier):
                 _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
                 _set(context, recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:%s' % \
                 bbox[-1].split(':')[1])
+
+        _set(context, recobj, 'pycsw:Contacts', 
+            json.dumps(contacts,default=lambda o: o.__dict__))
 
         times = md.contents[layer].timepositions
         if times is not None:  # get temporal extent
@@ -506,6 +515,12 @@ def _parse_wmts(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
+
+    contacts = [vars(md.provider.contact)]
+    contacts[0]['role'] = 'pointOfContact'
+    _set(context, serviceobj, 'pycsw:Contacts', 
+         json.dumps(contacts,default=lambda o: o.__dict__))
+
     _set(context, serviceobj, 'pycsw:AccessConstraints', md.identification.accessconstraints)
     _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
     _set(context, serviceobj, 'pycsw:Source', record)
@@ -591,6 +606,8 @@ def _parse_wmts(context, repos, record, identifier):
                 _set(context, recobj, 'pycsw:CRS', 'urn:ogc:def:crs:EPSG:6.11:%s' % \
                 bbox[-1].split(':')[1])
 
+        _set(context, recobj, 'pycsw:Contacts', 
+            json.dumps(contacts,default=lambda o: o.__dict__))
 
         params = {
             'service': 'WMTS',
@@ -657,6 +674,12 @@ def _parse_wfs(context, repos, record, identifier, version):
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
+
+    contacts = [vars(md.provider.contact)]
+    contacts[0]['role'] = 'pointOfContact'
+    _set(context, serviceobj, 'pycsw:Contacts', 
+         json.dumps(contacts,default=lambda o: o.__dict__))
+
     _set(context, serviceobj, 'pycsw:AccessConstraints', md.identification.accessconstraints)
     _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
     _set(context, serviceobj, 'pycsw:Source', record)
@@ -738,6 +761,8 @@ def _parse_wfs(context, repos, record, identifier, version):
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
         _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
+        _set(context, recobj, 'pycsw:Contacts', 
+             json.dumps(contacts,default=lambda o: o.__dict__))
 
         recobjs.append(recobj)
 
@@ -784,6 +809,12 @@ def _parse_wcs(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
+
+    contacts = [vars(md.provider.contact)]
+    contacts[0]['role'] = 'pointOfContact'
+    _set(context, serviceobj, 'pycsw:Contacts', 
+         json.dumps(contacts,default=lambda o: o.__dict__))
+
     _set(context, serviceobj, 'pycsw:AccessConstraints', md.identification.accessConstraints)
     _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
     _set(context, serviceobj, 'pycsw:Source', record)
@@ -851,6 +882,8 @@ def _parse_wcs(context, repos, record, identifier):
         }]
 
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
+        _set(context, recobj, 'pycsw:Contacts', 
+             json.dumps(contacts,default=lambda o: o.__dict__))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
 
         recobjs.append(recobj)
@@ -896,6 +929,12 @@ def _parse_wps(context, repos, record, identifier):
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
+
+    contacts = [vars(md.provider.contact)]
+    contacts[0]['role'] = 'pointOfContact'
+    _set(context, serviceobj, 'pycsw:Contacts', 
+         json.dumps(contacts,default=lambda o: o.__dict__))
+
     _set(context, serviceobj, 'pycsw:AccessConstraints', md.identification.accessconstraints)
     _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
     _set(context, serviceobj, 'pycsw:Source', record)
@@ -964,6 +1003,8 @@ def _parse_wps(context, repos, record, identifier):
         })
 
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
+        _set(context, recobj, 'pycsw:Contacts', 
+             json.dumps(contacts,default=lambda o: o.__dict__))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
         _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
 
@@ -1007,6 +1048,12 @@ def _parse_sos(context, repos, record, identifier, version):
     _set(context, serviceobj, 'pycsw:Publisher', md.provider.name)
     _set(context, serviceobj, 'pycsw:Contributor', md.provider.contact.name)
     _set(context, serviceobj, 'pycsw:OrganizationName', md.provider.contact.name)
+
+    contacts = [vars(md.provider.contact)]
+    contacts[0]['role'] = 'pointOfContact'
+    _set(context, serviceobj, 'pycsw:Contacts', 
+         json.dumps(contacts,default=lambda o: o.__dict__))
+
     _set(context, serviceobj, 'pycsw:AccessConstraints', md.identification.accessconstraints)
     _set(context, serviceobj, 'pycsw:OtherConstraints', md.identification.fees)
     _set(context, serviceobj, 'pycsw:Source', record)
@@ -1077,7 +1124,8 @@ def _parse_sos(context, repos, record, identifier, version):
             _set(context, recobj, 'pycsw:CRS', md.contents[offering].bbox_srs.id)
             _set(context, recobj, 'pycsw:DistanceUOM', 'degrees')
             bboxs.append(wkt_polygon)
-
+        _set(context, recobj, 'pycsw:Contacts', 
+             json.dumps(contacts,default=lambda o: o.__dict__))
         _set(context, recobj, 'pycsw:XML', caps2iso(recobj, md, context))
         _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
         recobjs.append(recobj)
