@@ -1018,23 +1018,23 @@ def record2json(record, url, collection, stac_item=False):
         for cnt in json.loads(record.contacts):
             rcnt.append({
                 'name': ' - '.join(filter(None, [cnt['name'], cnt['organization']])),
-                'positionName': cnt.get('position',''),
+                'positionName': cnt.get('position', ''),
                 'roles': [
-                    {'name': cnt.get('role','')}
+                    {'name': cnt.get('role', '')}
                 ],
                 'contactInfo': {
-                    'phone': {'work': cnt.get('phone','')},
-                    'email': {'work': cnt.get('email','')},
+                    'phone': {'work': cnt.get('phone', '')},
+                    'email': {'work': cnt.get('email', '')},
                     'address': {
                         'work': {
-                            'deliveryPoint': cnt.get('address',''),
-                            'city': cnt.get('city',''),
-                            'administrativeArea': cnt.get('region',''),
-                            'postalCode': cnt.get('postcode',''),
-                            'country': cnt.get('country',''),
+                            'deliveryPoint': cnt.get('address', ''),
+                            'city': cnt.get('city', ''),
+                            'administrativeArea': cnt.get('region', ''),
+                            'postalCode': cnt.get('postcode', ''),
+                            'country': cnt.get('country', ''),
                         }
                     },
-                    'url': cnt.get('onlineresource','')
+                    'url': cnt.get('onlineresource', '')
                 }
             })
         record_dict['properties']['providers'] = rcnt
