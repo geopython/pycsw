@@ -55,6 +55,7 @@ class MCRaster(base_profile.base_profile):
                         'mc:includedInBests': Queryable(context.md_core_model['mappings']['pycsw:includedInBests'], 'mc:includedInBests'),
                         'mc:discretes': Queryable(context.md_core_model['mappings']['pycsw:discretes'], 'mc:discretes'),
                         'mc:productBBox': Queryable(context.md_core_model['mappings']['pycsw:productBBox'], 'mc:productBBox'),
+                        'mc:transparency': Queryable(context.md_core_model['mappings']['pycsw:transparency'], 'mc:transparency'),
                     }
                 })
         }
