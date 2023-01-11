@@ -18,6 +18,14 @@ valid_origin[payload] {
 	payload.ao == http_request.headers.origin
 }
 
+valid_referrer[payload] {
+	payload.ao[_] = http_request.headers.referrer
+}
+
+valid_referrer[payload] {
+	payload.ao == http_request.headers.referrer
+}
+
 valid_origin[payload] {
 	not payload.ao
 }
@@ -25,6 +33,11 @@ valid_origin[payload] {
 # allow authenticated acess
 allow {
 	valid_origin[payload]
+	user_has_resource_access[payload]
+}
+
+allow {
+	valid_referrer[payload]
 	user_has_resource_access[payload]
 }
 
