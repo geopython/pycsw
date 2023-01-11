@@ -17,6 +17,7 @@ pycsw |release| Documentation
    docker
    configuration
    administration
+   metadata-model-reference
    oarec-support
    csw-support
    stac
