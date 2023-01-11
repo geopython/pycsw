@@ -46,6 +46,9 @@ able to transform to other formats as part of transformation during OARec/CSW re
 .. note::
   See :ref:`profiles` for information on enabling profiles
 
+.. note::
+  See :ref:`metadata-model-reference` for detailed information on pycsw's internal metadata model
+
 Setting up the Database
 -----------------------
 
@@ -181,6 +184,8 @@ The following repository semantics exist if the attributes are specified:
 
 - ``pycsw:Keywords``: comma delimited list of keywords
 - ``pycsw:Links``: Text field of JSON list of objects with properties ``name``, ``description``, ``protocol``, ``url``
+- ``pycsw:Themes``: Text field of JSON list of objects with properties ``concepts``, ``scheme``
+- ``pycsw:Contacts``: Text field of JSON list of objects with properties as per the OGC API - Records party definition
 
 .. code-block:: javascript
 
@@ -220,6 +225,9 @@ Values of mappings can be derived from the following mechanisms:
 
 Further information is provided in ``pycsw/config.py:MD_CORE_MODEL``.
 
+
+.. note::
+  See :ref:`metadata-model-reference` for detailed information on pycsw's internal metadata model
 
 Using a SQL View as the repository table
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
