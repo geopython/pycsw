@@ -12,6 +12,7 @@ Model Crosswalk
 .. list-table:: pycsw model
    :widths: 20 20 20 20 20 20 20 20
    :header-rows: 1
+
    * - Database column
      - Mapping name
      - Queryable name
@@ -43,7 +44,7 @@ Model Crosswalk
      - 
      - 
      - 
-     - Schema namespace, i.e. http://www.opengis.net/cat/csw/2.0.2, http://www.isotc211.org/2005/gmd
+     - Schema namespace, i.e. http://www.opengis.net/cat/csw/2.0.2, http://www.isotc211.org/2005/gmd, http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core
    * - mdsource
      - pycsw:MdSource
      - 
@@ -57,7 +58,7 @@ Model Crosswalk
      - 
      - 
      - 
-     - 
+     - record.properties.recordUpdated
      - 
      - Date of insertion
    * - xml
@@ -83,7 +84,7 @@ Model Crosswalk
      - 
      - 
      - 
-     - Raw metadata payload type, 'application/xml' as default
+     - Raw metadata payload type, 'application/xml' as default, 'application/json' for OGC API Records and STAC.
    * - anytext
      - pycsw:AnyText
      - apiso:AnyText
@@ -97,24 +98,24 @@ Model Crosswalk
      - apiso:Language
      - gmd:language/gmd:LanguageCode, gmd:language/gco:CharacterString
      - dc:language
-     - 
-     - 
+     - record.properties.language
+     - item.properties.language
      - 
    * - title
      - pycsw:Title
      - apiso:Title
      - gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString
      - dc:title
-     - 
-     - 
+     - record.properties.title
+     - item.properties.title
      - 
    * - abstract
      - pycsw:Abstract
      - apiso:Abstract
      - gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString
      - dct:abstract
-     - 
-     - 
+     - record.properties.description
+     - item.properties.description
      - 
    * - edition
      - pycsw:Edition
@@ -129,7 +130,7 @@ Model Crosswalk
      - apiso:Subject
      - gmd:identificationInfo/gmd:MD_Identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString, gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode
      - dc:subject
-     - 
+     - record.properties.keywords
      - 
      - 
    * - keywordstype
@@ -145,7 +146,7 @@ Model Crosswalk
      - 
      - 
      - 
-     - 
+     - record.properties.themes
      - 
      - 
    * - format
@@ -153,7 +154,7 @@ Model Crosswalk
      - apiso:Format
      - gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString
      - dc:format
-     - 
+     - record.properties.formats
      - 
      - 
    * - source
@@ -161,7 +162,7 @@ Model Crosswalk
      - 
      - 
      - dc:source
-     - 
+     - record.properties.externalIds
      - 
      - 
    * - date
@@ -169,23 +170,23 @@ Model Crosswalk
      - 
      - 
      - dc:date
-     - 
-     - 
+     - record.time
+     - item.properties.datetime
      - 
    * - date_modified
      - pycsw:Modified
      - apiso:Modified
      - gmd:dateStamp/gco:Date
      - dct:modified
-     - 
-     - 
+     - record.properties.updated
+     - item.properties.updated
      - 
    * - type
      - pycsw:Type
      - apiso:Type
      - gmd:hierarchyLevel/gmd:MD_ScopeCode
      - dc:type
-     - 
+     - record.properties.type
      - 
      - 
    * - wkt_geometry
@@ -193,8 +194,8 @@ Model Crosswalk
      - apiso:BoundingBox
      - apiso:BoundingBox
      - ows:BoundingBox
-     - 
-     - 
+     - record.geometry
+     - item.geometry
      - 
    * - crs
      - pycsw:CRS
@@ -225,8 +226,8 @@ Model Crosswalk
      - apiso:CreationDate
      - gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="creation"]/gmd:date/gco:Date
      - 
-     - 
-     - 
+     - record.properties.created
+     - item.properties.created
      - 
    * - date_publication
      - pycsw:PublicationDate
@@ -257,8 +258,8 @@ Model Crosswalk
      - apiso:ParentIdentifier
      - gmd:parentIdentifier/gco:CharacterString
      - 
-     - 
-     - 
+     - record.collection
+     - item.collection
      - 
    * - topicategory
      - pycsw:TopicCategory
@@ -313,16 +314,16 @@ Model Crosswalk
      - apiso:TempExtent_begin
      - gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition
      - 
-     - 
-     - 
+     - record.properties.extent.temporal.interval[0]
+     - item.properties.start_datetime
      - 
    * - time_end
      - pycsw:TempExtent_end
      - apiso:TempExtent_end
      - gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition
      - 
-     - 
-     - 
+     - record.properties.extent.temporal.interval[1]
+     - item.properties.end_datetime
      - 
    * - servicetype
      - pycsw:ServiceType
@@ -401,7 +402,7 @@ Model Crosswalk
      - apiso:OtherConstraints
      - gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString
      - 
-     - 
+     - record.properties.license
      - 
      - 
    * - classification
@@ -537,14 +538,14 @@ Model Crosswalk
      - 
      - 
      - 
-     - 
-     - 
+     - record.links
+     - item.links, item.assets
      - List of dicts with properties: name, description, protocol, url
    * - contacts
      - pycsw:Contacts
      - 
      - 
      - 
-     - 
+     - record.properties.providers
      - 
      - List of dicts with properties: name, organization, address, postcode, city, region, country, email, phone, fax, onlineresource, position, role
