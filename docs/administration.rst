@@ -164,6 +164,8 @@ Note you can also reference mappings as a Python object as a dotted path:
 
 See the :ref:`geonode`, :ref:`hhypermap`, and :ref:`odc` for further examples.
 
+.. _existing-repository-requirements:
+
 Existing Repository Requirements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -173,7 +175,9 @@ pycsw requires certain repository attributes and semantics to exist in any repos
 - ``pycsw:Typename``: typename for the metadata; typically the value of the root element tag (e.g. ``csw:Record``, ``gmd:MD_Metadata``)
 - ``pycsw:Schema``: schema for the metadata; typically the target namespace (e.g. ``http://www.opengis.net/cat/csw/2.0.2``, ``http://www.isotc211.org/2005/gmd``)
 - ``pycsw:InsertDate``: date of insertion
-- ``pycsw:XML``: full XML representation
+- ``pycsw:XML``: full XML representation (deprecated; will be removed in a future release)
+- ``pycsw:Metadata``: full metadata representation
+- ``pycsw:MetadataType``: media type of metadata representation
 - ``pycsw:AnyText``: bag of XML element text values, used for full text search.  Realized with the following design pattern:
 
   - capture all XML element and attribute values
@@ -183,19 +187,85 @@ pycsw requires certain repository attributes and semantics to exist in any repos
 The following repository semantics exist if the attributes are specified:
 
 - ``pycsw:Keywords``: comma delimited list of keywords
-- ``pycsw:Links``: Text field of JSON list of objects with properties ``name``, ``description``, ``protocol``, ``url``
 - ``pycsw:Themes``: Text field of JSON list of objects with properties ``concepts``, ``scheme``
+
+.. code-block:: json
+
+   [
+     {
+       "concepts": [
+         {
+           "id": "atmosphericComposition"
+         },
+         {
+           "id": "pollution"
+         },
+         {
+           "id": "observationPlatform"
+         },
+         {
+           "id": "rocketSounding"
+         }
+       ],
+       "scheme": "https://wis.wmo.int/2012/codelists/WMOCodeLists.xml#WMO_CategoryCode"
+     }
+   ]
+
 - ``pycsw:Contacts``: Text field of JSON list of objects with properties as per the OGC API - Records party definition
 
-.. code-block:: javascript
+.. code-block:: json
 
-  [
-    {
-        'name': 'foo',
-        'description': 'bar',
-        'protocol': 'OGC:WMS',
-        'url': 'https://example.org/wms'
-    }
+   [
+     {
+       "name": "contact",
+       "individual": "Lastname, Firstname",
+       "positionName": "Position Title",
+       "contactInfo": {
+         "phone": {
+           "office": "+xx-xxx-xxx-xxxx"
+         },
+         "email": {
+           "office": "you@example.org"
+         },
+         "address": {
+           "office": {
+             "deliveryPoint": "Mailing Address",
+             "city": "City",
+             "administrativeArea": "Administrative Area",
+             "postalCode": "Zip or Postal Code",
+             "country": "COuntry"
+           },
+           "onlineResource": {
+             "href": "Contact URL"
+           }
+         },
+         "hoursOfService": "Hours of Service",
+         "contactInstructions": "During hours of service.  Off on weekends",
+         "url": {
+           "rel": "canonical",
+           "type": "text/html",
+           "href": "https://example.org"
+         }
+       },
+       "roles": [
+         {
+           "name": "pointOfContact"
+         }
+       ]
+     }
+   ]
+
+- ``pycsw:Links``: Text field of JSON list of objects with properties ``name``, ``description``, ``protocol``, ``url``
+
+.. code-block:: json
+
+   [
+     {
+       "name": "foo",
+       "description": "bar",
+       "protocol": "OGC:WMS",
+       "url": "https://example.org/wms"
+     }
   ]
 
 .. note::
@@ -203,15 +273,15 @@ The following repository semantics exist if the attributes are specified:
 
 - ``pycsw:Bands``: Text field of JSON list of dicts with properties: ``name``, ``units``, ``min``, ``max``
 
-.. code-block:: javascript
+.. code-block:: json
 
-  [
-    {
-        'name': 'B1',
-        'units': 'nm',
-        'min': 0.1,
-        'max': 0.333
-    }
+   [
+     {
+       "name": "B1",
+       "units": "nm",
+       "min": 0.1,
+       "max": 0.333
+     }
   ]
 
 .. note::
