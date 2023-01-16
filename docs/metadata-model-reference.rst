@@ -15,6 +15,7 @@ Model Crosswalk
 
 .. list-table:: pycsw model
    :widths: 20 20 20 20 20 20 20 20
+   :class: metadata-model-table
    :header-rows: 1
 
    * - Database column
