@@ -1536,7 +1536,7 @@ class Csw2(object):
                     for link in util.jsonify_links(rlinks):
                         ref = etree.SubElement(record, util.nspath_eval('dct:references',
                             self.parent.context.namespaces))
-                        if 'protocol' in link:
+                        if link.get('protocol'):
                             ref.attrib['scheme'] = link['protocol']
 
                         ref.text = link['url']
