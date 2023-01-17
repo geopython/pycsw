@@ -333,7 +333,7 @@ Model Crosswalk
    * - ``servicetype``
      - ``pycsw:ServiceType``
      - ``apiso:ServiceType``
-     - gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName``
+     - ``gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName``
      - 
      - 
      - 
