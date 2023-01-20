@@ -21,6 +21,16 @@ pycsw 2.x to 3.0 Migration
   - the ``-c`` flag has been replaced by subcommands (i.e. ``pycsw-admin.py -c load_records`` -> ``pycsw-admin.py load-records``)
   - subcommands have been slugified (i.e. ``load_records`` -> ``load-records``)
   - consult ``--help`` to use the updated CLI syntax
+- use the following migration script to add new model fields
+
+.. code-block:: sql
+
+  alter table records add column metadata TEXT;
+  alter table records add column metadata_type TEXT default 'application/xml';
+  alter table records add column edition TEXT;
+  alter table records add column contacts TEXT;
+  alter table records add column themes TEXT;
+  vacuum;
 
 pycsw 1.x to 2.0 Migration
 --------------------------
