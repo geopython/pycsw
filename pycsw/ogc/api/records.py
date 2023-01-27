@@ -1017,7 +1017,8 @@ def record2json(record, url, collection, stac_item=False):
         rcnt = []
         for cnt in json.loads(record.contacts):
             rcnt.append({
-                'name': ' - '.join(filter(None, [cnt['name'], cnt['organization']])),
+                'name': cnt['name'],
+                'organization': cnt.get('organization', ''),
                 'positionName': cnt.get('position', ''),
                 'roles': [
                     {'name': cnt.get('role', '')}
