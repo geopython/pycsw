@@ -116,7 +116,8 @@ def launch_pycsw(pycsw_config, workers=2, reload=False, flask_app=True):
             python_app,
         ]
     )
-    logger.debug("Launching pycsw with {} ...".format(" ".join(execution_args)))
+    logger.debug("Launching pycsw with {} ...".format(
+        " ".join(execution_args)))
     os.execlp("gunicorn", *execution_args)
 
 
@@ -128,13 +129,15 @@ def handle_sqlite_db(database_url, table_name, pycsw_home):
         except OSError as exc:
             if exc.args[0] == 17:  # directory already exists
                 pass
-        admin.setup_db(database=database_url, table=table_name, home=pycsw_home)
+        admin.setup_db(database=database_url,
+                       table=table_name, home=pycsw_home)
 
 
 def handle_postgresql_db(database_url, table_name, pycsw_home):
     _wait_for_postgresql_db(database_url)
     try:
-        admin.setup_db(database=database_url, table=table_name, home=pycsw_home)
+        admin.setup_db(database=database_url,
+                       table=table_name, home=pycsw_home)
     except ProgrammingError:
         pass  # database tables are already created
 
@@ -201,4 +204,5 @@ if __name__ == "__main__":
         flask_app = args.flask_app
     logging.basicConfig(level=getattr(logging, level))
     print(flask_app)
-    launch_pycsw(config, workers=workers, flask_app=flask_app, reload=args.reload)
+    launch_pycsw(config, workers=workers,
+                 flask_app=flask_app, reload=args.reload)
