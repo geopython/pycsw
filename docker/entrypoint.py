@@ -55,7 +55,7 @@ from pycsw.core.util import EnvInterpolation
 logger = logging.getLogger(__name__)
 
 
-def launch_pycsw(pycsw_config, workers=2, flask_app=True, reload=False):
+def launch_pycsw(pycsw_config, workers=2, reload=False, flask_app=True):
     """Launch pycsw.
 
     Main function of this entrypoint script. It will read pycsw's config file
@@ -74,7 +74,7 @@ def launch_pycsw(pycsw_config, workers=2, flask_app=True, reload=False):
 
     for more information on how to control gunicorn by sending UNIX signals.
     """
-    if flask_app == "True":
+    if flask_app:
         db_url = pycsw_config.get("repository", "database")
         db = db_url.partition(":")[0].partition("+")[0]
         db_handler = {
@@ -86,7 +86,7 @@ def launch_pycsw(pycsw_config, workers=2, flask_app=True, reload=False):
         db_handler(
             db_url,
             pycsw_config.get("repository", "table"),
-            pycsw_config.get("server", "home")
+            pycsw_config.get("server", "home"),
         )
         sys.stdout.flush()
         # we're using --reload-engine=poll because there is a bug with gunicorn
@@ -94,9 +94,9 @@ def launch_pycsw(pycsw_config, workers=2, flask_app=True, reload=False):
         #
         # https://github.com/benoitc/gunicorn/issues/1477
         #
-        python_app="pycsw.wsgi_flask:APP"
+        python_app = "pycsw.wsgi_flask:APP"
     else:
-        python_app="pycsw.wsgi"
+        python_app = "pycsw.wsgi"
 
     try:
         timeout = pycsw_config.get("server", "timeout")
@@ -104,20 +104,20 @@ def launch_pycsw(pycsw_config, workers=2, flask_app=True, reload=False):
         timeout = 30
 
     args = ["--reload", "--reload-engine=poll"] if reload else []
-    execution_args = ["gunicorn"] + args + [
-        "--bind=0.0.0.0:8000",
-        "--access-logfile=-",
-        "--error-logfile=-",
-        "--workers={}".format(workers),
-        "--timeout={}".format(timeout),
-        python_app,
-
-    ]
-    logger.debug("Launching pycsw with {} ...".format(" ".join(execution_args)))
-    os.execlp(
-        "gunicorn",
-        *execution_args
+    execution_args = (
+        ["gunicorn"]
+        + args
+        + [
+            "--bind=0.0.0.0:8000",
+            "--access-logfile=-",
+            "--error-logfile=-",
+            "--workers={}".format(workers),
+            "--timeout={}".format(timeout),
+            python_app,
+        ]
     )
+    logger.debug("Launching pycsw with {} ...".format(" ".join(execution_args)))
+    os.execlp("gunicorn", *execution_args)
 
 
 def handle_sqlite_db(database_url, table_name, pycsw_home):
@@ -128,15 +128,13 @@ def handle_sqlite_db(database_url, table_name, pycsw_home):
         except OSError as exc:
             if exc.args[0] == 17:  # directory already exists
                 pass
-        admin.setup_db(database=database_url, table=table_name,
-                       home=pycsw_home)
+        admin.setup_db(database=database_url, table=table_name, home=pycsw_home)
 
 
 def handle_postgresql_db(database_url, table_name, pycsw_home):
     _wait_for_postgresql_db(database_url)
     try:
-        admin.setup_db(database=database_url, table=table_name,
-                       home=pycsw_home)
+        admin.setup_db(database=database_url, table=table_name, home=pycsw_home)
     except ProgrammingError:
         pass  # database tables are already created
 
@@ -166,22 +164,21 @@ if __name__ == "__main__":
     parser.add_argument(
         "--workers",
         default=2,
-        help="Number of workers to use by the gunicorn server. Defaults to 2."
+        help="Number of workers to use by the gunicorn server. Defaults to 2.",
     )
     parser.add_argument(
         "--flask-app",
-        default="True",
-        choices=("True", "False"),
-        help="Start the WSGI Flask app, default: True"
-             "if False, run only the CSW service endpoint"
+        default=True,
+        action="store_true",
+        help="Start the WSGI Flask app, default: True if False, run only the WSGI CSW service endpoint",
     )
     parser.add_argument(
         "-r",
         "--reload",
         action="store_true",
         help="Should the gunicorn server automatically restart workers when "
-             "code changes? This option is only useful for development. "
-             "Defaults to False."
+        "code changes? This option is only useful for development. "
+        "Defaults to False.",
     )
     args = parser.parse_args()
     config = configparser.ConfigParser(interpolation=EnvInterpolation())
@@ -196,7 +193,12 @@ if __name__ == "__main__":
         workers = args.workers
     try:
         flask_app = config.get("server", "flask_app")
+        if flask_app == "true":
+            flask_app = True
+        else:
+            flask_app = False
     except configparser.NoOptionError:
         flask_app = args.flask_app
     logging.basicConfig(level=getattr(logging, level))
-    launch_pycsw(config, flask_app=flask_app, workers=workers, reload=args.reload)
+    print(flask_app)
+    launch_pycsw(config, workers=workers, flask_app=flask_app, reload=args.reload)
