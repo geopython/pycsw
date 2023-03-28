@@ -2,12 +2,13 @@
 {{- if .Values.nginx.enabled -}}
 {{- $releaseName := .Release.Name -}}
 {{- $chartName := include "pycsw.name" . -}}
+{{- $serviceName := include "service.fullname" . -}}
 {{- $cloudProviderFlavor := include "pycsw.cloudProviderFlavor" . -}}
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $releaseName }}-{{ $chartName }}-nginx
+  name: {{ $serviceName }}-nginx
   labels:
     app: {{ $releaseName }}-{{ $chartName }}
     component: nginx-service

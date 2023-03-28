@@ -1,11 +1,12 @@
 {{- $releaseName := .Release.Name -}}
 {{- $chartName := include "pycsw.name" . -}}
 {{- $cloudProviderFlavor := include "pycsw.cloudProviderFlavor" . -}}
+{{- $serviceName := include "service.fullname" . -}}
 {{- if .Values.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $releaseName }}-{{ $chartName }}
+  name: {{ $serviceName }}
   labels:
     app: {{ $chartName }}
     component: {{ $chartName }}

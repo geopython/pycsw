@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ $chartName }}-nginx
+  name: {{ .Release.Name }}-nginx-deployment
   annotations: 
     collectord.io/index: {{ quote .Values.splunkIndex }}
   labels:
@@ -46,29 +46,29 @@ spec:
         {{- if .Values.rasterCommon.authentication.opa.enabled }}
         - name: opa-policy
           secret:
-            secretName: {{ .Release.Name }}-{{ $chartName }}-opa
+            secretName: {{ .Release.Name }}-opa
         - name: proxy-config
           configMap:
-            name: {{ .Release.Name }}-{{ $chartName }}-envoy
+            name: {{ .Release.Name }}-envoy
         - name: jwt-public-keys
           secret:
             secretName: {{ .Values.global.authentication.jwtPublicKeySecretName }}
         {{- end }}
         - name: nginx-config
           configMap:
-            name: {{ .Release.Name }}-{{ $chartName }}-nginx-configmap
+            name: {{ .Release.Name }}-nginx-configmap
             items:
             - key: "NGINX_CONFIG"
               path: "nginx.conf"
         - name: nginx-root-config
           configMap:
-            name: {{ .Release.Name }}-{{ $chartName }}-nginx-configmap
+            name: {{ .Release.Name }}-nginx-configmap
             items:
             - key: "NGINX_ROOT_CONFIG"
               path: "nginx.conf"
       containers:
         ## Nginx Deployment
-        - name: {{ .Release.Name }}-{{ $chartName }}-nginx
+        - name: {{ .Release.Name }}-nginx
           {{- with .Values.nginx.image }}
           image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ .tag }}
           {{- end }}

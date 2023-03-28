@@ -12,6 +12,7 @@ replicaCount: 5
 initialDelaySeconds: 60
 resetOnConfigChange: true
 splunkIndex: ''
+imagePullPolicy: Always
 
 cloudProvider:
   dockerRegistryUrl: my-registry-url.io

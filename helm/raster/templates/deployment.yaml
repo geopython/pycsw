@@ -25,7 +25,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $releaseName }}-{{ $chartName }}
+  name: {{ $releaseName }}-deployment
   labels:
     app: {{ $chartName }}
     component: {{ $chartName }}
@@ -59,7 +59,7 @@ spec:
         - name: {{ $cloudProviderImagePullSecretName | quote }}
     {{- end }}
       containers:
-        - name: {{ $releaseName }}-{{ $chartName }}-deployment
+        - name: {{ $releaseName }}
           {{- with .Values.image }}
           image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ $imageTag }}
           {{- end }}
@@ -139,7 +139,7 @@ spec:
               value: key.pem
           envFrom:
             - configMapRef:
-                name: {{ $releaseName }}-{{ $chartName }}-configmap
+                name: {{ $releaseName }}-configmap
           ports:
             - name: http
               containerPort: {{ .Values.pycswPort }}
@@ -167,19 +167,19 @@ spec:
         {{- end }}
         - name: pyscw-config
           configMap:
-              name: {{ .Release.Name }}-{{ $chartName }}-configmap
+              name: {{ $releaseName }}-configmap
               items:
               - key: "pycsw.cfg"
                 path: "pycsw.cfg"
         - name: pyscw-mappings
           configMap:
-              name: {{ .Release.Name }}-{{ $chartName }}-configmap
+              name: {{ $releaseName }}-configmap
               items:
               - key: "mappings.py"
                 path: "mappings.py"
         - name: uwsgi-config
           configMap:
-            name: {{ .Release.Name }}-{{ $chartName }}-configmap
+            name: {{ $releaseName }}-configmap
             items:
             - key: "uwsgi.ini"
               path: "uwsgi.ini"
