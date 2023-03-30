@@ -1,4 +1,4 @@
-geolinks
+geolinks==0.2.0
 lxml
 OWSLib
 pyproj
