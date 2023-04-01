@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -30,7 +30,7 @@
 
 import os
 
-JQUERY_VERSION = '1.9.0'
+JQUERY_VERSION = '3.6.0'
 
 print('''
 <!DOCTYPE html>
