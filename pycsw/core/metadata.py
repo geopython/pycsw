@@ -1803,6 +1803,9 @@ def _parse_stac_resource(context, repos, record):
             bbox_wkt = util.bbox2wktpolygon(bbox_csv)
         else:
             bbox_wkt = None
+        if 'extent' in record and 'temporal' in record['extent']:
+            _set(context, recobj, 'pycsw:TempExtent_begin', record['extent']['temporal']['interval'][0][0])
+            _set(context, recobj, 'pycsw:TempExtent_end', record['extent']['temporal']['interval'][0][1])
     elif stac_type == 'Catalog':
         LOGGER.debug('Parsing STAC Catalog')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/catalog-spec/catalog-spec.md'
