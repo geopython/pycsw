@@ -1,6 +1,6 @@
 geolinks
 lxml
-OWSLib
+OWSLib<0.29
 pyproj
 Shapely<2.0
 xmltodict
