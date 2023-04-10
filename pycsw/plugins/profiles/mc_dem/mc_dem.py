@@ -11,7 +11,7 @@ class MCDEM(base_profile.base_profile):
         typename = '%s:MCDEMRecord' % (prefix)
         main_namespace = 'http://schema.mapcolonies.com/dem'
 
-        schemas_pathes = [[ 'plugins','profiles', 'mc_dem', 'schemas', 'mcdem-record.xsd']]
+        schemas_pathes = [[ 'plugins','profiles', 'mc_dem', 'schemas', 'mcrdem-record.xsd']]
 
         added_namespaces = {
             prefix: main_namespace
