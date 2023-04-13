@@ -37,7 +37,6 @@ import uuid
 from urllib.parse import urlparse
 
 from geolinks import sniff_link
-from owslib.iso import MD_ImageDescription
 from owslib.util import build_get_url
 from shapely.wkt import loads
 from shapely.geometry import MultiPolygon
@@ -1363,10 +1362,11 @@ def _parse_gm03(context, repos, exml):
 
 def _parse_iso(context, repos, exml):
 
-    from owslib.iso import MD_Metadata
+    from owslib.iso import MD_ImageDescription, MD_Metadata, SV_ServiceIdentification
     from owslib.iso_che import CHE_MD_Metadata
 
     recobj = repos.dataset()
+    bbox = None
     links = []
 
     if exml.tag == '{http://www.geocat.ch/2008/che}CHE_MD_Metadata':
@@ -1390,6 +1390,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:Date', md.datestamp)
     _set(context, recobj, 'pycsw:Modified', md.datestamp)
     _set(context, recobj, 'pycsw:Source', md.dataseturi)
+
     if md.referencesystem is not None:
         try:
             code_ = 'urn:ogc:def:crs:EPSG::%d' % int(md.referencesystem.code)
@@ -1397,7 +1398,7 @@ def _parse_iso(context, repos, exml):
             code_ = md.referencesystem.code
         _set(context, recobj, 'pycsw:CRS', code_)
 
-    if hasattr(md, 'identification'):
+    if md_identification:
         _set(context, recobj, 'pycsw:Title', md_identification.title)
         _set(context, recobj, 'pycsw:Edition', md_identification.edition)
         _set(context, recobj, 'pycsw:AlternateTitle', md_identification.alternatetitle)
@@ -1426,7 +1427,7 @@ def _parse_iso(context, repos, exml):
             len(md_identification.keywords) > 0):
             all_keywords = [item for sublist in md_identification.keywords for item in sublist.keywords if item is not None]
             _set(context, recobj, 'pycsw:Keywords', ','.join([k.name for k in all_keywords]))
-            _set(context, recobj, 'pycsw:KeywordType', md_identification.keywords[0]['type'])
+            _set(context, recobj, 'pycsw:KeywordType', md_identification.keywords[0].type)
             _set(context, recobj, 'pycsw:Themes', 
                  json.dumps([t for t in md_identification.keywords if t.thesaurus is not None], 
                             default=lambda o: o.__dict__))
@@ -1487,25 +1488,15 @@ def _parse_iso(context, repos, exml):
     if hasattr(md_identification, 'format'):
         _set(context, recobj, 'pycsw:Format', md.distribution.format)
 
-    if md.serviceidentification is not None:
-        _set(context, recobj, 'pycsw:ServiceType', md.serviceidentification.type)
-        _set(context, recobj, 'pycsw:ServiceTypeVersion', md.serviceidentification.version)
-
-        _set(context, recobj, 'pycsw:CouplingType', md.serviceidentification.couplingtype)
-
     service_types = []
+    from owslib.iso import SV_ServiceIdentification
     for smd in md.identification:
-        if smd.identtype == 'service' and smd.type is not None:
+        if isinstance(smd, SV_ServiceIdentification):
             service_types.append(smd.type)
+            _set(context, recobj, 'pycsw:ServiceTypeVersion', smd.version)
+            _set(context, recobj, 'pycsw:CouplingType', smd.couplingtype)
 
     _set(context, recobj, 'pycsw:ServiceType', ','.join(service_types))
-
-        #if len(md.serviceidentification.operateson) > 0:
-        #    _set(context, recobj, 'pycsw:operateson = VARCHAR(32),
-        #_set(context, recobj, 'pycsw:operation VARCHAR(32),
-        #_set(context, recobj, 'pycsw:operatesonidentifier VARCHAR(32),
-        #_set(context, recobj, 'pycsw:operatesoname VARCHAR(32),
-
 
     if hasattr(md_identification, 'dataquality'):
         _set(context, recobj, 'pycsw:Degree', md.dataquality.conformancedegree)
