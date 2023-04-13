@@ -37,7 +37,6 @@ import uuid
 from urllib.parse import urlparse
 
 from geolinks import sniff_link
-from owslib.iso import MD_ImageDescription
 from owslib.util import build_get_url
 from shapely.wkt import loads
 from shapely.geometry import MultiPolygon
@@ -1363,16 +1362,19 @@ def _parse_gm03(context, repos, exml):
 
 def _parse_iso(context, repos, exml):
 
-    from owslib.iso import MD_Metadata
+    from owslib.iso import MD_ImageDescription, MD_Metadata, SV_ServiceIdentification
     from owslib.iso_che import CHE_MD_Metadata
 
     recobj = repos.dataset()
+    bbox = None
     links = []
 
     if exml.tag == '{http://www.geocat.ch/2008/che}CHE_MD_Metadata':
         md = CHE_MD_Metadata(exml)
     else:
         md = MD_Metadata(exml)
+
+    md_identification = md.identification[0]
 
     _set(context, recobj, 'pycsw:Identifier', md.identifier)
     _set(context, recobj, 'pycsw:Typename', 'gmd:MD_Metadata')
@@ -1388,6 +1390,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:Date', md.datestamp)
     _set(context, recobj, 'pycsw:Modified', md.datestamp)
     _set(context, recobj, 'pycsw:Source', md.dataseturi)
+
     if md.referencesystem is not None:
         try:
             code_ = 'urn:ogc:def:crs:EPSG::%d' % int(md.referencesystem.code)
@@ -1395,71 +1398,70 @@ def _parse_iso(context, repos, exml):
             code_ = md.referencesystem.code
         _set(context, recobj, 'pycsw:CRS', code_)
 
-    if hasattr(md, 'identification'):
-        _set(context, recobj, 'pycsw:Title', md.identification.title)
-        _set(context, recobj, 'pycsw:Edition', md.identification.edition)
-        _set(context, recobj, 'pycsw:AlternateTitle', md.identification.alternatetitle)
-        _set(context, recobj, 'pycsw:Abstract', md.identification.abstract)
-        _set(context, recobj, 'pycsw:Relation', md.identification.aggregationinfo)
+    if md_identification:
+        _set(context, recobj, 'pycsw:Title', md_identification.title)
+        _set(context, recobj, 'pycsw:Edition', md_identification.edition)
+        _set(context, recobj, 'pycsw:AlternateTitle', md_identification.alternatetitle)
+        _set(context, recobj, 'pycsw:Abstract', md_identification.abstract)
+        _set(context, recobj, 'pycsw:Relation', md_identification.aggregationinfo)
 
-        if hasattr(md.identification, 'temporalextent_start'):
-            _set(context, recobj, 'pycsw:TempExtent_begin', md.identification.temporalextent_start)
-        if hasattr(md.identification, 'temporalextent_end'):
-            _set(context, recobj, 'pycsw:TempExtent_end', md.identification.temporalextent_end)
+        if hasattr(md_identification, 'temporalextent_start'):
+            _set(context, recobj, 'pycsw:TempExtent_begin', md_identification.temporalextent_start)
+        if hasattr(md_identification, 'temporalextent_end'):
+            _set(context, recobj, 'pycsw:TempExtent_end', md_identification.temporalextent_end)
 
-        if len(md.identification.topiccategory) > 0:
-            _set(context, recobj, 'pycsw:TopicCategory', md.identification.topiccategory[0])
+        if len(md_identification.topiccategory) > 0:
+            _set(context, recobj, 'pycsw:TopicCategory', md_identification.topiccategory[0])
 
-        if len(md.identification.resourcelanguage) > 0:
-            _set(context, recobj, 'pycsw:ResourceLanguage', md.identification.resourcelanguage[0])
-        elif len(md.identification.resourcelanguagecode) > 0:
-            _set(context, recobj, 'pycsw:ResourceLanguage', md.identification.resourcelanguagecode[0])
+        if len(md_identification.resourcelanguage) > 0:
+            _set(context, recobj, 'pycsw:ResourceLanguage', md_identification.resourcelanguage[0])
+        elif len(md_identification.resourcelanguagecode) > 0:
+            _set(context, recobj, 'pycsw:ResourceLanguage', md_identification.resourcelanguagecode[0])
 
-        if hasattr(md.identification, 'bbox'):
-            bbox = md.identification.bbox
+        if hasattr(md_identification, 'bbox'):
+            bbox = md_identification.bbox
         else:
             bbox = None
 
-        if (hasattr(md.identification, 'keywords') and
-            len(md.identification.keywords) > 0):
-            all_keywords = [item for sublist in md.identification.keywords for item in sublist['keywords'] if item is not None]
-            _set(context, recobj, 'pycsw:Keywords', ','.join(all_keywords))
-            _set(context, recobj, 'pycsw:KeywordType', md.identification.keywords[0]['type'])
+        if (hasattr(md_identification, 'keywords') and
+            len(md_identification.keywords) > 0):
+            all_keywords = [item for sublist in md_identification.keywords for item in sublist.keywords if item is not None]
+            _set(context, recobj, 'pycsw:Keywords', ','.join([k.name for k in all_keywords]))
+            _set(context, recobj, 'pycsw:KeywordType', md_identification.keywords[0].type)
             _set(context, recobj, 'pycsw:Themes', 
-                 # OWSlib currently stores keywords extended with thesaurus in keywords2, see https://github.com/geopython/OWSLib/issues/301
-                 json.dumps([t for t in md.identification.keywords2 if t.thesaurus is not None], 
+                 json.dumps([t for t in md_identification.keywords if t.thesaurus is not None], 
                             default=lambda o: o.__dict__))
 
-        if (hasattr(md.identification, 'creator') and
-            len(md.identification.creator) > 0):
-            all_orgs = set([item.organization for item in md.identification.creator if hasattr(item, 'organization') and item.organization is not None])
+        if (hasattr(md_identification, 'creator') and
+            len(md_identification.creator) > 0):
+            all_orgs = set([item.organization for item in md_identification.creator if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Creator', ';'.join(all_orgs))
-        if (hasattr(md.identification, 'publisher') and
-            len(md.identification.publisher) > 0):
-            all_orgs = set([item.organization for item in md.identification.publisher if hasattr(item, 'organization') and item.organization is not None])
+        if (hasattr(md_identification, 'publisher') and
+            len(md_identification.publisher) > 0):
+            all_orgs = set([item.organization for item in md_identification.publisher if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Publisher', ';'.join(all_orgs))
-        if (hasattr(md.identification, 'contributor') and
-            len(md.identification.contributor) > 0):
-            all_orgs = set([item.organization for item in md.identification.contributor if hasattr(item, 'organization') and item.organization is not None])
+        if (hasattr(md_identification, 'contributor') and
+            len(md_identification.contributor) > 0):
+            all_orgs = set([item.organization for item in md_identification.contributor if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Contributor', ';'.join(all_orgs))
 
-        if (hasattr(md.identification, 'contact') and
-            len(md.identification.contact) > 0):
-            all_orgs = set([item.organization for item in md.identification.contact if hasattr(item, 'organization') and item.organization is not None])
+        if (hasattr(md_identification, 'contact') and
+            len(md_identification.contact) > 0):
+            all_orgs = set([item.organization for item in md_identification.contact if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:OrganizationName', ';'.join(all_orgs))
-            _set(context, recobj, 'pycsw:Contacts', json.dumps(md.identification.contact, default=lambda o: o.__dict__))
+            _set(context, recobj, 'pycsw:Contacts', json.dumps(md_identification.contact, default=lambda o: o.__dict__))
 
-        if len(md.identification.securityconstraints) > 0:
+        if len(md_identification.securityconstraints) > 0:
             _set(context, recobj, 'pycsw:SecurityConstraints',
-            md.identification.securityconstraints[0])
-        if len(md.identification.accessconstraints) > 0:
+            md_identification.securityconstraints[0])
+        if len(md_identification.accessconstraints) > 0:
             _set(context, recobj, 'pycsw:AccessConstraints',
-            md.identification.accessconstraints[0])
-        if len(md.identification.otherconstraints) > 0:
-            _set(context, recobj, 'pycsw:OtherConstraints', md.identification.otherconstraints[0])
+            md_identification.accessconstraints[0])
+        if len(md_identification.otherconstraints) > 0:
+            _set(context, recobj, 'pycsw:OtherConstraints', md_identification.otherconstraints[0])
 
-        if hasattr(md.identification, 'date'):
-            for datenode in md.identification.date:
+        if hasattr(md_identification, 'date'):
+            for datenode in md_identification.date:
                 if datenode.type == 'revision':
                     _set(context, recobj, 'pycsw:RevisionDate', datenode.date)
                 elif datenode.type == 'creation':
@@ -1467,46 +1469,36 @@ def _parse_iso(context, repos, exml):
                 elif datenode.type == 'publication':
                     _set(context, recobj, 'pycsw:PublicationDate', datenode.date)
 
-        if hasattr(md.identification, 'extent') and hasattr(md.identification.extent, 'description_code'):
-            _set(context, recobj, 'pycsw:GeographicDescriptionCode', md.identification.extent.description_code)
+        if hasattr(md_identification, 'extent') and hasattr(md_identification.extent, 'description_code'):
+            _set(context, recobj, 'pycsw:GeographicDescriptionCode', md_identification.extent.description_code)
 
-        if len(md.identification.denominators) > 0:
-            _set(context, recobj, 'pycsw:Denominator', md.identification.denominators[0])
-        if len(md.identification.distance) > 0:
-            _set(context, recobj, 'pycsw:DistanceValue', md.identification.distance[0])
-        if len(md.identification.uom) > 0:
+        if len(md_identification.denominators) > 0:
+            _set(context, recobj, 'pycsw:Denominator', md_identification.denominators[0])
+        if len(md_identification.distance) > 0:
+            _set(context, recobj, 'pycsw:DistanceValue', md_identification.distance[0])
+        if len(md_identification.uom) > 0:
             _set(context, recobj, 'pycsw:DistanceUOM', md.identification.uom[0])
 
-        if len(md.identification.classification) > 0:
-            _set(context, recobj, 'pycsw:Classification', md.identification.classification[0])
-        if len(md.identification.uselimitation) > 0:
+        if len(md_identification.classification) > 0:
+            _set(context, recobj, 'pycsw:Classification', md_identification.classification[0])
+        if len(md_identification.uselimitation) > 0:
             _set(context, recobj, 'pycsw:ConditionApplyingToAccessAndUse',
-            md.identification.uselimitation[0])
+            md_identification.uselimitation[0])
 
-    if hasattr(md.identification, 'format'):
+    if hasattr(md_identification, 'format'):
         _set(context, recobj, 'pycsw:Format', md.distribution.format)
 
-    if md.serviceidentification is not None:
-        _set(context, recobj, 'pycsw:ServiceType', md.serviceidentification.type)
-        _set(context, recobj, 'pycsw:ServiceTypeVersion', md.serviceidentification.version)
-
-        _set(context, recobj, 'pycsw:CouplingType', md.serviceidentification.couplingtype)
-
     service_types = []
-    for smd in md.identificationinfo:
-        if smd.identtype == 'service' and smd.type is not None:
+    from owslib.iso import SV_ServiceIdentification
+    for smd in md.identification:
+        if isinstance(smd, SV_ServiceIdentification):
             service_types.append(smd.type)
+            _set(context, recobj, 'pycsw:ServiceTypeVersion', smd.version)
+            _set(context, recobj, 'pycsw:CouplingType', smd.couplingtype)
 
     _set(context, recobj, 'pycsw:ServiceType', ','.join(service_types))
 
-        #if len(md.serviceidentification.operateson) > 0:
-        #    _set(context, recobj, 'pycsw:operateson = VARCHAR(32),
-        #_set(context, recobj, 'pycsw:operation VARCHAR(32),
-        #_set(context, recobj, 'pycsw:operatesonidentifier VARCHAR(32),
-        #_set(context, recobj, 'pycsw:operatesoname VARCHAR(32),
-
-
-    if hasattr(md.identification, 'dataquality'):
+    if hasattr(md_identification, 'dataquality'):
         _set(context, recobj, 'pycsw:Degree', md.dataquality.conformancedegree)
         _set(context, recobj, 'pycsw:Lineage', md.dataquality.lineage)
         _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
@@ -1580,7 +1572,7 @@ def _parse_iso(context, repos, exml):
 
     try:
         LOGGER.debug('Scanning for srv:SV_ServiceIdentification links')
-        for sident in md.identificationinfo:
+        for sident in md.identification:
             if hasattr(sident, 'operations'):
                 for sops in sident.operations:
                     for scpt in sops['connectpoint']:
@@ -1595,8 +1587,8 @@ def _parse_iso(context, repos, exml):
     except Exception as err:  # srv: identification does not exist
         LOGGER.exception('no srv:SV_ServiceIdentification links found')
 
-    if hasattr(md.identification, 'graphicoverview'):
-        for thumb in  md.identification.graphicoverview:
+    if hasattr(md_identification, 'graphicoverview'):
+        for thumb in  md_identification.graphicoverview:
             links.append({
                 'name': 'preview',
                 'description': 'Web image thumbnail (URL)',
