@@ -62,8 +62,34 @@
           <tbody>
             {% for rec in data['features'] %}
             <tr>
+              {% if 'properties' in rec %}
               <td id="{{ rec['id'] }}"><a title="{{ rec['properties']['title'] }}" href="{{ config['server']['url'] }}/stac/collections/metadata:main/items/{{ rec['id'] }}">{{ rec['properties']['title'] }}</a></td>
-              <td>{{ rec['properties']['type'] }}</td>
+              {% else %}
+              <td id="{{ rec['id'] }}"><a title="{{ rec.get('title', rec['id']) }}" href="{{ config['server']['url'] }}/stac/collections/metadata:main/items/{{ rec['id'] }}">{{ rec.get('title', rec['id']) }}</a></td>
+              {% endif %}
+              {% if 'properties' in rec %}
+                {% if 'type' in rec['properties'] %}
+                <td>{{ rec['properties']['type'] }}</td>
+                {% elif rec.get('type') == 'Feature' and 'stac_version' not in rec %}
+                <td>record</td>
+                {% elif rec.get('type') == 'Feature' and 'stac_version' in rec %}
+                <td>item</td>
+                {% else%}
+                <td>{{ rec.get('type') }}</td>
+                {% endif %}
+              {% else %}
+                {% if rec.get('type') == 'Feature' and 'stac_version' not in rec %}
+                <td>record</td>
+                {% elif rec.get('type') == 'Feature' and 'stac_version' in rec %}
+                <td>item</td>
+                {% elif rec.get('type') == 'Collection' and 'stac_version' in rec %}
+                <td>collection</td>
+                {% elif rec.get('type') == 'Catalog' and 'stac_version' in rec %}
+                <td>catalog</td>
+                {% else%}
+                <td>{{ rec.get('type') }}</td>
+                {% endif %}
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>
