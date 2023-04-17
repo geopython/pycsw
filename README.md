@@ -1,5 +1,6 @@
 # pycsw
 
+[![DOI](https://zenodo.org/badge/2367090.svg)](https://zenodo.org/badge/latestdoi/2367090)
 [![Build Status](https://github.com/geopython/pycsw/workflows/build%20%E2%9A%99%EF%B8%8F/badge.svg)](https://github.com/geopython/pycsw/actions)
 [![Join the chat at https://gitter.im/geopython/pycsw](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/geopython/pycsw)
 [![Documentation](https://readthedocs.org/projects/pycsw/badge/)](https://docs.pycsw.org)

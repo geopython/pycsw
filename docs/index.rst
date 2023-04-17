@@ -4,6 +4,9 @@
 pycsw |release| Documentation
 =============================
 
+.. image:: https://zenodo.org/badge/2367090.svg
+   :target: https://zenodo.org/badge/latestdoi/2367090
+
 :Author: Tom Kralidis
 :Contact: tomkralidis at gmail.com
 :Release: |release|
