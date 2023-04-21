@@ -1877,6 +1877,9 @@ def _parse_stac_resource(context, repos, record):
 
         if 'datetime' in record['properties']:
             _set(context, recobj, 'pycsw:Date', record['properties']['datetime'])
+            if 'start_datetime' not in record['properties'] and 'end_datetime' not in record['properties']:
+                _set(context, recobj, 'pycsw:TempExtent_begin', record['properties']['datetime'])
+                _set(context, recobj, 'pycsw:TempExtent_end', record['properties']['datetime'])
 
         if 'eo:cloud_cover' in record['properties']:
             _set(context, recobj, 'pycsw:CloudCover', record['properties']['eo:cloud_cover'])
