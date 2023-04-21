@@ -980,9 +980,14 @@ def record2json(record, url, collection, stac_item=False):
     if stac_item:
         record_dict['stac_version'] = '1.0.0'
         record_dict['collection'] = 'metadata:main'
-        record_dict['properties']['datetime'] = record.date
-        record_dict['properties']['start_datetime'] = record.time_begin
-        record_dict['properties']['end_datetime'] = record.time_end
+        if record.date is None:
+            if record.time_begin == record.time_end:
+                record_dict['properties']['datetime'] = record.time_begin
+            else:
+                record_dict['properties']['start_datetime'] = record.time_begin
+                record_dict['properties']['end_datetime'] = record.time_end
+        else:
+            record_dict['properties']['datetime'] = record.date
 
     record_dict['properties']['recordUpdated'] = record.insert_date
 
