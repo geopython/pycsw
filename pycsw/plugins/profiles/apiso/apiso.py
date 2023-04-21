@@ -131,7 +131,7 @@ class APISO(profile.Profile):
                         'apiso:Publisher': 'dc:publisher',
                         'apiso:Contributor': 'dc:contributor',
                         'apiso:Modified': 'dct:modified',
-                        #'apiso:Date': 'dc:date',
+                        'apiso:Date': 'dc:date',
                         'apiso:Type': 'dc:type',
                         'apiso:Format': 'dc:format',
                         'apiso:Language': 'dc:language',
