@@ -69,8 +69,6 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
     'http://www.opengis.net/spec/cql2/1.0/conf/basic-cql2',
-    'http://www.opengis.net/spec/cql2/1.0/conf/cql2-text',
-    'http://www.opengis.net/spec/cql2/1.0/conf/cql2-json',
     'https://api.stacspec.org/v1.0.0-rc.4/core',
     'https://api.stacspec.org/v1.0.0-rc.4/item-search',
     'https://api.stacspec.org/v1.0.0-rc.4/ogcapi-features'
