@@ -128,7 +128,7 @@ def test_items(api):
     content = json.loads(api.items({}, None, {})[2])
 
     assert content['type'] == 'FeatureCollection'
-    assert len(content['links']) == 4
+    assert len(content['links']) == 5
     assert content['numberMatched'] == 12
     assert content['numberReturned'] == 10
     assert len(content['features']) == 10
