@@ -69,9 +69,9 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
     'http://www.opengis.net/spec/cql2/1.0/conf/basic-cql2',
-    'https://api.stacspec.org/v1.0.0-rc.2/core',
-    'https://api.stacspec.org/v1.0.0-rc.2/item-search',
-    'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features#sort'
+    'https://api.stacspec.org/v1.0.0-rc.4/core',
+    'https://api.stacspec.org/v1.0.0-rc.4/item-search',
+    'https://api.stacspec.org/v1.0.0-rc.4/ogcapi-features'
 ]
 
 
@@ -714,6 +714,12 @@ class API:
             'type': 'application/json',
             'title': 'Collection URL',
             'href': f"{self.config['server']['url']}/collections/{collection}",
+            'hreflang': self.config['server']['language']
+        }, {
+            'rel': 'root',
+            'type': 'application/json',
+            'title': 'The root URI as JSON',
+            'href': f"{self.config['server']['url']}/?f=json",
             'hreflang': self.config['server']['language']
         }])
 
