@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2022 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -75,6 +75,7 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/cql2/1.0/conf/cql2-text',
     'https://api.stacspec.org/v1.0.0-rc.4/core',
     'https://api.stacspec.org/v1.0.0-rc.4/item-search',
+    'https://api.stacspec.org/v1.0.0-rc.2/item-search#filter',
     'https://api.stacspec.org/v1.0.0-rc.4/ogcapi-features'
 ]
 
@@ -309,6 +310,11 @@ class API:
               'type': 'application/xml',
               'title': 'SRU endpoint',
               'href': f"{self.config['server']['url']}/sru"
+            }, {
+              'rel': 'http://www.opengis.net/def/rel/ogc/1.0/queryables',
+              'type': 'application/schema+json',
+              'title': 'Queryables',
+              'href': f"{self.config['server']['url']}/queryables"
             }, {
               'rel': 'child',
               'type': 'application/json',

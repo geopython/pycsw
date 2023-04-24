@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <gcpp.kalxas@gmail.com>
 #
-# Copyright (c) 2022 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2022 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -69,7 +69,7 @@ def test_landing_page(api):
 
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
-    assert len(content['links']) == 14
+    assert len(content['links']) == 15
 
     for link in content['links']:
         assert link['href'].startswith(api.config['server']['url'])
@@ -93,7 +93,7 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 17
+    assert len(content['conformsTo']) == 18
 
 
 def test_collections(api):
