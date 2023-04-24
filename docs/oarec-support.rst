@@ -52,7 +52,7 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   # collection query, property query
   http://localhost:8000/collections/metadata:main/items?title=Lorem%20ipsum
   # collection query, CQL filter
-  http://localhost:8000/collections/metadata:main/items?filter=title LIKE '%lorem%'
+  http://localhost:8000/collections/metadata:main/items?filter-lang=cql-text&filter=title LIKE '%lorem%'
   # collection query, limiting results
   http://localhost:8000/collections/metadata:main/items?limit=1
   # collection query, paging

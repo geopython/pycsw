@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2022 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -62,15 +62,20 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
     'http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core',
+    'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/queryables',
+    'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/queryables-query-parameters',  # noqa
     'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/filter',
+    'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/features-filter',
     'http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete',  # noqa
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
-    'http://www.opengis.net/spec/cql2/1.0/conf/basic-cql2',
+    'http://www.opengis.net/spec/cql2/1.0/conf/cql2-json',
+    'http://www.opengis.net/spec/cql2/1.0/conf/cql2-text',
     'https://api.stacspec.org/v1.0.0-rc.4/core',
     'https://api.stacspec.org/v1.0.0-rc.4/item-search',
+    'https://api.stacspec.org/v1.0.0-rc.2/item-search#filter',
     'https://api.stacspec.org/v1.0.0-rc.4/ogcapi-features'
 ]
 
@@ -306,6 +311,11 @@ class API:
               'title': 'SRU endpoint',
               'href': f"{self.config['server']['url']}/sru"
             }, {
+              'rel': 'http://www.opengis.net/def/rel/ogc/1.0/queryables',
+              'type': 'application/schema+json',
+              'title': 'Queryables',
+              'href': f"{self.config['server']['url']}/queryables"
+            }, {
               'rel': 'child',
               'type': 'application/json',
               'title': 'Main collection',
@@ -447,6 +457,18 @@ class API:
             'title': 'This document as HTML',
             'href': f"{url_base}?f=html",
             'hreflang': self.config['server']['language']
+        }, {
+            'rel': 'http://www.opengis.net/def/rel/ogc/1.0/queryables',
+            'type': 'application/schema+json',
+            'title': 'Queryables as JSON',
+            'href': f"{url_base}/queryables?f=json",
+            'hreflang': self.config['server']['language']
+        }, {
+            'rel': 'http://www.opengis.net/def/rel/ogc/1.0/queryables',
+            'type': 'text/html',
+            'title': 'Queryables as HTML',
+            'href': f"{url_base}/queryables?f=html",
+            'hreflang': self.config['server']['language']
         }]
 
         return self.get_response(200, headers_, 'collection.html', response)
@@ -463,6 +485,9 @@ class API:
         """
 
         headers_['Content-Type'] = self.get_content_type(headers_, args)
+
+        if 'json' in headers_['Content-Type']:
+            headers_['Content-Type'] = 'application/schema+json'
 
         properties = self.repository.describe()
         properties2 = {}
@@ -506,9 +531,15 @@ class API:
         reserved_query_params = [
             'f',
             'filter',
+            'filter-lang',
             'limit',
             'sortby',
             'offset'
+        ]
+
+        filter_langs = [
+            'cql2-json',
+            'cql2-text'
         ]
 
         response = {
@@ -545,6 +576,11 @@ class API:
         if 'filter' in args:
             LOGGER.debug(f'CQL query specified {args["filter"]}')
             cql_query = args['filter']
+            filter_lang = args.get('filter-lang')
+            if filter_lang is not None and filter_lang not in filter_langs:
+                msg = f'Invalid filter-lang'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
         LOGGER.debug('Transforming property filters into CQL')
         query_args = []

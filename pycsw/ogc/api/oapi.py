@@ -2,7 +2,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2021 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -59,6 +59,69 @@ def gen_oapi(config, oapi_filepath):
         'description': 'access to metadata (records)'
     }]
 
+    LOGGER.debug('Adding response components')
+    oapi['components']['responses']['Queryables'] = {
+        'content': {
+            'application/json': {
+                'schema': {
+                    '$ref': '#/components/schemas/queryables'
+                }
+            }
+        },
+        'description': 'successful queryables operation'
+    }
+    oapi['components']['schemas']['queryable'] = {
+        'properties': {
+            'description': {
+                'description': 'a human-readable narrative describing the queryable',  # noqa
+                'type': 'string'
+            },
+            'language': {
+                'default': [
+                    'en'
+                ],
+                'description': 'the language used for the title and description',  # noqa
+                'type': 'string'
+            },
+            'queryable': {
+                'description': 'the token that may be used in a CQL predicate',
+                'type': 'string'
+            },
+            'title': {
+                'description': 'a human readable title for the queryable',
+                'type': 'string'
+            },
+            'type': {
+                'description': 'the data type of the queryable',
+                'type': 'string'
+            },
+            'type-ref': {
+                'description': 'a reference to the formal definition of the type',  # noqa
+                'format': 'url',
+                'type': 'string'
+            }
+        },
+        'required': [
+            'queryable',
+            'type'
+        ],
+        'type': 'object'
+    }
+    oapi['components']['schemas']['queryables'] = {
+        'properties': {
+            'queryables': {
+                'items': {
+                    '$ref': '#/components/schemas/queryable'
+                },
+                'type': 'array'
+            }
+        },
+        'required': [
+            'queryables'
+        ],
+        'type': 'object'
+    }
+
     LOGGER.debug('Adding parameter components')
     oapi['components']['parameters']['f'] = {
         'name': 'f',
@@ -93,6 +156,22 @@ def gen_oapi(config, oapi_filepath):
         'required': False,
         'schema': {
             'type': 'object',
+        },
+        'style': 'form',
+        'explode': False
+    }
+    oapi['components']['parameters']['filter-lang'] = {
+        'name': 'filter-lang',
+        'in': 'query',
+        'description': 'The optional filter-lang parameter specifies the predicate language of the filter being applied',  # noqa
+        'required': False,
+        'schema': {
+            'type': 'string',
+            'enum': [
+                'cql2-json',
+                'cql2-text',
+            ],
+            'default': 'cql2-text'
         },
         'style': 'form',
         'explode': False
@@ -139,7 +218,7 @@ def gen_oapi(config, oapi_filepath):
             ],
             'responses': {
                 '200': {
-                    '$ref': '#/components/responses/LandingPage'
+                    '$ref': '#/components/responses/Queryables'
                 },
                 '500': {
                     '$ref': '#/components/responses/ServerError'
@@ -222,6 +301,39 @@ def gen_oapi(config, oapi_filepath):
 
     path = {
         'get': {
+            'tags': ['Queryables'],
+            'summary': 'Queryables page',
+            'description': 'Queryables page',
+            'operationId': 'getQueryables',
+            'parameters': [
+                {'$ref': '#/components/parameters/f'}
+            ],
+            'responses': {
+                '200': {
+                    '$ref': '#/components/responses/Queryables'
+                },
+                '500': {
+                    '$ref': '#/components/responses/ServerError'
+                }
+            }
+        }
+    }
+
+    oapi['paths']['/queryables'] = path
+
+    path2 = deepcopy(path)
+
+    path2['get']['operationId'] = 'getCollectionQueryables'
+    path2['get']['parameters'].append(
+        {'$ref': '#/components/parameters/collectionId'})
+    path2['get']['responses']['404'] = {
+        '$ref': '#/components/responses/NotFound'
+    }
+
+    oapi['paths']['/collections/{collectionId}/queryables'] = path2
+
+    path = {
+        'get': {
             'tags': ['metadata'],
             'summary': 'Records search items page',
             'description': 'Records search items page',
@@ -236,6 +348,7 @@ def gen_oapi(config, oapi_filepath):
                 {'$ref': '#/components/parameters/externalId'},
                 {'$ref': '#/components/parameters/sortby'},
                 {'$ref': '#/components/parameters/filter'},
+                {'$ref': '#/components/parameters/filter-lang'},
                 {'$ref': '#/components/parameters/f'},
                 {'$ref': '#/components/parameters/offset'},
                 {'$ref': '#/components/parameters/vendorSpecificParameters'}

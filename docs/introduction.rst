@@ -9,6 +9,8 @@ Features
 ========
 
 - implements `OGC API - Records - Part 1: Core`_
+- implements `OGC API - Features - Part 3: Filtering`_
+- implements `Common Query Language (CQL2)`_
 - certified OGC `Compliant`_ and OGC Reference Implementation for both CSW 2.0.2 and CSW 3.0.0
 - harvesting support for WMS, WFS, WCS, WPS, WAF, CSW, SOS
 - implements `INSPIRE Discovery Services 3.0`_
@@ -38,7 +40,7 @@ Standards Support
   :header: Standard,Version(s)
 
   `OGC API - Records - Part 1: Core`_,1.0
-  `OGC API - Features - Part 3: Filtering and the Common Query Language (CQL)`_,draft
+  `OGC API - Features - Part 3: Filtering`_,draft
   "`OGC API - Features - Part 4: Create, Replace, Update and Delete`_",draft
   `OGC CSW`_,2.0.2/3.0.0
   `OGC Filter`_,1.1.0/2.0.0
@@ -66,8 +68,13 @@ OGC API - Records support
 OGC API - Features support
 --------------------------
 
-- Part 3: Filtering and the Common Query Language (CQL)
+- Part 3: Filtering
 - Part 4: Create, Replace, Update and Delete
+
+CQL
+---
+
+- Common Query Language (CQL2)
 
 Supported Output Formats
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -80,7 +87,7 @@ Supported Filters
 
 - q
 - datetime
-- filter (CQL)
+- filter / filter-lang (CQL)
 - bbox
 - all properties (``property=value``)
 
@@ -199,7 +206,8 @@ Functions
 - upper
 
 .. _`OGC API - Records - Part 1: Core`: https://ogcapi.ogc.org/records
-.. _`OGC API - Features - Part 3: Filtering and the Common Query Language (CQL)`: http://docs.ogc.org/DRAFTS/19-079.html
+.. _`OGC API - Features - Part 3: Filtering`: http://docs.ogc.org/DRAFTS/19-079.html
+.. _`Common Query Language (CQL2)`: https://docs.ogc.org/DRAFTS/21-065.html
 .. _`OGC CSW`: https://www.ogc.org/standards/cat
 .. _`ISO Metadata Application Profile 1.0.0`: https://portal.ogc.org/files/?artifact_id=21460
 .. _`OGC Filter`: https://www.ogc.org/standards/filter

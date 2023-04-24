@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2022 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -130,6 +130,7 @@ def collection(collection='metadata:main'):
                         request.args, collection))
 
 
+@BLUEPRINT.route('/queryables')
 @BLUEPRINT.route('/collections/<collection>/queryables')
 def queryables(collection='metadata:main'):
     """
@@ -162,7 +163,7 @@ def items(collection='metadata:main'):
     if 'search' in request.url_rule.rule:
         stac_item = True
 
-    if request.method == 'POST' and request.content_type not in [None, 'application/json']:
+    if request.method == 'POST' and request.content_type not in [None, 'application/json']:  # noqa
         if request.content_type == 'application/geo+json':  # JSON grammar
             data = request.get_json(silent=True)
         elif 'xml' in request.content_type:  # XML grammar
