@@ -97,6 +97,22 @@ def gen_oapi(config, oapi_filepath):
         'style': 'form',
         'explode': False
     }
+    oapi['components']['parameters']['filter-lang'] = {
+        'name': 'filter-lang',
+        'in': 'query',
+        'description': 'The optional filter-lang parameter specifies the predicate language of the filter being applied',  # noqa
+        'required': False,
+        'schema': {
+            'type': 'string',
+            'enum': [
+                'cql2-json',
+                'cql2-text',
+            ],
+            'default': 'cql2-text'
+        },
+        'style': 'form',
+        'explode': False
+    }
     oapi['components']['parameters']['vendorSpecificParameters'] = {
         'name': 'vendorSpecificParameters',
         'in': 'query',
@@ -236,6 +252,7 @@ def gen_oapi(config, oapi_filepath):
                 {'$ref': '#/components/parameters/externalId'},
                 {'$ref': '#/components/parameters/sortby'},
                 {'$ref': '#/components/parameters/filter'},
+                {'$ref': '#/components/parameters/filter-lang'},
                 {'$ref': '#/components/parameters/f'},
                 {'$ref': '#/components/parameters/offset'},
                 {'$ref': '#/components/parameters/vendorSpecificParameters'}

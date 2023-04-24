@@ -162,7 +162,7 @@ def items(collection='metadata:main'):
     if 'search' in request.url_rule.rule:
         stac_item = True
 
-    if request.method == 'POST' and request.content_type not in [None, 'application/json']:
+    if request.method == 'POST' and request.content_type not in [None, 'application/json']:  # noqa
         if request.content_type == 'application/geo+json':  # JSON grammar
             data = request.get_json(silent=True)
         elif 'xml' in request.content_type:  # XML grammar

@@ -69,7 +69,7 @@ def test_landing_page(api):
 
     assert content['stac_version'] == '1.0.0'
     assert content['type'] == 'Catalog'
-    assert len(content['conformsTo']) == 13
+    assert len(content['conformsTo']) == 17
     assert len(content['keywords']) == 3
 
 
@@ -87,7 +87,7 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 13
+    assert len(content['conformsTo']) == 17
 
     assert 'https://api.stacspec.org/v1.0.0-rc.4/core' in content['conformsTo']  # noqa
     assert 'https://api.stacspec.org/v1.0.0-rc.4/item-search' in content['conformsTo']  # noqa

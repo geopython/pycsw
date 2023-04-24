@@ -93,7 +93,7 @@ def test_openapi(api):
 def test_conformance(api):
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 13
+    assert len(content['conformsTo']) == 17
 
 
 def test_collections(api):
