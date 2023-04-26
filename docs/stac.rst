@@ -6,7 +6,7 @@ SpatioTemporal Asset Catalog (STAC) API Support
 Versions
 --------
 
-pycsw supports `SpatioTemporal Asset Catalog API version v1.0.0-rc.4`_ by default.
+pycsw supports `SpatioTemporal Asset Catalog API version v1.0.0`_ by default.
 
 pycsw implements provides STAC support in the following manner:
 
@@ -75,4 +75,4 @@ JSON and HTML output formats are both supported via the ``f`` parameter.
   http://localhost:8000/collections/metadata:main/items/{itemId}?f=xml
 
 
-.. _`SpatioTemporal Asset Catalog API version v1.0.0-rc.4`: https://github.com/radiantearth/stac-api-spec
+.. _`SpatioTemporal Asset Catalog API version v1.0.0`: https://github.com/radiantearth/stac-api-spec
