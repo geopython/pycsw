@@ -134,6 +134,8 @@ class Csw(object):
         self.context.pycsw_home = self.config.get('server', 'home')
         self.context.url = self.config.get('server', 'url')
 
+        self.context.server = self
+
         log.setup_logger(self.config)
 
         LOGGER.info('running configuration %s', rtconfig)

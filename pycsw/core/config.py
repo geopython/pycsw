@@ -46,6 +46,7 @@ class StaticContext(object):
         self.ogc_schemas_base = 'http://schemas.opengis.net'
 
         self.parser = PARSER
+        self.server = None
 
         self.languages = {
             'en': 'english',
