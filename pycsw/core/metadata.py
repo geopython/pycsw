@@ -1774,6 +1774,10 @@ def _parse_oarec_record(context, repos, record):
 def _parse_stac_resource(context, repos, record):
     """Parse STAC resource"""
 
+    recobj = repos.dataset()
+    keywords = []
+    links = []
+
     stac_type = record.get('type', 'Feature')
     if stac_type == 'Feature':
         LOGGER.debug('Parsing STAC Item')
@@ -1806,10 +1810,6 @@ def _parse_stac_resource(context, repos, record):
         title = record.get('title')
         abstract = record.get('description')
         bbox_wkt = None
-
-    recobj = repos.dataset()
-    keywords = []
-    links = []
 
     _set(context, recobj, 'pycsw:Identifier', record['id'])
     _set(context, recobj, 'pycsw:Typename', typename)
