@@ -162,6 +162,8 @@ def _parse_metadata(context, repos, record):
         return [_parse_dc(context, repos, exml)]
     elif root == '{%s}DIF' % context.namespaces['dif']:  # DIF
         pass  # TODO
+    elif root == '{eml://ecoinformatics.org/eml-2.1.1}eml':  # EML
+        return [_parse_eml(context, repos, exml)]
     else:
         raise RuntimeError('Unsupported metadata format')
 
@@ -1685,6 +1687,61 @@ def _parse_dc(context, repos, exml):
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
+
+    return recobj
+
+
+def _parse_eml(context, repos, exml):
+    recobj = repos.dataset()
+
+    _set(context, recobj, 'pycsw:Identifier', exml.find("./dataset/alternateIdentifier[1]").text)
+    _set(context, recobj, 'pycsw:Typename', 'eml:dataset')
+    _set(context, recobj, 'pycsw:Schema', 'https://eml.ecoinformatics.org/eml-2.2.0')
+    _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
+    _set(context, recobj, 'pycsw:XML', etree.tostring(exml))
+    _set(context, recobj, 'pycsw:MetadataType', 'application/xml')
+    _set(context, recobj, 'pycsw:AnyText', util.get_anytext(exml))
+    _set(context, recobj, 'pycsw:Language', exml.find("./dataset/language").text)
+    #_set(context, recobj, 'pycsw:Type', md.type)
+    _set(context, recobj, 'pycsw:Title', exml.find("./dataset/title").text)
+    #_set(context, recobj, 'pycsw:AlternateTitle', '')
+    _set(context, recobj, 'pycsw:Abstract', exml.find("./dataset/abstract/para").text)
+
+    keywords = [el.text for el in exml.findall("./dataset/keywordSet/keyword")]
+    _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
+    #_set(context, recobj, 'pycsw:ParentIdentifier', md.ispartof)
+    #_set(context, recobj, 'pycsw:Relation', md.relation)
+
+    temp_start, temp_end = exml.find("./additionalMetadata/metadata/gbif/formationPeriod").text.split('-')
+    _set(context, recobj, 'pycsw:TempExtent_begin', temp_start)
+    _set(context, recobj, 'pycsw:TempExtent_end', temp_end)
+
+    _set(context, recobj, 'pycsw:ResourceLanguage', exml.find("./dataset/language").text)
+
+    creators = []
+    for creator_el in exml.findall("./dataset/creator"):
+        name = creator_el.find('./individualName/givenName').text
+        surname = creator_el.find('./individualName/surName').text
+        creators.append(f"{surname}, {name}")
+
+    _set(context, recobj, 'pycsw:Creator', " and ".join(creators))
+    #_set(context, recobj, 'pycsw:Publisher', md.publisher)
+    #_set(context, recobj, 'pycsw:Contributor', md.contributor)
+    _set(context, recobj, 'pycsw:OrganizationName', exml.find("./dataset/creator/organizationName").text)
+    #_set(context, recobj, 'pycsw:AccessConstraints', md.accessrights)
+    _set(context, recobj, 'pycsw:OtherConstraints', exml.find("./dataset/intellectualRights").text)
+    _set(context, recobj, 'pycsw:Date', exml.find("./additionalMetadata/metadata/gbif/dateStamp").text)
+    #_set(context, recobj, 'pycsw:CreationDate', md.created)
+    _set(context, recobj, 'pycsw:PublicationDate', exml.find("./dataset/pubDate").text)
+    #_set(context, recobj, 'pycsw:Modified', md.modified)
+    #_set(context, recobj, 'pycsw:Format', md.format)
+    _set(context, recobj, 'pycsw:MdSource', exml.find("./dataset/alternateIdentifier[2]").text)
+
+    bbox_element = exml.find("./dataset/coverage/geographicCoverage/boundingCoordinates")
+    bbox = {}
+    for direction in ('west', 'east', 'north', 'south'):
+        bbox[direction] = bbox_element.find("./%sBoundingCoordinate" % direction).text
+    _set(context, recobj, 'pycsw:BoundingBox', 'SRID=4326;POLYGON(({west} {south}, {west} {north}, {east} {north}, {east} {south}))'.format(**bbox))
 
     return recobj
 
