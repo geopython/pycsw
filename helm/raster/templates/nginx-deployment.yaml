@@ -54,6 +54,12 @@ spec:
           secret:
             secretName: {{ .Values.global.authentication.jwtPublicKeySecretName }}
         {{- end }}
+        - name: jwt-js
+          configMap:
+            name: {{ .Release.Name  }}-nginx-configmap
+            items:
+            - key: "JWT_JS"
+              path: "jwt.js"
         - name: nginx-config
           configMap:
             name: {{ .Release.Name }}-nginx-configmap
@@ -74,6 +80,10 @@ spec:
           {{- end }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           volumeMounts:
+          - mountPath: "/etc/nginx/jwt.js"
+            name: jwt-js
+            subPath: jwt.js
+            readOnly: true
           - mountPath: "/etc/nginx/conf.d"
             name: nginx-config
             readOnly: true

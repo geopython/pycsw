@@ -12,4 +12,5 @@ metadata:
 data:
   NGINX_CONFIG: {{ tpl (.Files.Get "config/nginx.conf") . | quote }}
   NGINX_ROOT_CONFIG: {{ .Files.Get "config/nginx_root.conf" | quote }}
+  JWT_JS: {{ tpl (.Files.Get "config/jwt.js") . | quote }}
 {{- end }}
