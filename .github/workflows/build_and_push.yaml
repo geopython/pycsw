@@ -13,23 +13,22 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  build_and_push:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    env:
+      Docker_Repository: ${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-        with: 
-          fetch-depth: 0
-      # Runs a single command using the runners shell
-      - name: Azure Pipelines Action
-        uses: Azure/pipelines@v1
+      - uses: azure/docker-login@v1
         with:
-          azure-devops-project-url: https://dev.azure.com/Libot-Mipui-Org/pycsw
-          azure-pipeline-name: 'build-and-push-to-ACR'
-          azure-devops-token: ${{ secrets.AZURE_TOKEN_NEW }}
+          login-server: ${{ secrets.ACR_URL }}
+          username: ${{ secrets.ACR_PUSH_USER }}
+          password: ${{ secrets.ACR_PUSH_TOKEN }}
+      - name: downcase repository
+        run: |
+          echo "Docker_Repository=${Docker_Repository,,}" >>${GITHUB_ENV}
+      - run: docker build . -t ${{ env.Docker_Repository }}
+      - run: docker push ${{ env.Docker_Repository }}
   security:
     runs-on: ubuntu-latest
     steps:
