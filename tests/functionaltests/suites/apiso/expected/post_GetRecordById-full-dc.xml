@@ -26,6 +26,7 @@
     <dc:subject>longitude</dc:subject>
     <dc:subject>time</dc:subject>
     <dc:subject scheme="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode">climatologyMeteorologyAtmosphere</dc:subject>
+    <dc:format>WWW:LINK</dc:format>
     <dct:references>http://oos.soest.hawaii.edu/thredds/idd/nss_pacioos.html?dataset=NS06agg</dct:references>
     <dct:references scheme="WWW:LINK">http://oos.soest.hawaii.edu/thredds/dodsC/pacioos/nss/ns06agg.html</dct:references>
     <dct:references>http://pacioos.org/voyager/index.html?b=6.874279%2C158.077126%2C7.050468%2C158.369808&amp;tz=pont&amp;o=qual:2::p0NS06p1</dct:references>
