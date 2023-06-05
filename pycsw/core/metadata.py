@@ -1477,16 +1477,13 @@ def _parse_iso(context, repos, exml):
         if len(md_identification.distance) > 0:
             _set(context, recobj, 'pycsw:DistanceValue', md_identification.distance[0])
         if len(md_identification.uom) > 0:
-            _set(context, recobj, 'pycsw:DistanceUOM', md.identification.uom[0])
+            _set(context, recobj, 'pycsw:DistanceUOM', md_identification.uom[0])
 
         if len(md_identification.classification) > 0:
             _set(context, recobj, 'pycsw:Classification', md_identification.classification[0])
         if len(md_identification.uselimitation) > 0:
             _set(context, recobj, 'pycsw:ConditionApplyingToAccessAndUse',
             md_identification.uselimitation[0])
-
-    if hasattr(md_identification, 'format'):
-        _set(context, recobj, 'pycsw:Format', md.distribution.format)
 
     service_types = []
     from owslib.iso import SV_ServiceIdentification
@@ -1549,6 +1546,10 @@ def _parse_iso(context, repos, exml):
             _set(context, recobj, 'pycsw:Instrument', instrument.identifier)
             _set(context, recobj, 'pycsw:SensorType', instrument.type)
 
+    all_formats=[]
+    if hasattr(md.distribution, 'format') and md.distribution.format is not None:
+        all_formats.append(md.distribution.format)
+
     LOGGER.info('Scanning for links')
     if hasattr(md, 'distribution'):
         dist_links = []
@@ -1562,6 +1563,8 @@ def _parse_iso(context, repos, exml):
         for link in dist_links:
             if link.url is not None and link.protocol is None:  # take a best guess
                 link.protocol = sniff_link(link.url)
+            if (link.protocol is not None and link.protocol not in all_formats):
+                all_formats.append(link.protocol)
             links.append({
                 'name': link.name,
                 'description': link.description,
@@ -1569,6 +1572,8 @@ def _parse_iso(context, repos, exml):
                 'url': link.url,
                 'function': link.function
             })
+
+    _set(context, recobj, 'pycsw:Format', ','.join(all_formats))
 
     try:
         LOGGER.debug('Scanning for srv:SV_ServiceIdentification links')
