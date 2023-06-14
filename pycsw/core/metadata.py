@@ -1887,7 +1887,7 @@ def _parse_stac_resource(context, repos, record):
         if 'collection' in record:
             _set(context, recobj, 'pycsw:ParentIdentifier', record['collection'])
 
-    if stac_type == 'Collection':
+    if stac_type == 'Collection' or stac_type == 'Catalog':
         if 'keywords' in record:
             keywords = record['keywords']
             _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
