@@ -1892,6 +1892,18 @@ def _parse_stac_resource(context, repos, record):
             keywords = record['keywords']
             _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
 
+        if 'start_datetime' in record:
+            _set(context, recobj, 'pycsw:TempExtent_begin', record['start_datetime'])
+
+        if 'end_datetime' in record:
+            _set(context, recobj, 'pycsw:TempExtent_end', record['end_datetime'])
+
+        if 'datetime' in record:
+            _set(context, recobj, 'pycsw:Date', record['datetime'])
+            if 'start_datetime' not in record and 'end_datetime' not in record:
+                _set(context, recobj, 'pycsw:TempExtent_begin', record['datetime'])
+                _set(context, recobj, 'pycsw:TempExtent_end', record['datetime'])
+
     return recobj
 
 def fgdccontact2iso(cnt, role='pointOfContact'):
