@@ -50,7 +50,7 @@ that pycsw works as expected.
 
 
 Suites for xml-based standards (CSW, ATOM, etc)
-+++++++++++++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A number of different test suites exist under ``tests/functionaltests/suites``.
 Each suite specifies the following structure:
@@ -101,7 +101,7 @@ POST requests defined in a suite's directory.
 
 
 Suites for JSON-based standards (OGC API - Records, STAC API, etc)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 These are implemented as simple pytest-based tests, for which no custom
 test generation function exists. They are simpler to generate - look into the
