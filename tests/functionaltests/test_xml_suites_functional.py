@@ -48,10 +48,12 @@ from pycsw import server
 pytestmark = pytest.mark.functional
 
 
-def test_suites(test_identifier, use_xml_canonicalisation,
-                save_results_directory, configuration, request_method,
-                request_data, expected_result, normalize_identifier_fields):
-    """Test suites.
+def test_xml_based_suites(
+        test_identifier, use_xml_canonicalisation,
+        save_results_directory, configuration, request_method,
+        request_data, expected_result, normalize_identifier_fields
+):
+    """Test XML-based suites.
 
     This function is automatically parametrized by pytest as a result of the
     ``conftest:pytest_generate_tests`` function. The input parameters are thus
