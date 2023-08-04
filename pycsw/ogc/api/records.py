@@ -1167,8 +1167,7 @@ def build_anytext(name, value):
 
     if len(tokens) == 1:  # single term
         return f"{name} ILIKE '%{value}%'"
-
-    for token in tokens:
-        predicates.append(f"{name} ILIKE '%{token}%'")
-
-    return f"({' AND '.join(predicates)})"
+    else:
+        # on each term use fuzzy match: ts_query(beer:* & wine:*)
+        ts_query = " & ".join([t + ':*' for t in tokens])
+        return f"{name} ILIKE '{ts_query}'"

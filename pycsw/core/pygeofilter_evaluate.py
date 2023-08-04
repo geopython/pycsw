@@ -66,7 +66,7 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
         if (str(lhs.prop) == 'dataset.anytext' and
                 self._pycsw_dbtype.startswith('postgres')):
             LOGGER.debug('Kicking into PostgreSQL FTS mode')
-            return text(f"plainto_tsquery('english', '{node.pattern}') @@ anytext_tsvector")  # noqa
+            return text(f"to_tsquery('english', '{node.pattern}') @@ anytext_tsvector")  # noqa
         else:
             LOGGER.debug('Default ILIKE behaviour')
             return filters.like(
