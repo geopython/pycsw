@@ -58,6 +58,11 @@ SuiteDirs = namedtuple("SuiteDirs", [
 ])
 
 
+def pytest_configure(config):
+    config.addinivalue_line("markers", "unit: Run only unit tests")
+    config.addinivalue_line("markers", "functional: Run only functional tests")
+
+
 def pytest_generate_tests(metafunc):
     """Parametrize tests programmatically.
 
@@ -103,7 +108,7 @@ def pytest_generate_tests(metafunc):
     """
 
     global TESTS_ROOT
-    if metafunc.function.__name__ == "test_suites":
+    if metafunc.function.__name__ == "test_xml_based_suites":
         suites_root_dir = os.path.join(TESTS_ROOT, "functionaltests", "suites")
         suite_names = os.listdir(suites_root_dir)
         arg_values = []

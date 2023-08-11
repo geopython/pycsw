@@ -2,9 +2,11 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <gcpp.kalxas@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
 # Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2022 Angelos Tzotsos
+# Copyright (c) 2023 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -30,40 +32,17 @@
 # =================================================================
 
 import json
-import os
 from xml.etree import ElementTree as etree
 
 import pytest
 
-from pycsw.core.util import parse_ini_config
 from pycsw.ogc.api.records import API
 
-pytestmark = pytest.mark.unit
+pytestmark = pytest.mark.functional
 
 
-def get_test_file_path(filename):
-    """helper function to open test file safely"""
-
-    if os.path.isfile(filename):
-        return filename
-    else:
-        return f'tests/unittests/{filename}'
-
-
-@pytest.fixture()
-def config():
-    config = parse_ini_config(get_test_file_path('oarec-default.cfg'))
-    database = config['repository']['database']
-    config['repository']['database'] = database.replace('cite.db', 'cite-virtual-collections.db')  # noqa
-    return config
-
-
-@pytest.fixture()
-def api(config):
-    return API(config)
-
-
-def test_landing_page(api):
+def test_landing_page(config):
+    api = API(config)
     headers, status, content = api.landing_page({}, {'f': 'json'})
     content = json.loads(content)
 
@@ -79,10 +58,11 @@ def test_landing_page(api):
     assert headers['Content-Type'] == 'text/html'
 
 
-def test_openapi(api):
+def test_openapi(config):
+    api = API(config)
     headers, status, content = api.openapi({}, {'f': 'json'})
     assert status == 200
-    content = json.loads(content)
+    json.loads(content)
     assert headers['Content-Type'] == 'application/vnd.oai.openapi+json;version=3.0'  # noqa
 
     headers, status, content = api.openapi({}, {'f': 'html'})
@@ -90,17 +70,19 @@ def test_openapi(api):
     assert headers['Content-Type'] == 'text/html'
 
 
-def test_conformance(api):
+def test_conformance(config):
+    api = API(config)
     content = json.loads(api.conformance({}, {})[2])
 
     assert len(content['conformsTo']) == 18
 
 
-def test_collections(api):
+def test_collections(config):
+    api = API(config)
     content = json.loads(api.collections({}, {})[2])
 
     assert len(content['links']) == 2
-    assert len(content['collections']) == 2
+    assert len(content['collections']) == 1
 
     content = json.loads(api.collections({}, {})[2])['collections'][0]
     assert len(content['links']) == 3
@@ -110,7 +92,8 @@ def test_collections(api):
     assert content['itemType'] == 'record'
 
 
-def test_queryables(api):
+def test_queryables(config):
+    api = API(config)
     content = json.loads(api.queryables({}, {})[2])
 
     assert content['type'] == 'object'
@@ -124,7 +107,8 @@ def test_queryables(api):
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
 
 
-def test_items(api):
+def test_items(config):
+    api = API(config)
     content = json.loads(api.items({}, None, {})[2])
 
     assert content['type'] == 'FeatureCollection'
@@ -218,7 +202,8 @@ def test_items(api):
     assert len(content['features']) == content['numberReturned']
 
 
-def test_item(api):
+def test_item(config):
+    api = API(config)
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
     content = json.loads(api.item({}, {}, 'metadata:main', item)[2])
 
@@ -229,7 +214,7 @@ def test_item(api):
 
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
     params = {'f': 'xml'}
-    content = api.item({}, params, 'metadat:main', item)[2]
+    content = api.item({}, params, 'metadata:main', item)[2]
 
     e = etree.fromstring(content)
 
@@ -244,3 +229,156 @@ def test_item(api):
 
     element = e.find('{http://purl.org/dc/elements/1.1/}subject').text
     assert element == 'Tourism--Greece'
+
+
+def test_json_transaction(config, sample_record):
+    api = API(config)
+    request_headers = {
+        'Content-Type': 'application/json'
+    }
+
+    # insert record
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_record)
+
+    assert status == 201
+
+    # test that record is in repository
+    content = json.loads(api.item({}, {}, 'metadata:main', 'record-123')[2])
+
+    assert content['id'] == 'record-123'
+    assert content['properties']['title'] == 'title in English'
+
+    # test XML representation
+    params = {'f': 'xml'}
+    content = api.item({}, params, 'metadata:main', 'record-123')[2]
+
+    e = etree.fromstring(content)
+
+    element = e.find('{http://www.w3.org/2005/Atom}id').text
+    assert element == 'record-123'
+
+    element = e.find('{http://www.w3.org/2005/Atom}title').text
+    assert element == 'title in English'
+
+    # update record
+    sample_record['properties']['title'] = 'new title'
+
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'update', item='record-123', data=sample_record)
+
+    assert status == 204
+
+    # test that record is in repository
+    content = json.loads(api.item({}, {}, 'metadata:main', 'record-123')[2])
+
+    assert content['id'] == 'record-123'
+    assert content['properties']['title'] == 'new title'
+
+    # test XML representation
+    params = {'f': 'xml'}
+    content = api.item({}, params, 'metadata:main', 'record-123')[2]
+
+    e = etree.fromstring(content)
+
+    element = e.find('{http://www.w3.org/2005/Atom}id').text
+    assert element == 'record-123'
+
+    element = e.find('{http://www.w3.org/2005/Atom}title').text
+    assert element == 'new title'
+
+    # delete record
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'delete', item='record-123')
+
+    assert status == 200
+
+    # test that record is not in repository
+    headers, status, content = api.item({}, {}, 'metadata:main', 'record-123')
+
+    assert status == 404
+
+
+def test_xml_transaction(config):
+    api = API(config)
+    sample_xml = b"""
+    <?xml version="1.0" encoding="UTF-8"?>
+    <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+      xmlns:ows="http://www.opengis.net/ows" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      xmlns:dct="http://purl.org/dc/terms/">
+        <dc:identifier>record-456</dc:identifier>
+        <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
+        <dc:title>Ut facilisis justo ut lacus</dc:title>
+        <dc:subject scheme="http://www.digest.org/2.1">Vegetation</dc:subject>
+        <dc:relation>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:relation>
+    </csw:Record>
+    """.strip()
+
+    request_headers = {
+        'Content-Type': 'application/xml'
+    }
+
+    # insert record
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_xml)
+
+    assert status == 201
+
+    # test that record is in repository
+    content = json.loads(api.item({}, {}, 'metadata:main', 'record-456')[2])
+
+    assert content['id'] == 'record-456'
+    assert content['properties']['title'] == 'Ut facilisis justo ut lacus'
+
+    # test XML representation
+    params = {'f': 'xml'}
+    content = api.item({}, params, 'metadata:main', 'record-456')[2]
+
+    e = etree.fromstring(content)
+
+    element = e.find('{http://purl.org/dc/elements/1.1/}identifier').text
+    assert element == 'record-456'
+
+    element = e.find('{http://purl.org/dc/elements/1.1/}title').text
+    assert element == 'Ut facilisis justo ut lacus'
+
+    # update record
+    test_data_xml = sample_xml.replace(
+        b'Ut facilisis justo ut lacus', b'new title')
+
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'update', item='record-456', data=test_data_xml)
+
+    assert status == 204
+
+    # test that record is in repository
+    content = json.loads(api.item({}, {}, 'metadata:main', 'record-456')[2])
+
+    assert content['id'] == 'record-456'
+    assert content['properties']['title'] == 'new title'
+
+    # test XML representation
+    params = {'f': 'xml'}
+    content = api.item({}, params, 'metadata:main', 'record-456')[2]
+
+    e = etree.fromstring(content)
+
+    element = e.find('{http://purl.org/dc/elements/1.1/}identifier').text
+    assert element == 'record-456'
+
+    element = e.find('{http://purl.org/dc/elements/1.1/}title').text
+    assert element == 'new title'
+
+    # delete record
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'delete', item='record-456')
+
+    assert status == 200
+
+    # test that record is not in repository
+    headers, status, content = api.item({}, {}, 'metadata:main', 'record-456')
+
+    assert status == 404
+
+

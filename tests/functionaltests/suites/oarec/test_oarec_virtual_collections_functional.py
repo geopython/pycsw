@@ -1,66 +1,15 @@
-# =================================================================
-#
-# Authors: Tom Kralidis <tomkralidis@gmail.com>
-#          Angelos Tzotsos <gcpp.kalxas@gmail.com>
-#
-# Copyright (c) 2023 Tom Kralidis
-# Copyright (c) 2022 Angelos Tzotsos
-#
-# Permission is hereby granted, free of charge, to any person
-# obtaining a copy of this software and associated documentation
-# files (the "Software"), to deal in the Software without
-# restriction, including without limitation the rights to use,
-# copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following
-# conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-# OTHER DEALINGS IN THE SOFTWARE.
-#
-# =================================================================
-
 import json
-import os
 from xml.etree import ElementTree as etree
 
 import pytest
 
-from pycsw.core.util import parse_ini_config
 from pycsw.ogc.api.records import API
 
-pytestmark = pytest.mark.unit
+pytestmark = pytest.mark.functional
 
 
-def get_test_file_path(filename):
-    """helper function to open test file safely"""
-
-    if os.path.isfile(filename):
-        return filename
-    else:
-        return f'tests/unittests/{filename}'
-
-
-@pytest.fixture()
-def config():
-    return parse_ini_config(get_test_file_path('oarec-default.cfg'))
-
-
-@pytest.fixture()
-def api(config):
-    return API(config)
-
-
-def test_landing_page(api):
+def test_landing_page(config_virtual_collections):
+    api = API(config_virtual_collections)
     headers, status, content = api.landing_page({}, {'f': 'json'})
     content = json.loads(content)
 
@@ -76,10 +25,11 @@ def test_landing_page(api):
     assert headers['Content-Type'] == 'text/html'
 
 
-def test_openapi(api):
+def test_openapi(config_virtual_collections):
+    api = API(config_virtual_collections)
     headers, status, content = api.openapi({}, {'f': 'json'})
     assert status == 200
-    content = json.loads(content)
+    json.loads(content)
     assert headers['Content-Type'] == 'application/vnd.oai.openapi+json;version=3.0'  # noqa
 
     headers, status, content = api.openapi({}, {'f': 'html'})
@@ -87,17 +37,19 @@ def test_openapi(api):
     assert headers['Content-Type'] == 'text/html'
 
 
-def test_conformance(api):
+def test_conformance(config_virtual_collections):
+    api = API(config_virtual_collections)
     content = json.loads(api.conformance({}, {})[2])
 
     assert len(content['conformsTo']) == 18
 
 
-def test_collections(api):
+def test_collections(config_virtual_collections):
+    api = API(config_virtual_collections)
     content = json.loads(api.collections({}, {})[2])
 
     assert len(content['links']) == 2
-    assert len(content['collections']) == 1
+    assert len(content['collections']) == 2
 
     content = json.loads(api.collections({}, {})[2])['collections'][0]
     assert len(content['links']) == 3
@@ -107,7 +59,8 @@ def test_collections(api):
     assert content['itemType'] == 'record'
 
 
-def test_queryables(api):
+def test_queryables(config_virtual_collections):
+    api = API(config_virtual_collections)
     content = json.loads(api.queryables({}, {})[2])
 
     assert content['type'] == 'object'
@@ -121,7 +74,8 @@ def test_queryables(api):
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
 
 
-def test_items(api):
+def test_items(config_virtual_collections):
+    api = API(config_virtual_collections)
     content = json.loads(api.items({}, None, {})[2])
 
     assert content['type'] == 'FeatureCollection'
@@ -215,7 +169,8 @@ def test_items(api):
     assert len(content['features']) == content['numberReturned']
 
 
-def test_item(api):
+def test_item(config_virtual_collections):
+    api = API(config_virtual_collections)
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
     content = json.loads(api.item({}, {}, 'metadata:main', item)[2])
 
@@ -226,7 +181,7 @@ def test_item(api):
 
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
     params = {'f': 'xml'}
-    content = api.item({}, params, 'metadata:main', item)[2]
+    content = api.item({}, params, 'metadat:main', item)[2]
 
     e = etree.fromstring(content)
 
