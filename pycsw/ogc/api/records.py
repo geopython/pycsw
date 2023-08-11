@@ -33,7 +33,7 @@ from configparser import ConfigParser
 import json
 import logging
 import os
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote
 
 from pygeofilter.parsers.ecql import parse as parse_ecql
 from pygeofilter.parsers.cql2_json import parse as parse_cql2_json
@@ -1128,6 +1128,19 @@ def record2json(record, url, collection, stac_item=False):
                 link2['rel'] = link['function']
 
             rdl.append(link2)
+
+    for lnk in [record.parentidentifier, record.relation]:
+        if lnk and len(lnk.strip()) > 0:
+            if not lnk.startswith('http'):
+                lnk = f"{url}/collections/{collection}/items/{quote(lnk)}"
+            record_dict['links'].append({
+                'rel': 'related',
+                'href': lnk,
+                'name': 'related record',
+                'description': 'related record',
+                'type': 'application/json'
+            })
+    
 
     record_dict['links'].append({
         'rel': 'collection',
