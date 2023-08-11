@@ -458,6 +458,18 @@ class API:
             'href': f"{url_base}?f=html",
             'hreflang': self.config['server']['language']
         }, {
+            'rel': 'items',
+            'type': 'application/json',
+            'title': 'items as GeoJSON',
+            'href': f"{url_base}/items?f=json",
+            'hreflang': self.config['server']['language']
+        }, {
+            'rel': 'items',
+            'type': 'text/html',
+            'title': 'items as HTML',
+            'href': f"{url_base}/items?f=html",
+            'hreflang': self.config['server']['language']
+        }, {
             'rel': 'http://www.opengis.net/def/rel/ogc/1.0/queryables',
             'type': 'application/schema+json',
             'title': 'Queryables as JSON',
