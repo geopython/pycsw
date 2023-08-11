@@ -460,13 +460,13 @@ class API:
         }, {
             'rel': 'items',
             'type': 'application/json',
-            'title': 'The items of this collection as geojson',
+            'title': 'items as GeoJSON',
             'href': f"{url_base}/items?f=json",
             'hreflang': self.config['server']['language']
         }, {
             'rel': 'items',
             'type': 'text/html',
-            'title': 'The items of this collection as html',
+            'title': 'items as HTML',
             'href': f"{url_base}/items?f=html",
             'hreflang': self.config['server']['language']
         }, {
