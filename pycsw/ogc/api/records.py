@@ -1122,10 +1122,11 @@ def record2json(record, url, collection, stac_item=False):
             if not lnk.startswith('http'):
                 lnk = f"{url}/collections/{collection}/items/{quote(lnk)}"
             record_dict['links'].append({
+                'rel': 'related',
                 'href': lnk,
-                'name': 'Related record',
-                'description': '',
-                'type': 'text/html'
+                'name': 'related record',
+                'description': 'related record',
+                'type': 'application/json'
             })
     
 
