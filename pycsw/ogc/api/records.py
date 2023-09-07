@@ -1072,42 +1072,54 @@ def record2json(record, url, collection, stac_item=False):
     if record.keywords:
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
 
-    if record.contacts:
+    if record.contacts not in [None, '', 'null']:
         rcnt = []
-        for cnt in json.loads(record.contacts):
-            rcnt.append({
-                'name': cnt['name'],
-                'organization': cnt.get('organization', ''),
-                'positionName': cnt.get('position', ''),
-                'roles': [
-                    {'name': cnt.get('role', '')}
-                ],
-                'contactInfo': {
-                    'phone': {'work': cnt.get('phone', '')},
-                    'email': {'work': cnt.get('email', '')},
-                    'address': {
-                        'work': {
-                            'deliveryPoint': cnt.get('address', ''),
-                            'city': cnt.get('city', ''),
-                            'administrativeArea': cnt.get('region', ''),
-                            'postalCode': cnt.get('postcode', ''),
-                            'country': cnt.get('country', ''),
+        try:
+            for cnt in json.loads(record.contacts):
+                try:
+                    rcnt.append({
+                        'name': cnt['name'],
+                        'organization': cnt.get('organization', ''),
+                        'positionName': cnt.get('position', ''),
+                        'roles': [
+                            {'name': cnt.get('role', '')}
+                        ],
+                        'contactInfo': {
+                            'phone': {'work': cnt.get('phone', '')},
+                            'email': {'work': cnt.get('email', '')},
+                            'address': {
+                                'work': {
+                                    'deliveryPoint': cnt.get('address', ''),
+                                    'city': cnt.get('city', ''),
+                                    'administrativeArea': cnt.get('region', ''),
+                                    'postalCode': cnt.get('postcode', ''),
+                                    'country': cnt.get('country', ''),
+                                }
+                            },
+                            'url': cnt.get('onlineresource', '')
                         }
-                    },
-                    'url': cnt.get('onlineresource', '')
-                }
-            })
+                    })
+                except Exception as err:
+                    LOGGER.exception(f"failed to parse contact of {record.identifier}: {err}")
+        except Exception as err:
+            LOGGER.exception(f"failed to parse contacts json of {record.identifier}: {err}")
         record_dict['properties']['providers'] = rcnt
 
-    if record.themes:
+    if record.themes not in [None, '', 'null']:
         ogcapiThemes = []
         # For a scheme, prefer uri over label
         # OWSlib currently uses .keywords_object for keywords with url, see https://github.com/geopython/OWSLib/pull/765
-        for theme in json.loads(record.themes):
-            ogcapiThemes.append({
-                'scheme': theme['thesaurus'].get('url', theme['thesaurus'].get('title', '')),
-                'concepts': [c for c in theme.get('keywords_object', []) if c not in [None, '']]
-            })
+        try:
+            for theme in json.loads(record.themes):
+                try:
+                    ogcapiThemes.append({
+                        'scheme': theme['thesaurus'].get('url', theme['thesaurus'].get('title', '')),
+                        'concepts': [c for c in theme.get('keywords_object', []) if c not in [None, '']]
+                    })
+                except Exception as err:
+                    LOGGER.exception(f"failed to parse theme of {record.identifier}: {err}")
+        except Exception as err:
+            LOGGER.exception(f"failed to parse themes json of {record.identifier}: {err}")
         record_dict['properties']['themes'] = ogcapiThemes
 
     if record.links:
