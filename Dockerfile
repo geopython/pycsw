@@ -39,9 +39,6 @@
 FROM python:3.8-slim-buster
 LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
-RUN apt-get update && apt-get install --yes \
-        ca-certificates libexpat1 \
-
 # Build arguments
 # add "--build-arg BUILD_DEV_IMAGE=true" to Docker build command when building with test/doc tools
 
