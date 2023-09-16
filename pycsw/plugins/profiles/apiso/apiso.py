@@ -688,13 +688,13 @@ class APISO(profile.Profile):
                 etree.SubElement(linkage, util.nspath_eval('gmd:URL', self.namespaces)).text = link['url']
 
                 protocol = etree.SubElement(online2, util.nspath_eval('gmd:protocol', self.namespaces))
-                etree.SubElement(protocol, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link['protocol']
+                etree.SubElement(protocol, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link.get('protocol', 'WWW:LINK')
 
                 name = etree.SubElement(online2, util.nspath_eval('gmd:name', self.namespaces))
-                etree.SubElement(name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link['name']
+                etree.SubElement(name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link.get('name')
 
                 desc = etree.SubElement(online2, util.nspath_eval('gmd:description', self.namespaces))
-                etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link['description']
+                etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link.get('description')
 
         return node
 
