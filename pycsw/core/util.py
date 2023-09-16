@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2022 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -167,7 +167,7 @@ def nspath_eval(xpath, nsmap):
         elif len(chunks) == 1:
             out.append(node)
         else:
-            raise RuntimeError("Invalid XPath expression: {0}".format(xpath))
+            raise RuntimeError(f"Invalid XPath expression: {xpath}")
     return '/'.join(out)
 
 

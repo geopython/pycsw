@@ -38,6 +38,7 @@ from flask import Flask, Blueprint, make_response, request
 from pycsw.core.util import parse_ini_config
 from pycsw.ogc.api.records import API
 from pycsw.ogc.api.util import STATIC
+from pycsw.stac.api import STACAPI
 from pycsw.wsgi import application_dispatcher
 
 
@@ -52,6 +53,24 @@ BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC,
                       static_url_path='/static')
 
 api_ = API(APP.config['PYCSW_CONFIG'])
+stacapi = STACAPI(parse_ini_config(Path(os.getenv('PYCSW_CONFIG'))))
+
+
+def get_api_type(urlpath):
+    """
+    Decorator to detect API type
+
+    :param urlpath: URL path
+
+    :returns: `str` of API typ
+    """
+
+    api_type = 'ogcapi-records'
+
+    if 'stac' in urlpath:
+        api_type = 'stac-api'
+
+    return api_type
 
 
 def get_response(result: tuple):
@@ -73,6 +92,7 @@ def get_response(result: tuple):
 
 
 @BLUEPRINT.route('/')
+@BLUEPRINT.route('/stac')
 def landing_page():
     """
     OGC API landing page endpoint
@@ -80,10 +100,14 @@ def landing_page():
     :returns: HTTP response
     """
 
-    return get_response(api_.landing_page(dict(request.headers), request.args))
+    if get_api_type(request.url_rule.rule) == 'stac-api':
+        return get_response(stacapi.landing_page(dict(request.headers), request.args))  # noqa
+    else:
+        return get_response(api_.landing_page(dict(request.headers), request.args))
 
 
 @BLUEPRINT.route('/openapi')
+@BLUEPRINT.route('/stac/openapi')
 def openapi():
     """
     OGC API OpenAPI document endpoint
@@ -91,10 +115,14 @@ def openapi():
     :returns: HTTP response
     """
 
-    return get_response(api_.openapi(dict(request.headers), request.args))
+    if get_api_type(request.url_rule.rule) == 'stac-api':
+        return get_response(stacapi.openapi(dict(request.headers), request.args))
+    else:
+        return get_response(api_.openapi(dict(request.headers), request.args))
 
 
 @BLUEPRINT.route('/conformance')
+@BLUEPRINT.route('/stac/conformance')
 def conformance():
     """
     OGC API conformance endpoint
@@ -102,10 +130,14 @@ def conformance():
     :returns: HTTP response
     """
 
-    return get_response(api_.conformance(dict(request.headers), request.args))
+    if get_api_type(request.url_rule.rule) == 'stac-api':
+        return get_response(stacapi.conformance(dict(request.headers), request.args))
+    else:
+        return get_response(api_.conformance(dict(request.headers), request.args))
 
 
 @BLUEPRINT.route('/collections')
+@BLUEPRINT.route('/stac/collections')
 def collections():
     """
     OGC API collections endpoint
@@ -113,10 +145,14 @@ def collections():
     :returns: HTTP response
     """
 
-    return get_response(api_.collections(dict(request.headers), request.args))
+    if get_api_type(request.url_rule.rule) == 'stac-api':
+        return get_response(stacapi.collections(dict(request.headers), request.args))  # noqa
+    else:
+        return get_response(api_.collections(dict(request.headers), request.args))
 
 
 @BLUEPRINT.route('/collections/<collection>')
+@BLUEPRINT.route('/stac/collections/<collection>')
 def collection(collection='metadata:main'):
     """
     OGC API collection endpoint
@@ -126,12 +162,16 @@ def collection(collection='metadata:main'):
     :returns: HTTP response
     """
 
-    return get_response(api_.collection(dict(request.headers),
-                        request.args, collection))
+    if get_api_type(request.url_rule.rule) == 'stac-api':
+        return get_response(stacapi.collection(dict(request.headers),
+                            request.args, collection))
+    else:
+        return get_response(api_.collection(dict(request.headers),
+                            request.args, collection))
 
 
-@BLUEPRINT.route('/queryables')
 @BLUEPRINT.route('/collections/<collection>/queryables')
+@BLUEPRINT.route('/stac/queryables')
 def queryables(collection='metadata:main'):
     """
     OGC API collection queryables endpoint
@@ -141,12 +181,17 @@ def queryables(collection='metadata:main'):
     :returns: HTTP response
     """
 
-    return get_response(api_.queryables(dict(request.headers), request.args,
-                        collection))
+    if get_api_type(request.url_rule.rule) == 'stac-api':
+        return get_response(stacapi.queryables(dict(request.headers), request.args,
+                            collection))
+    else:
+        return get_response(api_.queryables(dict(request.headers), request.args,
+                            collection))
 
 
-@BLUEPRINT.route('/search', methods=['GET', 'POST'])
 @BLUEPRINT.route('/collections/<collection>/items', methods=['GET', 'POST'])
+@BLUEPRINT.route('/stac/search', methods=['GET', 'POST'])
+@BLUEPRINT.route('/stac/collections/<collection>/items', methods=['GET', 'POST'])
 def items(collection='metadata:main'):
     """
     OGC API collection items endpoint
@@ -157,13 +202,8 @@ def items(collection='metadata:main'):
     :returns: HTTP response
     """
 
-    data = None
-    stac_item = False
-
-    if 'search' in request.url_rule.rule:
-        stac_item = True
-
     if request.method == 'POST' and request.content_type not in [None, 'application/json']:  # noqa
+        data = None
         if request.content_type == 'application/geo+json':  # JSON grammar
             data = request.get_json(silent=True)
         elif 'xml' in request.content_type:  # XML grammar
@@ -171,14 +211,19 @@ def items(collection='metadata:main'):
         return get_response(api_.manage_collection_item(dict(request.headers),
                             'create', data=data))
     else:
-        return get_response(api_.items(dict(request.headers),
-                            request.get_json(silent=True), dict(request.args),
-                            collection, stac_item))
+        if get_api_type(request.url_rule.rule) == 'stac-api':
+            return get_response(stacapi.items(dict(request.headers),
+                                request.get_json(silent=True), dict(request.args),
+                                collection))
+        else:
+            return get_response(api_.items(dict(request.headers),
+                                request.get_json(silent=True), dict(request.args),
+                                collection))
 
 
-@BLUEPRINT.route('/stac/collections/<collection>/items/<item>')
 @BLUEPRINT.route('/collections/<collection>/items/<item>',
                  methods=['GET', 'PUT', 'DELETE'])
+@BLUEPRINT.route('/stac/collections/<collection>/items/<item>')
 def item(collection='metadata:main', item=None):
     """
     OGC API collection items endpoint
@@ -189,11 +234,6 @@ def item(collection='metadata:main', item=None):
     :returns: HTTP response
     """
 
-    stac_item = False
-
-    if 'stac' in request.url_rule.rule:
-        stac_item = True
-
     if request.method == 'PUT':
         return get_response(
             api_.manage_collection_item(
@@ -203,8 +243,12 @@ def item(collection='metadata:main', item=None):
         return get_response(
             api_.manage_collection_item(dict(request.headers), 'delete', item))
     else:
-        return get_response(api_.item(dict(request.headers), request.args,
-                            collection, item, stac_item))
+        if get_api_type(request.url_rule.rule) == 'stac-api':
+            return get_response(stacapi.item(dict(request.headers), request.args,
+                                collection, item))
+        else:
+            return get_response(api_.item(dict(request.headers), request.args,
+                                collection, item))
 
 
 @BLUEPRINT.route('/csw', methods=['GET', 'POST'])

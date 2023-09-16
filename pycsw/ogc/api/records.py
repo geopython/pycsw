@@ -52,7 +52,7 @@ LOGGER = logging.getLogger(__name__)
 #: Return headers for requests (e.g:X-Powered-By)
 HEADERS = {
     'Content-Type': 'application/json',
-    'X-Powered-By': 'pycsw {}'.format(__version__)
+    'X-Powered-By': f'pycsw {__version__}'
 }
 
 THISDIR = os.path.dirname(os.path.realpath(__file__))
@@ -72,11 +72,7 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
     'http://www.opengis.net/spec/cql2/1.0/conf/cql2-json',
-    'http://www.opengis.net/spec/cql2/1.0/conf/cql2-text',
-    'https://api.stacspec.org/v1.0.0/core',
-    'https://api.stacspec.org/v1.0.0/item-search',
-    'https://api.stacspec.org/v1.0.0/item-search#filter',
-    'https://api.stacspec.org/v1.0.0/ogcapi-features'
+    'http://www.opengis.net/spec/cql2/1.0/conf/cql2-text'
 ]
 
 
@@ -92,6 +88,7 @@ class API:
         :returns: `pycsw.ogc.api.API` instance
         """
 
+        self.mode = 'ogcapi-records'
         self.config = config
 
         log.setup_logger(self.config)
@@ -146,10 +143,11 @@ class API:
             raise
 
         self.query_mappings = {
+            'identifier': self.repository.dataset.identifier,
             'type': self.repository.dataset.type,
             'parentidentifier': self.repository.dataset.parentidentifier,
             'collections': self.repository.dataset.parentidentifier,
-            'recordUpdated': self.repository.dataset.insert_date,
+            'updated': self.repository.dataset.insert_date,
             'title': self.repository.dataset.title,
             'description': self.repository.dataset.abstract,
             'keywords': self.repository.dataset.keywords,
@@ -196,19 +194,19 @@ class API:
 
         return content_type
 
-    def get_response(self, status, headers, template, data):
+    def get_response(self, status, headers, data, template=None):
         """
         Provide response
 
         :param status: `int` of HTTP status
         :param headers: `dict` of HTTP request headers
-        :param template: template filename
         :param data: `dict` of response data
+        :param template: template filename (default is `None`)
 
         :returns: tuple of headers, status code, content
         """
 
-        if headers.get('Content-Type') == 'text/html':
+        if headers.get('Content-Type') == 'text/html' and template is not None:
             content = render_j2_template(self.config, template, data)
         else:
             content = to_json(data)
@@ -230,10 +228,7 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         response = {
-            'stac_version': '1.0.0',
             'id': 'pycsw-catalogue',
-            'type': 'Catalog',
-            'conformsTo': CONFORMANCE_CLASSES,
             'links': [],
             'title': self.config['metadata:main']['identification_title'],
             'description':
@@ -247,12 +242,6 @@ class API:
               'rel': 'self',
               'type': 'application/json',
               'title': 'This document as JSON',
-              'href': f"{self.config['server']['url']}?f=json",
-              'hreflang': self.config['server']['language']
-            }, {
-              'rel': 'root',
-              'type': 'application/json',
-              'title': 'The root URI as JSON',
               'href': f"{self.config['server']['url']}?f=json",
               'hreflang': self.config['server']['language']
             }, {
@@ -323,7 +312,7 @@ class API:
             }
         ]
 
-        return self.get_response(200, headers_, 'landing_page.html', response)
+        return self.get_response(200, headers_, response, 'landing_page.html')
 
     def openapi(self, headers_, args):
         """
@@ -343,7 +332,7 @@ class API:
 
         response = gen_oapi(self.config, filepath)
 
-        return self.get_response(200, headers_, 'openapi.html', response)
+        return self.get_response(200, headers_, response, 'openapi.html')
 
     def conformance(self, headers_, args):
         """
@@ -361,7 +350,7 @@ class API:
             'conformsTo': CONFORMANCE_CLASSES
         }
 
-        return self.get_response(200, headers_, 'conformance.html', response)
+        return self.get_response(200, headers_, response, 'conformance.html')
 
     def collections(self, headers_, args):
         """
@@ -414,7 +403,7 @@ class API:
             'hreflang': self.config['server']['language']
         }]
 
-        return self.get_response(200, headers_, 'collections.html', response)
+        return self.get_response(200, headers_, response, 'collections.html')
 
     def collection(self, headers_, args, collection='metadata:main'):
         """
@@ -459,7 +448,7 @@ class API:
             'hreflang': self.config['server']['language']
         }, {
             'rel': 'items',
-            'type': 'application/json',
+            'type': 'application/gep+json',
             'title': 'items as GeoJSON',
             'href': f"{url_base}/items?f=json",
             'hreflang': self.config['server']['language']
@@ -483,7 +472,7 @@ class API:
             'hreflang': self.config['server']['language']
         }]
 
-        return self.get_response(200, headers_, 'collection.html', response)
+        return self.get_response(200, headers_, response, 'collection.html')
 
     def queryables(self, headers_, args, collection='metadata:main'):
         """
@@ -500,6 +489,11 @@ class API:
 
         if 'json' in headers_['Content-Type']:
             headers_['Content-Type'] = 'application/schema+json'
+
+        if collection not in self.get_all_collections():
+            msg = f'Invalid collection'
+            LOGGER.exception(msg)
+            return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
         properties = self.repository.describe()
         properties2 = {}
@@ -524,10 +518,9 @@ class API:
             '$id': f"{self.config['server']['url']}/collections/{collection}/queryables"
         }
 
-        return self.get_response(200, headers_, 'queryables.html', response)
+        return self.get_response(200, headers_, response, 'queryables.html')
 
-    def items(self, headers_, json_post_data, args, collection='metadata:main',
-              stac_item=False):
+    def items(self, headers_, json_post_data, args, collection='metadata:main'):
         """
         Provide collection items
 
@@ -566,7 +559,12 @@ class API:
         limit = None
         collections = []
 
-        if stac_item and json_post_data is not None:
+        if collection not in self.get_all_collections():
+            msg = f'Invalid collection'
+            LOGGER.exception(msg)
+            return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+        if json_post_data is not None:
             LOGGER.debug(f'JSON POST data: {json_post_data}')
             LOGGER.debug('Transforming JSON POST data into request args')
 
@@ -601,7 +599,10 @@ class API:
                 continue
 
             if k not in reserved_query_params:
-                if k == 'anytext':
+                if k == 'ids':
+                    ids = ','.join(f'"{x}"' for x in v.split(','))
+                    query_args.append(f"identifier IN ({ids})")
+                elif k == 'anytext':
                     query_args.append(build_anytext(k, v))
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
@@ -622,9 +623,14 @@ class API:
                 else:
                     query_args.append(f'{k} = "{v}"')
 
-        if collection != 'metadata:main' and not stac_item:
+        if collection != 'metadata:main':
             LOGGER.debug('Adding virtual collection filter')
             query_args.append(f'parentidentifier = "{collection}"')
+
+        if 'collections' in args:
+            LOGGER.debug('Adding collections filter')
+            for collection in args['collections'].split(','):
+                query_args.append(f'parentidentifier = "{collection}"')
 
         LOGGER.debug('Evaluating CQL and other specified filtering parameters')
         if cql_query is not None and query_args:
@@ -641,6 +647,7 @@ class API:
         if cql_query is not None:
             LOGGER.debug('Detected CQL text')
             query_parser = parse_ecql
+
         elif json_post_data is not None:
             if 'limit' in json_post_data:
                 limit = json_post_data.pop('limit')
@@ -657,6 +664,8 @@ class API:
             cql_query = json_post_data
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
             query_parser = parse_cql2_json
+
+        LOGGER.debug(f'query parser: {query_parser}')
 
         if query_parser is not None and json_post_data != {}:
             LOGGER.debug('Parsing CQL into AST')
@@ -725,7 +734,7 @@ class API:
         response['numberReturned'] = returned
 
         for record in records:
-            response['features'].append(record2json(record, self.config['server']['url'], collection, stac_item))
+            response['features'].append(record2json(record, self.config['server']['url'], collection, self.mode))
 
         LOGGER.debug('Creating links')
 
@@ -733,10 +742,7 @@ class API:
 
         link_args.pop('f', None)
 
-        if stac_item:
-            fragment = 'search'
-        else:
-            fragment = f'collections/{collection}/items'
+        fragment = f'collections/{collection}/items'
 
         if link_args:
             url_base = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
@@ -762,12 +768,6 @@ class API:
             'type': 'application/json',
             'title': 'Collection URL',
             'href': f"{self.config['server']['url']}/collections/{collection}",
-            'hreflang': self.config['server']['language']
-        }, {
-            'rel': 'root',
-            'type': 'application/json',
-            'title': 'The root URI as JSON',
-            'href': f"{self.config['server']['url']}/?f=json",
             'hreflang': self.config['server']['language']
         }])
 
@@ -806,14 +806,11 @@ class API:
             response['title'] = self.config['metadata:main']['identification_title']
             response['collection'] = collection
 
-        if stac_item:
-            template = 'stac_items.html'
-        else:
-            template = 'items.html'
+        template = 'items.html'
 
-        return self.get_response(200, headers_, template, response)
+        return self.get_response(200, headers_, response, template)
 
-    def item(self, headers_, args, collection, item, stac_item=False):
+    def item(self, headers_, args, collection, item):
         """
         Provide collection item
 
@@ -827,6 +824,11 @@ class API:
 
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
+        if collection not in self.get_all_collections():
+            msg = f'Invalid collection'
+            LOGGER.exception(msg)
+            return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
         LOGGER.debug(f'Querying repository for item {item}')
         try:
             record = self.repository.query_ids([item])[0]
@@ -837,13 +839,16 @@ class API:
         if headers_['Content-Type'] == 'application/xml':
             return headers_, 200, record.xml
 
-        response = record2json(record, self.config['server']['url'], collection, stac_item)
+        response = record2json(record, self.config['server']['url'], collection, self.mode)
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
             response['collection'] = collection
 
-        return self.get_response(200, headers_, 'item.html', response)
+        if 'json' in headers_['Content-Type']:
+            headers_['Content-Type'] = 'application/geo+json'
+
+        return self.get_response(200, headers_, response, 'item.html')
 
     def manage_collection_item(self, headers_, action='create', item=None, data=None):
         """
@@ -923,7 +928,7 @@ class API:
             code = 200
             response = {}
 
-        return self.get_response(code, headers_, None, response)
+        return self.get_response(code, headers_, response)
 
     def get_exception(self, status, headers, code, description):
         """
@@ -942,7 +947,7 @@ class API:
             'description': description
         }
 
-        return self.get_response(status, headers, 'exception.html', exception)
+        return self.get_response(status, headers, exception, 'exception.html')
 
     def get_collection_info(self, collection_name: str = 'metadata:main',
                             collection_info: dict = {}) -> dict:
@@ -985,29 +990,74 @@ class API:
                 'hreflang': self.config['server']['language']
             }, {
                 'rel': 'items',
-                'type': 'application/json',
+                'type': 'application/geo+json',
                 'title': 'Collection items as GeoJSON',
                 'href': f"{self.config['server']['url']}/collections/{collection_name}/items",
                 'hreflang': self.config['server']['language']
             }]
         }
 
+    def get_all_collections(self):
+        """
+        Get all collections
 
-def record2json(record, url, collection, stac_item=False):
+        :returns: `list` of collection identifiers
+        """
+
+        default_collection = 'metadata:main'
+        virtual_collections = self.repository.query_collections()
+
+        return [default_collection] + [vc.identifier for vc in virtual_collections]
+
+
+def record2json(record, url, collection, mode='ogcapi-records'):
     """
     OGC API - Records record generator from core pycsw record model
 
     :param record: pycsw record object
     :param url: server URL
     :param collection: collection id
-    :stac_item: whether the result should be a STAC item (default False)
+    :param mode: `str` of API mode
 
     :returns: `dict` of record GeoJSON
     """
 
     if record.metadata_type == 'application/json':
-        LOGGER.debug('Returning native JSON representation')
-        return json.loads(record.metadata)
+        rec = json.loads(record.metadata)
+        if rec.get('stac_version') is not None and rec['type'] == 'Feature' and mode == 'stac-api':
+            LOGGER.debug('Returning native STAC representation')
+            rec['links'].extend([{
+                'rel': 'self',
+                'type': 'application/geo+json',
+                'href': f"{url}/collections/{collection}/items/{rec['id']}"
+                }, {
+                'rel': 'root',
+                'type': 'application/json',
+                'href': url
+                }, {
+                'rel': 'parent',
+                'type': 'application/json',
+                'href': f"{url}/collections/{collection}"
+                }, {
+                'rel': 'collection',
+                'type': 'application/json',
+                'href': f"{url}/collections/{collection}"
+                }
+            ])
+
+            return rec
+
+        LOGGER.debug('Removing STAC version')
+        _ = rec.pop('stac_version', None)
+        _ = rec.pop('stac_extensions', None)
+        LOGGER.debug('Transforming assets to enclosure links')
+        assets = rec.pop('assets', {})
+        for key, value in assets.items():
+            value['rel'] = 'enclosure'
+            value['name'] = key
+            rec['links'].append(value)
+
+        return rec
 
     record_dict = {
         'id': record.identifier,
@@ -1015,8 +1065,7 @@ def record2json(record, url, collection, stac_item=False):
         'geometry': None,
         'time': record.date,
         'properties': {},
-        'links': [],
-        'assets': {}
+        'links': []
     }
 
     # todo; for keywords with a scheme use the theme property
@@ -1031,19 +1080,7 @@ def record2json(record, url, collection, stac_item=False):
             record.otherconstraints = [record.otherconstraints]
         record_dict['properties']['license'] = ", ".join(record.otherconstraints)
 
-    if stac_item:
-        record_dict['stac_version'] = '1.0.0'
-        record_dict['collection'] = 'metadata:main'
-        if record.date is None:
-            if record.time_begin == record.time_end:
-                record_dict['properties']['datetime'] = record.time_begin
-            else:
-                record_dict['properties']['start_datetime'] = record.time_begin
-                record_dict['properties']['end_datetime'] = record.time_end
-        else:
-            record_dict['properties']['datetime'] = record.date
-
-    record_dict['properties']['recordUpdated'] = record.insert_date
+    record_dict['properties']['updated'] = record.insert_date
 
     if record.type:
         record_dict['properties']['type'] = record.type
@@ -1128,9 +1165,9 @@ def record2json(record, url, collection, stac_item=False):
         for link in jsonify_links(record.links):
             link2 = {
                 'href': link['url'],
-                'name': link['name'],
-                'description': link['description'],
-                'type': link['protocol']
+                'name': link.get('name'),
+                'description': link.get('description'),
+                'type': link.get('protocol')
             }
             if 'rel' in link:
                 link2['rel'] = link['rel']
@@ -1152,7 +1189,6 @@ def record2json(record, url, collection, stac_item=False):
                 'description': 'related record',
                 'type': 'application/json'
             })
-    
 
     record_dict['links'].append({
         'rel': 'collection',

@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2016 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -1605,7 +1605,7 @@ class Csw3(object):
                 self.parent.context.md_core_model['mappings']['pycsw:Links'])
 
                 if rlinks:
-                    LOGGER.info('link type: {}'.format(type(rlinks)))
+                    LOGGER.info(f'link type: {type(rlinks)}')
                     for link in util.jsonify_links(rlinks):
                         ref = etree.SubElement(record, util.nspath_eval('dct:references',
                             self.parent.context.namespaces))

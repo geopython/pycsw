@@ -2,8 +2,10 @@
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2023 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -82,7 +84,7 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
         "postgresql": handle_postgresql_db,
     }.get(db)
     logger.debug("Setting up pycsw's data repository...")
-    logger.debug("Repository URL: {}".format(db_url))
+    logger.debug(f"Repository URL: {db_url}")
     db_handler(
         db_url,
         pycsw_config.get("repository", "table"),
@@ -105,12 +107,12 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
         "--bind=0.0.0.0:8000",
         "--access-logfile=-",
         "--error-logfile=-",
-        "--workers={}".format(workers),
-        "--timeout={}".format(timeout),
+        f"--workers={workers}",
+        f"--timeout={timeout}",
         "pycsw.wsgi_flask:APP",
 
     ]
-    logger.debug("Launching pycsw with {} ...".format(" ".join(execution_args)))
+    logger.debug(f"Launching pycsw with {' '.join(execution_args)} ...")
     os.execlp(
         "gunicorn",
         *execution_args
@@ -139,7 +141,7 @@ def handle_postgresql_db(database_url, table_name, pycsw_home):
 
 
 def _wait_for_postgresql_db(database_url, max_tries=10, wait_seconds=3):
-    logger.debug("Waiting for {!r}...".format(database_url))
+    logger.debug(f"Waiting for {database_url}...")
     engine = create_engine(database_url)
     current_try = 0
     while current_try < max_tries:
@@ -153,8 +155,7 @@ def _wait_for_postgresql_db(database_url, max_tries=10, wait_seconds=3):
             sleep(wait_seconds)
     else:
         raise RuntimeError(
-            "Database not responding at {} after {} tries. "
-            "Giving up".format(database_url, max_tries)
+            f"Database not responding at {database_url} after {max_tries} tries. "
         )
 
 

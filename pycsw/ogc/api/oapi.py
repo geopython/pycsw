@@ -36,7 +36,7 @@ from pycsw.ogc.api.util import yaml_load
 LOGGER = logging.getLogger(__name__)
 
 
-def gen_oapi(config, oapi_filepath):
+def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
     """
     Genrate OpenAPI document
 
@@ -156,7 +156,7 @@ def gen_oapi(config, oapi_filepath):
         'description': 'The optional filter parameter specifies a CQL2 expression to be used for enhanced filtering',  # noqa
         'required': False,
         'schema': {
-            'type': 'object',
+            'type': 'object'
         },
         'style': 'form',
         'explode': False
@@ -170,7 +170,7 @@ def gen_oapi(config, oapi_filepath):
             'type': 'string',
             'enum': [
                 'cql2-json',
-                'cql2-text',
+                'cql2-text'
             ],
             'default': 'cql2-text'
         },
@@ -187,6 +187,38 @@ def gen_oapi(config, oapi_filepath):
         },
         'style': 'form'
     }
+    # TODO: remove local definition of ids once implemented
+    # in OGC API - Records
+    oapi['components']['parameters']['ids'] = {
+        'name': 'ids',
+        'in': 'query',
+        'description': 'Comma-separated list of identifiers',
+        'required': False,
+        'schema': {
+            'type': 'array',
+            'items': {
+                'type': 'string'
+            }
+        },
+        'style': 'form',
+        'explode': False
+    }
+
+    if mode == 'stac-api':
+        oapi['components']['parameters']['collections'] = {
+            'name': 'collections',
+            'in': 'query',
+            'description': 'Comma-separated list of collection identifiers',
+            'required': False,
+            'schema': {
+                'type': 'array',
+                'items': {
+                    'type': 'string'
+                }
+            },
+            'style': 'form',
+            'explode': False
+        }
 
     LOGGER.debug('Adding server info')
     oapi['info'] = {
@@ -342,6 +374,7 @@ def gen_oapi(config, oapi_filepath):
             'parameters': [
                 {'$ref': '#/components/parameters/collectionId'},
                 {'$ref': '#/components/parameters/bbox'},
+                {'$ref': '#/components/parameters/ids'},
                 {'$ref': '#/components/parameters/datetime'},
                 {'$ref': '#/components/parameters/limit'},
                 {'$ref': '#/components/parameters/q'},
@@ -400,9 +433,15 @@ def gen_oapi(config, oapi_filepath):
 
     oapi['paths']['/collections/{collectionId}/items'] = path
 
-    path2 = deepcopy(path)
-    path2['get']['operationId'] = 'searchRecords'
-    oapi['paths']['/search'] = path2
+    if mode == 'stac-api':
+        LOGGER.debug('Adding /stac/search')
+        path2 = deepcopy(path)
+        path2['get']['operationId'] = 'searchRecords'
+        oapi['paths']['/search'] = path2
+
+        oapi['paths']['/search']['get']['parameters'].append({
+            '$ref': '#/components/parameters/collections'
+        })
 
     f = deepcopy(oapi['components']['parameters']['f'])
     f['schema']['enum'].append('xml')

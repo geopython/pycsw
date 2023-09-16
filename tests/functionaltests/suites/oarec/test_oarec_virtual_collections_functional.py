@@ -15,7 +15,7 @@ def test_landing_page(config_virtual_collections):
 
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
-    assert len(content['links']) == 15
+    assert len(content['links']) == 14
 
     for link in content['links']:
         assert link['href'].startswith(api.config['server']['url'])
@@ -41,7 +41,7 @@ def test_conformance(config_virtual_collections):
     api = API(config_virtual_collections)
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 18
+    assert len(content['conformsTo']) == 14
 
 
 def test_collections(config_virtual_collections):
@@ -68,10 +68,13 @@ def test_queryables(config_virtual_collections):
     assert content['$id'] == 'http://localhost/pycsw/oarec/collections/metadata:main/queryables'  # noqa
     assert content['$schema'] == 'http://json-schema.org/draft/2019-09/schema'
 
-    assert len(content['properties']) == 12
+    assert len(content['properties']) == 13
 
     assert 'geometry' in content['properties']
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
+
+    headers, status, content = api.queryables({}, {}, 'foo')
+    assert status == 400
 
 
 def test_items(config_virtual_collections):
@@ -79,7 +82,7 @@ def test_items(config_virtual_collections):
     content = json.loads(api.items({}, None, {})[2])
 
     assert content['type'] == 'FeatureCollection'
-    assert len(content['links']) == 5
+    assert len(content['links']) == 4
     assert content['numberMatched'] == 12
     assert content['numberReturned'] == 10
     assert len(content['features']) == 10
@@ -168,6 +171,9 @@ def test_items(config_virtual_collections):
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
+    headers, status, content = api.items({}, {}, {}, 'foo')
+    assert status == 400
+
 
 def test_item(config_virtual_collections):
     api = API(config_virtual_collections)
@@ -181,7 +187,7 @@ def test_item(config_virtual_collections):
 
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
     params = {'f': 'xml'}
-    content = api.item({}, params, 'metadat:main', item)[2]
+    content = api.item({}, params, 'metadata:main', item)[2]
 
     e = etree.fromstring(content)
 
@@ -196,3 +202,6 @@ def test_item(config_virtual_collections):
 
     element = e.find('{http://purl.org/dc/elements/1.1/}subject').text
     assert element == 'Tourism--Greece'
+
+    headers, status, content = api.item({}, {}, 'foo', item)
+    assert status == 400

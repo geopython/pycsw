@@ -3,9 +3,11 @@
 #
 # Authors: Adam Hinz <hinz.adam@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2015 Adam Hinz
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2023 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -173,6 +175,7 @@ def get_pycsw_root_path(process_environment, request_environment=None,
     )
     return app_root
 
+
 def get_configuration_path(process_environment, request_environment,
                            pycsw_root, config_path_key="PYCSW_CONFIG"):
     """Get the path for pycsw configuration file.
@@ -228,5 +231,5 @@ if __name__ == '__main__':  # run inline using WSGI reference implementation
     if len(sys.argv) > 1:
         port = int(sys.argv[1])
     httpd = make_server('', port, application)
-    print('Serving on port {}...'.format(port))
+    print(f'Serving on port {port}...')
     httpd.serve_forever()

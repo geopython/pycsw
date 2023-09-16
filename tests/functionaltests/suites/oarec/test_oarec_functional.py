@@ -48,7 +48,7 @@ def test_landing_page(config):
 
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
-    assert len(content['links']) == 15
+    assert len(content['links']) == 14
 
     for link in content['links']:
         assert link['href'].startswith(api.config['server']['url'])
@@ -72,15 +72,19 @@ def test_openapi(config):
 
 def test_conformance(config):
     api = API(config)
-    content = json.loads(api.conformance({}, {})[2])
+    headers, status, content = api.conformance({}, {})
+    content = json.loads(content)
 
-    assert len(content['conformsTo']) == 18
+    assert headers['Content-Type'] == 'application/json'
+    assert len(content['conformsTo']) == 14
 
 
 def test_collections(config):
     api = API(config)
-    content = json.loads(api.collections({}, {})[2])
+    headers, status, content = api.collections({}, {})
+    content = json.loads(content)
 
+    assert headers['Content-Type'] == 'application/json'
     assert len(content['links']) == 2
     assert len(content['collections']) == 1
 
@@ -94,25 +98,32 @@ def test_collections(config):
 
 def test_queryables(config):
     api = API(config)
-    content = json.loads(api.queryables({}, {})[2])
+    headers, status, content = api.queryables({}, {})
+    content = json.loads(content)
 
+    assert headers['Content-Type'] == 'application/schema+json'
     assert content['type'] == 'object'
     assert content['title'] == 'pycsw Geospatial Catalogue'
     assert content['$id'] == 'http://localhost/pycsw/oarec/collections/metadata:main/queryables'  # noqa
     assert content['$schema'] == 'http://json-schema.org/draft/2019-09/schema'
 
-    assert len(content['properties']) == 12
+    assert len(content['properties']) == 13
 
     assert 'geometry' in content['properties']
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
 
+    headers, status, content = api.queryables({}, {}, collection='foo')
+    assert status == 400
+
 
 def test_items(config):
     api = API(config)
-    content = json.loads(api.items({}, None, {})[2])
+    headers, status, content = api.items({}, None, {})
+    content = json.loads(content)
 
+    assert headers['Content-Type'] == 'application/json'
     assert content['type'] == 'FeatureCollection'
-    assert len(content['links']) == 5
+    assert len(content['links']) == 4
     assert content['numberMatched'] == 12
     assert content['numberReturned'] == 10
     assert len(content['features']) == 10
@@ -140,6 +151,16 @@ def test_items(config):
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 1
     assert content['numberReturned'] == 1
+    assert len(content['features']) == content['numberReturned']
+
+    ids = [
+        'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f',
+        'urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd'
+    ]
+    params = {'ids': ','.join(ids)}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 2
+    assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
     params = {'filter': "title LIKE '%%Lorem%%'"}
@@ -201,12 +222,17 @@ def test_items(config):
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
+    headers, status, content = api.items({}, None, {}, collection='foo')
+    assert status == 400
+
 
 def test_item(config):
     api = API(config)
     item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
-    content = json.loads(api.item({}, {}, 'metadata:main', item)[2])
+    headers, status, content = api.item({}, {}, 'metadata:main', item)
+    content = json.loads(content)
 
+    assert headers['Content-Type'] == 'application/geo+json'
     assert content['id'] == item
     assert content['type'] == 'Feature'
     assert content['properties']['title'] == 'Lorem ipsum'
@@ -229,6 +255,9 @@ def test_item(config):
 
     element = e.find('{http://purl.org/dc/elements/1.1/}subject').text
     assert element == 'Tourism--Greece'
+
+    headers, status, content = api.item({}, {}, 'foo', item)
+    assert status == 400
 
 
 def test_json_transaction(config, sample_record):
@@ -303,9 +332,9 @@ def test_xml_transaction(config):
     api = API(config)
     sample_xml = b"""
     <?xml version="1.0" encoding="UTF-8"?>
-    <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
-      xmlns:ows="http://www.opengis.net/ows" 
-      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+    <csw:Record xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+      xmlns:ows="http://www.opengis.net/ows"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
       xmlns:dct="http://purl.org/dc/terms/">
         <dc:identifier>record-456</dc:identifier>
         <dc:type>http://purl.org/dc/dcmitype/Service</dc:type>
@@ -380,5 +409,3 @@ def test_xml_transaction(config):
     headers, status, content = api.item({}, {}, 'metadata:main', 'record-456')
 
     assert status == 404
-
-

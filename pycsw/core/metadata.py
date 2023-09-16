@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2022 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2016 James F. Dickens
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -1960,7 +1960,7 @@ def bbox_from_polygons(bboxs):
         multi_pol = MultiPolygon(
             [loads(bbox) for bbox in bboxs]
         )
-        bstr = ",".join(["{0:.2f}".format(b) for b in multi_pol.bounds])
+        bstr = ",".join([f"{b:.2f}" for b in multi_pol.bounds])
         return util.bbox2wktpolygon(bstr)
     except Exception as err:
         raise RuntimeError('Cannot aggregate polygons: %s' % str(err)) from err

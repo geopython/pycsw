@@ -4,7 +4,7 @@
 #          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
-# Copyright (c) 2017 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -105,8 +105,8 @@ def test_xml_based_suites(
         matches_expected = _compare_without_xml_canonicalisation(
             normalized_result, expected)
     if not matches_expected and use_xml_canonicalisation:
-        print("expected: {0}".format(expected))
-        print("response: {0}".format(normalized_result))
+        print(f"expected: {expected}")
+        print(f"response: {normalized_result}")
     if save_results_directory is not None:
         _save_test_result(save_results_directory, normalized_result,
                           test_identifier, encoding)
@@ -154,7 +154,7 @@ def _prepare_wsgi_test_environment(request_method, request_data):
         "REMOTE_ADDR": "127.0.0.1"
     }
     if request_method == "POST":
-        print("request_path: {0}".format(request_data))
+        print(f"request_path: {request_data}")
         request_buffer = BytesIO()
         encoding = "utf-8"
         with codecs.open(request_data, encoding=encoding) as fh:
@@ -164,7 +164,7 @@ def _prepare_wsgi_test_environment(request_method, request_data):
             request_buffer.seek(0)
             request_environment["wsgi.input"] = request_buffer
     else:
-        print("Request contents: {0}".format(request_data))
+        print(f"Request contents: {request_data}")
         request_environment["QUERY_STRING"] = request_data
     wsgiref.util.setup_testing_defaults(request_environment)
     return request_environment
