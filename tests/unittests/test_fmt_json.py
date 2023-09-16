@@ -2,8 +2,10 @@
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2023 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -38,7 +40,7 @@ pytestmark = pytest.mark.unit
 
 def test_xml2dict():
     identifier = "ac522ef2-89a6-11db-91b1-7eea55d89593"
-    xml = """
+    xml = f"""
         <?xml version="1.0" encoding="UTF-8"?>
         <GetRecordsResponse
            xmlns="http://www.opengis.net/cat/csw/3.0"
@@ -80,7 +82,8 @@ def test_xml2dict():
               </csw:Record>
            </SearchResults>
         </GetRecordsResponse>
-    """.strip().format(identifier=identifier)
+    """.strip()
+
     namespaces = {
         "csw": "http://www.opengis.net/cat/csw/3.0",
         "ows": "http://www.opengis.net/ows/2.0",

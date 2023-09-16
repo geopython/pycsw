@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -182,8 +182,8 @@ class OpenSearch(object):
             }
 
             node1.set('template', '%s%s' % (self.bind_url,
-                '&'.join('{}={}'.format(*i) for i in kvps.items())))
-
+                '&'.join([f'{k}={v}' for k, v in kvps.items()]))
+            )
 
             #node1.set('template', '%smode=opensearch&service=CSW&version=2.0.2&request=GetRecords&elementsetname=full&typenames=csw:Record&resulttype=results&q={searchTerms?}&bbox={geo:box?}&time={time:start?}/{time:end?}&start={time:start?}&stop={time:end?}&startposition={startIndex?}&maxrecords={count?}' % self.bind_url)
 
@@ -294,7 +294,7 @@ class OpenSearch(object):
             }
 
             node1.set('template', '%s%s' % (self.bind_url,
-                '&'.join('{}={}'.format(*i) for i in kvps.items())))
+                '&'.join(f'{k}={v}' for k, v in kvps.items())))
 
             # Requirement-023
             node1 = etree.SubElement(node, util.nspath_eval('os:Url', self.namespaces))
@@ -304,7 +304,7 @@ class OpenSearch(object):
             kvps['mode'] = 'opensearch'
 
             node1.set('template', '%s%s' % (self.bind_url,
-                '&'.join('{}={}'.format(*i) for i in kvps.items())))
+                '&'.join(f'{k}={v}' for k, v in kvps.items())))
 
             node1 = etree.SubElement(node, util.nspath_eval('os:Image', self.namespaces))
             node1.set('type', 'image/vnd.microsoft.icon')
@@ -486,7 +486,7 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
                 kvp['time'] += kvp['stop']
             else:
                 kvp['time'] = '/' + kvp['stop']
-            LOGGER.debug('new KVP time: {}'.format(kvp['time']))
+            LOGGER.debug(f'new KVP time: {kvp["time"]}')
 
     # time to FilterXML
     if 'time' in kvp and kvp['time'] != '':
@@ -754,8 +754,8 @@ def evaluate_literal(context, pname, pvalue):
     :returns: lxml Element of predicate
     """
 
-    LOGGER.debug('property name: {}'.format(pname))
-    LOGGER.debug('property value: {}'.format(pvalue))
+    LOGGER.debug(f'property name: {pname}')
+    LOGGER.debug(f'property value: {pvalue}')
 
     if pvalue.startswith('{') and pvalue.endswith('}'):
         # {n1,n2,…} equals to field=n1 OR field=n2 OR …

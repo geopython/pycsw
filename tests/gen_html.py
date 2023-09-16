@@ -140,12 +140,9 @@ for root, dirs, files in os.walk('functionaltests/suites'):
                     for line in f:
                         name, query_string = line.strip().partition(",")[::2]
                         baseurl = "../csw.py"
-                        query = "{baseurl}?{query_string}".format(
-                            baseurl=baseurl,
-                            query_string=query_string.replace("&", "&amp;")
-                        )
-                        print('<li><a href={query!r}>{name}</a></li>'.format(
-                            query=query, name=name))
+                        query_string = query_string.replace("&", "&amp;")
+                        query = f"{baseurl}?{query_string}"
+                        print(f'<li><a href={query}>{name}</a></li>')
 print('''
             </ul>
         <hr/>

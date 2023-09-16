@@ -30,10 +30,10 @@ msgstr "版本"
 
 #: ../../stac.rst:9
 msgid ""
-"pycsw supports `SpatioTemporal Asset Catalog API version 1.0.0-beta2`_ "
+"pycsw supports `SpatioTemporal Asset Catalog API version v1.0.0`_ "
 "by default."
 msgstr ""
-"pycsw 默认支持 `SpatioTemporal Asset Catalog API version 1.0.0-beta2`_。"
+"pycsw 默认支持 `SpatioTemporal Asset Catalog API version v1.0.0`_。"
 
 #: ../../stac.rst:11
 msgid "pycsw implements provides STAC support in the following manner:"

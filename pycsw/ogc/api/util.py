@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2021 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -49,10 +49,9 @@ LOGGER = logging.getLogger(__name__)
 
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 
-TEMPLATES = '{}{}templates'.format(os.path.dirname(
-    os.path.realpath(__file__)), os.sep)
+TEMPLATES = f'{os.path.dirname(os.path.realpath(__file__))}{os.sep}templates'
 
-STATIC = '{}/static'.format(TEMPLATES)
+STATIC = f'{TEMPLATES}/static'
 
 mimetypes.add_type('text/plain', '.yaml')
 mimetypes.add_type('text/plain', '.yml')
@@ -98,7 +97,7 @@ def json_serial(obj):
     elif isinstance(obj, Decimal):
         return float(obj)
 
-    msg = '{} type {} not serializable'.format(obj, type(obj))
+    msg = f'{obj} type {type(obj)} not serializable'
     LOGGER.error(msg)
     raise TypeError(msg)
 
@@ -175,10 +174,10 @@ def render_j2_template(config, template, data):
         templates_path = config['server']['templates']['path']
         env = Environment(loader=FileSystemLoader(templates_path))
         custom_templates = True
-        LOGGER.debug('using custom templates: {}'.format(templates_path))
+        LOGGER.debug(f'using custom templates: {templates_path}')
     except (KeyError, TypeError):
         env = Environment(loader=FileSystemLoader(TEMPLATES))
-        LOGGER.debug('using default templates: {}'.format(TEMPLATES))
+        LOGGER.debug(f'using default templates: {TEMPLATES}')
 
     env.filters['to_json'] = to_json
     env.globals.update(to_json=to_json)
