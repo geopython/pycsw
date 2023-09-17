@@ -64,10 +64,14 @@ To enable OGC API - Records as well as the abovementioned search standards:
 
 .. code-block:: bash
 
+  # configure which config file to use
+  export PYCSW_CONFIG=default.cfg
   # start server - OARec and all services (various endpoints below)
   python3 pycsw/wsgi_flask.py
   # OGC API - Records
-  curl http://localhost:8000/
+  curl http://localhost:8000
+  # OpenAPI document
+  curl http://localhost:8000/openapi
   # OGC CSW 3
   curl http://localhost:8000/csw
   # OGC CSW 2
