@@ -3,7 +3,7 @@
 #
 # - pycsw DataCite output plugin -
 #
-# Authors: Carl-Fredrik Enell <carl-fredrik.enell@eiscat.se>
+# Authors: Carl-Fredrik Enell <carl-fredrik.enell@eiscat.se>, Paul van Genuchten <genuchten@yahoo.com>
 # Based on pycsw plugins by  Tom Kralidis <tomkralidis@gmail.com>
 # DataCite schema follows:
 # https://github.com/inveniosoftware/datacite/blob/master/datacite/schema42.py
@@ -209,11 +209,11 @@ def write_record(result, esn, context, url=None):
 
     # publisher, creator, contributor, should have at least 1 creator (use originator else organization else ...)
     cval = util.getqattr(result, context.md_core_model['mappings']['pycsw:Contacts'])
-    hasCreator = False # requires at least 1 creator 
+    hasCreator = False # requires at least 1 creator
+    creas = etree.SubElement(node, util.nspath_eval('creators', NAMESPACES)) 
     hasPublisher = False # 1 publisher at most
     if cval not in [None, '', 'null']:
         conts = etree.SubElement(node, util.nspath_eval('contributors', NAMESPACES))
-        creas = etree.SubElement(node, util.nspath_eval('creators', NAMESPACES))
 
         try:
             for cnt in json.loads(cval):
@@ -344,13 +344,13 @@ def write_record(result, esn, context, url=None):
         bound = etree.SubElement(bounds, util.nspath_eval('geoLocation', NAMESPACES))
         box = etree.SubElement(bound, util.nspath_eval('geoLocationBox', NAMESPACES)) 
         wb = etree.SubElement(box, util.nspath_eval('westBoundLongitude', NAMESPACES))
-        wb.text = bbox2[0]
+        wb.text = str(bbox2[0])
         sb = etree.SubElement(box, util.nspath_eval('southBoundLatitude', NAMESPACES)) 
-        sb.text = bbox2[1]
+        sb.text = str(bbox2[1])
         eb = etree.SubElement(box, util.nspath_eval('eastBoundLongitude', NAMESPACES)) 
-        eb.text = bbox2[2]
+        eb.text = str(bbox2[2])
         nb = etree.SubElement(box, util.nspath_eval('northBoundLatitude', NAMESPACES))  
-        nb.text = bbox2[3]
+        nb.text = str(bbox2[3])
 
 # Subtitle
     sval = util.getqattr(result, context.md_core_model['mappings']['pycsw:AlternateTitle'])
