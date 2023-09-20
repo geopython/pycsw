@@ -1,5 +1,8 @@
 global:
-  cloudProvider: {}
+  cloudProvider: 
+    dockerRegistryUrl: my-registry-url.io
+    imagePullSecretName: 'my-registry-secret'
+    flavor: openshift
   tracing: {}
   metrics: {}
   environment: {}
@@ -60,10 +63,11 @@ image:
   repository: pycsw
   tag: 'latest'
 
-servicePort: 8080
+
 internalServicePort: 80
 pycswPort: 8000
 nodePort: 30018
+servicePort: 8080
 
 env:
   loglevel: WARNING
@@ -104,12 +108,32 @@ nginx:
   enabled: true
   replicaCount: 2
   image:
-    repository: nginx
-    tag: 'merge' 
+    repository: nginx-otel-unprivileged
+    tag: 'v1.0.0' 
   port: 8080
   internalServicePort: 80
   targetPort: 8080
+  servicePort: 8080
   nodePort: 30001
+  
+  authorization:
+    enabled: true
+    domain: 'raster'
+    url: http://opa-la-opa-service.integration/v1/data/http/authz/decision
+
+  extraVolumes:
+    - name: nginx-config
+      configMap:
+        name: '{{ .Release.Name }}-nginx-configmap'
+
+  extraVolumeMounts: 
+    - name: nginx-config
+      mountPath: "/etc/nginx/conf.d/default.conf"
+      subPath: default.conf
+    - mountPath: "/etc/nginx/nginx.conf"
+      name: nginx-config
+      subPath: nginx.conf
+
   resources:
     enabled: true
     value:
@@ -118,56 +142,26 @@ nginx:
         memory: 128Mi
       requests:
         cpu: 100m
-        memory: 128Mi
+        memory: 128Mi     
 
-opa:
-  image: openpolicyagent/opa
-  imageTag: 0.29.4-envoy-3
-  port: 9191
-  enableLogging: false
-  resources:
+  route:
     enabled: true
-    value:
-      limits:
-        cpu: 100m
-        memory: 128Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
-envoy:
-  image: envoyproxy/envoy
-  imageTag: v1.20.7
-  port: 6565
-  maxRequestBytes: 8192
-  requestedDomain: raster
-  resources:
-    enabled: true
-    value:
-      limits:
-        cpu: 100m
-        memory: 128Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi        
+    path: /api/raster/v1
+    host: 
+    timeout:
+      enabled: false # defaults to 30s by openshift
+      duration: 60s # supported units (us, ms, s, m, h, d)
+    tls:
+      enabled: true
+      useCerts: false
+      certificate: ''
+      key: ''
+      caCertificate: ''
 
-route:
-  enabled: true
-  path: /api/raster/v1
-  host: 
-  https: true
-  timeout:
-    enabled: false # defaults to 30s by openshift
-    duration: 60s # supported units (us, ms, s, m, h, d)
-  useCert: false
-
-ingress:
-  enabled: false
-  type: 'nginx-org' # supported values: 'nginx-org' | 'nginx-kubernetes'
-  path: /api/raster/v1
-  host: 'localhost'
-  cors:
-    enabled: true
-    origin: '*'
-  tls: 
-    enabled: true
-    useExternal: ''
+  ingress:
+    enabled: false
+    path: /api/raster/v1
+    host: 'localhost'
+    tls: 
+      enabled: true
+      useExternal: ''
