@@ -96,6 +96,13 @@ class OAIPMH(object):
                 'identifier': './/gm03:DATASECTION//gm03:fileIdentifer',
                 'dateStamp': './/gm03:DATASECTION//gm03:dateStamp',
                 'setSpec': './/dataset'
+            },
+            'datacite': {
+                'namespace': 'http://datacite.org/schema/kernel-4',
+                'schema': 'http://schema.datacite.org/meta/kernel-4.3/metadata.xsd',
+                'identifier': '//identifier',
+                'dateStamp': '//dates/date',
+                'setSpec': ''
             }
         }
         self.metadata_sets = {
