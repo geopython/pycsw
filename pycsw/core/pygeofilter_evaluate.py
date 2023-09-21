@@ -63,18 +63,20 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
     @handle(ast.Like)
     def ilike(self, node, lhs):
         LOGGER.debug('Overriding ILIKE filter handling')
+        LOGGER.debug(f'Term: {node.pattern}')
         if (str(lhs.prop) == 'dataset.anytext' and
                 self._pycsw_dbtype.startswith('postgres')):
-            LOGGER.debug('Kicking into PostgreSQL FTS mode')
-            return text(f"plainto_tsquery('english', '{node.pattern}') @@ anytext_tsvector")  # noqa
-        else:
-            LOGGER.debug('Default ILIKE behaviour')
-            return filters.like(
-                lhs,
-                node.pattern,
-                not node.nocase,
-                node.not_,
-            )
+            if '%' not in node.pattern:
+                LOGGER.debug('Kicking into PostgreSQL FTS mode')
+                return text(f"plainto_tsquery('english', '{node.pattern}') @@ anytext_tsvector")  # noqa
+
+        LOGGER.debug('Default ILIKE behaviour')
+        return filters.like(
+            lhs,
+            node.pattern,
+            not node.nocase,
+            node.not_
+        )
 
 
 def to_filter(ast, dbtype, field_mapping=None):
