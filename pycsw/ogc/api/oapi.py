@@ -30,6 +30,7 @@
 from copy import deepcopy
 import logging
 
+from pycsw import __version__
 from pycsw.ogc.api.util import yaml_load
 
 LOGGER = logging.getLogger(__name__)
@@ -194,7 +195,7 @@ def gen_oapi(config, oapi_filepath):
             'name': config.get('metadata:main', 'contact_name'),
             'url': config.get('metadata:main', 'contact_url')
         },
-        'version': '1.0',
+        'version': __version__,
         'title': config.get('metadata:main', 'identification_title'),
         'description': config.get('metadata:main', 'identification_abstract')
     }
