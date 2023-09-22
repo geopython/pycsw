@@ -20,7 +20,7 @@ Features
 - implements Full Text Search capabilities
 - implements OGC OpenSearch Geo and Time Extensions
 - implements Open Archives Initiative Protocol for Metadata Harvesting
-- supports ISO, Dublin Core, DIF, FGDC, Atom, GM03 and Datacite metadata models
+- supports ISO, Dublin Core, DIF, FGDC, Atom, GM03 and DataCite metadata models
 - CGI or WSGI deployment
 - simple configuration
 - transactional capabilities (OGC API - Records and CSW-T)
@@ -59,7 +59,7 @@ Standards Support
   `SRU`_,1.1
   `OGC OpenSearch`_,1.0
   `OAI-PMH`_,2.0
-  `Datacite`_,4.3
+  `DataCite`_,4.3
 
 OGC API - Records support
 -------------------------
@@ -140,7 +140,7 @@ Supported Output Schemas
 - NASA DIF
 - Atom
 - GM03
-- Datacite
+- DataCite
 
 Supported Sorting Functionality
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -262,4 +262,4 @@ Paging
 .. _`OAI-PMH`: https://www.openarchives.org/pmh/
 .. _`GM03`: https://www.geocat.admin.ch/en/dokumentation/gm03.html
 .. _`OGC API - Features - Part 4: Create, Replace, Update and Delete`: https://cnn.com
-.. _`Datacite`: https://schema.datacite.org/meta/kernel-4.3/
+.. _`DataCite`: https://schema.datacite.org/meta/kernel-4.3/
