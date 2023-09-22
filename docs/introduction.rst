@@ -208,7 +208,7 @@ Functions
 - upper
 
 OAI-PMH Support
------------
+---------------
 
 Supported Operations
 ^^^^^^^^^^^^^^^^^^^^

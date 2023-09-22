@@ -173,11 +173,13 @@ def write_record(result, esn, context, url=None):
         idType = "Handle"
     elif ival.lower().startswith("urn"):
         idType = "URN"
+    else:
+        idType = "URL"
     ident.attrib[util.nspath_eval('identifierType', NAMESPACES)] = idType or "DOI"
     
     # modified
     mod = util.getqattr(result, context.md_core_model['mappings']['pycsw:Date'])
-    if mod not in [None,'']:
+    if mod not in [None, '']:
         dates = etree.SubElement(node, util.nspath_eval('dates', NAMESPACES))
         date = etree.SubElement(dates, util.nspath_eval('date', NAMESPACES))
         date.attrib['dateType'] = 'Updated'
@@ -195,17 +197,28 @@ def write_record(result, esn, context, url=None):
     kwval = util.getqattr(result, context.md_core_model['mappings']['pycsw:Keywords'])
     tcval = util.getqattr(result, context.md_core_model['mappings']['pycsw:TopicCategory'])
     kws = etree.SubElement(node, util.nspath_eval('subjects', NAMESPACES))
-    if kwval not in [None,'']:
+    if kwval not in [None, '']:
         # todo: subject per kw
         kw = etree.SubElement(kws, util.nspath_eval('subject', NAMESPACES))
         kw.attrib[util.nspath_eval("xml:lang", NAMESPACES)]= util.getqattr(result, context.md_core_model['mappings']['pycsw:Language']) or "eng"
         kw.text = kwval
-    if tcval not in  [None,'']:
+    if tcval not in  [None, '']:
         kw = etree.SubElement(kws, util.nspath_eval('subject', NAMESPACES))
         kw.attrib['schemaUri'] = 'https://schemas.opengis.net/iso/19139/20070417/resources/codelist/gmxCodelists.xml#MD_TopicCategoryCode' 
         kw.text = tcval   
     # themes
     # <subjects><subject schemeURI="https://example.com" xml:lang="eng">example</subject></subjects>
+    themes = util.getqattr(result, context.md_core_model['mappings']['pycsw:Themes'])
+    if themes not in [None, '']:
+        try:
+            for t in json.loads(themes):
+                thesaurus = t.get('thesaurus',{}).get('url', t.get('thesaurus',{}).get('title', ''))
+                for k in [c for c in t.get('keywords', []) if c['name'] not in [None, '']]:
+                    kw = etree.SubElement(kws, util.nspath_eval('subject', NAMESPACES))
+                    kw.attrib['schemaUri'] = thesaurus 
+                    kw.text = k.get('name') 
+        except Exception as err:
+            LOGGER.exception(f"failed to parse themes json of {themes}: {err}")
 
     # publisher, creator, contributor, should have at least 1 creator (use originator else organization else ...)
     cval = util.getqattr(result, context.md_core_model['mappings']['pycsw:Contacts'])
@@ -214,12 +227,10 @@ def write_record(result, esn, context, url=None):
     hasPublisher = False # 1 publisher at most
     if cval not in [None, '', 'null']:
         conts = etree.SubElement(node, util.nspath_eval('contributors', NAMESPACES))
-
         try:
             for cnt in json.loads(cval):
                 try:
                     cont = etree.SubElement(conts, util.nspath_eval('contributor', NAMESPACES))
-                    
                     roleMapping = {
                         "resourceProvider": "Distributor",
                         "custodian": "DataCurator",
@@ -235,8 +246,8 @@ def write_record(result, esn, context, url=None):
                     }                    
 
                     contnm = etree.SubElement(cont, util.nspath_eval('contributorName', NAMESPACES))
-                    contnm.text = cnt.get('individualname',cnt.get('organization',''))
-                    cont.attrib['contributorType'] = roleMapping.get(cnt.get('role',''),'Other')
+                    contnm.text = cnt.get('individualname',cnt.get('organization', ''))
+                    cont.attrib['contributorType'] = roleMapping.get(cnt.get('role', ''),'Other')
                     if cont.get('url').startswith('http'):
                         contid = etree.SubElement(cont, util.nspath_eval('nameIdentifier', NAMESPACES))
                         contid.attrib['nameIdentifierScheme'] = "URL"
@@ -245,20 +256,20 @@ def write_record(result, esn, context, url=None):
                         contaf = etree.SubElement(cont, util.nspath_eval('affiliation', NAMESPACES))
                         contaf.text = cont['organization']
 
-                    if not hasPublisher and cnt.get('role','').lower() in ['publisher','resourceProvider','distributor']:
+                    if not hasPublisher and cnt.get('role', '').lower() in ['publisher','resourceProvider','distributor']:
                         hasPublisher = True
                         pb = etree.SubElement(node, util.nspath_eval('publisher', NAMESPACES))
-                        pb.text = cnt.get('individualname',cnt.get('organization',''))
-                    elif cnt.get('role','').lower() in ['originator','author','principalInvestigator']:
+                        pb.text = cnt.get('individualname',cnt.get('organization', ''))
+                    elif cnt.get('role', '').lower() in ['originator','author','principalInvestigator']:
                         hasCreator = True
                         crea = etree.SubElement(creas, util.nspath_eval('creator', NAMESPACES))
                         creanm = etree.SubElement(crea, util.nspath_eval('creatorName', NAMESPACES))
-                        creanm.text = cnt.get('individualname',cnt.get('organization',''))
-                        if cnt['url'] not in [None,'']:
+                        creanm.text = cnt.get('individualname',cnt.get('organization', ''))
+                        if cnt['url'] not in [None, '']:
                             creaid = etree.SubElement(crea, util.nspath_eval('nameIdentifier', NAMESPACES))
                             creaid.attrib['nameIdentifierScheme'] = "URL"
                             creaid.text = cnt['url']
-                        if cnt['organization'] not in [None,'']:
+                        if cnt['organization'] not in [None, '']:
                             creaff = etree.SubElement(crea, util.nspath_eval('affiliation', NAMESPACES))
                             creaff.text = cnt['organization']
 
@@ -282,21 +293,21 @@ def write_record(result, esn, context, url=None):
 # https://guidelines.openaire.eu/en/latest/data/field_language.html
 # <language>eng</language>
     tval = util.getqattr(result, context.md_core_model['mappings']['pycsw:Language'])
-    if tval not in [None,'']:
+    if tval not in [None, '']:
         format = etree.SubElement(node, util.nspath_eval('Language', NAMESPACES))
         format.text = tval
 
 # https://guidelines.openaire.eu/en/latest/data/field_version.html?highlight=version
 # <version>1.0</version>
     tval = util.getqattr(result, context.md_core_model['mappings']['pycsw:Edition'])
-    if tval not in [None,'']:
+    if tval not in [None, '']:
         format = etree.SubElement(node, util.nspath_eval('version', NAMESPACES))
         format.text = tval
 
 # https://guidelines.openaire.eu/en/latest/data/field_format.html
 # <formats> <format>PDF</format> </formats>
     tval = util.getqattr(result, context.md_core_model['mappings']['pycsw:Format'])
-    if tval not in [None,'']:
+    if tval not in [None, '']:
         formats = etree.SubElement(node, util.nspath_eval('formats', NAMESPACES))
         format = etree.SubElement(formats, util.nspath_eval('format', NAMESPACES))
         format.text = tval
@@ -305,7 +316,7 @@ def write_record(result, esn, context, url=None):
     rights = etree.SubElement(node, util.nspath_eval('rightsList', NAMESPACES))
     for r in ["AccessConstraints","OtherConstraints","Classification","ConditionApplyingToAccessAndUse"]:
         rval = util.getqattr(result, context.md_core_model['mappings']['pycsw:'+r])
-        if rval not in [None,'']:
+        if rval not in [None, '']:
             right = etree.SubElement(rights, util.nspath_eval('rights', NAMESPACES))
             if rval.startswith('http'):
                 right.attrib['rightsURI'] = rval
@@ -325,7 +336,7 @@ def write_record(result, esn, context, url=None):
         try:
             for lnk in json.loads(rval):
                 try:
-                    if lnk.get('url','').startswith('http'):
+                    if lnk.get('url', '').startswith('http'):
                         ct = etree.SubElement(node, util.nspath_eval('contentUrl', NAMESPACES))
                         ct.text = lnk.get('url')
                 except Exception as err:
@@ -335,7 +346,7 @@ def write_record(result, esn, context, url=None):
 
 # <geoLocations><geoLocation><geoLocationBox><westBoundLongitude>41.090</...
     bbox = util.getqattr(result, context.md_core_model['mappings']['pycsw:BoundingBox'])
-    if bbox not in [None,'']:
+    if bbox not in [None, '']:
         try:
             bbox2 = util.wkt2geom(bbox)
         except:
