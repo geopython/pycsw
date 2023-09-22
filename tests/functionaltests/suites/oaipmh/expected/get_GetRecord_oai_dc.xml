@@ -2,12 +2,12 @@
 <!-- PYCSW_VERSION -->
 <oai:OAI-PMH xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
   <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
-  <oai:request verb="GetRecord" identifier="urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f" metadataprefix="oai_dc">http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
+  <oai:request verb="GetRecord" identifier="urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f" metadataPrefix="oai_dc">http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
   <oai:GetRecord>
     <oai:record>
       <oai:header>
         <oai:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</oai:identifier>
-        <oai:dateStamp/>
+        <oai:datestamp/>
         <oai:setSpec/>
       </oai:header>
       <oai:metadata>
