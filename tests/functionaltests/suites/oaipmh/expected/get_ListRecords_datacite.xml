@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<oai:OAI-PMH xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
+  <oai:request verb="ListRecords" metadataprefix="datacite">http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
+  <oai:ListRecords>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</oai:identifier>
+        <oai:dateStamp>2006-05-12</oai:dateStamp>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Image">Image</resourceType>
+          <identifier identifierType="URN">urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</identifier>
+          <titles>
+            <title xml:lang="eng">Lorem ipsum</title>
+          </titles>
+          <subjects>
+            <subject xml:lang="eng">Tourism--Greece</subject>
+          </subjects>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng">Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</description>
+          </descriptions>
+          <formats>
+            <format>image/svg+xml</format>
+          </formats>
+          <rightsList/>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd</oai:identifier>
+        <oai:dateStamp>2006-05-12</oai:dateStamp>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Service">Service</resourceType>
+          <identifier identifierType="URN">urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd</identifier>
+          <titles>
+            <title xml:lang="eng"/>
+          </titles>
+          <subjects/>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng">Proin sit amet justo. In justo. Aenean adipiscing nulla id tellus.</description>
+          </descriptions>
+          <rightsList/>
+          <geoLocations>
+            <geoLocation>
+              <geoLocationBox>
+                <westBoundLongitude>13.75</westBoundLongitude>
+                <southBoundLatitude>60.04</southBoundLatitude>
+                <eastBoundLongitude>17.92</eastBoundLongitude>
+                <northBoundLatitude>68.41</northBoundLatitude>
+              </geoLocationBox>
+            </geoLocation>
+          </geoLocations>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</oai:identifier>
+        <oai:dateStamp>2006-05-12</oai:dateStamp>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Text">Text</resourceType>
+          <identifier identifierType="URN">urn:uuid:66ae76b7-54ba-489b-a582-0f0633d96493</identifier>
+          <titles>
+            <title xml:lang="eng">Maecenas enim</title>
+          </titles>
+          <subjects>
+            <subject xml:lang="eng">Marine sediments</subject>
+          </subjects>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng">Pellentesque tempus magna non sapien fringilla blandit.</description>
+          </descriptions>
+          <formats>
+            <format>application/xhtml+xml</format>
+          </formats>
+          <rightsList/>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</oai:identifier>
+        <oai:dateStamp>2006-05-12</oai:dateStamp>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Service">Service</resourceType>
+          <identifier identifierType="URN">urn:uuid:6a3de50b-fa66-4b58-a0e6-ca146fdd18d4</identifier>
+          <titles>
+            <title xml:lang="eng">Ut facilisis justo ut lacus</title>
+          </titles>
+          <subjects>
+            <subject xml:lang="eng">Vegetation</subject>
+          </subjects>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng"/>
+          </descriptions>
+          <rightsList/>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</oai:identifier>
+        <oai:dateStamp>2006-05-12</oai:dateStamp>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Text">Text</resourceType>
+          <identifier identifierType="URN">urn:uuid:784e2afd-a9fd-44a6-9a92-a3848371c8ec</identifier>
+          <dates>
+            <date dateType="Updated">2006-05-12</date>
+          </dates>
+          <titles>
+            <title xml:lang="eng">Aliquam fermentum purus quis arcu</title>
+          </titles>
+          <subjects>
+            <subject xml:lang="eng">Hydrography--Dictionaries</subject>
+          </subjects>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng">Vestibulum quis ipsum sit amet metus imperdiet vehicula. Nulla scelerisque cursus mi.</description>
+          </descriptions>
+          <formats>
+            <format>application/pdf</format>
+          </formats>
+          <rightsList/>
+          <publicationYear>2006</publicationYear>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e</oai:identifier>
+        <oai:dateStamp>2006-03-26</oai:dateStamp>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Image">Image</resourceType>
+          <identifier identifierType="URN">urn:uuid:829babb0-b2f1-49e1-8cd5-7b489fe71a1e</identifier>
+          <titles>
+            <title xml:lang="eng">Vestibulum massa purus</title>
+          </titles>
+          <subjects/>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng"/>
+          </descriptions>
+          <formats>
+            <format>image/jp2</format>
+          </formats>
+          <rightsList/>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</oai:identifier>
+        <oai:dateStamp>2006-03-26</oai:dateStamp>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+          <identifier identifierType="URN">urn:uuid:88247b56-4cbc-4df9-9860-db3f8042e357</identifier>
+          <titles>
+            <title xml:lang="eng"/>
+          </titles>
+          <subjects>
+            <subject xml:lang="eng">Physiography-Landforms</subject>
+          </subjects>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng">Donec scelerisque pede ut nisl luctus accumsan. Quisque ultrices, lorem eget feugiat fringilla, lorem dui porttitor ante, cursus ultrices magna odio eu neque.</description>
+          </descriptions>
+          <rightsList/>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</oai:identifier>
+        <oai:dateStamp>2006-03-26</oai:dateStamp>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+          <identifier identifierType="URN">urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</identifier>
+          <dates>
+            <date dateType="Updated">2006-03-26</date>
+          </dates>
+          <titles>
+            <title xml:lang="eng">Mauris sed neque</title>
+          </titles>
+          <subjects>
+            <subject xml:lang="eng">Vegetation-Cropland</subject>
+          </subjects>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng">Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</description>
+          </descriptions>
+          <rightsList/>
+          <geoLocations>
+            <geoLocation>
+              <geoLocationBox>
+                <westBoundLongitude>-4.1</westBoundLongitude>
+                <southBoundLatitude>47.59</southBoundLatitude>
+                <eastBoundLongitude>0.89</eastBoundLongitude>
+                <northBoundLatitude>51.22</northBoundLatitude>
+              </geoLocationBox>
+            </geoLocation>
+          </geoLocations>
+          <publicationYear>2006</publicationYear>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</oai:identifier>
+        <oai:dateStamp>2005-10-24</oai:dateStamp>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+          <identifier identifierType="URN">urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</identifier>
+          <dates>
+            <date dateType="Updated">2005-10-24</date>
+          </dates>
+          <titles>
+            <title xml:lang="eng">Ñunç elementum</title>
+          </titles>
+          <subjects>
+            <subject xml:lang="eng">Hydrography-Oceanographic</subject>
+          </subjects>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng"/>
+          </descriptions>
+          <rightsList/>
+          <geoLocations>
+            <geoLocation>
+              <geoLocationBox>
+                <westBoundLongitude>-6.17</westBoundLongitude>
+                <southBoundLatitude>44.79</southBoundLatitude>
+                <eastBoundLongitude>-2.23</eastBoundLongitude>
+                <northBoundLatitude>51.13</northBoundLatitude>
+              </geoLocationBox>
+            </geoLocation>
+          </geoLocations>
+          <publicationYear>2005</publicationYear>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</oai:identifier>
+        <oai:dateStamp/>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Image">Image</resourceType>
+          <identifier identifierType="URN">urn:uuid:a06af396-3105-442d-8b40-22b57a90d2f2</identifier>
+          <titles>
+            <title xml:lang="eng">Lorem ipsum dolor sit amet</title>
+          </titles>
+          <subjects/>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng"/>
+          </descriptions>
+          <formats>
+            <format>image/jpeg</format>
+          </formats>
+          <rightsList/>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+    <oai:resumptionToken completeListSize="12" cursor="0">11</oai:resumptionToken>
+  </oai:ListRecords>
+</oai:OAI-PMH>

@@ -121,6 +121,7 @@
         <ows:Value>application/xml</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
+        <ows:Value>http://datacite.org/schema/kernel-4</ows:Value>
         <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
         <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
@@ -234,6 +235,7 @@
         <ows:Value>application/xml</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
+        <ows:Value>http://datacite.org/schema/kernel-4</ows:Value>
         <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
         <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>

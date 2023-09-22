@@ -99,6 +99,7 @@
       </ows20:Parameter>
       <ows20:Parameter name="outputSchema">
         <ows20:AllowedValues>
+          <ows20:Value>http://datacite.org/schema/kernel-4</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.interlis.ch/INTERLIS2.3</ows20:Value>
           <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
@@ -151,6 +152,7 @@
       </ows20:Parameter>
       <ows20:Parameter name="outputSchema">
         <ows20:AllowedValues>
+          <ows20:Value>http://datacite.org/schema/kernel-4</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.interlis.ch/INTERLIS2.3</ows20:Value>
           <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
@@ -197,6 +199,7 @@
       </ows20:DCP>
       <ows20:Parameter name="ResourceType">
         <ows20:AllowedValues>
+          <ows20:Value>http://datacite.org/schema/kernel-4</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.interlis.ch/INTERLIS2.3</ows20:Value>
           <ows20:Value>http://www.isotc211.org/2005/gmi</ows20:Value>

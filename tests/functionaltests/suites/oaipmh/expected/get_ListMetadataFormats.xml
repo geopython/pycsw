@@ -10,6 +10,11 @@
       <oai:metadataNamespace>http://www.opengis.net/cat/csw/2.0.2</oai:metadataNamespace>
     </oai:metadataFormat>
     <oai:metadataFormat>
+      <oai:metadataPrefix>datacite</oai:metadataPrefix>
+      <oai:schema>http://schema.datacite.org/meta/kernel-4.3/metadata.xsd</oai:schema>
+      <oai:metadataNamespace>http://datacite.org/schema/kernel-4</oai:metadataNamespace>
+    </oai:metadataFormat>
+    <oai:metadataFormat>
       <oai:metadataPrefix>dif</oai:metadataPrefix>
       <oai:schema>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd</oai:schema>
       <oai:metadataNamespace>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</oai:metadataNamespace>

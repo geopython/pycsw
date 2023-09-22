@@ -4,6 +4,7 @@
   <csw:DomainValues type="csw:Record">
     <csw:ParameterName>Harvest.ResourceType</csw:ParameterName>
     <csw:ListOfValues>
+      <csw:Value>http://datacite.org/schema/kernel-4</csw:Value>
       <csw:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</csw:Value>
       <csw:Value>http://www.interlis.ch/INTERLIS2.3</csw:Value>
       <csw:Value>http://www.isotc211.org/2005/gmd</csw:Value>
