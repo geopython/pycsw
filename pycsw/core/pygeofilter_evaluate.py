@@ -66,9 +66,16 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
         LOGGER.debug(f'Term: {node.pattern}')
         if (str(lhs.prop) == 'dataset.anytext' and
                 self._pycsw_dbtype.startswith('postgres')):
-            if '%' not in node.pattern:
+            if not node.pattern.startswith('%'):
                 LOGGER.debug('Kicking into PostgreSQL FTS mode')
-                return text(f"plainto_tsquery('english', '{node.pattern}') @@ anytext_tsvector")  # noqa
+                if node.pattern.endswith('%'):
+                    LOGGER.debug('Fuzzy term search')
+                    term = node.pattern.replace('%', ':*')
+                else:
+                    LOGGER.debug('Normal term search')
+                    term = node.pattern
+                LOGGER.debug(f"FTS term: {term}")
+                return text(f"to_tsquery('english', '{term}') @@ anytext_tsvector")  # noqa
 
         LOGGER.debug('Default ILIKE behaviour')
         return filters.like(
