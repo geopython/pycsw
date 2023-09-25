@@ -318,8 +318,7 @@ def write_record(result, esn, context, url=None):
 # <sizes><size></size></sizes>
 
 # "IsCitedBy","Cites","IsSupplementTo","IsSupplementedBy","IsContinuedBy","Continues","IsNewVersionOf","IsPreviousVersionOf","IsPartOf","HasPart","IsPublishedIn","IsReferencedBy","References","IsDocumentedBy","Documents","IsCompiledBy","Compiles","IsVariantFormOf","IsOriginalFormOf","IsIdenticalTo","HasMetadata","IsMetadataFor","Reviews","IsReviewedBy","IsDerivedFrom","IsSourceOf","Describes","IsDescribedBy","HasVersion","IsVersionOf","Requires","IsRequiredBy","Obsoletes","IsObsoletedBy"
-# <relatedIdentifiers><relatedIdentifier relatedIdentifierType="URN" relationType="">doi:1234</relatedIdentifier></relatedIdentifiers>    
-c
+# <relatedIdentifiers><relatedIdentifier relatedIdentifierType="URN" relationType="">doi:1234</relatedIdentifier></relatedIdentifiers>
 # alternateIdentifiers/alternateIdentifier/@alternateIdentifierType
 
 # Since Datacite is a metadata format related to the DOI to access a piece of content, the schema does not include a link to the actual file
