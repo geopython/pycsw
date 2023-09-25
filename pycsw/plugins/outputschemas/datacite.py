@@ -14,7 +14,6 @@
 # PyCSW  Copyright (C) 2015 Tom Kralidis
 # Schema Copyright (C) 2016 CERN
 # Schema Copyright (C) 2019 Caltech
-# This file Copyright (C) 2020 EISCAT Scientific Association
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -27,11 +26,7 @@
 #
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-#
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
+
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -105,8 +100,6 @@ def write_record(result, esn, context, url=None):
         '%s http://schema.datacite.org/meta/kernel-4.3/metadata.xsd' % NAMESPACE
     # Type
     type = etree.SubElement(node, util.nspath_eval('resourceType', NAMESPACES))
-   
-    # mapping from isotypes = ["attribute","attributeType","collectionHardware","collectionSession","dataset","series","nonGeographicDataset","dimensionGroup","feature","featureType","propertyType","fieldSession","software","service","model","tile","initiative","stereomate","sensor","platformSeries","sensorSeries","productionSeries","transferAggregate","otherAggregate"]
     resTypeGeneral = basename(util.getqattr(result, context.md_core_model['mappings']['pycsw:Type']))
     type.text = resTypeGeneral
 
@@ -325,8 +318,7 @@ def write_record(result, esn, context, url=None):
 # <sizes><size></size></sizes>
 
 # "IsCitedBy","Cites","IsSupplementTo","IsSupplementedBy","IsContinuedBy","Continues","IsNewVersionOf","IsPreviousVersionOf","IsPartOf","HasPart","IsPublishedIn","IsReferencedBy","References","IsDocumentedBy","Documents","IsCompiledBy","Compiles","IsVariantFormOf","IsOriginalFormOf","IsIdenticalTo","HasMetadata","IsMetadataFor","Reviews","IsReviewedBy","IsDerivedFrom","IsSourceOf","Describes","IsDescribedBy","HasVersion","IsVersionOf","Requires","IsRequiredBy","Obsoletes","IsObsoletedBy"
-# <relatedIdentifiers><relatedIdentifier relatedIdentifierType="URN" relationType="">doi:1234</relatedIdentifier></relatedIdentifiers>    
-
+# <relatedIdentifiers><relatedIdentifier relatedIdentifierType="URN" relationType="">doi:1234</relatedIdentifier></relatedIdentifiers>
 # alternateIdentifiers/alternateIdentifier/@alternateIdentifierType
 
 # Since Datacite is a metadata format related to the DOI to access a piece of content, the schema does not include a link to the actual file
