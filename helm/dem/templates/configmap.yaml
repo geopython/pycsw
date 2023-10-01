@@ -1,0 +1,33 @@
+{{- $tracingUrl := include "pycsw.tracingUrl" . -}}
+{{- $metricsUrl := include "pycsw.metricsUrl" . -}}
+{{- if .Values.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  {{ if .Values.env.tracing.enabled }}
+  TELEMETRY_TRACING_ENABLED: 'true'
+  TELEMETRY_TRACING_URL: {{ $tracingUrl }}
+  {{ end }}
+  {{ if .Values.env.metrics.enabled }}
+  TELEMETRY_METRICS_ENABLED: 'true'
+  TELEMETRY_METRICS_URL: {{ $metricsUrl }}
+  {{ end }}
+  pycsw.cfg: {{ tpl (.Files.Get "config/pycsw.cfg") . | quote }}
+  {{ if eq .Values.env.profiles "mc_dem" }}
+  mappings.py: {{ .Files.Get "config/mappings_dem.py" | quote }}
+  {{ else }}
+  mappings.py: {{ .Files.Get "config/mappings.py" | quote }}
+  {{ end }}
+  uwsgi.ini: {{ tpl (.Files.Get "config/pycswWsgi.ini") . | quote }}
+  CORS_ENABLED: {{ .Values.authentication.cors.enabled | quote }}
+  CORS_ALLOWED_HEADERS: {{ template "pycsw.cors.allowedHeaders" . }}
+  CORS_ALLOWED_ORIGIN: {{ .Values.authentication.cors.allowedOrigin | quote }}
+  LOG_FORMAT: {{ .Values.env.logFormat | quote }}
+  DB_HOST: {{ quote .Values.db.host }}
+  DB_PORT:  {{ quote .Values.db.port }}
+  DB_NAME: {{ quote .Values.db.name }}
+  POSTGRES_ENABLE_SSL_AUTH: {{ quote .Values.authentication.db.sslEnabled }}
+  DB_SCHEMA: {{ quote .Values.db.schema }}
+{{- end }}

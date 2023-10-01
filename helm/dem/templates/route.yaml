@@ -1,0 +1,35 @@
+{{- $releaseName := .Release.Name -}}
+{{- $cloudProviderFlavor := include "pycsw.cloudProviderFlavor" . -}}
+{{ $targetPort := ternary "external" "internal" .Values.authentication.opa.enabled }}
+{{- $serviceName := include "service.fullname" . -}}
+{{- if and (and (.Values.enabled) (eq $cloudProviderFlavor "openshift")) (.Values.route.enabled) -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ $releaseName }}-nginx-route
+  annotations:
+    haproxy.router.openshift.io/rewrite-target: /
+    {{- if .Values.route.timeout.enabled }}
+    haproxy.router.openshift.io/timeout: {{ .Values.route.timeout.duration }}
+    {{- end }}
+spec:
+  {{- if .Values.route.host }}
+  host: {{ .Values.route.host }}
+  {{- end }}
+  path:  {{ .Values.route.path | default "/" }}
+  port:
+    targetPort: {{ $targetPort }}
+  to:
+    kind: Service
+    name: {{ $serviceName }}-nginx
+  {{- if .Values.route.https }}
+  tls:
+    termination: edge
+    {{- if .Values.route.useCert }}
+    certificate: {{ .Files.Get "config/cert.pem" | quote }}
+    key: {{ .Files.Get "config/key.pem" | quote }}
+    caCertificate: {{ .Files.Get "config/caCertificate.pem" | quote }}
+    insecureEdgeTerminationPolicy: Redirect
+    {{- end }}
+  {{- end -}}
+{{- end -}}
