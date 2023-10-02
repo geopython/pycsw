@@ -54,7 +54,7 @@ from sqlalchemy.exc import ProgrammingError
 from pycsw.core import admin
 from pycsw.core.util import EnvInterpolation
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 def launch_pycsw(pycsw_config, workers=2, reload=False):
@@ -78,18 +78,28 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     """
 
     db_url = pycsw_config.get("repository", "database")
+
     db = db_url.partition(":")[0].partition("+")[0]
+
     db_handler = {
         "sqlite": handle_sqlite_db,
         "postgresql": handle_postgresql_db,
     }.get(db)
-    logger.debug("Setting up pycsw's data repository...")
-    logger.debug(f"Repository URL: {db_url}")
-    db_handler(
-        db_url,
-        pycsw_config.get("repository", "table"),
-        pycsw_config.get("server", "home")
-    )
+
+    # FIXME: pycsw.wsgi_flask is bound to PostgreSQL backends only
+    # An update in pycsw/ogc/api/records.py is required
+    if db_handler is not None:
+        LOGGER.debug("Setting up pycsw's data repository...")
+        LOGGER.debug(f"Repository URL: {db_url}")
+        db_handler(
+            db_url,
+            pycsw_config.get("repository", "table"),
+            pycsw_config.get("server", "home")
+        )
+        pycsw_app = 'pycsw.wsgi_flask:APP'
+    else:
+        pycsw_app = 'pycsw.wsgi'
+
     sys.stdout.flush()
     # we're using --reload-engine=poll because there is a bug with gunicorn
     # that prevents using inotify together with python3. For more info:
@@ -109,10 +119,10 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
         "--error-logfile=-",
         f"--workers={workers}",
         f"--timeout={timeout}",
-        "pycsw.wsgi_flask:APP",
+        pycsw_app,
 
     ]
-    logger.debug(f"Launching pycsw with {' '.join(execution_args)} ...")
+    LOGGER.debug(f"Launching pycsw with {' '.join(execution_args)} ...")
     os.execlp(
         "gunicorn",
         *execution_args
@@ -141,16 +151,16 @@ def handle_postgresql_db(database_url, table_name, pycsw_home):
 
 
 def _wait_for_postgresql_db(database_url, max_tries=10, wait_seconds=3):
-    logger.debug(f"Waiting for {database_url}...")
+    LOGGER.debug(f"Waiting for {database_url}...")
     engine = create_engine(database_url)
     current_try = 0
     while current_try < max_tries:
         try:
             engine.execute("SELECT version();")
-            logger.debug("Database is already up!")
+            LOGGER.debug("Database is already up!")
             break
         except OperationalError:
-            logger.debug("Database not responding yet ...")
+            LOGGER.debug("Database not responding yet ...")
             current_try += 1
             sleep(wait_seconds)
     else:
