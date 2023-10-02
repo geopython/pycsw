@@ -88,7 +88,7 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
 
     # FIXME: pycsw.wsgi_flask is bound to PostgreSQL backends only
     # An update in pycsw/ogc/api/records.py is required
-    if db_handler is None:
+    if db_handler is not None:
         LOGGER.debug("Setting up pycsw's data repository...")
         LOGGER.debug(f"Repository URL: {db_url}")
         db_handler(
