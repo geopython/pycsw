@@ -248,7 +248,7 @@ class STACAPI(API):
             }, {
             'rel': 'root',
             'type': 'application/json',
-            'href': self.config['server']['url']
+            'href': f"{self.config['server']['url']}/"
             }, {
             'rel': 'parent',
             'type': 'application/json',
@@ -291,7 +291,7 @@ class STACAPI(API):
             }, {
             'rel': 'root',
             'type': 'application/json',
-            'href': self.config['server']['url']
+            'href': f"{self.config['server']['url']}/"
             }, {
             'rel': 'parent',
             'type': 'application/json',
@@ -354,7 +354,7 @@ class STACAPI(API):
                     }, {
                     'rel': 'root',
                     'type': 'application/json',
-                    'href': self.config['server']['url']
+                    'href': f"{self.config['server']['url']}/"
                     }, {
                     'rel': 'parent',
                     'type': 'application/json',
@@ -371,7 +371,7 @@ class STACAPI(API):
         response2['links'].extend([{
             'rel': 'root',
             'type': 'application/json',
-            'href': self.config['server']['url']
+            'href': f"{self.config['server']['url']}/"
             }
         ])
 
