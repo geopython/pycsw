@@ -134,7 +134,7 @@ class STACAPI(API):
                'href': f"{self.config['server']['url']}/queryables"
             }, {
               'rel': 'search',
-              'type': 'application/json',
+              'type': 'application/geo+json',
               'href': f"{self.config['server']['url']}/search"
             }
         ]
