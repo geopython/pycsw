@@ -49,7 +49,7 @@ def test_landing_page(config):
 
     assert content['stac_version'] == '1.0.0'
     assert content['type'] == 'Catalog'
-    assert len(content['conformsTo']) == 4
+    assert len(content['conformsTo']) == 14
     assert len(content['keywords']) == 3
 
 
@@ -70,7 +70,7 @@ def test_conformance(config):
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
 
-    assert len(content['conformsTo']) == 18
+    assert len(content['conformsTo']) == 14
 
     conformances = [
         'https://api.stacspec.org/v1.0.0/core',

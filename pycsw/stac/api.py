@@ -52,6 +52,16 @@ THISDIR = os.path.dirname(os.path.realpath(__file__))
 
 
 CONFORMANCE_CLASSES = [
+    'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
+    'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
+    'http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core',
+    'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/queryables',
+    'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/queryables-query-parameters',
+    'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/filter',
+    'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/features-filter',
+    'http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete',
+    'http://www.opengis.net/spec/cql2/1.0/conf/cql2-json',
+    'http://www.opengis.net/spec/cql2/1.0/conf/cql2-text',
     'https://api.stacspec.org/v1.0.0/core',
     'https://api.stacspec.org/v1.0.0/ogcapi-features',
     'https://api.stacspec.org/v1.0.0/item-search',
@@ -174,12 +184,11 @@ class STACAPI(API):
         headers_['Content-Type'] = 'application/json'
         headers_['Accept'] = 'application/json'
 
-        headers, status, response = super().conformance(headers_, args)
-        response2 = json.loads(response)
+        response = {
+            'conformsTo': CONFORMANCE_CLASSES
+        }
 
-        response2['conformsTo'].extend(CONFORMANCE_CLASSES)
-
-        return self.get_response(200, headers_, response2)
+        return self.get_response(200, headers_, response)
 
     def collections(self, headers_, args):
         """
