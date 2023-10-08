@@ -54,7 +54,7 @@ Setting up the Database
 
 .. code-block:: bash
 
-  pycsw-admin.py setup_db --config default.cfg
+  pycsw-admin.py setup_repository --config default.cfg
 
 This will create the necessary tables and values for the repository.
 
@@ -120,8 +120,8 @@ Database Specific Notes
 PostgreSQL
 ^^^^^^^^^^
 
-- if PostGIS is not enabled, pycsw makes uses of PL/Python functions.  To enable PostgreSQL support, the database user must be able to create functions within the database. In case of recent PostgreSQL versions (9.x), the PL/Python extension must be enabled prior to pycsw setup
-- `PostgreSQL Full Text Search`_ is supported for ``csw:AnyText`` based queries.  pycsw creates a tsvector column based on the text from anytext column. Then pycsw creates a GIN index against the anytext_tsvector column.  This is created automatically in ``pycsw.admin.setup_db``.  Any query against OARec's ``q`` parameter or CSW `csw:AnyText` or `apiso:AnyText` will process using PostgreSQL FTS handling
+-  To enable PostgreSQL support, the database user must be able to create functions within the database.
+- `PostgreSQL Full Text Search`_ is supported for ``csw:AnyText`` based queries.  pycsw creates a tsvector column based on the text from anytext column. Then pycsw creates a GIN index against the anytext_tsvector column.  This is created automatically in ``pycsw.core.repository.setup``.  Any query against OARec's ``q`` parameter or CSW `csw:AnyText` or `apiso:AnyText` will process using PostgreSQL FTS handling
 
 PostGIS
 ^^^^^^^
@@ -131,7 +131,7 @@ PostGIS
 - If PostGIS is detected, the ``pycsw-admin.py`` script will create both a native geometry column and a WKT column, as well as a trigger to keep both synchronized
 - In case PostGIS gets disabled, pycsw will continue to work with the `WKT`_ column
 - In case of migration from plain PostgreSQL database to PostGIS, the spatial functions of PostGIS will be used automatically
-- When migrating from plain PostgreSQL database to PostGIS, in order to enable native geometry support, a "GEOMETRY" column named "wkb_geometry" needs to be created manually (along with the update trigger in ``pycsw.admin.setup_db``). Also the native geometries must be filled manually from the `WKT`_ field. Next versions of pycsw will automate this process
+- When migrating from plain PostgreSQL database to PostGIS, in order to enable native geometry support, a "GEOMETRY" column named "wkb_geometry" needs to be created manually (along with the update trigger in ``pycsw.core.repository.setup``). Also the native geometries must be filled manually from the `WKT`_ field. Next versions of pycsw will automate this process
 
 .. _custom_repository:
 

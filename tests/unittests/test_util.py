@@ -349,7 +349,7 @@ def test_is_none_or_empty(value, result):
 
 @pytest.mark.parametrize("import_path, expected_attribute", [
     pytest.param("itertools", "count", id="import from stdlib"),
-    pytest.param("pycsw.core.admin", "setup_db", id="dotted path import from pycsw"),
+    pytest.param("pycsw.core.repository", "setup", id="dotted path import from pycsw"),
     pytest.param(__file__, "test_programmatic_import", id="filesystem path import"),
 ])
 def test_programmatic_import(import_path, expected_attribute):

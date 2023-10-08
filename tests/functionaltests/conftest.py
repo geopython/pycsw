@@ -42,6 +42,7 @@ import pytest
 
 from pycsw.core import admin
 from pycsw.core.config import StaticContext
+from pycsw.core.repository import Repository, setup
 
 apipkg.initpkg("optionaldependencies", {
     "psycopg2": "psycopg2",
@@ -153,7 +154,7 @@ def pytest_generate_tests(metafunc):
 
         metafunc.parametrize(
             argnames=["configuration", "request_method", "request_data",
-                      "expected_result", "normalize_identifier_fields",],
+                      "expected_result", "normalize_identifier_fields"],
             argvalues=arg_values,
             indirect=["configuration"],
             ids=test_ids,
@@ -362,7 +363,7 @@ def _get_suite_dirs(suite_name):
     gets_dir = get_tests_dir if os.path.isdir(get_tests_dir) else None
     expected_dir = (expected_results_dir if os.path.isdir(
         expected_results_dir) else None)
-    export_dir = export_tests_dir if os.path.isdir(export_tests_dir) else None
+    _ = export_tests_dir if os.path.isdir(export_tests_dir) else None
     return SuiteDirs(get_tests_dir=gets_dir,
                      post_tests_dir=posts_dir,
                      data_tests_dir=data_dir,
@@ -420,30 +421,33 @@ def _initialize_database(repository_url, table_name, data_dir, test_dir, export_
 
     """
 
+    context = StaticContext()
+
     print(f"Setting up {repository_url} repository...")
     if repository_url.startswith("postgresql"):
         extra_kwargs = {
-            "create_sfsql_tables": True,
-            "create_plpythonu_functions": False
+            "create_sfsql_tables": True
         }
     else:
         extra_kwargs = {}
-    admin.setup_db(database=repository_url, table=table_name, home=test_dir,
-                   **extra_kwargs)
+
+    setup(repository_url, table_name, **extra_kwargs)
+    repo = Repository(repository_url, context, table=table_name)
+
     if len(os.listdir(data_dir)) > 0:
         print("Loading database data...")
         loaded = admin.load_records(
-            context=StaticContext(),
+            context=context,
             database=repository_url,
             table=table_name,
             xml_dirpath=data_dir,
             recursive=True
         )
-        admin.optimize_db(context=StaticContext(), database=repository_url, table=table_name)
+        repo.optimize_db()
         if export_dir is not None:
             # Attempt to export files
             exported = admin.export_records(
-                context=StaticContext(),
+                context=context,
                 database=repository_url,
                 table=table_name,
                 xml_dirpath=export_dir
@@ -524,8 +528,6 @@ def _recreate_postgresql_database(configuration):
     connection.close()
     if postgis_available:
         _create_postgresql_extension(configuration, extension="postgis")
-    else:
-        _create_postgresql_extension(configuration, extension="plpythonu")
 
 
 def _create_postgresql_extension(configuration, extension):

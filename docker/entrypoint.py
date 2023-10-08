@@ -45,14 +45,10 @@ import logging
 import os
 import configparser
 import sys
-from time import sleep
 
-from sqlalchemy import create_engine
-from sqlalchemy.exc import OperationalError
-from sqlalchemy.exc import ProgrammingError
-
-from pycsw.core import admin
+from pycsw.core.config import StaticContext
 from pycsw.core.util import EnvInterpolation
+from pycsw.core.repository import Repository, setup
 
 LOGGER = logging.getLogger(__name__)
 
@@ -77,28 +73,17 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     for more information on how to control gunicorn by sending UNIX signals.
     """
 
-    db_url = pycsw_config.get("repository", "database")
+    try:
+        setup(pycsw_config.get("repository", "database"),
+              pycsw_config.get("repository", "table"))
+    except Exception as err:
+        LOGGER.debug(err)
 
-    db = db_url.partition(":")[0].partition("+")[0]
+    repo = Repository(pycsw_config.get("repository", "database"),
+                      StaticContext(),
+                      table=pycsw_config.get("repository", "table"))
 
-    db_handler = {
-        "sqlite": handle_sqlite_db,
-        "postgresql": handle_postgresql_db,
-    }.get(db)
-
-    # FIXME: pycsw.wsgi_flask is bound to PostgreSQL backends only
-    # An update in pycsw/ogc/api/records.py is required
-    if db_handler is not None:
-        LOGGER.debug("Setting up pycsw's data repository...")
-        LOGGER.debug(f"Repository URL: {db_url}")
-        db_handler(
-            db_url,
-            pycsw_config.get("repository", "table"),
-            pycsw_config.get("server", "home")
-        )
-        pycsw_app = 'pycsw.wsgi_flask:APP'
-    else:
-        pycsw_app = 'pycsw.wsgi'
+    repo.ping()
 
     sys.stdout.flush()
     # we're using --reload-engine=poll because there is a bug with gunicorn
@@ -119,7 +104,7 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
         "--error-logfile=-",
         f"--workers={workers}",
         f"--timeout={timeout}",
-        pycsw_app,
+        'pycsw.wsgi_flask:APP'
 
     ]
     LOGGER.debug(f"Launching pycsw with {' '.join(execution_args)} ...")
@@ -127,46 +112,6 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
         "gunicorn",
         *execution_args
     )
-
-
-def handle_sqlite_db(database_url, table_name, pycsw_home):
-    db_path = database_url.rpartition(":///")[-1]
-    if not os.path.isfile(db_path):
-        try:
-            os.makedirs(os.path.dirname(db_path))
-        except OSError as exc:
-            if exc.args[0] == 17:  # directory already exists
-                pass
-        admin.setup_db(database=database_url, table=table_name,
-                       home=pycsw_home)
-
-
-def handle_postgresql_db(database_url, table_name, pycsw_home):
-    _wait_for_postgresql_db(database_url)
-    try:
-        admin.setup_db(database=database_url, table=table_name,
-                       home=pycsw_home)
-    except ProgrammingError:
-        pass  # database tables are already created
-
-
-def _wait_for_postgresql_db(database_url, max_tries=10, wait_seconds=3):
-    LOGGER.debug(f"Waiting for {database_url}...")
-    engine = create_engine(database_url)
-    current_try = 0
-    while current_try < max_tries:
-        try:
-            engine.execute("SELECT version();")
-            LOGGER.debug("Database is already up!")
-            break
-        except OperationalError:
-            LOGGER.debug("Database not responding yet ...")
-            current_try += 1
-            sleep(wait_seconds)
-    else:
-        raise RuntimeError(
-            f"Database not responding at {database_url} after {max_tries} tries. "
-        )
 
 
 if __name__ == "__main__":

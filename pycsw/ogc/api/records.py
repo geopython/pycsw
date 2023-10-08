@@ -131,38 +131,14 @@ class API:
             self.repository = repository.Repository(
                 self.config.get('repository', 'database'),
                 self.context,
-                # self.environ.get('local.app_root', None),
-                None,
-                self.config.get('repository', 'table'),
-                repo_filter
+                table=self.config.get('repository', 'table'),
+                repo_filter=repo_filter
             )
             LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
         except Exception as err:
             msg = f'Could not load repository {err}'
             LOGGER.exception(msg)
             raise
-
-        self.query_mappings = {
-            'identifier': self.repository.dataset.identifier,
-            'type': self.repository.dataset.type,
-            'parentidentifier': self.repository.dataset.parentidentifier,
-            'collections': self.repository.dataset.parentidentifier,
-            'updated': self.repository.dataset.insert_date,
-            'title': self.repository.dataset.title,
-            'description': self.repository.dataset.abstract,
-            'keywords': self.repository.dataset.keywords,
-            'edition': self.repository.dataset.edition,
-            'anytext': self.repository.dataset.anytext,
-            'bbox': self.repository.dataset.wkt_geometry,
-            'date': self.repository.dataset.date,
-            'time_begin': self.repository.dataset.time_begin,
-            'time_end': self.repository.dataset.time_end,
-            'platform': self.repository.dataset.platform,
-            'instrument': self.repository.dataset.instrument,
-            'sensortype': self.repository.dataset.sensortype
-        }
-        if self.repository.dbtype == 'postgresql+postgis+native':
-            self.query_mappings['bbox'] = self.repository.dataset.wkb_geometry
 
     def get_content_type(self, headers, args):
         """
@@ -499,7 +475,7 @@ class API:
         properties2 = {}
 
         for key, value in properties.items():
-            if key in self.query_mappings or key == 'geometry':
+            if key in self.repository.query_mappings or key == 'geometry':
                 properties2[key] = value
 
         if collection == 'metadata:main':
@@ -679,7 +655,7 @@ class API:
 
             LOGGER.debug('Transforming AST into filters')
             try:
-                filters = to_filter(ast, self.repository.dbtype, self.query_mappings)
+                filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
                 LOGGER.debug(f'Filter: {filters}')
             except Exception as err:
                 msg = f'CQL evaluator error: {str(err)}'
@@ -699,15 +675,15 @@ class API:
             if sortby.startswith('-'):
                 sortby = sortby.lstrip('-')
 
-            if sortby not in list(self.query_mappings.keys()):
+            if sortby not in list(self.repository.query_mappings.keys()):
                 msg = 'Invalid sortby property'
                 LOGGER.exception(msg)
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
             if args['sortby'].startswith('-'):
-                query = query.order_by(self.query_mappings[sortby].desc())
+                query = query.order_by(self.repository.query_mappings[sortby].desc())
             else:
-                query = query.order_by(self.query_mappings[sortby])
+                query = query.order_by(self.repository.query_mappings[sortby])
 
         if limit is None and 'limit' in args:
             limit = int(args['limit'])
