@@ -164,8 +164,6 @@ class Repository(object):
             'instrument': self.dataset.instrument,
             'sensortype': self.dataset.sensortype
         }
-        if self.dbtype == 'postgresql+postgis+native':
-            self.query_mappings['bbox'] = self.dataset.wkb_geometry
 
         if self.dbtype == 'postgresql':
             # check if PostgreSQL is enabled with PostGIS 1.x
@@ -208,6 +206,10 @@ class Repository(object):
         if temp_dbtype is not None:
             LOGGER.debug('%s support detected', temp_dbtype)
             self.dbtype = temp_dbtype
+
+        if self.dbtype == 'postgresql+postgis+native':
+            LOGGER.debug('Adjusting to PostGIS geometry column  (wkb_geometry)')
+            self.query_mappings['bbox'] = self.dataset.wkb_geometry
 
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             # <= 0.6 behaviour
