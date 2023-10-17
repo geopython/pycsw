@@ -578,6 +578,9 @@ class API:
                 if k == 'ids':
                     ids = ','.join(f'"{x}"' for x in v.split(','))
                     query_args.append(f"identifier IN ({ids})")
+                elif k == 'collections':
+                    collections = ','.join(f'"{x}"' for x in v.split(','))
+                    query_args.append(f"parentidentifier IN ({collections})")
                 elif k == 'anytext':
                     query_args.append(build_anytext(k, v))
                 elif k == 'bbox':
@@ -602,11 +605,6 @@ class API:
         if collection != 'metadata:main':
             LOGGER.debug('Adding virtual collection filter')
             query_args.append(f'parentidentifier = "{collection}"')
-
-        if 'collections' in args:
-            LOGGER.debug('Adding collections filter')
-            for collection in args['collections'].split(','):
-                query_args.append(f'parentidentifier = "{collection}"')
 
         LOGGER.debug('Evaluating CQL and other specified filtering parameters')
         if cql_query is not None and query_args:
