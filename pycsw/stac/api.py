@@ -65,7 +65,8 @@ CONFORMANCE_CLASSES = [
     'https://api.stacspec.org/v1.0.0/core',
     'https://api.stacspec.org/v1.0.0/ogcapi-features',
     'https://api.stacspec.org/v1.0.0/item-search',
-    'https://api.stacspec.org/v1.0.0/item-search#filter'
+    'https://api.stacspec.org/v1.0.0/item-search#filter',
+    'https://api.stacspec.org/v1.0.0/item-search#free-text'
 ]
 
 
