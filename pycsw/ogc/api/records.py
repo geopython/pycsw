@@ -1209,13 +1209,25 @@ def build_anytext(name, value):
     :returns: string of CQL predicate(s)
     """
 
-    predicates = []
-    tokens = value.split()
+    LOGGER.debug(f'Name: {name}')
+    LOGGER.debug(f'Value: {value}')
 
-    if len(tokens) == 1:  # single term
+    predicates = []
+    tokens = value.split(',')
+
+    if len(tokens) == 1 and ' ' not in value:  # single term
+        LOGGER.debug(f'Single term with no spaces')
         return f"{name} ILIKE '%{value}%'"
 
     for token in tokens:
-        predicates.append(f"{name} ILIKE '%{token}%'")
+        if ' ' in token:
+            tokens2 = token.split()
+            predicates2 = []
+            for token2 in tokens2:
+                predicates2.append(f"{name} ILIKE '%{token2}%'")
 
-    return f"({' AND '.join(predicates)})"
+            predicates.append('(' + ' AND '.join(predicates2) + ')')
+        else:
+            predicates.append(f"{name} ILIKE '%{token}%'")
+
+    return f"({' OR '.join(predicates)})"
