@@ -1738,10 +1738,10 @@ def _parse_oarec_record(context, repos, record):
 
     if 'keywords' in record['properties']:
         keywords = record['properties']['keywords']
+        _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
 
     if 'themes' in record['properties']:
-        for theme in record['properties']['themes']:
-            keywords.extend(theme['concepts'])
+        _set(context, recobj, 'pycsw:Themes', json.dumps(record['properties']['themes']))
 
     if 'links' in record:
         for link in record['links']:
@@ -1763,9 +1763,6 @@ def _parse_oarec_record(context, repos, record):
 
     if links:
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
-
-    if keywords:
-        _set(context, recobj, 'pycsw:Keywords', ','.join(keywords))
 
     _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry'])))
 
