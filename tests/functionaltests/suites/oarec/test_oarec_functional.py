@@ -153,25 +153,25 @@ def test_items(config):
     assert content['numberReturned'] == 1
     assert len(content['features']) == content['numberReturned']
 
-    params = {'bbox': '-50,0,50,80', 'q': 'Lorem ipsum'}
+    params = {'q': 'Lorem ipsum'}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 2
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
-    params = {'bbox': '-50,0,50,80', 'q': 'Lorem,ipsum'}
+    params = {'q': 'Lorem,ipsum'}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 6
     assert content['numberReturned'] == 6
     assert len(content['features']) == content['numberReturned']
 
-    params = {'bbox': '-50,0,50,80', 'q': 'Lorem ipsum purus'}
+    params = {'q': 'Lorem ipsum purus'}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 0
     assert content['numberReturned'] == 0
     assert len(content['features']) == content['numberReturned']
 
-    params = {'bbox': '-50,0,50,80', 'q': 'Lorem ipsum,purus'}
+    params = {'q': 'Lorem ipsum,purus'}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 4
     assert content['numberReturned'] == 4
