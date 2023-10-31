@@ -424,7 +424,7 @@ class API:
             'hreflang': self.config['server']['language']
         }, {
             'rel': 'items',
-            'type': 'application/gep+json',
+            'type': 'application/geo+json',
             'title': 'items as GeoJSON',
             'href': f"{url_base}/items?f=json",
             'hreflang': self.config['server']['language']
