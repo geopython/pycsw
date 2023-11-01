@@ -896,6 +896,23 @@ class Csw(object):
                 except Exception as err:
                     LOGGER.exception('Error processing FTP')
 
+            elif uprh.scheme == 'ftps':
+                import ftplib
+
+                LOGGER.debug('FTPS detected.')
+
+                try:
+                    LOGGER.info('Sending to FTPS server')
+                    ftp = ftplib.FTP_TLS(uprh.hostname)
+                    if uprh.username is not None:
+                        ftp.login(uprh.username, uprh.password)
+                    ftp.prot_p()
+                    ftp.storbinary('STOR %s' % uprh.path[1:], StringIO(xml))
+                    ftp.quit()
+                    LOGGER.debug('FTPS sent successfully.')
+                except Exception as err:
+                    LOGGER.exception('Error processing FTPS')
+
     def _render_xslt(self, res):
         ''' Validate and render XSLT '''
 

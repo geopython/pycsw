@@ -50,7 +50,7 @@ Harvesting
 
    Your server must be able to make outgoing HTTP requests for this functionality.
 
-pycsw supports the CSW-T ``Harvest`` operation.  Records which are harvested require to setup a cronjob to periodically refresh records in the local repository.  A sample cronjob is available in ``etc/harvest-all.cron`` which points to ``pycsw-admin.py`` (you must specify the correct path to your configuration).  Harvest operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) if the Harvest request specifies ``csw:ResponseHandler``.
+pycsw supports the CSW-T ``Harvest`` operation.  Records which are harvested require to setup a cronjob to periodically refresh records in the local repository.  A sample cronjob is available in ``etc/harvest-all.cron`` which points to ``pycsw-admin.py`` (you must specify the correct path to your configuration).  Harvest operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) or ftps (via ``ftps://``) if the Harvest request specifies ``csw:ResponseHandler``.
 
 .. note::
 
@@ -72,7 +72,7 @@ pycsw supports 3 modes of the ``Transaction`` operation (``Insert``, ``Update``,
 - **Update**: updates can be made as full record updates or record properties against a ``csw:Constraint``
 - **Delete**: deletes can be made against a ``csw:Constraint``
 
-Transaction operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) if the Transaction request specifies ``csw:ResponseHandler``.
+Transaction operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) or ftps (via ``ftps://``) if the Transaction request specifies ``csw:ResponseHandler``.
 
 The :ref:`tests` contain CSW-T request examples.
 
