@@ -862,20 +862,41 @@ class Csw(object):
                 LOGGER.debug('Email detected')
 
                 smtp_host = 'localhost'
+                smtp_user = ''
+                smtp_pass = ''
+                smtp_ssl = False
                 if self.config.has_option('server', 'smtp_host'):
                     smtp_host = self.config.get('server', 'smtp_host')
+
+                if self.config.has_option('server', 'smtp_user'):
+                    smtp_user = self.config.get('server', 'smtp_user')
+
+                if self.config.has_option('server', 'smtp_pass'):
+                    smtp_pass = self.config.get('server', 'smtp_pass')
+
+                if self.config.has_option('server', 'smtp_ssl'):
+                    smtp_ssl = (self.config.get('server', 'smtp_ssl') == 'true')
 
                 body = ('Subject: pycsw %s results\n\n%s' %
                         (self.kvp['request'], xml))
 
                 try:
                     LOGGER.info('Sending email')
-                    msg = smtplib.SMTP(smtp_host)
-                    msg.sendmail(
-                        self.config.get('metadata:main', 'contact_email'),
-                        uprh.path, body
-                    )
-                    msg.quit()
+                    if smtp_ssl:
+                        msg = smtplib.SMTP_SSL(smtp_host, port=smtplib.SMTP_SSL_PORT)
+                        msg.login(smtp_user, smtp_pass)
+                        msg.sendmail(
+                            self.config.get('metadata:main', 'contact_email'),
+                            uprh.path, body
+                        )
+                        msg.quit()
+                    else:
+                        msg = smtplib.SMTP(smtp_host)
+                        msg.sendmail(
+                            self.config.get('metadata:main', 'contact_email'),
+                            uprh.path, body
+                        )
+                        msg.quit()
                     LOGGER.debug('Email sent successfully.')
                 except Exception as err:
                     LOGGER.exception('Error processing email')
