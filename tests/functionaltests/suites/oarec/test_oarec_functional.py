@@ -153,6 +153,30 @@ def test_items(config):
     assert content['numberReturned'] == 1
     assert len(content['features']) == content['numberReturned']
 
+    params = {'q': 'Lorem ipsum'}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 2
+    assert content['numberReturned'] == 2
+    assert len(content['features']) == content['numberReturned']
+
+    params = {'q': 'Lorem,ipsum'}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 6
+    assert content['numberReturned'] == 6
+    assert len(content['features']) == content['numberReturned']
+
+    params = {'q': 'Lorem ipsum purus'}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 0
+    assert content['numberReturned'] == 0
+    assert len(content['features']) == content['numberReturned']
+
+    params = {'q': 'Lorem ipsum,purus'}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 4
+    assert content['numberReturned'] == 4
+    assert len(content['features']) == content['numberReturned']
+
     ids = [
         'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f',
         'urn:uuid:1ef30a8b-876d-4828-9246-c37ab4510bbd'

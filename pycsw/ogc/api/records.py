@@ -424,7 +424,7 @@ class API:
             'hreflang': self.config['server']['language']
         }, {
             'rel': 'items',
-            'type': 'application/gep+json',
+            'type': 'application/geo+json',
             'title': 'items as GeoJSON',
             'href': f"{url_base}/items?f=json",
             'hreflang': self.config['server']['language']
@@ -578,6 +578,9 @@ class API:
                 if k == 'ids':
                     ids = ','.join(f'"{x}"' for x in v.split(','))
                     query_args.append(f"identifier IN ({ids})")
+                elif k == 'collections':
+                    collections = ','.join(f'"{x}"' for x in v.split(','))
+                    query_args.append(f"parentidentifier IN ({collections})")
                 elif k == 'anytext':
                     query_args.append(build_anytext(k, v))
                 elif k == 'bbox':
@@ -602,11 +605,6 @@ class API:
         if collection != 'metadata:main':
             LOGGER.debug('Adding virtual collection filter')
             query_args.append(f'parentidentifier = "{collection}"')
-
-        if 'collections' in args:
-            LOGGER.debug('Adding collections filter')
-            for collection in args['collections'].split(','):
-                query_args.append(f'parentidentifier = "{collection}"')
 
         LOGGER.debug('Evaluating CQL and other specified filtering parameters')
         if cql_query is not None and query_args:
@@ -1211,13 +1209,25 @@ def build_anytext(name, value):
     :returns: string of CQL predicate(s)
     """
 
-    predicates = []
-    tokens = value.split()
+    LOGGER.debug(f'Name: {name}')
+    LOGGER.debug(f'Value: {value}')
 
-    if len(tokens) == 1:  # single term
+    predicates = []
+    tokens = value.split(',')
+
+    if len(tokens) == 1 and ' ' not in value:  # single term
+        LOGGER.debug(f'Single term with no spaces')
         return f"{name} ILIKE '%{value}%'"
 
     for token in tokens:
-        predicates.append(f"{name} ILIKE '%{token}%'")
+        if ' ' in token:
+            tokens2 = token.split()
+            predicates2 = []
+            for token2 in tokens2:
+                predicates2.append(f"{name} ILIKE '%{token2}%'")
 
-    return f"({' AND '.join(predicates)})"
+            predicates.append('(' + ' AND '.join(predicates2) + ')')
+        else:
+            predicates.append(f"{name} ILIKE '%{token}%'")
+
+    return f"({' OR '.join(predicates)})"
