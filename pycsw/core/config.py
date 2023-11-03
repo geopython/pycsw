@@ -82,6 +82,7 @@ class StaticContext(object):
             'gmd': 'http://www.isotc211.org/2005/gmd',
             'gml': 'http://www.opengis.net/gml',
             'gml32': 'http://www.opengis.net/gml/3.2',
+            'mdb': 'http://standards.iso.org/iso/19115/-3/mdb/2.0',
             'ogc': 'http://www.opengis.net/ogc',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
             'ows': 'http://www.opengis.net/ows',

@@ -162,6 +162,9 @@ def _parse_metadata(context, repos, record):
         return [_parse_dc(context, repos, exml)]
     elif root == '{%s}DIF' % context.namespaces['dif']:  # DIF
         pass  # TODO
+    elif root == '{%s}MD_Metadata' % context.namespaces['mdb']:
+        # ISO19115-3 XML
+        return [_parse_iso(context, repos, exml)]
     else:
         raise RuntimeError('Unsupported metadata format')
 
@@ -1361,6 +1364,7 @@ def _parse_gm03(context, repos, exml):
     return recobj
 
 def _parse_iso(context, repos, exml):
+    """ Parses ISO 19139, ISO 19115-3 """
 
     from owslib.iso import MD_ImageDescription, MD_Metadata, SV_ServiceIdentification
     from owslib.iso_che import CHE_MD_Metadata
@@ -1368,16 +1372,21 @@ def _parse_iso(context, repos, exml):
     recobj = repos.dataset()
     bbox = None
     links = []
+    mdmeta_ns = 'gmd'
 
     if exml.tag == '{http://www.geocat.ch/2008/che}CHE_MD_Metadata':
         md = CHE_MD_Metadata(exml)
+    elif exml.tag == '{http://standards.iso.org/iso/19115/-3/mdb/2.0}MD_Metadata':
+        from pycsw.core.mdb import MD_Metadata
+        md = MD_Metadata(exml)
+        mdmeta_ns = 'mdb'
     else:
         md = MD_Metadata(exml)
 
     md_identification = md.identification[0]
 
     _set(context, recobj, 'pycsw:Identifier', md.identifier)
-    _set(context, recobj, 'pycsw:Typename', 'gmd:MD_Metadata')
+    _set(context, recobj, 'pycsw:Typename', f'{mdmeta_ns}:MD_Metadata')
     _set(context, recobj, 'pycsw:Schema', context.namespaces['gmd'])
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
@@ -1391,7 +1400,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:Modified', md.datestamp)
     _set(context, recobj, 'pycsw:Source', md.dataseturi)
 
-    if md.referencesystem is not None:
+    if md.referencesystem is not None and md.referencesystem.code is not None:
         try:
             code_ = 'urn:ogc:def:crs:EPSG::%d' % int(md.referencesystem.code)
         except ValueError:
@@ -1554,10 +1563,10 @@ def _parse_iso(context, repos, exml):
     if hasattr(md, 'distribution'):
         dist_links = []
         if hasattr(md.distribution, 'online'):
-            LOGGER.debug('Scanning for gmd:transferOptions element(s)')
+            LOGGER.debug(f'Scanning for {mdmeta_ns}:transferOptions element(s)')
             dist_links.extend(md.distribution.online)
         if hasattr(md.distribution, 'distributor'):
-            LOGGER.debug('Scanning for gmd:distributorTransferOptions element(s)')
+            LOGGER.debug(f'Scanning for {mdmeta_ns}:distributorTransferOptions element(s)')
             for dist_member in md.distribution.distributor:
                 dist_links.extend(dist_member.online)
         for link in dist_links:
