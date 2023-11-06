@@ -35,6 +35,7 @@ import logging
 import os
 from urllib.parse import urlencode, quote
 
+from owslib.ogcapi.records import Records
 from pygeofilter.parsers.ecql import parse as parse_ecql
 from pygeofilter.parsers.cql2_json import parse as parse_cql2_json
 
@@ -725,6 +726,16 @@ class API:
         for record in records:
             response['features'].append(record2json(record, self.config['server']['url'], collection, self.mode))
 
+        response['distributedFeatures'] = []
+
+        for fc in self.config['server']['federatedcatalogues'].split(','):
+            LOGGER.debug(f'Running distributed search against {fc}')
+            fc_url, _, fc_collection = fc.rsplit('/', 2)
+            w = Records(fc_url)
+            fc_results = w.collection_items(fc_collection, **args)
+            for feature in fc_results['features']:
+                response['distributedFeatures'].append(feature)
+
         LOGGER.debug('Creating links')
 
         link_args = {**args}
@@ -811,6 +822,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
+        record = None
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         if collection not in self.get_all_collections():
@@ -821,14 +833,26 @@ class API:
         LOGGER.debug(f'Querying repository for item {item}')
         try:
             record = self.repository.query_ids([item])[0]
+            response = record2json(record, self.config['server']['url'],
+                                   collection, self.mode)
         except IndexError:
+            for fc in self.config['server']['federatedcatalogues'].split(','):
+                LOGGER.debug(f'Running distributed search against {fc}')
+                fc_url, _, fc_collection = fc.rsplit('/', 2)
+                w = Records(fc_url)
+                try:
+                    response = record = w.collection_item(fc_collection, item)
+                    LOGGER.debug(f'Found item from {fc}')
+                    break
+                except RuntimeError:
+                    continue
+
+        if record is None:
             return self.get_exception(
                     404, headers_, 'InvalidParameterValue', 'item not found')
 
         if headers_['Content-Type'] == 'application/xml':
             return headers_, 200, record.xml
-
-        response = record2json(record, self.config['server']['url'], collection, self.mode)
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
@@ -959,7 +983,7 @@ class API:
             title = collection_info.get('title')
             description = collection_info.get('description')
 
-        return {
+        collection_info = {
             'id': id_,
             'title': title,
             'description': description,
@@ -985,6 +1009,18 @@ class API:
                 'hreflang': self.config['server']['language']
             }]
         }
+
+        if collection_name == 'metadata:main':
+            if self.config['server'].get('federatedcatalogues') is not None:
+                LOGGER.debug('Adding federated catalogues')
+                collection_info['federatedCatalogues'] = []
+                for fc in self.config['server']['federatedcatalogues'].split(','):
+                    collection_info['federatedCatalogues'].append({
+                        'type': 'OGC API - Records',
+                        'url': fc
+                    })
+
+        return collection_info
 
     def get_all_collections(self) -> list:
         """
