@@ -183,7 +183,7 @@ def sample_record():
             "language": "en",
             "type": "dataset",
             "created": "2011-11-11",
-            "recordUpdated": "2000-09-01",
+            "updated": "2000-09-01",
             "rights": "Copyright (c) 2010 Her Majesty the Queen in Right of Canada"
         },
         "links": [
