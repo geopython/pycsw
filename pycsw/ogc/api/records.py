@@ -728,13 +728,14 @@ class API:
 
         response['distributedFeatures'] = []
 
-        for fc in self.config['server']['federatedcatalogues'].split(','):
-            LOGGER.debug(f'Running distributed search against {fc}')
-            fc_url, _, fc_collection = fc.rsplit('/', 2)
-            w = Records(fc_url)
-            fc_results = w.collection_items(fc_collection, **args)
-            for feature in fc_results['features']:
-                response['distributedFeatures'].append(feature)
+        if 'federatedcatalogues' in self.config['server']:
+            for fc in self.config['server']['federatedcatalogues'].split(','):
+                LOGGER.debug(f'Running distributed search against {fc}')
+                fc_url, _, fc_collection = fc.rsplit('/', 2)
+                w = Records(fc_url)
+                fc_results = w.collection_items(fc_collection, **args)
+                for feature in fc_results['features']:
+                    response['distributedFeatures'].append(feature)
 
         LOGGER.debug('Creating links')
 
@@ -836,16 +837,17 @@ class API:
             response = record2json(record, self.config['server']['url'],
                                    collection, self.mode)
         except IndexError:
-            for fc in self.config['server']['federatedcatalogues'].split(','):
-                LOGGER.debug(f'Running distributed search against {fc}')
-                fc_url, _, fc_collection = fc.rsplit('/', 2)
-                w = Records(fc_url)
-                try:
-                    response = record = w.collection_item(fc_collection, item)
-                    LOGGER.debug(f'Found item from {fc}')
-                    break
-                except RuntimeError:
-                    continue
+            if 'federatedcatalogues' in self.config['server']:
+                for fc in self.config['server']['federatedcatalogues'].split(','):
+                    LOGGER.debug(f'Running distributed search against {fc}')
+                    fc_url, _, fc_collection = fc.rsplit('/', 2)
+                    w = Records(fc_url)
+                    try:
+                        response = record = w.collection_item(fc_collection, item)
+                        LOGGER.debug(f'Found item from {fc}')
+                        break
+                    except RuntimeError:
+                        continue
 
         if record is None:
             return self.get_exception(
