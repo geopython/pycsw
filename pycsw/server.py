@@ -880,21 +880,26 @@ class Csw(object):
                 except Exception as err:
                     LOGGER.exception('Error processing email')
 
-            elif uprh.scheme == 'ftp':
+            elif uprh.scheme in ['ftp', 'ftps']:
                 import ftplib
 
-                LOGGER.debug('FTP detected.')
+                LOGGER.debug(f'{uprh.scheme} detected.')
 
                 try:
-                    LOGGER.info('Sending to FTP server.')
-                    ftp = ftplib.FTP(uprh.hostname)
+                    LOGGER.info(f'Sending to {uprh.scheme} server.')
+                    if uprh.scheme == 'ftps':
+                        ftp = ftplib.FTP_TLS(uprh.hostname)
+                    else:
+                        ftp = ftplib.FTP(uprh.hostname)
                     if uprh.username is not None:
                         ftp.login(uprh.username, uprh.password)
+                    if uprh.scheme == 'ftps':
+                        ftp.prot_p()
                     ftp.storbinary('STOR %s' % uprh.path[1:], StringIO(xml))
                     ftp.quit()
-                    LOGGER.debug('FTP sent successfully.')
+                    LOGGER.debug(f'{uprh.scheme} sent successfully.')
                 except Exception as err:
-                    LOGGER.exception('Error processing FTP')
+                    LOGGER.exception(f'Error processing {uprh.scheme}')
 
     def _render_xslt(self, res):
         ''' Validate and render XSLT '''
