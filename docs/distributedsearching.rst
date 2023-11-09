@@ -87,7 +87,11 @@ A very important facet of distributed search is as per Annex B of OGC:CSW 2.0.2.
 OGC API - Records
 -----------------
 
-Experimental support for distibuted searching is available in pycsw's OGC API - Records support to allow for searching remote servers.  The implementation uses the same approach as described above, operating in OGC API - Records mode.
+Experimental support for distibuted searching is available in pycsw's OGC API - Records support to allow for searching remote services.  The implementation uses the same approach as described above, operating in OGC API - Records mode.
+
+.. note::
+
+   The ``federatedcatalogues`` directives must point to an OGC API - Records **collections** endpoint.
 
 .. code-block:: none 
 
