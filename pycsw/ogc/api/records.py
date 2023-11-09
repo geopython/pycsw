@@ -1008,11 +1008,11 @@ class API:
         facets_results = {}
 
         for facet in self.facets:
+            LOGGER.debug(f'Running facet for {facet}')
+            facetq = self.repository.session.query(self.repository.query_mappings[facet], self.repository.func.count(facet)).group_by(facet)
+
             if filters is not None:
-                facetq = self.repository.session.query(self.repository.query_mappings[facet], self.repository.func.count(facet)).group_by(facet).filter(filters).all()
-            else:
-                LOGGER.debug('Running facet query')
-                facetq = self.repository.session.query(self.repository.query_mappings[facet], self.repository.func.count(facet)).group_by(facet).all()
+                facetq = facetq.filter(filters)
 
             LOGGER.debug('Writing facet query results')
             facets_results[facet] = {
@@ -1020,7 +1020,8 @@ class API:
                 'property': facet,
                 'buckets': []
             }
-            for fq in facetq:
+
+            for fq in facetq.all():
                 facets_results[facet]['buckets'].append({
                     'value': fq[0],
                     'count': fq[1]
