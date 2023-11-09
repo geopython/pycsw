@@ -142,6 +142,7 @@ class Repository(object):
         self.dbtype = self.engine.name
 
         self.session = create_session(self.engine)
+        self.func = func
 
         temp_dbtype = None
 

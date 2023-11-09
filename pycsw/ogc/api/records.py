@@ -43,7 +43,7 @@ from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.metadata import parse_record
 from pycsw.core.pygeofilter_evaluate import to_filter
-from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, wkt2geom
+from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, str2bool, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
 
@@ -101,6 +101,7 @@ class API:
 
         LOGGER.debug(f'Server URL: {url_}')
         self.config['server']['url'] = url_.rstrip('/')
+        self.facets = self.config['repository'].get('facets', 'type').split(',')
 
         self.context = StaticContext()
 
@@ -511,6 +512,7 @@ class API:
 
         reserved_query_params = [
             'f',
+            'facets',
             'filter',
             'filter-lang',
             'limit',
@@ -525,6 +527,7 @@ class API:
 
         response = {
             'type': 'FeatureCollection',
+            'facets': [],
             'features': [],
             'links': []
         }
@@ -533,6 +536,7 @@ class API:
         query_parser = None
         sortby = None
         limit = None
+        facets_requested = False
         collections = []
 
         if collection not in self.get_all_collections():
@@ -602,6 +606,8 @@ class API:
                 else:
                     query_args.append(f'{k} = "{v}"')
 
+        facets_requested = str2bool(args.get('facets', False))
+
         if collection != 'metadata:main':
             LOGGER.debug('Adding virtual collection filter')
             query_args.append(f'parentidentifier = "{collection}"')
@@ -661,8 +667,17 @@ class API:
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
             query = self.repository.session.query(self.repository.dataset).filter(filters)
+            if facets_requested:
+                LOGGER.debug('Running facet query')
+                facets_results = self.get_facets(filters)
         else:
             query = self.repository.session.query(self.repository.dataset)
+            facets_results = self.get_facets()
+
+        if facets_requested:
+            response['facets'] = facets_results
+        else:
+            response.pop('facets')
 
         if 'sortby' in args:
             LOGGER.debug('sortby specified')
@@ -971,7 +986,7 @@ class API:
             }]
         }
 
-    def get_all_collections(self):
+    def get_all_collections(self) -> list:
         """
         Get all collections
 
@@ -982,6 +997,36 @@ class API:
         virtual_collections = self.repository.query_collections()
 
         return [default_collection] + [vc.identifier for vc in virtual_collections]
+
+    def get_facets(self, filters=None) -> dict:
+        """
+        Gets all facets for a given query
+
+        :returns: `dict` of facets
+        """
+
+        facets_results = {}
+
+        for facet in self.facets:
+            if filters is not None:
+                facetq = self.repository.session.query(self.repository.query_mappings[facet], self.repository.func.count(facet)).group_by(facet).filter(filters).all()
+            else:
+                LOGGER.debug('Running facet query')
+                facetq = self.repository.session.query(self.repository.query_mappings[facet], self.repository.func.count(facet)).group_by(facet).all()
+
+            LOGGER.debug('Writing facet query results')
+            facets_results[facet] = {
+                'type': 'terms',
+                'property': facet,
+                'buckets': []
+            }
+            for fq in facetq:
+                facets_results[facet]['buckets'].append({
+                    'value': fq[0],
+                    'count': fq[1]
+                })
+
+        return facets_results
 
 
 def record2json(record, url, collection, mode='ogcapi-records'):

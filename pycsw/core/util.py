@@ -192,6 +192,7 @@ def geojson_geometry2bbox(geometry):
 
     return bbox
 
+
 def wkt2geom(ewkt, bounds=True):
     """Return Shapely geometry object based on WKT/EWKT
 
@@ -207,8 +208,9 @@ def wkt2geom(ewkt, bounds=True):
     Returns
     -------
     shapely.geometry.base.BaseGeometry or tuple
-        Depending on the value of the ``bounds`` parameter, returns either 
-        the shapely geometry instance or a tuple with the bounding box.
+
+    Depending on the value of the ``bounds`` parameter, returns either
+    the shapely geometry instance or a tuple with the bounding box.
 
     References
     ----------
@@ -346,8 +348,8 @@ def ipaddress_in_whitelist(ipaddress, whitelist):
                 if ip_in_network_cidr(ipaddress, white):
                     return True
             elif white.find('*') != -1:  # subnet wildcard
-                    if ipaddress.startswith(white.split('*')[0]):
-                        return True
+                if ipaddress.startswith(white.split('*')[0]):
+                    return True
     return False
 
 
@@ -372,7 +374,7 @@ def get_anytext_from_obj(obj):
     """
     generate bag of text for free text searches
     accepts dict, list or string
-    """ 
+    """
 
     if isinstance(obj, dict):
         for key, value in obj.items():
@@ -432,6 +434,7 @@ def secure_filename(filename):
 
     return filename
 
+
 def jsonify_links(links):
     """
     pycsw:Links column data handler.
@@ -441,7 +444,7 @@ def jsonify_links(links):
         LOGGER.debug('JSON link')
         linkset = json.loads(links)
         return linkset
-    except json.decoder.JSONDecodeError as err:  # try CSV parsing
+    except json.decoder.JSONDecodeError:  # try CSV parsing
         LOGGER.debug('old style CSV link')
         json_links = []
         for link in links.split('^'):
@@ -525,3 +528,21 @@ def load_custom_repo_mappings(repository_mappings: str) -> typing.Optional[typin
     if imported_mappings_module is not None:
         result = getattr(imported_mappings_module, "MD_CORE_MODEL", None)
     return result
+
+
+def str2bool(value: typing.Union[bool, str]) -> bool:
+    """
+    helper function to return Python boolean
+    type (source: https://stackoverflow.com/a/715468)
+    :param value: value to be evaluated
+    :returns: `bool` of whether the value is boolean-ish
+    """
+
+    value2 = False
+
+    if isinstance(value, bool):
+        value2 = value
+    else:
+        value2 = value.lower() in ('yes', 'true', 't', '1', 'on')
+
+    return value2
