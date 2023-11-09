@@ -534,7 +534,9 @@ def str2bool(value: typing.Union[bool, str]) -> bool:
     """
     helper function to return Python boolean
     type (source: https://stackoverflow.com/a/715468)
+
     :param value: value to be evaluated
+
     :returns: `bool` of whether the value is boolean-ish
     """
 

@@ -5,17 +5,20 @@ Distributed Searching
 
 .. note::
 
-   Distributed search is supported for CSW 2/3 APIs.  OARec support will be implemented
-   following guidance from the OARec specification once available.
+   - in CSW mode, distributed search must be configured against remote CSW services
+   - in OGC API - Records mode, distributed search must be configured against remote OGC API - Records services
 
 .. note::
 
    Your server must be able to make outgoing HTTP requests for this functionality.
 
+CSW 2 / 3
+---------
+
 pycsw has the ability to perform distributed searching against other CSW servers.  Distributed searching is disabled by default; to enable, ``server.federatedcatalogues`` must be set.  A CSW client must issue a GetRecords request with ``csw:DistributedSearch`` specified, along with an optional ``hopCount`` attribute (see subclause 10.8.4.13 of the CSW specification).  When enabled, pycsw will search all specified catalogues and return a unified set of search results to the client.  Due to the distributed nature of this functionality, requests will take extra time to process compared to queries against the local repository.
 
 Scenario: Federated Search
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 pycsw deployment with 3 configurations (CSW-1, CSW-2, CSW-3), subsequently providing three (3) endpoints.  Each endpoint is based on an opaque metadata repository (based on theme/place/discipline, etc.).  Goal is to perform a single search against all endpoints.
  
@@ -80,3 +83,18 @@ As a result, a pycsw deployment in this scenario may be approached on a per 'the
 All interaction in this scenario is local to the pycsw installation, so network performance would not be problematic.
  
 A very important facet of distributed search is as per Annex B of OGC:CSW 2.0.2.  Given that all the CSW endpoints are managed locally, duplicates and infinite looping are not deemed to present an issue.
+
+OGC API - Records
+-----------------
+
+Experimental support for distibuted searching is available in pycsw's OGC API - Records support to allow for searching remote servers.  The implementation uses the same approach as described above, operating in OGC API - Records mode.
+
+.. code-block:: none 
+
+  [server]
+  ...
+  federatedcatalogues=https://example.org/collections/collection1,https://example.org/collections/collection2
+
+With the above configured, a distributed search can be invoked as follows:
+
+http://localhost/collections/metadata:main/items?distributed=true

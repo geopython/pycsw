@@ -512,6 +512,7 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         reserved_query_params = [
+            'distributed',
             'f',
             'facets',
             'filter',
@@ -728,14 +729,19 @@ class API:
 
         response['distributedFeatures'] = []
 
-        if 'federatedcatalogues' in self.config['server']:
+        distributed = str2bool(args.get('distributed', False))
+
+        if distributed and 'federatedcatalogues' in self.config['server']:
             for fc in self.config['server']['federatedcatalogues'].split(','):
                 LOGGER.debug(f'Running distributed search against {fc}')
                 fc_url, _, fc_collection = fc.rsplit('/', 2)
-                w = Records(fc_url)
-                fc_results = w.collection_items(fc_collection, **args)
-                for feature in fc_results['features']:
-                    response['distributedFeatures'].append(feature)
+                try:
+                    w = Records(fc_url)
+                    fc_results = w.collection_items(fc_collection, **args)
+                    for feature in fc_results['features']:
+                        response['distributedFeatures'].append(feature)
+                except Exception as err:
+                    LOGGER.warning(err)
 
         LOGGER.debug('Creating links')
 
@@ -837,12 +843,14 @@ class API:
             response = record2json(record, self.config['server']['url'],
                                    collection, self.mode)
         except IndexError:
-            if 'federatedcatalogues' in self.config['server']:
+            distributed = str2bool(args.get('distributed', False))
+
+            if distributed and 'federatedcatalogues' in self.config['server']:
                 for fc in self.config['server']['federatedcatalogues'].split(','):
-                    LOGGER.debug(f'Running distributed search against {fc}')
+                    LOGGER.debug(f'Running distributed item search against {fc}')
                     fc_url, _, fc_collection = fc.rsplit('/', 2)
-                    w = Records(fc_url)
                     try:
+                        w = Records(fc_url)
                         response = record = w.collection_item(fc_collection, item)
                         LOGGER.debug(f'Found item from {fc}')
                         break

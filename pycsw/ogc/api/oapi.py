@@ -198,6 +198,18 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         'style': 'form',
         'explode': False
     }
+    oapi['components']['parameters']['distributed'] = {
+        'name': 'distributed',
+        'in': 'query',
+        'description': 'Whether to invoke distributed mode',
+        'schema': {
+            'type': 'boolean',
+            'default': False
+        },
+        'style': 'form',
+        'explode': False
+    }
+
     # TODO: remove local definition of ids once implemented
     # in OGC API - Records
     oapi['components']['parameters']['ids'] = {
@@ -396,8 +408,9 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
                 {'$ref': '#/components/parameters/filter-lang'},
                 {'$ref': '#/components/parameters/f'},
                 {'$ref': '#/components/parameters/offset'},
-                {'$ref': '#/components/parameters/vendorSpecificParameters'},
                 {'$ref': '#/components/parameters/facets'},
+                {'$ref': '#/components/parameters/distributed'},
+                {'$ref': '#/components/parameters/vendorSpecificParameters'}
             ],
             'responses': {
                 '200': {
@@ -467,6 +480,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
             'parameters': [
                 {'$ref': '#/components/parameters/collectionId'},
                 {'$ref': '#/components/parameters/recordId'},
+                {'$ref': '#/components/parameters/distributed'},
                 f
             ],
             'responses': {
