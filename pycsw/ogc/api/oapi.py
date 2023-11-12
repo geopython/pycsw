@@ -187,6 +187,17 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         },
         'style': 'form'
     }
+    oapi['components']['parameters']['facets'] = {
+        'name': 'facets',
+        'in': 'query',
+        'description': 'Whether to include facets in results',
+        'schema': {
+            'type': 'boolean',
+            'default': False
+        },
+        'style': 'form',
+        'explode': False
+    }
     # TODO: remove local definition of ids once implemented
     # in OGC API - Records
     oapi['components']['parameters']['ids'] = {
@@ -385,7 +396,8 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
                 {'$ref': '#/components/parameters/filter-lang'},
                 {'$ref': '#/components/parameters/f'},
                 {'$ref': '#/components/parameters/offset'},
-                {'$ref': '#/components/parameters/vendorSpecificParameters'}
+                {'$ref': '#/components/parameters/vendorSpecificParameters'},
+                {'$ref': '#/components/parameters/facets'},
             ],
             'responses': {
                 '200': {
