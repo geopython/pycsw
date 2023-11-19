@@ -58,7 +58,7 @@ env:
   requestPayloadLimit: 1mb
   maxrecords: null #10000 for innet1
   logfile: '' #/var/log/pycsw/pycsw.log for innet1
-  profiles: mc_3d
+  profiles: mc_dem
   # should be false for PYCSW-ALL!!
   filter_repository: false
   logFormat: >-
@@ -69,14 +69,14 @@ env:
     threads: 10
   tracing:
     enabled: false
-    url: http://localhost:55681/v1/trace
+    url: http://localhost:55681/v1/traces
   metrics:
     enabled: false
     url: http://localhost:55681/v1/metrics
 
 db:
   host: 10.0.4.4
-  name: 3d-catalog-manager-int
+  name: dem-catalog-manager-int
   schema: public
   port: 5432
 
@@ -128,7 +128,7 @@ envoy:
   imageTag: v1.20.7
   port: 6565
   maxRequestBytes: 8192
-  requestedDomain: 3d
+  requestedDomain: dem
   resources:
     enabled: true
     value:
@@ -143,7 +143,7 @@ route:
   enabled: true
   https: true
   host:
-  path: /api/3d/v1
+  path: /api/dem/v1
   timeout:
     enabled: false # defaults to 30s by openshift
     duration: 60s # supported units (us, ms, s, m, h, d)
@@ -151,12 +151,12 @@ route:
 
 ingress:
   enabled: false
-  type: nginx-org # supported values: 'nginx-org' | 'nginx-kubernetes'
+  type: nginx-kubernetes # supported values: 'nginx-org' | 'nginx-kubernetes'
   tls:
     enabled: false
     useExternal: ''
   host:
-  path: /api/3d/v1
+  path: /dem-pycsw
 
 annotations:
   collectord.io/index: SPLUNK_INDEX
