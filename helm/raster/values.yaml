@@ -1,7 +1,7 @@
 global:
-  cloudProvider: 
+  cloudProvider:
     dockerRegistryUrl: my-registry-url.io
-    imagePullSecretName: 'my-registry-secret'
+    imagePullSecretName: "my-registry-secret"
     flavor: openshift
   tracing: {}
   metrics: {}
@@ -14,27 +14,27 @@ environment: development
 replicaCount: 5
 initialDelaySeconds: 60
 resetOnConfigChange: true
-splunkIndex: ''
+splunkIndex: ""
 imagePullPolicy: Always
 
 cloudProvider:
   dockerRegistryUrl: my-registry-url.io
-  imagePullSecretName: 'my-registry-secret'
+  imagePullSecretName: "my-registry-secret"
   flavor: openshift
 
 authentication:
   ca:
     enabled: false
     useExternal: false
-    externalSecretName: ''
+    externalSecretName: ""
   ssl:
     enabled: false
     useExternal: false
-    externalSecretName: ''
+    externalSecretName: ""
 
-caSecretName: ''
-caPath: '/usr/local/share/ca-certificates'
-caKey: 'ca.crt'
+caSecretName: ""
+caPath: "/usr/local/share/ca-certificates"
+caKey: "ca.crt"
 
 rasterCommon:
   authentication:
@@ -42,9 +42,9 @@ rasterCommon:
       enabled: true
       customHeaderName: "x-api-key,content-type"
   ca:
-    secretName: ''
-    path: '/usr/local/share/ca-certificates'
-    key: 'ca.crt'
+    secretName: ""
+    path: "/usr/local/share/ca-certificates"
+    key: "ca.crt"
   db:
     host: "localhost"
     name: "raster"
@@ -53,16 +53,14 @@ rasterCommon:
     rejectUnauthorized: true
     secrets:
       useExternal: true
-      externalSecretName: ''
+      externalSecretName: ""
       caFileKey: "caFileKey"
       certFileKey: "certFileKey"
       keyFileKey: "keyFileKey"
 
-
 image:
   repository: pycsw
-  tag: 'latest'
-
+  tag: "latest"
 
 internalServicePort: 80
 pycswPort: 8000
@@ -72,7 +70,7 @@ servicePort: 8080
 env:
   loglevel: WARNING
   maxrecords: null
-  logfile: ''
+  logfile: ""
   profiles: mc_raster
   logFormat: >-
     %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
@@ -80,10 +78,14 @@ env:
   uwsgi:
     processes: 6
     threads: 10
+    statsServer:
+      enabled: true
+      stats: 1717
+      statsMinify: true
   cors:
     enabled: true
-    allowedOrigin: '*'
-    allowedHeaders: ''
+    allowedOrigin: "*"
+    allowedHeaders: ""
   db:
     schema: RasterCatalogManager
     requirePassword: true
@@ -91,7 +93,10 @@ env:
     enabled: false
     url: http://localhost:55681/v1/trace
   metrics:
-    enabled: false
+    prometheus:
+      scrape: true
+      port: 9117
+    enabled: true
     url: http://localhost:55681/v1/metrics
 
 resources:
@@ -109,24 +114,24 @@ nginx:
   replicaCount: 2
   image:
     repository: nginx-otel-unprivileged
-    tag: 'v1.0.0' 
+    tag: "v1.0.0"
   port: 8080
   internalServicePort: 80
   targetPort: 8080
   servicePort: 8080
   nodePort: 30001
-  
+
   authorization:
     enabled: true
-    domain: 'raster'
+    domain: "raster"
     url: http://opa-la-opa-service.integration/v1/data/http/authz/decision
 
   extraVolumes:
     - name: nginx-config
       configMap:
-        name: '{{ .Release.Name }}-nginx-configmap'
+        name: "{{ .Release.Name }}-nginx-configmap"
 
-  extraVolumeMounts: 
+  extraVolumeMounts:
     - name: nginx-config
       mountPath: "/etc/nginx/conf.d/default.conf"
       subPath: default.conf
@@ -142,26 +147,43 @@ nginx:
         memory: 128Mi
       requests:
         cpu: 100m
-        memory: 128Mi     
+        memory: 128Mi
 
   route:
     enabled: true
     path: /api/raster/v1
-    host: 
+    host:
     timeout:
       enabled: false # defaults to 30s by openshift
       duration: 60s # supported units (us, ms, s, m, h, d)
     tls:
       enabled: true
       useCerts: false
-      certificate: ''
-      key: ''
-      caCertificate: ''
+      certificate: ""
+      key: ""
+      caCertificate: ""
 
   ingress:
     enabled: false
     path: /api/raster/v1
-    host: 'localhost'
-    tls: 
+    host: "localhost"
+    tls:
       enabled: true
-      useExternal: ''
+      useExternal: ""
+
+uwsgiExporter:
+  image:
+    repository: "timonwong/uwsgi-exporter"
+    tag: "latest"
+  env:
+    logLevel: info # one of [debug, info, warn, error]
+  port: 9117
+  resources:
+    enabled: true
+    value:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi

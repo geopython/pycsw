@@ -52,6 +52,10 @@ spec:
       {{- if .Values.resetOnConfigChange }}
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if .Values.env.metrics.enabled }}
+        prometheus.io/port: {{ .Values.env.metrics.prometheus.port | quote }}
+        prometheus.io/scrape: {{ .Values.env.metrics.prometheus.scrape | quote }}
+        {{- end }}
       {{- end }}
     spec:
     {{- if $cloudProviderImagePullSecretName }}
@@ -154,6 +158,10 @@ spec:
           resources:
             {{- toYaml .Values.resources.value | nindent 12 }}
           {{- end }}
+        ################################################## uwsgi exporter deployment##############################################
+        {{- if .Values.env.metrics.enabled }}
+        {{- template "pycsw-chart.uwsgi-exporter-container" (merge (dict "releaseName" .releaseName "chartName" .chartName "cloudProviderDockerRegistryUrl" $cloudProviderDockerRegistryUrl "resources" .Values.uwsgiExporter.resources) .) }}
+        {{- end }}
       volumes:
         {{- if .Values.rasterCommon.ca.secretName }}
         - name: root-ca
