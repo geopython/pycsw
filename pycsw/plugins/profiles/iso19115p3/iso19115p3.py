@@ -36,8 +36,8 @@ from pycsw.plugins.profiles import profile
 CODELIST = 'http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml'
 
 
-class ISO19115v3(profile.Profile):
-    ''' ISO19115_3 class '''
+class ISO19115p3(profile.Profile):
+    ''' ISO19115p3 class represents the profile for input and output of ISO 19115 Part 3 XML '''
     def __init__(self, model, namespaces, context):
         self.context = context
 
@@ -99,6 +99,8 @@ class ISO19115v3(profile.Profile):
                                      'dbcol': self.context.md_core_model['mappings']['pycsw:Type']},
                         # Copied from 'apiso', not sure if works
                         'mdb:BoundingBox': {'xpath': 'mdb:BoundingBox', 'dbcol': self.context.md_core_model['mappings']['pycsw:BoundingBox']},
+                        'mdb:VertExtentMin': {'xpath': 'mdb:VertExtentMin', 'dbcol': self.context.md_core_model['mappings']['pycsw:VertExtentMin']},
+                        'mdb:VertExtentMax': {'xpath': 'mdb:VertExtentMax', 'dbcol': self.context.md_core_model['mappings']['pycsw:VertExtentMax']},
                         'mdb:CRS': {'xpath': '''concat("urn:ogc:def:crs:",
                                                        "mdb:referenceSystemInfo/mrs:MD_ReferenceSystem/mrs:referenceSystemIdentifier/mcc:MD_Identifier/mcc:codeSpace/gco:CharacterString",
                                                        ":",
@@ -185,6 +187,8 @@ class ISO19115v3(profile.Profile):
                                           'dbcol': self.context.md_core_model['mappings']['pycsw:Publisher']},
                         'mdb:Contributor': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:citedResponsibleParty/cit:CI_Responsibility/cit:role/cit:CI_RoleCode[text()="contributor"]',
                                             'dbcol': self.context.md_core_model['mappings']['pycsw:Contributor']},
+                        'mdb:Funder': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:citedResponsibleParty/cit:CI_Responsibility/cit:role/cit:CI_RoleCode[text()="funder"]',
+                                       'dbcol': self.context.md_core_model['mappings']['pycsw:Funder']},
                         'mdb:Relation': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:aggregationInfo',
                                          'dbcol': self.context.md_core_model['mappings']['pycsw:Relation']},
                         # 19115-2
@@ -264,7 +268,7 @@ class ISO19115v3(profile.Profile):
 
         # Copied from: https://github.com/geonetwork/core-geonetwork/tree/main/schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/schema/standards.iso.org/19115/-3/mdb/2.0
         schema_file = os.path.join(self.context.pycsw_home, 'plugins',
-                                   'profiles', 'iso19115-3', 'schemas', 'ogc',
+                                   'profiles', 'iso19115p3', 'schemas', 'ogc',
                                    'iso', 'iso19115-3', 'mdb', '2.0', 'mdb.xsd')
 
         schema = etree.parse(schema_file, self.context.parser).getroot()
@@ -277,7 +281,7 @@ class ISO19115v3(profile.Profile):
         parentSchema='mdb.xsd')
 
         schema_file = os.path.join(self.context.pycsw_home, 'plugins',
-                                   'profiles', 'iso19115-3', 'schemas', 'ogc',
+                                   'profiles', 'iso19115p3', 'schemas', 'ogc',
                                    'iso', 'iso19115-3', 'srv', '2.1',
                                    'serviceInformation.xsd')
 
@@ -313,9 +317,8 @@ class ISO19115v3(profile.Profile):
             return etree.fromstring(xml_blob, self.context.parser)
 
         node = etree.Element(util.nspath_eval('mdb:MD_Metadata', self.namespaces))
-        # TODO: Update
         node.attrib[util.nspath_eval('xsi:schemaLocation', self.context.namespaces)] = \
-        '%s %s/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd' % (self.namespace, self.ogc_schemas_base)
+        '%s %s/csw/2.0.2/csw.xsd' % (self.namespace, self.ogc_schemas_base)
 
         # identifier
         idval = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Identifier'])
@@ -510,9 +513,11 @@ class ISO19115v3(profile.Profile):
                 for v in val.split(','):
                     etree.SubElement(topic_cat, util.nspath_eval('mri:MD_TopicCategoryCode', self.namespaces)).text = val
 
-        # bbox extent
-        val = util.getqattr(result, queryables['mdb:BoundingBox']['dbcol'])
-        bboxel = write_extent(val, self.namespaces)
+        # bbox and vertical extent
+        bbox = util.getqattr(result, queryables['mdb:BoundingBox']['dbcol'])
+        vert_ext_min = util.getqattr(result, queryables['mdb:VertExtentMin']['dbcol'])
+        vert_ext_max = util.getqattr(result, queryables['mdb:VertExtentMax']['dbcol'])
+        bboxel = write_extent(bbox, vert_ext_min, vert_ext_max, self.namespaces)
         if bboxel is not None and mtype != 'service':
             # Add <mri:extent> element etc.
             resident.append(bboxel)
@@ -628,8 +633,9 @@ def write_keywords(keywords, nsmap):
     return md_keywords
 
 
-def write_extent(bbox, nsmap):
-    ''' Generate BBOX extent '''
+def write_extent(bbox, vert_ext_min, vert_extent_max, nsmap):
+    ''' Generate BBOX and vertical extent
+    '''
     if bbox is not None:
         try:
             bbox2 = util.wkt2geom(bbox)
@@ -648,6 +654,15 @@ def write_extent(bbox, nsmap):
         etree.SubElement(south, util.nspath_eval('gco:Decimal', nsmap)).text = str(bbox2[1])
         etree.SubElement(east, util.nspath_eval('gco:Decimal', nsmap)).text = str(bbox2[2])
         etree.SubElement(north, util.nspath_eval('gco:Decimal', nsmap)).text = str(bbox2[3])
+
+        # If there is a vertical extent
+        if vert_ext_min is not None and vert_ext_max is not None:
+            vert_ext = _build_path(ex_extent, ['<gex:verticalElement', 'gex:EX_VerticalExtent'], self.namespaces)
+            min_val = _build_path(vert_ext, ['gex:minimumValue', 'gco:Real'], self.namespaces)
+            min_val.text = vert_ext_min
+            max_val = _build_path(vert_ext, ['gex:maximumValue', 'gco:Real'], self.namespaces)
+            max_val.text = vert_ext_max
+
         return extent
     return None
 

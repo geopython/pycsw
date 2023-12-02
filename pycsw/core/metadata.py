@@ -163,7 +163,7 @@ def _parse_metadata(context, repos, record):
     elif root == '{%s}DIF' % context.namespaces['dif']:  # DIF
         pass  # TODO
     elif root == '{%s}MD_Metadata' % context.namespaces['mdb']:
-        # ISO19115-3 XML
+        # ISO 19115-3 XML
         return [_parse_iso(context, repos, exml)]
     else:
         raise RuntimeError('Unsupported metadata format')

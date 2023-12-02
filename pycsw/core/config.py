@@ -135,6 +135,8 @@ class StaticContext(object):
                 'pycsw:Type': 'type',
                 # geometry, specified in OGC WKT
                 'pycsw:BoundingBox': 'wkt_geometry',
+                'pycsw:VertExtentMin': 'vert_extent_min',
+                'pycsw:VertExtentMax': 'vert_extent_max',
                 'pycsw:CRS': 'crs',
                 'pycsw:AlternateTitle': 'title_alternate',
                 'pycsw:RevisionDate': 'date_revision',
@@ -171,6 +173,7 @@ class StaticContext(object):
                 'pycsw:Creator': 'creator',
                 'pycsw:Publisher': 'publisher',
                 'pycsw:Contributor': 'contributor',
+                'pycsw:Funder': 'funder',
                 'pycsw:Relation': 'relation',
                 'pycsw:Platform': 'platform',
                 'pycsw:Instrument': 'instrument',
