@@ -218,11 +218,13 @@ def bbox2wktpolygon(bbox):
 
     """
 
+    precision = int(os.environ.get('COORDINATE_PRECISION', 2))
     if bbox.startswith('ENVELOPE'):
         bbox = wktenvelope2bbox(bbox)
-    minx, miny, maxx, maxy = [float(coord) for coord in bbox.split(",")]
-    return 'POLYGON((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))' \
+    minx, miny, maxx, maxy = [f"{float(coord):.{precision}f}" for coord in bbox.split(",")]
+    wktGeometry = 'POLYGON((%s %s, %s %s, %s %s, %s %s, %s %s))' \
         % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
+    return wktGeometry
 
 
 def transform_mappings(queryables, typename):
