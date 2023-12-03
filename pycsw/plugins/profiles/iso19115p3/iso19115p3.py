@@ -316,7 +316,7 @@ class ISO19115p3(profile.Profile):
             # dump record as is and exit
             return etree.fromstring(xml_blob, self.context.parser)
 
-        node = etree.Element(util.nspath_eval('mdb:MD_Metadata', self.namespaces))
+        node = etree.Element(util.nspath_eval('mdb:MD_Metadata', self.namespaces), nsmap=self.namespaces)
         node.attrib[util.nspath_eval('xsi:schemaLocation', self.context.namespaces)] = \
         '%s %s/csw/2.0.2/csw.xsd' % (self.namespace, self.ogc_schemas_base)
 
@@ -503,7 +503,7 @@ class ISO19115p3(profile.Profile):
             if val:
                 path = ['mri:spatialResolution', 'mri:MD_Resolution', 'mri:equivalentScale',
                         'mri:MD_RepresentativeFraction', 'mri:denominator', 'gco:Integer']
-                int_elem = _build_path(resident, path)
+                int_elem = _build_path(resident, path, self.namespaces)
                 int_elem.text = str(val)
 
             # Topic category
