@@ -35,6 +35,7 @@ import logging
 import os
 from urllib.parse import urlencode, quote
 
+from owslib.ogcapi.records import Records
 from pygeofilter.parsers.ecql import parse as parse_ecql
 from pygeofilter.parsers.cql2_json import parse as parse_cql2_json
 
@@ -43,7 +44,7 @@ from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.metadata import parse_record
 from pycsw.core.pygeofilter_evaluate import to_filter
-from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, wkt2geom
+from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, str2bool, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
 
@@ -101,6 +102,7 @@ class API:
 
         LOGGER.debug(f'Server URL: {url_}')
         self.config['server']['url'] = url_.rstrip('/')
+        self.facets = self.config['repository'].get('facets', 'type').split(',')
 
         self.context = StaticContext()
 
@@ -510,7 +512,9 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         reserved_query_params = [
+            'distributed',
             'f',
+            'facets',
             'filter',
             'filter-lang',
             'limit',
@@ -525,6 +529,7 @@ class API:
 
         response = {
             'type': 'FeatureCollection',
+            'facets': [],
             'features': [],
             'links': []
         }
@@ -533,6 +538,7 @@ class API:
         query_parser = None
         sortby = None
         limit = None
+        facets_requested = False
         collections = []
 
         if collection not in self.get_all_collections():
@@ -602,6 +608,8 @@ class API:
                 else:
                     query_args.append(f'{k} = "{v}"')
 
+        facets_requested = str2bool(args.get('facets', False))
+
         if collection != 'metadata:main':
             LOGGER.debug('Adding virtual collection filter')
             query_args.append(f'parentidentifier = "{collection}"')
@@ -661,8 +669,17 @@ class API:
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
             query = self.repository.session.query(self.repository.dataset).filter(filters)
+            if facets_requested:
+                LOGGER.debug('Running facet query')
+                facets_results = self.get_facets(filters)
         else:
             query = self.repository.session.query(self.repository.dataset)
+            facets_results = self.get_facets()
+
+        if facets_requested:
+            response['facets'] = facets_results
+        else:
+            response.pop('facets')
 
         if 'sortby' in args:
             LOGGER.debug('sortby specified')
@@ -709,6 +726,22 @@ class API:
 
         for record in records:
             response['features'].append(record2json(record, self.config['server']['url'], collection, self.mode))
+
+        response['distributedFeatures'] = []
+
+        distributed = str2bool(args.get('distributed', False))
+
+        if distributed and 'federatedcatalogues' in self.config['server']:
+            for fc in self.config['server']['federatedcatalogues'].split(','):
+                LOGGER.debug(f'Running distributed search against {fc}')
+                fc_url, _, fc_collection = fc.rsplit('/', 2)
+                try:
+                    w = Records(fc_url)
+                    fc_results = w.collection_items(fc_collection, **args)
+                    for feature in fc_results['features']:
+                        response['distributedFeatures'].append(feature)
+                except Exception as err:
+                    LOGGER.warning(err)
 
         LOGGER.debug('Creating links')
 
@@ -796,6 +829,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
+        record = None
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         if collection not in self.get_all_collections():
@@ -806,14 +840,29 @@ class API:
         LOGGER.debug(f'Querying repository for item {item}')
         try:
             record = self.repository.query_ids([item])[0]
+            response = record2json(record, self.config['server']['url'],
+                                   collection, self.mode)
         except IndexError:
+            distributed = str2bool(args.get('distributed', False))
+
+            if distributed and 'federatedcatalogues' in self.config['server']:
+                for fc in self.config['server']['federatedcatalogues'].split(','):
+                    LOGGER.debug(f'Running distributed item search against {fc}')
+                    fc_url, _, fc_collection = fc.rsplit('/', 2)
+                    try:
+                        w = Records(fc_url)
+                        response = record = w.collection_item(fc_collection, item)
+                        LOGGER.debug(f'Found item from {fc}')
+                        break
+                    except RuntimeError:
+                        continue
+
+        if record is None:
             return self.get_exception(
                     404, headers_, 'InvalidParameterValue', 'item not found')
 
         if headers_['Content-Type'] == 'application/xml':
             return headers_, 200, record.xml
-
-        response = record2json(record, self.config['server']['url'], collection, self.mode)
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata:main']['identification_title']
@@ -944,7 +993,7 @@ class API:
             title = collection_info.get('title')
             description = collection_info.get('description')
 
-        return {
+        collection_info = {
             'id': id_,
             'title': title,
             'description': description,
@@ -971,7 +1020,19 @@ class API:
             }]
         }
 
-    def get_all_collections(self):
+        if collection_name == 'metadata:main':
+            if self.config['server'].get('federatedcatalogues') is not None:
+                LOGGER.debug('Adding federated catalogues')
+                collection_info['federatedCatalogues'] = []
+                for fc in self.config['server']['federatedcatalogues'].split(','):
+                    collection_info['federatedCatalogues'].append({
+                        'type': 'OGC API - Records',
+                        'url': fc
+                    })
+
+        return collection_info
+
+    def get_all_collections(self) -> list:
         """
         Get all collections
 
@@ -982,6 +1043,37 @@ class API:
         virtual_collections = self.repository.query_collections()
 
         return [default_collection] + [vc.identifier for vc in virtual_collections]
+
+    def get_facets(self, filters=None) -> dict:
+        """
+        Gets all facets for a given query
+
+        :returns: `dict` of facets
+        """
+
+        facets_results = {}
+
+        for facet in self.facets:
+            LOGGER.debug(f'Running facet for {facet}')
+            facetq = self.repository.session.query(self.repository.query_mappings[facet], self.repository.func.count(facet)).group_by(facet)
+
+            if filters is not None:
+                facetq = facetq.filter(filters)
+
+            LOGGER.debug('Writing facet query results')
+            facets_results[facet] = {
+                'type': 'terms',
+                'property': facet,
+                'buckets': []
+            }
+
+            for fq in facetq.all():
+                facets_results[facet]['buckets'].append({
+                    'value': fq[0],
+                    'count': fq[1]
+                })
+
+        return facets_results
 
 
 def record2json(record, url, collection, mode='ogcapi-records'):

@@ -23,6 +23,9 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **domaincounts**: for GetDomain operations, whether to provide frequency counts for values.  Accepted values are ``true`` and ``False``. Default is ``false``
 - **profiles**: comma delimited list of profiles to load at runtime (default is none).  See :ref:`profiles`
 - **smtp_host**: SMTP host for processing ``csw:ResponseHandler`` parameter via outgoing email requests (default is ``localhost``)
+- **smtp_user**: SMTP user name related to the account (default is '')
+- **smtp_pass**: SMTP password related to the account (default is '')
+- **smtp_ssl**: Option to choose between SMTP and SMTP_SSL. To enable it, set the value to ``true`` (default is ``false``)
 - **spatial_ranking**: parameter that enables (``true`` or ``false``) ranking of spatial query results as per `K.J. Lanfear 2006 - A Spatial Overlay Ranking Method for a Geospatial Search of Text Objects  <https://pubs.usgs.gov/of/2006/1279/2006-1279.pdf>`_.
 - **workers**: set the number of workers used by the wsgi server when lunching pycsw using the provided docker/entrypoint.py. If not set, it will use 2 workers as Default.
 
@@ -65,6 +68,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **source**: the source of this repository only if not local (e.g. :ref:`geonode`, :ref:`odc`).  Supported values are ``geonode``, ``odc``
 - **filter**: server side database filter to apply as mask to all CSW requests (see :ref:`repofilters`)
 - **max_retries**: max number of retry attempts when connecting to records-repository database
+- **facets**: comma-separated list of facetable properties for search results
 
 .. note::
 

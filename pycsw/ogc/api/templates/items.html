@@ -24,20 +24,39 @@
 
 <section id="items">
 
-{% set nav_links = namespace(prev=None, next=None) %}
+{% set nav_links = namespace(prev=None, next=None, self=None) %}
 {% for link in data['links'] %}
-  {% if link['rel'] == 'prev' %}
-    {% set nav_links.prev = link['href'] %}
-  {% endif %}
-  {% if link['rel'] == 'next' %}
-    {% set nav_links.next = link['href'] %}
-  {% endif %}
+{% if link['rel'] == 'prev' %}
+{% set nav_links.prev = link['href'] %}
+{% endif %}
+{% if link['rel'] == 'self' %}
+{% set nav_links.self = link['href'] %}
+{% endif %}
+{% if link['rel'] == 'next' %}
+{% set nav_links.next = link['href'] %}
+{% endif %}
 {% endfor %}
 
 <div class="container-fluid">
   <div class="row">
     <div class="col-lg-6">
       <div id="records-map"></div>
+      <div id="facets">
+        {% if data['facets'] %}
+        {% for facet in data['facets'].keys() %}
+        <div class="card mt-3">
+          <div class="card-header text-capitalize">{{ facet }}</div>
+          <div class="card-body">
+            {% for bucket in data['facets'][facet].buckets %}
+            <a href="{{ nav_links.self.split('?')[0] }}?{{facet}}={{bucket['value']}}"
+              class="text-capitalize">{{bucket['value']}}</a>
+            <span class="badge rounded-pill bg-secondary" style="float:right">{{bucket['count']}}</span><br>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
     </div>
     <div class="col-lg-6">
       {% if nav_links.prev %}

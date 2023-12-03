@@ -862,39 +862,65 @@ class Csw(object):
                 LOGGER.debug('Email detected')
 
                 smtp_host = 'localhost'
+                smtp_user = ''
+                smtp_pass = ''
+                smtp_ssl = False
                 if self.config.has_option('server', 'smtp_host'):
                     smtp_host = self.config.get('server', 'smtp_host')
+
+                if self.config.has_option('server', 'smtp_user'):
+                    smtp_user = self.config.get('server', 'smtp_user')
+
+                if self.config.has_option('server', 'smtp_pass'):
+                    smtp_pass = self.config.get('server', 'smtp_pass')
+
+                if self.config.has_option('server', 'smtp_ssl'):
+                    smtp_ssl = (self.config.get('server', 'smtp_ssl') == 'true')
 
                 body = ('Subject: pycsw %s results\n\n%s' %
                         (self.kvp['request'], xml))
 
                 try:
                     LOGGER.info('Sending email')
-                    msg = smtplib.SMTP(smtp_host)
-                    msg.sendmail(
-                        self.config.get('metadata:main', 'contact_email'),
-                        uprh.path, body
-                    )
-                    msg.quit()
+                    if smtp_ssl:
+                        msg = smtplib.SMTP_SSL(smtp_host, port=smtplib.SMTP_SSL_PORT)
+                        msg.login(smtp_user, smtp_pass)
+                        msg.sendmail(
+                            self.config.get('metadata:main', 'contact_email'),
+                            uprh.path, body
+                        )
+                        msg.quit()
+                    else:
+                        msg = smtplib.SMTP(smtp_host)
+                        msg.sendmail(
+                            self.config.get('metadata:main', 'contact_email'),
+                            uprh.path, body
+                        )
+                        msg.quit()
                     LOGGER.debug('Email sent successfully.')
                 except Exception as err:
                     LOGGER.exception('Error processing email')
 
-            elif uprh.scheme == 'ftp':
+            elif uprh.scheme in ['ftp', 'ftps']:
                 import ftplib
 
-                LOGGER.debug('FTP detected.')
+                LOGGER.debug(f'{uprh.scheme} detected.')
 
                 try:
-                    LOGGER.info('Sending to FTP server.')
-                    ftp = ftplib.FTP(uprh.hostname)
+                    LOGGER.info(f'Sending to {uprh.scheme} server.')
+                    if uprh.scheme == 'ftps':
+                        ftp = ftplib.FTP_TLS(uprh.hostname)
+                    else:
+                        ftp = ftplib.FTP(uprh.hostname)
                     if uprh.username is not None:
                         ftp.login(uprh.username, uprh.password)
+                    if uprh.scheme == 'ftps':
+                        ftp.prot_p()
                     ftp.storbinary('STOR %s' % uprh.path[1:], StringIO(xml))
                     ftp.quit()
-                    LOGGER.debug('FTP sent successfully.')
+                    LOGGER.debug(f'{uprh.scheme} sent successfully.')
                 except Exception as err:
-                    LOGGER.exception('Error processing FTP')
+                    LOGGER.exception(f'Error processing {uprh.scheme}')
 
     def _render_xslt(self, res):
         ''' Validate and render XSLT '''
