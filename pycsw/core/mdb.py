@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: ISO-8859-15 -*-
 # =============================================================================
-# Copyright (c) 2023 Vincent Fazio
+# Copyright (c) 2023 CSIRO Australia
 #
 # Authors : Vincent Fazio
 #
@@ -102,71 +102,54 @@ class MD_Metadata(printable):
 
             val = md.find(util.nspath_eval('mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code/gco:CharacterString', namespaces))
             self.identifier = util.testXMLValue(val)
-            print(f"{self.identifier=}")
 
             val = md.find(util.nspath_eval('mdb:parentMetadata/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gco:CharacterString', namespaces))
-            # print(f"{val=}")
             self.parentidentifier = util.testXMLValue(val)
-            print(f"{self.parentidentifier=}")
 
             val = md.find(util.nspath_eval('lan:language/gco:CharacterString', namespaces))
             self.language = util.testXMLValue(val)
-            print(f"{self.language=}")
 
             val = md.find(util.nspath_eval('mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gco:CharacterString', namespaces))
             self.dataseturi = util.testXMLValue(val)
-            print(f"{self.dataseturi=}")
 
             # extract code or value?
             val = md.find(util.nspath_eval('mdb:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode', namespaces))
             self.languagecode = util.testXMLAttribute(val, 'codeListValue')
-            print(f"{self.languagecode=}")
 
             # NB: There are different kinds of timestamp with different codes
             val = md.find(util.nspath_eval('mdb:dateInfo/cit:CI_Date/cit:date/gco:DateTime', namespaces))
             self.datestamp = util.testXMLValue(val)
-            print(f"{self.datestamp=}")
 
             # extract code or value?
             self.charset = _testCodeListValue(md.find(
                 util.nspath_eval('mdb:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode', namespaces)))
-            print(f"{self.charset=}")
 
             val = md.find(
                 util.nspath_eval('mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/mcc:MD_ScopeCode', namespaces))
-            #print(f"{val=}")
             self.hierarchy = util.testXMLAttribute(val, 'codeListValue')
-            print(f"{self.hierarchy=}")
 
             self.contact = []
             for i in md.findall(util.nspath_eval('mdb:contact/cit:CI_Responsibility/cit:party', namespaces)):
-                print(f"{i=}")
                 o = CI_Responsibility(i)
                 self.contact.append(o)
-            print(f"{self.contact=}")
 
             self.datetimestamp = self.datestamp
-            print(f"{self.datetimestamp=}")
 
             val = md.find(util.nspath_eval('mdb:metadataStandard/cit:CI_Citation/cit:title/gco:CharacterString', namespaces))
             self.stdname = util.testXMLValue(val)
-            print(f"{self.stdname=}")
 
             val = md.find(util.nspath_eval('mdb:metadataStandard/cit:CI_Citation/cit:edition/gco:CharacterString', namespaces))
             self.stdver = util.testXMLValue(val)
-            print(f"{self.stdver=}")
 
             self.locales = []
             for i in md.findall(util.nspath_eval('mdb:defaultLocale/lan:PT_Locale', namespaces)):
                 self.locales.append(PT_Locale(i))
-            print(f"{self.locales=}")
 
             val = md.find(util.nspath_eval('mdb:referenceSystemInfo/mrs:MD_ReferenceSystem', namespaces))
             if val is not None:
                 self.referencesystem = MD_ReferenceSystem(val)
             else:
                 self.referencesystem = None
-            print(f"{self.referencesystem=}")
 
             self.identification = []
 
@@ -180,7 +163,6 @@ class MD_Metadata(printable):
                         self.identification.append(MD_DataIdentification(val, 'service'))
                     elif tagval == 'SV_ServiceIdentification':
                         self.identification.append(SV_ServiceIdentification(val))
-            print("f{self.identification=}")
 
             self.contentinfo = []
             # FIXME: No equivalent??
@@ -190,7 +172,6 @@ class MD_Metadata(printable):
             #for contentinfo in md.findall(
             #        util.nspath_eval('mdb:contentInfo/gmd:MD_ImageDescription', namespaces)):
             #    self.contentinfo.append(MD_ImageDescription(contentinfo))
-            # print(f"{self.contentinfo=}")
 
             val = md.find(util.nspath_eval('mdb:distributionInfo/mrd:MD_Distribution', namespaces))
 
@@ -198,15 +179,12 @@ class MD_Metadata(printable):
                 self.distribution = MD_Distribution(val)
             else:
                 self.distribution = None
-            print(f"{self.distribution=}")
 
             val = md.find(util.nspath_eval('mdb:dataQualityInfo/mdq:DQ_DataQuality', namespaces))
-            print(f"dataquality{val=}")
             if val is not None:
                 self.dataquality = DQ_DataQuality(val)
             else:
                 self.dataquality = None
-            print(f"{self.dataquality=}")
 
 
     def get_all_contacts(self):
@@ -293,22 +271,17 @@ class CI_Responsibility(printable):
             self.onlineresource = None
             self.role = None
         else:
-            print("CI_Responsibility:")
             val = md.find(util.nspath_eval('cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name', namespaces))
-            print(f"name{val=}")
             self.name = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval('cit:CI_Organisation/cit:name', namespaces))
-            print(f"organization{val=}")
             self.organization = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval('cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:positionName', namespaces))
-            print(f"position{val=}")
             self.position = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
                 'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:phone/cit:CI_Telephone/cit:number/gco:CharacterString', namespaces))
-            print(f"phone{val=}")
             self.phone = util.testXMLValue(val)
 
             # NB:telephone and fax are differentiated by telephone type codes
@@ -320,47 +293,39 @@ class CI_Responsibility(printable):
             val = md.find(util.nspath_eval(
                 'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:deliveryPoint/gco:CharacterString',
                 namespaces))
-            print(f"address{val=}")
             self.address = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
                 'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:city/gco:CharacterString', namespaces))
-            print(f"city{val=}")
             self.city = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
                 'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:administrativeArea/gco:CharacterString',
                 namespaces))
-            print(f"region{val=}")
             self.region = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
                 'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:postalCode/gco:CharacterString',
                 namespaces))
-            print(f"postcode{val=}")
             self.postcode = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
                 'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:country/gco:CharacterString',
                 namespaces))
-            print(f"country{val=}")
             self.country = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
                 'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:electronicMailAddress/gco:CharacterString',
                 namespaces))
-            print(f"email{val=}")
             self.email = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
                 'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:onlineResource/cit:CI_OnlineResource', namespaces))
-            print(f"onlineresource{val=}")
             if val is not None:
                 self.onlineresource = CI_OnlineResource(val)
             else:
                 self.onlineresource = None
             val = md.find(util.nspath_eval('cit:role/cit:CI_RoleCode', namespaces))
-            print(f"role{val=}")
             self.role = _testCodeListValue(val)
 
 
@@ -961,13 +926,11 @@ class MD_ReferenceSystem(printable):
         else:
             val = md.find(util.nspath_eval(
                 'mrs:referenceSystemIdentifier/mcc:MD_Identifier/mcc:code/gco:CharacterString', namespaces))
-            print(f"1:{val=}")
             if val is not None:
                 self.code = util.testXMLValue(val)
             else:
                 val = md.find(util.nspath_eval(
                 'mrs:referenceSystemIdentifier/mcc:MD_Identifier/mcc:code/gcx:Anchor', namespaces))
-                print(f"2:{val=}")
                 if val is not None:
                     self.code = util.testXMLValue(val)
                 else:

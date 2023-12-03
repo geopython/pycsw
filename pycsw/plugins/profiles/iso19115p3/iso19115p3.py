@@ -80,7 +80,7 @@ class ISO19115p3(profile.Profile):
             'mdb:MD_Metadata': {
                 'outputschema': 'http://standards.iso.org/iso/19115/-3/mdb/2.0',
                 'queryables': {
-                    'SupportedISOQueryables': {
+                    'SupportedISO19115-3Queryables': {
                         'mdb:Subject': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:topicCategory/mri:MD_TopicCategoryCode',
                                         'dbcol': self.context.md_core_model['mappings']['pycsw:Keywords']},
                         'mdb:Title': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:title/gco:CharacterString',
@@ -159,7 +159,7 @@ class ISO19115p3(profile.Profile):
                         'mdb:OperatesOnName': {'xpath': 'mdb:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:operationName/gco:CharacterString',
                                                'dbcol': self.context.md_core_model['mappings']['pycsw:OperatesOnName']},
                     },
-                    'AdditionalQueryables': {
+                    'AdditionalISO19115-3Queryables': {
                         'mdb:Degree': {'xpath': 'mdb:dataQualityInfo/mdq:DQ_DataQuality/mdq:report/mdq:DQ_DomainConsistency/mdq:result/mdq:DQ_ConformanceResult/mdq:pass/gco:Boolean',
                                        'dbcol': self.context.md_core_model['mappings']['pycsw:Degree']},
                         'mdb:AccessConstraints': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:resourceConstraints/mco:MD_LegalConstraints/mco:accessConstraints/mco:MD_RestrictionCode',
@@ -333,13 +333,13 @@ class ISO19115p3(profile.Profile):
             try:
                 val = util.getqattr(result, queryables['mdb:ResourceLanguage']['dbcol'])
             except Exception as e:
-                print(f"{queryables['mdb:ResourceLanguage']['dbcol']=}")
+                print(f"{queryables=}")
                 print("exc=", e)
             if val is None:
                 val = util.getqattr(result, queryables['mdb:Language']['dbcol'])
             lang_code = _build_path(node,['mdb:defaultLocale', 'lan:PT_Locale', 'lan:language', 'lan:LanguageCode'], self.namespaces)
             lang_code.set('codeListValue', val)
-            lang_code.set(codeList, 'http://www.loc.gov/standards/iso639-2/')
+            lang_code.set('codeList', 'http://www.loc.gov/standards/iso639-2/')
 
         # hierarchyLevel
         mtype = util.getqattr(result, queryables['mdb:Type']['dbcol']) or None
@@ -432,8 +432,8 @@ class ISO19115p3(profile.Profile):
                     role.set("codeList", f'{CODELIST}#CI_RoleCode')
                     role.set("codeListValue", role_val)
             else:
-                val = util.getqattr(result, queryables['mdb:OrganisationName']['dbcol'])
-                if val:
+                org_val = util.getqattr(result, queryables['mdb:OrganisationName']['dbcol'])
+                if org_val:
                     path = ['cit:name', 'gco:CharacterString']
                     org_name = _build_path(ci_org, path, self.namespaces)
                     org_name.text = org_val
@@ -709,10 +709,10 @@ def _build_path(node, path_list, nsmap, reuse=True):
     tail = node
     for elem_name in path_list:
         # Does the next node in the path exist?
-        next_node = node.find(elem_name, namespaces=self.namespaces)
+        next_node = node.find(elem_name, namespaces=nsmap)
         # If next node does not exist or reuse flag is False then create it
         if next_node is None or not reuse:
-            tail = etree.SubElement(tail, util.nspath_eval(elem_name, self.namespaces))
+            tail = etree.SubElement(tail, util.nspath_eval(elem_name, nsmap))
         else:
             tail = next_node
     return tail

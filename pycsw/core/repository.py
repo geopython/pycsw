@@ -220,7 +220,6 @@ class Repository(object):
         LOGGER.info('setting repository queryables')
         # generate core queryables db and obj bindings
         self.queryables = {}
-
         for tname in self.context.model['typenames']:
             for qname in self.context.model['typenames'][tname]['queryables']:
                 self.queryables[qname] = {}
@@ -233,7 +232,8 @@ class Repository(object):
         # TODO smarter way of doing this
         self.queryables['_all'] = {}
         for qbl in self.queryables:
-            self.queryables['_all'].update(self.queryables[qbl])
+            if qbl != '_all':
+                self.queryables['_all'].update(self.queryables[qbl])
 
         self.queryables['_all'].update(self.context.md_core_model['mappings'])
 
