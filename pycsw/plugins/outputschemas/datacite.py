@@ -326,7 +326,7 @@ def write_record(result, esn, context, url=None):
     rval = util.getqattr(result, context.md_core_model['mappings']['pycsw:Links'])
     if rval not in [None, '', 'null']:
         try:
-            for lnk in json.loads(rval):
+            for lnk in util.jsonify_links(rval):
                 try:
                     if lnk.get('url', '').startswith('http'):
                         ct = etree.SubElement(node, util.nspath_eval('contentUrl', NAMESPACES))
