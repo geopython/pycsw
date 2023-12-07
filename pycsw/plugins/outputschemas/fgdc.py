@@ -151,7 +151,7 @@ def write_record(recobj, esn, context, url=None):
     rlinks = util.getqattr(recobj, context.md_core_model['mappings']['pycsw:Links'])
     if rlinks:
         for link in util.jsonify_links(rlinks):
-            etree.SubElement(citeinfo, 'onlink', type=linkset[2]).text = link['url']
+            etree.SubElement(citeinfo, 'onlink', type=link['protocol']).text = link['url']
 
     # metd
     metainfo = etree.SubElement(node, 'metainfo')
