@@ -1257,12 +1257,21 @@ def record2json(record, url, collection, mode='ogcapi-records'):
             })
 
     record_dict['links'].append({
+        'rel': 'self',
+        'type': 'application/geo+json',
+        'title': record.identifier,
+        'name': 'item',
+        'description': record.identifier,
+        'href': f'{url}/collections/{collection}/items/{record.identifier}'
+    })
+
+    record_dict['links'].append({
         'rel': 'collection',
         'type': 'application/json',
         'title': 'Collection',
         'name': 'collection',
         'description': 'Collection',
-        'href': f"{url}/collections/{collection}"
+        'href': f'{url}/collections/{collection}'
     })
 
     if record.wkt_geometry:
