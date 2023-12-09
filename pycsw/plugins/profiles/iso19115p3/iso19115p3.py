@@ -29,6 +29,7 @@
 # =================================================================
 
 import os
+import json
 from pycsw.core import config, util
 from pycsw.core.etree import etree
 from pycsw.plugins.profiles import profile
@@ -337,7 +338,7 @@ class ISO19115p3(profile.Profile):
                 print("exc=", e)
             if val is None:
                 val = util.getqattr(result, queryables['mdb:Language']['dbcol'])
-            lang_code = _build_path(node,['mdb:defaultLocale', 'lan:PT_Locale', 'lan:language', 'lan:LanguageCode'], self.namespaces)
+            lang_code = build_path(node,['mdb:defaultLocale', 'lan:PT_Locale', 'lan:language', 'lan:LanguageCode'], self.namespaces)
             lang_code.set('codeListValue', val)
             lang_code.set('codeList', 'http://www.loc.gov/standards/iso639-2/')
 
@@ -350,17 +351,20 @@ class ISO19115p3(profile.Profile):
             md_scope = etree.SubElement(node, util.nspath_eval('mdb:metadataScope', self.namespaces))
             md_metascope = etree.SubElement(md_scope, util.nspath_eval('mdb:MD_MetadataScope', self.namespaces))
             res_scope = etree.SubElement(md_metascope, util.nspath_eval('mdb:resourceScope', self.namespaces))
-            res_scope.append(_write_codelist_element('mcc:MD_ScopeCode', mtype, self.namespaces))
+            res_scope.append(write_codelist_element('mcc:MD_ScopeCode', mtype, self.namespaces))
 
         if esn in ['summary', 'full']:
-            # contact
-            ci_resp = _build_path(node, ['mdb:contact', 'cit:CI_Responsibility'], self.namespaces)
-            ci_org = _build_path(ci_resp, ['cit:party', 'cit:CI_Organisation'], self.namespaces)
+            # Contact
+            ci_resp = build_path(node, ['mdb:contact', 'cit:CI_Responsibility'], self.namespaces)
+            ci_org = build_path(ci_resp, ['cit:party', 'cit:CI_Organisation'], self.namespaces)
+
+            # If 'GetCapability' information is supplied
             if caps is not None:
+                ci_contact = build_path(ci_resp, ['cit:contactInfo', 'cit:CI_Contact'], self.namespaces)
                 # Name of individual within an organisation
                 if hasattr(caps.provider.contact, 'name'):
                     path = ['cit:individual', 'cit:CI_Individual', 'cit:name', 'gco:CharacterString']
-                    ind_name = _build_path(ci_org, path, self.namespaces)
+                    ind_name = build_path(ci_org, path, self.namespaces)
                     ind_name.text = caps.provider.contact.name
                 # Name of organisation
                 if hasattr(caps.provider.contact, 'organization'):
@@ -369,49 +373,22 @@ class ISO19115p3(profile.Profile):
                     else:
                         org_val = caps.provider.name
                     path = ['cit:name', 'gco:CharacterString']
-                    org_name = _build_path(ci_org, path, self.namespaces)
+                    org_name = build_path(ci_org, path, self.namespaces)
                     org_name.text = org_val
                 # Position of individual within organisation
                 if hasattr(caps.provider.contact, 'position'):
                     path = ['cit:party', 'cit:CI_Organisation', 'cit:positionName', 'cit:CI_Individual', 'cit:individual', 'gco:characterString']
-                    pos_name = _build_path(ci_resp, path, self.namespaces)
+                    pos_name = build_path(ci_resp, path, self.namespaces)
                     pos_name.text = caps.provider.contact.position
-                path = ['cit:contactInfo', 'cit:CI_Contact']
-                ci_contact = _build_path(ci_resp, path, self.namespaces)
+
                 # Phone number and fax of individual within an organisation
                 if hasattr(caps.provider.contact, 'phone'):
-                    phone = _build_path(ci_contact, ['cit:phone', 'cit:CI_Telephone'], self.namespaces)
-                    ph_number = _build_path(phone, ['cit:number', 'gco:characterString'], self.namespaces)
-                    ph_number.text = caps.provider.contact.phone
-                    ph_type = _build_path(phone, ['cit:numberType', 'cit:CI_TelephoneTypeCode'], self.namespaces)
-                    ph_type.text = "voice"
+                    self._write_contact_phone(ci_contact, caps.provider.contact.phone)
                 if hasattr(caps.provider.contact, 'fax'):
-                    phone = _build_path(ci_contact, ['cit:phone', 'cit:CI_Telephone'], self.namespaces, reuse=False)
-                    ph_number = _build_path(phone, ['cit:number', 'gco:characterString'], self.namespaces)
-                    ph_number.text = caps.provider.contact.fax
-                    ph_type = _build_path(phone, ['cit:numberType', 'cit:CI_TelephoneTypeCode'], self.namespaces)
-                    ph_type.text = "facsimile"
-                    
+                    self._write_contact_fax(ci_contact, caps.provider.contact.fax)
+
                 # Address of organisation
-                ci_address = _build_path(ci_contact, ['cit:address', 'cit:CI_Address'], self.namespaces)
-                if hasattr(caps.provider.contact, 'address'):
-                    delivery_point = etree.SubElement(ci_address, util.nspath_eval('cit:deliveryPoint', self.namespaces))
-                    etree.SubElement(delivery_point, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.address
-                if hasattr(caps.provider.contact, 'city'):
-                    city = etree.SubElement(ci_address, util.nspath_eval('cit:city', self.namespaces))
-                    etree.SubElement(city, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.city
-                if hasattr(caps.provider.contact, 'region'):
-                    admin_area = etree.SubElement(ci_address, util.nspath_eval('cit:administrativeArea', self.namespaces))
-                    etree.SubElement(admin_area, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.region
-                if hasattr(caps.provider.contact, 'postcode'):
-                    postal_code = etree.SubElement(ci_address, util.nspath_eval('cit:postalCode', self.namespaces))
-                    etree.SubElement(postal_code, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.postcode
-                if hasattr(caps.provider.contact, 'country'):
-                    country = etree.SubElement(ci_address, util.nspath_eval('cit:country', self.namespaces))
-                    etree.SubElement(country, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.country
-                if hasattr(caps.provider.contact, 'email'):
-                    email = etree.SubElement(ci_address, util.nspath_eval('cit:electronicMailAddress', self.namespaces))
-                    etree.SubElement(email, util.nspath_eval('gco:CharacterString', self.namespaces)).text = caps.provider.contact.email
+                self._write_contact_address(ci_resp, ci_contact, **vars(caps.provider.contact))
 
                 # URL of organisation or individual
                 contact_url = None
@@ -421,39 +398,56 @@ class ISO19115p3(profile.Profile):
                     contact_url = caps.provider.contact.url
                 if contact_url is not None:
                     path = ['cit:onlineResource', 'cit:CI_OnlineResource', 'cit:linkage', 'gco:characterString']
-                    url = _build_path(ci_contact, path, self.namespaces)
+                    url = build_path(ci_contact, path, self.namespaces)
                     url.text = contact_url
                 # Role
                 if hasattr(caps.provider.contact, 'role'):
-                    role = _build_path(ci_resp, ['cit:role', 'cit:CI_RoleCode'], self.namespaces)
+                    role = build_path(ci_resp, ['cit:role', 'cit:CI_RoleCode'], self.namespaces)
                     role_val = caps.provider.contact.role
                     if role_val is None:
                         role_val = 'pointOfContact'
                     role.set("codeList", f'{CODELIST}#CI_RoleCode')
                     role.set("codeListValue", role_val)
             else:
+                # If 'GetCapability' information is not supplied ...
+
+                # Name of organisation
                 org_val = util.getqattr(result, queryables['mdb:OrganisationName']['dbcol'])
                 if org_val:
                     path = ['cit:name', 'gco:CharacterString']
-                    org_name = _build_path(ci_org, path, self.namespaces)
+                    org_name = build_path(ci_org, path, self.namespaces)
                     org_name.text = org_val
+
+                # Get address, phone etc. from contacts
+                cjson = util.getqattr(result,self.context.md_core_model['mappings']['pycsw:Contacts'])
+                if cjson not in [None, '', 'null']:
+                    try:
+                        for contact in json.loads(cjson):
+                            ci_contact = build_path(ci_resp, ['cit:contactInfo', 'cit:CI_Contact'], self.namespaces)
+                            if contact.get('phone', '') != '':
+                                self._write_contact_phone(ci_contact, contact.get('phone'))
+                            if contact.get('fax', '') != '':
+                                self._write_contact_fax(ci_contact, contact.get('fax'))
+                            self._write_contact_address(ci_resp, ci_contact, **contact)
+                    except Exception as err:
+                        print(f"failed to parse contacts json of {cjson}: {err}")
 
             # Creation date for record
             val = util.getqattr(result, queryables['mdb:Modified']['dbcol'])
-            date = _build_path(node, ['mdb:dateInfo'], self.namespaces)
-            ci_date =_write_date(val, 'creation', self.namespaces)
+            date = build_path(node, ['mdb:dateInfo'], self.namespaces)
+            ci_date = self._write_date(val, 'creation')
             date.append(ci_date)
             
             metadatastandardname = 'ISO 19115-1:2014'
             if mtype == 'service':
                 metadatastandardname = 'ISO19119:2016'
 
-            # metadata standard name and version
+            # Metadata standard name and version
             path = ['mdb:metadataStandard', 'cit:CI_Citation', 'cit:title', 'gco:CharacterString']
-            standard_name = _build_path(node, path, self.namespaces)
+            standard_name = build_path(node, path, self.namespaces)
             standard_name.text = metadatastandardname
 
-        # title
+        # Title
         title_val = util.getqattr(result, queryables['mdb:Title']['dbcol']) or ''
         identification = etree.SubElement(node, util.nspath_eval('mdb:identificationInfo', self.namespaces))
         if mtype == 'service':
@@ -461,71 +455,69 @@ class ISO19115p3(profile.Profile):
         else:
            res_tagname = 'mri:MD_DataIdentification'
         resident = etree.SubElement(identification, util.nspath_eval(res_tagname, self.namespaces), id=idval)
-        
-        ci_citation = _build_path(resident, ['mri:citation', 'cit:CI_Citation'], self.namespaces)
-        title = _build_path(ci_citation, ['cit:title', 'gco:CharacterString'], self.namespaces)
+        ci_citation = build_path(resident, ['mri:citation', 'cit:CI_Citation'], self.namespaces)
+        title = build_path(ci_citation, ['cit:title', 'gco:CharacterString'], self.namespaces)
         title.text = title_val
 
-        # edition
+        # Edition
         edition_val = util.getqattr(result, queryables['mdb:Edition']['dbcol'])
         if edition_val is not None:
-            edition = _build_path(ci_citation, ['cit:edition', 'gco:CharacterString'], self.namespaces)
+            edition = build_path(ci_citation, ['cit:edition', 'gco:CharacterString'], self.namespaces)
             edition.text = edition_val
 
-        date_info = _build_path(node, ['mdb:dateInfo'], self.namespaces)
-        # creation date
+        date_info = build_path(node, ['mdb:dateInfo'], self.namespaces)
+        # Creation date
         val = util.getqattr(result, queryables['mdb:CreationDate']['dbcol'])
         if val is not None:
-            date_info.append(_write_date(val, 'creation', self.namespaces))
-        # publication date
+            date_info.append(self._write_date(val, 'creation'))
+        # Publication date
         val = util.getqattr(result, queryables['mdb:PublicationDate']['dbcol'])
         if val is not None:
-            date_info.append(_write_date(val, 'publication', self.namespaces))
-        # revision date
+            date_info.append(self._write_date(val, 'publication'))
+        # Revision date
         val = util.getqattr(result, queryables['mdb:RevisionDate']['dbcol'])
         if val is not None:
-            date_info.append(_write_date(val, 'revision', self.namespaces))
+            date_info.append(self._write_date(val, 'revision'))
 
         if esn in ['summary', 'full']:
-            # abstract
+            # Abstract
             val = util.getqattr(result, queryables['mdb:Abstract']['dbcol']) or ''
-            abstract = _build_path(resident, ['mri:abstract', 'gco:characterString'], self.namespaces)
+            abstract = build_path(resident, ['mri:abstract', 'gco:characterString'], self.namespaces)
             abstract.text = val
 
-            # 
+            # Keywords
             kw = util.getqattr(result, queryables['mdb:Subject']['dbcol'])
             if kw is not None:
-                md_keywords = _build_path(resident, ['mri:descriptiveKeywords'], self.namespaces)
-                md_keywords.append(write_keywords(kw, self.namespaces))
+                md_keywords = build_path(resident, ['mri:descriptiveKeywords'], self.namespaces)
+                md_keywords.append(self._write_keywords(kw))
 
             # Spatial resolution
             val = util.getqattr(result, queryables['mdb:Denominator']['dbcol'])
             if val:
                 path = ['mri:spatialResolution', 'mri:MD_Resolution', 'mri:equivalentScale',
                         'mri:MD_RepresentativeFraction', 'mri:denominator', 'gco:Integer']
-                int_elem = _build_path(resident, path, self.namespaces)
+                int_elem = build_path(resident, path, self.namespaces)
                 int_elem.text = str(val)
 
             # Topic category
             val = util.getqattr(result, queryables['mdb:TopicCategory']['dbcol'])
-            topic_cat = _build_path(resident, ['mri:topicCategory'], self.namespaces)
+            topic_cat = build_path(resident, ['mri:topicCategory'], self.namespaces)
             if val:
                 for v in val.split(','):
                     etree.SubElement(topic_cat, util.nspath_eval('mri:MD_TopicCategoryCode', self.namespaces)).text = val
 
-        # bbox and vertical extent
+        # Bbox and vertical extent
         bbox = util.getqattr(result, queryables['mdb:BoundingBox']['dbcol'])
         vert_ext_min = util.getqattr(result, queryables['mdb:VertExtentMin']['dbcol'])
         vert_ext_max = util.getqattr(result, queryables['mdb:VertExtentMax']['dbcol'])
-        bboxel = write_extent(bbox, vert_ext_min, vert_ext_max, self.namespaces)
+        bboxel = self._write_extent(bbox, vert_ext_min, vert_ext_max)
         if bboxel is not None and mtype != 'service':
             # Add <mri:extent> element etc.
             resident.append(bboxel)
             
-        # service identification
+        # Service identification
         if mtype == 'service':
-            # service type
-            # service type version
+            # Service type & service type version
             val = util.getqattr(result, queryables['mdb:ServiceType']['dbcol'])
             val2 = util.getqattr(result, queryables['mdb:ServiceTypeVersion']['dbcol'])
             if val is not None:
@@ -534,11 +526,13 @@ class ISO19115p3(profile.Profile):
                 tmp = etree.SubElement(resident, util.nspath_eval('srv:serviceTypeVersion', self.namespaces))
                 etree.SubElement(tmp, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val2
 
+            # Keywords
             kw = util.getqattr(result, queryables['mdb:Subject']['dbcol'])
             if kw is not None:
                 srv_keywords = etree.SubElement(resident, util.nspath_eval('srv:descriptiveKeywords', self.namespaces))
-                srv_keywords.append(write_keywords(kw, self.namespaces))
+                srv_keywords.append(self._write_keywords(kw))
 
+            # Extent and bounding box
             if bboxel is not None:
                 # Change <mri:extent> element to <srv:extent> and append
                 bboxel.tag = util.nspath_eval('srv:extent', self.namespaces)
@@ -559,19 +553,19 @@ class ISO19115p3(profile.Profile):
                         coupledres = etree.SubElement(resident, util.nspath_eval('srv:coupledResource', self.namespaces))
                         svcoupledres = etree.SubElement(coupledres, util.nspath_eval('srv:SV_CoupledResource', self.namespaces))
                         opname = etree.SubElement(svcoupledres, util.nspath_eval('srv:coupledName', self.namespaces))
-                        etree.SubElement(opname, util.nspath_eval('gco:ScopedName', self.namespaces)).text = _get_resource_opname(operations)
+                        etree.SubElement(opname, util.nspath_eval('gco:ScopedName', self.namespaces)).text = get_resource_opname(operations)
                         sid = etree.SubElement(svcoupledres, util.nspath_eval('srv:resourceReference', self.namespaces))
                         # Unfortunately only have one field to apply 
                         # <srv:resourceReference> has a <cit:CI_Citation>
                         ci_citation = etree.SubElement(sid, util.nspath_eval('cit:CI_Citation', self.namespaces))
                         # <cit:CI_Citation> must have a title, insert reference
-                        title = _build_path(cit_citation, ['cit:title', 'gco:CharacterString'],  self.namespaces)
+                        title = build_path(cit_citation, ['cit:title', 'gco:CharacterString'],  self.namespaces)
                         title.text = val2
                         # Insert reference as a identifier code
-                        code = _build_path(cit_citation, ['cit:identifer', 'mcc:MD_Identifier', 'mcc:code', 'gco:CharacterString'], self.namespaces)
+                        code = build_path(cit_citation, ['cit:identifer', 'mcc:MD_Identifier', 'mcc:code', 'gco:CharacterString'], self.namespaces)
                         code.text = val2
 
-                # service operations
+                # Service operations
                 if operations:
                     for i in operations.split(','):
                         oper = etree.SubElement(resident, util.nspath_eval('srv:containsOperations', self.namespaces))
@@ -596,7 +590,7 @@ class ISO19115p3(profile.Profile):
                 if coupledresources:
                     for i in coupledresources.split(','):
                         operates_on = etree.SubElement(resident, util.nspath_eval('srv:operatesOn', self.namespaces))
-                        code = _build_path(operates_on, ['mri:MD_DataIdentification','mri:citation','cit:CI_Citation','cit:identifier','mcc:MD_Identifier','mcc:code','gcx:Anchor'], self.namespaces)
+                        code = build_path(operates_on, ['mri:MD_DataIdentification','mri:citation','cit:CI_Citation','cit:identifier','mcc:MD_Identifier','mcc:code','gcx:Anchor'], self.namespaces)
                         code.text = f"{util.bind_url(self.url)}service=CSW&version=2.0.2&request=GetRecordById&outputschema={self.repository['mdb:MD_Metadata']['outputschema']}&id={idval}-{i}"
 
         rlinks = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Links'])
@@ -623,71 +617,135 @@ class ISO19115p3(profile.Profile):
                 etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link.get('description')
         return node
 
+    def _write_contact_phone(self, ci_contact, phone_num_str):
+        """
+        Write out a telephone number of a contact within an organisation
+        """
+        phone = build_path(ci_contact, ['cit:phone', 'cit:CI_Telephone'], self.namespaces)
+        ph_number = build_path(phone, ['cit:number', 'gco:characterString'], self.namespaces)
+        ph_number.text = phone_num_str
+        ph_type = build_path(phone, ['cit:numberType', 'cit:CI_TelephoneTypeCode'], self.namespaces)
+        ph_type.text = "voice"
 
-def write_keywords(keywords, nsmap):
-    """generate mri:MD_Keywords construct"""
-    md_keywords = etree.Element(util.nspath_eval('mri:MD_Keywords', nsmap))
-    for kw in keywords.split(','):
-        keyword = etree.SubElement(md_keywords, util.nspath_eval('mri:keyword', nsmap))
-        etree.SubElement(keyword, util.nspath_eval('gco:CharacterString', nsmap)).text = kw
-    return md_keywords
+    def _write_contact_fax(self, ci_contact, fax_num_str):
+        """
+        Write out a fax number  of a contact within an organisation
+        """
+        phone = build_path(ci_contact, ['cit:phone', 'cit:CI_Telephone'], self.namespaces, reuse=False)
+        ph_number = build_path(phone, ['cit:number', 'gco:characterString'], self.namespaces)
+        ph_number.text = fax_num_str
+        ph_type = build_path(phone, ['cit:numberType', 'cit:CI_TelephoneTypeCode'], self.namespaces)
+        ph_type.text = "facsimile"
+
+    def _write_contact_address(self, ci_resp, ci_contact, **contact):
+        """
+        Write out an address of a contact within an organisation
+        """
+        ci_address = build_path(ci_contact, ['cit:address', 'cit:CI_Address'], self.namespaces)
+        if contact.get('address', None) is not None:
+            delivery_point = etree.SubElement(ci_address, util.nspath_eval('cit:deliveryPoint', self.namespaces))
+            etree.SubElement(delivery_point, util.nspath_eval('gco:CharacterString', self.namespaces)).text = contact['address']
+        if contact.get('city', None) is not None:
+            city = etree.SubElement(ci_address, util.nspath_eval('cit:city', self.namespaces))
+            etree.SubElement(city, util.nspath_eval('gco:CharacterString', self.namespaces)).text = contact['city']
+        if contact.get('region', None) is not None:
+            admin_area = etree.SubElement(ci_address, util.nspath_eval('cit:administrativeArea', self.namespaces))
+            etree.SubElement(admin_area, util.nspath_eval('gco:CharacterString', self.namespaces)).text = contact['region']
+        if contact.get('postcode', None) is not None:
+            postal_code = etree.SubElement(ci_address, util.nspath_eval('cit:postalCode', self.namespaces))
+            etree.SubElement(postal_code, util.nspath_eval('gco:CharacterString', self.namespaces)).text = contact['postcode']
+        if contact.get('country', None)  is not None:
+            country = etree.SubElement(ci_address, util.nspath_eval('cit:country', self.namespaces))
+            etree.SubElement(country, util.nspath_eval('gco:CharacterString', self.namespaces)).text = contact['country']
+        if contact.get('email', None)  is not None:
+            email = etree.SubElement(ci_address, util.nspath_eval('cit:electronicMailAddress', self.namespaces))
+            etree.SubElement(email, util.nspath_eval('gco:CharacterString', self.namespaces)).text = contact['email']
+
+        # URL of organisation or individual
+        if contact.get('url', None) is not None:
+            path = ['cit:onlineResource', 'cit:CI_OnlineResource', 'cit:linkage', 'gco:characterString']
+            url = build_path(ci_contact, path, self.namespaces)
+            url.text = contact['url']
+        # Role
+        role = build_path(ci_resp, ['cit:role', 'cit:CI_RoleCode'], self.namespaces)
+        role.set("codeList", f'{CODELIST}#CI_RoleCode')
+        role_str = 'pointOfContact'
+        if contact.get('role', None) is not None:
+            role_str = contact.get('role')
+        role.set("codeListValue", role_str)
+
+    def _write_keywords(self, keywords):
+        """
+        Generate mri:MD_Keywords construct
+        """
+        md_keywords = etree.Element(util.nspath_eval('mri:MD_Keywords', self.namespaces))
+        for kw in keywords.split(','):
+            keyword = etree.SubElement(md_keywords, util.nspath_eval('mri:keyword', self.namespaces))
+            etree.SubElement(keyword, util.nspath_eval('gco:CharacterString', self.namespaces)).text = kw
+        return md_keywords
+
+    def _write_extent(self, bbox, vert_ext_min, vert_extent_max):
+        """
+        Generate BBOX and vertical extent
+        """
+        if bbox is not None:
+            try:
+                bbox2 = util.wkt2geom(bbox)
+            except:
+                return None
+            extent = etree.Element(util.nspath_eval('mri:extent', self.namespaces))
+            path = ['gex:EX_Extent', 'gex:geographicElement', 'gex:EX_GeographicBoundingBox']
+            gbb = build_path(extent, path, self.namespaces)
+            west = etree.SubElement(gbb, util.nspath_eval('gex:westBoundLongitude', self.namespaces))
+            east = etree.SubElement(gbb, util.nspath_eval('gex:eastBoundLongitude', self.namespaces))
+            south = etree.SubElement(gbb, util.nspath_eval('gex:southBoundLatitude', self.namespaces))
+            north = etree.SubElement(gbb, util.nspath_eval('gex:northBoundLatitude', self.namespaces))
+
+            etree.SubElement(west, util.nspath_eval('gco:Decimal', self.namespaces)).text = str(bbox2[0])
+            etree.SubElement(south, util.nspath_eval('gco:Decimal', self.namespaces)).text = str(bbox2[1])
+            etree.SubElement(east, util.nspath_eval('gco:Decimal', self.namespaces)).text = str(bbox2[2])
+            etree.SubElement(north, util.nspath_eval('gco:Decimal', self.namespaces)).text = str(bbox2[3])
+
+            # If there is a vertical extent
+            if vert_ext_min is not None and vert_ext_max is not None:
+                vert_ext = build_path(ex_extent, ['<gex:verticalElement', 'gex:EX_VerticalExtent'], self.namespaces)
+                min_val = build_path(vert_ext, ['gex:minimumValue', 'gco:Real'], self.namespaces)
+                min_val.text = vert_ext_min
+                max_val = build_path(vert_ext, ['gex:maximumValue', 'gco:Real'], self.namespaces)
+                max_val.text = vert_ext_max
+
+            return extent
+        return None
+
+    def _write_date(self, dateval, datetypeval):
+        """
+        Generate date elements
+        """
+        date1 = etree.Element(util.nspath_eval('cit:CI_Date', self.namespaces))
+        date2 = etree.SubElement(date1, util.nspath_eval('cit:date', self.namespaces))
+        if dateval.find('T') != -1:
+            dateel = 'gco:DateTime'
+        else:
+            dateel = 'gco:Date'
+        etree.SubElement(date2, util.nspath_eval(dateel, self.namespaces)).text = dateval
+        datetype = etree.SubElement(date1, util.nspath_eval('cit:dateType', self.namespaces))
+        datetype.append(write_codelist_element('cit:CI_DateTypeCode', datetypeval, self.namespaces))
+        return date1
 
 
-def write_extent(bbox, vert_ext_min, vert_extent_max, nsmap):
-    ''' Generate BBOX and vertical extent
-    '''
-    if bbox is not None:
-        try:
-            bbox2 = util.wkt2geom(bbox)
-        except:
-            return None
-        extent = etree.Element(util.nspath_eval('mri:extent', nsmap))
-        ex_extent = etree.SubElement(extent, util.nspath_eval('gex:EX_Extent', nsmap))
-        ge = etree.SubElement(ex_extent, util.nspath_eval('gex:geographicElement', nsmap))
-        gbb = etree.SubElement(ge, util.nspath_eval('gex:EX_GeographicBoundingBox', nsmap))
-        west = etree.SubElement(gbb, util.nspath_eval('gex:westBoundLongitude', nsmap))
-        east = etree.SubElement(gbb, util.nspath_eval('gex:eastBoundLongitude', nsmap))
-        south = etree.SubElement(gbb, util.nspath_eval('gex:southBoundLatitude', nsmap))
-        north = etree.SubElement(gbb, util.nspath_eval('gex:northBoundLatitude', nsmap))
+ 
+# END of class
 
-        etree.SubElement(west, util.nspath_eval('gco:Decimal', nsmap)).text = str(bbox2[0])
-        etree.SubElement(south, util.nspath_eval('gco:Decimal', nsmap)).text = str(bbox2[1])
-        etree.SubElement(east, util.nspath_eval('gco:Decimal', nsmap)).text = str(bbox2[2])
-        etree.SubElement(north, util.nspath_eval('gco:Decimal', nsmap)).text = str(bbox2[3])
-
-        # If there is a vertical extent
-        if vert_ext_min is not None and vert_ext_max is not None:
-            vert_ext = _build_path(ex_extent, ['<gex:verticalElement', 'gex:EX_VerticalExtent'], self.namespaces)
-            min_val = _build_path(vert_ext, ['gex:minimumValue', 'gco:Real'], self.namespaces)
-            min_val.text = vert_ext_min
-            max_val = _build_path(vert_ext, ['gex:maximumValue', 'gco:Real'], self.namespaces)
-            max_val.text = vert_ext_max
-
-        return extent
-    return None
-
-
-def _write_date(dateval, datetypeval, nsmap):
-    date1 = etree.Element(util.nspath_eval('cit:CI_Date', nsmap))
-    date2 = etree.SubElement(date1, util.nspath_eval('cit:date', nsmap))
-    if dateval.find('T') != -1:
-        dateel = 'gco:DateTime'
-    else:
-        dateel = 'gco:Date'
-    etree.SubElement(date2, util.nspath_eval(dateel, nsmap)).text = dateval
-    datetype = etree.SubElement(date1, util.nspath_eval('cit:dateType', nsmap))
-    datetype.append(_write_codelist_element('cit:CI_DateTypeCode', datetypeval, nsmap))
-    return date1
-
-
-def _get_resource_opname(operations):
+def get_resource_opname(operations):
     for op in operations.split(','):
         if op in ['GetMap', 'GetFeature', 'GetCoverage', 'GetObservation']:
             return op
     return None
 
-
-def _write_codelist_element(codelist_element, codelist_value, nsmap):
+def write_codelist_element(codelist_element, codelist_value, nsmap):
+    """
+    Generic routine to write codelist artributes into an element
+    """
     # Get tag name without namespace
     namespace, no_ns_tag = codelist_element.split(':')
     element = etree.Element(util.nspath_eval(codelist_element, nsmap),
@@ -696,16 +754,16 @@ def _write_codelist_element(codelist_element, codelist_value, nsmap):
     return element
 
 
-def _build_path(node, path_list, nsmap, reuse=True):
-    '''
-    Builds a etree.Element path
+def build_path(node, path_list, nsmap, reuse=True):
+    """
+    Generic routine to build an etree.Element path
     Set reuse=False if you want to create duplicates
     
     :param node: add elements to this Element
     :param path_list: list of xml tags of new path to create, list of strings
     :param reuse: if False will always create new Elements along this path
     :return: returns the last Element in the new Element path
-    '''
+    """
     tail = node
     for elem_name in path_list:
         # Does the next node in the path exist?
