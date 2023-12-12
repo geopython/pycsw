@@ -51,9 +51,6 @@ class MCRaster(base_profile.base_profile):
                         'mc:keywords': Queryable(context.md_core_model['mappings']['pycsw:Keywords'], 'mc:keywords'),
                         'mc:RMS': Queryable(context.md_core_model['mappings']['pycsw:Rms'], 'mc:RMS'),
                         'mc:scale': Queryable(context.md_core_model['mappings']['pycsw:Scale'], 'mc:scale'),
-                        'mc:layerPolygonParts': Queryable(context.md_core_model['mappings']['pycsw:layerPolygonParts'], 'mc:layerPolygonParts'),
-                        'mc:includedInBests': Queryable(context.md_core_model['mappings']['pycsw:includedInBests'], 'mc:includedInBests'),
-                        'mc:discretes': Queryable(context.md_core_model['mappings']['pycsw:discretes'], 'mc:discretes'),
                         'mc:productBBox': Queryable(context.md_core_model['mappings']['pycsw:productBBox'], 'mc:productBBox'),
                         'mc:transparency': Queryable(context.md_core_model['mappings']['pycsw:transparency'], 'mc:transparency'),
                     }

@@ -30,9 +30,6 @@
    <xsd:element name="footprint_geojson" />
    <xsd:element name="rms" />
    <xsd:element name="scale" />
-   <xsd:element name="layer_polygon_parts" />
-   <xsd:element name="included_in_bests" />
-   <xsd:element name="discretes" />
 
 
    <xsd:element name="MCRasterRecord" type="mc:MCRasterRecord" />
@@ -74,9 +71,6 @@
                <xsd:element ref="mc:region" />
                <xsd:element ref="mc:RMS" />
                <xsd:element ref="mc:scale" />
-               <xsd:element ref="mc:layerPolygonParts" />
-               <xsd:element ref="mc:includedInBests" />
-               <xsd:element ref="mc:discretes" />
                <xsd:element ref="mc:productBBox" />
             </xsd:sequence>
          </xsd:extension>
