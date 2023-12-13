@@ -92,7 +92,7 @@ class API:
         self.mode = 'ogcapi-records'
         self.config = config
 
-        log.setup_logger(self.config)
+        log.setup_logger(self.config.get('logging', {}))
 
         if self.config['server']['url'].startswith('${'):
             LOGGER.debug(f"Server URL is an environment variable: {self.config['server']['url']}")
@@ -102,22 +102,20 @@ class API:
 
         LOGGER.debug(f'Server URL: {url_}')
         self.config['server']['url'] = url_.rstrip('/')
-        self.facets = self.config['repository'].get('facets', 'type').split(',')
+        self.facets = self.config['repository'].get('facets', ['type'])
 
         self.context = StaticContext()
 
-        LOGGER.debug('Setting maxrecords')
+        LOGGER.debug('Setting limit')
         try:
-            self.maxrecords = int(self.config['server']['maxrecords'])
+            self.limit = int(self.config['server']['limit'])
         except KeyError:
-            self.maxrecords = 10
-        LOGGER.debug(f'maxrecords: {self.maxrecords}')
+            self.limit= 10
+        LOGGER.debug(f'limit: {self.limit}')
 
-        repo_filter = None
-        if self.config.has_option('repository', 'filter'):
-            repo_filter = self.config.get('repository', 'filter')
+        repo_filter = self.config['repository'].get('filter')
 
-        custom_mappings_path = self.config.get('repository', 'mappings', fallback=None)
+        custom_mappings_path = self.config['repository'].get('mappings')
         if custom_mappings_path is not None:
             md_core_model = load_custom_repo_mappings(custom_mappings_path)
             if md_core_model is not None:
@@ -131,9 +129,9 @@ class API:
         try:
             LOGGER.info('Loading default repository')
             self.repository = repository.Repository(
-                self.config.get('repository', 'database'),
+                self.config['repository']['database'],
                 self.context,
-                table=self.config.get('repository', 'table'),
+                table=self.config['repository']['table'],
                 repo_filter=repo_filter
             )
             LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
@@ -208,11 +206,11 @@ class API:
         response = {
             'id': 'pycsw-catalogue',
             'links': [],
-            'title': self.config['metadata:main']['identification_title'],
+            'title': self.config['metadata']['identification']['title'],
             'description':
-                self.config['metadata:main']['identification_abstract'],
+                self.config['metadata']['identification']['description'],
             'keywords':
-                self.config['metadata:main']['identification_keywords'].split(',')
+                self.config['metadata']['identification']['keywords']
         }
 
         LOGGER.debug('Creating links')
@@ -481,9 +479,9 @@ class API:
                 properties2[key] = value
 
         if collection == 'metadata:main':
-            title = self.config['metadata:main']['identification_title']
+            title = self.config['metadata']['identification']['title']
         else:
-            title = self.config['metadata:main']['identification_title']
+            title = self.config['metadata']['identification']['title']
             virtual_collection = self.repository.query_ids([collection])[0]
             title = virtual_collection.title
 
@@ -707,10 +705,10 @@ class API:
                 msg = 'Limit must be a positive integer'
                 LOGGER.exception(msg)
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
-            if limit > self.maxrecords:
-                limit = self.maxrecords
+            if limit > self.limit:
+                limit = self.limit
         else:
-            limit = self.maxrecords
+            limit = self.limit
 
         offset = int(args.get('offset', 0))
 
@@ -731,8 +729,8 @@ class API:
 
         distributed = str2bool(args.get('distributed', False))
 
-        if distributed and 'federatedcatalogues' in self.config['server']:
-            for fc in self.config['server']['federatedcatalogues'].split(','):
+        if distributed:
+            for fc in self.config.get('federatedcatalogues', []):
                 LOGGER.debug(f'Running distributed search against {fc}')
                 fc_url, _, fc_collection = fc.rsplit('/', 2)
                 try:
@@ -810,7 +808,7 @@ class API:
             })
 
         if headers_['Content-Type'] == 'text/html':
-            response['title'] = self.config['metadata:main']['identification_title']
+            response['title'] = self.config['metadata']['identification']['title']
             response['collection'] = collection
 
         template = 'items.html'
@@ -845,8 +843,8 @@ class API:
         except IndexError:
             distributed = str2bool(args.get('distributed', False))
 
-            if distributed and 'federatedcatalogues' in self.config['server']:
-                for fc in self.config['server']['federatedcatalogues'].split(','):
+            if distributed:
+                for fc in self.config.get('federatedcatalogues', []):
                     LOGGER.debug(f'Running distributed item search against {fc}')
                     fc_url, _, fc_collection = fc.rsplit('/', 2)
                     try:
@@ -865,7 +863,7 @@ class API:
             return headers_, 200, record.xml
 
         if headers_['Content-Type'] == 'text/html':
-            response['title'] = self.config['metadata:main']['identification_title']
+            response['title'] = self.config['metadata']['identification']['title']
             response['collection'] = collection
 
         if 'json' in headers_['Content-Type']:
@@ -882,7 +880,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        if self.config.get('manager', 'transactions') != 'true':
+        if not self.config['manager']['transactions']:
             return self.get_exception(
                     405, headers_, 'InvalidParameterValue',
                     'transactions not allowed')
@@ -986,8 +984,8 @@ class API:
 
         if collection_name == 'metadata:main':
             id_ = collection_name
-            title = self.config['metadata:main']['identification_title']
-            description = self.config['metadata:main']['identification_abstract']
+            title = self.config['metadata']['identification']['title']
+            description = self.config['metadata']['identification']['description']
         else:
             id_ = collection_name
             title = collection_info.get('title')
@@ -1021,10 +1019,10 @@ class API:
         }
 
         if collection_name == 'metadata:main':
-            if self.config['server'].get('federatedcatalogues') is not None:
+            if 'federatedcatalogues' in self.config:
                 LOGGER.debug('Adding federated catalogues')
                 collection_info['federatedCatalogues'] = []
-                for fc in self.config['server']['federatedcatalogues'].split(','):
+                for fc in self.config.get('federatedcatalogues', []):
                     collection_info['federatedCatalogues'].append({
                         'type': 'OGC API - Records',
                         'url': fc
