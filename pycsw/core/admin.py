@@ -43,7 +43,7 @@ from pycsw.core import config as pconfig
 from pycsw.core import metadata, repository, util
 from pycsw.core.etree import etree
 from pycsw.core.etree import PARSER
-from pycsw.core.util import parse_ini_config
+from pycsw.ogc.api.util import yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
@@ -398,7 +398,8 @@ def cli():
 def cli_setup_repository(ctx, config, verbosity):
     """Create repository tables and indexes"""
 
-    cfg = parse_ini_config(config)
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
 
     try:
         repository.setup(cfg['repository']['database'], table=cfg['repository'].get('table'))
@@ -421,7 +422,10 @@ def cli_setup_repository(ctx, config, verbosity):
 @CLI_OPTION_YES
 def cli_load_records(ctx, config, path, recursive, yes, verbosity):
     """Load metadata records from directory or file into repository"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     load_records(
@@ -441,7 +445,10 @@ def cli_load_records(ctx, config, path, recursive, yes, verbosity):
 @CLI_OPTION_YES_PROMPT
 def cli_delete_records(ctx, config, yes, verbosity):
     """Delete all records from repository"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     delete_records(
@@ -461,7 +468,10 @@ def cli_delete_records(ctx, config, yes, verbosity):
                               writable=True, file_okay=False))
 def cli_export_records(ctx, config, path, verbosity):
     """Dump metadata records from repository into directory"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     export_records(
@@ -478,7 +488,10 @@ def cli_export_records(ctx, config, path, verbosity):
 @CLI_OPTION_CONFIG
 def cli_rebuild_db_indexes(ctx, config, verbosity):
     """Rebuild repository database indexes"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     repo = repository.Repository(cfg['repository']['database'], context, table=cfg['repository'].get('table'))
@@ -491,7 +504,10 @@ def cli_rebuild_db_indexes(ctx, config, verbosity):
 @CLI_OPTION_CONFIG
 def cli_optimize_db(ctx, config, verbosity):
     """Optimize repository database"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     repo = repository.Repository(cfg['repository']['database'], context, table=cfg['repository'].get('table'))
@@ -505,7 +521,10 @@ def cli_optimize_db(ctx, config, verbosity):
 @click.option('--url', '-u', 'url', help='URL of harvest endpoint')
 def cli_refresh_harvested_records(ctx, config, verbosity, url):
     """Refresh / harvest non-local records in repository"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     refresh_harvested_records(
@@ -526,7 +545,10 @@ def cli_refresh_harvested_records(ctx, config, verbosity, url):
                               dir_okay=False))
 def cli_gen_sitemap(ctx, config, output, verbosity):
     """Generate XML Sitemap"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     gen_sitemap(

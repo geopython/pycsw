@@ -136,7 +136,7 @@ class Csw(object):
 
         self.context.server = self
 
-        log.setup_logger(self.config)
+        log.setup_logger(self.config.get('logging', {}))
 
         LOGGER.info('running configuration %s', rtconfig)
         LOGGER.debug('QUERY_STRING: %s', self.environ['QUERY_STRING'])
