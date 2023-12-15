@@ -100,8 +100,8 @@ class ISO19115p3(profile.Profile):
                                      'dbcol': self.context.md_core_model['mappings']['pycsw:Type']},
                         # Copied from 'apiso', not sure if works
                         'mdb:BoundingBox': {'xpath': 'mdb:BoundingBox', 'dbcol': self.context.md_core_model['mappings']['pycsw:BoundingBox']},
-                        'mdb:VertExtentMin': {'xpath': 'mdb:VertExtentMin', 'dbcol': self.context.md_core_model['mappings']['pycsw:VertExtentMin']},
-                        'mdb:VertExtentMax': {'xpath': 'mdb:VertExtentMax', 'dbcol': self.context.md_core_model['mappings']['pycsw:VertExtentMax']},
+                        'mdb:VertExtentMin': {'xpath': 'gex:EX_VerticalExtent/gex:minimumValue/gco:Real', 'dbcol': self.context.md_core_model['mappings']['pycsw:VertExtentMin']},
+                        'mdb:VertExtentMax': {'xpath': 'gex:EX_VerticalExtent/gex:maximumValue/gco:Real', 'dbcol': self.context.md_core_model['mappings']['pycsw:VertExtentMax']},
                         'mdb:CRS': {'xpath': '''concat("urn:ogc:def:crs:",
                                                        "mdb:referenceSystemInfo/mrs:MD_ReferenceSystem/mrs:referenceSystemIdentifier/mcc:MD_Identifier/mcc:codeSpace/gco:CharacterString",
                                                        ":",
@@ -694,8 +694,8 @@ class ISO19115p3(profile.Profile):
             except:
                 return None
             extent = etree.Element(util.nspath_eval('mri:extent', self.namespaces))
-            path = ['gex:EX_Extent', 'gex:geographicElement', 'gex:EX_GeographicBoundingBox']
-            gbb = build_path(extent, path, self.namespaces)
+            ex_extent = etree.SubElement(extent, util.nspath_eval('gex:EX_Extent', self.namespaces))
+            gbb = build_path(ex_extent, ['gex:geographicElement', 'gex:EX_GeographicBoundingBox'], self.namespaces)
             west = etree.SubElement(gbb, util.nspath_eval('gex:westBoundLongitude', self.namespaces))
             east = etree.SubElement(gbb, util.nspath_eval('gex:eastBoundLongitude', self.namespaces))
             south = etree.SubElement(gbb, util.nspath_eval('gex:southBoundLatitude', self.namespaces))
@@ -708,7 +708,7 @@ class ISO19115p3(profile.Profile):
 
             # If there is a vertical extent
             if vert_ext_min is not None and vert_ext_max is not None:
-                vert_ext = build_path(ex_extent, ['<gex:verticalElement', 'gex:EX_VerticalExtent'], self.namespaces)
+                vert_ext = build_path(ex_extent, ['gex:verticalElement', 'gex:EX_VerticalExtent'], self.namespaces)
                 min_val = build_path(vert_ext, ['gex:minimumValue', 'gco:Real'], self.namespaces)
                 min_val.text = vert_ext_min
                 max_val = build_path(vert_ext, ['gex:maximumValue', 'gco:Real'], self.namespaces)

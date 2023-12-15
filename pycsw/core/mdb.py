@@ -196,7 +196,7 @@ class MD_Metadata(printable):
             for iic in ii.contact:
                 contacts.append(iic)
 
-            for ct in ['creator', 'publisher', 'contributor']:
+            for ct in ['creator', 'publisher', 'contributor', 'funder']:
                 iict = getattr(ii, ct)
                 if iict:
                     contacts.append(iict)
@@ -412,6 +412,7 @@ class MD_DataIdentification(printable):
             self.resourcelanguagecode = []
             self.creator = []
             self.publisher = []
+            self.funder = []
             self.contributor = []
             self.edition = None
             self.abstract = None
@@ -536,6 +537,7 @@ class MD_DataIdentification(printable):
             self.creator = []
             self.publisher = []
             self.contributor = []
+            self.funder = []
             for val in md.findall(util.nspath_eval('mri:pointOfContact/cit:CI_Responsibility', namespaces)):
                 role = val.find(util.nspath_eval('cit:role/cit:CI_RoleCode', namespaces))
                 if role is not None:
@@ -547,6 +549,8 @@ class MD_DataIdentification(printable):
                         self.publisher.append(rp)
                     elif clv == 'author':
                         self.contributor.append(rp)
+                    elif clv == 'funder':
+                        self.funder.append(rp)
 
             val = md.find(util.nspath_eval('cit:CI_Citation/cit:edition/gco:CharacterString', namespaces))
             self.edition = util.testXMLValue(val)
@@ -607,15 +611,18 @@ class MD_DataIdentification(printable):
             val3 = None
             extents = md.findall(util.nspath_eval('mri:extent', namespaces))
             for extent in extents:
+                # Parse bounding box and vertical extents
                 if val is None:
                     for e in extent.findall(util.nspath_eval('gex:EX_Extent/gex:geographicElement', namespaces)):
                         if e.find(util.nspath_eval('gex:EX_GeographicBoundingBox', namespaces)) is not None or \
                                 e.find(util.nspath_eval('gex:EX_BoundingPolygon', namespaces)) is not None:
                             val = e
                             break
-                    self.extent = EX_Extent(val)
+                    vertelem = extent.findall(util.nspath_eval('gex:EX_Extent/gex:verticalElement', namespaces))
+                    self.extent = EX_Extent(val, vertelem)
                     self.bbox = self.extent.boundingBox  # for backwards compatibility
 
+                # Parse temporal extent begin
                 if val2 is None:
                     val2 = extent.find(util.nspath_eval(
                         'gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/gml:beginPosition',
@@ -628,6 +635,7 @@ class MD_DataIdentification(printable):
                     """
                     self.temporalextent_start = util.testXMLValue(val2)
 
+                # Parse temporal extent end
                 if val3 is None:
                     val3 = extent.find(util.nspath_eval(
                         'gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/gml:endPosition',
@@ -892,28 +900,41 @@ class EX_GeographicBoundingPolygon(printable):
 
 class EX_Extent(printable):
     """ process EX_Extent """
-    def __init__(self, md=None):
-        if md is None:
-            self.boundingBox = None
-            self.boundingPolygon = None
-            self.description_code = None
-        else:
-            self.boundingBox = None
-            self.boundingPolygon = None
+    def __init__(self, md=None, vertelem=None):
 
-            if md is not None:
-                bboxElement = md.find(util.nspath_eval('gex:EX_GeographicBoundingBox', namespaces))
-                if bboxElement is not None:
-                    self.boundingBox = EX_GeographicBoundingBox(bboxElement)
+        self.boundingBox = None
+        self.boundingPolygon = None
+        self.description_code = None
+        self.vertExtMin = None
+        self.vertExtMax = None
+        if md is not None:
+            # Parse bounding box
+            bboxElement = md.find(util.nspath_eval('gex:EX_GeographicBoundingBox', namespaces))
+            if bboxElement is not None:
+                self.boundingBox = EX_GeographicBoundingBox(bboxElement)
 
-                polygonElement = md.find(util.nspath_eval('gex:EX_BoundingPolygon', namespaces))
-                if polygonElement is not None:
-                    self.boundingPolygon = EX_GeographicBoundingPolygon(polygonElement)
+            polygonElement = md.find(util.nspath_eval('gex:EX_BoundingPolygon', namespaces))
+            if polygonElement is not None:
+                self.boundingPolygon = EX_GeographicBoundingPolygon(polygonElement)
 
-                val = md.find(util.nspath_eval(
-                    'gex:EX_GeographicDescription/gex:geographicIdentifier/mcc:MD_Identifier/mcc:code/gco:CharacterString',
-                    namespaces))
-                self.description_code = util.testXMLValue(val)
+            code = md.find(util.nspath_eval(
+                'gex:EX_GeographicDescription/gex:geographicIdentifier/mcc:MD_Identifier/mcc:code/gco:CharacterString',
+                namespaces))
+            self.description_code = util.testXMLValue(code)
+
+        # Parse vertical extent
+        if vertelem is not None:
+            # Get vertical extent max
+            vertext_max = vertelem.find(util.nspath_eval(
+                'gex:EX_VerticalExtent/gex:maximumValue/gco:Real',
+                namespaces))
+            self.vertExtMax = util.testXMLValue(vertext_max)
+
+            # Get vertical extent min
+            vertext_min = vertelem.find(util.nspath_eval(
+                'gex:EX_VerticalExtent/gex:minimumValue/gco:Real',
+                namespaces))
+            self.vertExtMin = util.testXMLValue(vertext_min)
 
 
 class MD_ReferenceSystem(printable):

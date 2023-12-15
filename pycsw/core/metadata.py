@@ -1427,10 +1427,20 @@ def _parse_iso(context, repos, exml):
         elif len(md_identification.resourcelanguagecode) > 0:
             _set(context, recobj, 'pycsw:ResourceLanguage', md_identification.resourcelanguagecode[0])
 
+        # Geographical bounding box
         if hasattr(md_identification, 'bbox'):
             bbox = md_identification.bbox
         else:
             bbox = None
+
+        # Vertical extent of a bounding box
+        if hasattr(md_identification, 'extent'):
+            if hasattr(md_identification.extent, 'vertExtMin') and \
+                md_identification.extent.vertExtMin is not None:
+                _set(context, recobj, 'pycsw:VertExtentMin', md_identification.extent.vertExtMin)
+            if hasattr(md_identification.extent, 'vertExtMax') and \
+                md_identification.extent.vertExtMax is not None:
+                _set(context, recobj, 'pycsw:VertExtentMax', md_identification.extent.vertExtMax)
 
         if (hasattr(md_identification, 'keywords') and
             len(md_identification.keywords) > 0):
@@ -1441,18 +1451,27 @@ def _parse_iso(context, repos, exml):
                  json.dumps([t for t in md_identification.keywords if t.thesaurus is not None], 
                             default=lambda o: o.__dict__))
 
+        # Creator
         if (hasattr(md_identification, 'creator') and
             len(md_identification.creator) > 0):
             all_orgs = set([item.organization for item in md_identification.creator if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Creator', ';'.join(all_orgs))
+        # Publisher
         if (hasattr(md_identification, 'publisher') and
             len(md_identification.publisher) > 0):
             all_orgs = set([item.organization for item in md_identification.publisher if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Publisher', ';'.join(all_orgs))
+        # Contributor
         if (hasattr(md_identification, 'contributor') and
             len(md_identification.contributor) > 0):
             all_orgs = set([item.organization for item in md_identification.contributor if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Contributor', ';'.join(all_orgs))
+        # Funder
+        if (hasattr(md_identification, 'funder') and
+            len(md_identification.funder) > 0):
+            all_orgs = set([item.organization for item in md_identification.funder if hasattr(item, 'organization') and item.organization is not None])
+            _set(context, recobj, 'pycsw:Funder', ';'.join(all_orgs))
+
 
         if (hasattr(md_identification, 'contact') and
             len(md_identification.contact) > 0):
