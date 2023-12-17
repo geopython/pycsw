@@ -106,11 +106,11 @@ class STACAPI(API):
             'type': 'Catalog',
             'conformsTo': CONFORMANCE_CLASSES,
             'links': [],
-            'title': self.config['metadata:main']['identification_title'],
+            'title': self.config['metadata']['identification']['title'],
             'description':
-                self.config['metadata:main']['identification_abstract'],
+                self.config['metadata']['identification']['description'],
             'keywords':
-                self.config['metadata:main']['identification_keywords'].split(',')
+                self.config['metadata']['identification']['keywords']
         }
 
         LOGGER.debug('Creating links')
@@ -426,8 +426,8 @@ class STACAPI(API):
 
         if collection_name == 'metadata:main':
             id_ = collection_name
-            title = self.config['metadata:main']['identification_title']
-            description = self.config['metadata:main']['identification_abstract']
+            title = self.config['metadata']['identification']['title']
+            description = self.config['metadata']['identification']['description']  # noqa
         else:
             id_ = collection_name
             title = collection_info.get('title')

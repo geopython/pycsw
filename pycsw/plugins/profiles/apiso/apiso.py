@@ -167,21 +167,22 @@ class APISO(profile.Profile):
             model['operations']['Harvest']['parameters']['ResourceType']['values'].append('http://www.isotc211.org/schemas/2005/gmd/')
 
         # set INSPIRE config
-        if config.has_section('metadata:inspire') and config.has_option('metadata:inspire', 'enabled') and config.get('metadata:inspire', 'enabled') == 'true':
-            self.inspire_config = {}
-            self.inspire_config['languages_supported'] = config.get('metadata:inspire', 'languages_supported')
-            self.inspire_config['default_language'] = config.get('metadata:inspire', 'default_language')
-            self.inspire_config['date'] = config.get('metadata:inspire', 'date')
-            self.inspire_config['gemet_keywords'] = config.get('metadata:inspire', 'gemet_keywords')
-            self.inspire_config['conformity_service'] = config.get('metadata:inspire', 'conformity_service')
-            self.inspire_config['contact_name'] = config.get('metadata:inspire', 'contact_name')
-            self.inspire_config['contact_email'] = config.get('metadata:inspire', 'contact_email')
-            self.inspire_config['temp_extent'] = config.get('metadata:inspire', 'temp_extent')
-        else:
+        try:
+            if config['metadata']['inspire']['enabled']:
+                self.inspire_config = {}
+                self.inspire_config['languages_supported'] = config['metadata']['inspire']['languages_supported']
+                self.inspire_config['default_language'] = config['metadata']['inspire']['default_language']
+                self.inspire_config['date'] = config['metadata']['inspire']['date']
+                self.inspire_config['gemet_keywords'] = config['metadata']['inspire']['inspire']['gemet_keywords']
+                self.inspire_config['conformity_service'] = config['metadata']['inspire']['conformity_service']
+                self.inspire_config['contact_name'] = config['metadata']['inspire']['contact_name']
+                self.inspire_config['contact_email'] = config['metadata']['inspire']['contact_email']
+                self.inspire_config['temp_extent'] = config['metadata']['inspire']['temp_extent']
+        except KeyError:
             self.inspire_config = None
 
-        self.ogc_schemas_base = config.get('server', 'ogc_schemas_base')
-        self.url = config.get('server', 'url')
+        self.ogc_schemas_base = config['server']['ogc_schemas_base']
+        self.url = config['server']['url']
 
     def check_parameters(self, kvp):
         '''Check for Language parameter in GetCapabilities request'''

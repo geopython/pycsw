@@ -133,7 +133,7 @@ if __name__ == "__main__":
     config = configparser.ConfigParser(interpolation=EnvInterpolation())
     config.read(os.getenv("PYCSW_CONFIG"))
     try:
-        level = config.get("server", "loglevel").upper()
+        level = config['logging']['level')
     except configparser.NoOptionError:
         level = "WARNING"
     try:

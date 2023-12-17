@@ -42,8 +42,8 @@ server:
     #workers=2
 
 logging:
-    loglevel: ERROR
-    logfile: /tmp/pycsw.log
+    level: ERROR
+    #logfile: /tmp/pycsw.log
 
 profiles:
     - apiso
