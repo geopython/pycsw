@@ -618,7 +618,7 @@ class MD_DataIdentification(printable):
                                 e.find(util.nspath_eval('gex:EX_BoundingPolygon', namespaces)) is not None:
                             val = e
                             break
-                    vertelem = extent.findall(util.nspath_eval('gex:EX_Extent/gex:verticalElement', namespaces))
+                    vertelem = extent.find(util.nspath_eval('gex:EX_Extent/gex:verticalElement', namespaces))
                     self.extent = EX_Extent(val, vertelem)
                     self.bbox = self.extent.boundingBox  # for backwards compatibility
 
