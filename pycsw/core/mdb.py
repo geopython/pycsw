@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: ISO-8859-15 -*-
 # =============================================================================
-# Copyright (c) 2023 CSIRO Australia
+# Copyright (c) 2024 CSIRO Australia
 #
 # Authors : Vincent Fazio
 #
@@ -10,21 +10,13 @@
 
 # flake8: noqa: E501
 
-""" ISO metadata parser """
+""" ISO 19115 Part 3 XML metadata parser """
 
 from owslib.etree import etree
 from owslib import util
-from owslib.namespaces import Namespaces
 
 
-# default variables
-def get_namespaces():
-    n = Namespaces()
-    ns = n.get_namespaces(["gco", "gfc", "gmd", "gmi", "gml", "gml32", "gmx", "gts", "srv", "xlink"])
-    ns[None] = n.get_namespace("gmd")
-    return ns
-
-
+# ISO 19115 Part 3 XML namspaces
 namespaces = {
         "mdb":"http://standards.iso.org/iso/19115/-3/mdb/2.0",
         "cat":"http://standards.iso.org/iso/19115/-3/cat/1.0",
@@ -59,10 +51,15 @@ namespaces = {
 
 class printable(object):
     def __repr__(self):
-        repr_str = str(self.__class__) + ":\n"
+        repr_str = "\n"
         for d in dir(self):
-            if not d.startswith("__"):
-                repr_str += f"    {d}={repr(getattr(self,d,''))}\n"
+            if not d.startswith("__") and not callable(getattr(self,d)):
+                if isinstance(getattr(self,d), str) or isinstance(getattr(self,d), bytes):
+                    repr_str += f"    {self.__class__.__name__}:{d}='{getattr(self,d)[:100]}'\n"
+                elif isinstance(getattr(self,d), list):
+                    repr_str += f"    {self.__class__.__name__}:{d}=\n{getattr(self,d)}\n"
+                elif getattr(self,d) is not None:
+                    repr_str += f"    {self.__class__.__name__}:{d}={getattr(self,d)}\n"
         return repr_str
 
 
@@ -112,24 +109,22 @@ class MD_Metadata(printable):
             val = md.find(util.nspath_eval('mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gco:CharacterString', namespaces))
             self.dataseturi = util.testXMLValue(val)
 
-            # extract code or value?
             val = md.find(util.nspath_eval('mdb:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode', namespaces))
             self.languagecode = util.testXMLAttribute(val, 'codeListValue')
 
-            # NB: There are different kinds of timestamp with different codes
             val = md.find(util.nspath_eval('mdb:dateInfo/cit:CI_Date/cit:date/gco:DateTime', namespaces))
             self.datestamp = util.testXMLValue(val)
 
-            # extract code or value?
-            self.charset = _testCodeListValue(md.find(
-                util.nspath_eval('mdb:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode', namespaces)))
+            val = md.find(
+                util.nspath_eval('mdb:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode', namespaces))
+            self.charset = util.testXMLAttribute(val, 'codeListValue')
 
             val = md.find(
                 util.nspath_eval('mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/mcc:MD_ScopeCode', namespaces))
             self.hierarchy = util.testXMLAttribute(val, 'codeListValue')
 
             self.contact = []
-            for i in md.findall(util.nspath_eval('mdb:contact/cit:CI_Responsibility/cit:party', namespaces)):
+            for i in md.findall(util.nspath_eval('mdb:contact/cit:CI_Responsibility', namespaces)):
                 o = CI_Responsibility(i)
                 self.contact.append(o)
 
@@ -165,13 +160,12 @@ class MD_Metadata(printable):
                         self.identification.append(SV_ServiceIdentification(val))
 
             self.contentinfo = []
-            # FIXME: No equivalent??
-            #for contentinfo in md.findall(
-            #        util.nspath_eval('mdb:contentInfo/gmd:MD_FeatureCatalogueDescription', namespaces)):
-            #    self.contentinfo.append(MD_FeatureCatalogueDescription(contentinfo))
-            #for contentinfo in md.findall(
-            #        util.nspath_eval('mdb:contentInfo/gmd:MD_ImageDescription', namespaces)):
-            #    self.contentinfo.append(MD_ImageDescription(contentinfo))
+            for contentinfo in md.findall(
+                    util.nspath_eval('mdb:contentInfo/mrc:MD_FeatureCatalogueDescription', namespaces)):
+                self.contentinfo.append(MD_FeatureCatalogueDescription(contentinfo))
+            for contentinfo in md.findall(
+                    util.nspath_eval('mdb:contentInfo/mrc:MD_ImageDescription', namespaces)):
+                self.contentinfo.append(MD_ImageDescription(contentinfo))
 
             val = md.find(util.nspath_eval('mdb:distributionInfo/mrd:MD_Distribution', namespaces))
 
@@ -188,10 +182,8 @@ class MD_Metadata(printable):
 
 
     def get_all_contacts(self):
-        """get all contacts in document"""
-
+        """ Get all contacts in document"""
         contacts = []
-
         for ii in self.identification:
             for iic in ii.contact:
                 contacts.append(iic)
@@ -204,7 +196,7 @@ class MD_Metadata(printable):
         return list(filter(None, contacts))
 
     def get_default_locale(self):
-        """ get default lan:PT_Locale based on lan:language """
+        """ Get default lan:PT_Locale based on lan:language """
 
         for loc in self.locales:
             if loc.languagecode == self.language:
@@ -213,7 +205,7 @@ class MD_Metadata(printable):
 
 
 class PT_Locale(printable):
-    """ process PT_Locale """
+    """ Process PT_Locale """
 
     def __init__(self, md=None):
         if md is None:
@@ -223,7 +215,6 @@ class PT_Locale(printable):
         else:
             self.id = md.attrib.get('id')
             self.languagecode = md.find(
-                # gmd had an error ??
                 util.nspath_eval('lan:language/lan:LanguageCode', namespaces)).attrib.get('codeListValue')
             self.charset = md.find(
                 util.nspath_eval('lan:characterEncoding/lan:MD_CharacterSetCode', namespaces)).attrib.get(
@@ -232,7 +223,7 @@ class PT_Locale(printable):
 
 
 class CI_Date(printable):
-    """ process CI_Date """
+    """ Process CI_Date """
     def __init__(self, md=None):
         if md is None:
             self.date = None
@@ -253,7 +244,7 @@ class CI_Date(printable):
 
 
 class CI_Responsibility(printable):
-    """ process cit:CI_Responsibility """
+    """ Process cit:CI_Responsibility """
     def __init__(self, md=None):
 
         if md is None:
@@ -271,56 +262,56 @@ class CI_Responsibility(printable):
             self.onlineresource = None
             self.role = None
         else:
-            val = md.find(util.nspath_eval('cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name', namespaces))
+            val = md.find(util.nspath_eval('cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name/gco:CharacterString', namespaces))
             self.name = util.testXMLValue(val)
 
-            val = md.find(util.nspath_eval('cit:CI_Organisation/cit:name', namespaces))
+            val = md.find(util.nspath_eval('cit:party/cit:CI_Organisation/cit:name/gco:CharacterString', namespaces))
             self.organization = util.testXMLValue(val)
 
-            val = md.find(util.nspath_eval('cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:positionName', namespaces))
+            val = md.find(util.nspath_eval('cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:positionName/gco:CharacterString', namespaces))
             self.position = util.testXMLValue(val)
 
-            val = md.find(util.nspath_eval(
-                'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:phone/cit:CI_Telephone/cit:number/gco:CharacterString', namespaces))
-            self.phone = util.testXMLValue(val)
+            # Telephone 
+            val_list = md.xpath('cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:phone/cit:CI_Telephone[cit:numberType/cit:CI_TelephoneTypeCode/@codeListValue="voice"]/cit:number/gco:CharacterString', namespaces=namespaces)
+            if len(val_list) > 0:
+                self.phone = util.testXMLValue(val_list[0])
 
-            # NB:telephone and fax are differentiated by telephone type codes
-            #val = md.find(util.nspath_eval(
-            #    'gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:facsimile/gco:CharacterString',
-            #    namespaces))
-            #self.fax = util.testXMLValue(val)
+            # Facsimile (Telephone and fax are differentiated by telephone type codes)
+            val_list = md.xpath('cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:phone/cit:CI_Telephone[cit:numberType/cit:CI_TelephoneTypeCode/@codeListValue="facsimile"]/cit:number/gco:CharacterString', namespaces=namespaces)
+            if len(val_list) > 0:
+                self.fax = util.testXMLValue(val_list[0])
 
             val = md.find(util.nspath_eval(
-                'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:deliveryPoint/gco:CharacterString',
+                'cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:deliveryPoint/gco:CharacterString',
                 namespaces))
             self.address = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
-                'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:city/gco:CharacterString', namespaces))
+                'cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:city/gco:CharacterString', namespaces))
             self.city = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
-                'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:administrativeArea/gco:CharacterString',
+                'cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:administrativeArea/gco:CharacterString',
                 namespaces))
             self.region = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
-                'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:postalCode/gco:CharacterString',
+                'cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:postalCode/gco:CharacterString',
                 namespaces))
             self.postcode = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
-                'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:country/gco:CharacterString',
+                'cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:country/gco:CharacterString',
                 namespaces))
             self.country = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
-                'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:electronicMailAddress/gco:CharacterString',
+                'cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:address/cit:CI_Address/cit:electronicMailAddress/gco:CharacterString',
                 namespaces))
             self.email = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
-                'cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:onlineResource/cit:CI_OnlineResource', namespaces))
+                'cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:onlineResource/cit:CI_OnlineResource', namespaces))
             if val is not None:
                 self.onlineresource = CI_OnlineResource(val)
             else:
@@ -432,11 +423,11 @@ class MD_DataIdentification(printable):
         else:
             self.identtype = identtype
             val = md.find(util.nspath_eval(
-                'mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:title/gco:CharacterString', namespaces))
+                'mri:citation/cit:CI_Citation/cit:title/gco:CharacterString', namespaces))
             self.title = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
-                'mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:alternateTitle/gco:CharacterString', namespaces))
+                'mri:citation/cit:CI_Citation/cit:alternateTitle/gco:CharacterString', namespaces))
             self.alternatetitle = util.testXMLValue(val)
 
             self.uricode = []
@@ -464,9 +455,9 @@ class MD_DataIdentification(printable):
 
             self.uselimitation = []
             self.uselimitation_url = []
-            _values = md.findall(util.nspath_eval(
+            uselimit_values = md.findall(util.nspath_eval(
                 'mri:resourceConstraints/mco:MD_LegalConstraints/mco:useLimitation/gco:CharacterString>', namespaces))
-            for i in _values:
+            for i in uselimit_values:
                 val = util.testXMLValue(i)
                 if val is not None:
                     self.uselimitation.append(val)
@@ -627,12 +618,6 @@ class MD_DataIdentification(printable):
                     val2 = extent.find(util.nspath_eval(
                         'gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/gml:beginPosition',
                         namespaces))
-                    """ Not sure about gml32
-                    if val2 is None:
-                        val2 = extent.find(util.nspath_eval(
-                            'gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml32:TimePeriod/gml32:beginPosition',
-                            namespaces))
-                    """
                     self.temporalextent_start = util.testXMLValue(val2)
 
                 # Parse temporal extent end
@@ -640,12 +625,6 @@ class MD_DataIdentification(printable):
                     val3 = extent.find(util.nspath_eval(
                         'gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/gml:endPosition',
                         namespaces))
-                    """ Not sure about gml32
-                    if val3 is None:
-                        val3 = extent.find(util.nspath_eval(
-                            'gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml32:TimePeriod/gml32:endPosition',
-                            namespaces))
-                    """
                     self.temporalextent_end = util.testXMLValue(val3)
 
 
@@ -1000,12 +979,11 @@ class MD_FeatureCatalogueDescription(printable):
             else:  # part of a larger document
                 self.xml = etree.tostring(fcd)
 
-            # Equivalent?
             self.compliancecode = None
-            #val = fcd.find(util.nspath_eval('gmd:complianceCode/gco:Boolean', namespaces))
-            #val = util.testXMLValue(val)
-            #if val is not None:
-            #    self.compliancecode = util.getTypedValue('boolean', val)
+            comp = fcd.find(util.nspath_eval('mrc:complianceCode/gco:Boolean', namespaces))
+            val = util.testXMLValue(comp)
+            if val is not None:
+                self.compliancecode = util.getTypedValue('boolean', val)
 
             self.language = []
             for i in fcd.findall(util.nspath_eval('lan:language/gco:CharacterString', namespaces)):
@@ -1014,8 +992,8 @@ class MD_FeatureCatalogueDescription(printable):
                     self.language.append(val)
 
             self.includedwithdataset = None
-            val = fcd.find(util.nspath_eval('mrc:includedWithDataset/gco:Boolean', namespaces))
-            val = util.testXMLValue(val)
+            comp = fcd.find(util.nspath_eval('mrc:includedWithDataset/gco:Boolean', namespaces))
+            val = util.testXMLValue(comp)
             if val is not None:
                 self.includedwithdataset = util.getTypedValue('boolean', val)
 
@@ -1034,7 +1012,6 @@ class MD_FeatureCatalogueDescription(printable):
 
 
 
-# TODO: This does have equivalents in GN's ISO19115-3 XML
 class MD_Band(printable):
     """Process mrc:MD_Band"""
     def __init__(self, band, band_id=None):
@@ -1054,18 +1031,3 @@ class MD_Band(printable):
 
             val = band.find(util.nspath_eval('mrc:maxValue/gco:Real', namespaces))
             self.max = util.testXMLValue(val)
-
-
-
-if __name__ == '__main__':
-    GN_SAMPLE = "/home/vincent/github/pycsw/xml-sources/metadata-ISO19115-3.xml"
-    BELGIAN_SAMPLE = "/home/vincent/github/pycsw/xml-sources/SAMPLE_ISO1915-3.xml"
-    with open(GN_SAMPLE, "r") as fd:
-        xml_list = fd.readlines()
-        xml_str = ''.join(xml_list)
-        xml_bytes = bytes(xml_str, encoding='utf-8')
-        exml = etree.fromstring(xml_bytes)
-        print(f"{exml=}")
-        mdb = MD_Metadata(exml)
-        # print(mdb.xml)
-
