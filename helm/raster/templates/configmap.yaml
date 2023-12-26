@@ -27,4 +27,5 @@ data:
   DB_NAME: {{ quote .Values.rasterCommon.db.name }}
   POSTGRES_ENABLE_SSL_AUTH: {{ quote .Values.rasterCommon.db.sslEnabled }}
   DB_SCHEMA: {{ quote .Values.env.db.schema }}
+  PGAPPNAME: {{ $chartName }}
 {{- end }}
