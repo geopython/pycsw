@@ -50,16 +50,30 @@ namespaces = {
 }
 
 class printable(object):
-    def __repr__(self):
+    """ Roughly pretty print classes
+
+        Usage:
+
+        mdb = MD_Metadata(exml)
+        print(mdb.format_me())
+
+    """
+    def format_me(self, idx=0):
         repr_str = "\n"
         for d in dir(self):
             if not d.startswith("__") and not callable(getattr(self,d)):
                 if isinstance(getattr(self,d), str) or isinstance(getattr(self,d), bytes):
-                    repr_str += f"    {self.__class__.__name__}:{d}='{getattr(self,d)[:100]}'\n"
+                    repr_str += "  " * idx + f"{self.__class__.__name__}:{d}='{getattr(self,d)[:100]}'\n"
                 elif isinstance(getattr(self,d), list):
-                    repr_str += f"    {self.__class__.__name__}:{d}=\n{getattr(self,d)}\n"
-                elif getattr(self,d) is not None:
-                    repr_str += f"    {self.__class__.__name__}:{d}={getattr(self,d)}\n"
+                    repr_str += "  " * idx + f"{self.__class__.__name__}:{d}=[\n"
+                    for item in getattr(self,d):
+                        if isinstance(item, printable):
+                            repr_str += "  " * idx + f"  {item.format_me(idx+1)}"
+                        elif item is not None:
+                            repr_str += "  " * idx + f"  {item}\n"
+                    repr_str += "  " * idx + "]\n"
+                elif isinstance(getattr(self,d), printable):
+                    repr_str += "  " * idx + f"{self.__class__.__name__}:{d}={getattr(self,d).format_me(idx+1)}"
         return repr_str
 
 
@@ -84,7 +98,6 @@ class MD_Metadata(printable):
             self.stdver = None
             self.locales = []
             self.referencesystem = None
-            self.contentinfo = None
             self.identification = []
             self.contentinfo = []
             self.distribution = None
@@ -392,7 +405,7 @@ class MD_DataIdentification(printable):
             self.uselimitation = []
             self.uselimitation_url = []
             self.accessconstraints = []
-            self.classification = []
+            self.classification = []  # Left empty - no legal classification equivalent
             self.otherconstraints = []
             self.securityconstraints = []
             self.useconstraints = []
@@ -470,15 +483,16 @@ class MD_DataIdentification(printable):
                 if val is not None:
                     self.accessconstraints.append(val)
 
-            self.classification = []
+            self.classification = [] # Left empty - no legal classification equivalent
 
             self.otherconstraints = []
-            for i in md.findall(util.nspath_eval(
-                    'mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints/gco:CharacterString',
-                    namespaces)):
-                val = util.testXMLValue(i)
-                if val is not None:
-                    self.otherconstraints.append(val)
+            for end_tag in ['gco:CharacterString', 'gcx:Anchor']:
+                for i in md.findall(util.nspath_eval(
+                        f"mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints/{end_tag}",
+                        namespaces)):
+                    val = util.testXMLValue(i)
+                    if val is not None:
+                        self.otherconstraints.append(val)
 
             self.securityconstraints = []
             for i in md.findall(util.nspath_eval(
@@ -498,7 +512,7 @@ class MD_DataIdentification(printable):
 
             self.denominators = []
             for i in md.findall(util.nspath_eval(
-                    'mrl:sourceSpatialResolution/mri:MD_Resolution/mri:equivalentScale/mri:MD_RepresentativeFraction/mri:denominator/gco:Integer',
+                    'mri:spatialResolution/mri:MD_Resolution/mri:equivalentScale/mri:MD_RepresentativeFraction/mri:denominator/gco:Integer',
                     namespaces)):
                 val = util.testXMLValue(i)
                 if val is not None:
@@ -1003,13 +1017,13 @@ class MD_FeatureCatalogueDescription(printable):
                 if val is not None:
                     self.featuretypenames.append(val)
 
+            # Gather feature catalogue titles
             self.featurecatalogues = []
-            for i in fcd.findall(util.nspath_eval('mrc:featureCatalogueCitation', namespaces)):
-                val = i.attrib.get('uuidref')
-                val = util.testXMLValue(val, attrib=True)
+            for cit in fcd.findall(util.nspath_eval(
+                    'mrc:featureCatalogueCitation/cit:CI_Citation/cit:title/gco:CharacterString', namespaces)):
+                val = util.testXMLValue(cit)
                 if val is not None:
                     self.featurecatalogues.append(val)
-
 
 
 class MD_Band(printable):

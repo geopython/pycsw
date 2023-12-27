@@ -3,7 +3,7 @@
 #
 # Author: Vincent Fazio <vincent.fazio@csiro.au>
 #
-# Copyright (c) 2023 CSIRO Australia
+# Copyright (c) 2024 CSIRO Australia
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
