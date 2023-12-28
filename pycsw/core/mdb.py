@@ -444,13 +444,14 @@ class MD_DataIdentification(printable):
             self.alternatetitle = util.testXMLValue(val)
 
             self.uricode = []
-            _values = md.findall(util.nspath_eval(
-                'mri:citation/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gco:CharacterString',
-                namespaces))
-            for i in _values:
-                val = util.testXMLValue(i)
-                if val is not None:
-                    self.uricode.append(val)
+            for end_tag in ['gco:CharacterString', 'gcx:Anchor']:
+                _values = md.findall(util.nspath_eval(
+                    f"mri:citation/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/{end_tag}",
+                    namespaces))
+                for i in _values:
+                    val = util.testXMLValue(i)
+                    if val is not None:
+                        self.uricode.append(val)
 
             self.uricodespace = []
             for i in md.findall(util.nspath_eval(
