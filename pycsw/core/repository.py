@@ -817,6 +817,7 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
         Column('publisher', Text, index=True),
         Column('contributor', Text, index=True),
         Column('organization', Text, index=True),
+        Column('funder', Text, index=True),
 
         # security
         Column('securityconstraints', Text, index=True),
