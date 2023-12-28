@@ -1552,18 +1552,18 @@ def _parse_iso(context, repos, exml):
 
                     _set(context, recobj, 'pycsw:Keywords', keywords)
 
-            bands = []
-            for band in ci.bands:
-                band_info = {
-                    'id': band.id,
-                    'units': band.units,
-                    'min': band.min,
-                    'max': band.max
-                }
-                bands.append(band_info)
+                bands = []
+                for band in ci.bands:
+                    band_info = {
+                        'id': band.id,
+                        'units': band.units,
+                        'min': band.min,
+                        'max': band.max
+                    }
+                    bands.append(band_info)
 
-            if len(bands) > 0:
-                _set(context, recobj, 'pycsw:Bands', json.dumps(bands))
+                if len(bands) > 0:
+                    _set(context, recobj, 'pycsw:Bands', json.dumps(bands))
 
     if hasattr(md, 'acquisition') and md.acquisition is not None:
         platform = md.acquisition.platforms[0]

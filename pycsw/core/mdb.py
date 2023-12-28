@@ -78,7 +78,8 @@ class printable(object):
 
 
 class MD_Metadata(printable):
-    """ Process mdb:MD_Metadata """
+    """ Process mdb:MD_Metadata
+    """
     def __init__(self, md=None):
 
         if md is None:
@@ -218,7 +219,8 @@ class MD_Metadata(printable):
 
 
 class PT_Locale(printable):
-    """ Process PT_Locale """
+    """ Process PT_Locale
+    """
 
     def __init__(self, md=None):
         if md is None:
@@ -236,7 +238,8 @@ class PT_Locale(printable):
 
 
 class CI_Date(printable):
-    """ Process CI_Date """
+    """ Process CI_Date
+    """
     def __init__(self, md=None):
         if md is None:
             self.date = None
@@ -257,7 +260,8 @@ class CI_Date(printable):
 
 
 class CI_Responsibility(printable):
-    """ Process cit:CI_Responsibility """
+    """ Process cit:CI_Responsibility
+    """
     def __init__(self, md=None):
 
         if md is None:
@@ -334,8 +338,7 @@ class CI_Responsibility(printable):
 
 
 class Keyword(printable):
-    """
-    Class for complex keywords, with labels and URLs
+    """ Class for complex keywords, with labels and URLs
     """
     def __init__(self, kw=None):
         if kw is None:
@@ -391,7 +394,8 @@ class MD_Keywords(printable):
 
 
 class MD_DataIdentification(printable):
-    """ process MD_DataIdentification """
+    """ Process MD_DataIdentification
+    """
     def __init__(self, md=None, identtype=None):
         self.aggregationinfo = None
         if md is None:
@@ -644,7 +648,8 @@ class MD_DataIdentification(printable):
 
 
 class MD_Distributor(printable):
-    """ process MD_Distributor """
+    """ Process MD_Distributor
+    """
     def __init__(self, md=None):
         if md is None:
             self.contact = None
@@ -665,7 +670,8 @@ class MD_Distributor(printable):
 
 
 class MD_Distribution(printable):
-    """ process MD_Distribution """
+    """ Process MD_Distribution
+    """
     def __init__(self, md=None):
         if md is None:
             self.format = None
@@ -695,7 +701,8 @@ class MD_Distribution(printable):
 
 
 class DQ_DataQuality(printable):
-    ''' process DQ_DataQuality'''
+    """ Process DQ_DataQuality
+    """
     def __init__(self, md=None):
 
         if md is None:
@@ -748,7 +755,8 @@ class DQ_DataQuality(printable):
 
 
 class SV_ServiceIdentification(MD_DataIdentification):
-    """ process SV_ServiceIdentification """
+    """ Process SV_ServiceIdentification
+    """
     def __init__(self, md=None):
 
         super().__init__(md, 'service')
@@ -804,7 +812,8 @@ class SV_ServiceIdentification(MD_DataIdentification):
 
 
 class CI_OnlineResource(printable):
-    """ process CI_OnlineResource """
+    """ Process CI_OnlineResource
+    """
     def __init__(self, md=None):
         if md is None:
             self.url = None
@@ -830,7 +839,8 @@ class CI_OnlineResource(printable):
 
 
 class EX_GeographicBoundingBox(printable):
-    """ Process gex:EX_GeographicBoundingBox """
+    """ Process gex:EX_GeographicBoundingBox
+    """
     def __init__(self, md=None):
         if md is None:
             self.minx = None
@@ -849,7 +859,8 @@ class EX_GeographicBoundingBox(printable):
 
 
 class EX_Polygon(printable):
-    """ Process gml32:Polygon """
+    """ Process gml32:Polygon
+    """
     def __init__(self, md=None):
         if md is None:
             self.exterior_ring = None
@@ -876,7 +887,8 @@ class EX_Polygon(printable):
 
 
 class EX_GeographicBoundingPolygon(printable):
-    """ Process EX_GeographicBoundingPolygon """
+    """ Process EX_GeographicBoundingPolygon
+    """
     def __init__(self, md=None):
         if md is None:
             self.is_extent = None
@@ -893,7 +905,8 @@ class EX_GeographicBoundingPolygon(printable):
 
 
 class EX_Extent(printable):
-    """ process EX_Extent """
+    """ Process EX_Extent
+    """
     def __init__(self, md=None, vertelem=None):
 
         self.boundingBox = None
@@ -932,7 +945,8 @@ class EX_Extent(printable):
 
 
 class MD_ReferenceSystem(printable):
-    """ process MD_ReferenceSystem """
+    """ Process MD_ReferenceSystem
+    """
     def __init__(self, md=None):
         if md is None:
             self.code = None
@@ -967,7 +981,7 @@ class MD_ReferenceSystem(printable):
 
 
 def _testCodeListValue(elpath):
-    """ get gco:CodeListValue_Type attribute, else get text content """
+    """ Get gco:CodeListValue_Type attribute, else get text content """
     if elpath is not None:  # try to get @codeListValue
         val = util.testXMLValue(elpath.attrib.get('codeListValue'), True)
         if val is not None:
@@ -979,7 +993,8 @@ def _testCodeListValue(elpath):
 
 
 class MD_FeatureCatalogueDescription(printable):
-    """Process mrc:MD_FeatureCatalogueDescription"""
+    """Process mrc:MD_FeatureCatalogueDescription
+    """
     def __init__(self, fcd=None):
         if fcd is None:
             self.xml = None
@@ -988,6 +1003,7 @@ class MD_FeatureCatalogueDescription(printable):
             self.includedwithdataset = None
             self.featuretypenames = []
             self.featurecatalogues = []
+
         else:
             if hasattr(fcd, 'getroot'):  # standalone document
                 self.xml = etree.tostring(fcd.getroot())
@@ -1026,9 +1042,39 @@ class MD_FeatureCatalogueDescription(printable):
                 if val is not None:
                     self.featurecatalogues.append(val)
 
+class MD_ImageDescription(printable):
+    """Process mrc:MD_ImageDescription
+    """
+    def __init__(self, img_desc=None):
+        self.type = 'image'
+        self.bands = []
+
+        if img_desc is None:
+            self.attribute_description = None
+            self.cloud_cover = None
+            self.processing_level = None
+        else:
+            val = img_desc.find(util.nspath_eval('mrc:attributeDescription/gco:RecordType', namespaces))
+            self.attribute_description = util.testXMLValue(val)
+
+            val = img_desc.find(util.nspath_eval('mrc:attributeGroup/mrc:MD_CoverageContentTypeCode', namespaces))
+            self.type = util.testXMLAttribute(val, 'codeListValue')
+
+            val = img_desc.find(util.nspath_eval('mrc:cloudCoverPercentage/gco:Real', namespaces))
+            self.cloud_cover = util.testXMLValue(val)
+
+            val = img_desc.find(util.nspath_eval(
+                'mrc:processingLevelCode/mcc:MD_Identifier/mcc:code/gco:CharacterString', namespaces))
+            self.processing_level = util.testXMLValue(val)
+
+            for i in img_desc.findall(util.nspath_eval('mrc:attributeGroup/mrc:MD_Band', namespaces)):
+                bid = util.testXMLAttribute(i, 'id')
+                self.bands.append(MD_Band(i, bid))
+
 
 class MD_Band(printable):
-    """Process mrc:MD_Band"""
+    """Process mrc:MD_Band
+    """
     def __init__(self, band, band_id=None):
         if band is None:
             self.id = None
@@ -1045,4 +1091,4 @@ class MD_Band(printable):
             self.min = util.testXMLValue(val)
 
             val = band.find(util.nspath_eval('mrc:maxValue/gco:Real', namespaces))
-            self.max = util.testXMLValue(val)
+            self.max = util.testXMLValue(val)   
