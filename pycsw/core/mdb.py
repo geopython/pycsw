@@ -44,7 +44,7 @@ namespaces = {
         "mdq":"http://standards.iso.org/iso/19157/-2/mdq/1.0",
         "mac":"http://standards.iso.org/iso/19115/-3/mac/2.0",
         "gco":"http://standards.iso.org/iso/19115/-3/gco/1.0",
-        "gml":"http://www.opengis.net/gml/3.2",
+        "gml":"http://www.opengis.net/gml",
         "xlink":"http://www.w3.org/1999/xlink",
         "xsi":"http://www.w3.org/2001/XMLSchema-instance"
 }
@@ -1091,4 +1091,4 @@ class MD_Band(printable):
             self.min = util.testXMLValue(val)
 
             val = band.find(util.nspath_eval('mrc:maxValue/gco:Real', namespaces))
-            self.max = util.testXMLValue(val)   
+            self.max = util.testXMLValue(val)
