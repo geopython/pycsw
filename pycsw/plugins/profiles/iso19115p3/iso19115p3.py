@@ -720,6 +720,10 @@ class ISO19115p3(profile.Profile):
     def _write_date(self, dateval, datetypeval):
         """
         Generate date elements
+        
+        :param dateval: date string
+        :param datetypeval: date type code string
+        :returns: date lxml.etree.Element
         """
         date1 = etree.Element(util.nspath_eval('cit:CI_Date', self.namespaces))
         date2 = etree.SubElement(date1, util.nspath_eval('cit:date', self.namespaces))
@@ -737,6 +741,12 @@ class ISO19115p3(profile.Profile):
 # END of class
 
 def get_resource_opname(operations):
+    """
+    Looks for resource opename in a CSV string
+    
+    :param operations: CSV string of operations
+    :returns: operation name
+    """
     for op in operations.split(','):
         if op in ['GetMap', 'GetFeature', 'GetCoverage', 'GetObservation']:
             return op
@@ -745,6 +755,11 @@ def get_resource_opname(operations):
 def write_codelist_element(codelist_element, codelist_value, nsmap):
     """
     Generic routine to write codelist artributes into an element
+    
+    :param codelist_element: codelist element
+    :param codelist_value: codelist values
+    :param nsmap: namespace map, namepace str -> namespace URI
+    :returns: lxml.etree.Element
     """
     # Get tag name without namespace
     namespace, no_ns_tag = codelist_element.split(':')

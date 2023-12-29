@@ -1,16 +1,23 @@
-#!/usr/bin/env python3
 # -*- coding: ISO-8859-15 -*-
 # =============================================================================
 # Copyright (c) 2024 CSIRO Australia
 #
-# Authors : Vincent Fazio
+# Author : Vincent Fazio
 #
 # Contact email: vincent.fazio@csiro.au
 # =============================================================================
 
 # flake8: noqa: E501
 
-""" ISO 19115 Part 3 XML metadata parser """
+""" ISO 19115 Part 3 XML metadata parser 
+
+    Parsing is initiated by passing in etree root Element to the 'MD_Metadata' constructor:
+
+    from owslib.etree import etree
+    
+    exml = etree.fromstring(xml_bytes)
+    mdb = MD_Metadata(exml)
+"""
 
 from owslib.etree import etree
 from owslib import util
@@ -50,7 +57,7 @@ namespaces = {
 }
 
 class printable(object):
-    """ Roughly pretty print classes
+    """ A super class used to roughly pretty print class members
 
         Usage:
 
@@ -288,7 +295,7 @@ class CI_Responsibility(printable):
             val = md.find(util.nspath_eval('cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:positionName/gco:CharacterString', namespaces))
             self.position = util.testXMLValue(val)
 
-            # Telephone 
+            # Telephone
             val_list = md.xpath('cit:party/cit:CI_Organisation/cit:contactInfo/cit:CI_Contact/cit:phone/cit:CI_Telephone[cit:numberType/cit:CI_TelephoneTypeCode/@codeListValue="voice"]/cit:number/gco:CharacterString', namespaces=namespaces)
             if len(val_list) > 0:
                 self.phone = util.testXMLValue(val_list[0])
@@ -720,7 +727,7 @@ class DQ_DataQuality(printable):
             self.conformancetitle = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
-                'mdq:evaluationProcedure/cit:CI_Citation/cit:date', namespaces)) 
+                'mdq:evaluationProcedure/cit:CI_Citation/cit:date', namespaces))
             self.conformancedate = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
@@ -986,10 +993,10 @@ def _testCodeListValue(elpath):
         val = util.testXMLValue(elpath.attrib.get('codeListValue'), True)
         if val is not None:
             return val
-        else:  # see if there is element text
-            return util.testXMLValue(elpath)
-    else:
-        return None
+        # see if there is element text
+        return util.testXMLValue(elpath)
+
+    return None
 
 
 class MD_FeatureCatalogueDescription(printable):
@@ -1092,3 +1099,4 @@ class MD_Band(printable):
 
             val = band.find(util.nspath_eval('mrc:maxValue/gco:Real', namespaces))
             self.max = util.testXMLValue(val)
+            
