@@ -1,6 +1,6 @@
 # -*- coding: ISO-8859-15 -*-
 # =============================================================================
-# Copyright (c) 2024 CSIRO Australia
+# Copyright (c) 2023 CSIRO Australia
 #
 # Author : Vincent Fazio
 #
@@ -23,7 +23,7 @@ from owslib.etree import etree
 from owslib import util
 
 
-# ISO 19115 Part 3 XML namspaces
+# ISO 19115 Part 3 XML namespaces
 namespaces = {
         "mdb":"http://standards.iso.org/iso/19115/-3/mdb/2.0",
         "cat":"http://standards.iso.org/iso/19115/-3/cat/1.0",
@@ -65,7 +65,13 @@ class printable(object):
         print(mdb.format_me())
 
     """
+
     def format_me(self, idx=0):
+        """ Returns a formatted string version of class
+
+        :param idx: optional indentation index, internal use only, used for 'printable' member classes
+        :returns: string version of class and members
+        """
         repr_str = "\n"
         for d in dir(self):
             if not d.startswith("__") and not callable(getattr(self,d)):
@@ -88,7 +94,11 @@ class MD_Metadata(printable):
     """ Process mdb:MD_Metadata
     """
     def __init__(self, md=None):
+        """
+        Parses XML root tree
 
+        :param md: etree.Element root
+        """
         if md is None:
             self.md = None
             self.xml = None
@@ -203,7 +213,10 @@ class MD_Metadata(printable):
 
 
     def get_all_contacts(self):
-        """ Get all contacts in document"""
+        """ Get all contacts in document
+
+        :returns: list of contacts
+        """
         contacts = []
         for ii in self.identification:
             for iic in ii.contact:
@@ -217,7 +230,10 @@ class MD_Metadata(printable):
         return list(filter(None, contacts))
 
     def get_default_locale(self):
-        """ Get default lan:PT_Locale based on lan:language """
+        """ Get default lan:PT_Locale based on lan:language
+
+        :returns: default PT_Locale instance or None if not found
+        """
 
         for loc in self.locales:
             if loc.languagecode == self.language:
@@ -230,6 +246,11 @@ class PT_Locale(printable):
     """
 
     def __init__(self, md=None):
+        """
+        Parses PT_Locale XML subtree
+
+        :param md: PT_Locale etree.Element
+        """
         if md is None:
             self.id = None
             self.languagecode = None
@@ -248,6 +269,11 @@ class CI_Date(printable):
     """ Process CI_Date
     """
     def __init__(self, md=None):
+        """
+        Parses CI_Date XML subtree
+
+        :param md: CI_Date etree.Element
+        """
         if md is None:
             self.date = None
             self.type = None
@@ -267,10 +293,14 @@ class CI_Date(printable):
 
 
 class CI_Responsibility(printable):
-    """ Process cit:CI_Responsibility
+    """ Process CI_Responsibility
     """
     def __init__(self, md=None):
+        """
+        Parses CI_Responsibility XML subtree
 
+        :param md: CI_Responsibility etree.Element
+        """
         if md is None:
             self.name = None
             self.organization = None
@@ -348,6 +378,11 @@ class Keyword(printable):
     """ Class for complex keywords, with labels and URLs
     """
     def __init__(self, kw=None):
+        """
+        Parses keyword Element
+
+        :param kw: keyword 'gco:CharacterString' or 'gcx:Anchor' etree.Element
+        """
         if kw is None:
             self.name = None
             self.url = None
@@ -361,6 +396,11 @@ class MD_Keywords(printable):
     Class for the metadata MD_Keywords element
     """
     def __init__(self, md=None):
+        """
+        Parses keyword Element
+
+        :param md: keyword etree.Element
+        """
         if md is None:
             self.keywords = []
             self.type = None
@@ -404,6 +444,13 @@ class MD_DataIdentification(printable):
     """ Process MD_DataIdentification
     """
     def __init__(self, md=None, identtype=None):
+        """
+        Parses MD_DataIdentification XML subtree
+
+        :param md: MD_DataIdentification etree.Element
+        :param identtype: identitication type e.g. 'dataset' if MD_DataIdentification,
+                                                   'service' if MD_ServiceIdentification
+        """
         self.aggregationinfo = None
         if md is None:
             self.identtype = None
@@ -635,8 +682,8 @@ class MD_DataIdentification(printable):
                                 e.find(util.nspath_eval('gex:EX_BoundingPolygon', namespaces)) is not None:
                             val = e
                             break
-                    vertelem = extent.find(util.nspath_eval('gex:EX_Extent/gex:verticalElement', namespaces))
-                    self.extent = EX_Extent(val, vertelem)
+                    vert_elem = extent.find(util.nspath_eval('gex:EX_Extent/gex:verticalElement', namespaces))
+                    self.extent = EX_Extent(val, vert_elem)
                     self.bbox = self.extent.boundingBox  # for backwards compatibility
 
                 # Parse temporal extent begin
@@ -658,6 +705,11 @@ class MD_Distributor(printable):
     """ Process MD_Distributor
     """
     def __init__(self, md=None):
+        """
+        Parses MD_Distributor XML subtree
+
+        :param md: MD_Distributor etree.Element
+        """
         if md is None:
             self.contact = None
             self.online = []
@@ -680,6 +732,11 @@ class MD_Distribution(printable):
     """ Process MD_Distribution
     """
     def __init__(self, md=None):
+        """
+        Parses MD_Distribution XML subtree
+
+        :param md: MD_Distribution etree.Element
+        """
         if md is None:
             self.format = None
             self.version = None
@@ -711,7 +768,11 @@ class DQ_DataQuality(printable):
     """ Process DQ_DataQuality
     """
     def __init__(self, md=None):
+        """
+        Parses DQ_DataQuality XML subtree
 
+        :param md: DQ_DataQuality etree.Element
+        """
         if md is None:
             self.conformancetitle = []
             self.conformancedate = []
@@ -761,11 +822,15 @@ class DQ_DataQuality(printable):
                     self.specificationdate.append(val)
 
 
-class SV_ServiceIdentification(MD_DataIdentification):
+class SV_ServiceIdentification(MD_DataIdentification, printable):
     """ Process SV_ServiceIdentification
     """
     def __init__(self, md=None):
+        """
+        Parses SV_ServiceIdentification XML subtree
 
+        :param md: SV_ServiceIdentification etree.Element
+        """
         super().__init__(md, 'service')
 
         if md is None:
@@ -822,6 +887,11 @@ class CI_OnlineResource(printable):
     """ Process CI_OnlineResource
     """
     def __init__(self, md=None):
+        """
+        Parses CI_OnlineResource XML subtree
+
+        :param md: CI_OnlineResource etree.Element
+        """
         if md is None:
             self.url = None
             self.protocol = None
@@ -849,6 +919,11 @@ class EX_GeographicBoundingBox(printable):
     """ Process gex:EX_GeographicBoundingBox
     """
     def __init__(self, md=None):
+        """
+        Parses EX_GeographicBoundingBox XML subtree
+
+        :param md: EX_GeographicBoundingBox etree.Element
+        """
         if md is None:
             self.minx = None
             self.maxx = None
@@ -869,6 +944,11 @@ class EX_Polygon(printable):
     """ Process gml32:Polygon
     """
     def __init__(self, md=None):
+        """
+        Parses EX_Polygon XML subtree
+
+        :param md: EX_Polygon etree.Element
+        """
         if md is None:
             self.exterior_ring = None
             self.interior_rings = []
@@ -884,6 +964,11 @@ class EX_Polygon(printable):
                 self.interior_rings.append(self._coordinates_for_ring(linear_ring))
 
     def _coordinates_for_ring(self, linear_ring):
+        """ Get coordinates for gml coordinate ring
+
+        :param linear_ring: etree.Element position list
+        :returns: coordinate list of float tuples
+        """
         coordinates = []
         positions = linear_ring.findall(util.nspath_eval('gml32:pos', namespaces))
         for pos in positions:
@@ -893,10 +978,15 @@ class EX_Polygon(printable):
         return coordinates
 
 
-class EX_GeographicBoundingPolygon(printable):
-    """ Process EX_GeographicBoundingPolygon
+class EX_BoundingPolygon(printable):
+    """ Process EX_BoundingPolygon
     """
     def __init__(self, md=None):
+        """
+        Parses EX_BoundingPolygon XML subtree
+
+        :param md: EX_BoundingPolygon etree.Element
+        """
         if md is None:
             self.is_extent = None
             self.polygons = []
@@ -914,8 +1004,13 @@ class EX_GeographicBoundingPolygon(printable):
 class EX_Extent(printable):
     """ Process EX_Extent
     """
-    def __init__(self, md=None, vertelem=None):
+    def __init__(self, md=None, vert_elem=None):
+        """
+        Parses EX_Extent XML subtree
 
+        :param md: EX_Extent etree.Element
+        :param vert_elem: vertical extent 'gex:verticalElement' etree.Element
+        """
         self.boundingBox = None
         self.boundingPolygon = None
         self.description_code = None
@@ -929,7 +1024,7 @@ class EX_Extent(printable):
 
             polygonElement = md.find(util.nspath_eval('gex:EX_BoundingPolygon', namespaces))
             if polygonElement is not None:
-                self.boundingPolygon = EX_GeographicBoundingPolygon(polygonElement)
+                self.boundingPolygon = EX_BoundingPolygon(polygonElement)
 
             code = md.find(util.nspath_eval(
                 'gex:EX_GeographicDescription/gex:geographicIdentifier/mcc:MD_Identifier/mcc:code/gco:CharacterString',
@@ -937,15 +1032,15 @@ class EX_Extent(printable):
             self.description_code = util.testXMLValue(code)
 
         # Parse vertical extent
-        if vertelem is not None:
+        if vert_elem is not None:
             # Get vertical extent max
-            vertext_max = vertelem.find(util.nspath_eval(
+            vertext_max = vert_elem.find(util.nspath_eval(
                 'gex:EX_VerticalExtent/gex:maximumValue/gco:Real',
                 namespaces))
             self.vertExtMax = util.testXMLValue(vertext_max)
 
             # Get vertical extent min
-            vertext_min = vertelem.find(util.nspath_eval(
+            vertext_min = vert_elem.find(util.nspath_eval(
                 'gex:EX_VerticalExtent/gex:minimumValue/gco:Real',
                 namespaces))
             self.vertExtMin = util.testXMLValue(vertext_min)
@@ -955,6 +1050,11 @@ class MD_ReferenceSystem(printable):
     """ Process MD_ReferenceSystem
     """
     def __init__(self, md=None):
+        """
+        Parses MD_ReferenceSystem XML subtree
+
+        :param md: MD_ReferenceSystem etree.Element
+        """
         if md is None:
             self.code = None
             self.codeSpace = None
@@ -988,7 +1088,11 @@ class MD_ReferenceSystem(printable):
 
 
 def _testCodeListValue(elpath):
-    """ Get gco:CodeListValue_Type attribute, else get text content """
+    """ Get gco:CodeListValue_Type attribute, else get text content
+
+    :param elpath: Element path
+    :returns: 'codeListValue' attribute of Element or text value or None if elpath is None
+    """
     if elpath is not None:  # try to get @codeListValue
         val = util.testXMLValue(elpath.attrib.get('codeListValue'), True)
         if val is not None:
@@ -1003,6 +1107,11 @@ class MD_FeatureCatalogueDescription(printable):
     """Process mrc:MD_FeatureCatalogueDescription
     """
     def __init__(self, fcd=None):
+        """
+        Parses MD_FeatureCatalogueDescription XML subtree
+
+        :param fcd: MD_FeatureCatalogueDescription etree.Element
+        """
         if fcd is None:
             self.xml = None
             self.compliancecode = None
@@ -1053,6 +1162,11 @@ class MD_ImageDescription(printable):
     """Process mrc:MD_ImageDescription
     """
     def __init__(self, img_desc=None):
+        """
+        Parses MD_ImageDescription XML subtree
+
+        :param img_desc: MD_ImageDescription etree.Element
+        """
         self.type = 'image'
         self.bands = []
 
@@ -1083,6 +1197,12 @@ class MD_Band(printable):
     """Process mrc:MD_Band
     """
     def __init__(self, band, band_id=None):
+        """
+        Parses MD_Band XML subtree
+
+        :param band: MD_Band etree.Element
+        :param band_id: optional id attribute
+        """
         if band is None:
             self.id = None
             self.units = None
@@ -1099,4 +1219,3 @@ class MD_Band(printable):
 
             val = band.find(util.nspath_eval('mrc:maxValue/gco:Real', namespaces))
             self.max = util.testXMLValue(val)
-            
