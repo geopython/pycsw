@@ -551,7 +551,7 @@ class ISO19115p3(profile.Profile):
             val2 = util.getqattr(result, queryables['mdb:ServiceTypeVersion']['dbcol'])
             if val is not None:
                 tmp = etree.SubElement(resident, util.nspath_eval('srv:serviceType', self.namespaces))
-                etree.SubElement(tmp, util.nspath_eval('gco:GenericName', self.namespaces)).text = val
+                etree.SubElement(tmp, util.nspath_eval('gco:LocalName', self.namespaces)).text = val
                 tmp = etree.SubElement(resident, util.nspath_eval('srv:serviceTypeVersion', self.namespaces))
                 etree.SubElement(tmp, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val2
 

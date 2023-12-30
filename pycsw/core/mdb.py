@@ -841,14 +841,15 @@ class SV_ServiceIdentification(MD_DataIdentification, printable):
             self.operations = []
             self.operateson = []
         else:
-            val = md.find(util.nspath_eval('srv:serviceType/gco:LocalName', namespaces))
-            self.type = util.testXMLValue(val)
+            val = md.xpath('srv:serviceType/*[self::gco:LocalName or self::gco:ScopedName]', namespaces=namespaces)
+            if len(val) > 0:
+                self.type = util.testXMLValue(val[0])
 
             val = md.find(util.nspath_eval('srv:serviceTypeVersion/gco:CharacterString', namespaces))
             self.version = util.testXMLValue(val)
 
             val = md.find(util.nspath_eval(
-                'mrd:MD_StandardOrderProcess/mrd:fees/gco:CharacterString', namespaces))
+                'srv:accessProperties/mrd:MD_StandardOrderProcess/mrd:fees/gco:CharacterString', namespaces))
             self.fees = util.testXMLValue(val)
 
             self.couplingtype = _testCodeListValue(md.find(util.nspath_eval(

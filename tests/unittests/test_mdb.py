@@ -2,7 +2,7 @@
 #
 # Author: Vincent Fazio <vincent.fazio@csiro.au>
 #
-# Copyright (c) 2024 CSIRO Australia
+# Copyright (c) 2023 CSIRO Australia
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -35,15 +35,15 @@ import pytest
 
 from owslib.etree import etree
 
-from pycsw.core.mdb import MD_Metadata
+from pycsw.core.mdb import MD_Metadata, SV_ServiceIdentification
 
 pytestmark = pytest.mark.unit
 
 @pytest.fixture
 def bmd():
-    """ Create an MD_Metadata instance from Belgian ISO 19115-3 XML sample
+    """ Create an MD_Metadata instance from Belgian ISO 19115 Part 3 XML sample
     """
-    belgian_sample = str(Path(__file__).parent.parent / "functionaltests" / "suites" / "mdb" / "data" / "SAMPLE_ISO1915-3.xml")
+    belgian_sample = str(Path(__file__).parent.parent / "functionaltests" / "suites" / "mdb" / "data" / "metawal.wallonie.be-catchments.xml")
     with open(belgian_sample, "r") as f_d:
         xml_list = f_d.readlines()
         xml_str = ''.join(xml_list)
@@ -183,7 +183,10 @@ def test_identification_keywords(bmd):
 
 @pytest.fixture
 def amd():
-    aust_sample = str(Path(__file__).parent.parent / "functionaltests" / "suites" / "mdb" / "data" / "auscope-iso19115-3.xml")
+    """
+    Create an MD_Metadata instance from AuScope 3D Models ISO 19115 Part 3 XML sample
+    """
+    aust_sample = str(Path(__file__).parent.parent / "functionaltests" / "suites" / "mdb" / "data" / "auscope-3d-model.xml")
     with open(aust_sample, "r") as f_d:
         xml_list = f_d.readlines()
         xml_str = ''.join(xml_list)
@@ -193,8 +196,8 @@ def amd():
         return MD_Metadata(exml)
     return None
 
-def test_aust(amd):
-    """ Tests elements that are mostly not present in Belgian sample
+def test_aus(amd):
+    """ Tests elements that are mostly not present in Belgian catchments sample
     """
     assert amd is not None
     ident = amd.identification[0]
@@ -203,4 +206,37 @@ def test_aust(amd):
     assert ident.securityconstraints[0] == 'unclassified'
     assert ident.funder[0].organization == 'AuScope'
     assert ident.uricode[0] == 'https://geology.data.vic.gov.au/searchAssistant/document.php?q=parent_id:107513'
-    
+
+
+@pytest.fixture
+def smd():
+    """
+    Create an MD_Metadata instance from Belgian health & safety ISO 19115 Part 3 XML services sample
+    """
+    belgian_srv_sample = str(Path(__file__).parent.parent / "functionaltests" / "suites" / "mdb" / "data" / "metawal.wallonie.be-srv.xml")
+    with open(belgian_srv_sample, "r") as f_d:
+        xml_list = f_d.readlines()
+        xml_str = ''.join(xml_list)
+        xml_bytes = bytes(xml_str, encoding='utf-8')
+        exml = etree.fromstring(xml_bytes)
+        assert exml is not None
+        return MD_Metadata(exml)
+    return None
+
+def test_service(smd):
+    """ Tests Belgian health & safety XML service record sample
+    """
+    assert smd is not None
+    srv_ident = smd.identification[0]
+    assert(isinstance(srv_ident, SV_ServiceIdentification))
+    assert(srv_ident.type == 'view')
+    assert(srv_ident.couplingtype == 'tight')
+    assert(len(srv_ident.operations) == 0)
+    assert(len(srv_ident.operateson) == 11)
+    rec_2 = srv_ident.operateson[1]
+    assert(rec_2['uuidref'] == '91f9ebb0-9bea-48b4-8572-da17450913b6')
+    assert(rec_2['href'] == 'https://metawal.wallonie.be/geonetwork/srv/api/records/91f9ebb0-9bea-48b4-8572-da17450913b6')
+    rec_9 = srv_ident.operateson[8]
+    assert(rec_9['uuidref'] == '401a1ac7-7222-4cf8-a7bb-f68090614056')
+    assert(rec_9['title'] == '[Brouillon] INSPIRE - Bruit des aéroports wallons (Charleroi et Liège) - Plan d’exposition au bruit en Wallonie (BE)')
+    assert(rec_9['href'] == 'https://metawal.wallonie.be/geonetwork/srv/api/records/401a1ac7-7222-4cf8-a7bb-f68090614056')
