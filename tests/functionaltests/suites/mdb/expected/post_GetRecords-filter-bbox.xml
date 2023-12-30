@@ -7,103 +7,6 @@
       <mdb:metadataIdentifier>
         <mcc:MD_Identifier>
           <mcc:code>
-            <gco:CharacterString>09a7c1d4c97ccdd7e34306deb91320ab95d51bb8</gco:CharacterString>
-          </mcc:code>
-        </mcc:MD_Identifier>
-      </mdb:metadataIdentifier>
-      <mdb:metadataScope>
-        <mdb:MD_MetadataScope>
-          <mdb:resourceScope>
-            <mcc:MD_ScopeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</mcc:MD_ScopeCode>
-          </mdb:resourceScope>
-        </mdb:MD_MetadataScope>
-      </mdb:metadataScope>
-      <mdb:identificationInfo>
-        <mri:MD_DataIdentification id="09a7c1d4c97ccdd7e34306deb91320ab95d51bb8">
-          <mri:citation>
-            <cit:CI_Citation>
-              <cit:title>
-                <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
-              </cit:title>
-            </cit:CI_Citation>
-          </mri:citation>
-          <mri:extent>
-            <gex:EX_Extent>
-              <gex:geographicElement>
-                <gex:EX_GeographicBoundingBox>
-                  <gex:westBoundLongitude>
-                    <gco:Decimal>106.57</gco:Decimal>
-                  </gex:westBoundLongitude>
-                  <gex:eastBoundLongitude>
-                    <gco:Decimal>171.88</gco:Decimal>
-                  </gex:eastBoundLongitude>
-                  <gex:southBoundLatitude>
-                    <gco:Decimal>-49.86</gco:Decimal>
-                  </gex:southBoundLatitude>
-                  <gex:northBoundLatitude>
-                    <gco:Decimal>-3.63</gco:Decimal>
-                  </gex:northBoundLatitude>
-                </gex:EX_GeographicBoundingBox>
-              </gex:geographicElement>
-            </gex:EX_Extent>
-          </mri:extent>
-        </mri:MD_DataIdentification>
-      </mdb:identificationInfo>
-      <mdb:dateInfo>
-        <cit:CI_Date>
-          <cit:date>
-            <gco:DateTime>2018-02-08T11:04:47</gco:DateTime>
-          </cit:date>
-          <cit:dateType>
-            <cit:CI_DateTypeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_DateTypeCode" codeListValue="revision">revision</cit:CI_DateTypeCode>
-          </cit:dateType>
-        </cit:CI_Date>
-      </mdb:dateInfo>
-      <mdb:distributionInfo>
-        <mrd:MD_Distribution>
-          <mrd:transferOptions>
-            <mrd:MD_DigitalTransferOptions>
-              <mrd:onLine>
-                <cit:CI_OnlineResource>
-                  <cit:linkage>
-                    <gco:CharacterString>https://nvclwebservices.csiro.au/geoserver/wms?SERVICE=WMS&amp;</gco:CharacterString>
-                  </cit:linkage>
-                  <cit:protocol>
-                    <gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString>
-                  </cit:protocol>
-                  <cit:name>
-                    <gco:CharacterString>gml:ProvinceFullExtent</gco:CharacterString>
-                  </cit:name>
-                  <cit:description>
-                    <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
-                  </cit:description>
-                </cit:CI_OnlineResource>
-              </mrd:onLine>
-              <mrd:onLine>
-                <cit:CI_OnlineResource>
-                  <cit:linkage>
-                    <gco:CharacterString>https://nvclwebservices.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=gml%3AProvinceFullExtent</gco:CharacterString>
-                  </cit:linkage>
-                  <cit:protocol>
-                    <gco:CharacterString>image/png</gco:CharacterString>
-                  </cit:protocol>
-                  <cit:name>
-                    <gco:CharacterString>Default Polygon (LegendURL)</gco:CharacterString>
-                  </cit:name>
-                  <cit:description>
-                    <gco:CharacterString/>
-                  </cit:description>
-                </cit:CI_OnlineResource>
-              </mrd:onLine>
-            </mrd:MD_DigitalTransferOptions>
-          </mrd:transferOptions>
-        </mrd:MD_Distribution>
-      </mdb:distributionInfo>
-    </mdb:MD_Metadata>
-    <mdb:MD_Metadata xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 http://schemas.opengis.net/csw/2.0.2/csw.xsd">
-      <mdb:metadataIdentifier>
-        <mcc:MD_Identifier>
-          <mcc:code>
             <gco:CharacterString>5ebc3cb7-a3b5-4760-a8ff-851d5d5beb32</gco:CharacterString>
           </mcc:code>
         </mcc:MD_Identifier>
@@ -196,6 +99,103 @@
                   </cit:protocol>
                   <cit:name>
                     <gco:CharacterString>3D Geological Model</gco:CharacterString>
+                  </cit:name>
+                  <cit:description>
+                    <gco:CharacterString/>
+                  </cit:description>
+                </cit:CI_OnlineResource>
+              </mrd:onLine>
+            </mrd:MD_DigitalTransferOptions>
+          </mrd:transferOptions>
+        </mrd:MD_Distribution>
+      </mdb:distributionInfo>
+    </mdb:MD_Metadata>
+    <mdb:MD_Metadata xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 http://schemas.opengis.net/csw/2.0.2/csw.xsd">
+      <mdb:metadataIdentifier>
+        <mcc:MD_Identifier>
+          <mcc:code>
+            <gco:CharacterString>09a7c1d4c97ccdd7e34306deb91320ab95d51bb8</gco:CharacterString>
+          </mcc:code>
+        </mcc:MD_Identifier>
+      </mdb:metadataIdentifier>
+      <mdb:metadataScope>
+        <mdb:MD_MetadataScope>
+          <mdb:resourceScope>
+            <mcc:MD_ScopeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</mcc:MD_ScopeCode>
+          </mdb:resourceScope>
+        </mdb:MD_MetadataScope>
+      </mdb:metadataScope>
+      <mdb:identificationInfo>
+        <mri:MD_DataIdentification id="09a7c1d4c97ccdd7e34306deb91320ab95d51bb8">
+          <mri:citation>
+            <cit:CI_Citation>
+              <cit:title>
+                <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
+              </cit:title>
+            </cit:CI_Citation>
+          </mri:citation>
+          <mri:extent>
+            <gex:EX_Extent>
+              <gex:geographicElement>
+                <gex:EX_GeographicBoundingBox>
+                  <gex:westBoundLongitude>
+                    <gco:Decimal>106.57</gco:Decimal>
+                  </gex:westBoundLongitude>
+                  <gex:eastBoundLongitude>
+                    <gco:Decimal>171.88</gco:Decimal>
+                  </gex:eastBoundLongitude>
+                  <gex:southBoundLatitude>
+                    <gco:Decimal>-49.86</gco:Decimal>
+                  </gex:southBoundLatitude>
+                  <gex:northBoundLatitude>
+                    <gco:Decimal>-3.63</gco:Decimal>
+                  </gex:northBoundLatitude>
+                </gex:EX_GeographicBoundingBox>
+              </gex:geographicElement>
+            </gex:EX_Extent>
+          </mri:extent>
+        </mri:MD_DataIdentification>
+      </mdb:identificationInfo>
+      <mdb:dateInfo>
+        <cit:CI_Date>
+          <cit:date>
+            <gco:DateTime>2018-02-08T11:04:47</gco:DateTime>
+          </cit:date>
+          <cit:dateType>
+            <cit:CI_DateTypeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_DateTypeCode" codeListValue="revision">revision</cit:CI_DateTypeCode>
+          </cit:dateType>
+        </cit:CI_Date>
+      </mdb:dateInfo>
+      <mdb:distributionInfo>
+        <mrd:MD_Distribution>
+          <mrd:transferOptions>
+            <mrd:MD_DigitalTransferOptions>
+              <mrd:onLine>
+                <cit:CI_OnlineResource>
+                  <cit:linkage>
+                    <gco:CharacterString>https://nvclwebservices.csiro.au/geoserver/wms?SERVICE=WMS&amp;</gco:CharacterString>
+                  </cit:linkage>
+                  <cit:protocol>
+                    <gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString>
+                  </cit:protocol>
+                  <cit:name>
+                    <gco:CharacterString>gml:ProvinceFullExtent</gco:CharacterString>
+                  </cit:name>
+                  <cit:description>
+                    <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
+                  </cit:description>
+                </cit:CI_OnlineResource>
+              </mrd:onLine>
+              <mrd:onLine>
+                <cit:CI_OnlineResource>
+                  <cit:linkage>
+                    <gco:CharacterString>https://nvclwebservices.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=gml%3AProvinceFullExtent</gco:CharacterString>
+                  </cit:linkage>
+                  <cit:protocol>
+                    <gco:CharacterString>image/png</gco:CharacterString>
+                  </cit:protocol>
+                  <cit:name>
+                    <gco:CharacterString>Default Polygon (LegendURL)</gco:CharacterString>
                   </cit:name>
                   <cit:description>
                     <gco:CharacterString/>
