@@ -3,7 +3,7 @@
 #
 # Author: Vincent Fazio <vincent.fazio@csiro.au>
 #
-# Copyright (c) 2024 CSIRO Australia
+# Copyright (c) 2023 CSIRO Australia
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -38,8 +38,14 @@ CODELIST = 'http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.
 
 
 class ISO19115p3(profile.Profile):
-    ''' ISO19115p3 class represents the profile for input and output of ISO 19115 Part 3 XML '''
+    """ ISO19115p3 class represents the profile for input and output of ISO 19115 Part 3 XML
+    """
     def __init__(self, model, namespaces, context):
+        """
+        :param model: model
+        :param namespaces: namespaces
+        :param context: context
+        """
         self.context = context
 
         self.namespaces = {
@@ -81,7 +87,7 @@ class ISO19115p3(profile.Profile):
             'mdb:MD_Metadata': {
                 'outputschema': 'http://standards.iso.org/iso/19115/-3/mdb/2.0',
                 'queryables': {
-                    'SupportedISO19115-3Queryables': {
+                    'SupportedISO19115p3Queryables': {
                         'mdb:Subject': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:topicCategory/mri:MD_TopicCategoryCode',
                                         'dbcol': self.context.md_core_model['mappings']['pycsw:Keywords']},
                         'mdb:Title': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:title/gco:CharacterString',
@@ -98,7 +104,7 @@ class ISO19115p3(profile.Profile):
                                          'dbcol': self.context.md_core_model['mappings']['pycsw:Modified']},
                         'mdb:Type': {'xpath': 'mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/mcc:MD_ScopeCode/@codeListValue',
                                      'dbcol': self.context.md_core_model['mappings']['pycsw:Type']},
-                        # Copied from 'apiso', not sure if works
+                        # NB: Placeholder only
                         'mdb:BoundingBox': {'xpath': 'mdb:BoundingBox', 'dbcol': self.context.md_core_model['mappings']['pycsw:BoundingBox']},
                         'mdb:VertExtentMin': {'xpath': 'gex:EX_VerticalExtent/gex:minimumValue/gco:Real', 'dbcol': self.context.md_core_model['mappings']['pycsw:VertExtentMin']},
                         'mdb:VertExtentMax': {'xpath': 'gex:EX_VerticalExtent/gex:maximumValue/gco:Real', 'dbcol': self.context.md_core_model['mappings']['pycsw:VertExtentMax']},
@@ -160,7 +166,7 @@ class ISO19115p3(profile.Profile):
                         'mdb:OperatesOnName': {'xpath': 'mdb:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource/srv:SV_CoupledResource/srv:operationName/gco:CharacterString',
                                                'dbcol': self.context.md_core_model['mappings']['pycsw:OperatesOnName']},
                     },
-                    'AdditionalISO19115-3Queryables': {
+                    'AdditionalISO19115p3Queryables': {
                         'mdb:Degree': {'xpath': 'mdb:dataQualityInfo/mdq:DQ_DataQuality/mdq:report/mdq:DQ_DomainConsistency/mdq:result/mdq:DQ_ConformanceResult/mdq:pass/gco:Boolean',
                                        'dbcol': self.context.md_core_model['mappings']['pycsw:Degree']},
                         'mdb:AccessConstraints': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:resourceConstraints/mco:MD_LegalConstraints/mco:accessConstraints/mco:MD_RestrictionCode',
@@ -241,7 +247,10 @@ class ISO19115p3(profile.Profile):
             repository=self.repository['mdb:MD_Metadata'])
 
     def extend_core(self, model, namespaces, config):
-        ''' Extend core configuration '''
+        """ Extend core configuration
+
+        :param model:
+        """
 
         # update harvest resource types with WMS, since WMS is not a typename,
         if 'Harvest' in model['operations']:
@@ -253,14 +262,20 @@ class ISO19115p3(profile.Profile):
         self.url = config.get('server', 'url')
 
     def check_parameters(self, kvp):
-        '''Check for Language parameter in GetCapabilities request'''
+        """ Check for Language parameter in GetCapabilities request
+            Kept for backwards compatibility
+        """
         return None
 
     def get_extendedcapabilities(self):
+        """ Get extended capabilities
+            Kept for backwards compatibility
+        """
         return None
 
     def get_schemacomponents(self):
-        ''' Return schema components as lxml.etree.Element list '''
+        """ Return schema components as lxml.etree.Element list
+        """
 
         node1 = etree.Element(
         util.nspath_eval('csw:SchemaComponent', self.context.namespaces),
@@ -293,11 +308,20 @@ class ISO19115p3(profile.Profile):
         return [node1, node2]
 
     def check_getdomain(self, kvp):
-        '''Perform extra profile specific checks in the GetDomain request'''
+        """ Perform extra profile specific checks in the GetDomain request
+            Kept for backwards compatibility
+        """
         return None
 
     def write_record(self, result, esn, outputschema, queryables, caps=None):
-        ''' Return csw:SearchResults child as lxml.etree.Element '''
+        """ Return csw:SearchResults child as etree.Element
+
+        :param result: results from repository query (to be written out)
+        :param esn: CSW element set name parameter
+        :param outputschema: CSW outputschema
+        :param queryables: database column mapping for our 'mdb:XXXX'
+        :param caps: optional information object gathered from GetCapabilities response
+        """
         typename = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Typename'])
         is_mdb_anyway = False
 
@@ -514,7 +538,7 @@ class ISO19115p3(profile.Profile):
         if bboxel is not None and mtype != 'service':
             # Add <mri:extent> element etc.
             resident.append(bboxel)
-            
+
         # Service identification
         if mtype == 'service':
             # Service type & service type version
@@ -620,6 +644,10 @@ class ISO19115p3(profile.Profile):
     def _write_contact_phone(self, ci_contact, phone_num_str):
         """
         Write out a telephone number of a contact within an organisation
+
+        :param ci_contact: 'cit:CI_Contact' XML etree.Element
+        :param phone_num_str: phone number string
+        :returns: XML contact phone etree.Element
         """
         phone = build_path(ci_contact, ['cit:phone', 'cit:CI_Telephone'], self.namespaces)
         ph_number = build_path(phone, ['cit:number', 'gco:characterString'], self.namespaces)
@@ -630,6 +658,10 @@ class ISO19115p3(profile.Profile):
     def _write_contact_fax(self, ci_contact, fax_num_str):
         """
         Write out a fax number  of a contact within an organisation
+
+        :param ci_contact: 'cit:CI_Contact' XML etree.Element
+        :param fax_num_str: fax number string
+        :returns: XML contact fax etree.Element
         """
         phone = build_path(ci_contact, ['cit:phone', 'cit:CI_Telephone'], self.namespaces, reuse=False)
         ph_number = build_path(phone, ['cit:number', 'gco:characterString'], self.namespaces)
@@ -640,6 +672,11 @@ class ISO19115p3(profile.Profile):
     def _write_contact_address(self, ci_resp, ci_contact, **contact):
         """
         Write out an address of a contact within an organisation
+
+        :param ci_resp: 'cit:CI_Responsibility' XML etree.Element
+        :param ci_contact: 'cit:CI_Contact' XML etree.Element
+        :param contact: dict of contact details, keys are 'address' 'city' 'region' 'postcode' 'country' 'email'
+        :returns: XML contact address etree.Element
         """
         ci_address = build_path(ci_contact, ['cit:address', 'cit:CI_Address'], self.namespaces)
         if contact.get('address', None) is not None:
@@ -676,7 +713,10 @@ class ISO19115p3(profile.Profile):
 
     def _write_keywords(self, keywords):
         """
-        Generate mri:MD_Keywords construct
+        Generate XML mri:MD_Keywords construct
+
+        :param keywords: keywords CSV string
+        :returns: XML as etree.Element
         """
         md_keywords = etree.Element(util.nspath_eval('mri:MD_Keywords', self.namespaces))
         for kw in keywords.split(','):
@@ -686,7 +726,13 @@ class ISO19115p3(profile.Profile):
 
     def _write_extent(self, bbox, vert_ext_min, vert_extent_max):
         """
-        Generate BBOX and vertical extent
+        Generate XML for a bounding box in 2 dimensions
+        or a bounding box and vertical extent in 3 dimensions
+
+        :param bbox: bounding box in EWKT (Extended Well Known Text) format
+        :param vert_ext_min: vertical extent minimum, pass in None for 2D
+        :param vert_extent_max: vertical extent maximum, pass in None for 2D
+        :returns: XML as etree.Element
         """
         if bbox is not None:
             try:
@@ -719,11 +765,11 @@ class ISO19115p3(profile.Profile):
 
     def _write_date(self, dateval, datetypeval):
         """
-        Generate date elements
-        
+        Generate XML date elements
+
         :param dateval: date string
         :param datetypeval: date type code string
-        :returns: date lxml.etree.Element
+        :returns: date XML etree.Element
         """
         date1 = etree.Element(util.nspath_eval('cit:CI_Date', self.namespaces))
         date2 = etree.SubElement(date1, util.nspath_eval('cit:date', self.namespaces))
@@ -736,14 +782,14 @@ class ISO19115p3(profile.Profile):
         datetype.append(write_codelist_element('cit:CI_DateTypeCode', datetypeval, self.namespaces))
         return date1
 
-
- 
 # END of class
+
+
 
 def get_resource_opname(operations):
     """
     Looks for resource opename in a CSV string
-    
+
     :param operations: CSV string of operations
     :returns: operation name
     """
@@ -755,7 +801,7 @@ def get_resource_opname(operations):
 def write_codelist_element(codelist_element, codelist_value, nsmap):
     """
     Generic routine to write codelist artributes into an element
-    
+
     :param codelist_element: codelist element
     :param codelist_value: codelist values
     :param nsmap: namespace map, namepace str -> namespace URI
@@ -773,11 +819,11 @@ def build_path(node, path_list, nsmap, reuse=True):
     """
     Generic routine to build an etree.Element path
     Set reuse=False if you want to create duplicates
-    
+
     :param node: add elements to this Element
     :param path_list: list of xml tags of new path to create, list of strings
     :param reuse: if False will always create new Elements along this path
-    :return: returns the last Element in the new Element path
+    :return: returns the last etree.Element in the new Element path
     """
     tail = node
     for elem_name in path_list:
