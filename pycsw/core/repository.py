@@ -707,6 +707,7 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
     """Setup database tables and indexes"""
     from sqlalchemy import Column, create_engine, Integer, MetaData, \
         Table, Text, Unicode
+    from sqlalchemy.types import Float
     from sqlalchemy.orm import create_session
 
     LOGGER.info('Creating database %s', database)
@@ -841,6 +842,8 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
         Column('distancevalue', Text, index=True),
         Column('distanceuom', Text, index=True),
         Column('wkt_geometry', Text),
+        Column('vert_extent_min', Float, index=True),
+        Column('vert_extent_max', Float, index=True),
 
         # service
         Column('servicetype', Text, index=True),
