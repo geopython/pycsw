@@ -119,7 +119,7 @@ class StaticContext(object):
                 'pycsw:Metadata': 'metadata',
                 # raw metadata payload type, xml as default for now
                 'pycsw:MetadataType': 'metadata_type',
-                # bag of metadata element and attributes ONLY, no XML tages
+                # bag of metadata element and attributes ONLY, no XML tags
                 'pycsw:AnyText': 'anytext',
                 'pycsw:Language': 'language',
                 'pycsw:Title': 'title',

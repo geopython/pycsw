@@ -1,10 +1,9 @@
-APISO Data
-==========
+MDB Data
+========
 
-This directory provides data used to check conformance against pycsw ISO 11915-3 XML support.
+This directory provides data used to check conformance against pycsw's ISO 19115 Part 3 XML support.
 
 Acknowledged sources:
 
-https://portal.auscope.org.au: FullExtentWMS.xml, auscope-iso19115-3.xml
-https://github.com/geonetwork/core-geonetwork: metadata-ISO19115-3.xml
-https://metawal.wallonie.be/geonetwork/: SAMPLE_ISO1915-3.xml
+https://portal.auscope.org.au/geonetwork: auscope-iso19139-geoprovinces.xml, auscope-3d-model.xml
+https://metawal.wallonie.be/geonetwork/: metawal.wallonie.be-catchments.xml, metawal.wallonie.be-srv.xml

@@ -163,7 +163,7 @@ def _parse_metadata(context, repos, record):
     elif root == '{%s}DIF' % context.namespaces['dif']:  # DIF
         pass  # TODO
     elif root == '{%s}MD_Metadata' % context.namespaces['mdb']:
-        # ISO 19115-3 XML
+        # ISO 19115p3 XML
         return [_parse_iso(context, repos, exml)]
     else:
         raise RuntimeError('Unsupported metadata format')
@@ -1364,7 +1364,7 @@ def _parse_gm03(context, repos, exml):
     return recobj
 
 def _parse_iso(context, repos, exml):
-    """ Parses ISO 19139, ISO 19115-3 """
+    """ Parses ISO 19139, ISO 19115p3 """
 
     from owslib.iso import MD_ImageDescription, MD_Metadata, SV_ServiceIdentification
     from owslib.iso_che import CHE_MD_Metadata
@@ -1427,7 +1427,7 @@ def _parse_iso(context, repos, exml):
         elif len(md_identification.resourcelanguagecode) > 0:
             _set(context, recobj, 'pycsw:ResourceLanguage', md_identification.resourcelanguagecode[0])
 
-        # Geographical bounding box
+        # Geographic bounding box
         if hasattr(md_identification, 'bbox'):
             bbox = md_identification.bbox
         else:
