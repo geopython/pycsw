@@ -534,6 +534,11 @@ class ISO19115p3(profile.Profile):
         bbox = util.getqattr(result, queryables['mdb:BoundingBox']['dbcol'])
         vert_ext_min = util.getqattr(result, queryables['mdb:VertExtentMin']['dbcol'])
         vert_ext_max = util.getqattr(result, queryables['mdb:VertExtentMax']['dbcol'])
+        # Convert float to string
+        if vert_ext_min is not None:
+            vert_ext_min = f"{vert_ext_min}"
+        if vert_ext_max is not None:
+            vert_ext_max = f"{vert_ext_max}"
         bboxel = self._write_extent(bbox, vert_ext_min, vert_ext_max)
         if bboxel is not None and mtype != 'service':
             # Add <mri:extent> element etc.
@@ -724,7 +729,7 @@ class ISO19115p3(profile.Profile):
             etree.SubElement(keyword, util.nspath_eval('gco:CharacterString', self.namespaces)).text = kw
         return md_keywords
 
-    def _write_extent(self, bbox, vert_ext_min, vert_extent_max):
+    def _write_extent(self, bbox, vert_ext_min, vert_ext_max):
         """
         Generate XML for a bounding box in 2 dimensions
         or a bounding box and vertical extent in 3 dimensions

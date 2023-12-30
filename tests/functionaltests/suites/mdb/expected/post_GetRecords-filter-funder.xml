@@ -38,6 +38,16 @@
                   </gex:northBoundLatitude>
                 </gex:EX_GeographicBoundingBox>
               </gex:geographicElement>
+              <gex:verticalElement>
+                <gex:EX_VerticalExtent>
+                  <gex:minimumValue>
+                    <gco:Real>-400.0</gco:Real>
+                  </gex:minimumValue>
+                  <gex:maximumValue>
+                    <gco:Real>300.0</gco:Real>
+                  </gex:maximumValue>
+                </gex:EX_VerticalExtent>
+              </gex:verticalElement>
             </gex:EX_Extent>
           </mri:extent>
         </mri:MD_DataIdentification>
