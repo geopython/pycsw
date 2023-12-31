@@ -54,7 +54,7 @@ Setting up the Database
 
 .. code-block:: bash
 
-  pycsw-admin.py setup_repository --config default.cfg
+  pycsw-admin.py setup-repository --config default.cfg
 
 This will create the necessary tables and values for the repository.
 
