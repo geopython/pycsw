@@ -372,51 +372,51 @@ The construction and integration of the basin model has involved both the interp
               <cit:name>
                 <gco:CharacterString>CSIRO</gco:CharacterString>
               </cit:name>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Peter Warren</gco:CharacterString>
+                  </cit:name>
+                  <cit:positionName>
+                    <gco:CharacterString>Software Engineer</gco:CharacterString>
+                  </cit:positionName>
+                  <cit:contactInfo>
+                    <cit:CI_Contact>
+                      <cit:phone>
+                        <cit:CI_Telephone>
+                          <cit:number>
+                            <gco:characterString>+61 2 9490 8802</gco:characterString>
+                          </cit:number>
+                          <cit:numberType>
+                            <cit:CI_TelephoneTypeCode>voice</cit:CI_TelephoneTypeCode>
+                          </cit:numberType>
+                        </cit:CI_Telephone>
+                      </cit:phone>
+                      <cit:address>
+                        <cit:CI_Address>
+                          <cit:deliveryPoint>
+                            <gco:CharacterString>11 Julius Ave</gco:CharacterString>
+                          </cit:deliveryPoint>
+                          <cit:city>
+                            <gco:CharacterString>North Ryde</gco:CharacterString>
+                          </cit:city>
+                          <cit:administrativeArea>
+                            <gco:CharacterString>CSIRO</gco:CharacterString>
+                          </cit:administrativeArea>
+                          <cit:postalCode>
+                            <gco:CharacterString>2113</gco:CharacterString>
+                          </cit:postalCode>
+                          <cit:country>
+                            <gco:CharacterString>Australia</gco:CharacterString>
+                          </cit:country>
+                        </cit:CI_Address>
+                      </cit:address>
+                    </cit:CI_Contact>
+                  </cit:contactInfo>
+                </cit:CI_Individual>
+              </cit:individual>
             </cit:CI_Organisation>
           </cit:party>
-          <cit:contactInfo>
-            <cit:CI_Contact>
-              <cit:phone>
-                <cit:CI_Telephone>
-                  <cit:number>
-                    <gco:characterString>+61 2 9490 8802</gco:characterString>
-                  </cit:number>
-                  <cit:numberType>
-                    <cit:CI_TelephoneTypeCode>voice</cit:CI_TelephoneTypeCode>
-                  </cit:numberType>
-                </cit:CI_Telephone>
-              </cit:phone>
-              <cit:phone>
-                <cit:CI_Telephone>
-                  <cit:number>
-                    <gco:characterString/>
-                  </cit:number>
-                  <cit:numberType>
-                    <cit:CI_TelephoneTypeCode>facsimile</cit:CI_TelephoneTypeCode>
-                  </cit:numberType>
-                </cit:CI_Telephone>
-              </cit:phone>
-              <cit:address>
-                <cit:CI_Address>
-                  <cit:deliveryPoint>
-                    <gco:CharacterString>11 Julius Ave</gco:CharacterString>
-                  </cit:deliveryPoint>
-                  <cit:city>
-                    <gco:CharacterString>North Ryde</gco:CharacterString>
-                  </cit:city>
-                  <cit:administrativeArea>
-                    <gco:CharacterString>CSIRO</gco:CharacterString>
-                  </cit:administrativeArea>
-                  <cit:postalCode>
-                    <gco:CharacterString>2113</gco:CharacterString>
-                  </cit:postalCode>
-                  <cit:country>
-                    <gco:CharacterString>Australia</gco:CharacterString>
-                  </cit:country>
-                </cit:CI_Address>
-              </cit:address>
-            </cit:CI_Contact>
-          </cit:contactInfo>
           <cit:role>
             <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
           </cit:role>

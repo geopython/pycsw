@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordByIdResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gml32="http://www.opengis.net/gml/3.2" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <mdb:MD_Metadata xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 http://schemas.opengis.net/csw/2.0.2/csw.xsd">
+    <mdb:metadataIdentifier>
+      <mcc:MD_Identifier>
+        <mcc:code>
+          <gco:CharacterString>09a7c1d4c97ccdd7e34306deb91320ab95d51bb8</gco:CharacterString>
+        </mcc:code>
+      </mcc:MD_Identifier>
+    </mdb:metadataIdentifier>
+    <mdb:defaultLocale>
+      <lan:PT_Locale>
+        <lan:language>
+          <lan:LanguageCode codeListValue="eng" codeList="http://www.loc.gov/standards/iso639-2/"/>
+        </lan:language>
+      </lan:PT_Locale>
+    </mdb:defaultLocale>
+    <mdb:metadataScope>
+      <mdb:MD_MetadataScope>
+        <mdb:resourceScope>
+          <mcc:MD_ScopeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</mcc:MD_ScopeCode>
+        </mdb:resourceScope>
+      </mdb:MD_MetadataScope>
+    </mdb:metadataScope>
+    <mdb:contact>
+      <cit:CI_Responsibility>
+        <cit:party>
+          <cit:CI_Organisation>
+            <cit:name>
+              <gco:CharacterString>CSIRO</gco:CharacterString>
+            </cit:name>
+            <cit:individual>
+              <cit:CI_Individual>
+                <cit:name>
+                  <gco:CharacterString>Peter Warren</gco:CharacterString>
+                </cit:name>
+                <cit:positionName>
+                  <gco:CharacterString>Software Engineer</gco:CharacterString>
+                </cit:positionName>
+                <cit:contactInfo>
+                  <cit:CI_Contact>
+                    <cit:phone>
+                      <cit:CI_Telephone>
+                        <cit:number>
+                          <gco:characterString>+61 2 9490 8802</gco:characterString>
+                        </cit:number>
+                        <cit:numberType>
+                          <cit:CI_TelephoneTypeCode>voice</cit:CI_TelephoneTypeCode>
+                        </cit:numberType>
+                      </cit:CI_Telephone>
+                    </cit:phone>
+                    <cit:address>
+                      <cit:CI_Address>
+                        <cit:deliveryPoint>
+                          <gco:CharacterString>11 Julius Ave</gco:CharacterString>
+                        </cit:deliveryPoint>
+                        <cit:city>
+                          <gco:CharacterString>North Ryde</gco:CharacterString>
+                        </cit:city>
+                        <cit:administrativeArea>
+                          <gco:CharacterString>CSIRO</gco:CharacterString>
+                        </cit:administrativeArea>
+                        <cit:postalCode>
+                          <gco:CharacterString>2113</gco:CharacterString>
+                        </cit:postalCode>
+                        <cit:country>
+                          <gco:CharacterString>Australia</gco:CharacterString>
+                        </cit:country>
+                      </cit:CI_Address>
+                    </cit:address>
+                  </cit:CI_Contact>
+                </cit:contactInfo>
+              </cit:CI_Individual>
+            </cit:individual>
+          </cit:CI_Organisation>
+        </cit:party>
+        <cit:role>
+          <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+        </cit:role>
+      </cit:CI_Responsibility>
+    </mdb:contact>
+    <mdb:dateInfo>
+      <cit:CI_Date>
+        <cit:date>
+          <gco:DateTime>2018-02-08T11:04:47</gco:DateTime>
+        </cit:date>
+        <cit:dateType>
+          <cit:CI_DateTypeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation">creation</cit:CI_DateTypeCode>
+        </cit:dateType>
+      </cit:CI_Date>
+      <cit:CI_Date>
+        <cit:date>
+          <gco:DateTime>2018-02-08T11:04:47</gco:DateTime>
+        </cit:date>
+        <cit:dateType>
+          <cit:CI_DateTypeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_DateTypeCode" codeListValue="revision">revision</cit:CI_DateTypeCode>
+        </cit:dateType>
+      </cit:CI_Date>
+    </mdb:dateInfo>
+    <mdb:metadataStandard>
+      <cit:CI_Citation>
+        <cit:title>
+          <gco:CharacterString>ISO 19115-1:2014</gco:CharacterString>
+        </cit:title>
+      </cit:CI_Citation>
+    </mdb:metadataStandard>
+    <mdb:identificationInfo>
+      <mri:MD_DataIdentification id="09a7c1d4c97ccdd7e34306deb91320ab95d51bb8">
+        <mri:citation>
+          <cit:CI_Citation>
+            <cit:title>
+              <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
+            </cit:title>
+          </cit:CI_Citation>
+        </mri:citation>
+        <mri:abstract>
+          <gco:characterString></gco:characterString>
+        </mri:abstract>
+        <mri:descriptiveKeywords>
+          <mri:MD_Keywords>
+            <mri:keyword>
+              <gco:CharacterString>features</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
+            </mri:keyword>
+          </mri:MD_Keywords>
+        </mri:descriptiveKeywords>
+        <mri:topicCategory>
+          <mri:MD_TopicCategoryCode>geoscientificInformation</mri:MD_TopicCategoryCode>
+        </mri:topicCategory>
+        <mri:extent>
+          <gex:EX_Extent>
+            <gex:geographicElement>
+              <gex:EX_GeographicBoundingBox>
+                <gex:westBoundLongitude>
+                  <gco:Decimal>106.57</gco:Decimal>
+                </gex:westBoundLongitude>
+                <gex:eastBoundLongitude>
+                  <gco:Decimal>171.88</gco:Decimal>
+                </gex:eastBoundLongitude>
+                <gex:southBoundLatitude>
+                  <gco:Decimal>-49.86</gco:Decimal>
+                </gex:southBoundLatitude>
+                <gex:northBoundLatitude>
+                  <gco:Decimal>-3.63</gco:Decimal>
+                </gex:northBoundLatitude>
+              </gex:EX_GeographicBoundingBox>
+            </gex:geographicElement>
+          </gex:EX_Extent>
+        </mri:extent>
+      </mri:MD_DataIdentification>
+    </mdb:identificationInfo>
+    <mdb:distributionInfo>
+      <mrd:MD_Distribution>
+        <mrd:transferOptions>
+          <mrd:MD_DigitalTransferOptions>
+            <mrd:onLine>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <gco:CharacterString>https://nvclwebservices.csiro.au/geoserver/wms?SERVICE=WMS&amp;</gco:CharacterString>
+                </cit:linkage>
+                <cit:protocol>
+                  <gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString>
+                </cit:protocol>
+                <cit:name>
+                  <gco:CharacterString>gml:ProvinceFullExtent</gco:CharacterString>
+                </cit:name>
+                <cit:description>
+                  <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
+                </cit:description>
+              </cit:CI_OnlineResource>
+            </mrd:onLine>
+            <mrd:onLine>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <gco:CharacterString>https://nvclwebservices.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=gml%3AProvinceFullExtent</gco:CharacterString>
+                </cit:linkage>
+                <cit:protocol>
+                  <gco:CharacterString>image/png</gco:CharacterString>
+                </cit:protocol>
+                <cit:name>
+                  <gco:CharacterString>Default Polygon (LegendURL)</gco:CharacterString>
+                </cit:name>
+                <cit:description>
+                  <gco:CharacterString/>
+                </cit:description>
+              </cit:CI_OnlineResource>
+            </mrd:onLine>
+          </mrd:MD_DigitalTransferOptions>
+        </mrd:transferOptions>
+      </mrd:MD_Distribution>
+    </mdb:distributionInfo>
+  </mdb:MD_Metadata>
+</csw:GetRecordByIdResponse>

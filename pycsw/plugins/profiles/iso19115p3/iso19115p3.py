@@ -447,11 +447,24 @@ class ISO19115p3(profile.Profile):
                 if cjson not in [None, '', 'null']:
                     try:
                         for contact in json.loads(cjson):
-                            ci_contact = build_path(ci_resp, ['cit:contactInfo', 'cit:CI_Contact'], self.namespaces)
-                            if contact.get('phone', '') != '':
+                            path = ['cit:individual', 'cit:CI_Individual']
+                            ci_individ = build_path(ci_org, path, self.namespaces)
+                            # Name and position of individual within organisation
+                            if contact.get('name', None) != None:
+                                path = ['cit:name', 'gco:CharacterString']
+                                name = build_path(ci_individ, path, self.namespaces)
+                                name.text = contact.get('name')
+                            if contact.get('position', None) != None:
+                                path = ['cit:positionName', 'gco:CharacterString']
+                                position = build_path(ci_individ, path, self.namespaces)
+                                position.text = contact.get('position')
+                            # Contact information
+                            ci_contact = build_path(ci_individ, ['cit:contactInfo', 'cit:CI_Contact'], self.namespaces)
+                            if contact.get('phone', None) != None:
                                 self._write_contact_phone(ci_contact, contact.get('phone'))
-                            if contact.get('fax', '') != '':
+                            if contact.get('fax', None) != None:
                                 self._write_contact_fax(ci_contact, contact.get('fax'))
+                            # Organisation address
                             self._write_contact_address(ci_resp, ci_contact, **contact)
                     except Exception as err:
                         print(f"failed to parse contacts json of {cjson}: {err}")
