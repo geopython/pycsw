@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -81,7 +81,7 @@ master_doc = 'index'
 project = u'pycsw'
 authors = u'Tom Kralidis'
 license = u'This work is licensed under a Creative Commons Attribution 4.0 International License'
-copyright = u'2010-2023, ' + authors + ' ' + license
+copyright = u'2010-2024, ' + authors + ' ' + license
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
