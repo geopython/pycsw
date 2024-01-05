@@ -977,7 +977,7 @@ class Csw3(object):
                         'Record serialization failed: %s' % str(err))
                         return self.parent.response
 
-        if ('federatedcatalogues' in self.parent and
+        if ('federatedcatalogues' in self.parent.config and
             'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
             self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
@@ -2068,7 +2068,7 @@ class Csw3(object):
         for value in sorted(values):
             etree.SubElement(allowed_values,
                              util.nspath_eval('ows20:Value',
-                             self.parent.context.namespaces)).text = value
+                             self.parent.context.namespaces)).text = str(value)
         return allowed_values
 
     def exceptionreport(self, code, locator, text):

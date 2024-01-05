@@ -55,31 +55,31 @@ def test_get_pycsw_root_path(process_env, wsgi_env, fake_dir, expected):
 
 
 @pytest.mark.parametrize("process_env, wsgi_env, pycsw_root, expected", [
-    ({}, {}, "dummy", "dummy/default.cfg"),
-    ({"PYCSW_CONFIG": "default.cfg"}, {}, "dummy", "default.cfg"),
+    ({}, {}, "dummy", "dummy/default.yml"),
+    ({"PYCSW_CONFIG": "default.yml"}, {}, "dummy", "default.yml"),
     (
-        {"PYCSW_CONFIG": "/some/abs/path/default.cfg"},
+        {"PYCSW_CONFIG": "/some/abs/path/default.yml"},
         {},
         "dummy",
-        "/some/abs/path/default.cfg"
+        "/some/abs/path/default.yml"
     ),
     (
-        {"PYCSW_CONFIG": "default.cfg"},
+        {"PYCSW_CONFIG": "default.yml"},
         {"QUERY_STRING": ""},
         "dummy",
-        "default.cfg"
+        "default.yml"
     ),
     (
-        {"PYCSW_CONFIG": "default.cfg"},
-        {"QUERY_STRING": "config=other.cfg"},
+        {"PYCSW_CONFIG": "default.yml"},
+        {"QUERY_STRING": "config=other.yml"},
         "dummy",
-        "other.cfg"
+        "other.yml"
     ),
     (
-        {"PYCSW_CONFIG": "default.cfg"},
-        {"QUERY_STRING": "config=/other/path/other.cfg"},
+        {"PYCSW_CONFIG": "default.yml"},
+        {"QUERY_STRING": "config=/other/path/other.yml"},
         "dummy",
-        "/other/path/other.cfg"
+        "/other/path/other.yml"
     ),
 ])
 def test_get_configuration_path(process_env, wsgi_env, pycsw_root, expected):

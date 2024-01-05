@@ -71,15 +71,15 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     for more information on how to control gunicorn by sending UNIX signals.
     """
 
+    database = pycsw_config['repository'].get('database')
+    table = pycsw_config['repository'].get('table')
+
     try:
-        setup(pycsw_config.get("repository", "database"),
-              pycsw_config.get("repository", "table"))
+        setup(database, table)
     except Exception as err:
         LOGGER.debug(err)
 
-    repo = Repository(pycsw_config.get("repository", "database"),
-                      StaticContext(),
-                      table=pycsw_config.get("repository", "table"))
+    repo = Repository(database, StaticContext(), table=table)
 
     repo.ping()
 
@@ -132,6 +132,6 @@ if __name__ == "__main__":
 
     level = config['logging'].get('level', 'WARNING')
 
-    workers = int(config["server"].get("workers", args.workers))
+    workers = int(config['server'].get('workers', args.workers))
     logging.basicConfig(level=getattr(logging, level))
     launch_pycsw(config, workers=workers, reload=args.reload)

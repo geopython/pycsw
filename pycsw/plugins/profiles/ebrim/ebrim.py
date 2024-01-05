@@ -89,7 +89,7 @@ class EBRIM(profile.Profile):
     def extend_core(self, model, namespaces, config):
         ''' Extend core configuration '''
 
-        self.ogc_schemas_base = config.get('server', 'ogc_schemas_base')
+        self.ogc_schemas_base = config['server'].get('ogc_schemas_base')
 
     def check_parameters(self, kvp):
         '''Check for Language parameter in GetCapabilities request'''

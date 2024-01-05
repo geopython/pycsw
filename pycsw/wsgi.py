@@ -69,8 +69,6 @@ from pycsw import server
 def application(env, start_response):
     """WSGI wrapper"""
 
-    print(env['PATH_INFO'])
-
     status, headers, contents = application_dispatcher(env)
     start_response(status, list(headers.items()))
     return [contents]

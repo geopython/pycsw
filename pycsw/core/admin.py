@@ -404,8 +404,6 @@ def cli_setup_repository(ctx, config, verbosity):
     try:
         repository.setup(cfg['repository']['database'], table=cfg['repository'].get('table'))
     except Exception as err:
-        import traceback
-        print(traceback.format_exc())
         msg = f'ERROR: Repository already exists: {err}'
         raise click.ClickException(msg) from err
 

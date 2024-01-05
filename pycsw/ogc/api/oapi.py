@@ -256,7 +256,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
     }
 
     oapi['servers'] = [{
-        'url': config.get('server', 'url'),
+        'url': config['server'].get('url'),
         'description': config['metadata']['identification']['description']
     }]
 

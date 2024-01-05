@@ -255,7 +255,6 @@ class Csw2(object):
             self.parent.context.namespaces)).text = \
             metadata_main['contact'].get('instructions', 'missing')
 
-            print("ROLE", metadata_main['contact'])
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:Role', self.parent.context.namespaces),
             codeSpace='ISOTC211/19115').text = \

@@ -107,7 +107,7 @@ for root, dirs, files in os.walk('functionaltests/suites'):
         for sfile in files:
             if os.path.splitext(sfile)[1] in ['.xml'] and 'post' in root:  # it's a POST request
                 query = '%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)
-                print('                            <option value="tests/functionaltests/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[2], query, query))
+                print('                            <option value="tests/functionaltests/suites/%s/default.yml,%s">%s</option>' % (root.split(os.sep)[2], query, query))
 print('''
                         </select>
                         <input type="button" class="send" value="Send"/>

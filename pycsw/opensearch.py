@@ -95,7 +95,7 @@ class OpenSearch(object):
 
         self.exml = element
         self.cfg = cfg
-        self.bind_url = util.bind_url(self.cfg.get('server', 'url'))
+        self.bind_url = util.bind_url(self.cfg['server'].get('url'))
         if self.bind_url.endswith(('/opensearch', '/opensearch?')):
             self.bind_url = self.bind_url.replace('/opensearch', '/csw')
 
@@ -118,7 +118,7 @@ class OpenSearch(object):
             node = etree.Element(util.nspath_eval('atom:feed',
                        self.context.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('atom:id',
-                       self.context.namespaces)).text = self.cfg.get('server', 'url')
+                       self.context.namespaces)).text = self.cfg['server'].get('url')
             etree.SubElement(node, util.nspath_eval('atom:title',
                        self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
             #etree.SubElement(node, util.nspath_eval('atom:updated',
@@ -216,7 +216,7 @@ class OpenSearch(object):
             node = etree.Element(util.nspath_eval('atom:feed',
                        self.context.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('atom:id',
-                       self.context.namespaces)).text = self.cfg.get('server', 'url')
+                       self.context.namespaces)).text = self.cfg['server'].get('url')
             etree.SubElement(node, util.nspath_eval('atom:title',
                        self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
             author = etree.SubElement(node, util.nspath_eval('atom:author', self.context.namespaces))
@@ -320,7 +320,7 @@ class OpenSearch(object):
             node = etree.Element(util.nspath_eval('atom:feed',
                        self.context.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('atom:id',
-                       self.context.namespaces)).text = self.cfg.get('server', 'url')
+                       self.context.namespaces)).text = self.cfg['server'].get('url')
             etree.SubElement(node, util.nspath_eval('atom:title',
                        self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
             #etree.SubElement(node, util.nspath_eval('atom:updated',
