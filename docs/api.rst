@@ -66,8 +66,7 @@ Simple CSW Flask Example
       pycsw_config = some_dict  # really comes from somewhere
 
       # initialize pycsw
-      # pycsw_config: either a ConfigParser object or a dict of
-      # the pycsw configuration
+      # pycsw_config: dict of the pycsw configuration
       #
       # env: dict of (HTTP) environment (defaults to os.environ)
       # 

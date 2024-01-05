@@ -43,11 +43,9 @@ additional input.
 import argparse
 import logging
 import os
-import configparser
 import sys
 
 from pycsw.core.config import StaticContext
-from pycsw.core.util import EnvInterpolation
 from pycsw.core.repository import Repository, setup
 
 LOGGER = logging.getLogger(__name__)
@@ -92,10 +90,7 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     # https://github.com/benoitc/gunicorn/issues/1477
     #
 
-    try:
-        timeout = pycsw_config.get("server", "timeout")
-    except configparser.NoOptionError:
-        timeout = 30
+    timeout = pycsw_config["server"].get('timeout', 30)
 
     args = ["--reload", "--reload-engine=poll"] if reload else []
     execution_args = ["gunicorn"] + args + [
@@ -129,16 +124,14 @@ if __name__ == "__main__":
              "code changes? This option is only useful for development. "
              "Defaults to False."
     )
+
     args = parser.parse_args()
-    config = configparser.ConfigParser(interpolation=EnvInterpolation())
-    config.read(os.getenv("PYCSW_CONFIG"))
-    try:
-        level = config['logging']['level')
-    except configparser.NoOptionError:
-        level = "WARNING"
-    try:
-        workers = int(config.get("server", "workers"))
-    except configparser.NoOptionError:
-        workers = args.workers
+
+    with open(os.getenv('PYCSW_CONFIG', encoding='utf8') as fh: 
+        config = yaml_load(fh)
+
+    level = config['logging'].get('level', 'WARNING')
+
+    workers = int(config["server"].get("workers", args.workers))
     logging.basicConfig(level=getattr(logging, level))
     launch_pycsw(config, workers=workers, reload=args.reload)

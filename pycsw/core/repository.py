@@ -723,7 +723,7 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
                     LOGGER.debug('Directory already exists')
 
     dbase = create_engine(database)
-
+    print("TABLE", table)
     schema_name, table_name = table.rpartition(".")[::2]
 
     mdata = MetaData(dbase, schema=schema_name or None)

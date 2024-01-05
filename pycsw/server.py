@@ -36,7 +36,6 @@ import logging
 import os
 from urllib.parse import parse_qsl, splitquery, urlparse
 from io import StringIO
-import configparser
 import sys
 from time import time
 import wsgiref.util
@@ -97,20 +96,11 @@ class Csw(object):
         # load user configuration
         try:
             LOGGER.info('Loading user configuration')
-            if isinstance(rtconfig, configparser.ConfigParser):  # serialized already
+            if isinstance(rtconfig, dict):  # dictionary
                 self.config = rtconfig
-            else:
-                self.config = configparser.ConfigParser(
-                    interpolation=util.EnvInterpolation())
-                if isinstance(rtconfig, dict):  # dictionary
-                    for section, options in rtconfig.items():
-                        self.config.add_section(section)
-                        for k, v in options.items():
-                            self.config.set(section, k, v)
-                else:  # configuration file
-                    import codecs
-                    with codecs.open(rtconfig, encoding='utf-8') as scp:
-                        self.config.read_file(scp)
+            else:  # configuration file
+                with open(rtconfig, encoding='utf8') as fh:
+                    self.config = yaml_load(fh)
         except Exception as err:
             msg = 'Could not load configuration'
             LOGGER.exception('%s %s: %s', msg, rtconfig, err)
@@ -120,10 +110,7 @@ class Csw(object):
 
         # set server.home safely
         # TODO: make this more abstract
-        self.config.set(
-            'server', 'home',
-            os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
-        )
+        self.config['server']['home'] = os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
 
         if 'PYCSW_IS_CSW' in self.environ and self.environ['PYCSW_IS_CSW']:
             self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/csw')
@@ -131,8 +118,8 @@ class Csw(object):
             self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/opensearch')
             self.mode = 'opensearch'
 
-        self.context.pycsw_home = self.config.get('server', 'home')
-        self.context.url = self.config.get('server', 'url')
+        self.context.pycsw_home = self.config['server'].get('home')
+        self.context.url = self.config['server']['url']
 
         self.context.server = self
 
@@ -169,7 +156,7 @@ class Csw(object):
         if 'language' in self.config['server']:
             try:
                 LOGGER.info('Setting language')
-                lang_code = self.config.get('server', 'language').split('-')[0]
+                lang_code = self.config['server']['language'].split('-')[0]
                 self.language['639_code'] = lang_code
                 self.language['text'] = self.context.languages[lang_code]
             except Exception as err:
@@ -193,7 +180,7 @@ class Csw(object):
                     'Could not load repository.mappings')
 
         # load user-defined max attempt to retry db connection
-        self.max_retries = int(self.config.get('repository', 'max_retries', 5))
+        self.max_retries = int(self.config['repository'].get('max_retries', 5))
 
         # load outputschemas
         LOGGER.info('Loading outputschemas')
@@ -209,13 +196,13 @@ class Csw(object):
 
         LOGGER.info('Loading XSLT transformations')
 
-        xslt_defs = [x for x in self.config.sections() if x.startswith('xslt:')]
+        xslt_defs = [x for x in self.config.keys() if x.startswith('xslt:')]
 
         for x in xslt_defs:
             LOGGER.debug('Loading XSLT %s' % x)
             input_os, output_os = x.split(':', 1)[-1].split(',')
             self.xslts.append({
-                x: self.config.get(x, 'xslt')
+                x: self.config[x]['xslt']
             })
         # TODO: add output schemas to namespace prefixes
 
@@ -336,12 +323,12 @@ class Csw(object):
             ops['GetDomain'] = self.context.gen_domains()
 
         # generate distributed search model, if specified in config
-        if 'federatedcatalogues' in self.config['server']:
+        if 'federatedcatalogues' in self.config:
             LOGGER.info('Configuring distributed search')
 
             constraints['FederatedCatalogues'] = {'values': []}
 
-            for fedcat in self.config['server']['federatedcatalogues']:
+            for fedcat in self.config['federatedcatalogues']:
                 LOGGER.debug('federated catalogue: %s', fedcat)
                 constraints['FederatedCatalogues']['values'].append(fedcat)
 
@@ -363,7 +350,7 @@ class Csw(object):
                 self.config['server']['maxrecords']]
 
         # load profiles
-        if 'profiles' in self.config['server', 'profiles']:
+        if 'profiles' in self.config['server']:
             self.profiles = pprofile.load_profiles(
                 os.path.join('pycsw', 'plugins', 'profiles'),
                 pprofile.Profile,
@@ -426,10 +413,10 @@ class Csw(object):
                 while not connection_done and max_attempts <= self.max_retries:
                     try:
                         self.repository = repository.Repository(
-                            self.config.get('repository', 'database'),
+                            self.config['repository']['database'],
                             self.context,
                             self.environ.get('local.app_root', None),
-                            self.config.get('repository', 'table'),
+                            self.config['repository'].get('table'),
                             repo_filter
                         )
                         LOGGER.debug(
@@ -620,7 +607,7 @@ class Csw(object):
             LOGGER.info('OAI-PMH mode detected; processing response.')
             self.response = self.oaipmh().response(
                 self.response, self.oaiargs, self.repository,
-                self.config.get('server', 'url')
+                self.config['server']['url']
             )
 
         return self._write_response()

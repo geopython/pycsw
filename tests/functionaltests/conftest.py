@@ -34,7 +34,6 @@ from collections import namedtuple
 import logging
 import os
 import re
-import configparser
 
 import apipkg
 import pytest
@@ -74,7 +73,7 @@ def pytest_generate_tests(metafunc):
     based on the available test suites. Each suite directory has the
     following structure:
 
-    * A mandatory ``default.cfg`` file specifying the configuration for the
+    * A mandatory ``default.yml`` file specifying the configuration for the
       pycsw instance to use in the tests of the suite.
 
     * An optional ``get/`` subdirectory containing a ``requests.txt`` file
@@ -122,7 +121,7 @@ def pytest_generate_tests(metafunc):
             _recreate_postgresql_database(metafunc.config)
         for suite in suite_names:
             suite_dir = os.path.join(suites_root_dir, suite)
-            config_path = os.path.join(suite_dir, "default.cfg")
+            config_path = os.path.join(suite_dir, "default.yml")
             if not os.path.isfile(config_path):
                 print(f"Directory {suite_dir} does not have a suite "
                       "configuration file")
@@ -383,7 +382,7 @@ def _get_table_name(suite, config, repository_url):
     ----------
     suite: str
         Name of the suite.
-    config: ConfigParser
+    config: dict
         Configuration for the suite.
     repository_url: str
         SQLAlchemy URL for the repository in use.
@@ -396,11 +395,12 @@ def _get_table_name(suite, config, repository_url):
     """
 
     if repository_url.startswith("sqlite"):
-        result = config.get("repository", "table")
+        result = config['repository']['table']
     elif repository_url.startswith("postgresql"):
         result = f"{suite}_records"
     else:
         raise NotImplementedError
+
     return result
 
 

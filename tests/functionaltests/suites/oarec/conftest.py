@@ -67,45 +67,45 @@ def config():
                 ],
                 'keywords_type': 'theme',
                 'fees': 'None',
-                'accessconstraints': 'None',
-                'provider': {
-                    'name': 'Organization Name',
-                    'url': 'https://pycsw.org/'
-                },
-                'contact': {
-                    'name': 'Lastname, Firstname',
-                    'position': 'Position Title',
-                    'address': 'Mailing Address',
-                    'city': 'City',
-                    'stateorprovince': 'Administrative Area',
-                    'postalcode': 'Zip or Postal Code',
-                    'country': 'Country',
-                    'phone': '+xx-xxx-xxx-xxxx',
-                    'fax': '+xx-xxx-xxx-xxxx',
-                    'email': 'you@example.org',
-                    'url': 'Contact URL',
-                    'hours': 'Hours of Service',
-                    'instructions': 'During hours of service.  Off on weekends.',
-                    'role': 'pointOfContact',
-                },
-                'inspire': {
-                    'enabled': True,
-                    'languages_supported': [
-                        'eng',
-                        'gre'
-                    ],
-                    'default_language': 'eng',
-                    'date': 'YYYY-MM-DD',
-                    'gemet_keywords': [
-                        'Utility and governmental services'
-                    ],
-                    'conformity_service': 'notEvaluated',
-                    'contact_name': 'Organization Name',
-                    'contact_email': 'you@example.org',
-                    'temp_extent': {
-                        'begin': 'YYYY-MM-DD',
-                        'end': 'YYYY-MM-DD'
-                    }
+                'accessconstraints': 'None'
+            },
+            'provider': {
+                'name': 'Organization Name',
+                'url': 'https://pycsw.org/'
+            },
+            'contact': {
+                'name': 'Lastname, Firstname',
+                'position': 'Position Title',
+                'address': 'Mailing Address',
+                'city': 'City',
+                'stateorprovince': 'Administrative Area',
+                'postalcode': 'Zip or Postal Code',
+                'country': 'Country',
+                'phone': '+xx-xxx-xxx-xxxx',
+                'fax': '+xx-xxx-xxx-xxxx',
+                'email': 'you@example.org',
+                'url': 'Contact URL',
+                'hours': 'Hours of Service',
+                'instructions': 'During hours of service.  Off on weekends.',
+                'role': 'pointOfContact'
+            },
+            'inspire': {
+                'enabled': True,
+                'languages_supported': [
+                    'eng',
+                    'gre'
+                ],
+                'default_language': 'eng',
+                'date': 'YYYY-MM-DD',
+                'gemet_keywords': [
+                    'Utility and governmental services'
+                ],
+                'conformity_service': 'notEvaluated',
+                'contact_name': 'Organization Name',
+                'contact_email': 'you@example.org',
+                'temp_extent': {
+                    'begin': 'YYYY-MM-DD',
+                    'end': 'YYYY-MM-DD'
                 }
             }
         },

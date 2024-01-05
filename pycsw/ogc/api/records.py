@@ -29,7 +29,6 @@
 #
 # =================================================================
 
-from configparser import ConfigParser
 import json
 import logging
 import os
@@ -80,11 +79,11 @@ CONFORMANCE_CLASSES = [
 class API:
     """API object"""
 
-    def __init__(self, config: ConfigParser):
+    def __init__(self, config: dict):
         """
         constructor
 
-        :param config: ConfigParser pycsw configuration dict
+        :param config: pycsw configuration dict
 
         :returns: `pycsw.ogc.api.API` instance
         """

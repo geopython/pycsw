@@ -61,7 +61,6 @@ from io import BytesIO
 import os
 import sys
 
-import configparser
 from urllib.parse import unquote
 
 from pycsw import server
@@ -92,18 +91,16 @@ def application_dispatcher(env):
     if "gzip" in env.get("HTTP_ACCEPT_ENCODING", ""):
         try:
             compression_level = int(
-                csw.config.get("server", "gzip_compresslevel"))
+                csw.config["server"]["gzip_compresslevel"])
             contents, compress_headers = compress_response(
                 contents, compression_level)
             headers.update(compress_headers)
-        except configparser.NoOptionError:
+        except KeyError:
             print(
                 "The client requested a gzip compressed response. However, "
                 "the server does not specify the 'gzip_compresslevel' option. "
                 "Returning an uncompressed response..."
             )
-        except configparser.NoSectionError:
-            print('Could not load user configuration %s' % configuration_path)
 
     return status, headers, contents
 

@@ -121,7 +121,6 @@ class OpenSearch(object):
                        self.context.namespaces)).text = self.cfg.get('server', 'url')
             etree.SubElement(node, util.nspath_eval('atom:title',
                        self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
-                       'identification_title')
             #etree.SubElement(node, util.nspath_eval('atom:updated',
             #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
 

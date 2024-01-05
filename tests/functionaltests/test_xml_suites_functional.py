@@ -62,7 +62,7 @@ def test_xml_based_suites(
 
     Parameters
     ----------
-    configuration: ConfigParser
+    configuration: dict
         The configuration to use with the pycsw server instance under test
     request_method: str
         The HTTP method of the request. Either GET or POST.

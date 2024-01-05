@@ -27,7 +27,6 @@
 #
 # =================================================================
 
-from configparser import ConfigParser
 from copy import deepcopy
 import json
 import logging
@@ -73,11 +72,11 @@ CONFORMANCE_CLASSES = [
 class STACAPI(API):
     """STAC API object"""
 
-    def __init__(self, config: ConfigParser):
+    def __init__(self, config: dict):
         """
         constructor
 
-        :param config: ConfigParser pycsw configuration dict
+        :param config: pycsw configuration dict
 
         :returns: `pycsw.ogc.api.STACAPI` instance
         """
