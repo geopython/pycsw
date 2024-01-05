@@ -1,5 +1,5 @@
-Exception-Harvest-missing-resourcetype,PYCSW_SERVER?config=tests/suites/manager/default.cfg&service=CSW&version=2.0.2&request=Harvest
-Exception-Harvest-missing-source,PYCSW_SERVER?config=tests/suites/manager/default.cfg&service=CSW&version=2.0.2&request=Harvest&resourcetype=http://www.opengis.net/wms
-Exception-Harvest-invalid-resourcetype,PYCSW_SERVER?config=tests/suites/manager/default.cfg&service=CSW&version=2.0.2&request=Harvest&resourcetype=http://www.opengis.net/wms1234&source=http://demo.pycsw.org/cite/csw
-Exception-Harvest-waf-no-records-found,PYCSW_SERVER?config=tests/suites/manager/default.cfg&service=CSW&version=2.0.2&request=Harvest&resourcetype=urn:geoss:waf&source=http://demo.pycsw.org
-Exception-Harvest-waf-bad-value,PYCSW_SERVER?config=tests/suites/manager/default.cfg&service=CSW&version=2.0.2&request=Harvest&resourcetype=urn:geoss:waf&source=badvalue
+Exception-Harvest-missing-resourcetype,PYCSW_SERVER?config=tests/suites/manager/default.yml&service=CSW&version=2.0.2&request=Harvest
+Exception-Harvest-missing-source,PYCSW_SERVER?config=tests/suites/manager/default.yml&service=CSW&version=2.0.2&request=Harvest&resourcetype=http://www.opengis.net/wms
+Exception-Harvest-invalid-resourcetype,PYCSW_SERVER?config=tests/suites/manager/default.yml&service=CSW&version=2.0.2&request=Harvest&resourcetype=http://www.opengis.net/wms1234&source=http://demo.pycsw.org/cite/csw
+Exception-Harvest-waf-no-records-found,PYCSW_SERVER?config=tests/suites/manager/default.yml&service=CSW&version=2.0.2&request=Harvest&resourcetype=urn:geoss:waf&source=http://demo.pycsw.org
+Exception-Harvest-waf-bad-value,PYCSW_SERVER?config=tests/suites/manager/default.yml&service=CSW&version=2.0.2&request=Harvest&resourcetype=urn:geoss:waf&source=badvalue

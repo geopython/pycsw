@@ -196,11 +196,10 @@ class Csw(object):
 
         LOGGER.info('Loading XSLT transformations')
 
-        xslt_defs = [x for x in self.config.keys() if x.startswith('xslt:')]
-
-        for x in xslt_defs:
-            LOGGER.debug('Loading XSLT %s' % x)
-            input_os, output_os = x.split(':', 1)[-1].split(',')
+        for x in self.config.get('xslt', []):
+            LOGGER.debug('Loading XSLT %s' % x['transform'])
+            input_os = x['input_os']
+            output_os = x['output_os']
             self.xslts.append({
                 x: self.config[x]['xslt']
             })
