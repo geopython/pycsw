@@ -126,7 +126,7 @@ def load_profiles(path, cls, profiles):
     aps['plugins'] = {}
     aps['loaded'] = {}
 
-    for prof in profiles.split(','):
+    for prof in profiles:
         # fgdc, atom, dif, gm03 are supported in core
         # no need to specify them explicitly anymore
         # provide deprecation warning

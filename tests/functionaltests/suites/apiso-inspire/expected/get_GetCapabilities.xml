@@ -45,8 +45,8 @@
     <ows:Operation name="GetCapabilities">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="sections">
@@ -59,8 +59,8 @@
     <ows:Operation name="DescribeRecord">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
@@ -80,8 +80,8 @@
     <ows:Operation name="GetDomain">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ParameterName">
@@ -103,8 +103,8 @@
     <ows:Operation name="GetRecords">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="CONSTRAINTLANGUAGE">
@@ -221,8 +221,8 @@
     <ows:Operation name="GetRecordById">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ElementSetName">
@@ -247,7 +247,7 @@
     <ows:Operation name="GetRepositoryItem">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>
@@ -273,7 +273,7 @@
     </ows:Constraint>
     <inspire_ds:ExtendedCapabilities xsi:schemaLocation="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0 http://inspire.ec.europa.eu/schemas/inspire_ds/1.0/inspire_ds.xsd">
       <inspire_common:ResourceLocator>
-        <inspire_common:URL>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetCapabilities</inspire_common:URL>
+        <inspire_common:URL>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/apiso-inspire/default.yml&amp;service=CSW&amp;version=2.0.2&amp;request=GetCapabilities</inspire_common:URL>
         <inspire_common:MediaType>application/xml</inspire_common:MediaType>
       </inspire_common:ResourceLocator>
       <inspire_common:ResourceType>service</inspire_common:ResourceType>
