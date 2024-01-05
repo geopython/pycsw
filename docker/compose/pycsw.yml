@@ -1,8 +1,10 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,11 +30,12 @@
 # =================================================================
 
 server:
-    url: http://localhost/pycsw/csw.py
+    url: ${PYCSW_SERVER_URL}
     mimetype: application/xml; charset=UTF-8
     encoding: UTF-8
     language: en-US
     maxrecords: 10
+    timeout: 30
     #ogc_schemas_location: http://foo
     #pretty_print: true
     gzip_compresslevel: 9
@@ -42,7 +45,7 @@ server:
     #workers=2
 
 logging:
-    level: ERROR
+    level: DEBUG
     #logfile: /tmp/pycsw.log
 
 profiles:
@@ -55,7 +58,7 @@ manager:
     transactions: false
     allowed_ips:
         - 127.0.0.1
-    csw_harvest_pagesize: 10
+#    csw_harvest_pagesize: 10
 
 metadata:
     identification:
@@ -106,18 +109,6 @@ metadata:
         contact_email=Email Address
         temp_extent=YYYY-MM-DD/YYYY-MM-DD
  
-
 repository:
-    # sqlite
-    database: sqlite:////var/www/pycsw/tests/functionaltests/suites/cite/data/cite.db
-    # postgres
-    #database: postgresql://username:password@localhost/pycsw
-    # mysql
-    #database: mysql://username:password@localhost/pycsw?charset=utf8
-    #mappings: path/to/mappings.py
+    database: 'postgresql://postgres:mypass@db/pycsw'
     table: records
-    #filter: type = 'http://purl.org/dc/dcmitype/Dataset'
-    #max_retries: 5
-    facets:
-        - type
-        - title

@@ -35,7 +35,6 @@ pycsw:
       encoding: UTF-8
       language: en-US
       maxrecords: 10
-      loglevel: DEBUG
       # logfile: " "
       # ogc_schemas_base: http://foo
       # federatedcatalogues: http://catalog.data.gov/csw
@@ -44,49 +43,63 @@ pycsw:
       # domainquerytype: range
       # domaincounts: true
       # spatial_ranking: true
-      profiles: apiso
       # workers: 2
       timeout: 30
+    profiles:
+      - apiso
+    logging:
+      level: DEBUG
     manager:
-      transactions: "false"
-      allowed_ips: 127.0.0.1
+      transactions: false
+      allowed_ips:
+        - 127.0.0.1
       # csw_harvest_pagesize: 10
     metadata:
-      identification_title: pycsw Geospatial Catalogue
-      identification_abstract: pycsw is an OARec and OGC CSW server implementation written in Python
-      identification_keywords: catalogue,discovery,metadata
-      identification_keywords_type: theme
-      identification_fees: None
-      identification_accessconstraints: None
-      provider_name: Organization Name
-      provider_url: https://pycsw.org/
-      contact_name: Lastname, Firstname
-      contact_position: Position Title
-      contact_address: Mailing Address
-      contact_city: City
-      contact_stateorprovince: Administrative Area
-      contact_postalcode: Zip or Postal Code
-      contact_country: Country
-      contact_phone: +xx-xxx-xxx-xxxx
-      contact_fax: +xx-xxx-xxx-xxxx
-      contact_email: Email Address
-      contact_url: Contact URL
-      contact_hours: Hours of Service
-      contact_instructions: During hours of service.  Off on weekends.
-      contact_role: pointOfContact
+      identification:
+        title: pycsw Geospatial Catalogue
+        description: pycsw is an OARec and OGC CSW server implementation written in Python
+        keywords:
+          - catalogue
+          - discovery
+          - metadata
+        keywords_type: theme
+        fees: None
+        accessconstraints: None
+      provider:
+        name: Organization Name
+        url: https://pycsw.org/
+      contact:
+        name: Lastname, Firstname
+        position: Position Title
+        address: Mailing Address
+        city: City
+        stateorprovince: Administrative Area
+        postalcode: Zip or Postal Code
+        country: Country
+        phone: +xx-xxx-xxx-xxxx
+        fax: +xx-xxx-xxx-xxxx
+        email: Email Address
+        url: Contact URL
+        hours: Hours of Service
+        instructions: During hours of service.  Off on weekends.
+        role: pointOfContact
+      inspire:
+        enabled: true
+        languages_supported:
+          - eng
+          - gre
+        default_language: eng
+        date: YYYY-MM-DD
+        gemet_keywords:
+          - Utility and governmental services
+        conformity_service: notEvaluated
+        contact_name: Organization Name
+        contact_email: Email Address
+        temp_extent:
+          begin: YYYY-MM-DD
+          end: YYYY-MM-DD
     repository:
       database: postgresql://postgres:mypass@db/pycsw
       table: records
       # mappings: path/to/mappings.py
       # filter: type = 'http://purl.org/dc/dcmitype/Dataset'
-    inspire:
-      enabled: "true"
-      languages_supported: eng,gre
-      default_language: eng
-      date: YYYY-MM-DD
-      gemet_keywords: Utility and governmental services
-      conformity_service: notEvaluated
-      contact_name: Organization Name
-      contact_email: Email Address
-      temp_extent: YYYY-MM-DD/YYYY-MM-DD
-    

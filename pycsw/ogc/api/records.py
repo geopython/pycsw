@@ -107,7 +107,7 @@ class API:
 
         LOGGER.debug('Setting limit')
         try:
-            self.limit = int(self.config['server']['limit'])
+            self.limit = int(self.config['server']['maxrecords'])
         except KeyError:
             self.limit= 10
         LOGGER.debug(f'limit: {self.limit}')
