@@ -143,12 +143,11 @@ def test_application_gzip():
                                       fake_compression_headers)
         mock_get_config_path.return_value = fake_config_path
         mock_csw_class = mock_server.Csw
+        mock_csw_class.return_value = mock.MagicMock(
+            config={"server": {"gzip_compresslevel": fake_compression_level}}
+        )
         mock_pycsw = mock_csw_class.return_value
-        mock_pycsw.config = mock.MagicMock()
-        mock_pycsw.config.get.return_value = fake_compression_level
         mock_pycsw.dispatch_wsgi.return_value = (fake_status, fake_response)
         mock_pycsw.contenttype = fake_content_type
         wsgi.application(request_env, mock_start_response)
-        mock_pycsw.config.get.assert_called_with("server",
-                                                 "gzip_compresslevel")
         mock_compress.assert_called_with(fake_response, fake_compression_level)

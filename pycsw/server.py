@@ -45,6 +45,7 @@ from pycsw import oaipmh, opensearch, sru
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
 from pycsw.core import config, log, util
+from pycsw.ogc.api.util import yaml_load
 from pycsw.ogc.csw import csw2, csw3
 
 LOGGER = logging.getLogger(__name__)
@@ -201,7 +202,7 @@ class Csw(object):
             input_os = x['input_os']
             output_os = x['output_os']
             self.xslts.append({
-                x: self.config[x]['xslt']
+                f'xslt:{input_os},{output_os}': x['transform']
             })
         # TODO: add output schemas to namespace prefixes
 
