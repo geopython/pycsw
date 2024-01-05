@@ -120,7 +120,7 @@ class OpenSearch(object):
             etree.SubElement(node, util.nspath_eval('atom:id',
                        self.context.namespaces)).text = self.cfg.get('server', 'url')
             etree.SubElement(node, util.nspath_eval('atom:title',
-                       self.context.namespaces)).text = self.cfg.get('metadata:main',
+                       self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
                        'identification_title')
             #etree.SubElement(node, util.nspath_eval('atom:updated',
             #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
@@ -219,11 +219,9 @@ class OpenSearch(object):
             etree.SubElement(node, util.nspath_eval('atom:id',
                        self.context.namespaces)).text = self.cfg.get('server', 'url')
             etree.SubElement(node, util.nspath_eval('atom:title',
-                       self.context.namespaces)).text = self.cfg.get('metadata:main',
-                       'identification_title')
+                       self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
             author = etree.SubElement(node, util.nspath_eval('atom:author', self.context.namespaces))
-            etree.SubElement(author, util.nspath_eval('atom:name', self.context.namespaces)).text = self.cfg.get('metadata:main',
-                       'provider_name')
+            etree.SubElement(author, util.nspath_eval('atom:name', self.context.namespaces)).text = self.cfg['metadata']['provider']['name']
             etree.SubElement(node, util.nspath_eval('atom:link',
                        self.context.namespaces), rel='search',
                            type='application/opensearchdescription+xml',
@@ -325,8 +323,7 @@ class OpenSearch(object):
             etree.SubElement(node, util.nspath_eval('atom:id',
                        self.context.namespaces)).text = self.cfg.get('server', 'url')
             etree.SubElement(node, util.nspath_eval('atom:title',
-                       self.context.namespaces)).text = self.cfg.get('metadata:main',
-                       'identification_title')
+                       self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
             #etree.SubElement(node, util.nspath_eval('atom:updated',
             #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
 

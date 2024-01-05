@@ -226,10 +226,10 @@ class OAIPMH(object):
         verbnode = etree.SubElement(node, util.nspath_eval('oai:%s' % verb, self.namespaces))
 
         if verb == 'Identify':
-                etree.SubElement(verbnode, util.nspath_eval('oai:repositoryName', self.namespaces)).text = self.config.get('metadata:main', 'identification_title')
+                etree.SubElement(verbnode, util.nspath_eval('oai:repositoryName', self.namespaces)).text = self.config['metadata']['identification']['title']
                 etree.SubElement(verbnode, util.nspath_eval('oai:baseURL', self.namespaces)).text = url
                 etree.SubElement(verbnode, util.nspath_eval('oai:protocolVersion', self.namespaces)).text = '2.0'
-                etree.SubElement(verbnode, util.nspath_eval('oai:adminEmail', self.namespaces)).text = self.config.get('metadata:main', 'contact_email')
+                etree.SubElement(verbnode, util.nspath_eval('oai:adminEmail', self.namespaces)).text = self.config['metadata']['identification']['contact']['email']
                 etree.SubElement(verbnode, util.nspath_eval('oai:earliestDatestamp', self.namespaces)).text = repository.query_insert('min')
                 etree.SubElement(verbnode, util.nspath_eval('oai:deletedRecord', self.namespaces)).text = 'no'
                 etree.SubElement(verbnode, util.nspath_eval('oai:granularity', self.namespaces)).text = 'YYYY-MM-DDThh:mm:ssZ'

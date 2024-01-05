@@ -246,18 +246,18 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
     LOGGER.debug('Adding server info')
     oapi['info'] = {
         'contact': {
-            'email': config.get('metadata:main', 'contact_email'),
-            'name': config.get('metadata:main', 'contact_name'),
-            'url': config.get('metadata:main', 'contact_url')
+            'email': config['metadata']['contact']['email'],
+            'name': config['metadata']['contact']['name'],
+            'url': config['metadata']['contact']['url']
         },
         'version': __version__,
-        'title': config.get('metadata:main', 'identification_title'),
-        'description': config.get('metadata:main', 'identification_abstract')
+        'title': config['metadata']['identification']['title'],
+        'description': config['metadata']['identification']['description']
     }
 
     oapi['servers'] = [{
         'url': config.get('server', 'url'),
-        'description': config.get('metadata:main', 'identification_abstract')
+        'description': config['metadata']['identification']['description']
     }]
 
     LOGGER.debug('Adding paths')
@@ -429,7 +429,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         }
     }
 
-    if config.get('manager', 'transactions') == 'true':
+    if config['manager'].get('transactions', False):
         LOGGER.debug('Transactions enabled; adding post')
 
         path['post'] = {
@@ -497,7 +497,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         }
     }
 
-    if config.get('manager', 'transactions') == 'true':
+    if config['manager'].get('transactions', False):
         LOGGER.debug('Transactions enabled; adding put/delete')
 
         path['put'] = {
