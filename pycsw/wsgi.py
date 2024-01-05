@@ -210,11 +210,11 @@ def get_configuration_path(process_environment, request_environment,
     else:
         # did not find any `config` parameter in the request
         # lets try the process env, request env and fallback to
-        # <pycsw_root>/default.cfg
+        # <pycsw_root>/default.yml
         configuration_path = process_environment.get(
             config_path_key,
             request_environment.get(
-                config_path_key, os.path.join(pycsw_root, "default.cfg")
+                config_path_key, os.path.join(pycsw_root, "default.yml")
             )
         )
     return configuration_path
