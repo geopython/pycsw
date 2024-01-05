@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
 <atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:eo="http://a9.com/-/opensearch/extensions/eo/1.0/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:time="http://a9.com/-/opensearch/extensions/time/1.0/">
-  <atom:id>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg</atom:id>
+  <atom:id>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml</atom:id>
   <atom:title>pycsw Geospatial Catalogue</atom:title>
   <atom:author>
     <atom:name>pycsw</atom:name>
   </atom:author>
-  <atom:link rel="search" type="application/opensearchdescription+xml" href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities"/>
+  <atom:link rel="search" type="application/opensearchdescription+xml" href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities"/>
   <atom:updated>PYCSW_TIMESTAMP</atom:updated>
   <os:Query role="request"/>
   <os:totalResults>1</os:totalResults>
@@ -61,7 +61,7 @@
     <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_AOT_60m.jp2" title="granule" type="image/jp2" rel="enclosure"/>
     <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_WVP_60m.jp2" title="granule" type="image/jp2" rel="enclosure"/>
     <atom:link href="s3://eodata/Sentinel-2/MSI/L2A/2020/09/02/S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE/GRANULE/L2A_T34SFG_A018237_20200902T091111/IMG_DATA/R60m/T34SFG_20200902T090559_SCL_60m.jp2" title="granule" type="image/jp2" rel="enclosure"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE"/>
     <atom:title>S2B_MSIL2A_20200902T090559_N0214_R050_T34SFG_20200902T113910.SAFE</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:published>PYCSW_TIMESTAMP</atom:published>
