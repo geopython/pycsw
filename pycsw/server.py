@@ -801,7 +801,7 @@ class Csw(object):
         else:
             ipaddress = self.environ['REMOTE_ADDR']
 
-        if 'allowed_ips' not in self.config['manager'] or \
+        if 'allowed_ips' not in self.config['manager'] or not \
             util.ipaddress_in_whitelist(ipaddress, self.config['manager'].get('allowed_ips', [])):
             raise RuntimeError(
             'CSW-T operations not allowed for this IP address: %s' % ipaddress)
