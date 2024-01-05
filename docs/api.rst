@@ -14,8 +14,8 @@ services could be used:
 - authentication or authorization logic
 - forcing CSW version 2.0.2 as default
 
-OARec Flask Example
--------------------
+OGC API - Records Flask Example
+-------------------------------
 
 See https://github.com/geopython/pycsw/blob/master/pycsw/wsgi_flask.py for how
 to implement a Flask wrapper atop all pycsw supported APIs.  Note the use of
