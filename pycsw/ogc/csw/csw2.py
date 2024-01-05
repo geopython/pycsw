@@ -349,7 +349,7 @@ class Csw2(object):
 
                 for val in self.parent.context.model['constraints'][constraint]['values']:
                     etree.SubElement(param, util.nspath_eval('ows:Value',
-                    self.parent.context.namespaces)).text = val
+                    self.parent.context.namespaces)).text = str(val)
 
             if self.parent.profiles is not None:
                 for prof in self.parent.profiles['loaded'].keys():

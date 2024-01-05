@@ -28,21 +28,21 @@
 # =================================================================
 
 server:
-    url: http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/csw30/default.yml
+    url: http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/atom/default.yml
     mimetype: application/xml; charset=UTF-8
     encoding: UTF-8
     language: en-US
     maxrecords: 10
     pretty_print: true
-    #gzip_compresslevel: 8
     #spatial_ranking: true
+    gzip_compresslevel: 9
 
 logging:
     level: DEBUG
 #    logfile: /tmp/pycsw.log
 
 federatedcatalogues:
-    - https://demo.pycsw.org/gisdata/csw
+    - http://geo.data.gov/geoportal/csw/discovery
 
 manager:
     transactions: false
