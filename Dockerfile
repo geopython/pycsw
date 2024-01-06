@@ -50,7 +50,7 @@ RUN apt-get update && apt-get install --yes \
 
 RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
 
-ENV PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+ENV PYCSW_CONFIG=/etc/pycsw/pycsw.yml
 
 WORKDIR /home/pycsw/pycsw
 
@@ -72,7 +72,7 @@ RUN pip install -U pip && \
 
 COPY --chown=pycsw . .
 
-COPY docker/pycsw.cfg ${PYCSW_CONFIG}
+COPY docker/pycsw.yml ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
 RUN python3 -m pip install --editable .
