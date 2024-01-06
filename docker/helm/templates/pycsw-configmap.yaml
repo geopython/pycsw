@@ -75,7 +75,7 @@ data:
 {{ end }}{{ if .Values.pycsw.config.inspire.contact_email }}    contact_email: {{ .Values.pycsw.config.metadata.inspire.contact_email }}
 {{ end }}{{ if .Values.pycsw.config.inspire.temp_extent }}    temp_extent: {{ .Values.pycsw.config.metadata.inspire.temp_extent }}
 {{ end }}
-    repositor:
+    repository:
 {{ if .Values.pycsw.config.repository.database }}    database: {{ .Values.pycsw.config.repository.database }}
 {{ end }}{{ if .Values.pycsw.config.repository.mappings }}    mappings: {{ .Values.pycsw.config.repository.mappings }}
 {{ end }}{{ if .Values.pycsw.config.repository.table }}    table: {{ .Values.pycsw.config.repository.table }}
