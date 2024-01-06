@@ -43,7 +43,8 @@ from pycsw.core import config as pconfig
 from pycsw.core import metadata, repository, util
 from pycsw.core.etree import etree
 from pycsw.core.etree import PARSER
-from pycsw.ogc.api.util import yaml_load
+from pycsw.core.util import parse_ini_config, str2bool
+from pycsw.ogc.api.util import get_typed_value, yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
@@ -599,6 +600,95 @@ def cli_get_sysprof(ctx):
     click.echo(get_sysprof())
 
 
+@click.command('migrate-config')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+def cli_migrate_config(ctx, config, verbosity):
+    """Migrate pycsw ini config to YAML"""
+
+    dict_ = {
+        'server': {},
+        'logging': {},
+        'manager': {},
+        'metadata': {
+            'identification': {},
+            'provider': {},
+            'contact': {},
+            'inspire': {}
+        },
+        'profiles': [],
+        'federatedcatalogues': [],
+        'repository': {}
+    }
+
+    cfg = parse_ini_config(config)
+
+    for name, value in cfg.items('server'):
+        if name == 'loglevel':
+            dict_['logging']['level'] = value
+        elif name == 'logfile':
+            dict_['logging']['logfile'] = value
+        elif name == 'profiles':
+            dict_[name] = value.split(',')
+        elif name == 'federatedcatalogues':
+            dict_[name] = value.split(',')
+        else:
+            dict_['server'][name] = get_typed_value(value)
+
+    for name, value in cfg.items('metadata:main'):
+        if name.startswith('identification'):
+            new_key = name.replace('identification_', '')
+            if new_key == 'keywords':
+                dict_['metadata']['identification'][new_key] = value.split(',')
+            elif new_key == 'abstract':
+                dict_['metadata']['identification']['description'] = value
+            else:
+                dict_['metadata']['identification'][new_key] = get_typed_value(value)
+
+        if name.startswith('provider'):
+            new_key = name.replace('provider_', '')
+            dict_['metadata']['provider'][new_key] = get_typed_value(value)
+
+        if name.startswith('contact'):
+            new_key = name.replace('contact_', '')
+            dict_['metadata']['contact'][new_key] = get_typed_value(value)
+
+    for name, value in cfg.items('manager'):
+        if name == 'allowed_ips':
+            dict_['manager'][name] = value.split(',')
+        elif name == 'transactions':
+            dict_['manager'][name] = str2bool(value)
+        else:
+            dict_['manager'][name] = get_typed_value(value)
+
+    for name, value in cfg.items('repository'):
+        if name == 'facets':
+            dict_['repository'][name] = value.split(',')
+        else:
+            dict_['repository'][name] = get_typed_value(value)
+
+    for name, value in cfg.items('metadata:inspire'):
+        if name == 'languages_supported':
+            dict_['metadata']['inspire'][name] = value.split(',')
+        elif name == 'enabled':
+            dict_['metadata']['inspire'][name] = str2bool(value)
+        elif name == 'gemet_keywords':
+            dict_['metadata']['inspire'][name] = value.split(',')
+        elif name == 'temp_extent':
+            begin, end = value.split('/')
+            dict_['metadata']['inspire'][name] = {
+                'begin': begin,
+                'end': end
+            }
+        else:
+            dict_['metadata']['inspire'][name] = get_typed_value(value)
+
+    from pprint import pprint
+    pprint(dict_)
+
+
+
 cli.add_command(cli_setup_repository)
 cli.add_command(cli_load_records)
 cli.add_command(cli_export_records)
@@ -608,5 +698,6 @@ cli.add_command(cli_optimize_db)
 cli.add_command(cli_refresh_harvested_records)
 cli.add_command(cli_gen_sitemap)
 cli.add_command(cli_post_xml)
-cli.add_command(cli_get_sysprof)
 cli.add_command(cli_validate_xml)
+cli.add_command(cli_get_sysprof)
+cli.add_command(cli_migrate_config)
