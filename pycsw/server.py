@@ -114,9 +114,9 @@ class Csw(object):
         self.config['server']['home'] = os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
 
         if 'PYCSW_IS_CSW' in self.environ and self.environ['PYCSW_IS_CSW']:
-            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/csw')
+            self.config['server']['url'] = self.config['server']['url'].rstrip('/') + '/csw'
         if 'PYCSW_IS_OPENSEARCH' in self.environ and self.environ['PYCSW_IS_OPENSEARCH']:
-            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/opensearch')
+            self.config['server']['url'] = self.config['server']['url'].rstrip('/') + '/opensearch'
             self.mode = 'opensearch'
 
         self.context.pycsw_home = self.config['server'].get('home')
@@ -286,10 +286,10 @@ class Csw(object):
                 self.request_version = '3.0.0'
 
         if 'PYCSW_IS_OAIPMH' in self.environ and self.environ['PYCSW_IS_OAIPMH']:
-            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/oaipmh')
+            self.config['server']['url'] = self.config['server']['url'].rstrip('/') + '/oaipmh'
             self.kvp['mode'] = 'oaipmh'
         if 'PYCSW_IS_SRU' in self.environ and self.environ['PYCSW_IS_SRU']:
-            self.config.set('server', 'url', self.config['server']['url'].rstrip('/') + '/sru')
+            self.config['server']['url'] = self.config['server']['url'].rstrip('/') + '/sru'
             self.kvp['mode'] = 'sru'
 
         if (not isinstance(self.kvp, str) and 'mode' in self.kvp and
