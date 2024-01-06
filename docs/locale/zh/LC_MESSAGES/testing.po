@@ -119,9 +119,9 @@ msgstr ""
 
 #: ../../testing.rst:66
 msgid ""
-"A mandatory ``default.cfg`` file with the pycsw configuration that must be used "
+"A mandatory ``default.yml`` file with the pycsw configuration that must be used "
 "by the test suite;"
-msgstr "测试套件必须使用的带有 pycsw 配置的强制 ``default.cfg`` 文件；"
+msgstr "测试套件必须使用的带有 pycsw 配置的强制 ``default.yml`` 文件；"
 
 #: ../../testing.rst:69
 msgid ""
@@ -263,8 +263,8 @@ msgid ""
 msgstr "在 ``tests/functionaltests/suites`` （如 ``foo`` )下创建一个新目录"
 
 #: ../../testing.rst:141
-msgid "Create a new configuration in ``tests/suites/foo/default.cfg``"
-msgstr "在 ``tests/suites/foo/default.cfg`` 创建一个新的配置"
+msgid "Create a new configuration in ``tests/suites/foo/default.yml``"
+msgstr "在 ``tests/suites/foo/default.yml`` 创建一个新的配置"
 
 #: ../../testing.rst:142
 msgid "Populate HTTP POST requests in ``tests/suites/foo/post``"
@@ -584,8 +584,8 @@ msgstr "导航到 ``http://host/path/to/pycsw/tests/index.html`` 。"
 #~ "测试框架将针对一系列“套件”（在``测试/ suites``）完成运行，其中每一项均指定一个"
 #~ "给定的配置，以测试基本代码的各种功能。每个套件的结构如下："
 
-#~ msgid "``tests/suites/suite/default.cfg``: the configuration for the suite"
-#~ msgstr "`tests/suites/suite/default.cfg`：对于该套件的配置"
+#~ msgid "``tests/suites/suite/default.yml``: the configuration for the suite"
+#~ msgstr "`tests/suites/suite/default.yml`：对于该套件的配置"
 
 #~ msgid ""
 #~ "``tests/suites/suite/post``: directory of XML documents for HTTP POST requests"
@@ -608,8 +608,8 @@ msgstr "导航到 ``http://host/path/to/pycsw/tests/index.html`` 。"
 #~ msgid "When the tests are invoked, the following operations are run:"
 #~ msgstr "当测试被调用，将执行以下操作："
 
-#~ msgid "pycsw configuration is set to ``tests/suites/suite/default.cfg``"
-#~ msgstr "pycsw配置设置为`tests/suites/suite/default.cfg`"
+#~ msgid "pycsw configuration is set to ``tests/suites/suite/default.yml``"
+#~ msgstr "pycsw配置设置为`tests/suites/suite/default.yml`"
 
 #~ msgid "HTTP POST requests are run against ``tests/suites/suite/post/*.xml``"
 #~ msgstr "HTTP POST请求是针对 `tests/suites/suite/post/*.xml` 运行的"

@@ -55,7 +55,7 @@ Suites for xml-based standards (CSW, ATOM, etc)
 A number of different test suites exist under ``tests/functionaltests/suites``.
 Each suite specifies the following structure:
 
-* A mandatory ``default.cfg`` file with the pycsw configuration that must be
+* A mandatory ``default.yml`` file with the pycsw configuration that must be
   used by the test suite;
 
 * A mandatory ``expected/`` directory containing the expected results for each
