@@ -61,7 +61,7 @@ data:
         transactions: false
         allowed_ips:
             - 127.0.0.1
-    #    csw_harvest_pagesize: 10
+        #csw_harvest_pagesize: 10
     
     metadata:
         identification:
@@ -97,7 +97,6 @@ data:
             hours: Mo-Fr 08:00-17:00
             instructions: During hours of service. Off on weekends.
             role: pointOfContact
-
         inspire:
             enabled: true
             languages_supported:
