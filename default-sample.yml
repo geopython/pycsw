@@ -91,7 +91,6 @@ metadata:
         hours: Mo-Fr 08:00-17:00
         instructions: During hours of service. Off on weekends.
         role: pointOfContact
-
     inspire:
         enabled: true
         languages_supported:
@@ -103,9 +102,10 @@ metadata:
             - Utility and governmental services
         conformity_service: notEvaluated
         contact_name: Organization Name
-        contact_email=Email Address
-        temp_extent=YYYY-MM-DD/YYYY-MM-DD
- 
+        contact_email: Email Address
+        temp_extent:
+            begin: YYYY-MM-DD
+            end: YYYY-MM-DD
 
 repository:
     # sqlite
