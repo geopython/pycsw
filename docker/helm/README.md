@@ -5,6 +5,11 @@ Debug with:
 ```bash
 helm install --dry-run --debug pycsw .
 ```
+Test template rendering with:
+
+```bash
+helm template --debug .
+```
 
 Deploy with:
 
