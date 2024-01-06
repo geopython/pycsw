@@ -44,7 +44,7 @@ from pycsw.core import metadata, repository, util
 from pycsw.core.etree import etree
 from pycsw.core.etree import PARSER
 from pycsw.core.util import parse_ini_config, str2bool
-from pycsw.ogc.api.util import get_typed_value, yaml_load
+from pycsw.ogc.api.util import get_typed_value, yaml_dump, yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
@@ -684,9 +684,9 @@ def cli_migrate_config(ctx, config, verbosity):
         else:
             dict_['metadata']['inspire'][name] = get_typed_value(value)
 
-    from pprint import pprint
-    pprint(dict_)
-
+    yaml_file = config.replace('.cfg', '.yml')
+    click.echo(f'Writing to {yaml_file}')
+    yaml_dump(dict_, yaml_file)
 
 
 cli.add_command(cli_setup_repository)
