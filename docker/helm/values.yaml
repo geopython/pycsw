@@ -37,7 +37,6 @@ pycsw:
       maxrecords: 10
       # logfile: " "
       # ogc_schemas_base: http://foo
-      # federatedcatalogues: http://catalog.data.gov/csw
       # pretty_print: true
       # gzip_compresslevel: 8
       # domainquerytype: range
@@ -47,6 +46,8 @@ pycsw:
       timeout: 30
     profiles:
       - apiso
+    # federatedcatalogues:
+    #   - http://catalog.data.gov/csw
     logging:
       level: DEBUG
     manager:
@@ -103,3 +104,6 @@ pycsw:
       table: records
       # mappings: path/to/mappings.py
       # filter: type = 'http://purl.org/dc/dcmitype/Dataset'
+      facets:
+        - type
+        - title
