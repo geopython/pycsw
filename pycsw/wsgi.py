@@ -7,7 +7,7 @@
 #
 # Copyright (c) 2015 Adam Hinz
 # Copyright (c) 2017 Ricardo Garcia Silva
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
