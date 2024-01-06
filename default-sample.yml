@@ -42,6 +42,7 @@ server:
     #domaincounts: true
     #spatial_ranking: true
     #workers=2
+    #timeout=30
 
 logging:
     level: ERROR
