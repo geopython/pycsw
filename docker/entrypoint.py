@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    with open(os.getenv('PYCSW_CONFIG', encoding='utf8')) as fh:
+    with open(os.getenv('PYCSW_CONFIG'), encoding='utf8') as fh:
         config = yaml_load(fh)
 
     level = config['logging'].get('level', 'WARNING')
