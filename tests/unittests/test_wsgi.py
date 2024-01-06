@@ -1,8 +1,10 @@
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -55,31 +57,31 @@ def test_get_pycsw_root_path(process_env, wsgi_env, fake_dir, expected):
 
 
 @pytest.mark.parametrize("process_env, wsgi_env, pycsw_root, expected", [
-    ({}, {}, "dummy", "dummy/default.cfg"),
-    ({"PYCSW_CONFIG": "default.cfg"}, {}, "dummy", "default.cfg"),
+    ({}, {}, "dummy", "dummy/default.yml"),
+    ({"PYCSW_CONFIG": "default.yml"}, {}, "dummy", "default.yml"),
     (
-        {"PYCSW_CONFIG": "/some/abs/path/default.cfg"},
+        {"PYCSW_CONFIG": "/some/abs/path/default.yml"},
         {},
         "dummy",
-        "/some/abs/path/default.cfg"
+        "/some/abs/path/default.yml"
     ),
     (
-        {"PYCSW_CONFIG": "default.cfg"},
+        {"PYCSW_CONFIG": "default.yml"},
         {"QUERY_STRING": ""},
         "dummy",
-        "default.cfg"
+        "default.yml"
     ),
     (
-        {"PYCSW_CONFIG": "default.cfg"},
-        {"QUERY_STRING": "config=other.cfg"},
+        {"PYCSW_CONFIG": "default.yml"},
+        {"QUERY_STRING": "config=other.yml"},
         "dummy",
-        "other.cfg"
+        "other.yml"
     ),
     (
-        {"PYCSW_CONFIG": "default.cfg"},
-        {"QUERY_STRING": "config=/other/path/other.cfg"},
+        {"PYCSW_CONFIG": "default.yml"},
+        {"QUERY_STRING": "config=/other/path/other.yml"},
         "dummy",
-        "/other/path/other.cfg"
+        "/other/path/other.yml"
     ),
 ])
 def test_get_configuration_path(process_env, wsgi_env, pycsw_root, expected):
@@ -143,12 +145,11 @@ def test_application_gzip():
                                       fake_compression_headers)
         mock_get_config_path.return_value = fake_config_path
         mock_csw_class = mock_server.Csw
+        mock_csw_class.return_value = mock.MagicMock(
+            config={"server": {"gzip_compresslevel": fake_compression_level}}
+        )
         mock_pycsw = mock_csw_class.return_value
-        mock_pycsw.config = mock.MagicMock()
-        mock_pycsw.config.get.return_value = fake_compression_level
         mock_pycsw.dispatch_wsgi.return_value = (fake_status, fake_response)
         mock_pycsw.contenttype = fake_content_type
         wsgi.application(request_env, mock_start_response)
-        mock_pycsw.config.get.assert_called_with("server",
-                                                 "gzip_compresslevel")
         mock_compress.assert_called_with(fake_response, fake_compression_level)

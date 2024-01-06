@@ -67,7 +67,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./pycsw.cfg:/etc/pycsw/pycsw.cfg
+      - ./pycsw.yml:/etc/pycsw/pycsw.yml
 
 
 volumes:

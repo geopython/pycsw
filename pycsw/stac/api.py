@@ -2,7 +2,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -27,7 +27,6 @@
 #
 # =================================================================
 
-from configparser import ConfigParser
 from copy import deepcopy
 import json
 import logging
@@ -73,11 +72,11 @@ CONFORMANCE_CLASSES = [
 class STACAPI(API):
     """STAC API object"""
 
-    def __init__(self, config: ConfigParser):
+    def __init__(self, config: dict):
         """
         constructor
 
-        :param config: ConfigParser pycsw configuration dict
+        :param config: pycsw configuration dict
 
         :returns: `pycsw.ogc.api.STACAPI` instance
         """
@@ -106,11 +105,11 @@ class STACAPI(API):
             'type': 'Catalog',
             'conformsTo': CONFORMANCE_CLASSES,
             'links': [],
-            'title': self.config['metadata:main']['identification_title'],
+            'title': self.config['metadata']['identification']['title'],
             'description':
-                self.config['metadata:main']['identification_abstract'],
+                self.config['metadata']['identification']['description'],
             'keywords':
-                self.config['metadata:main']['identification_keywords'].split(',')
+                self.config['metadata']['identification']['keywords']
         }
 
         LOGGER.debug('Creating links')
@@ -426,8 +425,8 @@ class STACAPI(API):
 
         if collection_name == 'metadata:main':
             id_ = collection_name
-            title = self.config['metadata:main']['identification_title']
-            description = self.config['metadata:main']['identification_abstract']
+            title = self.config['metadata']['identification']['title']
+            description = self.config['metadata']['identification']['description']  # noqa
         else:
             id_ = collection_name
             title = collection_info.get('title')

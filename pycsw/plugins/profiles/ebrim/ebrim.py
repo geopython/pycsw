@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -89,7 +89,7 @@ class EBRIM(profile.Profile):
     def extend_core(self, model, namespaces, config):
         ''' Extend core configuration '''
 
-        self.ogc_schemas_base = config.get('server', 'ogc_schemas_base')
+        self.ogc_schemas_base = config['server'].get('ogc_schemas_base')
 
     def check_parameters(self, kvp):
         '''Check for Language parameter in GetCapabilities request'''

@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -95,7 +95,7 @@ class OpenSearch(object):
 
         self.exml = element
         self.cfg = cfg
-        self.bind_url = util.bind_url(self.cfg.get('server', 'url'))
+        self.bind_url = util.bind_url(self.cfg['server'].get('url'))
         if self.bind_url.endswith(('/opensearch', '/opensearch?')):
             self.bind_url = self.bind_url.replace('/opensearch', '/csw')
 
@@ -118,10 +118,9 @@ class OpenSearch(object):
             node = etree.Element(util.nspath_eval('atom:feed',
                        self.context.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('atom:id',
-                       self.context.namespaces)).text = self.cfg.get('server', 'url')
+                       self.context.namespaces)).text = self.cfg['server'].get('url')
             etree.SubElement(node, util.nspath_eval('atom:title',
-                       self.context.namespaces)).text = self.cfg.get('metadata:main',
-                       'identification_title')
+                       self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
             #etree.SubElement(node, util.nspath_eval('atom:updated',
             #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
 
@@ -217,13 +216,11 @@ class OpenSearch(object):
             node = etree.Element(util.nspath_eval('atom:feed',
                        self.context.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('atom:id',
-                       self.context.namespaces)).text = self.cfg.get('server', 'url')
+                       self.context.namespaces)).text = self.cfg['server'].get('url')
             etree.SubElement(node, util.nspath_eval('atom:title',
-                       self.context.namespaces)).text = self.cfg.get('metadata:main',
-                       'identification_title')
+                       self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
             author = etree.SubElement(node, util.nspath_eval('atom:author', self.context.namespaces))
-            etree.SubElement(author, util.nspath_eval('atom:name', self.context.namespaces)).text = self.cfg.get('metadata:main',
-                       'provider_name')
+            etree.SubElement(author, util.nspath_eval('atom:name', self.context.namespaces)).text = self.cfg['metadata']['provider']['name']
             etree.SubElement(node, util.nspath_eval('atom:link',
                        self.context.namespaces), rel='search',
                            type='application/opensearchdescription+xml',
@@ -323,10 +320,9 @@ class OpenSearch(object):
             node = etree.Element(util.nspath_eval('atom:feed',
                        self.context.namespaces), nsmap=self.namespaces)
             etree.SubElement(node, util.nspath_eval('atom:id',
-                       self.context.namespaces)).text = self.cfg.get('server', 'url')
+                       self.context.namespaces)).text = self.cfg['server'].get('url')
             etree.SubElement(node, util.nspath_eval('atom:title',
-                       self.context.namespaces)).text = self.cfg.get('metadata:main',
-                       'identification_title')
+                       self.context.namespaces)).text = self.cfg['metadata']['identification']['title']
             #etree.SubElement(node, util.nspath_eval('atom:updated',
             #  self.context.namespaces)).text = self.exml.xpath('//@timestamp')[0]
 

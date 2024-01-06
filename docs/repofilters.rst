@@ -43,11 +43,11 @@ A default pycsw instance (with no ``repository.filters`` option) will always pro
 
 Suppose you wanted to deploy another pycsw instance which serves metadata from the same database, but only from a specific subset.  Here we set the ``repository.filter`` option:
 
-.. code-block:: text
+.. code-block:: yaml
 
-  [repository]
-  database=sqlite:///records.db
-  filter=pycsw:ParentIdentifier = '33'
+  repository:
+      database: sqlite:///records.db
+      filter: pycsw:ParentIdentifier = '33'
 
 The same CSW `GetRecords` filter as per above then yields the following results:
 
@@ -60,9 +60,9 @@ Another example:
 
 .. code-block:: text
 
-  [repository]
-  database=sqlite:///records.db
-  filter=pycsw:ParentIdentifier != '33'
+  repository:0
+      database: sqlite:///records.db
+      filter: "pycsw:ParentIdentifier != '33'"
 
 The same CSW `GetRecords` filter as per above then yields the following results:
 

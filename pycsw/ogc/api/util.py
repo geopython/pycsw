@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -37,6 +37,7 @@ import json
 import logging
 import mimetypes
 import os
+import pathlib
 import re
 
 from jinja2 import Environment, FileSystemLoader
@@ -137,6 +138,29 @@ def yaml_load(fh):
     EnvVarLoader.add_constructor('!path', path_constructor)
 
     return yaml.load(fh, Loader=EnvVarLoader)
+
+
+def yaml_dump(dict_: dict, destfile: str) -> bool:
+    """
+    Dump dict to YAML file
+
+    :param dict_: `dict` to dump
+    :param destfile: destination filepath
+
+    :returns: `bool`
+    """
+
+    def path_representer(dumper, data):
+        return dumper.represent_scalar(u'tag:yaml.org,2002:str', str(data))
+
+    yaml.add_multi_representer(pathlib.PurePath, path_representer)
+
+    LOGGER.debug('Dumping YAML document')
+    with open(destfile, 'wb') as fh:
+        yaml.dump(dict_, fh, sort_keys=False, encoding='utf8', indent=4,
+                  default_flow_style=False)
+
+    return True
 
 
 def to_json(dict_, pretty=False):

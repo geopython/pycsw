@@ -39,9 +39,9 @@ To expose your geospatial metadata via pycsw, perform the following actions:
 Supported Information Models
 ----------------------------
 
-By default, pycsw's API  supports the core OARec and CSW Record information models.  From
+By default, pycsw's API  supports the core OGC API - Records and CSW Record information models.  From
 the database perspective, the pycsw metadata model is loosely based on ISO 19115 and is
-able to transform to other formats as part of transformation during OARec/CSW requests.
+able to transform to other formats as part of transformation during OGC API - Records/CSW requests.
 
 .. note::
   See :ref:`profiles` for information on enabling profiles
@@ -54,7 +54,7 @@ Setting up the Database
 
 .. code-block:: bash
 
-  pycsw-admin.py setup-repository --config default.cfg
+  pycsw-admin.py setup-repository --config default.yml
 
 This will create the necessary tables and values for the repository.
 
@@ -78,9 +78,9 @@ Loading Records
 
 .. code-block:: bash
 
-  pycsw-admin.py load-records --config default.cfg --path /path/to/records
+  pycsw-admin.py load-records --config default.yml --path /path/to/records
 
-This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.cfg`` (``repository.database``).  Passing ``-r`` to the script will process ``/path/to/records`` recursively.  Passing ``-y`` to the script will force overwrite existing metadata with the same identifier.  Note that ``-p`` accepts either a directory path or single file.
+This will import all ``*.xml`` records from ``/path/to/records`` into the database specified in ``default.yml`` (``repository.database``).  Passing ``-r`` to the script will process ``/path/to/records`` recursively.  Passing ``-y`` to the script will force overwrite existing metadata with the same identifier.  Note that ``-p`` accepts either a directory path or single file.
 
 .. note::
   Records can also be imported using CSW-T (see :ref:`transactions`).
@@ -90,17 +90,17 @@ Exporting the Repository
 
 .. code-block:: bash
 
-  pycsw-admin.py export-records --config default.cfg --path /path/to/output_dir
+  pycsw-admin.py export-records --config default.yml --path /path/to/output_dir
 
-This will write each record in the database specified in ``default.cfg`` (``repository.database``) to an XML document on disk, in directory ``/path/to/output_dir``.
+This will write each record in the database specified in ``default.yml`` (``repository.database``) to an XML document on disk, in directory ``/path/to/output_dir``.
 
 Optimizing the Database
 -----------------------
 
 .. code-block:: bash
 
-  pycsw-admin.py optimize-db --config default.cfg
-  pycsw-admin.py rebuild-db-indexes --config default.cfg
+  pycsw-admin.py optimize-db --config default.yml
+  pycsw-admin.py rebuild-db-indexes --config default.yml
 
 .. note::
   This feature is relevant only for PostgreSQL and MySQL
@@ -110,7 +110,7 @@ Deleting Records from the Repository
 
 .. code-block:: bash
 
-  pycsw-admin.py delete-records --config default.cfg
+  pycsw-admin.py delete-records --config default.yml
 
 This will empty the repository of all records.
 
@@ -121,7 +121,7 @@ PostgreSQL
 ^^^^^^^^^^
 
 -  To enable PostgreSQL support, the database user must be able to create functions within the database.
-- `PostgreSQL Full Text Search`_ is supported for ``csw:AnyText`` based queries.  pycsw creates a tsvector column based on the text from anytext column. Then pycsw creates a GIN index against the anytext_tsvector column.  This is created automatically in ``pycsw.core.repository.setup``.  Any query against OARec's ``q`` parameter or CSW `csw:AnyText` or `apiso:AnyText` will process using PostgreSQL FTS handling
+- `PostgreSQL Full Text Search`_ is supported for ``csw:AnyText`` based queries.  pycsw creates a tsvector column based on the text from anytext column. Then pycsw creates a GIN index against the anytext_tsvector column.  This is created automatically in ``pycsw.core.repository.setup``.  Any query against the OGC API - Records ``q`` parameter or CSW `csw:AnyText` or `apiso:AnyText` will process using PostgreSQL FTS handling
 
 PostGIS
 ^^^^^^^
@@ -145,21 +145,21 @@ mappings are in ``pycsw/core/config.py:StaticContext.md_core_model``).
 To override the default settings:
 
 - define a custom database mapping based on ``etc/mappings.py``
-- in ``default.cfg``, set ``repository.mappings`` to the location of the mappings.py file:
+- in ``default.yml``, set ``repository.mappings`` to the location of the mappings.py file:
 
-.. code-block:: none
+.. code-block:: yaml
 
-  [repository]
-  ...
-  mappings=path/to/mappings.py
+  repository:
+      ...
+      mappings: path/to/mappings.py
 
 Note you can also reference mappings as a Python object as a dotted path:
 
-.. code-block:: none
+.. code-block:: yaml
 
-  [repository]
-  ...
-  mappings='path.to.pycsw_mappings'
+  repository:
+      ...
+      mappings: path.to.pycsw_mappings
 
 
 See the :ref:`geonode`, :ref:`hhypermap`, and :ref:`odc` for further examples.
@@ -375,14 +375,14 @@ the DB, that the ``identifier`` column of the SQL view should be assumed to be t
 
 Finally, we can configure pycsw with the path to the custom mappings and the name of the SQL view:
 
-.. code-block:: ini
+.. code-block:: yaml
 
-    # file: pycsw.cfg
+    # file: pycsw.yml
 
-    [repository]
-    database=postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
-    mappings=/path/to/my_custom_pycsw_mappings.py
-    table=my_pycsw_view
+    repository:
+        database: postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
+        mappings: /path/to/my_custom_pycsw_mappings.py
+        table: my_pycsw_view
 
 
 .. _`GDAL`: https://www.gdal.org

@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="{{ config['server']['encoding'] }}">
-    <title>{% block title %}{{ config['metadata:main']['identification_title'] }} -{% endblock %}</title>
+    <title>{% block title %}{{ config['metadata']['identification']['title'] }} -{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="language" content="{{ config['server']['language'] }}">
-    <meta name="description" content="{{ config['metadata:main']['identification_title'] }}">
-    <meta name="keywords" content="{{ config['metadata:main']['identification_keywords'] }}">
+    <meta name="description" content="{{ config['metadata']['identification']['title'] }}">
+    <meta name="keywords" content="{{ config['metadata']['identification']['keywords'] }}">
     <link rel="shortcut icon" href="{{ config['server']['url'] }}/static/favicon.ico" type="image/x-icon">
     {% for link in data['links'] %}
       <link rel="{{ link['rel'] }}" type="{{ link['type'] }}" title="{{ link['title'] }}" href="{{ link['href'] }}"/>
@@ -26,7 +26,7 @@
     <div class="container">
       <div class="col-sm-12 col-md-10 col-md-offset-1">
         <a title="pycsw website" href="https://pycsw.org"><img class="header-img" src="https://pycsw.org/img/pycsw-logo-vertical.png" alt="pycsw website" title="pycsw website" height="100"/></a>
-      <h1>{{ config['metadata:main']['identification_title'] }}</h1>
+      <h1>{{ config['metadata']['identification']['title'] }}</h1>
       </div>
     </div>
     </header>
@@ -51,7 +51,7 @@
           {% if links_found.json == 0 %}
             <a href="?f=json">JSON</a>
           {% endif %}
-          | <a href="mailto:{{ config['metadata:main']['contact_email'] }}">Contact</a>
+          | <a href="mailto:{{ config['metadata']['contact']['email'] }}">Contact</a>
           </div>
         </div>
       </div>

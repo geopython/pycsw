@@ -69,24 +69,24 @@ pycsw configuration
 It is possible to supply a custom configuration file for pycsw as a bind 
 mount or as a docker secret (in the case of docker swarm). The configuration 
 file is searched at the value of the ``PYCSW_CONFIG`` environmental variable,
-which defaults to ``/etc/pycsw/pycsw.cfg``. 
+which defaults to ``/etc/pycsw/pycsw.yml``. 
 
 Supplying the configuration file via bind mount::
 
     docker run \
         --name pycsw \
         --detach \
-        --volume <path-to-local-pycsw.cfg>:/etc/pycsw/pycsw.cfg \
+        --volume <path-to-local-pycsw.yml>:/etc/pycsw/pycsw.yml \
         --publish 8000:8000 \
         geopython/pycsw
 
 Supplying the configuration file via docker secrets::
 
     # first create a docker secret with the pycsw config file
-    docker secret create pycsw-config <path-to-local-pycsw.cfg>
+    docker secret create pycsw-config <path-to-local-pycsw.yml>
     docker service create \
         --name pycsw \
-        --secret src=pycsw-config,target=/etc/pycsw/pycsw.cfg \
+        --secret src=pycsw-config,target=/etc/pycsw/pycsw.yml \
         --publish 8000:8000
         geopython/pycsw
 
@@ -112,7 +112,7 @@ PostgreSQL repositories
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifying a PostgreSQL repository is just a matter of configuring a custom
-pycsw.cfg file with the correct specification.
+pycsw.yml file with the correct specification.
 
 Check `pycsw's github repository`_ for an example of a docker-compose/stack
 file that spins up a postgis database together with a pycsw instance.

@@ -14,6 +14,6 @@ HHypermap Setup
 
 pycsw is enabled and configured by default in HHypermap, so there are no additional steps required once HHypermap is setup.  See the ``REGISTRY_PYCSW`` `hypermap/settings.py entries`_ for customizing pycsw within HHypermap.
 
-The HHypermap plugin is managed outside of pycsw within the HHypermap project.  HHypermap settings must ensure that ``REGISTRY_PYCSW['repository']['source']`` is set to``hypermap.search.pycsw_repository``.
+The HHypermap plugin is managed outside of pycsw within the HHypermap project.  HHypermap settings must ensure that ``REGISTRY_PYCSW['repository']['source']`` is set to ``hypermap.search.pycsw_repository``.
 
 .. _`hypermap/settings.py entries`: https://github.com/cga-harvard/Hypermap-Registry/blob/master/hypermap/settings.py

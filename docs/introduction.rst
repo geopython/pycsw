@@ -3,7 +3,7 @@
 Introduction
 ============
 
-pycsw is an OARec and OGC CSW server implementation written in Python.
+pycsw is an OGC API - Records and OGC CSW server implementation written in Python.
 
 Features
 ========
@@ -22,7 +22,7 @@ Features
 - implements Open Archives Initiative Protocol for Metadata Harvesting
 - supports ISO, Dublin Core, DIF, FGDC, Atom, GM03 and DataCite metadata models
 - CGI or WSGI deployment
-- simple configuration
+- simple YAML configuration
 - transactional capabilities (OGC API - Records and CSW-T)
 - flexible repository configuration
 - `GeoNode`_ connectivity

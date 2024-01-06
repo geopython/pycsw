@@ -6,12 +6,12 @@ OGC API - Records Support
 Versions
 --------
 
-pycsw supports `OGC API - Records - Part 1: Core, version 1.0`_ (OARec) by default.
+pycsw supports `OGC API - Records - Part 1: Core, version 1.0`_ by default.
 
 Request Examples
 ----------------
 
-As the OGC successor to CSW, OARec is a change in paradigm rooted in lowering
+As the OGC successor to CSW, OGC API - Records is a change in paradigm rooted in lowering
 the barrier to entry, being webby/of the web, and focusing on developer experience/adoption.
 JSON and HTML output formats are both supported via the ``f`` parameter.
 

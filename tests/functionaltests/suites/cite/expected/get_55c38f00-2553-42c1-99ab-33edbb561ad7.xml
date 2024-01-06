@@ -19,8 +19,8 @@
     <ows20:Operation name="GetCapabilities">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="acceptFormats">
@@ -48,8 +48,8 @@
     <ows20:Operation name="GetDomain">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="ParameterName">
@@ -73,8 +73,8 @@
     <ows20:Operation name="GetRecords">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="CONSTRAINTLANGUAGE">
@@ -120,7 +120,7 @@
       </ows20:Constraint>
       <ows20:Constraint name="OpenSearchDescriptionDocument">
         <ows20:AllowedValues>
-          <ows20:Value>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg?mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities</ows20:Value>
+          <ows20:Value>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml?mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities</ows20:Value>
         </ows20:AllowedValues>
       </ows20:Constraint>
       <ows20:Constraint name="FederatedCatalogues">
@@ -132,8 +132,8 @@
     <ows20:Operation name="GetRecordById">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="ElementSetName">
@@ -164,14 +164,14 @@
     <ows20:Operation name="GetRepositoryItem">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
     </ows20:Operation>
     <ows20:Operation name="Transaction">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="TransactionSchemas">
@@ -194,7 +194,7 @@
     <ows20:Operation name="Harvest">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="ResourceType">

@@ -8,8 +8,8 @@ pycsw supports the `The Open Archives Initiative Protocol for Metadata Harvestin
 OAI-PMH OpenSearch support is enabled by default.  There are two ways to access OAI-PMH
 depending on the deployment pattern chosen.
 
-OARec deployment
-----------------
+OGC API - Records deployment
+----------------------------
 
 .. code-block:: bash
 
