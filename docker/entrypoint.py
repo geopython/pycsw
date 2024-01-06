@@ -47,6 +47,7 @@ import sys
 
 from pycsw.core.config import StaticContext
 from pycsw.core.repository import Repository, setup
+from pycsw.ogc.api.util import yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
