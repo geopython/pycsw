@@ -45,7 +45,7 @@ LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 ARG BUILD_DEV_IMAGE="false"
 
 RUN apt-get update && \
-    apt-get install --yes --no-install-recommends ca-certificates libexpat1 && \
+    apt-get install --yes --no-install-recommends ca-certificates libexpat1 python3-setuptools && \
     rm -rf /var/lib/apt/lists/*
 
 RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
