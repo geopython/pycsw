@@ -1,8 +1,9 @@
 {{- if .Values.enabled -}}
+{{- $nginxConfigmapName := include "nginx-configmap.fullname" . }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-nginx-configmap
+  name: {{ $nginxConfigmapName }}
 data:
   default.conf: {{ tpl (.Files.Get "config/default.conf") . | quote }}
   nginx.conf: {{ tpl (.Files.Get "config/nginx.conf") . | quote }}

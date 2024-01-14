@@ -5,9 +5,29 @@ global:
     flavor: openshift
   tracing: {}
   metrics: {}
-  environment: {}
+  environment: ""
   authentication:
     jwtPublicKeySecretName: map-colonies-jwks
+  ca:
+    secretName: ""
+    path: "/usr/local/share/ca-certificates"
+    key: "ca.crt"
+  authentication:
+    opa:
+      enabled: false
+      customHeaderName: ""
+  db:
+    host: ""
+    name: ""
+    port: 5432
+    sslEnabled: false
+    rejectUnauthorized: false
+    secrets:
+      useExternal: false
+      externalSecretName: ""
+      caFileKey: ""
+      certFileKey: ""
+      keyFileKey: ""
 
 enabled: true
 environment: development
@@ -23,40 +43,25 @@ cloudProvider:
   flavor: openshift
 
 authentication:
-  ca:
-    enabled: false
-    useExternal: false
-    externalSecretName: ""
   ssl:
     enabled: false
     useExternal: false
     externalSecretName: ""
-
-caSecretName: ""
-caPath: "/usr/local/share/ca-certificates"
-caKey: "ca.crt"
-
-rasterCommon:
-  authentication:
-    opa:
-      enabled: true
-      customHeaderName: "x-api-key,content-type"
-  ca:
-    secretName: ""
-    path: "/usr/local/share/ca-certificates"
-    key: "ca.crt"
-  db:
-    host: "localhost"
-    name: "raster"
-    port: 5432
-    sslEnabled: false
-    rejectUnauthorized: true
-    secrets:
-      useExternal: true
-      externalSecretName: ""
-      caFileKey: "caFileKey"
-      certFileKey: "certFileKey"
-      keyFileKey: "keyFileKey"
+  opa:
+    enabled: false
+    customHeaderName: "x-api-key,content-type"
+db:
+  host: ""
+  name: ""
+  port: 5432
+  sslEnabled: false
+  rejectUnauthorized: false
+  secrets:
+    useExternal: false
+    externalSecretName: ""
+    caFileKey: ""
+    certFileKey: ""
+    keyFileKey: ""
 
 image:
   repository: pycsw
@@ -66,6 +71,13 @@ internalServicePort: 80
 pycswPort: 8000
 nodePort: 30018
 servicePort: 8080
+
+# add pod annotations
+# example:
+# podAnnotations:
+  # annotation1: annotation-value-1
+  # annotation2: annotation-value-2
+podAnnotations: {}
 
 env:
   loglevel: WARNING
@@ -111,6 +123,7 @@ resources:
 
 nginx:
   enabled: true
+  fullnameOverride: ""
   replicaCount: 2
   image:
     repository: nginx-otel-unprivileged
@@ -129,7 +142,7 @@ nginx:
   extraVolumes:
     - name: nginx-config
       configMap:
-        name: "{{ .Release.Name }}-nginx-configmap"
+        name: "{{ .Release.Name }}-pycsw-nginx-configmap"
 
   extraVolumeMounts:
     - name: nginx-config

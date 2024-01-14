@@ -27,13 +27,6 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Create service name as used by the service name label.
-*/}}
-{{- define "service.fullname" -}}
-{{- printf "%s-%s" .Release.Name "service" }}
-{{- end }}
-
-{{/*
 Common labels
 */}}
 {{- define "pycsw.labels" -}}
@@ -130,37 +123,39 @@ Returns the tracing url from global if exists or from the chart's values
 {{- end -}}
 
 {{- define "pycsw-pg-connection-string" -}}
+{{- $db := (include "common.db.merged" .) | fromYaml }}
 {{- "postgresql://${DB_USER}" -}}
 {{- if .Values.env.db.requirePassword -}}
 {{- ":${DB_PASSWORD}" -}}
 {{- end -}}
 {{- "@${DB_HOST}:${DB_PORT}/${DB_NAME}" -}}
-{{- if .Values.rasterCommon.db.sslEnabled -}}
+{{- if $db.sslEnabled -}}
 {{- "?sslmode=require" -}}
-{{- if .Values.rasterCommon.db.secrets.caFileKey -}}
+{{- if $db.secrets.caFileKey -}}
 {{- "&sslrootcert=" -}}/.postgresql/ca.pem
 {{- end -}}
-{{- if .Values.rasterCommon.db.secrets.certFileKey -}}
+{{- if $db.secrets.certFileKey -}}
 {{- "&sslcert=" -}}/.postgresql/cert.pem
 {{- end -}}
-{{- if .Values.rasterCommon.db.secrets.keyFileKey -}}
+{{- if $db.secrets.keyFileKey -}}
 {{- "&sslkey=" -}}/.postgresql/key.pem
 {{- end -}}
 {{- end -}}
 {{- end -}}
 
 {{- define "pycsw.cors.allowedHeaders" -}}
+{{- $authentication := (include "common.authentication.merged" .) | fromYaml }}
 {{- $headerList := list -}}
 {{- if ne .Values.env.cors.allowedHeaders "" -}}
 {{- range $k, $v := (split "," .Values.env.cors.allowedHeaders) -}}
 {{- $headerList = append $headerList $v -}}
 {{- end -}}
-{{- if ne .Values.rasterCommon.authentication.opa.customHeaderName "" -}}
-{{- $headerList = append $headerList .Values.rasterCommon.authentication.opa.customHeaderName -}}
+{{- if ne $authentication.opa.customHeaderName "" -}}
+{{- $headerList = append $headerList $authentication.opa.customHeaderName -}}
 {{- end -}}
 {{- $headerList = uniq $headerList -}}
 {{-  quote (join "," $headerList) -}}
 {{- else -}}
-{{- .Values.rasterCommon.authentication.opa.customHeaderName | quote -}}
+{{- $authentication.opa.customHeaderName | quote -}}
 {{- end -}}
 {{- end -}}

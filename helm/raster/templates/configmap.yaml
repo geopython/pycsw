@@ -1,11 +1,13 @@
 {{- $chartName := include "pycsw.name" . -}}
+{{- $configmapName := include "configmap.fullname" . }}
 {{- $tracingUrl := include "pycsw.tracingUrl" . -}}
 {{- $metricsUrl := include "pycsw.metricsUrl" . -}}
+{{- $db := (include "common.db.merged" .) | fromYaml }}
 {{- if .Values.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-configmap
+  name: {{ $configmapName }}
 data:
   {{ if .Values.env.tracing.enabled }}
   TELEMETRY_TRACING_ENABLED: 'true'
@@ -22,10 +24,10 @@ data:
   CORS_ALLOWED_HEADERS: {{ template "pycsw.cors.allowedHeaders" . }}
   CORS_ALLOWED_ORIGIN: {{ .Values.env.cors.allowedOrigin | quote }}
   LOG_FORMAT: {{ .Values.env.logFormat | quote }}
-  DB_HOST: {{ quote .Values.rasterCommon.db.host }}
-  DB_PORT:  {{ quote .Values.rasterCommon.db.port }}
-  DB_NAME: {{ quote .Values.rasterCommon.db.name }}
-  POSTGRES_ENABLE_SSL_AUTH: {{ quote .Values.rasterCommon.db.sslEnabled }}
+  DB_HOST: {{ $db.host }}
+  DB_PORT:  {{ $db.port | quote }}
+  DB_NAME: {{ $db.name }}
+  POSTGRES_ENABLE_SSL_AUTH: {{ $db.sslEnabled | quote }}
   DB_SCHEMA: {{ quote .Values.env.db.schema }}
   PGAPPNAME: {{ $chartName }}
 {{- end }}
