@@ -241,13 +241,13 @@ def write_record(result, esn, context, url=None):
                     contnm = etree.SubElement(cont, util.nspath_eval('contributorName', NAMESPACES))
                     contnm.text = cnt.get('individualname',cnt.get('organization', ''))
                     cont.attrib['contributorType'] = roleMapping.get(cnt.get('role', ''),'Other')
-                    if cont.get('url').startswith('http'):
+                    if cnt.get('url').startswith('http'):
                         contid = etree.SubElement(cont, util.nspath_eval('nameIdentifier', NAMESPACES))
                         contid.attrib['nameIdentifierScheme'] = "URL"
-                        contid.text = cont['url']
-                    if cont['organization']:
+                        contid.text = cnt['url']
+                    if cnt['organization']:
                         contaf = etree.SubElement(cont, util.nspath_eval('affiliation', NAMESPACES))
-                        contaf.text = cont['organization']
+                        contaf.text = cnt['organization']
 
                     if not hasPublisher and cnt.get('role', '').lower() in ['publisher','resourceProvider','distributor']:
                         hasPublisher = True
