@@ -137,29 +137,22 @@
 
 {% block extrafoot %}
 {% if data['features'] %}
+
     <script>
     var map = L.map('records-map').setView([0, 0], 1);
+    var items;
     map.addLayer(new L.TileLayer(
         'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: 'Map data &copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
         }
     ));
-    var geojson_data = {{ data['features'] | to_json }};
-    var items = new L.GeoJSON(geojson_data, {
-        onEachFeature: function (feature, layer) {
-            var url = './items/' + feature.id;
-            var html = '<span><a href="' + url + '">' + feature.id + '</a></span>';
-            layer._leaflet_id = feature.id;
-            layer.bindPopup(html);
-        }
-    });
 
-    map.addLayer(items);
-    var bounds = items.getBounds();
-    if (bounds.isValid() === true) {
-        map.fitBounds(bounds);
-    }
+    {% for link in data['links'] %}
+    {% if link['rel'] == 'self' %}
+    maprecords("{{ link['href'].replace('f=html','') }}");
+    {% endif %}
+    {% endfor %}
 
     var highlightStyle = {
         color: 'red',
@@ -190,6 +183,29 @@
             }
         });
     });
+
+  async function maprecords(u){
+   let response = await fetch(u, {
+      method: "GET", 
+		  headers: {'Accept': 'application/json'}});
+   if (response.ok) {
+      let geojsondata = await response.json();  
+      items = new L.GeoJSON(geojsondata, {
+        onEachFeature: function (feature, layer) {
+            var url = './items/' + encodeURIComponent(feature.id);
+            var html = '<span><a href="' + url + '">' + (feature.properties.title?feature.properties.title:feature.id) + '</a></span>';
+            layer._leaflet_id = feature.id;
+            layer.bindPopup(html);
+          }
+        });
+        map.addLayer(items);
+        var bounds = items.getBounds();
+        if (bounds.isValid() === true) {
+            map.fitBounds(bounds);
+        }
+   }
+}
+
     </script>
 {% endif %}
 {% endblock %}
