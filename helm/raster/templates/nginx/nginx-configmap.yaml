@@ -1,0 +1,18 @@
+{{- if .Values.nginx.enabled -}}
+{{- $chartName := include "pycsw.name" . -}}
+{{- $releaseName := .Release.Name -}}
+{{- $nginxConfigmapName := include "nginx-configmap.fullname" . }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $nginxConfigmapName }}
+  labels:
+    app: {{ $releaseName }}-{{ $chartName }}
+    component: nginx-configmap
+    environment: {{ .Values.environment }}
+    release: {{ $releaseName }}
+data:
+  default.conf: {{ tpl (.Files.Get "config/default.conf") . | quote }}
+  nginx.conf: {{ tpl (.Files.Get "config/nginx.conf") . | quote }}
+  log_format.conf: {{ tpl (.Files.Get "config/log_format.conf") . | quote }}
+{{- end }}

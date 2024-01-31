@@ -1,21 +1,18 @@
 global:
   cloudProvider:
-    dockerRegistryUrl: my-registry-url.io
-    imagePullSecretName: "my-registry-secret"
+    dockerRegistryUrl: ""
+    imagePullSecretName: ""
     flavor: openshift
   tracing: {}
   metrics: {}
   environment: ""
   authentication:
     jwtPublicKeySecretName: map-colonies-jwks
+  opalaEnabled: false  
   ca:
     secretName: ""
     path: "/usr/local/share/ca-certificates"
     key: "ca.crt"
-  authentication:
-    opa:
-      enabled: false
-      customHeaderName: ""
   db:
     host: ""
     name: ""
@@ -23,8 +20,8 @@ global:
     sslEnabled: false
     rejectUnauthorized: false
     secrets:
-      useExternal: false
-      externalSecretName: ""
+      useExternal: true
+      externalSecretName: "raster-dev-postgres-secret"
       caFileKey: ""
       certFileKey: ""
       keyFileKey: ""
@@ -38,8 +35,8 @@ splunkIndex: ""
 imagePullPolicy: Always
 
 cloudProvider:
-  dockerRegistryUrl: my-registry-url.io
-  imagePullSecretName: "my-registry-secret"
+  dockerRegistryUrl: ""
+  imagePullSecretName: ""
   flavor: openshift
 
 authentication:
@@ -128,21 +125,66 @@ nginx:
   image:
     repository: nginx-otel-unprivileged
     tag: "v1.0.0"
+  envoy:
+    image: envoyproxy/envoy
+    imageTag: v1.20.7
+    port: &envoyPort 8000
+    maxRequestBytes: 8192
+    requestedDomain: raster
+    resources:
+      enabled: true
+      value:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+  opa:
+    image: openpolicyagent/opa
+    imageTag: 0.29.4-envoy-3
+    port: 9191
+    jwtPublicKeySecretName: map-colonies-jwks
+    customHeaderName: "x-api-key"
+    secretName: docker-mapproxy-nginx-opa
+    enableLogging: false
+    logLevel: warn
+    resources:
+      enabled: true
+      value:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
   port: 8080
   internalServicePort: 80
-  targetPort: 8080
-  servicePort: 8080
-  nodePort: 30001
+  nginxTargetPort: &nginxTargetPort 8080
+  targetPort: *envoyPort  # --> if global.opalaEnabled is true use *nginxTargetPort else use *envoyPort | if no authorization is needed use *nginxTargetPort
+  nodePort: 30003
 
   authorization:
     enabled: true
     domain: "raster"
-    url: http://opa-la-opa-service.integration/v1/data/http/authz/decision
+    url: http://opa-dev-opa-service.infra-services/v1/data/http/authz/decision
+    token:
+      queryName: token
 
   extraVolumes:
     - name: nginx-config
       configMap:
         name: "{{ .Release.Name }}-pycsw-nginx-configmap"
+    - name: envoy-config
+      configMap:
+        name: "{{ .Release.Name }}-pycsw-envoy-configmap"
+    - name: opa-policy
+      secret:
+        secretName: "{{ .Release.Name }}-opa"
+    - name: jwt-public-keys
+      secret:
+        secretName: "{{ .Values.global.authentication.jwtPublicKeySecretName }}"    
 
   extraVolumeMounts:
     - name: nginx-config
@@ -151,6 +193,68 @@ nginx:
     - mountPath: "/etc/nginx/nginx.conf"
       name: nginx-config
       subPath: nginx.conf
+    - name: nginx-config
+      mountPath: "/etc/nginx/log_format.conf"
+      subPath: log_format.conf
+
+  sidecars: |-
+    {{- if and (not .Values.global.opalaEnabled) (.Values.authorization.enabled) }}
+    - name: envoy
+      image: {{ .Values.envoy.image }}:{{ .Values.envoy.imageTag }}
+      volumeMounts:
+      - name: envoy-config
+        readOnly: true
+        mountPath: /config
+      - name: jwt-public-keys
+        readOnly: true
+        mountPath: /keys/mapColonies.jwks
+        subPath: mapColonies.jwks
+      args:
+      - "envoy"
+      - "--config-path"
+      - "/config/envoy.yaml"
+      ports:
+      - name: http
+        containerPort: 8000
+        protocol: TCP
+      {{- if .Values.envoy.resources.enabled }}
+      resources:
+        {{- toYaml .Values.envoy.resources.value | nindent 4 }}
+      {{- end }}
+    - name: opa
+      image: "{{ .Values.opa.image }}:{{ .Values.opa.imageTag }}"
+      volumeMounts:
+      - readOnly: true
+        mountPath: /policy
+        name: opa-policy
+      args:
+      - "run"
+      - "--server"
+      - "--addr=0.0.0.0:8181"
+      - "--diagnostic-addr=0.0.0.0:8282"
+      - "--set=plugins.envoy_ext_authz_grpc.add=:{{ .Values.opa.imageTag }}"
+      - "--set=plugins.envoy_ext_authz_grpc.path=envoy/authz/allow"
+      {{- if .Values.opa.enableLogging }}
+      - "--set=decision_logs.console=true"
+      {{- end }}
+      - "/policy/policy.rego"
+      {{- if .Values.opa.resources.enabled }}
+      resources:
+        {{- toYaml .Values.opa.resources.value | nindent 12 }}
+      {{- end }}
+      livenessProbe:
+        httpGet:
+          path: /health?plugins
+          port: 8282
+        initialDelaySeconds: 5
+        periodSeconds: 30
+      readinessProbe:
+        httpGet:
+          path: /health?plugins
+          port: 8282
+        initialDelaySeconds: 5
+        periodSeconds: 30
+      {{- end }}    
 
   resources:
     enabled: true

@@ -30,4 +30,10 @@ data:
   POSTGRES_ENABLE_SSL_AUTH: {{ $db.sslEnabled | quote }}
   DB_SCHEMA: {{ quote .Values.env.db.schema }}
   PGAPPNAME: {{ $chartName }}
+  AUTH_ENABLED: {{ .Values.nginx.authorization.domain | quote }}
+  {{ if and (not .Values.nginx.opalaEnabled) (.Values.nginx.authorization.domain) }}
+  AUTH_VALID_DOMAIN: {{ .Values.nginx.authorization.domain | quote }}
+  AUTH_HEADER_NAME: {{ .Values.nginx.opa.customHeaderName | quote }}
+  AUTH_QUERY_NAME: {{ .Values.nginx.authorization.token.queryName | quote }}
+  {{- end}}
 {{- end }}

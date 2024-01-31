@@ -148,7 +148,7 @@ spec:
               path: /csw?service=CSW&request=GetCapabilities&version=3.0.0
               port: 8080
             initialDelaySeconds: 30
-            timeoutSeconds: 1
+            timeoutSeconds: 5
           {{- if .Values.resources.enabled }}
           resources:
             {{- toYaml .Values.resources.value | nindent 12 }}

@@ -1,0 +1,12 @@
+{{- if and (.Values.nginx.authorization.enabled) (not .Values.global.opalaEnabled) }}
+{{- $chartName := include "pycsw.name" . -}}
+{{- $envoyConfigmapName := include "envoy-configmap.fullname" . }}
+{{- $releaseName := .Release.Name -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ $envoyConfigmapName }}
+data:
+  envoy.yaml: |-
+{{ tpl (.Files.Get "config/envoy.yaml") . | indent 4 }}
+{{- end }}

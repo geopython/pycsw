@@ -38,7 +38,7 @@ Usage:
 {{- end -}}
 
 {{/*
-End of uasage example
+End of usage example
 */}}
 
 {{/*
