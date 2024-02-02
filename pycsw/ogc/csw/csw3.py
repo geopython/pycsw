@@ -259,7 +259,7 @@ class Csw3(object):
             etree.SubElement(address,
             util.nspath_eval('ows20:PostalCode',
             self.parent.context.namespaces)).text = \
-            metadata_main['contact'].get('postalcode', 'missing')
+            str(metadata_main['contact'].get('postalcode', 'missing'))
 
             etree.SubElement(address,
             util.nspath_eval('ows20:Country', self.parent.context.namespaces)).text = \
