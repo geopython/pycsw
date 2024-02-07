@@ -46,9 +46,9 @@ Custom definitions
 */}}
 
 {{- define "common.db.merged" -}}
-{{- include "common.tplvalues.merge" ( dict "values" ( list .Values.global.db .Values.db ) "context" . ) }}
+{{- include "common.tplvalues.merge" ( dict "values" ( list .Values.db .Values.global.db ) "context" . ) }}
 {{- end -}}
 
 {{- define "common.authentication.merged" -}}
-{{- include "common.tplvalues.merge" ( dict "values" ( list .Values.global.authentication .Values.authentication ) "context" . ) }}
+{{- include "common.tplvalues.merge" ( dict "values" ( list .Values.authentication .Values.global.authentication ) "context" . ) }}
 {{- end -}}
