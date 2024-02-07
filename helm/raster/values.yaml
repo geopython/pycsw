@@ -144,6 +144,7 @@ nginx:
     image: openpolicyagent/opa
     imageTag: 0.29.4-envoy-3
     port: 9191
+    createSecret: false
     jwtPublicKeySecretName: map-colonies-jwks
     customHeaderName: "x-api-key"
     secretName: docker-mapproxy-nginx-opa
