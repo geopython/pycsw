@@ -79,6 +79,7 @@ podAnnotations: {}
 env:
   loglevel: WARNING
   maxrecords: null
+  bboxPrecisionDigits: 10
   logfile: ""
   profiles: mc_raster
   logFormat: >-
