@@ -567,8 +567,8 @@ class API:
             cql_query = args['filter']
             filter_lang = args.get('filter-lang')
             if filter_lang is not None and filter_lang not in filter_langs:
-                msg = f'Invalid filter-lang'
-                LOGGER.exception(msg)
+                msg = f'Invalid filter-lang, available: {", ".join(filter_langs)}'
+                LOGGER.exception(f'{msg} Used: {filter_lang}')
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
         LOGGER.debug('Transforming property filters into CQL')
