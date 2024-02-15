@@ -1021,13 +1021,12 @@ class API:
             if 'federatedcatalogues' in self.config:
                 LOGGER.debug('Adding federated catalogues')
                 collection_info['federatedCatalogues'] = []
-                if not self.config['federatedcatalogues']: # if empty in config
-                    self.config['federatedcatalogues'] = []
-                for fc in self.config.get('federatedcatalogues', []):
-                    collection_info['federatedCatalogues'].append({
-                        'type': 'OGC API - Records',
-                        'url': fc
-                    })
+                if self.config.get('federatedcatalogues') not in [None,""]: # if empty in config
+                    for fc in self.config.get('federatedcatalogues'):
+                        collection_info['federatedCatalogues'].append({
+                            'type': 'OGC API - Records',
+                            'url': fc
+                        })
 
         return collection_info
 
