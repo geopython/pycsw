@@ -45,6 +45,7 @@ MD_CORE_MODEL = {
         'pycsw:footprint': 'footprint_geojson',
         'pycsw:Source': 'product_name',
         'pycsw:transparency': 'transparency',
+        'pycsw:ImageFormat': 'tile_mime_format',
         
         'pycsw:Relation': '',
         'pycsw:Language': '',
