@@ -1,19 +1,24 @@
-# This is a basic workflow to help you get started with Actions
+name: Match chart version and push to ACR
 
-name: CI
-
-# Controls when the action will run. 
 on:
   push:
     tags:
-    - 'v*'
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+      - 'v*'
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  workflow_dispatch:
+    inputs:
+      version:
+        required: false
+        type: string
+env:
+  HELM_EXPERIMENTAL_OCI: 1
+
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  # This workflow contains a single job called "build"
-  build_and_push:
+  build_and_push_docker:
     runs-on: ubuntu-latest
     env:
       Docker_Repository: ${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}
@@ -29,12 +34,41 @@ jobs:
           echo "Docker_Repository=${Docker_Repository,,}" >>${GITHUB_ENV}
       - run: docker build . -t ${{ env.Docker_Repository }}
       - run: docker push ${{ env.Docker_Repository }}
-  security:
+
+  build_and_push_helm:
+    name: publish helm to acr
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/node@master
-      continue-on-error: true
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}  
+    steps:    
+      - name: checkout repo from latest commit
+        uses: actions/checkout@v2
+
+      - name: install helm
+        uses: Azure/setup-helm@v1
+        with:
+          version: 'v3.6.3'
+
+      - name: login to acr using helm
+        run: |
+          helm registry login ${{ secrets.ACR_URL }} --username ${{ secrets.ACR_PUSH_USER }} --password ${{ secrets.ACR_PUSH_TOKEN }} 
+
+      - name: Get Chart name
+        run: |
+          export "CHART=$(cat Chart.yaml | grep name | awk '{print $2; exit}')"
+          echo "CHART=$CHART" >> $GITHUB_ENV
+        working-directory: ./helm
+
+      - name: Get version 
+        run: |
+          export "VER=$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
+          echo "VER=$VER" >> $GITHUB_ENV
+        working-directory: ./helm
+
+      - name: save helm chart to local registry
+        run: |
+          helm chart save . '${{ secrets.ACR_URL }}/helm/${{ env.CHART }}:${{ env.VER }}'
+        working-directory: ./helm
+      
+      - name: publish chart to acr
+        run: |
+          helm chart push ${{ secrets.ACR_URL }}/helm/${{ env.CHART }}:${{ env.VER }}
+        working-directory: ./helm

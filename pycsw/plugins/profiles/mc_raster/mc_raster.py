@@ -53,7 +53,7 @@ class MCRaster(base_profile.base_profile):
                         'mc:scale': Queryable(context.md_core_model['mappings']['pycsw:Scale'], 'mc:scale'),
                         'mc:productBBox': Queryable(context.md_core_model['mappings']['pycsw:productBBox'], 'mc:productBBox'),
                         'mc:transparency': Queryable(context.md_core_model['mappings']['pycsw:transparency'], 'mc:transparency'),
-                        'mc:imageFormat': Queryable(context.md_core_model['mappings']['pycsw:ImageFormat'], 'mc:imageFormat'),
+                        'mc:mimeType': Queryable(context.md_core_model['mappings']['pycsw:MimeType'], 'mc:mimeType'),
                     }
                 })
         }
