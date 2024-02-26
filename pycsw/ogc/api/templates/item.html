@@ -42,8 +42,8 @@
           {% if 'properties' in data %}
             {% for key, value in data['properties'].items() %}
             <tr>
-              <td>{{ key }}</td>
-              {% if key == 'keywords' %}
+              <td>{{ key | capitalize }}</td>
+              {% if key == 'keywords' or key == 'formats' %}
                 <td>
                   <ul>
                   {% for keyword in value %}
@@ -114,7 +114,17 @@
           {% if data['time'] %}
           <tr>
             <td>Temporal</td>
-            <td>{{ data['time'] }}</td>
+            <td>
+              <ul>
+                {% if data['time'] is string  %}
+                  <li>{{ data['time'] }}</li>
+                {% else %}
+                  {% for d in data['time'] %}
+                    <li>{{ d }}</li>
+                  {% endfor %}
+                {% endif %}
+              </ul>
+            </td>
           </tr>
           {% endif %}
           <tr>
