@@ -222,7 +222,7 @@ def items(collection='metadata:main'):
                                 collection))
 
 
-@BLUEPRINT.route('/collections/<collection>/items/<item>',
+@BLUEPRINT.route('/collections/<collection>/items/<path:item>',
                  methods=['GET', 'PUT', 'DELETE'])
 @BLUEPRINT.route('/stac/collections/<collection>/items/<item>')
 def item(collection='metadata:main', item=None):
