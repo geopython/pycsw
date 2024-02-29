@@ -9,6 +9,7 @@
 {{ $sslSecretName := ternary .Values.authentication.ssl.externalSecretName (printf "%s%s" .Release.Name "-open-ssl") .Values.authentication.ssl.useExternal }}
 {{ $postgresSecretName := ternary $db.secrets.externalSecretName (printf "%s%s" .Release.Name "-postgres-secret") $db.secrets.useExternal }}
 {{- $imageTag := include "pycsw.tag" . -}}
+{{- $serverURL := include "pycsw.serverURL" . -}}
 
 {{- if .Values.enabled -}}
 
@@ -115,7 +116,7 @@ spec:
               value: {{ printf "%s/%s" .Values.caPath .Values.caKey | quote }}
             {{- end }}
             - name: PYCSW_SERVER_URL
-              value: http://localhost:8000
+              value: {{ $serverURL }}
             - name: PYCSW_MAPPINGS_FILEPATH
               value: /etc/pycsw/mappings.py
             - name: DB_USER

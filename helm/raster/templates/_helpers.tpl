@@ -65,6 +65,21 @@ Returns the environment from global if exists or from the chart's values, defaul
 {{- end -}}
 
 {{/*
+Returns the pycsw server url based on the provided values, default localhost
+*/}}
+{{- define "pycsw.serverURL" -}}
+    {{- if not .Values.route.host }}
+        {{- printf "http://localhost:8000" -}}
+    {{- else -}}
+        {{- $protocol := .Values.route.https | ternary "httos" "http" -}}
+        {{- printf "%s://%s" $protocol .Values.route.host -}}
+        {{- if .Values.route.path -}}
+            {{- printf "%s" .Values.route.path -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
 Returns the cloud provider name from global if exists or from the chart's values, defaults to minikube
 */}}
 {{- define "pycsw.cloudProviderFlavor" -}}
