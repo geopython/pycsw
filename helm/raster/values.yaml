@@ -8,7 +8,7 @@ global:
   environment: ""
   authentication:
     jwtPublicKeySecretName: map-colonies-jwks
-  opalaEnabled: false  
+  opalaEnabled: false
   ca:
     secretName: ""
     path: "/usr/local/share/ca-certificates"
@@ -72,8 +72,8 @@ servicePort: 8080
 # add pod annotations
 # example:
 # podAnnotations:
-  # annotation1: annotation-value-1
-  # annotation2: annotation-value-2
+# annotation1: annotation-value-1
+# annotation2: annotation-value-2
 podAnnotations: {}
 
 env:
@@ -164,7 +164,7 @@ nginx:
   port: 8080
   internalServicePort: 80
   nginxTargetPort: &nginxTargetPort 8080
-  targetPort: *envoyPort  # --> if global.opalaEnabled is true use *nginxTargetPort else use *envoyPort | if no authorization is needed use *nginxTargetPort
+  targetPort: *envoyPort # --> if global.opalaEnabled is true use *nginxTargetPort else use *envoyPort | if no authorization is needed use *nginxTargetPort
   nodePort: 30003
 
   authorization:
@@ -186,7 +186,7 @@ nginx:
         secretName: "{{ .Release.Name }}-opa"
     - name: jwt-public-keys
       secret:
-        secretName: "{{ .Values.global.authentication.jwtPublicKeySecretName }}"    
+        secretName: "{{ .Values.global.authentication.jwtPublicKeySecretName }}"
 
   extraVolumeMounts:
     - name: nginx-config
@@ -256,7 +256,7 @@ nginx:
           port: 8282
         initialDelaySeconds: 5
         periodSeconds: 30
-      {{- end }}    
+      {{- end }}
 
   resources:
     enabled: true
