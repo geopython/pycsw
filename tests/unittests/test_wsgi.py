@@ -31,7 +31,6 @@
 """Unit tests for pycsw.wsgi"""
 
 from unittest import mock
-
 from wsgiref.util import setup_testing_defaults
 
 import pytest
