@@ -30,7 +30,7 @@
 # =================================================================
 """Unit tests for pycsw.wsgi"""
 
-import unittest import mock
+from unittest import mock
 
 from wsgiref.util import setup_testing_defaults
 
