@@ -32,8 +32,8 @@ import datetime as dt
 import os
 import time
 from pathlib import Path
+from unittest import mock
 
-import mock
 import pytest
 from shapely.wkt import loads
 
