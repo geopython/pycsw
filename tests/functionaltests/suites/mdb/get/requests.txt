@@ -1,0 +1,2 @@
+GetCapabilities,service=CSW&version=2.0.2&request=GetCapabilities
+DescribeRecord,service=CSW&REQUEST=DescribeRecord&version=2.0.2&typeName=mdb:MD_Metadata
