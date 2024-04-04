@@ -5,9 +5,7 @@ build
 dist
 docs/_build
 MANIFEST
-lib
-include
-bin
+
 # testing artifacts
 tests/index.html
 tests/results
@@ -22,19 +20,17 @@ tests/results
 # pycharm ide
 .idea
 
-# venv
-*venv
-
 # shell files
 .env
 .envrc
 
-# vscode ide
-.vscode
+# compiled file for *.po.
+*.mo
 
-# helm values
-helm/*/local.yaml
+# virtual environments
+.venv
 
-# general ext
-*.tgz
-Chart.lock
+# visual studio code workspace
+*.code-workspace
+.vscode/settings.json
+.vscode/launch.json
