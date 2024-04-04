@@ -32,5 +32,5 @@ Additional examples:
 - `Data.gov CSW HowTo v2.0`_
 - `pycsw Quickstart on OSGeoLive`_
 
-.. _`pycsw Quickstart on OSGeoLive`: http://live.osgeo.org/en/quickstart/pycsw_quickstart.html
+.. _`pycsw Quickstart on OSGeoLive`: https://live.osgeo.org/en/quickstart/pycsw_quickstart.html
 .. _`Data.gov CSW HowTo v2.0`: https://gist.github.com/kalxas/6ecb06d61cdd487dc7f9

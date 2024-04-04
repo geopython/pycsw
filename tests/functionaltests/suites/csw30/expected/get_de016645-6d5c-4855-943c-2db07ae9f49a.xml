@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
-  <atom:id>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/csw30/default.cfg</atom:id>
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:eo="http://a9.com/-/opensearch/extensions/eo/1.0/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:time="http://a9.com/-/opensearch/extensions/time/1.0/">
+  <atom:id>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/csw30/default.yml</atom:id>
   <atom:title>pycsw Geospatial Catalogue</atom:title>
   <atom:author>
     <atom:name>pycsw</atom:name>
   </atom:author>
-  <atom:link rel="search" type="application/opensearchdescription+xml" href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/csw30/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities"/>
+  <atom:link rel="search" type="application/opensearchdescription+xml" href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/csw30/default.yml&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities"/>
   <atom:updated>PYCSW_TIMESTAMP</atom:updated>
   <os:Query role="request"/>
   <os:totalResults>1</os:totalResults>
@@ -16,7 +16,7 @@
     <atom:category term="Vegetation-Cropland"/>
     <atom:id>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</atom:id>
     <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/csw30/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/csw30/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63"/>
     <atom:title>Mauris sed neque</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:summary>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</atom:summary>

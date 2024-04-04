@@ -1,14 +1,134 @@
-{{- $resourceName := print .Release.Name "-pycsw-configmap" }}
-{{- with .Values.pycsw -}}
 apiVersion: v1
+data:
+  pycsw.yml: |+
+    # =================================================================
+    #
+    # Authors: Tom Kralidis <tomkralidis@gmail.com>
+    #          Angelos Tzotsos <tzotsos@gmail.com>
+    #
+    # Copyright (c) 2023 Tom Kralidis
+    # Copyright (c) 2024 Angelos Tzotsos
+    #
+    # Permission is hereby granted, free of charge, to any person
+    # obtaining a copy of this software and associated documentation
+    # files (the "Software"), to deal in the Software without
+    # restriction, including without limitation the rights to use,
+    # copy, modify, merge, publish, distribute, sublicense, and/or sell
+    # copies of the Software, and to permit persons to whom the
+    # Software is furnished to do so, subject to the following
+    # conditions:
+    #
+    # The above copyright notice and this permission notice shall be
+    # included in all copies or substantial portions of the Software.
+    #
+    # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+    # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    # NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+    # HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+    # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+    # OTHER DEALINGS IN THE SOFTWARE.
+    #
+    # =================================================================
+    server:
+{{ if .Values.pycsw.config.server.home }}        home: {{ .Values.pycsw.config.server.home }}
+{{ end }}{{ if .Values.pycsw.config.server.url }}        url: {{ .Values.pycsw.config.server.url }}
+{{ end }}{{ if .Values.pycsw.config.server.mimetype }}        mimetype: {{ .Values.pycsw.config.server.mimetype }}
+{{ end }}{{ if .Values.pycsw.config.server.encoding }}        encoding: {{ .Values.pycsw.config.server.encoding }}
+{{ end }}{{ if .Values.pycsw.config.server.language }}        language: {{ .Values.pycsw.config.server.language }}
+{{ end }}{{ if .Values.pycsw.config.server.maxrecords }}        maxrecords: {{ .Values.pycsw.config.server.maxrecords }}
+{{ end }}{{ if .Values.pycsw.config.server.ogc_schemas_base }}        ogc_schemas_base: {{ .Values.pycsw.config.server.ogc_schemas_base }}
+{{ end }}{{ if .Values.pycsw.config.server.pretty_print }}        pretty_print: {{ .Values.pycsw.config.server.pretty_print }}
+{{ end }}{{ if .Values.pycsw.config.server.gzip_compresslevel }}        gzip_compresslevel: {{ .Values.pycsw.config.server.gzip_compresslevel }}
+{{ end }}{{ if .Values.pycsw.config.server.domainquerytype }}        domainquerytype: {{ .Values.pycsw.config.server.domainquerytype }}
+{{ end }}{{ if .Values.pycsw.config.server.domaincounts }}         domaincounts: {{ .Values.pycsw.config.server.domaincounts }}
+{{ end }}{{ if .Values.pycsw.config.server.spatial_ranking }}        spatial_ranking: {{ .Values.pycsw.config.server.spatial_ranking }}
+{{ end }}{{ if .Values.pycsw.config.server.workers }}        workers: {{ .Values.pycsw.config.server.workers }}
+{{ end }}{{ if .Values.pycsw.config.server.timeout }}        timeout: {{ .Values.pycsw.config.server.timeout }}
+{{ end }}
+    logging:
+{{ if .Values.pycsw.config.logging.level }}        level: {{ .Values.pycsw.config.logging.level }}
+{{ end }}{{ if .Values.pycsw.config.logging.logfile }}        logfile: {{ .Values.pycsw.config.logging.logfile }}
+{{ end }}
+    profiles:
+{{- range $.Values.pycsw.config.profiles }}
+        - {{ . }}
+{{- end }}
+{{ if .Values.pycsw.config.federatedcatalogues }}    federatedcatalogues:
+{{- range $.Values.pycsw.config.federatedcatalogues }}
+        - {{ . }}
+{{- end }}
+{{ end }}
+    manager:
+{{ if .Values.pycsw.config.manager.transactions }}        transactions: {{ .Values.pycsw.config.manager.transactions }}
+{{ end }}{{ if .Values.pycsw.config.manager.allowed_ips }}        allowed_ips:
+{{- range $.Values.pycsw.config.manager.allowed_ips }}
+            - {{ . }}
+{{- end }}
+{{ end }}{{ if .Values.pycsw.config.manager.csw_harvest_pagesize }}        csw_harvest_pagesize: {{ .Values.pycsw.config.manager.csw_harvest_pagesize }}
+{{ end }}
+    metadata:
+        identification:
+{{ if .Values.pycsw.config.metadata.identification.title }}            title: {{ .Values.pycsw.config.metadata.identification.title }}
+{{ end }}{{ if .Values.pycsw.config.metadata.identification.description }}            description: {{ .Values.pycsw.config.metadata.identification.description }}
+{{ end }}{{ if .Values.pycsw.config.metadata.identification.keywords }}            keywords:
+{{- range $.Values.pycsw.config.metadata.identification.keywords }}
+                - {{ . }}
+{{- end }}
+{{ end }}{{ if .Values.pycsw.config.metadata.identification.keywords_type }}            keywords_type: {{ .Values.pycsw.config.metadata.identification.keywords_type }}
+{{ end }}{{ if .Values.pycsw.config.metadata.identification.fees }}            fees: {{ .Values.pycsw.config.metadata.identification.fees }}
+{{ end }}{{ if .Values.pycsw.config.metadata.identification.accessconstraints }}            accessconstraints: {{ .Values.pycsw.config.metadata.identification.accessconstraints }}
+{{ end }}        provider:
+{{ if .Values.pycsw.config.metadata.provider.name }}            name: {{ .Values.pycsw.config.metadata.provider.name }}
+{{ end }}{{ if .Values.pycsw.config.metadata.provider_url }}            url: {{ .Values.pycsw.config.metadata.provider.url }}
+{{ end }}        contact:
+{{ if .Values.pycsw.config.metadata.contact.name }}            name: {{ .Values.pycsw.config.metadata.contact.name }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.position }}            position: {{ .Values.pycsw.config.metadata.contact.position }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.address }}            address: {{ .Values.pycsw.config.metadata.contact.address }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.city }}            city: {{ .Values.pycsw.config.metadata.contact.city }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.stateorprovince }}            stateorprovince: {{ .Values.pycsw.config.metadata.contact.stateorprovince }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.postalcode }}            postalcode: {{ .Values.pycsw.config.metadata.contact.postalcode }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.country }}            country: {{ .Values.pycsw.config.metadata.contact.country }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.phone }}            phone: {{ .Values.pycsw.config.metadata.contact.phone }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.fax }}            fax: {{ .Values.pycsw.config.metadata.contact.fax }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.email }}            email: {{ .Values.pycsw.config.metadata.contact.email }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.url }}            url: {{ .Values.pycsw.config.metadata.contact.url }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.hours }}            hours: {{ .Values.pycsw.config.metadata.contact.hours }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.instructions }}            instructions: {{ .Values.pycsw.config.metadata.contact.instructions }}
+{{ end }}{{ if .Values.pycsw.config.metadata.contact.role }}            role: {{ .Values.pycsw.config.metadata.contact.role }}
+{{ end }}        inspire:
+{{ if .Values.pycsw.config.metadata.inspire.enabled }}            enabled: {{ .Values.pycsw.config.metadata.inspire.enabled }}
+{{ end }}{{ if .Values.pycsw.config.metadata.inspire.languages_supported }}            languages_supported:
+{{- range $.Values.pycsw.config.metadata.inspire.languages_supported }}
+                - {{ . }}
+{{- end }}
+{{ end }}{{ if .Values.pycsw.config.metadata.inspire.default_language }}            default_language: {{ .Values.pycsw.config.metadata.inspire.default_language }}
+{{ end }}{{ if .Values.pycsw.config.metadata.inspire.date }}            date: {{ .Values.pycsw.config.metadata.inspire.date }}
+{{ end }}{{ if .Values.pycsw.config.metadata.inspire.gemet_keywords }}            gemet_keywords:
+{{- range $.Values.pycsw.config.metadata.inspire.gemet_keywords }}
+                - {{ . }}
+{{- end }}
+{{ end }}{{ if .Values.pycsw.config.metadata.inspire.conformity_service }}            conformity_service: {{ .Values.pycsw.config.metadata.inspire.conformity_service }}
+{{ end }}{{ if .Values.pycsw.config.metadata.inspire.contact_name }}            contact_name: {{ .Values.pycsw.config.metadata.inspire.contact_name }}
+{{ end }}{{ if .Values.pycsw.config.metadata.inspire.contact_email }}            contact_email: {{ .Values.pycsw.config.metadata.inspire.contact_email }}
+{{ end }}{{ if .Values.pycsw.config.metadata.inspire.temp_extent }}            temp_extent:
+{{- range $.Values.pycsw.config.metadata.inspire.temp_extent }}
+                - {{ . }}
+{{- end }}
+{{ end }}
+    repository:
+{{ if .Values.pycsw.config.repository.database }}        database: {{ .Values.pycsw.config.repository.database }}
+{{ end }}{{ if .Values.pycsw.config.repository.mappings }}        mappings: {{ .Values.pycsw.config.repository.mappings }}
+{{ end }}{{ if .Values.pycsw.config.repository.table }}        table: {{ .Values.pycsw.config.repository.table }}
+{{ end }}{{ if .Values.pycsw.config.repository.filter }}        filter: {{ .Values.pycsw.config.repository.filter }}
+{{ end }}{{ if .Values.pycsw.config.repository.facets }}        facets:
+{{- range $.Values.pycsw.config.repository.facets }}
+            - {{ . }}
+{{- end }}
+{{ end }}
+
 kind: ConfigMap
 metadata:
-  name: {{ $resourceName }}
-data:
-  pycsw.cfg: |+ 
-{{ .pycsw_cfg | indent 4 }}
-  {{- if .mappings_py }}
-  mappings.py: |+ 
-{{ .mappings_py | indent 4}}
-  {{- end -}}
-{{- end -}}
+  name: {{ .Values.pycsw.configmap_name }}
+  namespace: {{ .Values.global.namespace }}

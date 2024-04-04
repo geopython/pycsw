@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
-  <atom:id>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg</atom:id>
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:eo="http://a9.com/-/opensearch/extensions/eo/1.0/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:time="http://a9.com/-/opensearch/extensions/time/1.0/">
+  <atom:id>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml</atom:id>
   <atom:title>pycsw Geospatial Catalogue</atom:title>
   <atom:author>
     <atom:name>pycsw</atom:name>
   </atom:author>
-  <atom:link rel="search" type="application/opensearchdescription+xml" href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities"/>
+  <atom:link rel="search" type="application/opensearchdescription+xml" href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml&amp;mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities"/>
   <atom:updated>PYCSW_TIMESTAMP</atom:updated>
   <os:Query role="request"/>
   <os:totalResults>12</os:totalResults>
@@ -16,8 +16,8 @@
     <atom:category term="Elevation"/>
     <atom:id>a2744b0c-becd-426a-95a8-46e9850ccc6d</atom:id>
     <dc:identifier>a2744b0c-becd-426a-95a8-46e9850ccc6d</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=a2744b0c-becd-426a-95a8-46e9850ccc6d"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=a2744b0c-becd-426a-95a8-46e9850ccc6d"/>
     <atom:title>DTM</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>
@@ -33,8 +33,8 @@
     <atom:category term="Elevation"/>
     <atom:id>0dc824a6-b555-46c1-bd7b-bc66cb91a70f</atom:id>
     <dc:identifier>0dc824a6-b555-46c1-bd7b-bc66cb91a70f</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=0dc824a6-b555-46c1-bd7b-bc66cb91a70f"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=0dc824a6-b555-46c1-bd7b-bc66cb91a70f"/>
     <atom:title>DTM</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>
@@ -50,8 +50,8 @@
     <atom:category term="Elevation"/>
     <atom:id>42c8e55a-2bf6-476d-a7c9-be3bcd697f13</atom:id>
     <dc:identifier>42c8e55a-2bf6-476d-a7c9-be3bcd697f13</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=42c8e55a-2bf6-476d-a7c9-be3bcd697f13"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=42c8e55a-2bf6-476d-a7c9-be3bcd697f13"/>
     <atom:title>DTM</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>
@@ -67,8 +67,8 @@
     <atom:category term="Elevation"/>
     <atom:id>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</atom:id>
     <dc:identifier>c3bf29d4-d60a-4959-a415-2c03fb0d4aef</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=c3bf29d4-d60a-4959-a415-2c03fb0d4aef"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=c3bf29d4-d60a-4959-a415-2c03fb0d4aef"/>
     <atom:title>DTM</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>
@@ -84,8 +84,8 @@
     <atom:category term="Elevation"/>
     <atom:id>b8cc2388-5d0a-43d8-9473-0e86dd0396da</atom:id>
     <dc:identifier>b8cc2388-5d0a-43d8-9473-0e86dd0396da</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=b8cc2388-5d0a-43d8-9473-0e86dd0396da"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=b8cc2388-5d0a-43d8-9473-0e86dd0396da"/>
     <atom:title>DTM</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>
@@ -101,8 +101,8 @@
     <atom:category term="Orthoimagery"/>
     <atom:id>366f6257-19eb-4f20-ba78-0698ac4aae77</atom:id>
     <dc:identifier>366f6257-19eb-4f20-ba78-0698ac4aae77</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=366f6257-19eb-4f20-ba78-0698ac4aae77"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=366f6257-19eb-4f20-ba78-0698ac4aae77"/>
     <atom:title>Aerial Photos</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>
@@ -118,8 +118,8 @@
     <atom:category term="Orthoimagery"/>
     <atom:id>75a7eb5e-336e-453d-ab06-209b1070d396</atom:id>
     <dc:identifier>75a7eb5e-336e-453d-ab06-209b1070d396</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=75a7eb5e-336e-453d-ab06-209b1070d396"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=75a7eb5e-336e-453d-ab06-209b1070d396"/>
     <atom:title>Aerial Photos</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>
@@ -135,8 +135,8 @@
     <atom:category term="Orthoimagery"/>
     <atom:id>a7308c0a-b748-48e2-bab7-0a608a51d416</atom:id>
     <dc:identifier>a7308c0a-b748-48e2-bab7-0a608a51d416</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=a7308c0a-b748-48e2-bab7-0a608a51d416"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=a7308c0a-b748-48e2-bab7-0a608a51d416"/>
     <atom:title>Aerial Photos</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>
@@ -152,8 +152,8 @@
     <atom:category term="Orthoimagery"/>
     <atom:id>0173e0d7-6ea9-4407-b846-f29d6bfa9903</atom:id>
     <dc:identifier>0173e0d7-6ea9-4407-b846-f29d6bfa9903</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=0173e0d7-6ea9-4407-b846-f29d6bfa9903"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=0173e0d7-6ea9-4407-b846-f29d6bfa9903"/>
     <atom:title>Aerial Photos</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>
@@ -169,8 +169,8 @@
     <atom:category term="Orthoimagery"/>
     <atom:id>437ae0a2-06e2-4015-b296-a66e7f407bf2</atom:id>
     <dc:identifier>437ae0a2-06e2-4015-b296-a66e7f407bf2</dc:identifier>
-    <atom:link href="http://www.ypaat.gr" type="None" title="None"/>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=437ae0a2-06e2-4015-b296-a66e7f407bf2"/>
+    <atom:link href="http://www.ypaat.gr"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=437ae0a2-06e2-4015-b296-a66e7f407bf2"/>
     <atom:title>Aerial Photos</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:rights>otherRestrictions</atom:rights>

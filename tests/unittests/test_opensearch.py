@@ -58,4 +58,5 @@ pytestmark = pytest.mark.unit
 ])
 def test_validate_4326(bbox, expected):
     result = opensearch.validate_4326(bbox)
+
     assert result == expected

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw30:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" updateSequence="PYCSW_UPDATESEQUENCE" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/cat/csw/3.0/cswGetCapabilities.xsd">
+<csw30:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gml32="http://www.opengis.net/gml/3.2" xmlns:ows="http://www.opengis.net/ows" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" updateSequence="PYCSW_UPDATESEQUENCE" xsi:schemaLocation="http://www.opengis.net/cat/csw/3.0 http://schemas.opengis.net/cat/csw/3.0/cswGetCapabilities.xsd">
   <ows20:ServiceIdentification>
     <ows20:Title>pycsw Geospatial Catalogue</ows20:Title>
-    <ows20:Abstract>pycsw is an OGC CSW server implementation written in Python</ows20:Abstract>
+    <ows20:Abstract>pycsw is an OARec and OGC CSW server implementation written in Python</ows20:Abstract>
     <ows20:Keywords>
       <ows20:Keyword>catalogue</ows20:Keyword>
       <ows20:Keyword>discovery</ows20:Keyword>
@@ -19,8 +19,8 @@
     <ows20:Operation name="GetCapabilities">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="acceptFormats">
@@ -48,8 +48,8 @@
     <ows20:Operation name="GetDomain">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="ParameterName">
@@ -73,8 +73,8 @@
     <ows20:Operation name="GetRecords">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="CONSTRAINTLANGUAGE">
@@ -99,6 +99,7 @@
       </ows20:Parameter>
       <ows20:Parameter name="outputSchema">
         <ows20:AllowedValues>
+          <ows20:Value>http://datacite.org/schema/kernel-4</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.interlis.ch/INTERLIS2.3</ows20:Value>
           <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
@@ -119,7 +120,7 @@
       </ows20:Constraint>
       <ows20:Constraint name="OpenSearchDescriptionDocument">
         <ows20:AllowedValues>
-          <ows20:Value>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg?mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities</ows20:Value>
+          <ows20:Value>http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml?mode=opensearch&amp;service=CSW&amp;version=3.0.0&amp;request=GetCapabilities</ows20:Value>
         </ows20:AllowedValues>
       </ows20:Constraint>
       <ows20:Constraint name="FederatedCatalogues">
@@ -131,8 +132,8 @@
     <ows20:Operation name="GetRecordById">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="ElementSetName">
@@ -151,6 +152,7 @@
       </ows20:Parameter>
       <ows20:Parameter name="outputSchema">
         <ows20:AllowedValues>
+          <ows20:Value>http://datacite.org/schema/kernel-4</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.interlis.ch/INTERLIS2.3</ows20:Value>
           <ows20:Value>http://www.opengis.net/cat/csw/3.0</ows20:Value>
@@ -162,14 +164,14 @@
     <ows20:Operation name="GetRepositoryItem">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
     </ows20:Operation>
     <ows20:Operation name="Transaction">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="TransactionSchemas">
@@ -192,11 +194,12 @@
     <ows20:Operation name="Harvest">
       <ows20:DCP>
         <ows20:HTTP>
-          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg"/>
+          <ows20:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml"/>
         </ows20:HTTP>
       </ows20:DCP>
       <ows20:Parameter name="ResourceType">
         <ows20:AllowedValues>
+          <ows20:Value>http://datacite.org/schema/kernel-4</ows20:Value>
           <ows20:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows20:Value>
           <ows20:Value>http://www.interlis.ch/INTERLIS2.3</ows20:Value>
           <ows20:Value>http://www.isotc211.org/2005/gmi</ows20:Value>
@@ -383,7 +386,7 @@
     </ows20:Constraint>
     <ows20:Constraint name="http://www.opengis.net/spec/csw/3.0/conf/SupportedGMLVersions">
       <ows20:AllowedValues>
-        <ows20:Value>http://www.opengis.net/gml</ows20:Value>
+        <ows20:Value>http://www.opengis.net/gml/3.2</ows20:Value>
       </ows20:AllowedValues>
     </ows20:Constraint>
     <ows20:Constraint name="http://www.opengis.net/spec/csw/3.0/conf/Transaction">

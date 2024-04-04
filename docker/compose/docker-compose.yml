@@ -42,7 +42,7 @@
 # PYCSW_DOCKER_IMAGE=2.1-dev docker stack deploy --compose-file docker-compose.yml pycsw
 #
 
-version: "3"
+version: "3.8"
 
 services:
 
@@ -67,7 +67,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./pycsw.cfg:/etc/pycsw/pycsw.cfg
+      - ./pycsw.yml:/etc/pycsw/pycsw.yml
 
 
 volumes:

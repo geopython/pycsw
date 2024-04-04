@@ -46,6 +46,7 @@ class StaticContext(object):
         self.ogc_schemas_base = 'http://schemas.opengis.net'
 
         self.parser = PARSER
+        self.server = None
 
         self.languages = {
             'en': 'english',
@@ -80,6 +81,7 @@ class StaticContext(object):
             'gm03': 'http://www.interlis.ch/INTERLIS2.3',
             'gmd': 'http://www.isotc211.org/2005/gmd',
             'gml': 'http://www.opengis.net/gml',
+            'gml32': 'http://www.opengis.net/gml/3.2',
             'ogc': 'http://www.opengis.net/ogc',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
             'ows': 'http://www.opengis.net/ows',
@@ -94,7 +96,7 @@ class StaticContext(object):
         }
 
         self.keep_ns_prefixes = [
-            'csw', 'dc', 'dct', 'gmd', 'gml', 'ows', 'xs'
+            'csw', 'dc', 'dct', 'gmd', 'gml', 'gml32', 'ows', 'xs'
         ]
 
         self.md_core_model = {
@@ -112,13 +114,19 @@ class StaticContext(object):
                 'pycsw:InsertDate': 'insert_date',  # date of insertion
                 # raw XML metadata
                 'pycsw:XML': 'xml',
+                # raw metadata payload, xml to be migrated to this in the future
+                'pycsw:Metadata': 'metadata',
+                # raw metadata payload type, xml as default for now
+                'pycsw:MetadataType': 'metadata_type',
                 # bag of metadata element and attributes ONLY, no XML tages
                 'pycsw:AnyText': 'anytext',
                 'pycsw:Language': 'language',
                 'pycsw:Title': 'title',
                 'pycsw:Abstract': 'abstract',
+                'pycsw:Edition': 'edition',
                 'pycsw:Keywords': 'keywords',
                 'pycsw:KeywordType': 'keywordstype',
+                'pycsw:Themes': 'themes',
                 'pycsw:Format': 'format',
                 'pycsw:Source': 'source',
                 'pycsw:Date': 'date',
@@ -163,8 +171,15 @@ class StaticContext(object):
                 'pycsw:Publisher': 'publisher',
                 'pycsw:Contributor': 'contributor',
                 'pycsw:Relation': 'relation',
-                # links: format "name,description,protocol,url[^,,,[^,,,]]"
+                'pycsw:Platform': 'platform',
+                'pycsw:Instrument': 'instrument',
+                'pycsw:SensorType': 'sensortype',
+                'pycsw:CloudCover': 'cloudcover',
+                'pycsw:Bands': 'bands',
+                # links: list of dicts with properties: name, description, protocol, url
                 'pycsw:Links': 'links',
+                # contacts: list of dicts with properties: name, organization, address, postcode, city, region, country, email, phone, fax, onlineresource, position, role
+                'pycsw:Contacts': 'contacts',
             }
         }
 
@@ -486,7 +501,7 @@ class StaticContext(object):
                         'values': ['TRUE']
                     },
                     'http://www.opengis.net/spec/csw/3.0/conf/SupportedGMLVersions': {
-                        'values': ['http://www.opengis.net/gml']
+                        'values': ['http://www.opengis.net/gml/3.2']
                     },
                     'http://www.opengis.net/spec/csw/3.0/conf/DefaultSortingAlgorithm': {
                         'values': ['TRUE']

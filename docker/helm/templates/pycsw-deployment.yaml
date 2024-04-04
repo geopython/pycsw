@@ -1,50 +1,38 @@
-{{- $resourceName := print .Release.Name "-pycsw" }}
-{{- $resourceConfigmap := print .Release.Name "-pycsw-configmap" }}
-{{- $postgresName := print .Release.Name "-postgres" }}
-{{- with .Values }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: {{ .Values.global.namespace }}
   labels:
-    name: {{ $resourceName }}
-  name: {{ $resourceName }}
+    io.kompose.service: {{ .Values.pycsw.name }}
+  name: {{ .Values.pycsw.name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: {{ $resourceName }}
+      io.kompose.service: {{ .Values.pycsw.name }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        name: {{ $resourceName }}
+        io.kompose.service: {{ .Values.pycsw.name }}
     spec:
       containers:
       - env:
         - name: PYCSW_SERVER_URL
-          value: http://localhost:8000
-        {{- if .postgres.enabled }}
+          value: {{ .Values.pycsw.config.server.url }}
         - name: PYCSW_REPOSITORY_DATABASE_URI
-          value: postgresql://{{ .postgres.authentication.username }}:{{ .postgres.authentication.password }}@{{ $postgresName }}/{{ .postgres.db_name }}
-        {{- end }}
-        {{- if .pycsw.mappings_py }}
-        - name: PYCSW_MAPPINGS_FILEPATH
-          value: /etc/pycsw/mappings.py
-        {{- end }}
-        image: {{ .pycsw.image | default "mapcolonies/pycsw:latest" }}
-        imagePullPolicy: Always
-        name: {{ $resourceName }}
+          value: {{ .Values.pycsw.config.repository.database }}
+        image: {{ .Values.pycsw.image }}
+        name: {{ .Values.pycsw.name }}
         ports:
-        - containerPort: 8000
+        - containerPort: {{ .Values.pycsw.container_port }}
         resources: {}
         volumeMounts:
-        - mountPath: /etc/pycsw
-          name: {{ $resourceConfigmap }}
+        - mountPath: {{ .Values.pycsw.volume_path }}
+          name: {{ .Values.pycsw.volume_name }}
       restartPolicy: Always
       volumes:
-      - name: {{ $resourceConfigmap }}
+      - name: {{ .Values.pycsw.volume_name }}
         configMap:
-          name: {{ $resourceConfigmap }}
-status: {}
-{{- end -}}
+          name: {{ .Values.pycsw.configmap_name }}

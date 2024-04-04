@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -30,7 +30,7 @@
 
 import os
 
-JQUERY_VERSION = '1.9.0'
+JQUERY_VERSION = '3.6.0'
 
 print('''
 <!DOCTYPE html>
@@ -49,7 +49,7 @@ print('''
                 border: 0px;
             }
         </style>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-%s.min.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-%s.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('.xml').change(function() {
@@ -107,7 +107,7 @@ for root, dirs, files in os.walk('functionaltests/suites'):
         for sfile in files:
             if os.path.splitext(sfile)[1] in ['.xml'] and 'post' in root:  # it's a POST request
                 query = '%s%s%s' % (root.replace(os.sep, '/'), '/', sfile)
-                print('                            <option value="tests/functionaltests/suites/%s/default.cfg,%s">%s</option>' % (root.split(os.sep)[2], query, query))
+                print('                            <option value="tests/functionaltests/suites/%s/default.yml,%s">%s</option>' % (root.split(os.sep)[2], query, query))
 print('''
                         </select>
                         <input type="button" class="send" value="Send"/>
@@ -140,18 +140,15 @@ for root, dirs, files in os.walk('functionaltests/suites'):
                     for line in f:
                         name, query_string = line.strip().partition(",")[::2]
                         baseurl = "../csw.py"
-                        query = "{baseurl}?{query_string}".format(
-                            baseurl=baseurl,
-                            query_string=query_string.replace("&", "&amp;")
-                        )
-                        print('<li><a href={query!r}>{name}</a></li>'.format(
-                            query=query, name=name))
+                        query_string = query_string.replace("&", "&amp;")
+                        query = f"{baseurl}?{query_string}"
+                        print(f'<li><a href={query}>{name}</a></li>')
 print('''
             </ul>
         <hr/>
         <footer>
-            <a href="http://validator.w3.org/check?verbose=1&amp;uri=referer" title="Valid HTML 5!"><img class="flat" src="http://www.w3.org/html/logo/downloads/HTML5_Badge_32.png" alt="Valid HTML 5!" height="32" width="32"/></a>
-            <a href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS!"><img class="flat" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!" height="31" width="88"/></a>
+            <a href="https://validator.w3.org/check?verbose=1&amp;uri=referer" title="Valid HTML 5!"><img class="flat" src="https://www.w3.org/html/logo/downloads/HTML5_Badge_32.png" alt="Valid HTML 5!" height="32" width="32"/></a>
+            <a href="https://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS!"><img class="flat" src="https://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!" height="31" width="88"/></a>
         </footer>
     </body>
 </html>

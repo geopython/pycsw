@@ -50,8 +50,9 @@ if (os.path.exists('MANIFEST')):
 setup(
     name='pycsw',
     version=read("VERSION.txt"),
-    description='pycsw is an OGC CSW server implementation written in Python',
-    long_description=read("README.rst"),
+    description='pycsw is an OARec and OGC CSW server implementation written in Python',
+    long_description=read("README.md"),
+    long_description_content_type='text/markdown',
     license='MIT',
     platforms='all',
     keywords=" ".join([
@@ -77,8 +78,11 @@ setup(
     install_requires=read("requirements.txt").splitlines(),
     packages=find_packages(),
     include_package_data=True,
-    # TODO: replace scripts with entry_points (needs a refactoring of pycsw-admin first)
-    scripts=[os.path.join('bin', 'pycsw-admin.py')],
+    entry_points={
+        'console_scripts': [
+            'pycsw-admin.py=pycsw.core.admin:cli',
+        ]
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -87,11 +91,9 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Scientific/Engineering :: GIS',
     ]
 )

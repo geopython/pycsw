@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -65,6 +65,7 @@ class APISO(profile.Profile):
                         'apiso:Subject': {'xpath': 'gmd:identificationInfo/gmd:MD_Identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'dbcol': self.context.md_core_model['mappings']['pycsw:Keywords']},
                         'apiso:Title': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Title']},
                         'apiso:Abstract': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Abstract']},
+                        'apiso:Edition': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:edition/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Edition']},
                         'apiso:Format': {'xpath': 'gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Format']},
                         'apiso:Identifier': {'xpath': 'gmd:fileIdentifier/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Identifier']},
                         'apiso:Modified': {'xpath': 'gmd:dateStamp/gco:Date', 'dbcol': self.context.md_core_model['mappings']['pycsw:Modified']},
@@ -111,7 +112,13 @@ class APISO(profile.Profile):
                         'apiso:Creator': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="originator"]/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Creator']},
                         'apiso:Publisher': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="publisher"]/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Publisher']},
                         'apiso:Contributor': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName[gmd:role/gmd:CI_RoleCode/@codeListValue="contributor"]/gco:CharacterString', 'dbcol': self.context.md_core_model['mappings']['pycsw:Contributor']},
-                        'apiso:Relation': {'xpath': 'gmd:identificationInfo/gmd:MD_Data_Identification/gmd:aggregationInfo', 'dbcol': self.context.md_core_model['mappings']['pycsw:Relation']}
+                        'apiso:Relation': {'xpath': 'gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo', 'dbcol': self.context.md_core_model['mappings']['pycsw:Relation']},
+                        # 19115-2
+                        'apiso:Platform': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:identifier', 'dbcol': self.context.md_core_model['mappings']['pycsw:Platform']},
+                        'apiso:Instrument': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:instrument/gmi:MI_Instrument/gmi:identifier', 'dbcol': self.context.md_core_model['mappings']['pycsw:Instrument']},
+                        'apiso:SensorType': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:instrument/gmi:MI_Instrument/gmi:type', 'dbcol': self.context.md_core_model['mappings']['pycsw:SensorType']},
+                        'apiso:CloudCover': {'xpath': 'gmd:contentInfo/gmd:MD_ImageDescription/gmd:cloudCoverPercentage', 'dbcol': self.context.md_core_model['mappings']['pycsw:CloudCover']},
+                        'apiso:Bands': {'xpath': 'gmd:contentInfo/gmd:MD_ImageDescription/gmd:dimension/MD_Band/@id', 'dbcol': self.context.md_core_model['mappings']['pycsw:Bands']},
                     }
                 },
                 'mappings': {
@@ -160,21 +167,21 @@ class APISO(profile.Profile):
             model['operations']['Harvest']['parameters']['ResourceType']['values'].append('http://www.isotc211.org/schemas/2005/gmd/')
 
         # set INSPIRE config
-        if config.has_section('metadata:inspire') and config.has_option('metadata:inspire', 'enabled') and config.get('metadata:inspire', 'enabled') == 'true':
+        if config['metadata']['inspire']['enabled']:
             self.inspire_config = {}
-            self.inspire_config['languages_supported'] = config.get('metadata:inspire', 'languages_supported')
-            self.inspire_config['default_language'] = config.get('metadata:inspire', 'default_language')
-            self.inspire_config['date'] = config.get('metadata:inspire', 'date')
-            self.inspire_config['gemet_keywords'] = config.get('metadata:inspire', 'gemet_keywords')
-            self.inspire_config['conformity_service'] = config.get('metadata:inspire', 'conformity_service')
-            self.inspire_config['contact_name'] = config.get('metadata:inspire', 'contact_name')
-            self.inspire_config['contact_email'] = config.get('metadata:inspire', 'contact_email')
-            self.inspire_config['temp_extent'] = config.get('metadata:inspire', 'temp_extent')
+            self.inspire_config['languages_supported'] = config['metadata']['inspire']['languages_supported']
+            self.inspire_config['default_language'] = config['metadata']['inspire']['default_language']
+            self.inspire_config['date'] = config['metadata']['inspire']['date']
+            self.inspire_config['gemet_keywords'] = config['metadata']['inspire']['gemet_keywords']
+            self.inspire_config['conformity_service'] = config['metadata']['inspire']['conformity_service']
+            self.inspire_config['contact_name'] = config['metadata']['inspire']['contact_name']
+            self.inspire_config['contact_email'] = config['metadata']['inspire']['contact_email']
+            self.inspire_config['temp_extent'] = config['metadata']['inspire']['temp_extent']
         else:
             self.inspire_config = None
 
-        self.ogc_schemas_base = config.get('server', 'ogc_schemas_base')
-        self.url = config.get('server', 'url')
+        self.ogc_schemas_base = config['server']['ogc_schemas_base']
+        self.url = config['server']['url']
 
     def check_parameters(self, kvp):
         '''Check for Language parameter in GetCapabilities request'''
@@ -184,7 +191,7 @@ class APISO(profile.Profile):
             if 'language' not in kvp:
                 self.inspire_config['current_language'] = self.inspire_config['default_language']
             else:
-                if kvp['language'] not in self.inspire_config['languages_supported'].split(','):
+                if kvp['language'] not in self.inspire_config['languages_supported']:
                     text = 'Requested Language not supported, Supported languages: %s' % self.inspire_config['languages_supported']
                     return {'error': 'true', 'locator': 'language', 'code': 'InvalidParameterValue', 'text': text}
                 else:
@@ -226,21 +233,16 @@ class APISO(profile.Profile):
             temp_extent = etree.SubElement(temp_ref,
             util.nspath_eval('inspire_common:TemporalExtent', self.inspire_namespaces))
 
-            val = self.inspire_config['temp_extent'].split('/')
+            val = self.inspire_config['temp_extent']
 
-            if len(val) == 1:
-                etree.SubElement(temp_extent,
-                util.nspath_eval('inspire_common:IndividualDate', self.inspire_namespaces)).text = val[0]
+            interval_dates = etree.SubElement(temp_extent,
+            util.nspath_eval('inspire_common:IntervalOfDates', self.inspire_namespaces))
 
-            else:
-                interval_dates = etree.SubElement(temp_extent,
-                util.nspath_eval('inspire_common:IntervalOfDates', self.inspire_namespaces))
+            etree.SubElement(interval_dates,
+            util.nspath_eval('inspire_common:StartingDate', self.inspire_namespaces)).text = str(val['begin'])
 
-                etree.SubElement(interval_dates,
-                util.nspath_eval('inspire_common:StartingDate', self.inspire_namespaces)).text = val[0]
-
-                etree.SubElement(interval_dates,
-                util.nspath_eval('inspire_common:EndDate', self.inspire_namespaces)).text = val[1]
+            etree.SubElement(interval_dates,
+            util.nspath_eval('inspire_common:EndDate', self.inspire_namespaces)).text = str(val['end'])
 
             # Conformity - service
             cfm = etree.SubElement(ex_caps,
@@ -284,7 +286,7 @@ class APISO(profile.Profile):
 
             # Metadata Date
             etree.SubElement(ex_caps,
-            util.nspath_eval('inspire_common:MetadataDate', self.inspire_namespaces)).text = self.inspire_config['date']
+            util.nspath_eval('inspire_common:MetadataDate', self.inspire_namespaces)).text = str(self.inspire_config['date'])
 
             # Spatial Data Service Type
             etree.SubElement(ex_caps,
@@ -301,7 +303,7 @@ class APISO(profile.Profile):
 
             # Gemet Keywords
 
-            for gkw in self.inspire_config['gemet_keywords'].split(','):
+            for gkw in self.inspire_config['gemet_keywords']:
                 gkey = etree.SubElement(ex_caps,
                 util.nspath_eval('inspire_common:Keyword', self.inspire_namespaces))
 
@@ -329,7 +331,7 @@ class APISO(profile.Profile):
             etree.SubElement(dlang,
             util.nspath_eval('inspire_common:Language', self.inspire_namespaces)).text = self.inspire_config['default_language']
 
-            for l in self.inspire_config['languages_supported'].split(','):
+            for l in self.inspire_config['languages_supported']:
                 lang = etree.SubElement(slang,
                 util.nspath_eval('inspire_common:SupportedLanguage', self.inspire_namespaces))
 
@@ -539,6 +541,12 @@ class APISO(profile.Profile):
         tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:title', self.namespaces))
         etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val
 
+        # edition
+        val = util.getqattr(result, queryables['apiso:Edition']['dbcol'])
+        if val is not None:
+            tmp4 = etree.SubElement(tmp3, util.nspath_eval('gmd:edition', self.namespaces))
+            etree.SubElement(tmp4, util.nspath_eval('gco:CharacterString', self.namespaces)).text = val
+
         # creation date
         val = util.getqattr(result, queryables['apiso:CreationDate']['dbcol'])
         if val is not None:
@@ -667,22 +675,21 @@ class APISO(profile.Profile):
             transopts = etree.SubElement(distinfo2, util.nspath_eval('gmd:transferOptions', self.namespaces))
             dtransopts = etree.SubElement(transopts, util.nspath_eval('gmd:MD_DigitalTransferOptions', self.namespaces))
 
-            for link in rlinks.split('^'):
-                linkset = link.split(',')
+            for link in util.jsonify_links(rlinks):
                 online = etree.SubElement(dtransopts, util.nspath_eval('gmd:onLine', self.namespaces))
                 online2 = etree.SubElement(online, util.nspath_eval('gmd:CI_OnlineResource', self.namespaces))
 
                 linkage = etree.SubElement(online2, util.nspath_eval('gmd:linkage', self.namespaces))
-                etree.SubElement(linkage, util.nspath_eval('gmd:URL', self.namespaces)).text = linkset[-1]
+                etree.SubElement(linkage, util.nspath_eval('gmd:URL', self.namespaces)).text = link['url']
 
                 protocol = etree.SubElement(online2, util.nspath_eval('gmd:protocol', self.namespaces))
-                etree.SubElement(protocol, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[2]
+                etree.SubElement(protocol, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link.get('protocol', 'WWW:LINK')
 
                 name = etree.SubElement(online2, util.nspath_eval('gmd:name', self.namespaces))
-                etree.SubElement(name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[0]
+                etree.SubElement(name, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link.get('name')
 
                 desc = etree.SubElement(online2, util.nspath_eval('gmd:description', self.namespaces))
-                etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = linkset[1]
+                etree.SubElement(desc, util.nspath_eval('gco:CharacterString', self.namespaces)).text = link.get('description')
 
         return node
 

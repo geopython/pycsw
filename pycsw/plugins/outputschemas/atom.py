@@ -84,13 +84,17 @@ def write_record(result, esn, context, url=None):
 
     rlinks = util.getqattr(result, context.md_core_model['mappings']['pycsw:Links'])
     if rlinks:
-        for link in rlinks.split('^'):
-            linkset = link.split(',')
+        for link in util.jsonify_links(rlinks):
+            url2 = etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href=link['url'])
 
-            url2 = etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href=linkset[-1], type=linkset[2], title=linkset[1])
-            if linkset[2] == 'enclosure':
-                url2.attrib['rel'] = linkset[2]
-                url2.attrib['type'] = 'application/octet-stream'
+            if link.get('description') is not None:
+                url2.attrib['title'] = link['description']
+
+            if link.get('protocol') is not None:
+                url2.attrib['type'] = link['protocol']
+
+            if link.get('function') is not None:
+                url2.attrib['rel'] = link['function']
 
     etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (url, util.getqattr(result, context.md_core_model['mappings']['pycsw:Identifier'])))
 

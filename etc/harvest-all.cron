@@ -2,4 +2,4 @@
 #
 # info on setting up cron at http://www.unixgeeks.org/security/newbie/unix/cron-1.html
 
-00 04 * * * /path/to/pycsw-admin.py -c refresh_harvested_records -f /path/to/default.cfg
+00 04 * * * /path/to/pycsw-admin.py refresh-harvested-records --config /path/to/default.yml

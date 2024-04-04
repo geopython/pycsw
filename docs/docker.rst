@@ -1,14 +1,26 @@
 Docker
 ======
 
-pycsw is available as a Docker image. The image is hosted on the `Docker Hub`_.
+Installation
+------------
 
-Assuming you already have docker installed, you can get a pycsw instance up
-and running by issuing the following command::
+pycsw  provides an official `Docker`_ image which is made available on both the `geopython Docker Hub`_ and our `GitHub Container Registry`_. 
 
-    docker run -p 8000:8000 geopython/pycsw
+Either ``IMAGE`` can be called with the ``docker`` command, ``geopython/pycsw`` from DockerHub or ``ghcr.io/geophython/pycsw`` from the GitHub Container Registry. Examples below use ``geopython/pygeoapi``. 
 
-Docker will retrieve the pycsw image from Docker Hub (if needed) and then
+Assuming you already have docker installed, you can get a pycsw instance up and running run with the default built-in configuration:
+
+.. code-block:: bash
+
+   docker run -p 8000:8000 geopython/pycsw 
+   
+   # or
+   
+   docker run -p 8000:8000 ghcr.io/geopython/pycsw
+
+...then browse to http://localhost:8000
+   
+Docker will retrieve the pycsw image (if needed) and then
 start a new container listening on port 8000.
 
 The default configuration will run pycsw with an sqlite repository backend
@@ -39,13 +51,13 @@ with the ``docker logs`` command::
    ``server.logfile=`` in the pycsw configuration file.
 
 
-Using pycsw-admin
------------------
+Using pycsw-admin.py
+--------------------
 
-``pycsw-admin`` can be executed on a running container by
+``pycsw-admin.py`` can be executed on a running container by
 using ``docker exec``::
 
-    docker exec -ti <running-container-id> pycsw-admin.py -h
+    docker exec -ti <running-container-id> pycsw-admin.py --help
 
 
 Running custom pycsw containers
@@ -57,24 +69,24 @@ pycsw configuration
 It is possible to supply a custom configuration file for pycsw as a bind 
 mount or as a docker secret (in the case of docker swarm). The configuration 
 file is searched at the value of the ``PYCSW_CONFIG`` environmental variable,
-which defaults to ``/etc/pycsw/pycsw.cfg``. 
+which defaults to ``/etc/pycsw/pycsw.yml``. 
 
 Supplying the configuration file via bind mount::
 
     docker run \
         --name pycsw \
         --detach \
-        --volume <path-to-local-pycsw.cfg>:/etc/pycsw/pycsw.cfg \
+        --volume <path-to-local-pycsw.yml>:/etc/pycsw/pycsw.yml \
         --publish 8000:8000 \
         geopython/pycsw
 
 Supplying the configuration file via docker secrets::
 
     # first create a docker secret with the pycsw config file
-    docker secret create pycsw-config <path-to-local-pycsw.cfg>
+    docker secret create pycsw-config <path-to-local-pycsw.yml>
     docker service create \
         --name pycsw \
-        --secret src=pycsw-config,target=/etc/pycsw/pycsw.cfg \
+        --secret src=pycsw-config,target=/etc/pycsw/pycsw.yml \
         --publish 8000:8000
         geopython/pycsw
 
@@ -100,7 +112,7 @@ PostgreSQL repositories
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifying a PostgreSQL repository is just a matter of configuring a custom
-pycsw.cfg file with the correct specification.
+pycsw.yml file with the correct specification.
 
 Check `pycsw's github repository`_ for an example of a docker-compose/stack
 file that spins up a postgis database together with a pycsw instance.
@@ -130,7 +142,7 @@ The following instructions set up a fully working development environment::
     docker run \
         --name pycsw-dev \
         --detach \
-        --volume ${PWD}/pycsw:/usr/lib/python3.5/site-packages/pycsw \
+        --volume ${PWD}/pycsw:/usr/lib/python3.7/site-packages/pycsw \
         --volume ${PWD}/docs:/home/pycsw/docs \
         --volume ${PWD}/VERSION.txt:/home/pycsw/VERSION.txt \
         --volume ${PWD}/LICENSE.txt:/home/pycsw/LICENSE.txt \
@@ -144,17 +156,17 @@ The following instructions set up a fully working development environment::
     docker exec \
         -ti \
         --user root \
-        pycsw-dev pip3 install -r requirements-dev.txt
+        pycsw-dev pip3 install -r pycsw/requirements-dev.txt
 
     # run tests (for example unit tests)
-    docker exec -ti pycsw-dev py.test -m unit
+    docker exec -ti pycsw-dev pytest -m unit pycsw
 
     # build docs
-    docker exec -ti pycsw-dev sh -c "cd docs && make html"
+    docker exec -ti pycsw-dev sh -c "cd pycsw/docs && make html"
 
 .. note::
 
-   Please note that the pycsw image only uses python 3.5 and that it also does
+   Please note that the pycsw image only uses python 3.8 and that it also does
    not install pycsw in editable mode. As such it is not possible to
    use ``tox``.
 
@@ -186,7 +198,9 @@ For Kubernetes deployment via `Helm`_, run the following in ``docker/helm``:
   minikube service pycsw --url
 
 
-.. _Docker Hub: https://hub.docker.com/r/geopython/pycsw/
+.. _`Docker`: https://www.docker.com
+.. _`geopython Docker Hub`: https://hub.docker.com/r/geopython/pycsw
+.. _`GitHub Container Registry`: https://github.com/geopython/pycsw/pkgs/container/pycsw
 .. _pycsw's github repository: https://github.com/geopython/pycsw/tree/master/docker
 .. _Kubernetes: https://kubernetes.io/
 .. _Helm: https://helm.sh

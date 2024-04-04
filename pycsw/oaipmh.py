@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -58,44 +58,51 @@ class OAIPMH(object):
             'iso19139': {
                 'namespace': 'http://www.isotc211.org/2005/gmd',
                 'schema': 'http://www.isotc211.org/2005/gmd/gmd.xsd',
-                'identifier': '//gmd:fileIdentifier/gco:CharacterString',
-                'dateStamp': '//gmd:dateStamp/gco:DateTime|//gmd:dateStamp/gco:Date',
-                'setSpec': '//gmd:hierarchyLevel/gmd:MD_ScopeCode'
+                'identifier': './/gmd:fileIdentifier/gco:CharacterString',
+                'datestamp': './/gmd:dateStamp/gco:DateTime|.//gmd:dateStamp/gco:Date',
+                'setSpec': './/gmd:hierarchyLevel/gmd:MD_ScopeCode'
             },
             'csw-record': {
                 'namespace': 'http://www.opengis.net/cat/csw/2.0.2',
                 'schema': 'http://schemas.opengis.net/csw/2.0.2/record.xsd',
-                'identifier': '//dc:identifier',
-                'dateStamp': '//dct:modified',
-                'setSpec': '//dc:type'
+                'identifier': './/dc:identifier',
+                'datestamp': './/dct:modified',
+                'setSpec': './/dc:type'
             },
             'fgdc-std': {
                 'namespace': 'http://www.opengis.net/cat/csw/csdgm',
                 'schema': 'http://www.fgdc.gov/metadata/fgdc-std-001-1998.xsd',
-                'identifier': '//idinfo/datasetid',
-                'dateStamp': '//metainfo/metd',
-                'setSpec': '//dataset'
+                'identifier': './/idinfo/datasetid',
+                'datestamp': './/metainfo/metd',
+                'setSpec': './/dataset'
             },
             'oai_dc': {
                 'namespace': '%soai_dc/' % self.namespaces['oai'],
                 'schema': 'http://www.openarchives.org/OAI/2.0/oai_dc.xsd',
-                'identifier': '//dc:identifier',
-                'dateStamp': '//dct:modified',
-                'setSpec': '//dc:type'
+                'identifier': './/dc:identifier',
+                'datestamp': './/dct:modified',
+                'setSpec': './/dc:type'
             },
             'dif': {
                 'namespace': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/',
                 'schema': 'http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/dif.xsd',
-                'identifier': '//dif:Entry_ID',
-                'dateStamp': '//dif:Last_DIF_Revision_Date',
+                'identifier': './/dif:Entry_ID',
+                'datestamp': './/dif:Last_DIF_Revision_Date',
                 'setSpec': '//dataset'
             },
             'gm03': {
                 'namespace': 'http://www.interlis.ch/INTERLIS2.3',
                 'schema': 'http://www.geocat.ch/internet/geocat/en/home/documentation/gm03.parsys.50316.downloadList.86742.DownloadFile.tmp/gm0321.zip',
-                'identifier': '//gm03:DATASECTION//gm03:fileIdentifer',
-                'dateStamp': '//gm03:DATASECTION//gm03:dateStamp',
-                'setSpec': '//dataset'
+                'identifier': './/gm03:DATASECTION//gm03:fileIdentifer',
+                'datestamp': './/gm03:DATASECTION//gm03:dateStamp',
+                'setSpec': './/dataset'
+            },
+            'datacite': {
+                'namespace': 'http://datacite.org/schema/kernel-4',
+                'schema': 'http://schema.datacite.org/meta/kernel-4.3/metadata.xsd',
+                'identifier': '//identifier',
+                'datestamp': '//dates/date',
+                'setSpec': ''
             }
         }
         self.metadata_sets = {
@@ -184,7 +191,10 @@ class OAIPMH(object):
         LOGGER.debug(etree.tostring(node))
 
         etree.SubElement(node, util.nspath_eval('oai:responseDate', self.namespaces)).text = util.get_today_and_now()
-        etree.SubElement(node, util.nspath_eval('oai:request', self.namespaces), attrib=kvp).text = url
+        kvp2 = dict(kvp)
+        if 'metadataprefix' in kvp2:
+            kvp2['metadataPrefix'] = kvp2.pop('metadataprefix')
+        etree.SubElement(node, util.nspath_eval('oai:request', self.namespaces), attrib=kvp2).text = url
 
         if 'verb' not in kvp:
             etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Missing \'verb\' parameter'
@@ -216,10 +226,10 @@ class OAIPMH(object):
         verbnode = etree.SubElement(node, util.nspath_eval('oai:%s' % verb, self.namespaces))
 
         if verb == 'Identify':
-                etree.SubElement(verbnode, util.nspath_eval('oai:repositoryName', self.namespaces)).text = self.config.get('metadata:main', 'identification_title')
+                etree.SubElement(verbnode, util.nspath_eval('oai:repositoryName', self.namespaces)).text = self.config['metadata']['identification']['title']
                 etree.SubElement(verbnode, util.nspath_eval('oai:baseURL', self.namespaces)).text = url
                 etree.SubElement(verbnode, util.nspath_eval('oai:protocolVersion', self.namespaces)).text = '2.0'
-                etree.SubElement(verbnode, util.nspath_eval('oai:adminEmail', self.namespaces)).text = self.config.get('metadata:main', 'contact_email')
+                etree.SubElement(verbnode, util.nspath_eval('oai:adminEmail', self.namespaces)).text = self.config['metadata']['contact']['email']
                 etree.SubElement(verbnode, util.nspath_eval('oai:earliestDatestamp', self.namespaces)).text = repository.query_insert('min')
                 etree.SubElement(verbnode, util.nspath_eval('oai:deletedRecord', self.namespaces)).text = 'no'
                 etree.SubElement(verbnode, util.nspath_eval('oai:granularity', self.namespaces)).text = 'YYYY-MM-DDThh:mm:ssZ'
@@ -240,14 +250,19 @@ class OAIPMH(object):
         elif verb in ['GetRecord', 'ListIdentifiers', 'ListRecords']:
                 if verb == 'GetRecord':  # GetRecordById
                     records = response.getchildren()
-                else:  # GetRecords
+                else:  # GetRecords & ListIdentifiers
                     records = response.getchildren()[1].getchildren()
                 for child in records:
-                    recnode = etree.SubElement(verbnode, util.nspath_eval('oai:record', self.namespaces))
-                    header = etree.SubElement(recnode, util.nspath_eval('oai:header', self.namespaces))
-                    self._transform_element(header, response, 'oai:identifier')
-                    self._transform_element(header, response, 'oai:dateStamp')
-                    self._transform_element(header, response, 'oai:setSpec')
+                    if verb == 'ListIdentifiers':
+                        header = etree.SubElement(verbnode, util.nspath_eval('oai:header', self.namespaces))
+                        recnode = header
+                    else:
+                        recnode = etree.SubElement(verbnode, util.nspath_eval('oai:record', self.namespaces))
+                        header = etree.SubElement(recnode, util.nspath_eval('oai:header', self.namespaces))
+                    
+                    self._transform_element(header, child, 'oai:identifier')
+                    self._transform_element(header, child, 'oai:datestamp')
+                    self._transform_element(header, child, 'oai:setSpec')
                     if verb in ['GetRecord', 'ListRecords']:
                         metadata = etree.SubElement(recnode, util.nspath_eval('oai:metadata', self.namespaces))
                         if 'metadataprefix' in kvp and kvp['metadataprefix'] == 'oai_dc':
@@ -259,7 +274,11 @@ class OAIPMH(object):
                     cursor = str(int(complete_list_size) - int(next_record) - 1)
 
                     resumption_token = etree.SubElement(verbnode, util.nspath_eval('oai:resumptionToken', self.namespaces),
-                                                        completeListSize=complete_list_size, cursor=cursor).text = next_record
+                                                        completeListSize=complete_list_size, cursor=cursor)
+
+                    if int(next_record) > 0:
+                        resumption_token.text = next_record
+
         return node
 
     def _get_metadata_prefix(self, prefix):
@@ -274,7 +293,8 @@ class OAIPMH(object):
         """tests for existence of a given xpath, writes out text if exists"""
 
         xpath = self.metadata_formats[self.metadata_prefix][elname.split(':')[1]]
-        if xpath.startswith('//'):
+
+        if xpath.startswith(('.//', '//')):
             value = element.xpath(xpath, namespaces=self.context.namespaces)
             if value:
                 value = value[0].text

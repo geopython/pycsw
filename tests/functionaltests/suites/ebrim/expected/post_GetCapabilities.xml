@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" updateSequence="PYCSW_UPDATESEQUENCE" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+<csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gml32="http://www.opengis.net/gml/3.2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" updateSequence="PYCSW_UPDATESEQUENCE" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <ows:ServiceIdentification>
     <ows:Title>pycsw Geospatial Catalogue</ows:Title>
-    <ows:Abstract>pycsw is an OGC CSW server implementation written in Python</ows:Abstract>
+    <ows:Abstract>pycsw is an OARec and OGC CSW server implementation written in Python</ows:Abstract>
     <ows:Keywords>
       <ows:Keyword>catalogue</ows:Keyword>
       <ows:Keyword>discovery</ows:Keyword>
@@ -45,8 +45,8 @@
     <ows:Operation name="GetCapabilities">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="sections">
@@ -59,8 +59,8 @@
     <ows:Operation name="DescribeRecord">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
@@ -80,8 +80,8 @@
     <ows:Operation name="GetDomain">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ParameterName">
@@ -103,8 +103,8 @@
     <ows:Operation name="GetRecords">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="CONSTRAINTLANGUAGE">
@@ -121,6 +121,7 @@
         <ows:Value>application/xml</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
+        <ows:Value>http://datacite.org/schema/kernel-4</ows:Value>
         <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
@@ -162,8 +163,8 @@
     <ows:Operation name="GetRecordById">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
+          <ows:Post xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ElementSetName">
@@ -176,6 +177,7 @@
         <ows:Value>application/xml</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputSchema">
+        <ows:Value>http://datacite.org/schema/kernel-4</ows:Value>
         <ows:Value>http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/</ows:Value>
         <ows:Value>http://www.interlis.ch/INTERLIS2.3</ows:Value>
         <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
@@ -187,7 +189,7 @@
     <ows:Operation name="GetRepositoryItem">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/fgdc/default.cfg"/>
+          <ows:Get xlink:type="simple" xlink:href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/ebrim/default.yml"/>
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>

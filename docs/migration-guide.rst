@@ -6,6 +6,33 @@ pycsw Migration Guide
 This page provides migration support across pycsw versions
 over time to help with pycsw change management.
 
+pycsw 2.x to 3.0 Migration
+--------------------------
+
+- the default configuration is now in YAML format.  See :ref:`configuration` for more information.  A helper script (``pycsw-admin.py migrate-config``) is included for updating from the previous configuration format
+- the default endpoint for standalone deployments is now powered by ``pycsw/wsgi_flask.py`` (based on Flask) which supports ALL pycsw supported APIs. Make sure to use ``requirements-standalone.txt`` on top of ``requirements.txt`` to install Flask along with other standalone requirements
+- the previously used ``pycsw/wsgi.py`` can still be used for CSW only deployments or for applications that need to integrate pycsw as a library (e.g. Django applications). PyPI installations still use ``requirements.txt`` which does not install Flask by default
+- the default endpoint ``/`` is now OGC API - Records
+- the CSW endpoint is now ``/csw``
+- the OAI-PMH endpoint is now ``/oaipmh``
+- the OpenSearch endpoint is now ``/opensearch``
+- the SRU endpoint is now ``/sru``
+- the ``pycsw-admin.py`` syntax has been updated
+
+  - the ``-c`` flag has been replaced by subcommands (i.e. ``pycsw-admin.py -c load_records`` -> ``pycsw-admin.py load-records``)
+  - subcommands have been slugified (i.e. ``load_records`` -> ``load-records``)
+  - consult ``--help`` to use the updated CLI syntax
+- use the following migration script to add new model fields
+
+.. code-block:: sql
+
+  alter table records add column metadata TEXT;
+  alter table records add column metadata_type TEXT default 'application/xml';
+  alter table records add column edition TEXT;
+  alter table records add column contacts TEXT;
+  alter table records add column themes TEXT;
+  vacuum;
+
 pycsw 1.x to 2.0 Migration
 --------------------------
 

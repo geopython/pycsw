@@ -123,7 +123,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                 LOGGER.debug('Testing existence of ogc:PropertyName')
                 pname = queryables[elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text]['dbcol']
             except Exception as err:
-                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err)))
+                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err))) from err
 
         else:
             try:
@@ -133,7 +133,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             except Exception as err:
                 raise RuntimeError('Invalid PropertyName: %s.  %s' %
                                    (elem.find(util.nspath_eval('ogc:PropertyName',
-                                   nsmap)).text, str(err)))
+                                   nsmap)).text, str(err))) from err
 
         if (elem.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
             if elem.tag in [util.nspath_eval('ogc:%s' % n, nsmap) for n in
@@ -169,8 +169,14 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             upper_boundary = elem.find(
                 util.nspath_eval('ogc:UpperBoundary/ogc:Literal',
                                  nsmap)).text
+
+            if pname == queryables['pycsw:CloudCover']:
+                LOGGER.debug("Casting queryables['pycsw:CloudCover'] as float")
+                pname = 'cast(%s as float)' % pname
+
             expression = "%s %s %s and %s" % \
                            (pname, com_op, assign_param(), assign_param())
+
             values.append(lower_boundary)
             values.append(upper_boundary)
         else:
@@ -202,6 +208,11 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                                   (anytext, language, assign_param()))
                 else:
                     LOGGER.debug('PostgreSQL non-FTS specific search')
+
+                    if pname == queryables['pycsw:CloudCover']:
+                        LOGGER.debug("Casting queryables['pycsw:CloudCover'] as float")
+                        pname = 'cast(%s as float)' % pname
+
                     expression = "%s is null or not %s %s %s" % \
                                    (pname, pname, com_op, assign_param())
             else:
@@ -214,12 +225,17 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                                   (language, assign_param()))
                 else:
                     LOGGER.debug('PostgreSQL non-FTS specific search')
+
+                    if pname == queryables['pycsw:CloudCover']:
+                        LOGGER.debug("Casting queryables['pycsw:CloudCover'] as float")
+                        pname = 'cast(%s as float)' % pname
+
                     expression = "%s %s %s" % (pname, com_op, assign_param())
+
 
         return expression
 
     queries = []
-    queries_nested = []
     values = []
 
     LOGGER.debug('Scanning children elements')
@@ -284,8 +300,10 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             tagname = ' %s ' % child_tag_name.lower()
             if tagname in [' or ', ' and ']:  # this is a nested binary logic query
                 LOGGER.debug('Nested binary logic detected; operator=%s', tagname)
+                queries_nested = []
                 for child2 in child.xpath('child::*'):
                     queries_nested.append(_get_comparison_expression(child2))
+                LOGGER.debug('Nested binary logic queries: %s', queries_nested)
                 queries.append('(%s)' % tagname.join(queries_nested))
             else:
                 queries.append(_get_comparison_expression(child))

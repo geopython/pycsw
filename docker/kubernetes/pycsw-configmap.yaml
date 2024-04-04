@@ -1,13 +1,15 @@
 apiVersion: v1
 data:
-  pycsw.cfg: |+
+  pycsw.yml: |+
     # =================================================================
     #
     # Authors: Tom Kralidis <tomkralidis@gmail.com>
     #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+    #          Angelos Tzotsos <tzotsos@gmail.com>
     #
-    # Copyright (c) 2015 Tom Kralidis
+    # Copyright (c) 2024 Tom Kralidis
     # Copyright (c) 2017 Ricardo Garcia Silva
+    # Copyright (c) 2024 Angelos Tzotsos
     #
     # Permission is hereby granted, free of charge, to any person
     # obtaining a copy of this software and associated documentation
@@ -31,75 +33,94 @@ data:
     # OTHER DEALINGS IN THE SOFTWARE.
     #
     # =================================================================
+    
+    server:
+        url: ${PYCSW_SERVER_URL}
+        mimetype: application/xml; charset=UTF-8
+        encoding: UTF-8
+        language: en-US
+        maxrecords: 10
+        timeout: 30
+        #ogc_schemas_location: http://foo
+        #pretty_print: true
+        #gzip_compresslevel: 9
+        #domainquerytype: range
+        #domaincounts: true
+        #spatial_ranking: true
+        #workers=2
+    
+    logging:
+        level: DEBUG
+        #logfile: /tmp/pycsw.log
+    
+    profiles:
+        - apiso
+    
+    federatedcatalogues:
+        - http://catalog.data.gov/csw
+    
+    manager:
+        transactions: false
+        allowed_ips:
+            - 127.0.0.1
+        #csw_harvest_pagesize: 10
+    
+    metadata:
+        identification:
+            title: pycsw Geospatial Catalogue
+            description: pycsw is an OARec and OGC CSW server implementation written in Python
+            keywords:
+                - catalogue
+                - discovery
+                - metadata
+            keywords_type: theme
+            fees: None
+            accessconstraints: None
+            terms_of_service: https://creativecommons.org/licenses/by/4.0
+            url: https://example.org
+        license:
+            name: CC-BY 4.0 license
+            url: https://creativecommons.org/licenses/by/4.0
+        provider:
+            name: Organization Name
+            url: https://pycsw.org
+        contact:
+            name: Lastname, Firstname
+            position: Position Title
+            address: Mailing Address
+            city: City
+            stateorprovince: Administrative Area
+            postalcode: Zip or Postal Code
+            country: Country
+            phone: +xx-xxx-xxx-xxxx
+            fax: +xx-xxx-xxx-xxxx
+            email: you@example.org
+            url: Contact URL
+            hours: Mo-Fr 08:00-17:00
+            instructions: During hours of service. Off on weekends.
+            role: pointOfContact
+        inspire:
+            enabled: true
+            languages_supported:
+                - eng
+                - gre
+            default_language: eng
+            date: YYYY-MM-DD
+            gemet_keywords:
+                - Utility and governmental services
+            conformity_service: notEvaluated
+            contact_name: Organization Name
+            contact_email: Email Address
+            temp_extent:
+                begin: YYYY-MM-DD
+                end: YYYY-MM-DD
 
-    [server]
-    home=/home/pycsw
-    url=${PYCSW_SERVER_URL}
-    mimetype=application/xml; charset=UTF-8
-    encoding=UTF-8
-    language=en-US
-    maxrecords=10
-    loglevel=DEBUG
-    logfile=
-    #ogc_schemas_base=http://foo
-    #federatedcatalogues=http://catalog.data.gov/csw
-    #pretty_print=true
-    #gzip_compresslevel=8
-    #domainquerytype=range
-    #domaincounts=true
-    #spatial_ranking=true
-    profiles=apiso
-
-    [manager]
-    transactions=false
-    allowed_ips=127.0.0.1
-    #csw_harvest_pagesize=10
-
-    [metadata:main]
-    identification_title=pycsw Geospatial Catalogue
-    identification_abstract=pycsw is an OGC CSW server implementation written in Python
-    identification_keywords=catalogue,discovery,metadata
-    identification_keywords_type=theme
-    identification_fees=None
-    identification_accessconstraints=None
-    provider_name=Organization Name
-    provider_url=https://pycsw.org/
-    contact_name=Lastname, Firstname
-    contact_position=Position Title
-    contact_address=Mailing Address
-    contact_city=City
-    contact_stateorprovince=Administrative Area
-    contact_postalcode=Zip or Postal Code
-    contact_country=Country
-    contact_phone=+xx-xxx-xxx-xxxx
-    contact_fax=+xx-xxx-xxx-xxxx
-    contact_email=Email Address
-    contact_url=Contact URL
-    contact_hours=Hours of Service
-    contact_instructions=During hours of service.  Off on weekends.
-    contact_role=pointOfContact
-
-    [repository]
-    # sqlite
-    #database=sqlite:////home/pycsw/tests/functionaltests/suites/cite/data/cite.db
-    # postgres
-    database=${PYCSW_REPOSITORY_DATABASE_URI}
-    # mysql
-    #database=mysql://username:password@localhost/pycsw?charset=utf8
-    #mappings=path/to/mappings.py
-    table=records
-    #filter=type = 'http://purl.org/dc/dcmitype/Dataset'
-
-    [metadata:inspire]
-    enabled=true
-    languages_supported=eng,gre
-    default_language=eng
-    date=YYYY-MM-DD
-    gemet_keywords=Utility and governmental services
-    conformity_service=notEvaluated
-    contact_name=Organization Name
-    contact_email=Email Address
-    temp_extent=YYYY-MM-DD/YYYY-MM-DD
+    repository:
+        database: ${PYCSW_REPOSITORY_DATABASE_URI}
+        table: records
+        facets:
+            - type
+            - title
 
 kind: ConfigMap
 metadata:

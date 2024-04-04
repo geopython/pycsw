@@ -21,7 +21,7 @@ Querying
 Enabling ebRIM Support
 ^^^^^^^^^^^^^^^^^^^^^^
 
-To enable ebRIM support, add ``ebrim`` to ``server.profiles`` as specified in :ref:`configuration`.
+To enable ebRIM support, add ``ebrim`` to ``profiles`` as specified in :ref:`configuration`.
 
 Testing
 ^^^^^^^

@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2023 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -32,11 +32,18 @@
 #
 # =================================================================
 
+from configparser import BasicInterpolation, ConfigParser
+from pathlib import Path
+import importlib
+import importlib.util
+import json
 import os
 import re
 import datetime
 import logging
+import sys
 import time
+import typing
 
 from urllib.request import Request, urlopen
 from urllib.parse import urlparse
@@ -124,7 +131,7 @@ def get_version_integer(version):
         else:
             result = -1
     except AttributeError as err:
-        raise RuntimeError('%s' % str(err))
+        raise RuntimeError('%s' % str(err)) from err
     return result
 
 
@@ -160,7 +167,7 @@ def nspath_eval(xpath, nsmap):
         elif len(chunks) == 1:
             out.append(node)
         else:
-            raise RuntimeError("Invalid XPath expression: {0}".format(xpath))
+            raise RuntimeError(f"Invalid XPath expression: {xpath}")
     return '/'.join(out)
 
 
@@ -169,6 +176,20 @@ def wktenvelope2bbox(envelope):
 
     tmparr = [x.strip() for x in envelope.split('(')[1].split(')')[0].split(',')]
     bbox = '%s,%s,%s,%s' % (tmparr[0], tmparr[3], tmparr[1], tmparr[2])
+    return bbox
+
+
+def geojson_geometry2bbox(geometry):
+    """returns bbox string of GeoJSON geometry"""
+
+    geom_type = geometry.get('type')
+    coords = geometry.get('coordinates')
+
+    if geom_type == 'Point':
+        bbox = '%s,%s,%s,%s' % (coords[0], coords[1], coords[0], coords[1])
+    elif geom_type == 'Polygon':
+        bbox = '%s,%s,%s,%s' % (coords[0][0][0], coords[0][0][1], coords[0][2][0], coords[0][2][1])
+
     return bbox
 
 
@@ -187,8 +208,9 @@ def wkt2geom(ewkt, bounds=True):
     Returns
     -------
     shapely.geometry.base.BaseGeometry or tuple
-        Depending on the value of the ``bounds`` parameter, returns either 
-        the shapely geometry instance or a tuple with the bounding box.
+
+    Depending on the value of the ``bounds`` parameter, returns either
+    the shapely geometry instance or a tuple with the bounding box.
 
     References
     ----------
@@ -328,8 +350,8 @@ def ipaddress_in_whitelist(ipaddress, whitelist):
                 if ip_in_network_cidr(ipaddress, white):
                     return True
             elif white.find('*') != -1:  # subnet wildcard
-                    if ipaddress.startswith(white.split('*')[0]):
-                        return True
+                if ipaddress.startswith(white.split('*')[0]):
+                    return True
     return False
 
 
@@ -347,6 +369,27 @@ def get_anytext(bag):
             bag = etree.fromstring(bag, PARSER)
         # get all XML element content
         return ' '.join([value.strip() for value in bag.xpath('//text()')])
+
+
+# https://stackoverflow.com/a/39234154
+def get_anytext_from_obj(obj):
+    """
+    generate bag of text for free text searches
+    accepts dict, list or string
+    """
+
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            if isinstance(value, (list, dict)):
+                yield from get_anytext_from_obj(value)
+            else:
+                yield value
+    elif isinstance(obj, list):
+        for value in obj:
+            if isinstance(value, (list, dict)):
+                yield from get_anytext_from_obj(value)
+            else:
+                yield value
 
 
 # https://github.com/pallets/werkzeug/blob/778f482d1ac0c9e8e98f774d2595e9074e6984d7/werkzeug/utils.py#L253
@@ -392,3 +435,118 @@ def secure_filename(filename):
         filename = '_' + filename
 
     return filename
+
+
+def jsonify_links(links):
+    """
+    pycsw:Links column data handler.
+    casts old or new style links into JSON objects
+    """
+    try:
+        LOGGER.debug('JSON link')
+        linkset = json.loads(links)
+        return linkset
+    except json.decoder.JSONDecodeError:  # try CSV parsing
+        LOGGER.debug('old style CSV link')
+        json_links = []
+        for link in links.split('^'):
+            tokens = link.split(',')
+            json_links.append({
+                'name': tokens[0] or None,
+                'description': tokens[1] or None,
+                'protocol': tokens[2] or None,
+                'url': tokens[3] or None
+            })
+        return json_links
+
+
+class EnvInterpolation(BasicInterpolation):
+    """
+    Interpolation which expands environment variables in values.
+    from: https://stackoverflow.com/a/49529659
+    """
+
+    def before_get(self, parser, section, option, value, defaults):
+        value = super().before_get(parser, section, option, value, defaults)
+        return os.path.expandvars(value)
+
+
+def parse_ini_config(config_path) -> ConfigParser:
+    """
+    Helper function to parse a .ini configuration file
+
+    :param config_path: filepath
+
+    :returns: ConfigParser object
+    """
+
+    config = ConfigParser(interpolation=EnvInterpolation())
+    with open(config_path, encoding='utf-8') as scp:
+        config.read_file(scp)
+    return config
+
+
+def is_none_or_empty(value):
+    """
+    Helper function to detect if value is None or empty
+
+    :param value: value to evaluate
+
+    :returns: bool of whether the value is None or empty
+    """
+
+    if value is None or len(value.strip()) == 0:
+        return True
+
+    return False
+
+
+def programmatic_import(target_module: str) -> typing.Optional[typing.Any]:
+    result = None
+    target_module_path = Path(target_module)
+    if target_module_path.is_file():
+        module_name = target_module_path.stem
+        # this is an adaptation of the Python docs on using importlib to import a
+        # filepath:
+        # https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
+        spec = importlib.util.spec_from_file_location(
+            module_name, target_module_path)
+        if spec is not None:
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[module_name] = module
+            spec.loader.exec_module(module)
+            result = module
+    else:
+        try:
+            result = importlib.import_module(target_module)
+        except ModuleNotFoundError:
+            pass
+    return result
+
+
+def load_custom_repo_mappings(repository_mappings: str) -> typing.Optional[typing.Dict]:
+    imported_mappings_module = programmatic_import(repository_mappings)
+    result = None
+    if imported_mappings_module is not None:
+        result = getattr(imported_mappings_module, "MD_CORE_MODEL", None)
+    return result
+
+
+def str2bool(value: typing.Union[bool, str]) -> bool:
+    """
+    helper function to return Python boolean
+    type (source: https://stackoverflow.com/a/715468)
+
+    :param value: value to be evaluated
+
+    :returns: `bool` of whether the value is boolean-ish
+    """
+
+    value2 = False
+
+    if isinstance(value, bool):
+        value2 = value
+    else:
+        value2 = value.lower() in ('yes', 'true', 't', '1', 'on')
+
+    return value2

@@ -2,7 +2,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2020 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -26,14 +26,15 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # =================================================================
+
 """Unit tests for pycsw.server"""
 
-import configparser
+import io
 import os
 
 import pytest
 
-from pycsw import server
+from pycsw.ogc.api.util import yaml_load
 
 pytestmark = pytest.mark.unit
 
@@ -43,12 +44,10 @@ def test_config_env_vars():
     os.environ['PYCSW_SERVER_URL'] = 'http://localhost:8000'
 
     cfg = """
-    [server]
-    home=/home/pycsw
-    url=${PYCSW_SERVER_URL}
+    server:
+        url: ${PYCSW_SERVER_URL}
     """
 
-    parser = configparser.ConfigParser(interpolation=server.EnvInterpolation())
-    parser.read_string(cfg)
+    parsed_config = yaml_load(io.StringIO(cfg))
 
-    assert parser['server']['url'] == 'http://localhost:8000'
+    assert parsed_config['server']['url'] == 'http://localhost:8000'

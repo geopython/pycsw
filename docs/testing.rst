@@ -3,15 +3,30 @@
 Testing
 =======
 
-Pycsw uses `pytest`_ for managing its automated tests. There are a number of
-test suites that perform mostly functional testing. These tests ensure that
-pycsw is compliant with the various supported standards.
+pycsw uses `pytest`_ for managing its automated tests.
+
+OGC API - Records
+-----------------
+
+Tests for OGC API - Records are located in ``tests/unittests/test_oarec.py``. They
+can be run as follows:
+
+.. code:: bash
+
+   pytest tests/unittests/test_oarec.py
+
+
+OGC CSW
+-------
+
+There are a number of test suites that perform mostly functional testing.
+These tests ensure that pycsw is compliant with the various supported standards.
 There is also a growing set of unit tests. These focus on smaller scope 
 testing, in order to verify that individual bits of code are working as
 expected.
 
 Tests can be run locally as part of the development cycle. They are also
-run on pycsw's `Travis`_ continuous integration server against all pushes and
+run on pycsw's `GitHub Actions`_ continuous integration setup against all pushes and
 pull requests to the code repository.
 
 
@@ -28,27 +43,19 @@ The pycsw `wiki`_ documents CITE testing procedures and status.
 Functional test suites
 ----------------------
 
-Currently most of pycsw's tests are `functional tests`_. This means that
+Most of pycsw's tests are `functional tests`_. This means that
 each test case is based on the requirements mandated by the specifications of
 the various standards that pycsw implements. These tests focus on making sure
 that pycsw works as expected.
 
-Each test follows the same workflow:
 
-* Create a new pycsw instance with a custom configuration and data repository
-  for each suite of tests;
-
-* Perform a series of GET and POST requests to the running pycsw instance;
-
-* Compare the results of each request against a previously prepared expected
-  result. If the test result matches the expected outcome the test passes,
-  otherwise it fails.
-
+Suites for xml-based standards (CSW, ATOM, etc)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A number of different test suites exist under ``tests/functionaltests/suites``.
 Each suite specifies the following structure:
 
-* A mandatory ``default.cfg`` file with the pycsw configuration that must be
+* A mandatory ``default.yml`` file with the pycsw configuration that must be
   used by the test suite;
 
 * A mandatory ``expected/`` directory containing the expected results for each
@@ -85,54 +92,20 @@ Each suite specifies the following structure:
 * An optional ``post/`` directory that holds ``.xml`` files used for making
   HTTP POST requests
 
-
-Test identifiers
-^^^^^^^^^^^^^^^^
-
-Each test has an identifier that is built using the following rule:
-
-    <test_function>[<suite_name>_<http_method>_<test_name>]
-
-For example:
-
-    test_suites[default_post_GetRecords-end]
-
-
-Functional tests' implementation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Functional tests are generated for each suite directory present under 
-`tests/functionaltests/suites`. Test generation uses pytest's 
-`pytest_generate_tests`_ function. This function is implemented in 
-`tests/functionaltests/conftest.py`. It provides an automatic parametrization 
-of the `tests/functionaltests/test_suites_functional:test_suites` function. 
-This parametrization causes the generation of a test for each of the GET and 
+Test generation uses pytest's `pytest_generate_tests`_ function. This
+function is implemented in `tests/functionaltests/conftest.py`. It provides
+an automatic parametrization of the
+`tests/functionaltests/test_suites_functional:test_suites` test.
+This parametrization causes the generation of a test for each of the GET and
 POST requests defined in a suite's directory.
 
 
-Adding New Tests
-^^^^^^^^^^^^^^^^
+Suites for JSON-based standards (OGC API - Records, STAC API, etc)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To add tests to an existing suite:
-
-* for HTTP POST tests, add XML documents to 
-  ``tests/functionaltests/suites/<suite>/post``
-* for HTTP GET tests, add tests (one per line) to
-  ``tests/functionaltests/suites/<suite>/get/requests.txt``
-
-To add a new test suite:
-
-* Create a new directory under ``tests/functionaltests/suites`` (e.g. ``foo``)
-* Create a new configuration in ``tests/suites/foo/default.cfg``
-* Populate HTTP POST requests in ``tests/suites/foo/post``
-* Populate HTTP GET requests in ``tests/suites/foo/get/requests.txt``
-* If the test suite requires test data, create ``tests/suites/foo/data`` and
-  store XML files there. These will be inserted in the test catalogue at test
-  runtime
-* Use pytest or tox as described above in order to run the tests
-
-The new test suite database will be created automatically and used as part of
-tests.
+These are implemented as simple pytest-based tests, for which no custom
+test generation function exists. They are simpler to generate - look into the
+implementation in `tests/functionaltests/suites/oarec` for examples.
 
 
 Unit tests
@@ -185,8 +158,8 @@ Running specific suites and test cases
 py.test allows tagging tests with markers. These can be used to selectively run
 some tests. pycsw uses two markers:
 
-* ``unit`` - run only inut tests
-* ``functional``- run onyl functional tests
+* ``unit`` - run only input tests
+* ``functional``- run only functional tests
 
 Markers can be specified by using the ``-m <marker_name>`` flag.
 
@@ -241,11 +214,11 @@ There are three main ways to get more output from running tests:
    py.test -v --capture=no --pycsw-loglevel=debug
 
 
-Comparing results with difflib instead of XML c14n
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Comparing xml-based suite results with difflib instead of XML c14n
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The functional tests compare results with their expected values by using
-[XML canonicalisation - XML c14n](https://www.w3.org/TR/xml-c14n/).
+Functional tests for XML-based suites compare results with their expected
+values by using `XML canonicalisation - XML c14n`_.
 Alternatively, you can call py.test with the ``--functional-prefer-diffs``
 flag. This will enable comparison based on Python's ``difflib``. Comparison
 is made on a line-by-line basis and in case of failure, a unified diff will
@@ -259,7 +232,7 @@ be printed to standard output.
 Saving test results for disk
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The result of each functional test can be saved to disk by using the
+The result of each XML-based suite test can be saved to disk by using the
 ``--functional-save-results-directory`` option. Each result file is named
 after the test identifier it has when running with pytest.
 
@@ -322,11 +295,11 @@ Examples:
    # with default arguments
    tox
 
-   # run tests only with python3.5 and using sqlite as backend
-   tox -e py35 -sqlite
+   # run tests only with python3.7 and using sqlite as backend
+   tox -e py37 -sqlite
 
-   # run only csw30 suite tests with python3.5 and postgresql as backend
-   tox -e py35-postgresql -- -k 'csw30'
+   # run only csw30 suite tests with python3.7 and postgresql as backend
+   tox -e py37-postgresql -- -k 'csw30'
 
 
 Web Testing
@@ -344,12 +317,13 @@ Then navigate to ``http://host/path/to/pycsw/tests/index.html``.
 
 
 
-.. _Compliance & Interoperability Testing & Evaluation Initiative: http://cite.opengeospatial.org/
+.. _Compliance & Interoperability Testing & Evaluation Initiative: https://github.com/opengeospatial/cite/wiki
 .. _functional tests: https://en.wikipedia.org/wiki/Functional_testing
-.. _`Paver`: http://paver.github.io/paver/
-.. _pytest's invocation documentation: http://docs.pytest.org/en/latest/usage.html
-.. _pytest: http://pytest.org/latest/
-.. _Travis: http://travis-ci.org/geopython/pycsw
+.. _`Paver`: https://pythonhosted.org/Paver/
+.. _pytest's invocation documentation: https://docs.pytest.org/en/stable/usage.html
+.. _pytest: https://docs.pytest.org
+.. _Github Actions: https://github.com/geopython/pycsw/actions
 .. _tox: https://tox.readthedocs.io
 .. _wiki: https://github.com/geopython/pycsw/wiki/OGC-CITE-Compliance
-.. _pytest_generate_tests: http://docs.pytest.org/en/latest/parametrize.html#basic-pytest-generate-tests-example
+.. _pytest_generate_tests: #basic-pytest-generate-tests-example
+.. _XML canonicalisation - XML c14n: https://www.w3.org/TR/xml-c14n/

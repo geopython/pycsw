@@ -4,7 +4,7 @@
    xmlns:fes="http://www.opengis.net/fes/2.0"
    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
    elementFormDefault="qualified"
-   version="2.0.2">
+   version="2.0.3">
 
    <xsd:annotation>
       <xsd:documentation>
@@ -13,7 +13,7 @@
          To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
       </xsd:documentation>
    </xsd:annotation>
-   
+
    <xsd:include schemaLocation="filterAll.xsd"/>
    <xsd:include schemaLocation="expr.xsd"/>
    <xsd:include schemaLocation="query.xsd"/>
@@ -266,6 +266,7 @@
             <xsd:attribute name="wildCard" type="xsd:string" use="required"/>
             <xsd:attribute name="singleChar" type="xsd:string" use="required"/>
             <xsd:attribute name="escapeChar" type="xsd:string" use="required"/>
+            <xsd:attribute name="matchCase" type="xsd:boolean" use="optional" default="true"/>
          </xsd:extension>
       </xsd:complexContent>
    </xsd:complexType>

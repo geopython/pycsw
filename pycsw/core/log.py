@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,73 +28,44 @@
 #
 # =================================================================
 
+
 import logging
+import sys
 
 LOGGER = logging.getLogger(__name__)
 
-MSG_FORMAT = '%(asctime)s] [%(levelname)s] file=%(pathname)s \
-line=%(lineno)s module=%(module)s function=%(funcName)s %(message)s'
 
-TIME_FORMAT = '%a, %d %b %Y %H:%M:%S'
+def setup_logger(logging_config):
+    """
+    Setup configuration
 
-LOGLEVELS = {
-    'CRITICAL': logging.CRITICAL,
-    'ERROR': logging.ERROR,
-    'WARNING': logging.WARNING,
-    'INFO': logging.INFO,
-    'DEBUG': logging.DEBUG,
-    'NOTSET': logging.NOTSET,
-}
+    :param logging_config: logging specific configuration
 
+    :returns: void (creates logging instance)
+    """
 
-def setup_logger(config=None):
-    """Initialize logging facility"""
-    if config is None:
-        return None
+    log_format = \
+        '[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s'
+    date_format = '%Y-%m-%dT%H:%M:%SZ'
 
-    # Do not proceed if logging has not been set up.
-    if not (config.has_option('server', 'loglevel') or
-            config.has_option('server', 'logfile')):
-        return None
+    loglevels = {
+        'CRITICAL': logging.CRITICAL,
+        'ERROR': logging.ERROR,
+        'WARNING': logging.WARNING,
+        'INFO': logging.INFO,
+        'DEBUG': logging.DEBUG,
+        'NOTSET': logging.NOTSET,
+    }
 
-    logfile = None
-    loglevel = 'NOTSET'
+    loglevel = loglevels[logging_config['level']]
 
-    if config.has_option('server', 'loglevel'):
-        loglevel = config.get('server', 'loglevel')
+    if 'logfile' in logging_config:
+        logging.basicConfig(level=loglevel, datefmt=date_format,
+                            format=log_format,
+                            filename=logging_config['logfile'])
+    else:
+        logging.basicConfig(level=loglevel, datefmt=date_format,
+                            format=log_format, stream=sys.stdout)
 
-        if loglevel not in LOGLEVELS.keys():
-            raise RuntimeError(
-                'Invalid server configuration (server.loglevel).')
-
-        if not config.has_option('server', 'logfile'):
-            raise RuntimeError(
-                'Invalid server configuration (server.loglevel set,\
-                but server.logfile missing).')
-
-    if config.has_option('server', 'logfile'):
-        if not config.has_option('server', 'loglevel'):
-            raise RuntimeError(
-                'Invalid server configuration (server.logfile set,\
-                but server.loglevel missing).')
-
-        logfile = config.get('server', 'logfile')
-
-    if loglevel != 'NOTSET' and logfile is None:
-        raise RuntimeError(
-            'Invalid server configuration \
-            (server.loglevel set, but server.logfile is not).')
-
-    # Setup logging globally (not only for the pycsw module)
-    # based on the parameters passed.
-    logging.basicConfig(level=LOGLEVELS[loglevel],
-                        filename=logfile,
-                        datefmt=TIME_FORMAT,
-                        format=MSG_FORMAT)
-
-    LOGGER.info('Logging initialized (level: %s).', loglevel)
-
-    if loglevel == 'DEBUG':  # turn on CGI debugging
-        LOGGER.info('CGI debugging enabled.')
-        import cgitb
-        cgitb.enable()
+    LOGGER.debug('Logging initialized')
+    return

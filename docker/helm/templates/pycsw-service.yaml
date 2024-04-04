@@ -1,15 +1,23 @@
-{{- $resourceName := print .Release.Name "-pycsw" }}
-{{- with .Values.pycsw }}
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: {{ .Values.global.namespace }}
   labels:
-    name: {{ $resourceName }}
-  name: {{ $resourceName }}
+    io.kompose.service: {{ .Values.pycsw.name }}
+  name: {{ .Values.pycsw.name }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.pycsw.service_type }}
   ports:
-    - port: 8000
+    - port: {{ .Values.pycsw.service_port }}
+      {{ if .Values.pycsw.service_node_port }}
+      nodePort: {{ .Values.pycsw.service_node_port }}
+      {{ end }}
+      {{ if .Values.pycsw.service_target_port }}
+      targetPort: {{ .Values.pycsw.service_target_port }}
+      {{ end }}
+      {{ if .Values.pycsw.service_port_protocol }}
+      protocol: {{ .Values.pycsw.service_port_protocol }}
+      {{ end }}
+      name: {{ .Values.pycsw.service_port_name }}
   selector:
-    name: {{ $resourceName }}
-{{- end -}}
+    io.kompose.service: {{ .Values.pycsw.name }}

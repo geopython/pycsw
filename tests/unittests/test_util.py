@@ -31,8 +31,9 @@
 import datetime as dt
 import os
 import time
+from pathlib import Path
+from unittest import mock
 
-import mock
 import pytest
 from shapely.wkt import loads
 
@@ -85,6 +86,7 @@ def test_get_version_integer_invalid_version(invalid_version):
     with pytest.raises(RuntimeError):
         util.get_version_integer(invalid_version)
 
+
 @pytest.mark.parametrize("xpath_expression, expected", [
     ("ns1:first", "{something}first"),
     ("ns1:first/ns2:second", "{something}first/{other}second"),
@@ -113,6 +115,7 @@ def test_nspath_eval_invalid_element():
             }
         )
 
+
 @pytest.mark.parametrize("envelope, expected", [
     ("ENVELOPE (-180,180,90,-90)", "-180,-90,180,90"),
     (" ENVELOPE(-180,180,90,-90)", "-180,-90,180,90"),
@@ -121,6 +124,7 @@ def test_nspath_eval_invalid_element():
 def test_wktenvelope2bbox(envelope, expected):
     result = util.wktenvelope2bbox(envelope)
     assert result == expected
+
 
 # TODO - Add more WKT cases for other geometry types
 @pytest.mark.parametrize("wkt, bounds, expected", [
@@ -191,8 +195,8 @@ def test_getqattr_link():
 
 
 def test_getqattr_invalid():
-        result = util.getqattr(dt.date(2017, 1, 1), "name")
-        assert result is None
+    result = util.getqattr(dt.date(2017, 1, 1), "name")
+    assert result is None
 
 
 def test_http_request_post():
@@ -250,3 +254,115 @@ def test_ipaddress_in_whitelist(ip, whitelist, expected):
     assert result == expected
 
 
+@pytest.mark.parametrize("linkstr, expected", [
+    # old style CSV
+    ("roads,my roads,OGC:WMS,http://example.org/wms",
+     [{
+         "name": "roads",
+         "description": "my roads",
+         "protocol": "OGC:WMS",
+         "url": "http://example.org/wms"
+     }]
+    ),
+    # old style CSV with some empty tokens
+    (",,,http://example.org/wms",
+     [{
+         "name": None,
+         "description": None,
+         "protocol": None,
+         "url": "http://example.org/wms"
+     }]
+    ),
+    # old style CSV with empty tokens
+    (",,,",
+     [{
+         "name": None,
+         "description": None,
+         "protocol": None,
+         "url": None
+     }]
+    ),
+    # old style CSV with 2 links
+    ("roads,my roads,OGC:WMS,http://example.org/wms^roads,my roads,OGC:WFS,http://example.org/wfs",
+     [{
+         "name": "roads",
+         "description": "my roads",
+         "protocol": "OGC:WMS",
+         "url": "http://example.org/wms"
+      }, {
+         "name": "roads",
+         "description": "my roads",
+         "protocol": "OGC:WFS",
+         "url": "http://example.org/wfs"
+      }]
+    ),
+    # JSON style
+    ('[{"name": "roads", "description": "my roads", "protocol": "OGC:WMS", "url": "http://example.org/wms"}]',
+     [{
+         "name": "roads",
+         "description": "my roads",
+         "protocol": "OGC:WMS",
+         "url": "http://example.org/wms"
+      }]
+    ),
+    # JSON style with some empty keys
+    ('[{"name": "roads", "description": null, "protocol": "OGC:WMS", "url": "http://example.org/wms"}]',
+        [{
+            "name": "roads",
+            "description": None,
+            "protocol": "OGC:WMS",
+            "url": "http://example.org/wms"
+        }]
+    ),
+    # JSON style with multiple links
+    ('[{"name": "roads", "description": null, "protocol": "OGC:WMS", "url": "http://example.org/wms"},'
+     '{"name": "roads", "description": null, "protocol": "OGC:WFS", "url": "http://example.org/wfs"}]',
+        [{
+            "name": "roads",
+            "description": None,
+            "protocol": "OGC:WMS",
+            "url": "http://example.org/wms"
+         }, {
+            "name": "roads",
+            "description": None,
+            "protocol": "OGC:WFS",
+            "url": "http://example.org/wfs"
+        }]
+     )
+])
+def test_jsonify_links(linkstr, expected):
+    result = util.jsonify_links(linkstr)
+    assert isinstance(result, list)
+    assert result == expected
+
+
+@pytest.mark.parametrize("value, result", [
+    ("foo", False),
+    (None, True),
+    ('', True),
+    (' ', True),
+    ('      ', True),
+])
+def test_is_none_or_empty(value, result):
+    assert util.is_none_or_empty(value) is result
+
+
+@pytest.mark.parametrize("import_path, expected_attribute", [
+    pytest.param("itertools", "count", id="import from stdlib"),
+    pytest.param("pycsw.core.repository", "setup", id="dotted path import from pycsw"),
+    pytest.param(__file__, "test_programmatic_import", id="filesystem path import"),
+])
+def test_programmatic_import(import_path, expected_attribute):
+    imported_module = util.programmatic_import(import_path)
+    assert getattr(imported_module, expected_attribute)
+
+
+@pytest.mark.parametrize("invalid_import_path", [
+    "dummy",
+    "dummy.submodule",
+    "/non-existent/path",
+    str(Path(__file__).parent / "invalid_path"),
+])
+def test_programmatic_import_with_invalid_path(invalid_import_path):
+    result = util.programmatic_import(invalid_import_path)
+    assert result is None

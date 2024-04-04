@@ -1,9 +1,9 @@
 .. _transactions:
 
-Transactions
-============
+Transactions using CSW
+======================
 
-pycsw has the ability to process CSW Harvest and Transaction requests (CSW-T).  Transactions are disabled by default; to enable, ``manager.transactions`` must be set to ``true``.  Access to transactional functionality is limited to IP addresses which must be set in ``manager.allowed_ips``.
+pycsw's CSW implementation has the ability to process CSW Harvest and Transaction requests (CSW-T).  Transactions are disabled by default; to enable, ``manager.transactions`` must be set to ``true``.  Access to transactional functionality is limited to IP addresses which must be set in ``manager.allowed_ips``.
 
 Supported Resource Types
 ------------------------
@@ -26,7 +26,7 @@ For transactions and harvesting, pycsw supports the following metadata resource 
   OGC:WPS 1.0.0,``http://www.opengis.net/wps/1.0.0``,,yes
   OGC:SOS 1.0.0,``http://www.opengis.net/sos/1.0``,,yes
   OGC:SOS 2.0.0,``http://www.opengis.net/sos/2.0``,,yes
-  `WAF`_,``urn:geoss:urn``,,yes
+  `WAF`_,``urn:geoss:waf``,,yes
 
 Additional metadata models are supported by enabling the appropriate :ref:`profiles`.
 
@@ -50,7 +50,7 @@ Harvesting
 
    Your server must be able to make outgoing HTTP requests for this functionality.
 
-pycsw supports the CSW-T ``Harvest`` operation.  Records which are harvested require to setup a cronjob to periodically refresh records in the local repository.  A sample cronjob is available in ``etc/harvest-all.cron`` which points to ``pycsw-admin.py`` (you must specify the correct path to your configuration).  Harvest operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) if the Harvest request specifies ``csw:ResponseHandler``.
+pycsw supports the CSW-T ``Harvest`` operation.  Records which are harvested require to setup a cronjob to periodically refresh records in the local repository.  A sample cronjob is available in ``etc/harvest-all.cron`` which points to ``pycsw-admin.py`` (you must specify the correct path to your configuration).  Harvest operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) or ftps (via ``ftps://``) if the Harvest request specifies ``csw:ResponseHandler``.
 
 .. note::
 
@@ -63,8 +63,8 @@ When harvesting OGC web services, requests can provide the base URL of the servi
 
 When harvesting other CSW servers, pycsw pages through the entire CSW in default increments of 10.  This value can be modified via the ``manager.csw_harvest_pagesize`` :ref:`configuration <configuration>` option.  It is strongly advised to use the ``csw:ResponseHandler`` parameter for harvesting large CSW catalogues to prevent HTTP timeouts.
 
-Transactions
-------------
+Transaction operations
+----------------------
 
 pycsw supports 3 modes of the ``Transaction`` operation (``Insert``, ``Update``, ``Delete``):
 
@@ -72,8 +72,47 @@ pycsw supports 3 modes of the ``Transaction`` operation (``Insert``, ``Update``,
 - **Update**: updates can be made as full record updates or record properties against a ``csw:Constraint``
 - **Delete**: deletes can be made against a ``csw:Constraint``
 
-Transaction operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) if the Transaction request specifies ``csw:ResponseHandler``.
+Transaction operation results can be sent by email (via ``mailto:``) or ftp (via ``ftp://``) or ftps (via ``ftps://``) if the Transaction request specifies ``csw:ResponseHandler``.
 
 The :ref:`tests` contain CSW-T request examples.
 
-.. _`WAF`: http://seabass.ieee.org/groups/geoss/index.php?option=com_sir_200&Itemid=157&ID=183
+.. _`WAF`: https://seabass.ieee.org/groups/geoss/index.php?option=com_sir_200&Itemid=157&ID=183
+
+Transactions using OGC API - Records
+====================================
+
+pycsw's OGC API - Records support provides transactional capabilities via the `OGC API - Features - Part 4: Create, Replace, Update and Delete`_ draft specification,
+which follows RESTful patterns for insert/update/delete of resources.
+
+Supported Resource Types
+------------------------
+
+All resource types supported by CSW Transactions are supported via OGC API - Records transactional workflow.  Note that the HTTP ``Content-Type``
+header MUST be set according to the media type of the given resource (i.e. ``application/json``, ``application/xml``, etc.).
+
+Transaction operations
+----------------------
+
+The below examples demonstrate transactional workflow using pycsw's OGC API - Records endpoint:
+
+.. code-block:: bash
+
+   # insert GeoJSON metadata
+   curl -v -H "Content-Type: application/geo+json" -XPOST http://localhost:8000/collections/metadata:main/items -d @foorecord.json
+
+   # update metadata
+   curl -v -H "Content-Type: application/geo+json" -XPUT http://localhost:8000/collections/metadata:main/items/foorecord -d @foorecord.json
+
+   # delete metadata
+   curl -v -XDELETE http://localhost:8000/collections/metadata:main/items/foorecord
+
+   # insert XML metadata
+   curl -v -H "Content-Type: application/xml" -XPOST http://localhost:8000/collections/metadata:main/items -d @foorecord.xml
+
+Harvesting
+----------
+
+Harvesting is not yet supported via OGC API - Records.
+
+
+.. _`OGC API - Features - Part 4: Create, Replace, Update and Delete`: https://docs.ogc.org/DRAFTS/20-002.html

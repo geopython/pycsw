@@ -3,9 +3,11 @@
 #
 # Authors: Adam Hinz <hinz.adam@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2015 Adam Hinz
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -47,7 +49,7 @@
 #
 # or invoke this script from the command line:
 #
-# $ python ./pycsw/wsgi.py
+# $ python3 ./pycsw/wsgi.py
 #
 # which will publish pycsw to:
 #
@@ -59,7 +61,6 @@ from io import BytesIO
 import os
 import sys
 
-import configparser
 from urllib.parse import unquote
 
 from pycsw import server
@@ -68,9 +69,12 @@ from pycsw import server
 def application(env, start_response):
     """WSGI wrapper"""
 
-    print(env['PATH_INFO'])
+    status, headers, contents = application_dispatcher(env)
+    start_response(status, list(headers.items()))
+    return [contents]
 
 
+def application_dispatcher(env):
     pycsw_root = get_pycsw_root_path(os.environ, env)
     configuration_path = get_configuration_path(os.environ, env, pycsw_root)
     env['local.app_root'] = pycsw_root
@@ -85,21 +89,18 @@ def application(env, start_response):
     if "gzip" in env.get("HTTP_ACCEPT_ENCODING", ""):
         try:
             compression_level = int(
-                csw.config.get("server", "gzip_compresslevel"))
+                csw.config["server"]["gzip_compresslevel"])
             contents, compress_headers = compress_response(
                 contents, compression_level)
             headers.update(compress_headers)
-        except configparser.NoOptionError:
+        except KeyError:
             print(
                 "The client requested a gzip compressed response. However, "
                 "the server does not specify the 'gzip_compresslevel' option. "
                 "Returning an uncompressed response..."
             )
-        except configparser.NoSectionError:
-            print('Could not load user configuration %s' % configuration_path)
 
-    start_response(status, list(headers.items()))
-    return [contents]
+    return status, headers, contents
 
 
 def compress_response(response, compression_level):
@@ -169,6 +170,7 @@ def get_pycsw_root_path(process_environment, request_environment=None,
     )
     return app_root
 
+
 def get_configuration_path(process_environment, request_environment,
                            pycsw_root, config_path_key="PYCSW_CONFIG"):
     """Get the path for pycsw configuration file.
@@ -208,11 +210,11 @@ def get_configuration_path(process_environment, request_environment,
     else:
         # did not find any `config` parameter in the request
         # lets try the process env, request env and fallback to
-        # <pycsw_root>/default.cfg
+        # <pycsw_root>/default.yml
         configuration_path = process_environment.get(
             config_path_key,
             request_environment.get(
-                config_path_key, os.path.join(pycsw_root, "default.cfg")
+                config_path_key, os.path.join(pycsw_root, "default.yml")
             )
         )
     return configuration_path
@@ -224,5 +226,5 @@ if __name__ == '__main__':  # run inline using WSGI reference implementation
     if len(sys.argv) > 1:
         port = int(sys.argv[1])
     httpd = make_server('', port, application)
-    print('Serving on port {}...'.format(port))
+    print(f'Serving on port {port}...')
     httpd.serve_forever()

@@ -1,8 +1,10 @@
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2016 Ricardo Garcia Silva
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,18 +30,18 @@
 # =================================================================
 """pytest configuration file for functional tests"""
 
-import codecs
 from collections import namedtuple
 import logging
 import os
 import re
-import configparser
 
 import apipkg
 import pytest
 
 from pycsw.core import admin
 from pycsw.core.config import StaticContext
+from pycsw.core.repository import Repository, setup
+from pycsw.ogc.api.util import yaml_load
 
 apipkg.initpkg("optionaldependencies", {
     "psycopg2": "psycopg2",
@@ -58,6 +60,11 @@ SuiteDirs = namedtuple("SuiteDirs", [
 ])
 
 
+def pytest_configure(config):
+    config.addinivalue_line("markers", "unit: Run only unit tests")
+    config.addinivalue_line("markers", "functional: Run only functional tests")
+
+
 def pytest_generate_tests(metafunc):
     """Parametrize tests programmatically.
 
@@ -66,7 +73,7 @@ def pytest_generate_tests(metafunc):
     based on the available test suites. Each suite directory has the
     following structure:
 
-    * A mandatory ``default.cfg`` file specifying the configuration for the
+    * A mandatory ``default.yml`` file specifying the configuration for the
       pycsw instance to use in the tests of the suite.
 
     * An optional ``get/`` subdirectory containing a ``requests.txt`` file
@@ -103,7 +110,7 @@ def pytest_generate_tests(metafunc):
     """
 
     global TESTS_ROOT
-    if metafunc.function.__name__ == "test_suites":
+    if metafunc.function.__name__ == "test_xml_based_suites":
         suites_root_dir = os.path.join(TESTS_ROOT, "functionaltests", "suites")
         suite_names = os.listdir(suites_root_dir)
         arg_values = []
@@ -114,12 +121,12 @@ def pytest_generate_tests(metafunc):
             _recreate_postgresql_database(metafunc.config)
         for suite in suite_names:
             suite_dir = os.path.join(suites_root_dir, suite)
-            config_path = os.path.join(suite_dir, "default.cfg")
+            config_path = os.path.join(suite_dir, "default.yml")
             if not os.path.isfile(config_path):
-                print("Directory {0!r} does not have a suite "
-                      "configuration file".format(suite_dir))
+                print(f"Directory {suite_dir} does not have a suite "
+                      "configuration file")
                 continue
-            print("Generating tests for suite {0!r}...".format(suite))
+            print(f"Generating tests for suite {suite}")
             normalize_ids = True if suite in ("harvesting",
                                               "manager") else False
             suite_dirs = _get_suite_dirs(suite)
@@ -146,7 +153,7 @@ def pytest_generate_tests(metafunc):
 
         metafunc.parametrize(
             argnames=["configuration", "request_method", "request_data",
-                      "expected_result", "normalize_identifier_fields",],
+                      "expected_result", "normalize_identifier_fields"],
             argvalues=arg_values,
             indirect=["configuration"],
             ids=test_ids,
@@ -192,34 +199,35 @@ def configuration(request, tests_directory, log_level):
     """
 
     config_path = request.param
-    config = configparser.ConfigParser()
-    with codecs.open(config_path, encoding="utf-8") as fh:
-        config.read_file(fh)
+
+    with open(config_path, encoding="utf-8") as fh:
+        config = yaml_load(fh)
     suite_name = config_path.split(os.path.sep)[-2]
     suite_dirs = _get_suite_dirs(suite_name)
     data_dir = suite_dirs.data_tests_dir
     export_dir = suite_dirs.export_tests_dir
+
     if data_dir is not None:  # suite has its own database
         repository_url = _get_repository_url(request.config, suite_name,
-                                             tests_directory)
-    elif suite_name == 'opensearcheo':
-        repository_url = _get_repository_url(request.config, "apiso",
                                              tests_directory)
     else:  # suite uses the CITE database
         data_dir, export_dir = _get_cite_suite_dirs()
         repository_url = _get_repository_url(request.config, "cite",
                                              tests_directory)
+
     table_name = _get_table_name(suite_name, config, repository_url)
+
     if not _repository_exists(repository_url, table_name):
         _initialize_database(repository_url=repository_url,
                              table_name=table_name,
                              data_dir=data_dir,
                              test_dir=tests_directory,
                              export_dir=export_dir)
-    config.set("server", "loglevel", log_level)
-    config.set("server", "logfile", "")
-    config.set("repository", "database", repository_url)
-    config.set("repository", "table", table_name)
+
+    config["logging"]["level"] = log_level
+    config["repository"]["database"] = repository_url
+    config["repository"]["table"] = table_name
+
     return config
 
 
@@ -266,17 +274,14 @@ def _get_get_parameters(get_tests_dir, expected_tests_dir, config_path,
                                       line.partition(",")[::2]]
             expected_result_path = os.path.join(
                 expected_tests_dir,
-                "{method}_{name}.xml".format(method=method.lower(),
-                                             name=test_name)
+                f"{method.lower()}_{test_name}.xml"
             )
             test_argvalues.append(
                 (config_path, method, test_params, expected_result_path,
                  normalize_ids)
             )
             test_ids.append(
-                "{suite}_{http_method}_{name}".format(
-                    suite=suite_name, http_method=method.lower(),
-                    name=test_name)
+                f"{suite_name}_{method.lower()}_{test_name}"
             )
     return test_argvalues, test_ids
 
@@ -295,21 +300,14 @@ def _get_post_parameters(post_tests_dir, expected_tests_dir, config_path,
                                     request_file_name)
         expected_result_path = os.path.join(
             expected_tests_dir,
-            "{method}_{filename}".format(
-                method=method.lower(),
-                filename=request_file_name
-            )
+            f"{method.lower()}_{request_file_name}"
         )
         test_argvalues.append(
             (config_path, method, request_path,
              expected_result_path, normalize_ids)
         )
         test_ids.append(
-            "{suite}_{http_method}_{file_name}".format(
-                suite=suite_name,
-                http_method=method.lower(),
-                file_name=os.path.splitext(
-                    request_file_name)[0])
+            f"{suite_name}_{method.lower()}_{os.path.splitext(request_file_name)[0]}"
         )
     return test_argvalues, test_ids
 
@@ -326,17 +324,15 @@ def _get_repository_url(conf, suite_name, test_dir):
 
     db_type = conf.getoption("--database-backend")
     if db_type == "sqlite":
-        repository_url = "sqlite:///{test_dir}/{suite}.db".format(
-            test_dir=test_dir, suite=suite_name)
+        repository_url = f"sqlite:///{test_dir}/{suite_name}.db"
     elif db_type == "postgresql":
-        repository_url = (
-            "postgresql://{user}:{password}@{host}:{port}/{database}".format(
-                user=conf.getoption("--database-user-postgresql"),
-                password=conf.getoption("--database-password-postgresql"),
-                host=conf.getoption("--database-host-postgresql"),
-                port=conf.getoption("--database-port-postgresql"),
-                database=conf.getoption("--database-name-postgresql"))
-        )
+        user = conf.getoption("--database-user-postgresql")
+        password = conf.getoption("--database-password-postgresql")
+        host = conf.getoption("--database-host-postgresql")
+        port = conf.getoption("--database-port-postgresql")
+        database = conf.getoption("--database-name-postgresql")
+
+        repository_url = f"postgresql://{user}:{password}@{host}:{port}/{database}"
     else:
         raise NotImplementedError
     return repository_url
@@ -371,7 +367,7 @@ def _get_suite_dirs(suite_name):
     gets_dir = get_tests_dir if os.path.isdir(get_tests_dir) else None
     expected_dir = (expected_results_dir if os.path.isdir(
         expected_results_dir) else None)
-    export_dir = export_tests_dir if os.path.isdir(export_tests_dir) else None
+    _ = export_tests_dir if os.path.isdir(export_tests_dir) else None
     return SuiteDirs(get_tests_dir=gets_dir,
                      post_tests_dir=posts_dir,
                      data_tests_dir=data_dir,
@@ -386,7 +382,7 @@ def _get_table_name(suite, config, repository_url):
     ----------
     suite: str
         Name of the suite.
-    config: ConfigParser
+    config: dict
         Configuration for the suite.
     repository_url: str
         SQLAlchemy URL for the repository in use.
@@ -399,11 +395,12 @@ def _get_table_name(suite, config, repository_url):
     """
 
     if repository_url.startswith("sqlite"):
-        result = config.get("repository", "table")
+        result = config['repository']['table']
     elif repository_url.startswith("postgresql"):
-        result = "{suite}_records".format(suite=suite)
+        result = f"{suite}_records"
     else:
         raise NotImplementedError
+
     return result
 
 
@@ -429,30 +426,33 @@ def _initialize_database(repository_url, table_name, data_dir, test_dir, export_
 
     """
 
-    print("Setting up {0!r} repository...".format(repository_url))
+    context = StaticContext()
+
+    print(f"Setting up {repository_url} repository...")
     if repository_url.startswith("postgresql"):
         extra_kwargs = {
-            "create_sfsql_tables": True,
-            "create_plpythonu_functions": False
+            "create_sfsql_tables": True
         }
     else:
         extra_kwargs = {}
-    admin.setup_db(database=repository_url, table=table_name, home=test_dir,
-                   **extra_kwargs)
+
+    setup(repository_url, table_name, **extra_kwargs)
+    repo = Repository(repository_url, context, table=table_name)
+
     if len(os.listdir(data_dir)) > 0:
         print("Loading database data...")
         loaded = admin.load_records(
-            context=StaticContext(),
+            context=context,
             database=repository_url,
             table=table_name,
             xml_dirpath=data_dir,
             recursive=True
         )
-        admin.optimize_db(context=StaticContext(), database=repository_url, table=table_name)
+        repo.optimize_db()
         if export_dir is not None:
             # Attempt to export files
             exported = admin.export_records(
-                context=StaticContext(),
+                context=context,
                 database=repository_url,
                 table=table_name,
                 xml_dirpath=export_dir
@@ -490,8 +490,7 @@ def _parse_postgresql_repository_url(repository_url):
     try:
         db_info = info_re.groupdict()
     except AttributeError:
-        raise RuntimeError("Could not parse repository url {0!r}".format(
-            repository_url))
+        raise RuntimeError(f"Could not parse repository url {repository_url}")
     else:
         return db_info
 
@@ -525,9 +524,8 @@ def _recreate_postgresql_database(configuration):
         psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
     db_name = configuration.getoption("--database-name-postgresql")
-    cursor.execute("DROP DATABASE IF EXISTS {database}".format(
-        database=db_name))
-    cursor.execute("CREATE DATABASE {database}".format(database=db_name))
+    cursor.execute(f"DROP DATABASE IF EXISTS {db_name}")
+    cursor.execute(f"CREATE DATABASE {db_name}")
     cursor.execute(
         "SELECT COUNT(1) FROM pg_available_extensions WHERE name='postgis'")
     postgis_available = bool(cursor.fetchone()[0])
@@ -535,8 +533,6 @@ def _recreate_postgresql_database(configuration):
     connection.close()
     if postgis_available:
         _create_postgresql_extension(configuration, extension="postgis")
-    else:
-        _create_postgresql_extension(configuration, extension="plpythonu")
 
 
 def _create_postgresql_extension(configuration, extension):
@@ -561,7 +557,7 @@ def _create_postgresql_extension(configuration, extension):
     connection.set_isolation_level(
         psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = connection.cursor()
-    cursor.execute("CREATE EXTENSION {0}".format(extension))
+    cursor.execute(f"CREATE EXTENSION {extension}")
     cursor.close()
     connection.close()
 
@@ -595,8 +591,7 @@ def _repository_exists(repository_url, table_name):
                                           port=db_info["port"],
                                           database=db_info["database"])
             cursor = connection.cursor()
-            cursor.execute("SELECT COUNT(1) FROM {table_name}".format(
-                table_name=table_name))
+            cursor.execute("SELECT COUNT(1) FROM {table_name}")
         except (psycopg2.OperationalError, psycopg2.ProgrammingError):
             # database or table does not exist yet
             result = False

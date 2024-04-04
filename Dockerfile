@@ -39,47 +39,48 @@
 FROM python:3.8-slim-buster
 LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
+# Build arguments
+# add "--build-arg BUILD_DEV_IMAGE=true" to Docker build command when building with test/doc tools
+
+ARG BUILD_DEV_IMAGE="false"
+
 RUN apt-get update && apt-get install --yes \
-    ca-certificates \
-    build-essential \ 
-    gettext-base \
+        ca-certificates libexpat1 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt \
+RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
+
+ENV PYCSW_CONFIG=/etc/pycsw/pycsw.yml
+
+WORKDIR /home/pycsw/pycsw
+
+RUN chown --recursive pycsw:pycsw .
+
+# initially copy only the requirements files
+COPY --chown=pycsw \
+    requirements.txt \
     requirements-standalone.txt \
+    requirements-dev.txt \
     ./
 
-RUN python3 -m pip install \
+RUN pip install -U pip && \
+    python3 -m pip install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
-    psycopg2-binary
+    psycopg2-binary gunicorn \
+    && if [ "$BUILD_DEV_IMAGE" = "true" ] ; then python3 -m pip install -r requirements-dev.txt; fi
 
-ADD uwsgi.ini /settings/uwsgi.default.ini
+COPY --chown=pycsw . .
 
-ENV \
-    # WSGI parameters
-    PYCSW_WSGI_PROCESSES=6 \
-    PYCSW_WSGI_THREADS=10 \
-    PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
-
-WORKDIR /home/pycsw
-
-COPY . .
-COPY docker/pycsw.cfg ${PYCSW_CONFIG}
+COPY docker/pycsw.yml ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
-
-# fix cert permissions in openshift
-RUN mkdir /.postgresql && chmod -R 777 /.postgresql
 
 RUN python3 -m pip install --editable .
 
-COPY docker/uwsgi-start.sh /usr/local/bin/uwsgi-start.sh
-RUN chgrp -R 0 /home/pycsw /settings /usr/local/bin/uwsgi-start.sh && \
-    chmod -R g=u /home/pycsw /settings /usr/local/bin/uwsgi-start.sh
+WORKDIR /home/pycsw
 
 EXPOSE 8000
 
-RUN useradd -ms /bin/bash pycsw && usermod -a -G root pycsw
 USER pycsw
 
-ENTRYPOINT [ "/usr/local/bin/uwsgi-start.sh" ]
+ENTRYPOINT [ "python3", "/usr/local/bin/entrypoint.py" ]

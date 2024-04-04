@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- PYCSW_VERSION -->
-<csw:GetRecordByIdResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+<csw:GetRecordByIdResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gml32="http://www.opengis.net/gml/3.2" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
   <csw:Record>
     <dc:identifier>NS06agg</dc:identifier>
     <dc:title>PacIOOS Nearshore Sensor 06: Pohnpei, Micronesia</dc:title>
@@ -26,17 +26,20 @@
     <dc:subject>longitude</dc:subject>
     <dc:subject>time</dc:subject>
     <dc:subject scheme="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode">climatologyMeteorologyAtmosphere</dc:subject>
-    <dct:references scheme="None">http://oos.soest.hawaii.edu/thredds/idd/nss_pacioos.html?dataset=NS06agg</dct:references>
+    <dc:format>WWW:LINK</dc:format>
+    <dct:references>http://oos.soest.hawaii.edu/thredds/idd/nss_pacioos.html?dataset=NS06agg</dct:references>
     <dct:references scheme="WWW:LINK">http://oos.soest.hawaii.edu/thredds/dodsC/pacioos/nss/ns06agg.html</dct:references>
-    <dct:references scheme="None">http://pacioos.org/voyager/index.html?b=6.874279%2C158.077126%2C7.050468%2C158.369808&amp;tz=pont&amp;o=qual:2::p0NS06p1</dct:references>
-    <dct:references scheme="None">http://oos.soest.hawaii.edu/dchart/index.html?dsetid=54cd0688ada08d86748b9c5762509f</dct:references>
-    <dct:references scheme="None">http://oos.soest.hawaii.edu/erddap/tabledap/nss06_agg.graph?time%2Ctemperature&amp;.draw=lines</dct:references>
-    <dct:references scheme="None">http://pacioos.org/focus/waterquality/wq_fsm.php</dct:references>
-    <dct:references scheme="None">http://oos.soest.hawaii.edu/thredds/dodsC/pacioos/nss/ns06agg</dct:references>
+    <dct:references>http://pacioos.org/voyager/index.html?b=6.874279%2C158.077126%2C7.050468%2C158.369808&amp;tz=pont&amp;o=qual:2::p0NS06p1</dct:references>
+    <dct:references>http://oos.soest.hawaii.edu/dchart/index.html?dsetid=54cd0688ada08d86748b9c5762509f</dct:references>
+    <dct:references>http://oos.soest.hawaii.edu/erddap/tabledap/nss06_agg.graph?time%2Ctemperature&amp;.draw=lines</dct:references>
+    <dct:references>http://pacioos.org/focus/waterquality/wq_fsm.php</dct:references>
+    <dct:references>http://oos.soest.hawaii.edu/thredds/dodsC/pacioos/nss/ns06agg</dct:references>
+    <dct:references scheme="WWW:LINK-1.0-http--image-thumbnail">http://pacioos.org/metadata/browse/NS06agg.png</dct:references>
     <dc:relation></dc:relation>
     <dct:modified>2014-04-16</dct:modified>
     <dct:abstract>The nearshore sensors are part of the Pacific Islands Ocean Observing System (PacIOOS) and are designed to measure a variety of ocean parameters at fixed point locations. NS06 is located at the dock in Pohnpei lagoon and is mounted to the bottom in about 1 meter of water. The instrument is a Sea-Bird Electronics model 16+ V2 coupled with a WET Labs ECO-FLNTUS combination sensor.</dct:abstract>
     <dc:date>2014-04-16</dc:date>
+    <dc:language>eng</dc:language>
     <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
       <ows:LowerCorner>6.96 158.22</ows:LowerCorner>
       <ows:UpperCorner>6.96 158.22</ows:UpperCorner>

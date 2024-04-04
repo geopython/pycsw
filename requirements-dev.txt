@@ -2,11 +2,10 @@
 -r requirements-standalone.txt
 
 apipkg==1.4
-mock==2.0.0
 Paver==1.2.4
-pytest==3.0.3
-pytest-cov==2.4.0
-pytest-flake8==0.8.1
-pytest-timeout==1.2.0
+pytest==6.2.4
+pytest-cov==2.12.0
+pytest-flake8==1.0.7
+pytest-timeout==1.4.2
 sphinx
 twine

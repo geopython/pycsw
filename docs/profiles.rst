@@ -55,7 +55,7 @@ Your profile plugin class (``FooProfile``) must implement all methods as per ``p
 Enabling Profiles
 -----------------
 
-All profiles are disabled by default.  To specify profiles at runtime, set the ``server.profiles`` value in the :ref:`configuration` to the name of the package (in the ``pycsw/plugins/profiles`` directory).  To enable multiple profiles, specify as a comma separated value (see :ref:`configuration`).
+All profiles are disabled by default.  To specify profiles at runtime, set the ``profiles`` value in the :ref:`configuration` to the name of the package (in the ``pycsw/plugins/profiles`` directory).  To enable multiple profiles, specify as a comma separated value (see :ref:`configuration`).
 
 Testing
 -------
@@ -67,4 +67,3 @@ Supported Profiles
 
 .. include:: ../pycsw/plugins/profiles/apiso/docs/apiso.rst
 .. include:: ../pycsw/plugins/profiles/ebrim/docs/ebrim.rst
-.. include:: ../pycsw/plugins/profiles/base_profile/docs/base_profile.rst

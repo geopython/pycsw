@@ -1,148 +1,109 @@
-route: 
-  tls: false
-postgres:
-  enabled: true
-  volume:
-    storage: 500Mi
-  db_name: postgres
-  authentication:
-    username: postgres
-    password: postgres
-  pg_data_path: /var/lib/postgresql/data/pgdata
+global:
+  namespace: default
+
+db:
+  name: db
+  image: postgis/postgis:12-3.1
+  port: 5432
+  database: pycsw
+  user: postgres
+  pass: mypass
+  volume_name: db-data
+  volume_path: /var/lib/postgresql/data/pgdata
+  volume_size: 500Mi
+  volume_access_modes: ReadWriteOnce
+  volume_storage_type: standard
 
 pycsw:
-  image: mapcolonies/pycsw:latest
-  pycsw_cfg: |+
-    [server]
-    home=/home/pycsw
-    url=http://localhost:8000
-    mimetype=application/xml; charset=UTF-8
-    encoding=UTF-8
-    language=en-US
-    maxrecords=10
-    loglevel=DEBUG
-    logfile=
-    #ogc_schemas_base=http://foo
-    #federatedcatalogues=http://catalog.data.gov/csw
-    #pretty_print=true
-    #gzip_compresslevel=8
-    #domainquerytype=range
-    #domaincounts=true
-    #spatial_ranking=true
-    profiles=mc_3d
-
-    [manager]
-    transactions=false
-    allowed_ips=127.0.0.1
-    #csw_harvest_pagesize=10
-
-    [metadata:main]
-    identification_title=pycsw Geospatial Catalogue
-    identification_abstract=pycsw is an OGC CSW server implementation written in Python
-    identification_keywords=catalogue,discovery,metadata
-    identification_keywords_type=theme
-    identification_fees=None
-    identification_accessconstraints=None
-    provider_name=Organization Name
-    provider_url=https://pycsw.org/
-    contact_name=Lastname, Firstname
-    contact_position=Position Title
-    contact_address=Mailing Address
-    contact_city=City
-    contact_stateorprovince=Administrative Area
-    contact_postalcode=Zip or Postal Code
-    contact_country=Country
-    contact_phone=+xx-xxx-xxx-xxxx
-    contact_fax=+xx-xxx-xxx-xxxx
-    contact_email=Email Address
-    contact_url=Contact URL
-    contact_hours=Hours of Service
-    contact_instructions=During hours of service.  Off on weekends.
-    contact_role=pointOfContact
-
-    [repository]
-    # sqlite
-    #database=sqlite:////home/pycsw/tests/functionaltests/suites/cite/data/cite.db
-    # postgres
-    database=${PYCSW_REPOSITORY_DATABASE_URI}
-    # mysql
-    #database=mysql://username:password@localhost/pycsw?charset=utf8
-    mappings=${PYCSW_MAPPINGS_FILEPATH}
-    table=records
-    #filter=type = 'http://purl.org/dc/dcmitype/Dataset'
-
-    [metadata:inspire]
-    #enabled=true
-    #languages_supported=eng,gre
-    #default_language=eng
-    #date=YYYY-MM-DD
-    #gemet_keywords=Utility and governmental services
-    #conformity_service=notEvaluated
-    #contact_name=Organization Name
-    #contact_email=Email Address
-    #temp_extent=YYYY-MM-DD/YYYY-MM-DD
-
-  # In order to change default db columns mapping
-  mappings_py: |+
-    MD_CORE_MODEL = {
-      'typename': 'pycsw:CoreMetadata',
-      'outputschema': 'http://pycsw.org/metadata',
-      'mappings': {
-        'pycsw:Identifier': 'identifier',
-        'pycsw:Typename': 'typename',
-        'pycsw:Schema': 'schema',
-        'pycsw:MdSource': 'mdsource',
-        'pycsw:InsertDate': 'insert_date',
-        'pycsw:XML': 'xml',
-        'pycsw:AnyText': 'anytext',
-        'pycsw:Language': 'language',
-        'pycsw:Title': 'title',
-        'pycsw:Abstract': 'abstract',
-        'pycsw:Keywords': 'keywords',
-        'pycsw:KeywordType': 'keywordstype',
-        'pycsw:Format': 'format',
-        'pycsw:Source': 'source',
-        'pycsw:Date': 'date',
-        'pycsw:Modified': 'date_modified',
-        'pycsw:Type': 'type',
-        'pycsw:BoundingBox': 'wkt_geometry',
-        'pycsw:CRS': 'crs',
-        'pycsw:AlternateTitle': 'title_alternate',
-        'pycsw:RevisionDate': 'date_revision',
-        'pycsw:CreationDate': 'date_creation',
-        'pycsw:PublicationDate': 'date_publication',
-        'pycsw:OrganizationName': 'organization',
-        'pycsw:SecurityConstraints': 'securityconstraints',
-        'pycsw:ParentIdentifier': 'parentidentifier',
-        'pycsw:TopicCategory': 'topicategory',
-        'pycsw:ResourceLanguage': 'resourcelanguage',
-        'pycsw:GeographicDescriptionCode': 'geodescode',
-        'pycsw:Denominator': 'denominator',
-        'pycsw:DistanceValue': 'distancevalue',
-        'pycsw:DistanceUOM': 'distanceuom',
-        'pycsw:TempExtent_begin': 'time_begin',
-        'pycsw:TempExtent_end': 'time_end',
-        'pycsw:ServiceType': 'servicetype',
-        'pycsw:ServiceTypeVersion': 'servicetypeversion',
-        'pycsw:Operation': 'operation',
-        'pycsw:CouplingType': 'couplingtype',
-        'pycsw:OperatesOn': 'operateson',
-        'pycsw:OperatesOnIdentifier': 'operatesonidentifier',
-        'pycsw:OperatesOnName': 'operatesoname',
-        'pycsw:Degree': 'degree',
-        'pycsw:AccessConstraints': 'accessconstraints',
-        'pycsw:OtherConstraints': 'otherconstraints',
-        'pycsw:Classification': 'classification',
-        'pycsw:ConditionApplyingToAccessAndUse': 'conditionapplyingtoaccessanduse',
-        'pycsw:Lineage': 'lineage',
-        'pycsw:ResponsiblePartyRole': 'responsiblepartyrole',
-        'pycsw:SpecificationTitle': 'specificationtitle',
-        'pycsw:SpecificationDate': 'specificationdate',
-        'pycsw:SpecificationDateType': 'specificationdatetype',
-        'pycsw:Creator': 'creator',
-        'pycsw:Publisher': 'publisher',
-        'pycsw:Contributor': 'contributor',
-        'pycsw:Relation': 'relation',
-        'pycsw:Links': 'links',
-      }
-    }
+  name: pycsw
+  image: geopython/pycsw:latest
+  container_port: 8000
+  service_type: NodePort
+  service_port: 8000
+  service_port_name: http
+  service_node_port: 30000
+  # service_port_protocol: TCP
+  # service_target_port: 8000
+  configmap_name: pycsw-configmap
+  volume_name: pycsw-config
+  volume_path: /etc/pycsw
+  config:
+    server:
+      home: /home/pycsw
+      url: http://localhost:8000
+      mimetype: application/xml; charset=UTF-8
+      encoding: UTF-8
+      language: en-US
+      maxrecords: 10
+      # logfile: " "
+      # ogc_schemas_base: http://foo
+      # pretty_print: true
+      # gzip_compresslevel: 8
+      # domainquerytype: range
+      # domaincounts: true
+      # spatial_ranking: true
+      # workers: 2
+      timeout: 30
+    profiles:
+      - apiso
+    # federatedcatalogues:
+    #   - http://catalog.data.gov/csw
+    logging:
+      level: DEBUG
+    manager:
+      transactions: false
+      allowed_ips:
+        - 127.0.0.1
+      # csw_harvest_pagesize: 10
+    metadata:
+      identification:
+        title: pycsw Geospatial Catalogue
+        description: pycsw is an OARec and OGC CSW server implementation written in Python
+        keywords:
+          - catalogue
+          - discovery
+          - metadata
+        keywords_type: theme
+        fees: None
+        accessconstraints: None
+      provider:
+        name: Organization Name
+        url: https://pycsw.org/
+      contact:
+        name: Lastname, Firstname
+        position: Position Title
+        address: Mailing Address
+        city: City
+        stateorprovince: Administrative Area
+        postalcode: Zip or Postal Code
+        country: Country
+        phone: +xx-xxx-xxx-xxxx
+        fax: +xx-xxx-xxx-xxxx
+        email: Email Address
+        url: Contact URL
+        hours: Hours of Service
+        instructions: During hours of service.  Off on weekends.
+        role: pointOfContact
+      inspire:
+        enabled: true
+        languages_supported:
+          - eng
+          - gre
+        default_language: eng
+        date: YYYY-MM-DD
+        gemet_keywords:
+          - Utility and governmental services
+        conformity_service: notEvaluated
+        contact_name: Organization Name
+        contact_email: Email Address
+        temp_extent:
+          begin: YYYY-MM-DD
+          end: YYYY-MM-DD
+    repository:
+      database: postgresql://postgres:mypass@db/pycsw
+      table: records
+      # mappings: path/to/mappings.py
+      # filter: type = 'http://purl.org/dc/dcmitype/Dataset'
+      facets:
+        - type
+        - title

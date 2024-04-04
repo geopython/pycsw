@@ -1,8 +1,8 @@
-geolinks==0.2.0
+click
+geolinks
 lxml
-OWSLib==0.27.2
+OWSLib
 pyproj
-Shapely
+PyYAML
+Shapely<2.0
 xmltodict
-wsgicors==0.7.0
-uWSGI==2.0.20

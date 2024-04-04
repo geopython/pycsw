@@ -1,1 +1,5 @@
 SQLAlchemy<2.0.0
+Flask
+pygeofilter
+PyYAML
+pygeoif==0.7

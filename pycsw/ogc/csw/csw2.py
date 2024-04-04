@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2016 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -37,7 +37,7 @@ from urllib.parse import quote, unquote
 from io import StringIO
 from pycsw.core.etree import etree
 from pycsw import oaipmh, opensearch, sru
-from pycsw.ogc.csw.cql import cql2fes1
+from pycsw.ogc.csw.cql import cql2fes
 from pycsw.plugins.profiles import profile as pprofile
 import pycsw.plugins.outputschemas
 from pycsw.core import config, log, metadata, util
@@ -86,7 +86,8 @@ class Csw2(object):
         try:
             updatesequence = \
             util.get_time_iso2unix(self.parent.repository.query_insert())
-        except:
+        except Exception as err:
+            LOGGER.debug('Could not derive updateSequence: %s' % err)
             updatesequence = None
 
         node = etree.Element(util.nspath_eval('csw:Capabilities',
@@ -107,9 +108,9 @@ class Csw2(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
         (self.parent.context.namespaces['csw'],
-         self.parent.config.get('server', 'ogc_schemas_base'))
+         self.parent.config['server'].get('ogc_schemas_base'))
 
-        metadata_main = dict(self.parent.config.items('metadata:main'))
+        metadata_main = self.parent.config['metadata']
 
         if serviceidentification:
             LOGGER.info('Writing section ServiceIdentification')
@@ -120,17 +121,16 @@ class Csw2(object):
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Title', self.parent.context.namespaces)).text = \
-            metadata_main.get('identification_title', 'missing')
+            metadata_main['identification'].get('title', 'missing')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Abstract', self.parent.context.namespaces)).text = \
-            metadata_main.get('identification_abstract', 'missing')
+            metadata_main['identification'].get('description', 'missing')
 
             keywords = etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Keywords', self.parent.context.namespaces))
 
-            for k in \
-            metadata_main.get('identification_keywords').split(','):
+            for k in metadata_main['identification']['keywords']:
                 etree.SubElement(
                 keywords, util.nspath_eval('ows:Keyword',
                 self.parent.context.namespaces)).text = k
@@ -138,7 +138,7 @@ class Csw2(object):
             etree.SubElement(keywords,
             util.nspath_eval('ows:Type', self.parent.context.namespaces),
             codeSpace='ISOTC211/19115').text = \
-            metadata_main.get('identification_keywords_type', 'missing')
+            metadata_main['identification'].get('keywords_type', 'missing')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:ServiceType', self.parent.context.namespaces),
@@ -151,12 +151,12 @@ class Csw2(object):
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:Fees', self.parent.context.namespaces)).text = \
-            metadata_main.get('identification_fees', 'missing')
+            metadata_main['identification'].get('fees', 'missing')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows:AccessConstraints',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('identification_accessconstraints', 'missing')
+            metadata_main['identification'].get('accessconstraints', 'missing')
 
         if serviceprovider:
             LOGGER.info('Writing section ServiceProvider')
@@ -165,7 +165,7 @@ class Csw2(object):
 
             etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ProviderName', self.parent.context.namespaces)).text = \
-            metadata_main.get('provider_name', 'missing')
+            metadata_main['provider'].get('name', 'missing')
 
             providersite = etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ProviderSite', self.parent.context.namespaces))
@@ -175,7 +175,7 @@ class Csw2(object):
 
             providersite.attrib[util.nspath_eval('xlink:href',
             self.parent.context.namespaces)] = \
-            metadata_main.get('provider_url', 'missing')
+            metadata_main['provider'].get('url', 'missing')
 
             servicecontact = etree.SubElement(serviceprovider,
             util.nspath_eval('ows:ServiceContact', self.parent.context.namespaces))
@@ -183,12 +183,12 @@ class Csw2(object):
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:IndividualName',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_name', 'missing')
+            metadata_main['contact'].get('name', 'missing')
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:PositionName',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_position', 'missing')
+            metadata_main['contact'].get('position', 'missing')
 
             contactinfo = etree.SubElement(servicecontact,
             util.nspath_eval('ows:ContactInfo', self.parent.context.namespaces))
@@ -198,11 +198,11 @@ class Csw2(object):
 
             etree.SubElement(phone, util.nspath_eval('ows:Voice',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_phone', 'missing')
+            metadata_main['contact'].get('phone', 'missing')
 
             etree.SubElement(phone, util.nspath_eval('ows:Facsimile',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_fax', 'missing')
+            metadata_main['contact'].get('fax', 'missing')
 
             address = etree.SubElement(contactinfo,
             util.nspath_eval('ows:Address', self.parent.context.namespaces))
@@ -210,30 +210,30 @@ class Csw2(object):
             etree.SubElement(address,
             util.nspath_eval('ows:DeliveryPoint',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_address', 'missing')
+            metadata_main['contact'].get('address', 'missing')
 
             etree.SubElement(address, util.nspath_eval('ows:City',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_city', 'missing')
+            metadata_main['contact'].get('city', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows:AdministrativeArea',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_stateorprovince', 'missing')
+            metadata_main['contact'].get('stateorprovince', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows:PostalCode',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_postalcode', 'missing')
+            metadata_main['contact'].get('postalcode', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows:Country', self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_country', 'missing')
+            metadata_main['contact'].get('country', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows:ElectronicMailAddress',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_email', 'missing')
+            metadata_main['contact'].get('email', 'missing')
 
             url = etree.SubElement(contactinfo,
             util.nspath_eval('ows:OnlineResource', self.parent.context.namespaces))
@@ -243,22 +243,22 @@ class Csw2(object):
 
             url.attrib[util.nspath_eval('xlink:href',
             self.parent.context.namespaces)] = \
-            metadata_main.get('contact_url', 'missing')
+            metadata_main['contact'].get('url', 'missing')
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows:HoursOfService',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_hours', 'missing')
+            metadata_main['contact'].get('hours', 'missing')
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows:ContactInstructions',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_instructions', 'missing')
+            metadata_main['contact'].get('instructions', 'missing')
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows:Role', self.parent.context.namespaces),
             codeSpace='ISOTC211/19115').text = \
-            metadata_main.get('contact_role', 'missing')
+            metadata_main['contact'].get('role', 'missing222')
 
         if operationsmetadata:
             LOGGER.info('Writing section OperationsMetadata')
@@ -285,7 +285,7 @@ class Csw2(object):
                     self.parent.context.namespaces)] = 'simple'
 
                     get.attrib[util.nspath_eval('xlink:href',\
-                    self.parent.context.namespaces)] = self.parent.config.get('server', 'url')
+                    self.parent.context.namespaces)] = self.parent.config['server'].get('url')
 
                 if self.parent.context.model['operations'][operation]['methods']['post']:
                     post = etree.SubElement(http, util.nspath_eval('ows:Post',
@@ -294,7 +294,7 @@ class Csw2(object):
                     self.parent.context.namespaces)] = 'simple'
                     post.attrib[util.nspath_eval('xlink:href',
                     self.parent.context.namespaces)] = \
-                    self.parent.config.get('server', 'url')
+                    self.parent.config['server'].get('url')
 
                 for parameter in \
                 sorted(self.parent.context.model['operations'][operation]['parameters']):
@@ -349,7 +349,7 @@ class Csw2(object):
 
                 for val in self.parent.context.model['constraints'][constraint]['values']:
                     etree.SubElement(param, util.nspath_eval('ows:Value',
-                    self.parent.context.namespaces)).text = val
+                    self.parent.context.namespaces)).text = str(val)
 
             if self.parent.profiles is not None:
                 for prof in self.parent.profiles['loaded'].keys():
@@ -460,7 +460,7 @@ class Csw2(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % (self.parent.context.namespaces['csw'],
-        self.parent.config.get('server', 'ogc_schemas_base'))
+        self.parent.config['server'].get('ogc_schemas_base'))
 
         for typename in self.parent.kvp['typename']:
             if typename.find(':') == -1:  # unqualified typename
@@ -473,7 +473,7 @@ class Csw2(object):
                 schemaLanguage='XMLSCHEMA',
                 targetNamespace=self.parent.context.namespaces['csw'])
 
-                path = os.path.join(self.parent.config.get('server', 'home'),
+                path = os.path.join(self.parent.config['server'].get('home'),
                 'core', 'schemas', 'ogc', 'csw', '2.0.2', 'record.xsd')
 
                 dublincore = etree.parse(path, self.parent.context.parser).getroot()
@@ -504,7 +504,7 @@ class Csw2(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
         (self.parent.context.namespaces['csw'],
-        self.parent.config.get('server', 'ogc_schemas_base'))
+        self.parent.config['server'].get('ogc_schemas_base'))
 
         if 'parametername' in self.parent.kvp:
             for pname in self.parent.kvp['parametername'].split(','):
@@ -568,8 +568,7 @@ class Csw2(object):
 
                     count = False
 
-                    if (self.parent.config.has_option('server', 'domaincounts') and
-                        self.parent.config.get('server', 'domaincounts') == 'true'):
+                    if self.parent.config['server'].get('domaincounts', False):
                         count = True
 
                     results = self.parent.repository.query_domain(
@@ -692,10 +691,7 @@ class Csw2(object):
         if self.parent.kvp['resulttype'] == 'validate':
             return self._write_acknowledgement()
 
-        maxrecords_cfg = -1  # not set in config server.maxrecords
-
-        if self.parent.config.has_option('server', 'maxrecords'):
-            maxrecords_cfg = int(self.parent.config.get('server', 'maxrecords'))
+        maxrecords_cfg = int(self.parent.config['server'].get('maxrecords', -1))
 
         if 'maxrecords' not in self.parent.kvp:  # not specified by client
             if maxrecords_cfg > -1:  # specified in config
@@ -709,7 +705,7 @@ class Csw2(object):
                 if int(self.parent.kvp['maxrecords']) > maxrecords_cfg:
                     self.parent.kvp['maxrecords'] = maxrecords_cfg
 
-        if any(x in ['bbox', 'q', 'time'] for x in self.parent.kvp):
+        if any(x in opensearch.QUERY_PARAMETERS for x in self.parent.kvp):
             LOGGER.debug('OpenSearch Geo/Time parameters detected.')
             self.parent.kvp['constraintlanguage'] = 'FILTER'
             tmp_filter = opensearch.kvp2filterxml(self.parent.kvp, self.parent.context,
@@ -739,7 +735,7 @@ class Csw2(object):
                         LOGGER.debug('CQL: %s', tmp)
                         self.parent.kvp['constraint'] = {}
                         self.parent.kvp['constraint']['type'] = 'filter'
-                        cql = cql2fes1(tmp, self.parent.context.namespaces)
+                        cql = cql2fes(tmp, self.parent.context.namespaces, fes_version='1.0')
                         self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = fes1.parse(cql,
                         self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
@@ -751,7 +747,7 @@ class Csw2(object):
                 elif self.parent.kvp['constraintlanguage'] == 'FILTER':
                     # validate filter XML
                     try:
-                        schema = os.path.join(self.parent.config.get('server', 'home'),
+                        schema = os.path.join(self.parent.config['server'].get('home'),
                         'core', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
                         LOGGER.info('Validating Filter %s', self.parent.kvp['constraint'])
                         schema = etree.XMLSchema(file=schema)
@@ -831,9 +827,9 @@ class Csw2(object):
 
         dsresults = []
 
-        if (self.parent.config.has_option('server', 'federatedcatalogues') and
-            'distributedsearch' in self.parent.kvp and
-            self.parent.kvp['distributedsearch'] and self.parent.kvp['hopcount'] > 0):
+        if ('federatedcatalogues' in self.parent.config and
+            'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
+            self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
 
             LOGGER.debug('DistributedSearch specified (hopCount: %s).',
@@ -841,12 +837,14 @@ class Csw2(object):
 
             from owslib.csw import CatalogueServiceWeb
             from owslib.ows import ExceptionReport
-            for fedcat in \
-            self.parent.config.get('server', 'federatedcatalogues').split(','):
+            for fedcat in self.parent.config.get('federatedcatalogues', []):
                 LOGGER.debug('Performing distributed search on federated \
                 catalogue: %s.', fedcat)
-                remotecsw = CatalogueServiceWeb(fedcat, skip_caps=True)
+                remotecsw = CatalogueServiceWeb(fedcat, version='2.0.2', skip_caps=True)
                 try:
+                    if str(self.parent.request).startswith('http'):
+                        self.parent.request = self.parent.request.split('?')[-1]
+                        self.parent.request = self.parent.request.replace('mode=opensearch', '')
                     remotecsw.getrecords2(xml=self.parent.request,
                                           esn=self.parent.kvp['elementsetname'],
                                           outputschema=self.parent.kvp['outputschema'])
@@ -900,7 +898,7 @@ class Csw2(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
         '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
-        (self.parent.context.namespaces['csw'], self.parent.config.get('server', 'ogc_schemas_base'))
+        (self.parent.context.namespaces['csw'], self.parent.config['server'].get('ogc_schemas_base'))
 
         if 'requestid' in self.parent.kvp and self.parent.kvp['requestid'] is not None:
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
@@ -939,46 +937,58 @@ class Csw2(object):
             self.parent.kvp['startposition'], max1)
 
             for res in results:
-                try:
-                    if (self.parent.kvp['outputschema'] ==
-                        'http://www.opengis.net/cat/csw/2.0.2' and
-                        'csw:Record' in self.parent.kvp['typenames']):
-                        # serialize csw:Record inline
-                        searchresults.append(self._write_record(
-                        res, self.parent.repository.queryables['_all']))
-                    elif (self.parent.kvp['outputschema'] ==
-                        'http://www.opengis.net/cat/csw/2.0.2' and
-                        'csw:Record' not in self.parent.kvp['typenames']):
-                        # serialize into csw:Record model
+                node_ = None
+                if self.parent.xslts:
+                    try:
+                        node_ = self.parent._render_xslt(res)
+                    except Exception as err:
+                        self.parent.response = self.exceptionreport(
+                        'NoApplicableCode', 'service',
+                        'XSLT transformation failed. Check server logs for errors %s' % str(err))
+                        return self.parent.response
+                if node_ is not None:
+                    searchresults.append(node_)
+                else:
+                    try:
+                        if (self.parent.kvp['outputschema'] ==
+                            'http://www.opengis.net/cat/csw/2.0.2' and
+                            'csw:Record' in self.parent.kvp['typenames']):
+                            # serialize csw:Record inline
+                            searchresults.append(self._write_record(
+                            res, self.parent.repository.queryables['_all']))
+                        elif (self.parent.kvp['outputschema'] ==
+                            'http://www.opengis.net/cat/csw/2.0.2' and
+                            'csw:Record' not in self.parent.kvp['typenames']):
+                            # serialize into csw:Record model
 
-                        for prof in self.parent.profiles['loaded']:
-                            # find source typename
-                            if self.parent.profiles['loaded'][prof].typename in \
-                            self.parent.kvp['typenames']:
-                                typename = self.parent.profiles['loaded'][prof].typename
-                                break
+                            for prof in self.parent.profiles['loaded']:
+                                # find source typename
+                                if self.parent.profiles['loaded'][prof].typename in \
+                                self.parent.kvp['typenames']:
+                                    typename = self.parent.profiles['loaded'][prof].typename
+                                    break
 
-                        util.transform_mappings(
-                            self.parent.repository.queryables['_all'],
-                            self.parent.context.model['typenames'][typename][
-                                'mappings']['csw:Record']
-                        )
+                            util.transform_mappings(
+                                self.parent.repository.queryables['_all'],
+                                self.parent.context.model['typenames'][typename][
+                                    'mappings']['csw:Record']
+                            )
 
-                        searchresults.append(self._write_record(
-                        res, self.parent.repository.queryables['_all']))
-                    elif self.parent.kvp['outputschema'] in self.parent.outputschemas.keys():  # use outputschema serializer
-                        searchresults.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(res, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url')))
-                    else:  # use profile serializer
-                        searchresults.append(
-                        self.parent.profiles['loaded'][self.parent.kvp['outputschema']].\
-                        write_record(res, self.parent.kvp['elementsetname'],
-                        self.parent.kvp['outputschema'],
-                        self.parent.repository.queryables['_all']))
-                except Exception as err:
-                    self.parent.response = self.exceptionreport(
-                    'NoApplicableCode', 'service',
-                    'Record serialization failed: %s' % str(err))
-                    return self.parent.response
+                            searchresults.append(self._write_record(
+                            res, self.parent.repository.queryables['_all']))
+                        elif self.parent.kvp['outputschema'] in self.parent.outputschemas.keys():  # use outputschema serializer
+                            searchresults.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(res, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config['server'].get('url')))
+                        else:  # use profile serializer
+                            searchresults.append(
+                            self.parent.profiles['loaded'][self.parent.kvp['outputschema']].\
+                            write_record(res, self.parent.kvp['elementsetname'],
+                            self.parent.kvp['outputschema'],
+                            self.parent.repository.queryables['_all']))
+                    except Exception as err:
+                        self.parent.response = self.exceptionreport(
+                        'NoApplicableCode', 'service',
+                        'Record serialization failed: %s' % str(err))
+                        return self.parent.response
 
         if len(dsresults) > 0:  # return DistributedSearch results
             for resultset in dsresults:
@@ -1038,7 +1048,7 @@ class Csw2(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = '%s %s/csw/2.0.2/CSW-discovery.xsd' % \
-        (self.parent.context.namespaces['csw'], self.parent.config.get('server', 'ogc_schemas_base'))
+        (self.parent.context.namespaces['csw'], self.parent.config['server'].get('ogc_schemas_base'))
 
         # query repository
         LOGGER.info('Querying repository with ids: %s', self.parent.kvp['id'][0])
@@ -1051,40 +1061,52 @@ class Csw2(object):
                 self.parent.context.md_core_model['mappings']['pycsw:XML']), self.parent.context.parser)
 
         for result in results:
-            if (util.getqattr(result,
-            self.parent.context.md_core_model['mappings']['pycsw:Typename']) == 'csw:Record'
-            and self.parent.kvp['outputschema'] ==
-            'http://www.opengis.net/cat/csw/2.0.2'):
-                # serialize record inline
-                node.append(self._write_record(
-                result, self.parent.repository.queryables['_all']))
-            elif (self.parent.kvp['outputschema'] ==
+            node_ = None
+            if self.parent.xslts:
+                try:
+                    node_ = self.parent._render_xslt(result)
+                except Exception as err:
+                    self.parent.response = self.exceptionreport(
+                    'NoApplicableCode', 'service',
+                    'XSLT transformation failed. Check server logs for errors %s' % str(err))
+                    return self.parent.response
+            if node_ is not None:
+                node = node_
+            else:
+                if (util.getqattr(result,
+                self.parent.context.md_core_model['mappings']['pycsw:Typename']) == 'csw:Record'
+                and self.parent.kvp['outputschema'] ==
                 'http://www.opengis.net/cat/csw/2.0.2'):
-                # serialize into csw:Record model
-                typename = None
+                    # serialize record inline
+                    node.append(self._write_record(
+                    result, self.parent.repository.queryables['_all']))
+                elif (self.parent.kvp['outputschema'] ==
+                    'http://www.opengis.net/cat/csw/2.0.2'):
+                    # serialize into csw:Record model
+                    typename = None
 
-                for prof in self.parent.profiles['loaded']:  # find source typename
-                    if self.parent.profiles['loaded'][prof].typename in \
-                    [util.getqattr(result, self.parent.context.md_core_model['mappings']['pycsw:Typename'])]:
-                        typename = self.parent.profiles['loaded'][prof].typename
-                        break
+                    for prof in self.parent.profiles['loaded']:  # find source typename
+                        if self.parent.profiles['loaded'][prof].typename in \
+                        [util.getqattr(result, self.parent.context.md_core_model['mappings']['pycsw:Typename'])]:
+                            typename = self.parent.profiles['loaded'][prof].typename
+                            break
 
-                if typename is not None:
-                    util.transform_mappings(
-                        self.parent.repository.queryables['_all'],
-                        self.parent.context.model['typenames'][typename][
-                            'mappings']['csw:Record']
-                    )
+                    if typename is not None:
+                        util.transform_mappings(
+                            self.parent.repository.queryables['_all'],
+                            self.parent.context.model['typenames'][typename][
+                                'mappings']['csw:Record']
+                        )
 
-                node.append(self._write_record(
-                result, self.parent.repository.queryables['_all']))
-            elif self.parent.kvp['outputschema'] in self.parent.outputschemas.keys():  # use outputschema serializer
-                node.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url')))
-            else:  # it's a profile output
-                node.append(
-                self.parent.profiles['loaded'][self.parent.kvp['outputschema']].write_record(
-                result, self.parent.kvp['elementsetname'],
-                self.parent.kvp['outputschema'], self.parent.repository.queryables['_all']))
+                    node.append(self._write_record(
+                    result, self.parent.repository.queryables['_all']))
+                elif self.parent.kvp['outputschema'] in self.parent.outputschemas.keys():  # use outputschema serializer
+                    node.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config['server'].get('url')))
+                else:  # it's a profile output
+                    node.append(
+                    self.parent.profiles['loaded'][self.parent.kvp['outputschema']].write_record(
+                    result, self.parent.kvp['elementsetname'],
+                    self.parent.kvp['outputschema'], self.parent.repository.queryables['_all']))
 
         if raw and len(results) == 0:
             return None
@@ -1219,7 +1241,7 @@ class Csw2(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = '%s %s/csw/2.0.2/CSW-publication.xsd' % \
-        (self.parent.context.namespaces['csw'], self.parent.config.get('server', 'ogc_schemas_base'))
+        (self.parent.context.namespaces['csw'], self.parent.config['server'].get('ogc_schemas_base'))
 
         node.append(
         self._write_transactionsummary(
@@ -1353,7 +1375,7 @@ class Csw2(object):
                 ir.append({'identifier': identifier, 'title': title})
 
                 results = []
-                if not self.parent.config.has_option('repository', 'source'):
+                if 'source' not in self.parent.config['repository']:
                     # query repository to see if record already exists
                     LOGGER.info('checking if record exists (%s)', identifier)
                     results = self.parent.repository.query_ids(ids=[identifier])
@@ -1407,7 +1429,7 @@ class Csw2(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
         '%s %s/csw/2.0.2/CSW-publication.xsd' % (self.parent.context.namespaces['csw'],
-        self.parent.config.get('server', 'ogc_schemas_base'))
+        self.parent.config['server'].get('ogc_schemas_base'))
 
         node2 = etree.SubElement(node,
         util.nspath_eval('csw:TransactionResponse',
@@ -1505,13 +1527,13 @@ class Csw2(object):
                 self.parent.context.md_core_model['mappings']['pycsw:Links'])
 
                 if rlinks:
-                    links = rlinks.split('^')
-                    for link in links:
-                        linkset = link.split(',')
-                        etree.SubElement(record,
-                        util.nspath_eval('dct:references',
-                        self.parent.context.namespaces),
-                        scheme=linkset[2]).text = linkset[-1]
+                    for link in util.jsonify_links(rlinks):
+                        ref = etree.SubElement(record, util.nspath_eval('dct:references',
+                            self.parent.context.namespaces))
+                        if link.get('protocol'):
+                            ref.attrib['scheme'] = link['protocol']
+
+                        ref.text = link['url']
 
                 for i in ['dc:relation', 'dct:modified', 'dct:abstract']:
                     val = util.getqattr(recobj, queryables[i]['dbcol'])
@@ -1564,7 +1586,7 @@ class Csw2(object):
             try:
                 LOGGER.info('Transforming CQL into OGC Filter')
                 query['type'] = 'filter'
-                cql = cql2fes1(tmp.text, self.parent.context.namespaces)
+                cql = cql2fes(tmp.text, self.parent.context.namespaces, fes_version='1.0')
                 query['where'], query['values'] = fes1.parse(cql,
                 self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
@@ -1602,10 +1624,10 @@ class Csw2(object):
         if (doc.tag in [util.nspath_eval('csw:Transaction',
             self.parent.context.namespaces), util.nspath_eval('csw:Harvest',
             self.parent.context.namespaces)]):
-            schema = os.path.join(self.parent.config.get('server', 'home'),
+            schema = os.path.join(self.parent.config['server'].get('home'),
             'core', 'schemas', 'ogc', 'csw', '2.0.2', 'CSW-publication.xsd')
         else:
-            schema = os.path.join(self.parent.config.get('server', 'home'),
+            schema = os.path.join(self.parent.config['server'].get('home'),
             'core', 'schemas', 'ogc', 'csw', '2.0.2', 'CSW-discovery.xsd')
 
         try:
@@ -1922,7 +1944,7 @@ class Csw2(object):
             node.attrib[util.nspath_eval('xsi:schemaLocation',
             self.parent.context.namespaces)] = \
             '%s %s/csw/2.0.2/CSW-discovery.xsd' % (self.parent.context.namespaces['csw'], \
-            self.parent.config.get('server', 'ogc_schemas_base'))
+            self.parent.config['server'].get('ogc_schemas_base'))
 
         node1 = etree.SubElement(node, util.nspath_eval('csw:EchoedRequest',
                 self.parent.context.namespaces))
@@ -1936,7 +1958,7 @@ class Csw2(object):
 
         if self.parent.asynchronous:
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
-            self.parent.context.namespaces)).text = self.kvp['requestid']
+            self.parent.context.namespaces)).text = self.parent.kvp['requestid']
 
         return node
 
@@ -1965,8 +1987,8 @@ class Csw2(object):
         self.parent.status = 'OK'
 
         try:
-            language = self.parent.config.get('server', 'language')
-            ogc_schemas_base = self.parent.config.get('server', 'ogc_schemas_base')
+            language = self.parent.config['server'].get('language')
+            ogc_schemas_base = self.parent.config['server'].get('ogc_schemas_base')
         except:
             language = 'en-US'
             ogc_schemas_base = self.parent.context.ogc_schemas_base
