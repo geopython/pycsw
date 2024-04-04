@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<oai:OAI-PMH xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
+  <oai:request verb="GetRecord" identifier="urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f" metadataPrefix="datacite">http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/oaipmh/default.yml&amp;mode=oaipmh</oai:request>
+  <oai:GetRecord>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</oai:identifier>
+        <oai:datestamp/>
+        <oai:setSpec/>
+      </oai:header>
+      <oai:metadata>
+        <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
+          <resourceType resourceTypeGeneral="Image">Image</resourceType>
+          <identifier identifierType="URN">urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</identifier>
+          <titles>
+            <title xml:lang="eng">Lorem ipsum</title>
+          </titles>
+          <subjects>
+            <subject xml:lang="eng">Tourism--Greece</subject>
+          </subjects>
+          <creators>
+            <creator>
+              <creatorName/>
+            </creator>
+          </creators>
+          <descriptions>
+            <description xml:lang="eng">Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</description>
+          </descriptions>
+          <formats>
+            <format>image/svg+xml</format>
+          </formats>
+          <rightsList/>
+        </resource>
+      </oai:metadata>
+    </oai:record>
+  </oai:GetRecord>
+</oai:OAI-PMH>

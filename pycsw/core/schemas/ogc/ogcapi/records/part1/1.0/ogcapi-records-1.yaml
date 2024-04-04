@@ -1,0 +1,932 @@
+openapi: 3.0.2
+info:
+  title: "Building Blocks specified in OGC API - Records - Part 1: Core"
+  description: |-
+    Common components used in the
+    [OGC standard "OGC API - Records - Part 1: Core"]
+    (https://docs.ogc.org/DRAFTS/20-004.html).
+
+    OGC API - Records - Part 1: Core 1.0 is an OGC Standard.
+    Copyright (c) 2020 Open Geospatial Consortium.
+    To obtain additional rights of use, visit
+    http://www.opengeospatial.org/legal/ .
+
+    This document is also available on
+    [OGC](http://schemas.opengis.net/ogcapi/records/part1/1.0/openapi/ogcapi-records-1.yaml).
+  version: '1.0.0'
+  contact:
+    name: Panagiotis (Peter) A. Vretanos
+    email: pvretano@pvretano.com
+  license:
+    name: OGC License
+    url: 'http://www.opengeospatial.org/legal/'
+components:
+  parameters:
+    bbox:
+      name: bbox
+      in: query
+      description: |-
+        Only records that have a geometry that intersects the bounding box are
+        selected. The bounding box is provided as four or six numbers,
+        depending on whether the coordinate reference system includes a
+        vertical axis (height or depth):
+
+        * Lower left corner, coordinate axis 1
+        * Lower left corner, coordinate axis 2
+        * Minimum value, coordinate axis 3 (optional)
+        * Upper right corner, coordinate axis 1
+        * Upper right corner, coordinate axis 2
+        * Maximum value, coordinate axis 3 (optional)
+
+        The coordinate reference system of the values is WGS 84 long/lat
+        (http://www.opengis.net/def/crs/OGC/1.3/CRS84) unless a different
+        coordinate reference system is specified in the parameter `bbox-crs`.
+
+        For WGS 84 longitude/latitude the values are in most cases the sequence
+        of minimum longitude, minimum latitude, maximum longitude and maximum
+        latitude.
+
+        However, in cases where the box spans the antimeridian the first value
+        (west-most box edge) is larger than the third value (east-most box
+        edge).
+
+        If the vertical axis is included, the third and the sixth number are
+        the bottom and the top of the 3-dimensional bounding box.
+
+        If a record has multiple spatial geometry properties, it is the
+        decision of the server whether only a single spatial geometry property
+        is used to determine the extent or all relevant geometries.
+      required: false
+      schema:
+        type: array
+        oneOf:
+          - minItems: 4
+            maxItems: 4
+          - minItems: 6
+            maxItems: 6
+        items:
+          type: number
+      style: form
+      explode: false
+    datetime:
+      name: datetime
+      in: query
+      description: |-
+        Either a date-time or an interval, open or closed. Date and time
+        expressions adhere to RFC 3339. Open intervals are expressed using
+        double-dots.
+
+        Examples:
+
+        * A date-time: "2018-02-12T23:20:50Z"
+        * A closed interval: "2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"
+        * Open intervals: "2018-02-12T00:00:00Z/.." or "../2018-03-18T12:31:12Z"
+
+        Only records that have a temporal property that intersects the value of
+        `datetime` are selected.  It is left to the decision of the server
+        whether only a single temporal property is used to determine the extent
+        or all relevant temporal properties.
+      required: false
+      schema:
+        type: string
+      style: form
+      explode: false
+    limit:
+      name: limit
+      in: query
+      description: |-
+        The optional limit parameter limits the number of items that are
+        presented in the response document. Only items are counted that
+        are on the first level of the collection in the response document.
+        Nested objects contained within the explicitly requested items
+        shall not be counted.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 10000
+        default: 10
+      style: form
+      explode: false
+    q:
+      name: q
+      in: query
+      description: |-
+        The optional q parameter supports keyword searching.  Only records
+        whose text fields contain one or more of the specified search terms
+        are selected.  The specific set of text keys/fields/properties of a
+        record to which the q operator is applied is up to the description
+        of the server.   Implementations should, however, apply the q
+        operator to the title, description and keywords keys/fields/properties.
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+      style: form
+    type:
+      name: type
+      in: query
+      description: |-
+        The optional type parameter supports searching by resource type.  Only
+        records whose type, as indicated by the value of the type core
+        queryable, is equal to one of the listed values shall be selected.
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+      style: form
+    externalId:
+      name: externalId
+      in: query
+      description: |-
+        The optional externalId parameter supports searching by an identifier
+        that was not assigned by the catalogue (i.e. an external identifier).
+        Only records with an external identifer, as indicated by the value of
+        the externalId core queryable array, that is equal to one of the listed
+        values shall be selected.
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+      style: form
+    sortby:
+      name: sortby
+      in: query
+      required: false
+      schema:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          pattern: '[+|-][A-Za-z_][A-Za-z_0-9]*'
+      style: form
+      explode: false
+    collectionId:
+      name: collectionId
+      in: path
+      description: local identifier of a collection
+      required: true
+      schema:
+        type: string
+    recordId:
+      name: recordId
+      in: path
+      description: local identifier of a record
+      required: true
+      schema:
+        type: string
+  schemas:
+    collectionInfo:
+      type: object
+      required:
+        - id
+        - links
+      properties:
+        id:
+          description: identifier of the collection used, for example, in URIs
+          type: string
+        title:
+          description: human readable title of the collection
+          type: string
+        description:
+          description: a description of the records in the collection
+          type: string
+        links:
+          type: array
+          items:
+            $ref: "#/components/schemas/link"
+        extent:
+          $ref: "#/components/schemas/extent"
+        itemType:
+          description: |-
+            indicator about the type of the items in the collection (the
+            default value is 'record' for OAPIR).
+          type: string
+          default: record
+        crs:
+          description: |-
+            the list of coordinate reference systems supported by the service
+          type: array
+          items:
+            type: string
+          default:
+            - http://www.opengis.net/def/crs/OGC/1.3/CRS84
+    collections:
+      type: object
+      required:
+        - links
+        - collections
+      properties:
+        links:
+          type: array
+          items:
+            $ref: "#/components/schemas/link"
+        collections:
+          type: array
+          items:
+            $ref: "#/components/schemas/collectionInfo"
+    confClasses:
+      type: object
+      required:
+        - conformsTo
+      properties:
+        conformsTo:
+          type: array
+          items:
+            type: string
+    exception:
+      type: object
+      description: |-
+        information about the exception; an error code plus an optional
+        description.
+      required:
+        - code
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    extent:
+      type: object
+      description: |-
+        The extent of the records in the collection. In the Core only spatial
+        and temporal extents are specified. Extensions may add additional
+        members to represent other extents, for example, thermal or pressure
+        ranges.
+      properties:
+        spatial:
+          description: |-
+            The spatial extent of the records in the collection.
+          type: object
+          properties:
+            bbox:
+              description: |-
+                One or more bounding boxes that describe the spatial extent of
+                the dataset. In the Core only a single bounding box is
+                supported. Extensions may support additional areas. If multiple
+                areas are provided, the union of the bounding boxes describes
+                the spatial extent.
+              type: array
+              minItems: 1
+              items:
+                description: |-
+                  Each bounding box is provided as four or six numbers,
+                  depending on whether the coordinate reference system
+                  includes a vertical axis (height or depth):
+
+                  * Lower left corner, coordinate axis 1
+                  * Lower left corner, coordinate axis 2
+                  * Minimum value, coordinate axis 3 (optional)
+                  * Upper right corner, coordinate axis 1
+                  * Upper right corner, coordinate axis 2
+                  * Maximum value, coordinate axis 3 (optional)
+
+                  The coordinate reference system of the values is WGS 84
+                  long/lat (http://www.opengis.net/def/crs/OGC/1.3/CRS84)
+                  unless a different coordinate reference system is specified
+                  in `crs`.
+
+                  For WGS 84 longitude/latitude the values are in most cases
+                  the sequence of minimum longitude, minimum latitude, maximum
+                  longitude and maximum latitude. However, in cases where the
+                  box spans the antimeridian the first value (west-most box
+                  edge) is larger than the third value (east-most box edge).
+
+                  If the vertical axis is included, the third and the sixth
+                  number are the bottom and the top of the 3-dimensional
+                  bounding box.
+
+                  If a record has multiple spatial geometry properties, it is
+                  the decision of the server whether only a single spatial
+                  geometry property is used to determine the extent or all
+                  relevant geometries.
+                type: array
+                oneOf:
+                  - minItems: 4
+                    maxItems: 4
+                  - minItems: 6
+                    maxItems: 6
+                items:
+                  type: number
+                example:
+                  - -180
+                  - -90
+                  - 180
+                  - 90
+            crs:
+              description: |-
+                Coordinate reference system of the coordinates in the spatial
+                extent (property `bbox`). The default reference system is WGS
+                84 longitude/latitude. In the Core this is the only supported
+                coordinate reference system. Extensions may support additional
+                coordinate reference systems and add additional enum values.
+              type: string
+              enum:
+                - 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
+              default: 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'
+        temporal:
+          description: |-
+            The temporal extent of the records in the collection.
+          type: object
+          properties:
+            interval:
+              description: |-
+                One or more time intervals that describe the temporal extent of
+                the dataset. The value `null` is supported and indicates an
+                open time interval. In the Core only a single time interval is
+                supported. Extensions may support multiple intervals. If
+                multiple intervals are provided, the union of the intervals
+                describes the temporal extent.
+              type: array
+              minItems: 1
+              items:
+                description: |-
+                  Begin and end times of the time interval. The timestamps are
+                  in the temporal coordinate reference system specified in
+                  `trs`. By default this is the Gregorian calendar.
+                type: array
+                minItems: 2
+                maxItems: 2
+                items:
+                  type: string
+                  format: date-time
+                  nullable: true
+                example:
+                  - '2011-11-11T12:22:11Z'
+                  - null
+            trs:
+              description: |-
+                Coordinate reference system of the coordinates in the temporal
+                extent (property `interval`). The default reference system is
+                the Gregorian calendar. In the Core this is the only supported
+                temporal coordinate reference system. Extensions may support
+                additional temporal coordinate reference systems and add
+                additional enum values.
+              type: string
+              enum:
+                - 'http://www.opengis.net/def/uom/ISO-8601/0/Gregorian'
+              default: 'http://www.opengis.net/def/uom/ISO-8601/0/Gregorian'
+    featureCollectionGeoJSON:
+      type: object
+      required:
+        - type
+        - features
+      properties:
+        type:
+          type: string
+          enum:
+            - FeatureCollection
+        features:
+          type: array
+          items:
+            $ref: "#/components/schemas/recordGeoJSON"
+        links:
+          type: array
+          items:
+            $ref: "#/components/schemas/link"
+        timeStamp:
+          $ref: "#/components/schemas/timeStamp"
+        numberMatched:
+          $ref: "#/components/schemas/numberMatched"
+        numberReturned:
+          $ref: "#/components/schemas/numberReturned"
+    recordGeoJSON:
+      type: object
+      required:
+        - id
+        - type
+        - geometry
+        - properties
+      properties:
+        id:
+          type: string
+          description: A unique identifier of the catalogue record.
+          format: uri
+        type:
+          type: string
+          enum:
+            - Feature
+        geometry:
+          $ref: "#/components/schemas/geometryGeoJSON"
+        properties:
+          type: object
+          required:
+            - type
+            - title
+          properties:
+            recordCreated:
+              type: string
+              description: Date of creation of this record.
+              format: date-time
+            recordUpdated:
+              type: string
+              description: The most recent date on which the record was changed.
+              format: date-time
+            type:
+              type: string
+              description: The nature or genre of the resource.
+              format: uri
+            title:
+              type: string
+              description: A human-readable name given to the resource.
+            description:
+              type: string
+              description: A free-text account of the resource.
+            keywords:
+              type: array
+              description: |-
+                The topic or topics of the resource. Typically represented
+                using keywords, tags, key phrases, or classification codes.
+                Recommended best practice is to use a controlled vocabulary.
+              items:
+                type: string
+            keywordsCodespace:
+              type: string
+              description: |-
+                A reference to a controlled vocabulary used for the keywords.
+              format: uri
+            language:
+              type: string
+              description: |-
+                 The natural language used for textual values (e.g. titles,
+                 descriptions, etc.) of the resource. ISO 639-1/639-2 codes
+                 should be used.
+              default: en
+            externalId:
+              type: array
+              description: |-
+                An identifier for the resource assigned by an external (to
+                the catalogue) entity.
+              items:
+                type: string
+            created:
+              type: string
+              description: Date of creation of the resource.
+              format: date-time
+            updated:
+              type: string
+              description: Most recent date on which the resource was changed.
+              format: date-time
+            publisher:
+              type: string
+              description: |-
+                 Link to the entity making the resource available. Recommended
+                 best practice is to use a VCard
+                 (see http://www.w3.org/TR/vcard-rdf/).
+              format: uri
+            themes:
+              type: array
+              description: |-
+                 A knowledge organization system used to classify the resource.
+              items:
+                type: object
+                properties:
+                  scheme:
+                    type: string
+                    description: |-
+                       An identifier for the knowledge organization system used
+                       to classify the resource.  It is recommended that the
+                       identifier by a resolvable URI.
+                  concepts:
+                    type: array
+                    description: |-
+                       One or more entity/concept identifers from this
+                       knowledge system. it is recommended that a resolvable
+                       URI be used for each entity/concept identifier.
+                    items:
+                      type: string
+            formats:
+              type: array
+              description: A list of available distributions of the resource.
+              items:
+                type: string
+            contactPoint:
+              type: string
+              description: |-
+                 Link to relevant contact information.  Recommended best
+                 practice is to use a VCard
+                 (see http://www.w3.org/TR/vcard-rdf/).
+              format: uri
+            license:
+              type: string
+              description: |-
+                 A legal document under which the resource is made available.
+              format: uri
+            rights:
+              type: string
+              description: |-
+                A statement that concerns all rights not addresses by the
+                license such as a copyright statement.
+            extent:
+              $ref: "#/components/schemas/extent"
+            associations:
+              type: array
+              description: |-
+                A list of links for accessing the resource (e.g. download
+                link, access link) in one of the supported distribution
+                formats and/or links to other resources associated with
+                this resource.
+              items:
+                $ref: "#/components/schemas/link"
+          additionalProperties: true
+        links:
+          type: array
+          description: |-
+            A list of links for navigating the API (e.g. prev, next, etc.).
+          items:
+            $ref: "#/components/schemas/link"
+    geometryGeoJSON:
+      oneOf:
+        - $ref: "#/components/schemas/pointGeoJSON"
+        - $ref: "#/components/schemas/multipointGeoJSON"
+        - $ref: "#/components/schemas/linestringGeoJSON"
+        - $ref: "#/components/schemas/multilinestringGeoJSON"
+        - $ref: "#/components/schemas/polygonGeoJSON"
+        - $ref: "#/components/schemas/multipolygonGeoJSON"
+        - $ref: "#/components/schemas/geometrycollectionGeoJSON"
+    geometrycollectionGeoJSON:
+      type: object
+      required:
+        - type
+        - geometries
+      properties:
+        type:
+          type: string
+          enum:
+            - GeometryCollection
+        geometries:
+          type: array
+          items:
+            $ref: "#/components/schemas/geometryGeoJSON"
+    landingPage:
+      type: object
+      required:
+        - links
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        links:
+          type: array
+          items:
+            $ref: "#/components/schemas/link"
+    linestringGeoJSON:
+      type: object
+      required:
+        - type
+        - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+            - LineString
+        coordinates:
+          type: array
+          minItems: 2
+          items:
+            type: array
+            minItems: 2
+            items:
+              type: number
+    link:
+      type: object
+      required:
+        - href
+      properties:
+        href:
+          type: string
+        rel:
+          type: string
+        type:
+          type: string
+        hreflang:
+          type: string
+        title:
+          type: string
+        length:
+          type: integer
+    multilinestringGeoJSON:
+      type: object
+      required:
+        - type
+        - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+            - MultiLineString
+        coordinates:
+          type: array
+          items:
+            type: array
+            minItems: 2
+            items:
+              type: array
+              minItems: 2
+              items:
+                type: number
+    multipointGeoJSON:
+      type: object
+      required:
+        - type
+        - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+            - MultiPoint
+        coordinates:
+          type: array
+          items:
+            type: array
+            minItems: 2
+            items:
+              type: number
+    multipolygonGeoJSON:
+      type: object
+      required:
+        - type
+        - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+            - MultiPolygon
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              type: array
+              minItems: 4
+              items:
+                type: array
+                minItems: 2
+                items:
+                  type: number
+    numberMatched:
+      description: |-
+        The number of records of the record type that match the selection
+        parameters like `bbox`.
+      type: integer
+      minimum: 0
+    numberReturned:
+      description: |-
+        The number of records in the record collection.
+
+        A server may omit this information in a response, if the information
+        about the number of records is not known or difficult to compute.
+
+        If the value is provided, the value shall be identical to the number
+        of items in the "records" array.
+      type: integer
+      minimum: 0
+    pointGeoJSON:
+      type: object
+      required:
+        - type
+        - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+            - Point
+        coordinates:
+          type: array
+          minItems: 2
+          items:
+            type: number
+    polygonGeoJSON:
+      type: object
+      required:
+        - type
+        - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+            - Polygon
+        coordinates:
+          type: array
+          items:
+            type: array
+            minItems: 4
+            items:
+              type: array
+              minItems: 2
+              items:
+                type: number
+    sortable:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          description: the identifier/name for the sortable
+          type: string
+        title:
+          description: a human readable title for the sortable
+          type: string
+        description:
+          description: a human-readable narrative describing the sortable
+          type: string
+        language:
+          description: the language used for the title and description
+          type: string
+        links:
+          type: array
+          items:
+            $ref: "#/components/schemas/link"
+    timeStamp:
+      description: |-
+        This property indicates the time and date when the response was
+        generated.
+      type: string
+      format: date-time
+      example: '2017-08-17T08:05:32Z'
+  responses:
+    LandingPage:
+      description: |-
+        The landing page provides links to the API definition
+        (link relations `service-desc` and `service-doc`),
+        the Conformance declaration (path `/conformance`,
+        link relation `conformance`), and the Record
+        Collections (path `/collections`, link relation
+        `data`).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/landingPage'
+        text/html:
+          schema:
+            type: string
+    ConformanceDeclaration:
+      description: |-
+        The URIs of all conformance classes supported by the server.
+
+        To support "generic" clients that want to access multiple
+        OGC API Records implementations - and not "just" a specific
+        API / server, the server declares the conformance
+        classes it implements and conforms to.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/confClasses'
+        text/html:
+          schema:
+            type: string
+    Collections:
+      description: |-
+        The record collections shared by this API.
+
+        Catalogues are organized as one or more record collections. This
+        resource provides information about and access to these collections.
+
+        The response contains the list of record collections (itemType=record).
+        For each record collection, a link to the items in the collection
+        (path `/collections/{collectionId}/items`, link relation `items`) as
+        well as key information about the collection. This information
+        includes...
+
+        * A local identifier for the collection that is unique for the +
+          catalogue;
+        * A list of coordinate reference systems (CRS) in which geometries +
+          may be returned by the server. The first CRS is the default +
+          coordinate reference system (the default is always WGS 84 with axis +
+          order longitude/latitude);
+        * An optional title and description for the collection;
+        * An optional extent that can be used to provide an indication of the +
+          spatial and temporal extent of the collection - typically derived +
+          from the data;
+        * An optional indicator about the type of the items in the collection +
+          (the default value, if the indicator is not provided, is 'record').
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/collections'
+        text/html:
+          schema:
+            type: string
+    Collection:
+      description: |-
+        Information about the record collection with id `collectionId`.
+
+        The response contains a link to the items in the collection
+        (path `/collections/{collectionId}/items`, link relation `items`)
+        as well as key information about the collection. This information
+        includes:
+
+        * A local identifier for the collection that is unique for the +
+          catalogue;
+        * A list of coordinate reference systems (CRS) in which geometries +
+          may be returned by the server. The first CRS is the default +
+          coordinate reference system (the default is always WGS 84 with +
+          axis order longitude/latitude);
+        * An optional title and description for the collection;
+        * An optional extent that can be used to provide an indication of +
+          the spatial and temporal extent of the collection - typically +
+          derived from the data;
+        * An optional indicator about the type of the items in the collection +
+          (the default value, if the indicator is not provided, is 'record').
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/collectionInfo'
+        text/html:
+          schema:
+            type: string
+    Records:
+      description: |-
+        The response is a document consisting of records in the collection.
+        The records included in the response are determined by the server
+        based on the query parameters of the request. To support access to
+        larger collections without overloading the client, the API supports
+        paged access with links to the next page, if more records are selected
+        that the page size.
+
+        The `bbox` and `datetime` parameter can be used to select only a
+        subset of the records in the collection (the records that are in the
+        bounding box or time interval). The `bbox` parameter matches all records
+        in the collection that are not associated with a location, too. The
+        `datetime` parameter matches all records in the collection that are
+        not associated with a time stamp or interval, too.
+
+        The `limit` parameter may be used to control the subset of the
+        selected records that should be returned in the response, the page size.
+        Each page may include information about the number of selected and
+        returned records (`numberMatched` and `numberReturned`) as well as
+        links to support paging (link relation `next`).
+
+        The XML representation of the response document is an ATOM feed.
+      content:
+        application/geo+json:
+          schema:
+            $ref: '#/components/schemas/featureCollectionGeoJSON'
+        text/html:
+          schema:
+            type: string
+        application/atom+xml:
+          schema:
+            type: string
+    Record:
+      description: |-
+        Fetch the record with id `recordId` in the record collection
+        with id `collectionId`.  The XML representation of a record
+        is an ATOM entry.
+      content:
+        application/geo+json:
+          schema:
+            $ref: '#/components/schemas/recordGeoJSON'
+        text/html:
+          schema:
+            type: string
+        application/atom+xml:
+          schema:
+            type: string
+    Sortables:
+      type: array
+      items:
+        $ref: "#/components/schemas/sortable"
+    OpenSearchDescriptionDocument:
+      description: |-
+        description document for OpenSearch clients
+      content:
+        application/opensearchdescription+xml:
+          schema:
+            type: string
+    InvalidParameter:
+      description: |-
+        A query parameter has an invalid value.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/exception'
+        text/html:
+          schema:
+            type: string
+    NotFound:
+      description: |-
+        The requested resource does not exist on the server. For example,
+        a path parameter had an incorrect value.
+    NotAcceptable:
+      description: |-
+        Content negotiation failed. For example, the `Accept` header submitted
+        in the request did not support any of the media types supported by the
+        server for the requested resource.
+    ServerError:
+      description: |-
+        A server error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/exception'
+        text/html:
+          schema:
+            type: string

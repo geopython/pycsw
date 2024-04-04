@@ -1,0 +1,103 @@
+# =================================================================
+#
+# Authors: Tom Kralidis <tomkralidis@gmail.com>
+#
+# Copyright (c) 2024 Tom Kralidis
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+# =================================================================
+
+server:
+    url: http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/opensearcheo/default.yml
+    mimetype: application/xml; charset=UTF-8
+    encoding: UTF-8
+    language: en-US
+    maxrecords: 10
+    pretty_print: true
+    #gzip_compresslevel: 8
+    #spatial_ranking: true
+
+profiles:
+    - apiso
+
+logging:
+    level: DEBUG
+#    logfile: /tmp/pycsw.log
+
+#federatedcatalogues:
+#    - http://geo.data.gov/geoportal/csw/discovery
+
+manager:
+    transactions: false
+    allowed_ips:
+        - 127.0.0.1
+
+metadata:
+    identification:
+        title: pycsw Geospatial Catalogue
+        description: pycsw is an OARec and OGC CSW server implementation written in Python
+        keywords:
+            - catalogue
+            - discovery
+        keywords_type: theme
+        fees: None
+        accessconstraints: None
+    provider:
+        name: pycsw
+        url: https://pycsw.org/
+    contact:
+        name: Kralidis, Tom
+        position: Senior Systems Scientist
+        address: TBA
+        city: Toronto
+        stateorprovince: Ontario
+        postalcode: M9C 3Z9
+        country: Canada
+        phone: +01-416-xxx-xxxx
+        fax: +01-416-xxx-xxxx
+        email: tomkralidis@gmail.com
+        url: http://kralidis.ca/
+        hours: 0800h - 1600h EST
+        instructions: During hours of service.  Off on weekends.
+        role: pointOfContact
+
+    inspire:
+        enabled: false
+        languages_supported:
+            - eng
+            - gre
+        default_language: eng
+        date: 2011-03-29
+        gemet_keywords:
+            - Utility and governmental services
+        conformity_service: notEvaluated
+        contact_name: National Technical University of Athens
+        contact_email: tzotsos@gmail.com
+        temp_extent:
+            begin: 2011-02-01
+            end: 2011-03-30
+
+repository:
+    # sqlite
+    database: sqlite:///tests/functionaltests/suites/cite/data/cite.db
+    table: records

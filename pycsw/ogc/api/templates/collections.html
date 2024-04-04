@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+{% block title %}{{ super() }} Collections {% endblock %}
+
+{% block crumbs %}
+{{ super() }} / <a href="{{ config['server']['url'] }}/collections">Collections</a>
+{% endblock %}
+
+{% block body %}
+
+<section id="collections">
+  <h2>Collections</h2>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for col in data['collections']  %}
+      <tr>
+        <td data-label="name">
+          <a title="{{ col['title'] | striptags | truncate }}" href="{{ config['server']['url'] }}/collections/{{ col.id }}">
+            <span>{{ col['title'] | striptags | truncate }}</span>
+          </a>
+        </td>
+        <td data-label="type">{{ col["itemType"] }}</td>
+        <td data-label="description">
+          {{ col['description'] | striptags | truncate }}
+        </td>
+        <td>
+           <a title="items" href="{{ config['server']['url'] }}/collections/{{ col.id }}/items">items</a>
+           <a title="queryables" href="{{ config['server']['url'] }}/collections/{{ col.id }}/queryables">queryables</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</section>
+
+{% endblock %}

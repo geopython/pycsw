@@ -1,0 +1,50 @@
+{% extends "_base.html" %}
+{% block title %}{{ super() }} Queryables {% endblock %}
+
+{% block crumbs %}
+{{ super() }} /
+<a href="{{ config['server']['url'] }}/collections">Collections</a> /
+<a href="{{ config['server']['url'] }}/collections/{{ data['id'] }}">{{ data['title'] }}</a> /
+<a href="{{ config['server']['url'] }}/collections/{{ data['id'] }}/queryables">Queryables</a>
+{% endblock %}
+
+{% block body %}
+
+<section id="queryables">
+  <h2>Queryables</h2>
+  <h2>{{ data['title'] }}</h2>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for qname, qinfo in data['properties'].items() %}
+      {% if qname == 'geometry' %}
+      <tr>
+        <td colspan="2"><a href="{{ qinfo['$ref'] }}">{{ qname }}</a></td>
+      </tr>
+      {% else %}
+      <tr>
+        <td>{{ qname }}</td>
+        <td>
+          <code>{{ qinfo['type'] }}</code>
+          {% if 'enum' in qinfo %}
+          <ul>
+            {% for value in qinfo['enum'] %}
+            <li><i>{{ value }}</i></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

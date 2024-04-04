@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    io.kompose.service: {{ .Values.db.name }}
+  name: {{ .Values.db.name }}
+spec:
+  ports:
+  - name: "default"
+    port: {{ .Values.db.port }}
+    targetPort: {{ .Values.db.port }}
+  selector:
+    io.kompose.service: {{ .Values.db.name }}
