@@ -1,14 +1,15 @@
 {{- if .Values.nginx.enabled -}}
+{{- $releaseName := .Release.Name -}}
 {{- $chartName := include "pycsw.name" . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-nginx-configmap
+  name: {{ $releaseName }}-{{ $chartName }}-nginx-configmap
   labels:
-    app: {{ .Release.Name }}-{{ $chartName }}
+    app: {{ $releaseName }}-{{ $chartName }}
     component: nginx-configmap
     environment: {{ .Values.environment }}
-    release: {{ .Release.Name }}
+    release: {{ $releaseName }}
 data:
   jwt.js: {{ .Files.Get "config/jwt.js" | quote }}
   log_format.conf: {{ tpl (.Files.Get "config/log_format.conf") . | quote }}

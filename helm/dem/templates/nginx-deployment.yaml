@@ -1,33 +1,34 @@
 {{- if .Values.nginx.enabled -}}
+{{- $releaseName := .Release.Name -}}
 {{- $chartName := include "pycsw.name" . -}}
 {{- $cloudProviderDockerRegistryUrl := include "pycsw.cloudProviderDockerRegistryUrl" . -}}
 {{- $cloudProviderImagePullSecretName := include "pycsw.cloudProviderImagePullSecretName" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-nginx-deployment
+  name: {{ $releaseName }}-nginx-deployment
 {{- with .Values.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    app: {{ .Release.Name }}-{{ $chartName }}
+    app: {{ $releaseName }}-{{ $chartName }}
     component: nginx-deployment
     environment: {{ .Values.environment }}
-    release: {{ .Release.Name }}
+    release: {{ $releaseName }}
 spec:
   replicas: {{ .Values.nginx.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ $chartName }}
-      release: {{ .Release.Name }}
-      run: {{ .Release.Name }}-nginx
+      app: {{ $releaseName }}-{{ $chartName }}
+      release: {{ $releaseName }}
+      run: {{ $releaseName }}-nginx
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ $chartName }}
-        release: {{ .Release.Name }}
-        run: {{ .Release.Name }}-nginx
+        app: {{ $releaseName }}-{{ $chartName }}
+        release: {{ $releaseName }}
+        run: {{ $releaseName }}-nginx
       # Autodiscover annotations should be here
       # https://github.com/elastic/beats/issues/7914
       annotations:
@@ -48,35 +49,35 @@ spec:
         {{- if .Values.authentication.opa.enabled }}
         - name: opa-policy
           secret:
-            secretName: {{ .Release.Name }}-opa
+            secretName: {{ $releaseName }}-opa
         - name: proxy-config
           configMap:
-            name: {{ .Release.Name }}-envoy
+            name: {{ $releaseName }}-{{ $chartName }}-envoy-configmap
         - name: jwt-public-keys
           secret:
             secretName: {{ .Values.authentication.jwtPublicKeySecretName }}
         {{- end }}
         - name: jwt-js
           configMap:
-            name: {{ .Release.Name  }}-nginx-configmap
+            name: {{ $releaseName }}-{{ $chartName }}-nginx-configmap
             items:
             - key: jwt.js
               path: jwt.js
         - name: log-format
           configMap:
-            name: {{ .Release.Name  }}-nginx-configmap
+            name: {{ $releaseName }}-{{ $chartName }}-nginx-configmap
             items:
             - key: log_format.conf
               path: log_format.conf
         - name: nginx-custom-conf
           configMap:
-            name: {{ .Release.Name }}-nginx-configmap
+            name: {{ $releaseName }}-{{ $chartName }}-nginx-configmap
             items:
             - key: default.conf
               path: default.conf
         - name: nginx-root-conf
           configMap:
-            name: {{ .Release.Name }}-nginx-configmap
+            name: {{ $releaseName }}-{{ $chartName }}-nginx-configmap
             items:
             - key: nginx.conf
               path: nginx.conf
@@ -89,7 +90,7 @@ spec:
         {{- end }}
       containers:
         ## Nginx Deployment
-        - name: {{ .Release.Name }}-nginx
+        - name: {{ $releaseName }}-nginx
           {{- with .Values.nginx.image }}
           image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ .tag }}
           {{- end }}

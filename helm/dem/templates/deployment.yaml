@@ -1,14 +1,13 @@
+{{- if .Values.enabled -}}
 {{- $releaseName := .Release.Name -}}
 {{- $chartName := include "pycsw.name" . -}}
+{{- $imageTag := include "pycsw.tag" . -}}
 {{- $cloudProviderFlavor := include "pycsw.cloudProviderFlavor" . -}}
 {{- $cloudProviderDockerRegistryUrl := include "pycsw.cloudProviderDockerRegistryUrl" . -}}
 {{- $cloudProviderImagePullSecretName := include "pycsw.cloudProviderImagePullSecretName" . -}}
 {{ $caSecretName := ternary .Values.authentication.ca.externalSecretName (printf "%s%s" .Release.Name "-root-ca") .Values.authentication.ca.useExternal }}
 {{ $sslSecretName := ternary .Values.authentication.ssl.externalSecretName (printf "%s%s" .Release.Name "-open-ssl") .Values.authentication.ssl.useExternal }}
 {{ $postgresSecretName := ternary .Values.authentication.db.externalSecretName (printf "%s%s" .Release.Name "-postgres-secret") .Values.authentication.db.useExternal }}
-{{- $imageTag := include "pycsw.tag" . -}}
-
-{{- if .Values.enabled -}}
 
 {{- if .Values.authentication.ca.enabled }}
 {{- if and .Values.authentication.ca.useExternal (not .Values.authentication.ca.externalSecretName) }}
@@ -145,7 +144,7 @@ spec:
               value: key.pem
           envFrom:
             - configMapRef:
-                name: {{ $releaseName }}-configmap
+                name: {{ $releaseName }}-{{ $chartName }}-configmap
           ports:
             - name: http
               containerPort: {{ .Values.env.targetPort }}
@@ -184,19 +183,19 @@ spec:
         {{- end }}
         - name: pyscw-config
           configMap:
-              name: {{ $releaseName }}-configmap
+              name: {{ $releaseName }}-{{ $chartName }}-configmap
               items:
               - key: "pycsw.cfg"
                 path: "pycsw.cfg"
         - name: pyscw-mappings
           configMap:
-              name: {{ $releaseName }}-configmap
+              name: {{ $releaseName }}-{{ $chartName }}-configmap
               items:
               - key: "mappings.py"
                 path: "mappings.py"
         - name: uwsgi-config
           configMap:
-            name: {{ $releaseName }}-configmap
+            name: {{ $releaseName }}-{{ $chartName }}-configmap
             items:
             - key: "uwsgi.ini"
               path: "uwsgi.ini"
