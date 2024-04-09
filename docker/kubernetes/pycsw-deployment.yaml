@@ -31,6 +31,8 @@ spec:
         - mountPath: /etc/pycsw
           name: pycsw-config
       restartPolicy: Always
+      securityContext:
+        readOnlyRootFilesystem: true
       volumes:
       - name: pycsw-config
         configMap:
