@@ -63,19 +63,19 @@ COPY --chown=pycsw \
     requirements-dev.txt \
     ./
 
-RUN pip install -U pip && \
-    python3 -m pip install \
+RUN pip3 install -U pip3 setuptools && \
+    python3 -m pip3 install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
     psycopg2-binary gunicorn \
-    && if [ "$BUILD_DEV_IMAGE" = "true" ] ; then python3 -m pip install -r requirements-dev.txt; fi
+    && if [ "$BUILD_DEV_IMAGE" = "true" ] ; then python3 -m pip3 install -r requirements-dev.txt; fi
 
 COPY --chown=pycsw . .
 
 COPY docker/pycsw.yml ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
-RUN python3 -m pip install --editable .
+RUN python3 -m pip3 install --editable .
 
 WORKDIR /home/pycsw
 
