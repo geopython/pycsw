@@ -32,6 +32,8 @@ spec:
         - mountPath: {{ .Values.pycsw.volume_path }}
           name: {{ .Values.pycsw.volume_name }}
       restartPolicy: Always
+      securityContext:
+        readOnlyRootFilesystem: true
       volumes:
       - name: {{ .Values.pycsw.volume_name }}
         configMap:
