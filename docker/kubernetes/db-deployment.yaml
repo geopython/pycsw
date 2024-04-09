@@ -34,9 +34,9 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/postgresql/data/pgdata
           name: db-data
+        securityContext:
+          readOnlyRootFilesystem: true
       restartPolicy: Always
-      securityContext:
-        readOnlyRootFilesystem: true
       volumes:
       - name: db-data
         persistentVolumeClaim:
