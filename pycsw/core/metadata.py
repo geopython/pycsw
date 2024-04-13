@@ -1377,7 +1377,7 @@ def _parse_iso(context, repos, exml):
     if exml.tag == '{http://www.geocat.ch/2008/che}CHE_MD_Metadata':
         md = CHE_MD_Metadata(exml)
     elif exml.tag == '{http://standards.iso.org/iso/19115/-3/mdb/2.0}MD_Metadata':
-        from pycsw.core.mdb import MD_Metadata
+        from owslib.iso3 import MD_Metadata
         md = MD_Metadata(exml)
         mdmeta_ns = 'mdb'
     else:
