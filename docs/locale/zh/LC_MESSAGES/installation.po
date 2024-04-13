@@ -267,19 +267,19 @@ msgstr "安全性"
 
 #: ../../installation.rst:199
 msgid ""
-"By default, ``default.cfg`` is at the root of the pycsw install.  If pycsw is "
+"By default, ``default.yml`` is at the root of the pycsw install.  If pycsw is "
 "setup outside an HTTP server's ``cgi-bin`` area, this file could be read.  The "
 "following options protect the configuration:"
 msgstr ""
-"默认情况下， ``default.cfg`` 是 pycsw 安装的根目录。 如果 pycsw 设置在 HTTP 服务"
+"默认情况下， ``default.yml`` 是 pycsw 安装的根目录。 如果 pycsw 设置在 HTTP 服务"
 "器 ``cgi-bin`` 区域以外，此文件就可以被读取。 以下是几项保护配置的选项:"
 
 #: ../../installation.rst:201
 msgid ""
-"move ``default.cfg`` to a non HTTP accessible area, and modify ``csw.py`` to "
+"move ``default.yml`` to a non HTTP accessible area, and modify ``csw.py`` to "
 "point to the updated location"
 msgstr ""
-"将 ``default.cfg`` 移动到非 HTTP 可访问的区域，并修改 ``csw.py`` 以指向更新的位置"
+"将 ``default.yml`` 移动到非 HTTP 可访问的区域，并修改 ``csw.py`` 以指向更新的位置"
 
 #: ../../installation.rst:202
 msgid ""

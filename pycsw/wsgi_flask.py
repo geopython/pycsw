@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -30,21 +30,21 @@
 # =================================================================
 
 import os
-from pathlib import Path
 import sys
 
 from flask import Flask, Blueprint, make_response, request
 
-from pycsw.core.util import parse_ini_config
 from pycsw.ogc.api.records import API
-from pycsw.ogc.api.util import STATIC
+from pycsw.ogc.api.util import STATIC, yaml_load
 from pycsw.stac.api import STACAPI
 from pycsw.wsgi import application_dispatcher
 
 
 APP = Flask(__name__, static_folder=STATIC, static_url_path='/static')
 APP.url_map.strict_slashes = False
-APP.config['PYCSW_CONFIG'] = parse_ini_config(Path(os.getenv('PYCSW_CONFIG')))
+
+with open(os.getenv('PYCSW_CONFIG'), encoding='utf8') as fh:
+    APP.config['PYCSW_CONFIG'] = yaml_load(fh)
 
 pretty_print = APP.config['PYCSW_CONFIG']['server'].get('pretty_print', True)
 APP.config['JSONIFY_PRETTYPRINT_REGULAR'] = pretty_print
@@ -53,7 +53,8 @@ BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC,
                       static_url_path='/static')
 
 api_ = API(APP.config['PYCSW_CONFIG'])
-stacapi = STACAPI(parse_ini_config(Path(os.getenv('PYCSW_CONFIG'))))
+with open(os.getenv('PYCSW_CONFIG'), encoding='utf8') as fh:
+    stacapi = STACAPI(yaml_load(fh))
 
 
 def get_api_type(urlpath):
@@ -221,7 +222,7 @@ def items(collection='metadata:main'):
                                 collection))
 
 
-@BLUEPRINT.route('/collections/<collection>/items/<item>',
+@BLUEPRINT.route('/collections/<collection>/items/<path:item>',
                  methods=['GET', 'PUT', 'DELETE'])
 @BLUEPRINT.route('/stac/collections/<collection>/items/<item>')
 def item(collection='metadata:main', item=None):

@@ -143,12 +143,12 @@ msgstr "加载记录"
 #: ../../administration.rst:79
 msgid ""
 "This will import all ``*.xml`` records from ``/path/to/records`` into the "
-"database specified in ``default.cfg`` (``repository.database``).  Passing ``-"
+"database specified in ``default.yml`` (``repository.database``).  Passing ``-"
 "r`` to the script will process ``/path/to/records`` recursively.  Passing ``-"
 "y`` to the script will force overwrite existing metadata with the same "
 "identifier.  Note that ``-p`` accepts either a directory path or single file."
 msgstr ""
-"这时所有的 ``*.xml`` 记录就会从 ``/path/to/records`` 导入到 ``default.cfg`` 中指"
+"这时所有的 ``*.xml`` 记录就会从 ``/path/to/records`` 导入到 ``default.yml`` 中指"
 "定的数据库 (``repository.database``)。将 ``-r`` 传递到脚本中， 程序 ``/path/to/"
 "records`` 就会递归运行。将 ``-y`` 传递到脚本中， 程序 ``/path/to/records`` 将强"
 "制替换现有的相同元数据标识符。请注意， ``-p`` 只能接受一个目录路径或单个文件。"
@@ -163,11 +163,11 @@ msgstr "导出数据库"
 
 #: ../../administration.rst:91
 msgid ""
-"This will write each record in the database specified in ``default.cfg`` "
+"This will write each record in the database specified in ``default.yml`` "
 "(``repository.database``) to an XML document on disk, in directory ``/path/to/"
 "output_dir``."
 msgstr ""
-"这会将 ``default.cfg`` (``repository.database``) 中指定的数据库的每条记录写入磁"
+"这会将 ``default.yml`` (``repository.database``) 中指定的数据库的每条记录写入磁"
 "盘上的 ``/path/to/output_dir`` 目录中的 XML 文档。"
 
 #: ../../administration.rst:94
@@ -288,10 +288,10 @@ msgstr "定于基于 ``etc/mappings.py`` 数据库映射"
 
 #: ../../administration.rst:142
 msgid ""
-"in ``default.cfg``, set ``repository.mappings`` to the location of the mappings."
+"in ``default.yml``, set ``repository.mappings`` to the location of the mappings."
 "py file:"
 msgstr ""
-"在 ``default.cfg`` 中，设置 ``repository.mappings`` 为 mappings.py 文件的位置："
+"在 ``default.yml`` 中，设置 ``repository.mappings`` 为 mappings.py 文件的位置："
 
 #: ../../administration.rst:150
 msgid "Note you can also reference mappings as a Python object as a dotted path:"

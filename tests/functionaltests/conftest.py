@@ -4,7 +4,7 @@
 #          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2016 Ricardo Garcia Silva
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -30,12 +30,10 @@
 # =================================================================
 """pytest configuration file for functional tests"""
 
-import codecs
 from collections import namedtuple
 import logging
 import os
 import re
-import configparser
 
 import apipkg
 import pytest
@@ -43,6 +41,7 @@ import pytest
 from pycsw.core import admin
 from pycsw.core.config import StaticContext
 from pycsw.core.repository import Repository, setup
+from pycsw.ogc.api.util import yaml_load
 
 apipkg.initpkg("optionaldependencies", {
     "psycopg2": "psycopg2",
@@ -74,7 +73,7 @@ def pytest_generate_tests(metafunc):
     based on the available test suites. Each suite directory has the
     following structure:
 
-    * A mandatory ``default.cfg`` file specifying the configuration for the
+    * A mandatory ``default.yml`` file specifying the configuration for the
       pycsw instance to use in the tests of the suite.
 
     * An optional ``get/`` subdirectory containing a ``requests.txt`` file
@@ -122,7 +121,7 @@ def pytest_generate_tests(metafunc):
             _recreate_postgresql_database(metafunc.config)
         for suite in suite_names:
             suite_dir = os.path.join(suites_root_dir, suite)
-            config_path = os.path.join(suite_dir, "default.cfg")
+            config_path = os.path.join(suite_dir, "default.yml")
             if not os.path.isfile(config_path):
                 print(f"Directory {suite_dir} does not have a suite "
                       "configuration file")
@@ -200,13 +199,14 @@ def configuration(request, tests_directory, log_level):
     """
 
     config_path = request.param
-    config = configparser.ConfigParser()
-    with codecs.open(config_path, encoding="utf-8") as fh:
-        config.read_file(fh)
+
+    with open(config_path, encoding="utf-8") as fh:
+        config = yaml_load(fh)
     suite_name = config_path.split(os.path.sep)[-2]
     suite_dirs = _get_suite_dirs(suite_name)
     data_dir = suite_dirs.data_tests_dir
     export_dir = suite_dirs.export_tests_dir
+
     if data_dir is not None:  # suite has its own database
         repository_url = _get_repository_url(request.config, suite_name,
                                              tests_directory)
@@ -214,16 +214,20 @@ def configuration(request, tests_directory, log_level):
         data_dir, export_dir = _get_cite_suite_dirs()
         repository_url = _get_repository_url(request.config, "cite",
                                              tests_directory)
+
     table_name = _get_table_name(suite_name, config, repository_url)
+
     if not _repository_exists(repository_url, table_name):
         _initialize_database(repository_url=repository_url,
                              table_name=table_name,
                              data_dir=data_dir,
                              test_dir=tests_directory,
                              export_dir=export_dir)
-    config.set("server", "loglevel", log_level)
-    config.set("repository", "database", repository_url)
-    config.set("repository", "table", table_name)
+
+    config["logging"]["level"] = log_level
+    config["repository"]["database"] = repository_url
+    config["repository"]["table"] = table_name
+
     return config
 
 
@@ -378,7 +382,7 @@ def _get_table_name(suite, config, repository_url):
     ----------
     suite: str
         Name of the suite.
-    config: ConfigParser
+    config: dict
         Configuration for the suite.
     repository_url: str
         SQLAlchemy URL for the repository in use.
@@ -391,11 +395,12 @@ def _get_table_name(suite, config, repository_url):
     """
 
     if repository_url.startswith("sqlite"):
-        result = config.get("repository", "table")
+        result = config['repository']['table']
     elif repository_url.startswith("postgresql"):
         result = f"{suite}_records"
     else:
         raise NotImplementedError
+
     return result
 
 

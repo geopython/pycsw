@@ -7,7 +7,7 @@
 #
 # Copyright (c) 2015 Adam Hinz
 # Copyright (c) 2017 Ricardo Garcia Silva
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -61,7 +61,6 @@ from io import BytesIO
 import os
 import sys
 
-import configparser
 from urllib.parse import unquote
 
 from pycsw import server
@@ -69,8 +68,6 @@ from pycsw import server
 
 def application(env, start_response):
     """WSGI wrapper"""
-
-    print(env['PATH_INFO'])
 
     status, headers, contents = application_dispatcher(env)
     start_response(status, list(headers.items()))
@@ -92,18 +89,16 @@ def application_dispatcher(env):
     if "gzip" in env.get("HTTP_ACCEPT_ENCODING", ""):
         try:
             compression_level = int(
-                csw.config.get("server", "gzip_compresslevel"))
+                csw.config["server"]["gzip_compresslevel"])
             contents, compress_headers = compress_response(
                 contents, compression_level)
             headers.update(compress_headers)
-        except configparser.NoOptionError:
+        except KeyError:
             print(
                 "The client requested a gzip compressed response. However, "
                 "the server does not specify the 'gzip_compresslevel' option. "
                 "Returning an uncompressed response..."
             )
-        except configparser.NoSectionError:
-            print('Could not load user configuration %s' % configuration_path)
 
     return status, headers, contents
 
@@ -215,11 +210,11 @@ def get_configuration_path(process_environment, request_environment,
     else:
         # did not find any `config` parameter in the request
         # lets try the process env, request env and fallback to
-        # <pycsw_root>/default.cfg
+        # <pycsw_root>/default.yml
         configuration_path = process_environment.get(
             config_path_key,
             request_environment.get(
-                config_path_key, os.path.join(pycsw_root, "default.cfg")
+                config_path_key, os.path.join(pycsw_root, "default.yml")
             )
         )
     return configuration_path

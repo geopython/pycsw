@@ -4,7 +4,7 @@
 #          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -62,7 +62,7 @@ def test_xml_based_suites(
 
     Parameters
     ----------
-    configuration: ConfigParser
+    configuration: dict
         The configuration to use with the pycsw server instance under test
     request_method: str
         The HTTP method of the request. Either GET or POST.

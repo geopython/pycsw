@@ -9,9 +9,10 @@ over time to help with pycsw change management.
 pycsw 2.x to 3.0 Migration
 --------------------------
 
+- the default configuration is now in YAML format.  See :ref:`configuration` for more information.  A helper script (``pycsw-admin.py migrate-config``) is included for updating from the previous configuration format
 - the default endpoint for standalone deployments is now powered by ``pycsw/wsgi_flask.py`` (based on Flask) which supports ALL pycsw supported APIs. Make sure to use ``requirements-standalone.txt`` on top of ``requirements.txt`` to install Flask along with other standalone requirements
 - the previously used ``pycsw/wsgi.py`` can still be used for CSW only deployments or for applications that need to integrate pycsw as a library (e.g. Django applications). PyPI installations still use ``requirements.txt`` which does not install Flask by default
-- the default endpoint ``/`` is now OARec
+- the default endpoint ``/`` is now OGC API - Records
 - the CSW endpoint is now ``/csw``
 - the OAI-PMH endpoint is now ``/oaipmh``
 - the OpenSearch endpoint is now ``/opensearch``

@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -43,7 +43,8 @@ from pycsw.core import config as pconfig
 from pycsw.core import metadata, repository, util
 from pycsw.core.etree import etree
 from pycsw.core.etree import PARSER
-from pycsw.core.util import parse_ini_config
+from pycsw.core.util import parse_ini_config, str2bool
+from pycsw.ogc.api.util import get_typed_value, yaml_dump, yaml_load
 
 LOGGER = logging.getLogger(__name__)
 
@@ -398,13 +399,12 @@ def cli():
 def cli_setup_repository(ctx, config, verbosity):
     """Create repository tables and indexes"""
 
-    cfg = parse_ini_config(config)
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
 
     try:
         repository.setup(cfg['repository']['database'], table=cfg['repository'].get('table'))
     except Exception as err:
-        import traceback
-        print(traceback.format_exc())
         msg = f'ERROR: Repository already exists: {err}'
         raise click.ClickException(msg) from err
 
@@ -421,7 +421,10 @@ def cli_setup_repository(ctx, config, verbosity):
 @CLI_OPTION_YES
 def cli_load_records(ctx, config, path, recursive, yes, verbosity):
     """Load metadata records from directory or file into repository"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     load_records(
@@ -441,7 +444,10 @@ def cli_load_records(ctx, config, path, recursive, yes, verbosity):
 @CLI_OPTION_YES_PROMPT
 def cli_delete_records(ctx, config, yes, verbosity):
     """Delete all records from repository"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     delete_records(
@@ -461,7 +467,10 @@ def cli_delete_records(ctx, config, yes, verbosity):
                               writable=True, file_okay=False))
 def cli_export_records(ctx, config, path, verbosity):
     """Dump metadata records from repository into directory"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     export_records(
@@ -478,7 +487,10 @@ def cli_export_records(ctx, config, path, verbosity):
 @CLI_OPTION_CONFIG
 def cli_rebuild_db_indexes(ctx, config, verbosity):
     """Rebuild repository database indexes"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     repo = repository.Repository(cfg['repository']['database'], context, table=cfg['repository'].get('table'))
@@ -491,7 +503,10 @@ def cli_rebuild_db_indexes(ctx, config, verbosity):
 @CLI_OPTION_CONFIG
 def cli_optimize_db(ctx, config, verbosity):
     """Optimize repository database"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     repo = repository.Repository(cfg['repository']['database'], context, table=cfg['repository'].get('table'))
@@ -505,7 +520,10 @@ def cli_optimize_db(ctx, config, verbosity):
 @click.option('--url', '-u', 'url', help='URL of harvest endpoint')
 def cli_refresh_harvested_records(ctx, config, verbosity, url):
     """Refresh / harvest non-local records in repository"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     refresh_harvested_records(
@@ -526,7 +544,10 @@ def cli_refresh_harvested_records(ctx, config, verbosity, url):
                               dir_okay=False))
 def cli_gen_sitemap(ctx, config, output, verbosity):
     """Generate XML Sitemap"""
-    cfg = parse_ini_config(config)
+
+    with open(config, encoding='utf8') as fh:
+        cfg = yaml_load(fh)
+
     context = pconfig.StaticContext()
 
     gen_sitemap(
@@ -579,6 +600,95 @@ def cli_get_sysprof(ctx):
     click.echo(get_sysprof())
 
 
+@click.command('migrate-config')
+@cli_callbacks
+@click.pass_context
+@CLI_OPTION_CONFIG
+def cli_migrate_config(ctx, config, verbosity):
+    """Migrate pycsw ini config to YAML"""
+
+    dict_ = {
+        'server': {},
+        'logging': {},
+        'manager': {},
+        'metadata': {
+            'identification': {},
+            'provider': {},
+            'contact': {},
+            'inspire': {}
+        },
+        'profiles': [],
+        'federatedcatalogues': [],
+        'repository': {}
+    }
+
+    cfg = parse_ini_config(config)
+
+    for name, value in cfg.items('server'):
+        if name == 'loglevel':
+            dict_['logging']['level'] = value
+        elif name == 'logfile':
+            dict_['logging']['logfile'] = value
+        elif name == 'profiles':
+            dict_[name] = value.split(',')
+        elif name == 'federatedcatalogues':
+            dict_[name] = value.split(',')
+        else:
+            dict_['server'][name] = get_typed_value(value)
+
+    for name, value in cfg.items('metadata:main'):
+        if name.startswith('identification'):
+            new_key = name.replace('identification_', '')
+            if new_key == 'keywords':
+                dict_['metadata']['identification'][new_key] = value.split(',')
+            elif new_key == 'abstract':
+                dict_['metadata']['identification']['description'] = value
+            else:
+                dict_['metadata']['identification'][new_key] = get_typed_value(value)
+
+        if name.startswith('provider'):
+            new_key = name.replace('provider_', '')
+            dict_['metadata']['provider'][new_key] = get_typed_value(value)
+
+        if name.startswith('contact'):
+            new_key = name.replace('contact_', '')
+            dict_['metadata']['contact'][new_key] = get_typed_value(value)
+
+    for name, value in cfg.items('manager'):
+        if name == 'allowed_ips':
+            dict_['manager'][name] = value.split(',')
+        elif name == 'transactions':
+            dict_['manager'][name] = str2bool(value)
+        else:
+            dict_['manager'][name] = get_typed_value(value)
+
+    for name, value in cfg.items('repository'):
+        if name == 'facets':
+            dict_['repository'][name] = value.split(',')
+        else:
+            dict_['repository'][name] = get_typed_value(value)
+
+    for name, value in cfg.items('metadata:inspire'):
+        if name == 'languages_supported':
+            dict_['metadata']['inspire'][name] = value.split(',')
+        elif name == 'enabled':
+            dict_['metadata']['inspire'][name] = str2bool(value)
+        elif name == 'gemet_keywords':
+            dict_['metadata']['inspire'][name] = value.split(',')
+        elif name == 'temp_extent':
+            begin, end = value.split('/')
+            dict_['metadata']['inspire'][name] = {
+                'begin': begin,
+                'end': end
+            }
+        else:
+            dict_['metadata']['inspire'][name] = get_typed_value(value)
+
+    yaml_file = config.replace('.cfg', '.yml')
+    click.echo(f'Writing to {yaml_file}')
+    yaml_dump(dict_, yaml_file)
+
+
 cli.add_command(cli_setup_repository)
 cli.add_command(cli_load_records)
 cli.add_command(cli_export_records)
@@ -588,5 +698,6 @@ cli.add_command(cli_optimize_db)
 cli.add_command(cli_refresh_harvested_records)
 cli.add_command(cli_gen_sitemap)
 cli.add_command(cli_post_xml)
-cli.add_command(cli_get_sysprof)
 cli.add_command(cli_validate_xml)
+cli.add_command(cli_get_sysprof)
+cli.add_command(cli_migrate_config)

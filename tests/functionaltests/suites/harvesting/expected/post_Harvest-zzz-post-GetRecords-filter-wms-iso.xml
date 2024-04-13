@@ -1327,9 +1327,9 @@
               </srv:connectPoint>
             </srv:SV_OperationMetadata>
           </srv:containsOperations>
-          <srv:operatesOn uuidref="nexrad_base_reflect" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-nexrad_base_reflect"/>
-          <srv:operatesOn uuidref="time_idx" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-time_idx"/>
-          <srv:operatesOn uuidref="nexrad-n0r-wmst" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.cfg&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-nexrad-n0r-wmst"/>
+          <srv:operatesOn uuidref="nexrad_base_reflect" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.yml&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-nexrad_base_reflect"/>
+          <srv:operatesOn uuidref="time_idx" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.yml&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-time_idx"/>
+          <srv:operatesOn uuidref="nexrad-n0r-wmst" xlink:href="http://localhost/pycsw/csw.py?config=tests/suites/harvesting/default.yml&amp;service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;id=PYCSW_IDENTIFIER-nexrad-n0r-wmst"/>
         </srv:SV_ServiceIdentification>
       </gmd:identificationInfo>
       <gmd:distributionInfo>

@@ -3,10 +3,10 @@
 Cataloguing and Metadata Tools
 ==============================
 
-OARec Clients and Servers
--------------------------
+OGC API - Records Clients and Servers
+-------------------------------------
 
-https://github.com/opengeospatial/ogcapi-records/blob/master/implementations.md
+- `OGC API - Records official implementations <https://github.com/opengeospatial/ogcapi-records/blob/master/implementations.md>`_
 
 CSW Clients
 -----------

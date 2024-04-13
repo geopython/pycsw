@@ -112,11 +112,11 @@ msgid ""
 "It is possible to supply a custom configuration file for pycsw as a bind mount or as "
 "a docker secret (in the case of docker swarm). The configuration file is searched at "
 "the value of the ``PYCSW_CONFIG`` environmental variable, which defaults to ``/etc/"
-"pycsw/pycsw.cfg``."
+"pycsw/pycsw.yml``."
 msgstr ""
 "可以为pycsw提供自定义配置文件作为绑定安装或作为docker秘密（在docker群集的情况下）。配"
 "置文件在 ``PYCSW_CONFIG`` 环境变量的值处进行搜索，该环境变量默认为 ``/etc/pycsw/"
-"pycsw.cfg`` 。"
+"pycsw.yml`` 。"
 
 #: ../../docker.rst:74
 msgid "Supplying the configuration file via bind mount::"
@@ -146,8 +146,8 @@ msgstr "PostgreSQL存储库"
 #: ../../docker.rst:114
 msgid ""
 "Specifying a PostgreSQL repository is just a matter of configuring a custom pycsw."
-"cfg file with the correct specification."
-msgstr "指定PostgreSQL存储库只是用正确的规范配置自定义pycsw.cfg 文件的问题。"
+.yml file with the correct specification."
+msgstr "指定PostgreSQL存储库只是用正确的规范配置自定义pycsw.yml 文件的问题。"
 
 #: ../../docker.rst:117
 msgid ""

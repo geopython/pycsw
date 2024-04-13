@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2019  Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -724,7 +724,6 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
                     LOGGER.debug('Directory already exists')
 
     dbase = create_engine(database)
-
     schema_name, table_name = table.rpartition(".")[::2]
 
     mdata = MetaData(dbase, schema=schema_name or None)

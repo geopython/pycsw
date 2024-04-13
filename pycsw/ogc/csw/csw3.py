@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -134,9 +134,9 @@ class Csw3(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = '%s %s/cat/csw/3.0/cswGetCapabilities.xsd' % \
         (self.parent.context.namespaces['csw30'],
-         self.parent.config.get('server', 'ogc_schemas_base'))
+         self.parent.config['server'].get('ogc_schemas_base'))
 
-        metadata_main = dict(self.parent.config.items('metadata:main'))
+        metadata_main = self.parent.config['metadata']
 
         if serviceidentification:
             LOGGER.info('Writing section ServiceIdentification')
@@ -147,17 +147,16 @@ class Csw3(object):
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows20:Title', self.parent.context.namespaces)).text = \
-            metadata_main.get('identification_title', 'missing')
+            metadata_main['identification'].get('title', 'missing')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows20:Abstract', self.parent.context.namespaces)).text = \
-            metadata_main.get('identification_abstract', 'missing')
+            metadata_main['identification'].get('description', 'missing')
 
             keywords = etree.SubElement(serviceidentification,
             util.nspath_eval('ows20:Keywords', self.parent.context.namespaces))
 
-            for k in \
-            metadata_main.get('identification_keywords').split(','):
+            for k in metadata_main['identification']['keywords']:
                 etree.SubElement(
                 keywords, util.nspath_eval('ows20:Keyword',
                 self.parent.context.namespaces)).text = k
@@ -165,7 +164,7 @@ class Csw3(object):
             etree.SubElement(keywords,
             util.nspath_eval('ows20:Type', self.parent.context.namespaces),
             codeSpace='ISOTC211/19115').text = \
-            metadata_main.get('identification_keywords_type', 'missing')
+            metadata_main['identification'].get('keywords_type', 'missing')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows20:ServiceType', self.parent.context.namespaces),
@@ -187,12 +186,12 @@ class Csw3(object):
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows20:Fees', self.parent.context.namespaces)).text = \
-            metadata_main.get('identification_fees', 'missing')
+            metadata_main['identification'].get('fees', 'missing')
 
             etree.SubElement(serviceidentification,
             util.nspath_eval('ows20:AccessConstraints',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('identification_accessconstraints', 'missing')
+            metadata_main['identification'].get('accessconstraints', 'missing')
 
         if serviceprovider:
             LOGGER.info('Writing section ServiceProvider')
@@ -201,7 +200,7 @@ class Csw3(object):
 
             etree.SubElement(serviceprovider,
             util.nspath_eval('ows20:ProviderName', self.parent.context.namespaces)).text = \
-            metadata_main.get('provider_name', 'missing')
+            metadata_main['provider'].get('name', 'missing')
 
             providersite = etree.SubElement(serviceprovider,
             util.nspath_eval('ows20:ProviderSite', self.parent.context.namespaces))
@@ -211,7 +210,7 @@ class Csw3(object):
 
             providersite.attrib[util.nspath_eval('xlink:href',
             self.parent.context.namespaces)] = \
-            metadata_main.get('provider_url', 'missing')
+            metadata_main['provider'].get('url', 'missing')
 
             servicecontact = etree.SubElement(serviceprovider,
             util.nspath_eval('ows20:ServiceContact', self.parent.context.namespaces))
@@ -219,12 +218,12 @@ class Csw3(object):
             etree.SubElement(servicecontact,
             util.nspath_eval('ows20:IndividualName',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_name', 'missing')
+            metadata_main['contact'].get('name', 'missing')
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows20:PositionName',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_position', 'missing')
+            metadata_main['contact'].get('position', 'missing')
 
             contactinfo = etree.SubElement(servicecontact,
             util.nspath_eval('ows20:ContactInfo', self.parent.context.namespaces))
@@ -234,11 +233,11 @@ class Csw3(object):
 
             etree.SubElement(phone, util.nspath_eval('ows20:Voice',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_phone', 'missing')
+            metadata_main['contact'].get('phone', 'missing')
 
             etree.SubElement(phone, util.nspath_eval('ows20:Facsimile',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_fax', 'missing')
+            metadata_main['contact'].get('fax', 'missing')
 
             address = etree.SubElement(contactinfo,
             util.nspath_eval('ows20:Address', self.parent.context.namespaces))
@@ -246,30 +245,30 @@ class Csw3(object):
             etree.SubElement(address,
             util.nspath_eval('ows20:DeliveryPoint',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_address', 'missing')
+            metadata_main['contact'].get('address', 'missing')
 
             etree.SubElement(address, util.nspath_eval('ows20:City',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_city', 'missing')
+            metadata_main['contact'].get('city', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows20:AdministrativeArea',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_stateorprovince', 'missing')
+            metadata_main['contact'].get('stateorprovince', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows20:PostalCode',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_postalcode', 'missing')
+            str(metadata_main['contact'].get('postalcode', 'missing'))
 
             etree.SubElement(address,
             util.nspath_eval('ows20:Country', self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_country', 'missing')
+            metadata_main['contact'].get('country', 'missing')
 
             etree.SubElement(address,
             util.nspath_eval('ows20:ElectronicMailAddress',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_email', 'missing')
+            metadata_main['contact'].get('email', 'missing')
 
             url = etree.SubElement(contactinfo,
             util.nspath_eval('ows20:OnlineResource', self.parent.context.namespaces))
@@ -279,22 +278,22 @@ class Csw3(object):
 
             url.attrib[util.nspath_eval('xlink:href',
             self.parent.context.namespaces)] = \
-            metadata_main.get('contact_url', 'missing')
+            metadata_main['contact'].get('url', 'missing')
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows20:HoursOfService',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_hours', 'missing')
+            metadata_main['contact'].get('hours', 'missing')
 
             etree.SubElement(contactinfo,
             util.nspath_eval('ows20:ContactInstructions',
             self.parent.context.namespaces)).text = \
-            metadata_main.get('contact_instructions', 'missing')
+            metadata_main['contact'].get('instructions', 'missing')
 
             etree.SubElement(servicecontact,
             util.nspath_eval('ows20:Role', self.parent.context.namespaces),
             codeSpace='ISOTC211/19115').text = \
-            metadata_main.get('contact_role', 'missing')
+            metadata_main['contact'].get('role', 'missing')
 
         if operationsmetadata:
             LOGGER.info('Writing section OperationsMetadata')
@@ -321,7 +320,7 @@ class Csw3(object):
                     self.parent.context.namespaces)] = 'simple'
 
                     get.attrib[util.nspath_eval('xlink:href',\
-                    self.parent.context.namespaces)] = self.parent.config.get('server', 'url')
+                    self.parent.context.namespaces)] = self.parent.config['server'].get('url')
 
                 if self.parent.context.model['operations'][operation]['methods']['post']:
                     post = etree.SubElement(http, util.nspath_eval('ows20:Post',
@@ -330,7 +329,7 @@ class Csw3(object):
                     self.parent.context.namespaces)] = 'simple'
                     post.attrib[util.nspath_eval('xlink:href',
                     self.parent.context.namespaces)] = \
-                    self.parent.config.get('server', 'url')
+                    self.parent.config['server'].get('url')
 
                 for parameter in \
                 sorted(self.parent.context.model['operations'][operation]['parameters']):
@@ -359,7 +358,7 @@ class Csw3(object):
                             param.append(self._write_allowed_values(self.parent.context.model['operations']['GetRecords']['constraints'][con]['values']))
 
                     extra_constraints = {
-                        'OpenSearchDescriptionDocument': ['%s?mode=opensearch&service=CSW&version=3.0.0&request=GetCapabilities' % self.parent.config.get('server', 'url')],
+                        'OpenSearchDescriptionDocument': ['%s?mode=opensearch&service=CSW&version=3.0.0&request=GetCapabilities' % self.parent.config['server'].get('url')],
                         'MaxRecordDefault': self.parent.context.model['constraints']['MaxRecordDefault']['values'],
                     }
 
@@ -500,7 +499,7 @@ class Csw3(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = '%s %s/cat/csw/3.0/cswGetDomain.xsd' % \
         (self.parent.context.namespaces['csw30'],
-        self.parent.config.get('server', 'ogc_schemas_base'))
+        self.parent.config['server'].get('ogc_schemas_base'))
 
         if 'parametername' in self.parent.kvp:
             for pname in self.parent.kvp['parametername'].split(','):
@@ -713,10 +712,7 @@ class Csw3(object):
                     'elementname', 'Invalid ElementName parameter value: %s' %
                     ename)
 
-        maxrecords_cfg = -1  # not set in config server.maxrecords
-
-        if self.parent.config.has_option('server', 'maxrecords'):
-            maxrecords_cfg = int(self.parent.config.get('server', 'maxrecords'))
+        maxrecords_cfg = int(self.parent.config['server'].get('maxrecords', -1))
 
         if 'maxrecords' in self.parent.kvp and self.parent.kvp['maxrecords'] == 'unlimited':
             LOGGER.debug('Detected maxrecords=unlimited')
@@ -780,7 +776,7 @@ class Csw3(object):
                 elif self.parent.kvp['constraintlanguage'] == 'FILTER':
                     # validate filter XML
                     try:
-                        schema = os.path.join(self.parent.config.get('server', 'home'),
+                        schema = os.path.join(self.parent.config['server'].get('home'),
                         'core', 'schemas', 'ogc', 'filter', '2.0', '_wrapper.xsd')
                         LOGGER.info('Validating Filter %s.', self.parent.kvp['constraint'])
                         schema = etree.XMLSchema(file=schema)
@@ -891,7 +887,7 @@ class Csw3(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
         '%s %s/cat/csw/3.0/cswGetRecords.xsd' % \
-        (self.parent.context.namespaces['csw30'], self.parent.config.get('server', 'ogc_schemas_base'))
+        (self.parent.context.namespaces['csw30'], self.parent.config['server'].get('ogc_schemas_base'))
 
         if 'requestid' in self.parent.kvp and self.parent.kvp['requestid'] is not None:
             etree.SubElement(node, util.nspath_eval('csw:RequestId',
@@ -968,7 +964,7 @@ class Csw3(object):
                             searchresults.append(self._write_record(
                             res, self.parent.repository.queryables['_all']))
                         elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
-                            searchresults.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(res, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url')))
+                            searchresults.append(self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(res, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config['server'].get('url')))
                         else:  # use profile serializer
                             searchresults.append(
                             self.parent.profiles['loaded'][self.parent.kvp['outputschema']].\
@@ -981,12 +977,12 @@ class Csw3(object):
                         'Record serialization failed: %s' % str(err))
                         return self.parent.response
 
-        if (self.parent.config.has_option('server', 'federatedcatalogues') and
+        if ('federatedcatalogues' in self.parent.config and
             'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
             self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
             # do distributed search
 
-#        if all([self.parent.config.has_option('server', 'federatedcatalogues'),
+#        if all(['federatedcatalogues' in self.parent.config,
 #                'distributedsearch' in self.parent.kvp,
 #                self.parent.kvp['distributedsearch'],
 #                'hopcount' in self.parent.kvp,
@@ -997,8 +993,7 @@ class Csw3(object):
 
             from owslib.csw import CatalogueServiceWeb
             from owslib.ows import ExceptionReport
-            for fedcat in \
-            self.parent.config.get('server', 'federatedcatalogues').split(','):
+            for fedcat in self.parent.config.get('federatedcatalogues', []):
                 LOGGER.info('Performing distributed search on federated \
                 catalogue: %s', fedcat)
                 try:
@@ -1168,7 +1163,7 @@ class Csw3(object):
 
                     node = self._write_record( result, self.parent.repository.queryables['_all'])
                 elif self.parent.kvp['outputschema'] in self.parent.outputschemas:  # use outputschema serializer
-                    node = self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config.get('server', 'url'))
+                    node = self.parent.outputschemas[self.parent.kvp['outputschema']].write_record(result, self.parent.kvp['elementsetname'], self.parent.context, self.parent.config['server'].get('url'))
                 else:  # it's a profile output
                     node = self.parent.profiles['loaded'][self.parent.kvp['outputschema']].write_record(
                     result, self.parent.kvp['elementsetname'],
@@ -1312,7 +1307,7 @@ class Csw3(object):
 
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = '%s %s/csw/3.0/cswTransaction.xsd' % \
-        (self.parent.context.namespaces['csw30'], self.parent.config.get('server', 'ogc_schemas_base'))
+        (self.parent.context.namespaces['csw30'], self.parent.config['server'].get('ogc_schemas_base'))
 
         node.append(
         self._write_transactionsummary(
@@ -1446,7 +1441,7 @@ class Csw3(object):
                 ir.append({'identifier': identifier, 'title': title})
 
                 results = []
-                if not self.parent.config.has_option('repository', 'source'):
+                if 'source' not in self.parent.config['repository']:
                     # query repository to see if record already exists
                     LOGGER.info('checking if record exists (%s)', identifier)
                     results = self.parent.repository.query_ids(ids=[identifier])
@@ -1500,7 +1495,7 @@ class Csw3(object):
         node.attrib[util.nspath_eval('xsi:schemaLocation',
         self.parent.context.namespaces)] = \
         '%s %s/csw/3.0/cswHarvest.xsd' % (self.parent.context.namespaces['csw30'],
-        self.parent.config.get('server', 'ogc_schemas_base'))
+        self.parent.config['server'].get('ogc_schemas_base'))
 
         node2 = etree.SubElement(node,
         util.nspath_eval('csw:TransactionResponse',
@@ -1712,7 +1707,7 @@ class Csw3(object):
             self.parent.context.namespaces)).xpath('child::*')[0]
 
         xsd_filename = '_wrapper.xsd'
-        schema = os.path.join(self.parent.config.get('server', 'home'),
+        schema = os.path.join(self.parent.config['server'].get('home'),
         'core', 'schemas', 'ogc', 'cat', 'csw', '3.0', xsd_filename)
 
         try:
@@ -2027,7 +2022,7 @@ class Csw3(object):
             node.attrib[util.nspath_eval('xsi:schemaLocation',
             self.parent.context.namespaces)] = \
             '%s %s/cat/csw/3.0/cswAll.xsd' % (self.parent.context.namespaces['csw30'], \
-            self.parent.config.get('server', 'ogc_schemas_base'))
+            self.parent.config['server'].get('ogc_schemas_base'))
 
         node1 = etree.SubElement(node, util.nspath_eval('csw30:EchoedRequest',
                 self.parent.context.namespaces))
@@ -2073,7 +2068,7 @@ class Csw3(object):
         for value in sorted(values):
             etree.SubElement(allowed_values,
                              util.nspath_eval('ows20:Value',
-                             self.parent.context.namespaces)).text = value
+                             self.parent.context.namespaces)).text = str(value)
         return allowed_values
 
     def exceptionreport(self, code, locator, text):
@@ -2082,8 +2077,8 @@ class Csw3(object):
         self.parent.status = code
 
         try:
-            language = self.parent.config.get('server', 'language')
-            ogc_schemas_base = self.parent.config.get('server', 'ogc_schemas_base')
+            language = self.parent.config['server'].get('language')
+            ogc_schemas_base = self.parent.config['server'].get('ogc_schemas_base')
         except:
             language = 'en-US'
             ogc_schemas_base = self.parent.context.ogc_schemas_base

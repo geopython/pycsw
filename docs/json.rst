@@ -3,10 +3,10 @@
 JSON Support
 ============
 
-OARec
------
+OGC API - Records
+-----------------
 
-pycsw fully supports the OARec JSON conformance class, which is the default
+pycsw fully supports the OGC API - Records JSON conformance class, which is the default
 representation provided.
 
 CSW

@@ -8,8 +8,8 @@ pycsw supports the `Search/Retrieval via URL`_ search protocol implementation as
 SRU support is enabled by default.  There are two ways to access SRU
 depending on the deployment pattern chosen.
 
-OARec deployment
-----------------
+OGC API - Records deployment
+----------------------------
 
 .. code-block:: bash
 

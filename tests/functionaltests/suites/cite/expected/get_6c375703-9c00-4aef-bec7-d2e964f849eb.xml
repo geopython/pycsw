@@ -5,7 +5,7 @@
     <atom:category term="Tourism--Greece"/>
     <atom:id>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</atom:id>
     <dc:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</dc:identifier>
-    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f"/>
+    <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/cite/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f"/>
     <atom:title>Lorem ipsum</atom:title>
     <atom:updated>PYCSW_TIMESTAMP</atom:updated>
     <atom:summary>Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.</atom:summary>

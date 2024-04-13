@@ -21,7 +21,7 @@ Querying
 Enabling APISO Support
 ^^^^^^^^^^^^^^^^^^^^^^
 
-To enable APISO support, add ``apiso`` to ``server.profiles`` as specified in :ref:`configuration`.
+To enable APISO support, add ``apiso`` to ``profiles`` as specified in :ref:`configuration`.
 
 Testing
 ^^^^^^^
@@ -39,13 +39,15 @@ APISO includes an extension for enabling `INSPIRE Discovery Services 3.0`_ suppo
 Configuration
 ^^^^^^^^^^^^^
 
-**[metadata:inspire]**
+INSPIRE configuration is specified within ``metadata.inspire``:
+
+**inspire**
 
 - **enabled**: whether to enable the INSPIRE extension (``true`` or ``false``)
 - **languages_supported**: supported languages (see http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, simpleType ``euLanguageISO6392B``)
 - **default_language**: the default language (see http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, simpleType ``euLanguageISO6392B``)
 - **date**: date of INSPIRE metadata offering (in `ISO 8601`_ format)
-- **gemet_keywords**: a comma-seperated keyword list of `GEMET INSPIRE theme keywords`_ about the service (see http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, complexType ``inspireTheme_eng``)
+- **gemet_keywords**: list of `GEMET INSPIRE theme keywords`_ about the service (see http://inspire.ec.europa.eu/schemas/common/1.0/enums/enum_eng.xsd, complexType ``inspireTheme_eng``)
 - **conformity_service**: the level of INSPIRE conformance for spatial data sets and services (``conformant``, ``notConformant``, ``notEvaluated``)
 - **contact_organization**: the organization name responsible for the INSPIRE metadata
 - **contact_email**: the email address of entity responsible for the INSPIRE metadata

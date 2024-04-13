@@ -67,23 +67,23 @@ msgstr ""
 "模式公开额外的 CSW 端点："
 
 #: ../../distributedsearching.rst:24
-msgid "CSW-1: ``http://localhost/pycsw/csw.py?config=CSW-1.cfg``"
-msgstr "CSW-1: ``http://localhost/pycsw/csw.py?config=CSW-1.cfg``"
+msgid "CSW-1: ``http://localhost/pycsw/csw.py?config=CSW-1.yml``"
+msgstr "CSW-1: ``http://localhost/pycsw/csw.py?config=CSW-1.yml``"
 
 #: ../../distributedsearching.rst:26
-msgid "CSW-2: ``http://localhost/pycsw/csw.py?config=CSW-2.cfg``"
-msgstr "CSW-2: ``http://localhost/pycsw/csw.py?config=CSW-2.cfg``"
+msgid "CSW-2: ``http://localhost/pycsw/csw.py?config=CSW-2.yml``"
+msgstr "CSW-2: ``http://localhost/pycsw/csw.py?config=CSW-2.yml``"
 
 #: ../../distributedsearching.rst:28
-msgid "CSW-3: ``http://localhost/pycsw/csw.py?config=CSW-3.cfg``"
-msgstr "CSW-3: ``http://localhost/pycsw/csw.py?config=CSW-3.cfg``"
+msgid "CSW-3: ``http://localhost/pycsw/csw.py?config=CSW-3.yml``"
+msgstr "CSW-3: ``http://localhost/pycsw/csw.py?config=CSW-3.yml``"
 
 #: ../../distributedsearching.rst:30
 msgid ""
-"...where the ``*.cfg`` configuration files are configured for each respective metadata repository.  "
+"...where the ``*.yml`` configuration files are configured for each respective metadata repository.  "
 "The above CSW endpoints can be interacted with as usual."
 msgstr ""
-"只要有 ``*.cfg`` 配置文件，就可以为每个元数据存储库进行配置。以上的CSW端点也可以像往常一样进行交互。"
+"只要有 ``*.yml`` 配置文件，就可以为每个元数据存储库进行配置。以上的CSW端点也可以像往常一样进行交互。"
 
 #: ../../distributedsearching.rst:32
 msgid ""
@@ -95,8 +95,8 @@ msgstr ""
 "能："
 
 #: ../../distributedsearching.rst:34
-msgid "CSW-all: ``http://localhost/pycsw/csw.py?config=CSW-all.cfg``"
-msgstr "所有的CSW: ``http://localhost/pycsw/csw.py?config=CSW-all.cfg``"
+msgid "CSW-all: ``http://localhost/pycsw/csw.py?config=CSW-all.yml``"
+msgstr "所有的CSW: ``http://localhost/pycsw/csw.py?config=CSW-all.yml``"
 
 #: ../../distributedsearching.rst:36
 msgid ""

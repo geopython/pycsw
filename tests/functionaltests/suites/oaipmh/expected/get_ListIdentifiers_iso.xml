@@ -2,7 +2,7 @@
 <!-- PYCSW_VERSION -->
 <oai:OAI-PMH xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
   <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
-  <oai:request verb="ListIdentifiers" metadataPrefix="iso19139">http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/oaipmh/default.cfg&amp;mode=oaipmh</oai:request>
+  <oai:request verb="ListIdentifiers" metadataPrefix="iso19139">http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/oaipmh/default.yml&amp;mode=oaipmh</oai:request>
   <oai:ListIdentifiers>
     <oai:header>
       <oai:identifier>urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f</oai:identifier>

@@ -7,7 +7,7 @@
       <atom:category term="Vegetation-Cropland"/>
       <atom:id>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</atom:id>
       <dc:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</dc:identifier>
-      <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63"/>
+      <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/atom/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63"/>
       <atom:title>Mauris sed neque</atom:title>
       <atom:updated>PYCSW_TIMESTAMP</atom:updated>
       <atom:summary>Curabitur lacinia, ante non porta tempus, mi lorem feugiat odio, eget suscipit eros pede ac velit.</atom:summary>
@@ -22,7 +22,7 @@
       <atom:category term="Hydrography-Oceanographic"/>
       <atom:id>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</atom:id>
       <dc:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</dc:identifier>
-      <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/atom/default.cfg?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc"/>
+      <atom:link href="http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/atom/default.yml?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc"/>
       <atom:title>Ñunç elementum</atom:title>
       <atom:updated>PYCSW_TIMESTAMP</atom:updated>
       <georss:where>
