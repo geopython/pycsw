@@ -258,8 +258,9 @@ class ISO19115p3(profile.Profile):
 
         self.inspire_config = None
 
-        self.ogc_schemas_base = config.get('server', 'ogc_schemas_base')
-        self.url = config.get('server', 'url')
+        server_cfg = config.get('server', {})
+        self.ogc_schemas_base = server_cfg.get('ogc_schemas_base', 'http://schemas.opengis.net')
+        self.url = server_cfg.get('url', 'http://localhost/pycsw/csw.py')
 
     def check_parameters(self, kvp):
         """ Check for Language parameter in GetCapabilities request
@@ -343,7 +344,7 @@ class ISO19115p3(profile.Profile):
 
         node = etree.Element(util.nspath_eval('mdb:MD_Metadata', self.namespaces), nsmap=self.namespaces)
         node.attrib[util.nspath_eval('xsi:schemaLocation', self.context.namespaces)] = \
-        '%s %s/csw/2.0.2/csw.xsd' % (self.namespace, self.ogc_schemas_base)
+                                           f"{self.namespace} {self.ogc_schemas_base}/csw/2.0.2/csw.xsd"
 
         # identifier
         idval = util.getqattr(result, self.context.md_core_model['mappings']['pycsw:Identifier'])
