@@ -4,5 +4,5 @@ lxml
 OWSLib
 pyproj
 PyYAML
-Shapely<2.0
+Shapely
 xmltodict
