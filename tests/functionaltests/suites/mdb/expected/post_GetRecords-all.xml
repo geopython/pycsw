@@ -147,6 +147,167 @@
               </mcc:description>
             </mcc:MD_Identifier>
           </cit:identifier>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="funder"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Organisation>
+                  <cit:name>
+                    <gco:CharacterString>AuScope</gco:CharacterString>
+                  </cit:name>
+                  <cit:contactInfo>
+                    <cit:CI_Contact>
+                      <cit:address>
+                        <cit:CI_Address>
+                          <cit:deliveryPoint>
+                            <gco:CharacterString>Level 2, 700 Swanston Street</gco:CharacterString>
+                          </cit:deliveryPoint>
+                          <cit:city>
+                            <gco:CharacterString>Carlton</gco:CharacterString>
+                          </cit:city>
+                          <cit:administrativeArea>
+                            <gco:CharacterString>Victoria</gco:CharacterString>
+                          </cit:administrativeArea>
+                          <cit:postalCode>
+                            <gco:CharacterString>3053</gco:CharacterString>
+                          </cit:postalCode>
+                          <cit:country>
+                            <gco:CharacterString>Australia</gco:CharacterString>
+                          </cit:country>
+                          <cit:electronicMailAddress>
+                            <gco:CharacterString>info@auscope.org.au</gco:CharacterString>
+                          </cit:electronicMailAddress>
+                        </cit:CI_Address>
+                      </cit:address>
+                    </cit:CI_Contact>
+                  </cit:contactInfo>
+                  <cit:partyIdentifier>
+                    <mcc:MD_Identifier>
+                      <mcc:authority/>
+                      <mcc:code>
+                        <gco:CharacterString>https://ror.org/04s1m4564</gco:CharacterString>
+                      </mcc:code>
+                      <mcc:codeSpace>
+                        <gco:CharacterString>ROR</gco:CharacterString>
+                      </mcc:codeSpace>
+                      <mcc:description>
+                        <gco:CharacterString>Research Organization Registry (ROR) Entry</gco:CharacterString>
+                      </mcc:description>
+                    </mcc:MD_Identifier>
+                  </cit:partyIdentifier>
+                </cit:CI_Organisation>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="publisher"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Organisation>
+                  <cit:name>
+                    <gco:CharacterString>Earth Resources Victoria</gco:CharacterString>
+                  </cit:name>
+                  <cit:contactInfo>
+                    <cit:CI_Contact>
+                      <cit:phone>
+                        <cit:CI_Telephone>
+                          <cit:number>
+                            <gco:CharacterString>1300 366 356</gco:CharacterString>
+                          </cit:number>
+                          <cit:numberType>
+                            <cit:CI_TelephoneTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_TelephoneTypeCode" codeListValue="voice"/>
+                          </cit:numberType>
+                        </cit:CI_Telephone>
+                      </cit:phone>
+                      <cit:address>
+                        <cit:CI_Address>
+                          <cit:deliveryPoint>
+                            <gco:CharacterString>GPO Box 2392</gco:CharacterString>
+                          </cit:deliveryPoint>
+                          <cit:city>
+                            <gco:CharacterString>Melbourne</gco:CharacterString>
+                          </cit:city>
+                          <cit:administrativeArea>
+                            <gco:CharacterString>Victoria</gco:CharacterString>
+                          </cit:administrativeArea>
+                          <cit:postalCode>
+                            <gco:CharacterString>3001</gco:CharacterString>
+                          </cit:postalCode>
+                          <cit:country>
+                            <gco:CharacterString>Australia</gco:CharacterString>
+                          </cit:country>
+                          <cit:electronicMailAddress>
+                            <gco:CharacterString>customer.service@ecodev.vic.gov.au</gco:CharacterString>
+                          </cit:electronicMailAddress>
+                        </cit:CI_Address>
+                      </cit:address>
+                    </cit:CI_Contact>
+                  </cit:contactInfo>
+                </cit:CI_Organisation>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="author"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>P.B. SKLADZIEN</gco:CharacterString>
+                  </cit:name>
+                  <cit:contactInfo/>
+                </cit:CI_Individual>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="coAuthor"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>C. Jorand</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="collaborator"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>A. Krassay</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="contributor"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>L. Hall</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
         </cit:CI_Citation>
       </mri:citation>
       <mri:abstract>
@@ -172,16 +333,16 @@ The construction and integration of the basin model has involved both the interp
               </gex:northBoundLatitude>
             </gex:EX_GeographicBoundingBox>
           </gex:geographicElement>
-      <gex:verticalElement>
-        <gex:EX_VerticalExtent>
-        <gex:minimumValue>
-          <gco:Real>-400</gco:Real>
-        </gex:minimumValue>
-        <gex:maximumValue>
-          <gco:Real>300</gco:Real>
-        </gex:maximumValue>
-      </gex:EX_VerticalExtent>
-      </gex:verticalElement>
+          <gex:verticalElement>
+            <gex:EX_VerticalExtent>
+              <gex:minimumValue>
+                <gco:Real>-400</gco:Real>
+              </gex:minimumValue>
+              <gex:maximumValue>
+                <gco:Real>300</gco:Real>
+              </gex:maximumValue>
+            </gex:EX_VerticalExtent>
+          </gex:verticalElement>
         </gex:EX_Extent>
       </mri:extent>
       <mri:descriptiveKeywords>
@@ -230,62 +391,6 @@ The construction and integration of the basin model has involved both the interp
           </mco:classification>
         </mco:MD_SecurityConstraints>
       </mri:resourceConstraints>
-      <mri:pointOfContact>
-        <cit:CI_Responsibility>
-          <cit:role>
-            <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="funder"/>
-          </cit:role>
-          <cit:party>
-            <cit:CI_Organisation>
-              <cit:name>
-                <gco:CharacterString>
-                  AuScope
-                </gco:CharacterString>
-              </cit:name>
-              <cit:contactInfo>
-                <cit:CI_Contact>
-                  <cit:address>
-                    <cit:CI_Address>
-                      <cit:deliveryPoint>
-                        <gco:CharacterString>
-                          Level 2, 700 Swanston Street
-                        </gco:CharacterString>
-                      </cit:deliveryPoint>
-                      <cit:city>
-                        <gco:CharacterString>Carlton</gco:CharacterString>
-                      </cit:city>
-                      <cit:administrativeArea>
-                        <gco:CharacterString>Victoria</gco:CharacterString>
-                      </cit:administrativeArea>
-                      <cit:postalCode>
-                        <gco:CharacterString>3053</gco:CharacterString>
-                      </cit:postalCode>
-                      <cit:country>
-                        <gco:CharacterString>Australia</gco:CharacterString>
-                      </cit:country>
-                      <cit:electronicMailAddress>
-                        <gco:CharacterString>info@auscope.org.au</gco:CharacterString>
-                      </cit:electronicMailAddress>
-                    </cit:CI_Address>
-                  </cit:address>
-                </cit:CI_Contact>
-              </cit:contactInfo>
-              <cit:partyIdentifier>
-                <mcc:MD_Identifier>
-                  <mcc:code>
-                    <gcx:anchor>https://ror.org/04s1m4564</gcx:anchor>
-                  </mcc:code>
-                  <mcc:description>
-                    <gco:CharacterString>
-                      Research Organization Registry (ROR) Entry
-                    </gco:CharacterString>
-                  </mcc:description>
-                </mcc:MD_Identifier>
-              </cit:partyIdentifier>
-            </cit:CI_Organisation>
-          </cit:party>
-        </cit:CI_Responsibility>
-      </mri:pointOfContact>
     </mri:MD_DataIdentification>
   </mdb:identificationInfo>
   <mdb:distributionInfo>

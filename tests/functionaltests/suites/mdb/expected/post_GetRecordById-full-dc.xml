@@ -17,6 +17,7 @@
     <dct:abstract>A 3D model of the Otway and Torquay basins has been produced at 1:250 000 scale as part of GeoScience Victorias state-wide 3D geological model. To date there has been a “knowledge gap” in the transition between the basement and basin environments. This regional scale integration of the basement and basin models addresses this gap and provides a regional framework within which more detailed work can be carried out in the future.
 
 The construction and integration of the basin model has involved both the interpretation and building of new faults and stratigraphic surfaces, as well as utilising existing stratigraphic surfaces and structural interpretations from previous studies, predominantly the Otway Basin HSA SEEBASE project by FrOG Tech (Jorand et. al., 2010).</dct:abstract>
+    <dc:publisher>Earth Resources Victoria</dc:publisher>
     <dc:language>eng</dc:language>
     <dc:rights>license</dc:rights>
     <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
