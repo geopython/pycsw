@@ -2,7 +2,7 @@ MD_CORE_MODEL = {
     'typename': 'pycsw:CoreMetadata',
     'outputschema': 'http://pycsw.org/metadata',
     'mappings': {
-        # Needed fot PYCSW
+        # Needed for PYCSW
         'pycsw:Identifier': 'identifier',
         'pycsw:Typename': 'typename',
         'pycsw:Schema': 'schema',
@@ -30,16 +30,18 @@ MD_CORE_MODEL = {
         'pycsw:Creator': 'producer_name',
         'pycsw:Publisher': 'producer_name',
         'pycsw:Contributor': 'producer_name',
-        'pycsw:CreationDate': 'creation_date',
-        'pycsw:Date': 'creation_date',
+        'pycsw:CreationDate': 'creation_date_utc',
+        'pycsw:Date': 'creation_date_utc',
         'pycsw:Format': 'type',
-        'pycsw:Modified': 'update_date',
-        'pycsw:UpdateDate': 'update_date',
+        'pycsw:Modified': 'update_date_utc',
+        'pycsw:UpdateDate': 'update_date_utc',
         'pycsw:IngestionDate': 'ingestion_date',
-        'pycsw:TempExtent_begin': 'source_start_date',
-        'pycsw:TempExtent_end': 'source_end_date',
+        'pycsw:TempExtent_begin': 'imaging_time_begin_utc',
+        'pycsw:TempExtent_end': 'imaging_time_end_utc',
         'pycsw:Resolution': 'max_resolution_deg',
+        'pycsw:minResolutionDeg': 'min_resolution_deg',
         'pycsw:horizontalAccuracyCE90': 'min_horizontal_accuracy_ce_90',
+        'pycsw:maxHorizontalAccuracyCE90': 'max_horizontal_accuracy_ce_90',
         'pycsw:sensorType': 'sensors',
         'pycsw:Region': 'region',
         'pycsw:footprint': 'footprint_geojson',
@@ -52,6 +54,7 @@ MD_CORE_MODEL = {
         'pycsw:TopicCategory': '',
 
         'pycsw:maxResolutionMeter': 'max_resolution_meter',
+        'pycsw:minResolutionMeter': 'min_resolution_meter',
         'pycsw:productBBox':'product_bbox',
 
         # Added for mc-raster 
