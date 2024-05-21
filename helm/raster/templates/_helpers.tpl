@@ -71,8 +71,8 @@ Returns the pycsw server url based on the provided values, default localhost
     {{- if not .Values.nginx.route.host }}
         {{- printf "http://localhost:8000" -}}
     {{- else -}}
-        {{- $protocol := .Values.nginx.route.https | ternary "https" "http" -}}
-        {{- printf "%s://%s" $protocol .Values.route.host -}}
+        {{- $protocol := ternary "https" "http" .Values.nginx.route.tls.enabled -}}
+        {{- printf "%s://%s" $protocol .Values.nginx.route.host -}}
         {{- if .Values.nginx.route.path -}}
             {{- printf "%s" .Values.nginx.route.path -}}
         {{- end -}}
