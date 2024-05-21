@@ -50,11 +50,14 @@
 {% endif %}
 
 {# update existing url with new key,val. indent prevents spaces in output #}
+{# reset pagination, else you may end up in empty result #}
 {% macro updateurl(key=None,val=None) %}{{ nav_links.self.split('?')[0] }}?{% 
-  for at in attrs.keys() %}{% 
-    if attrs[at] not in [None,''] %}{% 
-      if key not in [None,''] and key == at %}&{{ at }}={{ val }}{% 
-      else %}&{{ at }}={{ attrs[at] }}{% 
+  for at in attrs.keys() %}{%
+    if at != 'offset' %}{%
+      if attrs[at] not in [None,''] %}{% 
+        if key not in [None,''] and key == at %}&{{ at }}={{ val }}{% 
+        else %}&{{ at }}={{ attrs[at] }}{% 
+        endif %}{% 
       endif %}{% 
     endif %}{%
     if key not in attrs.keys() %}&{{ key }}={{ val }}{% endif %}{% 
@@ -100,7 +103,7 @@ endmacro %}
           </div>
           <div>
             {% if 'facets=true' in nav_links.self %}
-            <a href="#" onclick="{{ reseturl() }}">Reset</a>
+            <a href="{{ reseturl() }}">Reset</a>
             {% endif %}
           </div>
         </div>
