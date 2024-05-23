@@ -17,18 +17,14 @@
    <xsd:element name="srs" />
    <xsd:element name="srs_name" />
    <xsd:element name="geometry" type="ows:BoundingBoxType" />
-   <xsd:element name="creation_date_utc" />
-   <xsd:element name="update_date_utc" />
+   <xsd:element name="creation_date" />
+   <xsd:element name="update_date" />
    <xsd:element name="ingestion_date" />
    <xsd:element name="insert_date" />
-   <xsd:element name="imaging_time_begin_utc" />
-   <xsd:element name="imaging_time_end_utc" />
-   <xsd:element name="max_resolution_deg" />
-   <xsd:element name="min_resolution_deg" />
-   <xsd:element name="max_resolution_meter" />
-   <xsd:element name="min_resolution_meter" />
-   <xsd:element name="min_horizontal_accuracy_ce_90" />
-   <xsd:element name="max_horizontal_accuracy_ce_90" />
+   <xsd:element name="source_start_date" />
+   <xsd:element name="source_end_date" />
+   <xsd:element name="resolution" />
+   <xsd:element name="horizontal_accuracy_ce_90" />
    <xsd:element name="sensor_type" />
    <xsd:element name="region" />
    <xsd:element name="footprint_geojson" />
@@ -69,11 +65,8 @@
                <xsd:element ref="mc:imagingTimeBeginUTC" />
                <xsd:element ref="mc:imagingTimeEndUTC" />
                <xsd:element ref="mc:maxResolutionDeg" />
-               <xsd:element ref="mc:minResolutionDeg" />
                <xsd:element ref="mc:maxResolutionMeter" />
-               <xsd:element ref="mc:minResolutionMeter" />
                <xsd:element ref="mc:minHorizontalAccuracyCE90" />
-               <xsd:element ref="mc:maxHorizontalAccuracyCE90" />
                <xsd:element ref="mc:sensors" />
                <xsd:element ref="mc:region" />
                <xsd:element ref="mc:RMS" />
