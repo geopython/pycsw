@@ -36,6 +36,8 @@ spec:
         volumeMounts:
         - mountPath: {{ .Values.db.volume_path }}
           name: {{ .Values.db.volume_name }}
+        securityContext:
+          readOnlyRootFilesystem: true
       restartPolicy: Always
   volumeClaimTemplates:
     - metadata:
