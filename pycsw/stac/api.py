@@ -457,8 +457,8 @@ def links2stacassets(collection, record):
     if 'collection' not in record:
         record['collection'] = collection
 
-    links_assets = [i for i in record['links'] if i['rel'] == 'enclosure']
-    links_to_keep = [i for i in record['links'] if i['rel'] != 'enclosure']
+    links_assets = [i for i in record['links'] if i.get('rel', '') == 'enclosure']
+    links_to_keep = [i for i in record['links'] if i.get('rel', '') != 'enclosure']
 
     record['links'] = links_to_keep
 
