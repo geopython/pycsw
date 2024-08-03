@@ -39,6 +39,7 @@ import mimetypes
 import os
 import pathlib
 import re
+from typing import Union
 
 import dateutil
 from dateutil.parser import parse as dparse
@@ -224,7 +225,7 @@ def render_j2_template(config, template, data):
     return template.render(config=config, data=data, version=__version__)
 
 
-def to_rfc3339(value: str) -> tuple:
+def to_rfc3339(value: str) -> Union[tuple, None]:
     """
     Helper function to convert a date/datetime into
     RFC3339
@@ -239,7 +240,7 @@ def to_rfc3339(value: str) -> tuple:
     except Exception as err:
         msg = f'Parse error: {err}'
         LOGGER.error(msg)
-        raise
+        return 'date', None
 
     if len(value) < 11:
         dt_type = 'date'
