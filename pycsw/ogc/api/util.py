@@ -41,7 +41,6 @@ import pathlib
 import re
 from typing import Union
 
-import dateutil
 from dateutil.parser import parse as dparse
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound

@@ -38,10 +38,7 @@ import os
 from time import sleep
 
 from shapely.wkt import loads
-try:
-    from shapely.errors import ReadingError
-except Exception:
-    from shapely.geos import ReadingError
+from shapely.errors import ShapelyError
 
 from sqlalchemy import create_engine, func, __version__, select
 from sqlalchemy.exc import OperationalError
@@ -640,7 +637,7 @@ def query_spatial(bbox_data_wkt, bbox_input_wkt, predicate, distance):
         else:
             raise RuntimeError(
                 'Invalid spatial query predicate: %s' % predicate)
-    except (AttributeError, ValueError, ReadingError, TypeError):
+    except (AttributeError, ValueError, ShapelyError, TypeError):
         result = False
     return "true" if result else "false"
 
