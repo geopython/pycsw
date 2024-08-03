@@ -228,6 +228,12 @@ def test_items(config):
     assert content['numberReturned'] == 10
     assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
 
+    params = {'SoRtBy': '-title'}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 12
+    assert content['numberReturned'] == 10
+    assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
+
     cql_json = {'op': '=', 'args': [{'property': 'title'}, 'Lorem ipsum']}
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 1

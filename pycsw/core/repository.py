@@ -306,7 +306,8 @@ class Repository(object):
 
         properties = {
             'geometry': {
-                '$ref': 'https://geojson.org/schema/Polygon.json'
+                '$ref': 'https://geojson.org/schema/Polygon.json',
+                'x-ogc-role': 'primary-geometry'
             }
         }
 
@@ -317,6 +318,9 @@ class Repository(object):
             properties[i.name] = {
                 'title': i.name
             }
+
+            if i.name == 'identifier':
+                properties[i.name]['x-ogc-role'] = 'id'
 
             try:
                 properties[i.name]['type'] = type_mappings[str(i.type)]
