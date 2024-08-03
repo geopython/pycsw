@@ -424,7 +424,9 @@ class Csw(object):
                         connection_done = True
                     except:
                         LOGGER.debug(f'Repository not loaded retry connection {max_attempts}')
+                        LOGGER.debug(f"{self.config['repository']['database']}")
                         max_attempts += 1
+                        raise
             except Exception as err:
                 msg = 'Could not load repository (local): %s' % err
                 LOGGER.exception(msg)
