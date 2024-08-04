@@ -34,7 +34,7 @@
 
 import logging
 import os
-from urllib.parse import parse_qsl, urlparse
+from urllib.parse import parse_qsl, splitquery, urlparse
 from io import StringIO
 import sys
 from time import time
@@ -239,7 +239,7 @@ class Csw(object):
                     LOGGER.debug('Looks like an OpenSearch URL template')
                     query_part = self.request.split('?', 1)[-1]
                 else:
-                    query_part = urlparse(self.request).query
+                    query_part = splitquery(self.request)[-1]
                 self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
             except AttributeError as err:
                 LOGGER.exception('Could not parse query string')
