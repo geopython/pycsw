@@ -908,7 +908,7 @@ class Csw2(object):
         self.parent.context.namespaces), timestamp=timestamp)
 
         if 'where' not in self.parent.kvp['constraint'] and \
-        self.parent.kvp['resulttype'] is None:
+        self.parent.kvp['resulttype'] in [None, 'hits']:
             returned = '0'
 
         searchresults = etree.SubElement(node,
