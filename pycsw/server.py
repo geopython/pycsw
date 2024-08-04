@@ -240,7 +240,6 @@ class Csw(object):
                     query_part = self.request.split('?', 1)[-1]
                 else:
                     query_part = urlsplit(self.request).query
-                    #query_part = splitquery(self.request)[-1]
                 self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
                 print("SELF.KVP", self.kvp)
             except AttributeError as err:
