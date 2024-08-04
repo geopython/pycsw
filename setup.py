@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2016 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
@@ -32,6 +32,7 @@
 
 import io
 import os
+import re
 
 from setuptools import find_packages, setup
 
@@ -43,14 +44,30 @@ def read(filename, encoding="utf-8"):
     return contents
 
 
+def get_package_version():
+    """get version from top-level package init"""
+
+    version_file = read('pycsw/__init__.py')
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError('Unable to find version string.')
+
+
+DESCRIPTION = ('pycsw is an OGC API - Records and OGC CSW server '
+               'implementation written in Python')
+
+print("JJJ", DESCRIPTION)
+
 # ensure a fresh MANIFEST file is generated
 if (os.path.exists('MANIFEST')):
     os.unlink('MANIFEST')
 
 setup(
     name='pycsw',
-    version=read("VERSION.txt"),
-    description='pycsw is an OARec and OGC CSW server implementation written in Python',
+    version=get_package_version(),
+    description=DESCRIPTION.strip(),
     long_description=read("README.md"),
     long_description_content_type='text/markdown',
     license='MIT',
