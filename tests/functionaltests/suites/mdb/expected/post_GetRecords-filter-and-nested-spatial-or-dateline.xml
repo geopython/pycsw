@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gml32="http://www.opengis.net/gml/3.2" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0" xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="PYCSW_TIMESTAMP"/>
+  <csw:SearchResults numberOfRecordsMatched="2" numberOfRecordsReturned="2" nextRecord="0" recordSchema="http://standards.iso.org/iso/19115/-3/mdb/2.0" elementSet="full">
+    <mdb:MD_Metadata xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/2.0 http://standards.iso.org/iso/19115/-3/mds/2.0/mds.xsd">
+  <mdb:metadataIdentifier>
+    <mcc:MD_Identifier>
+      <mcc:code>
+        <gco:CharacterString>5ebc3cb7-a3b5-4760-a8ff-851d5d5beb32</gco:CharacterString>
+      </mcc:code>
+      <mcc:codeSpace>
+        <gco:CharacterString>urn:uuid</gco:CharacterString>
+      </mcc:codeSpace>
+    </mcc:MD_Identifier>
+  </mdb:metadataIdentifier>
+  <mdb:defaultLocale>
+    <lan:PT_Locale id="EN">
+      <lan:language>
+        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
+      </lan:language>
+      <lan:characterEncoding>
+        <lan:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
+      </lan:characterEncoding>
+    </lan:PT_Locale>
+  </mdb:defaultLocale>
+  <mdb:contact>
+    <cit:CI_Responsibility>
+      <cit:role>
+        <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+      </cit:role>
+      <cit:party>
+        <cit:CI_Organisation>
+          <cit:name>
+            <gco:CharacterString>Earth Resources Victoria</gco:CharacterString>
+          </cit:name>
+          <cit:contactInfo>
+            <cit:CI_Contact>
+              <cit:phone>
+                <cit:CI_Telephone>
+                  <cit:number>
+                    <gco:CharacterString>1300 366 356</gco:CharacterString>
+                  </cit:number>
+                  <cit:numberType>
+                    <cit:CI_TelephoneTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_TelephoneTypeCode" codeListValue="voice"/>
+                  </cit:numberType>
+                </cit:CI_Telephone>
+              </cit:phone>
+              <cit:address>
+                <cit:CI_Address>
+                  <cit:deliveryPoint>
+                    <gco:CharacterString>GPO Box  2392</gco:CharacterString>
+                  </cit:deliveryPoint>
+                  <cit:city>
+                    <gco:CharacterString>Melbourne</gco:CharacterString>
+                  </cit:city>
+                  <cit:administrativeArea>
+                    <gco:CharacterString>Victoria</gco:CharacterString>
+                  </cit:administrativeArea>
+                  <cit:postalCode>
+                    <gco:CharacterString>3001</gco:CharacterString>
+                  </cit:postalCode>
+                  <cit:country>
+                    <gco:CharacterString>Australia</gco:CharacterString>
+                  </cit:country>
+                  <cit:electronicMailAddress>
+                    <gco:CharacterString>customer.service@ecodev.vic.gov.au</gco:CharacterString>
+                  </cit:electronicMailAddress>
+                </cit:CI_Address>
+              </cit:address>
+            </cit:CI_Contact>
+          </cit:contactInfo>
+          <cit:individual>
+            <cit:CI_Individual>
+              <cit:name>
+                <gco:CharacterString>Anthony Hurst</gco:CharacterString>
+              </cit:name>
+              <cit:positionName>
+                <gco:CharacterString>Executive Director, Earth Resources Policy and Programs</gco:CharacterString>
+              </cit:positionName>
+            </cit:CI_Individual>
+          </cit:individual>
+        </cit:CI_Organisation>
+      </cit:party>
+    </cit:CI_Responsibility>
+  </mdb:contact>
+  <mdb:dateInfo>
+    <cit:CI_Date>
+      <cit:date>
+        <gco:DateTime>2022-11-03T06:16:21</gco:DateTime>
+      </cit:date>
+      <cit:dateType>
+        <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+      </cit:dateType>
+    </cit:CI_Date>
+  </mdb:dateInfo>
+  <mdb:dateInfo>
+    <cit:CI_Date>
+      <cit:date>
+        <gco:DateTime>2022-11-03T06:17:02</gco:DateTime>
+      </cit:date>
+      <cit:dateType>
+        <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="revision"/>
+      </cit:dateType>
+    </cit:CI_Date>
+  </mdb:dateInfo>
+  <mdb:metadataStandard>
+    <cit:CI_Citation>
+      <cit:title>
+        <gco:CharacterString>ISO 19115-3</gco:CharacterString>
+      </cit:title>
+    </cit:CI_Citation>
+  </mdb:metadataStandard>
+  <mdb:metadataLinkage>
+    <cit:CI_OnlineResource>
+      <cit:linkage>
+        <gco:CharacterString>http://portal.auscope.org/geonetwork/srv/api/records/5ebc3cb7-a3b5-4760-a8ff-851d5d5beb32</gco:CharacterString>
+      </cit:linkage>
+      <cit:function>
+        <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="completeMetadata"/>
+      </cit:function>
+    </cit:CI_OnlineResource>
+  </mdb:metadataLinkage>
+  <mdb:identificationInfo>
+    <mri:MD_DataIdentification>
+      <mri:citation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>3D geological model of the Otway and Torquay Basin 2011</gco:CharacterString>
+          </cit:title>
+          <cit:date>
+            <cit:CI_Date>
+              <cit:date>
+                <gco:Date>2010-01-01</gco:Date>
+              </cit:date>
+            </cit:CI_Date>
+          </cit:date>
+          <cit:identifier>
+            <mcc:MD_Identifier>
+              <mcc:code>
+                <gcx:Anchor>https://geology.data.vic.gov.au/searchAssistant/document.php?q=parent_id:107513</gcx:Anchor>
+              </mcc:code>
+              <mcc:description>
+                <gco:CharacterString>
+                  Reference
+                </gco:CharacterString>
+              </mcc:description>
+            </mcc:MD_Identifier>
+          </cit:identifier>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="funder"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Organisation>
+                  <cit:name>
+                    <gco:CharacterString>AuScope</gco:CharacterString>
+                  </cit:name>
+                  <cit:contactInfo>
+                    <cit:CI_Contact>
+                      <cit:address>
+                        <cit:CI_Address>
+                          <cit:deliveryPoint>
+                            <gco:CharacterString>Level 2, 700 Swanston Street</gco:CharacterString>
+                          </cit:deliveryPoint>
+                          <cit:city>
+                            <gco:CharacterString>Carlton</gco:CharacterString>
+                          </cit:city>
+                          <cit:administrativeArea>
+                            <gco:CharacterString>Victoria</gco:CharacterString>
+                          </cit:administrativeArea>
+                          <cit:postalCode>
+                            <gco:CharacterString>3053</gco:CharacterString>
+                          </cit:postalCode>
+                          <cit:country>
+                            <gco:CharacterString>Australia</gco:CharacterString>
+                          </cit:country>
+                          <cit:electronicMailAddress>
+                            <gco:CharacterString>info@auscope.org.au</gco:CharacterString>
+                          </cit:electronicMailAddress>
+                        </cit:CI_Address>
+                      </cit:address>
+                    </cit:CI_Contact>
+                  </cit:contactInfo>
+                  <cit:partyIdentifier>
+                    <mcc:MD_Identifier>
+                      <mcc:authority/>
+                      <mcc:code>
+                        <gco:CharacterString>https://ror.org/04s1m4564</gco:CharacterString>
+                      </mcc:code>
+                      <mcc:codeSpace>
+                        <gco:CharacterString>ROR</gco:CharacterString>
+                      </mcc:codeSpace>
+                      <mcc:description>
+                        <gco:CharacterString>Research Organization Registry (ROR) Entry</gco:CharacterString>
+                      </mcc:description>
+                    </mcc:MD_Identifier>
+                  </cit:partyIdentifier>
+                </cit:CI_Organisation>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="publisher"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Organisation>
+                  <cit:name>
+                    <gco:CharacterString>Earth Resources Victoria</gco:CharacterString>
+                  </cit:name>
+                  <cit:contactInfo>
+                    <cit:CI_Contact>
+                      <cit:phone>
+                        <cit:CI_Telephone>
+                          <cit:number>
+                            <gco:CharacterString>1300 366 356</gco:CharacterString>
+                          </cit:number>
+                          <cit:numberType>
+                            <cit:CI_TelephoneTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_TelephoneTypeCode" codeListValue="voice"/>
+                          </cit:numberType>
+                        </cit:CI_Telephone>
+                      </cit:phone>
+                      <cit:address>
+                        <cit:CI_Address>
+                          <cit:deliveryPoint>
+                            <gco:CharacterString>GPO Box 2392</gco:CharacterString>
+                          </cit:deliveryPoint>
+                          <cit:city>
+                            <gco:CharacterString>Melbourne</gco:CharacterString>
+                          </cit:city>
+                          <cit:administrativeArea>
+                            <gco:CharacterString>Victoria</gco:CharacterString>
+                          </cit:administrativeArea>
+                          <cit:postalCode>
+                            <gco:CharacterString>3001</gco:CharacterString>
+                          </cit:postalCode>
+                          <cit:country>
+                            <gco:CharacterString>Australia</gco:CharacterString>
+                          </cit:country>
+                          <cit:electronicMailAddress>
+                            <gco:CharacterString>customer.service@ecodev.vic.gov.au</gco:CharacterString>
+                          </cit:electronicMailAddress>
+                        </cit:CI_Address>
+                      </cit:address>
+                    </cit:CI_Contact>
+                  </cit:contactInfo>
+                </cit:CI_Organisation>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="author"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>P.B. SKLADZIEN</gco:CharacterString>
+                  </cit:name>
+                  <cit:contactInfo/>
+                </cit:CI_Individual>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="coAuthor"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>C. Jorand</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="collaborator"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>A. Krassay</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+          <cit:citedResponsibleParty>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="contributor"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>L. Hall</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </cit:citedResponsibleParty>
+        </cit:CI_Citation>
+      </mri:citation>
+      <mri:abstract>
+        <gco:CharacterString>A 3D model of the Otway and Torquay basins has been produced at 1:250 000 scale as part of GeoScience Victorias state-wide 3D geological model. To date there has been a “knowledge gap” in the transition between the basement and basin environments. This regional scale integration of the basement and basin models addresses this gap and provides a regional framework within which more detailed work can be carried out in the future.
+
+The construction and integration of the basin model has involved both the interpretation and building of new faults and stratigraphic surfaces, as well as utilising existing stratigraphic surfaces and structural interpretations from previous studies, predominantly the Otway Basin HSA SEEBASE project by FrOG Tech (Jorand et. al., 2010).</gco:CharacterString>
+      </mri:abstract>
+      <mri:extent>
+        <gex:EX_Extent>
+          <gex:geographicElement>
+            <gex:EX_GeographicBoundingBox>
+              <gex:westBoundLongitude>
+                <gco:Decimal>143.00</gco:Decimal>
+              </gex:westBoundLongitude>
+              <gex:eastBoundLongitude>
+                <gco:Decimal>144.00</gco:Decimal>
+              </gex:eastBoundLongitude>
+              <gex:southBoundLatitude>
+                <gco:Decimal>-39.40</gco:Decimal>
+              </gex:southBoundLatitude>
+              <gex:northBoundLatitude>
+                <gco:Decimal>-38.40</gco:Decimal>
+              </gex:northBoundLatitude>
+            </gex:EX_GeographicBoundingBox>
+          </gex:geographicElement>
+          <gex:verticalElement>
+            <gex:EX_VerticalExtent>
+              <gex:minimumValue>
+                <gco:Real>-400</gco:Real>
+              </gex:minimumValue>
+              <gex:maximumValue>
+                <gco:Real>300</gco:Real>
+              </gex:maximumValue>
+            </gex:EX_VerticalExtent>
+          </gex:verticalElement>
+        </gex:EX_Extent>
+      </mri:extent>
+      <mri:descriptiveKeywords>
+        <mri:MD_Keywords>
+          <mri:keyword>
+            <gco:CharacterString>Victoria</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>Otway Basin</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>Torquay Basin</gco:CharacterString>
+          </mri:keyword>
+          <mri:type>
+            <mri:MD_KeywordTypeCode codeListValue="place" codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"/>
+          </mri:type>
+        </mri:MD_Keywords>
+      </mri:descriptiveKeywords>
+      <mri:descriptiveKeywords>
+        <mri:MD_Keywords>
+          <mri:keyword>
+            <gco:CharacterString>3D Geological Models</gco:CharacterString>
+          </mri:keyword>
+          <mri:type>
+            <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+          </mri:type>
+        </mri:MD_Keywords>
+      </mri:descriptiveKeywords>
+      <mri:resourceConstraints>
+        <mco:MD_LegalConstraints>
+          <mco:useLimitation>
+            <gco:CharacterString>https://creativecommons.org/licenses/by/4.0/</gco:CharacterString>
+          </mco:useLimitation>
+          <mco:accessConstraints>
+            <mco:MD_RestrictionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="license"/>
+          </mco:accessConstraints>
+          <mco:useConstraints>
+            <mco:MD_RestrictionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="license"/>
+          </mco:useConstraints>
+        </mco:MD_LegalConstraints>
+      </mri:resourceConstraints>
+      <mri:resourceConstraints>
+        <mco:MD_SecurityConstraints>
+          <mco:classification>
+            <mco:MD_ClassificationCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ClassificationCode" codeListValue="unclassified"/>
+          </mco:classification>
+        </mco:MD_SecurityConstraints>
+      </mri:resourceConstraints>
+    </mri:MD_DataIdentification>
+  </mdb:identificationInfo>
+  <mdb:distributionInfo>
+    <mrd:MD_Distribution>
+      <mrd:transferOptions>
+        <mrd:MD_DigitalTransferOptions>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>http://geology.data.vic.gov.au/searchAssistant/document.php?q=parent_id:37363</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>View Reports</gco:CharacterString>
+              </cit:name>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>http://geology.data.vic.gov.au/searchAssistant/document.php?q=parent_id:107513</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Download Metadata and 3D model data</gco:CharacterString>
+              </cit:name>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+        </mrd:MD_DigitalTransferOptions>
+      </mrd:transferOptions>
+      <mrd:transferOptions>
+        <mrd:MD_DigitalTransferOptions>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>http://geomodels.auscope.org/model/otway</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>3D Geological Model</gco:CharacterString>
+              </cit:name>
+              <cit:description gco:nilReason="missing">
+                <gco:CharacterString/>
+              </cit:description>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+        </mrd:MD_DigitalTransferOptions>
+      </mrd:transferOptions>
+    </mrd:MD_Distribution>
+  </mdb:distributionInfo>
+</mdb:MD_Metadata>
+    <mdb:MD_Metadata xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 http://schemas.opengis.net/csw/2.0.2/csw.xsd">
+      <mdb:metadataIdentifier>
+        <mcc:MD_Identifier>
+          <mcc:code>
+            <gco:CharacterString>09a7c1d4c97ccdd7e34306deb91320ab95d51bb8</gco:CharacterString>
+          </mcc:code>
+        </mcc:MD_Identifier>
+      </mdb:metadataIdentifier>
+      <mdb:defaultLocale>
+        <lan:PT_Locale>
+          <lan:language>
+            <lan:LanguageCode codeListValue="eng" codeList="http://www.loc.gov/standards/iso639-2/"/>
+          </lan:language>
+        </lan:PT_Locale>
+      </mdb:defaultLocale>
+      <mdb:metadataScope>
+        <mdb:MD_MetadataScope>
+          <mdb:resourceScope>
+            <mcc:MD_ScopeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</mcc:MD_ScopeCode>
+          </mdb:resourceScope>
+        </mdb:MD_MetadataScope>
+      </mdb:metadataScope>
+      <mdb:contact>
+        <cit:CI_Responsibility>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>CSIRO</gco:CharacterString>
+              </cit:name>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Peter Warren</gco:CharacterString>
+                  </cit:name>
+                  <cit:positionName>
+                    <gco:CharacterString>Software Engineer</gco:CharacterString>
+                  </cit:positionName>
+                  <cit:contactInfo>
+                    <cit:CI_Contact>
+                      <cit:phone>
+                        <cit:CI_Telephone>
+                          <cit:number>
+                            <gco:characterString>+61 2 9490 8802</gco:characterString>
+                          </cit:number>
+                          <cit:numberType>
+                            <cit:CI_TelephoneTypeCode>voice</cit:CI_TelephoneTypeCode>
+                          </cit:numberType>
+                        </cit:CI_Telephone>
+                      </cit:phone>
+                      <cit:address>
+                        <cit:CI_Address>
+                          <cit:deliveryPoint>
+                            <gco:CharacterString>11 Julius Ave</gco:CharacterString>
+                          </cit:deliveryPoint>
+                          <cit:city>
+                            <gco:CharacterString>North Ryde</gco:CharacterString>
+                          </cit:city>
+                          <cit:administrativeArea>
+                            <gco:CharacterString>CSIRO</gco:CharacterString>
+                          </cit:administrativeArea>
+                          <cit:postalCode>
+                            <gco:CharacterString>2113</gco:CharacterString>
+                          </cit:postalCode>
+                          <cit:country>
+                            <gco:CharacterString>Australia</gco:CharacterString>
+                          </cit:country>
+                        </cit:CI_Address>
+                      </cit:address>
+                    </cit:CI_Contact>
+                  </cit:contactInfo>
+                </cit:CI_Individual>
+              </cit:individual>
+            </cit:CI_Organisation>
+          </cit:party>
+          <cit:role>
+            <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+          </cit:role>
+        </cit:CI_Responsibility>
+      </mdb:contact>
+      <mdb:dateInfo>
+        <cit:CI_Date>
+          <cit:date>
+            <gco:DateTime>2018-02-08T11:04:47</gco:DateTime>
+          </cit:date>
+          <cit:dateType>
+            <cit:CI_DateTypeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation">creation</cit:CI_DateTypeCode>
+          </cit:dateType>
+        </cit:CI_Date>
+        <cit:CI_Date>
+          <cit:date>
+            <gco:DateTime>2018-02-08T11:04:47</gco:DateTime>
+          </cit:date>
+          <cit:dateType>
+            <cit:CI_DateTypeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_DateTypeCode" codeListValue="revision">revision</cit:CI_DateTypeCode>
+          </cit:dateType>
+        </cit:CI_Date>
+      </mdb:dateInfo>
+      <mdb:metadataStandard>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>ISO 19115-1:2014</gco:CharacterString>
+          </cit:title>
+        </cit:CI_Citation>
+      </mdb:metadataStandard>
+      <mdb:identificationInfo>
+        <mri:MD_DataIdentification id="09a7c1d4c97ccdd7e34306deb91320ab95d51bb8">
+          <mri:citation>
+            <cit:CI_Citation>
+              <cit:title>
+                <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
+              </cit:title>
+            </cit:CI_Citation>
+          </mri:citation>
+          <mri:abstract>
+            <gco:characterString></gco:characterString>
+          </mri:abstract>
+          <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+              <mri:keyword>
+                <gco:CharacterString>features</gco:CharacterString>
+              </mri:keyword>
+              <mri:keyword>
+                <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
+              </mri:keyword>
+            </mri:MD_Keywords>
+          </mri:descriptiveKeywords>
+          <mri:topicCategory>
+            <mri:MD_TopicCategoryCode>geoscientificInformation</mri:MD_TopicCategoryCode>
+          </mri:topicCategory>
+          <mri:extent>
+            <gex:EX_Extent>
+              <gex:geographicElement>
+                <gex:EX_GeographicBoundingBox>
+                  <gex:westBoundLongitude>
+                    <gco:Decimal>106.57</gco:Decimal>
+                  </gex:westBoundLongitude>
+                  <gex:eastBoundLongitude>
+                    <gco:Decimal>171.88</gco:Decimal>
+                  </gex:eastBoundLongitude>
+                  <gex:southBoundLatitude>
+                    <gco:Decimal>-49.86</gco:Decimal>
+                  </gex:southBoundLatitude>
+                  <gex:northBoundLatitude>
+                    <gco:Decimal>-3.63</gco:Decimal>
+                  </gex:northBoundLatitude>
+                </gex:EX_GeographicBoundingBox>
+              </gex:geographicElement>
+            </gex:EX_Extent>
+          </mri:extent>
+        </mri:MD_DataIdentification>
+      </mdb:identificationInfo>
+      <mdb:distributionInfo>
+        <mrd:MD_Distribution>
+          <mrd:transferOptions>
+            <mrd:MD_DigitalTransferOptions>
+              <mrd:onLine>
+                <cit:CI_OnlineResource>
+                  <cit:linkage>
+                    <gco:CharacterString>https://nvclwebservices.csiro.au/geoserver/wms?SERVICE=WMS&amp;</gco:CharacterString>
+                  </cit:linkage>
+                  <cit:protocol>
+                    <gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString>
+                  </cit:protocol>
+                  <cit:name>
+                    <gco:CharacterString>gml:ProvinceFullExtent</gco:CharacterString>
+                  </cit:name>
+                  <cit:description>
+                    <gco:CharacterString>ProvinceFullExtent</gco:CharacterString>
+                  </cit:description>
+                </cit:CI_OnlineResource>
+              </mrd:onLine>
+              <mrd:onLine>
+                <cit:CI_OnlineResource>
+                  <cit:linkage>
+                    <gco:CharacterString>https://nvclwebservices.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=gml%3AProvinceFullExtent</gco:CharacterString>
+                  </cit:linkage>
+                  <cit:protocol>
+                    <gco:CharacterString>image/png</gco:CharacterString>
+                  </cit:protocol>
+                  <cit:name>
+                    <gco:CharacterString>Default Polygon (LegendURL)</gco:CharacterString>
+                  </cit:name>
+                  <cit:description>
+                    <gco:CharacterString/>
+                  </cit:description>
+                </cit:CI_OnlineResource>
+              </mrd:onLine>
+            </mrd:MD_DigitalTransferOptions>
+          </mrd:transferOptions>
+        </mrd:MD_Distribution>
+      </mdb:distributionInfo>
+    </mdb:MD_Metadata>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>
