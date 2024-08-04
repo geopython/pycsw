@@ -1328,11 +1328,15 @@ def record2json(record, url, collection, mode='ogcapi-records'):
             }
 
     if mode == 'stac-api':
-        record_dict['properties']['datetime'] = to_rfc3339(record.date)
+        date_, date_type = to_rfc3339(record.date)
+        record_dict['properties']['datetime'] = date_
 
         if None not in [record.time_begin, record.time_end]:
-            record_dict['properties']['start_datetime'] = to_rfc3339(record.time_begin)
-            record_dict['properties']['end_datetime'] = to_rfc3339(record.time_end)
+            start_date, start_date_type = to_rfc3339(record.time_begin)
+            end_date, end_date_type = to_rfc3339(record.time_end)
+
+            record_dict['properties']['start_datetime'] = start_date
+            record_dict['properties']['end_datetime'] = end_date
 
     return record_dict
 

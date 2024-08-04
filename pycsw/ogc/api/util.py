@@ -91,7 +91,10 @@ def json_serial(obj):
     """
 
     if isinstance(obj, (datetime, date, time)):
-        return obj.isoformat() + 'Z'
+        if isinstance(obj, date):
+            return obj.strftime('%Y-%m-%d')
+        else:
+            return obj.isoformat() + 'Z'
     elif isinstance(obj, bytes):
         try:
             LOGGER.debug('Returning as UTF-8 decoded bytes')

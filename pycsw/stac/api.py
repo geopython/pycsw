@@ -264,6 +264,9 @@ class STACAPI(API):
             'href': self.config['server']['url']
         }]
 
+        response['numberMatched'] = len(response['collections'])
+        response['numberReturned'] = len(response['collections'])
+
         return self.get_response(200, headers_, response)
 
     def collection(self, headers_, args, collection='metadata:main'):
@@ -345,7 +348,7 @@ class STACAPI(API):
         headers, status, response = super().items(headers_, json_post_data, args, collection)
 
         if collection not in self.get_all_collections():
-            msg = f'Invalid collection'
+            msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
@@ -372,6 +375,11 @@ class STACAPI(API):
                 response2['features'].append(links2stacassets(collection, record))
             else:
                 response2['features'].append(record)
+
+            for link in record['links']:
+                if link.get('rel') is None:
+                    LOGGER.debug('Missing link relation; adding rel=related')
+                    link['rel'] = 'related'
 
         for count, value in enumerate(response2['links']):
             if value['rel'] == 'alternate':
@@ -402,7 +410,7 @@ class STACAPI(API):
         headers, status, response = super().item(headers_, args, collection, item)
 
         if collection not in self.get_all_collections():
-            msg = f'Invalid collection'
+            msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 

@@ -83,6 +83,19 @@ def test_conformance(config):
         assert conformance in content['conformsTo']
 
 
+def test_collections(config):
+    api = STACAPI(config)
+    headers, status, content = api.collections({}, {'f': 'json'})
+    content = json.loads(content)
+
+    assert headers['Content-Type'] == 'application/json'
+    assert status == 200
+    assert len(content['links']) == 3
+
+    assert len(content['collections']) == 1
+    assert len(content['collections']) == content['numberMatched']
+    assert len(content['collections']) == content['numberReturned']
+
 def test_queryables(config):
     api = STACAPI(config)
     headers, status, content = api.queryables({}, {})
