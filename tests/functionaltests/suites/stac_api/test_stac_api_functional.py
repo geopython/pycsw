@@ -131,6 +131,11 @@ def test_items(config):
     assert record['stac_version'] == '1.0.0'
     assert record['collection'] == 'metadata:main'
 
+    for feature in content['features']:
+        for link in feature['links']:
+            assert 'href' in link
+            assert 'rel' in link
+
     # test GET KVP requests
     content = json.loads(api.items({}, None, {'bbox': '-180,-90,180,90'})[2])
     assert len(content['features']) == 3
@@ -206,6 +211,10 @@ def test_item(config):
     assert content['id'] == item
     assert content['stac_version'] == '1.0.0'
     assert content['collection'] == 'metadata:main'
+
+    for link in content['links']:
+        assert 'href' in link
+        assert 'rel' in link
 
     headers, status, content = api.item({}, {}, 'foo', item)
     assert status == 400
