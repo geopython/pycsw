@@ -4,7 +4,7 @@
 #          Angelos Tzotsos <gcpp.kalxas@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2022 Angelos Tzotsos
 # Copyright (c) 2023 Ricardo Garcia Silva
 #
