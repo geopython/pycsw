@@ -239,8 +239,8 @@ class Csw(object):
                     LOGGER.debug('Looks like an OpenSearch URL template')
                     query_part = self.request.split('?', 1)[-1]
                 else:
-                    #query_part = urlsplit(self.request).query
-                    query_part = splitquery(self.request)[-1]
+                    query_part = urlsplit(self.request).query
+                    #query_part = splitquery(self.request)[-1]
                     if query_part == '':
                         query_part = None
                 self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
