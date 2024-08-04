@@ -392,8 +392,8 @@ class Csw(object):
                         self.repository = rs_cls(self.context, repo_filter)
                         LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
                         connection_done = True
-                    except:
-                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}')
+                    except Exception as err:
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}: {err}')
                         max_attempts += 1
             except Exception as err:
                 msg = 'Could not load custom repository %s: %s' % (rs, err)
@@ -422,8 +422,8 @@ class Csw(object):
                         LOGGER.debug(
                             'Repository loaded (local): %s.' % self.repository.dbtype)
                         connection_done = True
-                    except:
-                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}')
+                    except Exception:
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}: {err}')
                         max_attempts += 1
             except Exception as err:
                 msg = 'Could not load repository (local): %s' % err
@@ -814,7 +814,8 @@ class Csw(object):
             for key in mappings.keys():
                 try:
                     cql = cql.replace(key, mappings[key]['dbcol'])
-                except:
+                except KeyError:
+                    LOGGER.debug('Setting without dbcol key')
                     cql = cql.replace(key, mappings[key])
             LOGGER.debug('Interpolated CQL text = %s.', cql)
             return cql

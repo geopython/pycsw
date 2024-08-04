@@ -31,16 +31,10 @@
 # =================================================================
 
 import os
-import sys
-import cgi
-from urllib.parse import quote, unquote
-from io import StringIO
 from pycsw.core.etree import etree
-from pycsw import oaipmh, opensearch, sru
+from pycsw import opensearch
 from pycsw.ogc.csw.cql import cql2fes
-from pycsw.plugins.profiles import profile as pprofile
-import pycsw.plugins.outputschemas
-from pycsw.core import config, log, metadata, util
+from pycsw.core import metadata, util
 from pycsw.core.formats.fmt_json import xml2dict
 from pycsw.ogc.fes import fes1
 import logging
@@ -517,7 +511,8 @@ class Csw2(object):
                 self.parent.context.namespaces)).text = pname
                 try:
                     operation, parameter = pname.split('.')
-                except:
+                except Exception as err:
+                    LOGGER.debug(f'Cannot split pname: {err}')
                     return node
                 if (operation in self.parent.context.model['operations'].keys() and
                     parameter in
@@ -540,7 +535,8 @@ class Csw2(object):
                 else:  # it's a core queryable, map to internal typename model
                     try:
                         pname2 = self.parent.repository.queryables['_all'][pname]['dbcol']
-                    except:
+                    except Exception as err:
+                        LOGGER.debug(f'pname2 not found: {err}')
                         pname2 = pname
 
                 # decipher typename
@@ -780,7 +776,7 @@ class Csw2(object):
 
             try:
                 name, order = tmp.rsplit(':', 1)
-            except:
+            except Exception:
                 return self.exceptionreport('InvalidParameterValue',
                 'sortby', 'Invalid SortBy value: must be in the format\
                 propertyname:A or propertyname:D')
@@ -1989,7 +1985,8 @@ class Csw2(object):
         try:
             language = self.parent.config['server'].get('language')
             ogc_schemas_base = self.parent.config['server'].get('ogc_schemas_base')
-        except:
+        except Exception:
+            LOGGER.debug('Dropping to default language and OGC schemas base')
             language = 'en-US'
             ogc_schemas_base = self.parent.context.ogc_schemas_base
 
@@ -2023,7 +2020,8 @@ def write_boundingbox(bbox, nsmap):
     if bbox is not None:
         try:
             bbox2 = util.wkt2geom(bbox)
-        except:
+        except Exception as err:
+            LOGGER.debug(f'Geometry parsing error: {err}')
             return None
 
         if len(bbox2) == 4:

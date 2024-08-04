@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -434,7 +434,6 @@ def set_spatial_ranking(geometry):
             util.ranking_pass = True
             util.ranking_query_geometry = geometry.wkt
         elif geometry.type in ['LineString', 'Point']:
-            from shapely.geometry.base import BaseGeometry
             from shapely.geometry import box
             from shapely.wkt import loads,dumps
             ls = loads(geometry.wkt)

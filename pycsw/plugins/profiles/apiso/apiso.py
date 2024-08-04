@@ -31,7 +31,7 @@
 # =================================================================
 
 import os
-from pycsw.core import config, util
+from pycsw.core import util
 from pycsw.core.etree import etree
 from pycsw.plugins.profiles import profile
 
@@ -707,7 +707,8 @@ def write_extent(bbox, nsmap):
     if bbox is not None:
         try:
             bbox2 = util.wkt2geom(bbox)
-        except:
+        except Exception as err:
+            LOGGER.debug(f'Geometry parsing error: {err}')
             return None
         extent = etree.Element(util.nspath_eval('gmd:extent', nsmap))
         ex_extent = etree.SubElement(extent, util.nspath_eval('gmd:EX_Extent', nsmap))

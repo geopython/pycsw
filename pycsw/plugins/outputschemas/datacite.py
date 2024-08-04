@@ -11,7 +11,7 @@
 #
 # This module intends to follow DataCite 4.3
 #
-# PyCSW  Copyright (C) 2015 Tom Kralidis
+# PyCSW  Copyright (C) 2024 Tom Kralidis
 # Schema Copyright (C) 2016 CERN
 # Schema Copyright (C) 2019 Caltech
 #
@@ -341,7 +341,8 @@ def write_record(result, esn, context, url=None):
     if bbox not in [None, '']:
         try:
             bbox2 = util.wkt2geom(bbox)
-        except:
+        except Exception as err:
+            LOGGER.debug(f'Geometry parsing error: {err}')
             return None
         bounds = etree.SubElement(node, util.nspath_eval('geoLocations', NAMESPACES))
         bound = etree.SubElement(bounds, util.nspath_eval('geoLocation', NAMESPACES))

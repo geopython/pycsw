@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -198,12 +198,11 @@ def write_record(result, esn, context, url=None):
 def write_extent(bbox, nsmap):
     ''' Generate BBOX extent '''
 
-    from shapely.wkt import loads
-
     if bbox is not None:
         try:
             bbox2 = util.wkt2geom(bbox)
-        except:
+        except Exception as err:
+            LOGGER.debug(f'Geometry parsing error: {err}')
             return None
         extent = etree.Element(util.nspath_eval('dif:Spatial_Coverage', nsmap))
         etree.SubElement(extent, util.nspath_eval('dif:Southernmost_Latitude', nsmap)).text = str(bbox2[1])
