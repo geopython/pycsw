@@ -84,8 +84,7 @@ copyright = u'2010-2024, ' + authors + ' ' + license
 # built documents.
 #
 # The short X.Y version.
-with open('../VERSION.txt') as f:
-    version = f.read().strip()
+version = '3.0-dev'
 # The full version, including alpha/beta/rc tags.
 release = version
 

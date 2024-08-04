@@ -144,7 +144,6 @@ The following instructions set up a fully working development environment::
         --detach \
         --volume ${PWD}/pycsw:/usr/lib/python3.7/site-packages/pycsw \
         --volume ${PWD}/docs:/home/pycsw/docs \
-        --volume ${PWD}/VERSION.txt:/home/pycsw/VERSION.txt \
         --volume ${PWD}/LICENSE.txt:/home/pycsw/LICENSE.txt \
         --volume ${PWD}/COMMITTERS.txt:/home/pycsw/COMMITTERS.txt \
         --volume ${PWD}/CONTRIBUTING.rst:/home/pycsw/CONTRIBUTING.rst \
