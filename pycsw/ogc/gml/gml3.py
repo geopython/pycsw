@@ -209,8 +209,9 @@ class Geometry(object):
             proj_src = 'epsg:%s' % src
             proj_dst = 'epsg:%s' % dest
             transformer = Transformer.from_crs(proj_src, proj_dst, always_xy=True)
-        except:
-            raise RuntimeError('Invalid projection transformation')
+        except Exception as err:
+            msg = f'Invalid projection transformation: {err}'
+            raise RuntimeError(msg)
 
         geom = loads(self.wkt)
 

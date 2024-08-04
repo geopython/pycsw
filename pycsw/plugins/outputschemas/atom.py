@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,7 +28,6 @@
 #
 # =================================================================
 
-import os
 from pycsw.core import util
 from pycsw.core.etree import etree
 
@@ -132,7 +131,8 @@ def write_extent(bbox, nsmap):
     if bbox is not None:
         try:
             bbox2 = util.wkt2geom(bbox)
-        except:
+        except Exception as err:
+            LOGGER.debug(f'Geometry parsing error: {err}')
             return None
         where = etree.Element(util.nspath_eval('georss:where', NAMESPACES))
         envelope = etree.SubElement(where, util.nspath_eval('gml:Envelope', nsmap), srsName='http://www.opengis.net/def/crs/EPSG/0/4326')

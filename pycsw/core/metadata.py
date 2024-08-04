@@ -242,7 +242,8 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
         md.getrecords2(typenames=csw_typenames, resulttype='hits',
                        outputschema=csw_outputschema)
         matches = md.results['matches']
-    except:  # this is a CSW, but server rejects query
+    except Exception:  # this is a CSW, but server rejects query
+        LOGGER.debug('CSW query failed')
         raise RuntimeError(md.response)
 
     if pagesize > matches:
@@ -1241,7 +1242,8 @@ def _parse_fgdc(context, repos, exml):
         try:
             tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
-        except:  # coordinates are corrupted, do not include
+        except Exception:
+            LOGGER.debug('Coordinates are corrupt')
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
@@ -1321,7 +1323,8 @@ def _parse_gm03(context, repos, exml):
                                    data.geographic_bounding_box.east_bound_longitude,
                                    data.geographic_bounding_box.north_bound_latitude)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
-        except:  # coordinates are corrupted, do not include
+        except Exception:
+            LOGGER.debug('Coordinates are corrupt')
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
@@ -1608,7 +1611,8 @@ def _parse_iso(context, repos, exml):
         try:
             tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
-        except:  # coordinates are corrupted, do not include
+        except Exception:
+            LOGGER.debug('Coordinates are corrupt')
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
@@ -1686,7 +1690,8 @@ def _parse_dc(context, repos, exml):
         try:
             tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
-        except:  # coordinates are corrupted, do not include
+        except Exception:
+            LOGGER.debug('Coordinates are corrupt')
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
