@@ -311,7 +311,8 @@ requests against your pycsw install.  The tests are is located in
 
 .. code-block:: bash
 
-  $ paver gen_tests_html
+   python3 gen_html.py > index.html'
+
 
 Then navigate to ``http://host/path/to/pycsw/tests/index.html``.
 
@@ -319,7 +320,6 @@ Then navigate to ``http://host/path/to/pycsw/tests/index.html``.
 
 .. _Compliance & Interoperability Testing & Evaluation Initiative: https://github.com/opengeospatial/cite/wiki
 .. _functional tests: https://en.wikipedia.org/wiki/Functional_testing
-.. _`Paver`: https://pythonhosted.org/Paver/
 .. _pytest's invocation documentation: https://docs.pytest.org/en/stable/usage.html
 .. _pytest: https://docs.pytest.org
 .. _Github Actions: https://github.com/geopython/pycsw/actions
