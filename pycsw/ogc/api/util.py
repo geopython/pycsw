@@ -39,7 +39,9 @@ import mimetypes
 import os
 import pathlib
 import re
+from typing import Union
 
+from dateutil.parser import parse as dparse
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 import yaml
@@ -82,12 +84,14 @@ def json_serial(obj):
     """
     helper function to convert to JSON non-default
     types (source: https://stackoverflow.com/a/22238613)
+
     :param obj: `object` to be evaluated
+
     :returns: JSON non-default type to `str`
     """
 
     if isinstance(obj, (datetime, date, time)):
-        return obj.isoformat()
+        return obj.isoformat() + 'Z'
     elif isinstance(obj, bytes):
         try:
             LOGGER.debug('Returning as UTF-8 decoded bytes')
@@ -218,3 +222,28 @@ def render_j2_template(config, template, data):
             raise
 
     return template.render(config=config, data=data, version=__version__)
+
+
+def to_rfc3339(value: str) -> Union[tuple, None]:
+    """
+    Helper function to convert a date/datetime into
+    RFC3339
+
+    :param value: `str` of date/datetime value
+
+    :returns: `tuple` of `datetime` of RFC3339 value and date type
+    """
+
+    try:
+        dt = dparse(value)  # TODO TIMEZONE)
+    except Exception as err:
+        msg = f'Parse error: {err}'
+        LOGGER.error(msg)
+        return 'date', None
+
+    if len(value) < 11:
+        dt_type = 'date'
+    else:
+        dt_type = 'date-time'
+
+    return dt, dt_type

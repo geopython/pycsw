@@ -45,7 +45,7 @@ from pycsw.core.metadata import parse_record
 from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, str2bool, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
-from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json
+from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json, to_rfc3339
 
 LOGGER = logging.getLogger(__name__)
 
@@ -109,7 +109,7 @@ class API:
         try:
             self.limit = int(self.config['server']['maxrecords'])
         except KeyError:
-            self.limit= 10
+            self.limit = 10
         LOGGER.debug(f'limit: {self.limit}')
 
         repo_filter = self.config['repository'].get('filter')
@@ -466,7 +466,7 @@ class API:
             headers_['Content-Type'] = 'application/schema+json'
 
         if collection not in self.get_all_collections():
-            msg = f'Invalid collection'
+            msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
@@ -506,6 +506,11 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
+        LOGGER.debug(f'Request args: {args.keys()}')
+        LOGGER.debug('converting request argument names to lower case')
+        args = {k.lower(): v for k, v in args.items()}
+        LOGGER.debug(f'Request args (lower case): {args.keys()}')
+
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         reserved_query_params = [
@@ -539,7 +544,7 @@ class API:
         collections = []
 
         if collection not in self.get_all_collections():
-            msg = f'Invalid collection'
+            msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
@@ -830,7 +835,7 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         if collection not in self.get_all_collections():
-            msg = f'Invalid collection'
+            msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
@@ -992,6 +997,7 @@ class API:
 
         collection_info = {
             'id': id_,
+            'type': 'catalog',
             'title': title,
             'description': description,
             'itemType': 'record',
@@ -1127,22 +1133,29 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         'id': record.identifier,
         'type': 'Feature',
         'geometry': None,
-        'time': record.date,
         'properties': {},
         'links': []
     }
 
+    try:
+        dt, dt_type = to_rfc3339(record.date)
+        record_dict['time'] = {
+            dt_type: dt
+        }
+    except Exception:
+        record_dict['time'] = None
+
     # todo; for keywords with a scheme use the theme property
-    themes = []
     if record.topicategory:
+        themes = []
         themes.append({'concepts': [record.topicategory],
                        'scheme': 'https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_TopicCategoryCode'})
-    record_dict['properties']['themes'] = themes
+        record_dict['properties']['themes'] = themes
 
     if record.otherconstraints:
-        if isinstance(record.otherconstraints, str):
+        if isinstance(record.otherconstraints, str) and record.otherconstraints not in [None, 'None']:
             record.otherconstraints = [record.otherconstraints]
-        record_dict['properties']['license'] = ", ".join(record.otherconstraints)
+            record_dict['properties']['license'] = ", ".join(record.otherconstraints)
 
     record_dict['properties']['updated'] = record.insert_date
 
@@ -1168,7 +1181,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         record_dict['properties']['description'] = record.abstract
 
     if record.format:
-        record_dict['properties']['formats'] = [record.format]
+        record_dict['properties']['formats'] = [{'name': record.format}]
 
     if record.keywords:
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
@@ -1181,39 +1194,40 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                     rcnt.append({
                         'name': cnt['name'],
                         'organization': cnt.get('organization', ''),
-                        'positionName': cnt.get('position', ''),
-                        'roles': [
-                            {'name': cnt.get('role', '')}
-                        ],
-                        'contactInfo': {
-                            'phone': {'work': cnt.get('phone', '')},
-                            'email': {'work': cnt.get('email', '')},
-                            'address': {
-                                'work': {
-                                    'deliveryPoint': cnt.get('address', ''),
-                                    'city': cnt.get('city', ''),
-                                    'administrativeArea': cnt.get('region', ''),
-                                    'postalCode': cnt.get('postcode', ''),
-                                    'country': cnt.get('country', ''),
-                                }
-                            },
-                            'url': cnt.get('onlineresource', '')
-                        }
+                        'position': cnt.get('position', ''),
+                        'roles': [cnt.get('role', '')],
+                        'phones': [{
+                            'value': cnt.get('phone', '')
+                        }],
+                        'emails': [{
+                            'value': cnt.get('email', '')
+                        }],
+                        'addresses': [{
+                            'deliveryPoint': [cnt.get('address', '')],
+                            'city': cnt.get('city', ''),
+                            'administrativeArea': cnt.get('region', ''),
+                            'postalCode': cnt.get('postcode', ''),
+                            'country': cnt.get('country', '')
+                        }],
+                        'links': [{
+                            'href': cnt.get('onlineresource')
+                        }]
                     })
                 except Exception as err:
                     LOGGER.exception(f"failed to parse contact of {record.identifier}: {err}")
         except Exception as err:
             LOGGER.exception(f"failed to parse contacts json of {record.identifier}: {err}")
-        record_dict['properties']['providers'] = rcnt
+
+        record_dict['properties']['contacts'] = rcnt
 
     if record.themes not in [None, '', 'null']:
-        ogcapiThemes = []
+        ogcapi_themes = []
         # For a scheme, prefer uri over label
         # OWSlib currently uses .keywords_object for keywords with url, see https://github.com/geopython/OWSLib/pull/765
         try:
             for theme in json.loads(record.themes):
                 try:
-                    ogcapiThemes.append({
+                    ogcapi_themes.append({
                         'scheme': theme['thesaurus'].get('url', theme['thesaurus'].get('title', '')),
                         'concepts': [c for c in theme.get('keywords_object', []) if c not in [None, '']]
                     })
@@ -1221,18 +1235,26 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                     LOGGER.exception(f"failed to parse theme of {record.identifier}: {err}")
         except Exception as err:
             LOGGER.exception(f"failed to parse themes json of {record.identifier}: {err}")
-        record_dict['properties']['themes'] = ogcapiThemes
+
+        record_dict['properties']['themes'] = ogcapi_themes
 
     if record.links:
         rdl = record_dict['links']
 
         for link in jsonify_links(record.links):
+            if link['url'] in [None, 'None']:
+                LOGGER.debug(f'Skipping null link: {link}')
+                continue
+
             link2 = {
-                'href': link['url'],
-                'name': link.get('name'),
-                'description': link.get('description'),
-                'type': link.get('protocol')
+                'href': link['url']
             }
+            if link.get('name') not in [None, 'None']:
+                link2['name'] = link['name']
+            if link.get('description') not in [None, 'None']:
+                link2['description'] = link['description']
+            if link.get('protocol') not in [None, 'None']:
+                link2['procotol'] = link['protocol']
             if 'rel' in link:
                 link2['rel'] = link['rel']
             elif link['protocol'] == 'WWW:LINK-1.0-http--image-thumbnail':
@@ -1289,18 +1311,28 @@ def record2json(record, url, collection, mode='ogcapi-records'):
     if record.time_begin or record.time_end:
         if record.time_end not in [None, '']:
             if record.time_begin not in [None, '']:
-                record_dict['time'] = [record.time_begin, record.time_end]
+                begin, _ = to_rfc3339(record.time_begin)
+                end, _ = to_rfc3339(record.time_end)
+                record_dict['time'] = {
+                    'interval': [begin, end]
+                }
             else:
-                record_dict['time'] = record.time_end
+                end, end_type = to_rfc3339(record.time_end)
+                record_dict['time'] = {
+                    end_type: end
+                }
         else:
-            record_dict['time'] = record.time_begin
+            begin, begin_type = to_rfc3339(record.time_begin)
+            record_dict['time'] = {
+                begin_type: begin
+            }
 
     if mode == 'stac-api':
-        record_dict['properties']['datetime'] = record.date
+        record_dict['properties']['datetime'] = to_rfc3339(record.date)
 
         if None not in [record.time_begin, record.time_end]:
-            record_dict['properties']['start_datetime'] = record.time_begin
-            record_dict['properties']['end_datetime'] = record.time_end
+            record_dict['properties']['start_datetime'] = to_rfc3339(record.time_begin)
+            record_dict['properties']['end_datetime'] = to_rfc3339(record.time_end)
 
     return record_dict
 
@@ -1322,7 +1354,7 @@ def build_anytext(name, value):
     tokens = value.split(',')
 
     if len(tokens) == 1 and ' ' not in value:  # single term
-        LOGGER.debug(f'Single term with no spaces')
+        LOGGER.debug('Single term with no spaces')
         return f"{name} ILIKE '%{value}%'"
 
     for token in tokens:
