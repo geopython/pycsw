@@ -32,6 +32,7 @@
 
 import io
 import os
+import re
 
 from setuptools import find_packages, setup
 
@@ -54,6 +55,11 @@ def get_package_version():
     raise RuntimeError('Unable to find version string.')
 
 
+DESCRIPTION = ('pycsw is an OGC API - Records and OGC CSW server '
+               'implementation written in Python')
+
+print("JJJ", DESCRIPTION)
+
 # ensure a fresh MANIFEST file is generated
 if (os.path.exists('MANIFEST')):
     os.unlink('MANIFEST')
@@ -61,7 +67,7 @@ if (os.path.exists('MANIFEST')):
 setup(
     name='pycsw',
     version=get_package_version(),
-    description='pycsw is an OARec and OGC CSW server implementation written in Python',
+    description=DESCRIPTION.strip(),
     long_description=read("README.md"),
     long_description_content_type='text/markdown',
     license='MIT',
