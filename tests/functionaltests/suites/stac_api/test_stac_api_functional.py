@@ -132,6 +132,9 @@ def test_items(config):
     assert record['collection'] == 'metadata:main'
 
     for feature in content['features']:
+        if feature.get('geometry') is not None:
+            assert 'bbox' in feature
+
         for link in feature['links']:
             assert 'href' in link
             assert 'rel' in link

@@ -38,6 +38,7 @@ from pycsw import __version__
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.records import API
 from pycsw.core.pygeofilter_evaluate import to_filter
+from pycsw.core.util import geojson_geometry2bbox
 
 LOGGER = logging.getLogger(__name__)
 
@@ -375,6 +376,13 @@ class STACAPI(API):
                 response2['features'].append(links2stacassets(collection, record))
             else:
                 response2['features'].append(record)
+
+            if record.get('bbox') is None:
+                geometry = record.get('geometry')
+                if geometry is not None:
+                    LOGGER.debug('Calculating bbox from geometry')
+                    bbox = geojson_geometry2bbox(geometry)
+                    record['bbox'] = [float(t) for t in bbox.split(',')]
 
             for link in record['links']:
                 if link.get('rel') is None:
