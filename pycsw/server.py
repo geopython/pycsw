@@ -241,8 +241,6 @@ class Csw(object):
                 else:
                     query_part = urlsplit(self.request).query
                     #query_part = splitquery(self.request)[-1]
-                    if query_part == '':
-                        query_part = None
                 self.kvp = dict(parse_qsl(query_part, keep_blank_values=True))
                 print("SELF.KVP", self.kvp)
             except AttributeError as err:
