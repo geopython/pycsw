@@ -25,6 +25,8 @@ jobs:
             toxenv: "py310-sqlite"
           - python-version: "3.11"
             toxenv: "py311-sqlite"
+          - python-version: "3.12"
+            toxenv: "py312-sqlite"
     env:
         TOXENV: ${{ matrix.toxenv }}
     steps:
