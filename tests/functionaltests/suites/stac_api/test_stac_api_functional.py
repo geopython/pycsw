@@ -134,6 +134,7 @@ def test_items(config):
     for feature in content['features']:
         if feature.get('geometry') is not None:
             assert 'bbox' in feature
+            assert isinstance(feature['bbox'], list)
 
         for link in feature['links']:
             assert 'href' in link

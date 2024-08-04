@@ -1769,7 +1769,7 @@ def _parse_oarec_record(context, repos, record):
     if links:
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
 
-    if record['geometry'] is not None:
+    if record.get('geometry') is not None:
         _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry'])))
 
     if 'temporal' in record['properties'].get('extent', []):
