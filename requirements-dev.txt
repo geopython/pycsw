@@ -2,7 +2,6 @@
 -r requirements-standalone.txt
 
 apipkg==1.4
-Paver==1.2.4
 pytest==6.2.4
 pytest-cov==2.12.0
 pytest-flake8==1.0.7
