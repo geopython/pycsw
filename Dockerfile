@@ -10,7 +10,7 @@
 # Copyright (c) 2020 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
 # Copyright (c) 2020 Tom Kralidis
-# Copyright (c) 2020 Angelos Tzotsos
+# Copyright (c) 2024 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -36,7 +36,7 @@
 #
 # =================================================================
 
-FROM python:3.10-slim-buster
+FROM python:3.10-slim-bookworm
 LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
 # Build arguments
@@ -46,7 +46,7 @@ ARG BUILD_DEV_IMAGE="false"
 
 RUN apt-get update --yes && \
     apt-get upgrade --yes && \
-    apt-get install --yes --no-install-recommends ca-certificates libexpat1 python3-setuptools && \
+    apt-get install --yes --no-install-recommends ca-certificates python3-setuptools && \
     rm -rf /var/lib/apt/lists/*
 
 RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
