@@ -289,7 +289,7 @@ Examples:
 .. code:: bash
 
    # install tox on your system
-   sudo pip install tox
+   sudo pip3 install tox
 
    # run all tests on multiple Python versions against all databases,
    # with default arguments
