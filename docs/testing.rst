@@ -311,7 +311,7 @@ requests against your pycsw install.  The tests are is located in
 
 .. code-block:: bash
 
-   python3 gen_html.py > index.html'
+   python3 gen_html.py > index.html
 
 
 Then navigate to ``http://host/path/to/pycsw/tests/index.html``.
