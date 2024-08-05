@@ -85,7 +85,7 @@ setup(
         'fgdc',
         'dif',
         'ebrim',
-        'inspire',
+        'inspire'
     ]),
     author='Tom Kralidis',
     author_email='tomkralidis@gmail.com',
@@ -97,7 +97,7 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'pycsw-admin.py=pycsw.core.admin:cli',
+            'pycsw-admin.py=pycsw.core.admin:cli'
         ]
     },
     classifiers=[
@@ -108,9 +108,8 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Topic :: Scientific/Engineering :: GIS',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Topic :: Scientific/Engineering :: GIS'
     ]
 )

@@ -165,7 +165,7 @@ The following instructions set up a fully working development environment::
 
 .. note::
 
-   Please note that the pycsw image only uses python 3.8 and that it also does
+   The pycsw image uses a specific Python version and does
    not install pycsw in editable mode. As such it is not possible to
    use ``tox``.
 

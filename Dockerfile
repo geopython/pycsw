@@ -36,7 +36,7 @@
 #
 # =================================================================
 
-FROM python:3.8-slim-buster
+FROM python:3.10-slim-buster
 LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
 # Build arguments
@@ -44,9 +44,10 @@ LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
 ARG BUILD_DEV_IMAGE="false"
 
-RUN apt-get update && apt-get install --yes \
-        ca-certificates libexpat1 \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update --yes && \
+    apt-get upgrade --yes && \
+    apt-get install --yes --no-install-recommends ca-certificates libexpat1 python3-setuptools && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
 
@@ -63,19 +64,19 @@ COPY --chown=pycsw \
     requirements-dev.txt \
     ./
 
-RUN pip install -U pip && \
-    python3 -m pip install \
+RUN pip3 install -U pip setuptools && \
+    pip3 install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
     psycopg2-binary gunicorn \
-    && if [ "$BUILD_DEV_IMAGE" = "true" ] ; then python3 -m pip install -r requirements-dev.txt; fi
+    && if [ "$BUILD_DEV_IMAGE" = "true" ] ; then python3 -m pip3 install -r requirements-dev.txt; fi
 
 COPY --chown=pycsw . .
 
 COPY docker/pycsw.yml ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
-RUN python3 -m pip install --editable .
+RUN pip3 install --editable .
 
 WORKDIR /home/pycsw
 

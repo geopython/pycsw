@@ -221,9 +221,9 @@ WSGI mode, use ``pycsw/wsgi.py`` in your WSGI server environment.
 
 .. note::
 
-  ``mod_wsgi`` supports only the version of python it was compiled with. If the target server
-  already supports WSGI applications, pycsw will need to use the same python version.
-  `WSGIDaemonProcess`_ provides a ``python-path`` directive that may allow a virtualenv created from the python version ``mod_wsgi`` uses.
+  ``mod_wsgi`` supports only the version of Python it was compiled with. If the target server
+  already supports WSGI applications, pycsw will need to use the same Python version.
+  `WSGIDaemonProcess`_ provides a ``python-path`` directive that may allow a virtualenv created from the Python version ``mod_wsgi`` uses.
 
 Below is an example of configuring with Apache:
 
