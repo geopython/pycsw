@@ -1702,12 +1702,17 @@ def _parse_dc(context, repos, exml):
 def _parse_json_record(context, repos, record):
     """Parse JSON record"""
 
+    recobj = None
+
     if 'http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core' in record.get('conformsTo', []):
         LOGGER.debug('Parsing OGC API - Records record model')
         recobj = _parse_oarec_record(context, repos, record)
     elif 'stac_version' in record:
         LOGGER.debug('Parsing STAC resource')
         recobj = _parse_stac_resource(context, repos, record)
+
+    if recobj is None:
+        raise RuntimeError('Unsupported JSON metadata format')
 
     atom_xml = atom.write_record(recobj, 'full', context)
 
