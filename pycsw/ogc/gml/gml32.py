@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,7 +28,6 @@
 #
 # =================================================================
 
-from copy import deepcopy
 import logging
 from owslib import crs
 
@@ -213,8 +212,9 @@ class Geometry(object):
             proj_src = 'epsg:%s' % src
             proj_dst = 'epsg:%s' % dest
             transformer = Transformer.from_crs(proj_src, proj_dst, always_xy=True)
-        except:
-            raise RuntimeError('Invalid projection transformation')
+        except Exception as err:
+            msg = f'Invalid projection transformation: {err}'
+            raise RuntimeError(msg)
 
         geom = loads(self.wkt)
 

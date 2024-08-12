@@ -31,7 +31,6 @@
 # =================================================================
 
 import logging
-from urllib.parse import urlencode
 
 from pycsw.core import util
 from pycsw.core.etree import etree

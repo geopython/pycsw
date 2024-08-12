@@ -30,6 +30,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/pycsw
           name: pycsw-config
+        securityContext:
+         readOnlyRootFilesystem: true
       restartPolicy: Always
       volumes:
       - name: pycsw-config

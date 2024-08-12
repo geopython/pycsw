@@ -30,7 +30,7 @@
 
 import os
 from pycsw.core.etree import etree
-from pycsw.core import config, util
+from pycsw.core import util
 from pycsw.ogc.csw.csw2 import write_boundingbox
 from pycsw.plugins.profiles import profile
 

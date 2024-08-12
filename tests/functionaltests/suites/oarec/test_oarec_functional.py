@@ -4,7 +4,7 @@
 #          Angelos Tzotsos <gcpp.kalxas@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 # Copyright (c) 2022 Angelos Tzotsos
 # Copyright (c) 2023 Ricardo Garcia Silva
 #
@@ -223,6 +223,12 @@ def test_items(config):
     assert content['features'][5]['properties']['title'] == 'Lorem ipsum'
 
     params = {'sortby': '-title'}
+    content = json.loads(api.items({}, None, params)[2])
+    assert content['numberMatched'] == 12
+    assert content['numberReturned'] == 10
+    assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
+
+    params = {'SoRtBy': '-title'}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 12
     assert content['numberReturned'] == 10

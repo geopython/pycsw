@@ -3,6 +3,7 @@ geolinks
 lxml
 OWSLib
 pyproj
+python-dateutil
 PyYAML
-Shapely<2.0
+Shapely
 xmltodict

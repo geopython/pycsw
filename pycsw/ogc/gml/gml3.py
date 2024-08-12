@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -209,16 +209,17 @@ class Geometry(object):
             proj_src = 'epsg:%s' % src
             proj_dst = 'epsg:%s' % dest
             transformer = Transformer.from_crs(proj_src, proj_dst, always_xy=True)
-        except:
-            raise RuntimeError('Invalid projection transformation')
+        except Exception as err:
+            msg = f'Invalid projection transformation: {err}'
+            raise RuntimeError(msg)
 
         geom = loads(self.wkt)
 
-        if geom.type == 'Point':
+        if geom.geom_type == 'Point':
             newgeom = Point(transformer.transform(geom.x, geom.y))
             wkt2 = newgeom.wkt
 
-        elif geom.type == 'LineString':
+        elif geom.geom_type == 'LineString':
             for vertice in list(geom.coords):
                 newgeom = transformer.transform(vertice[0], vertice[1])
                 vertices.append(newgeom)
@@ -227,7 +228,7 @@ class Geometry(object):
 
             wkt2 = linestring.wkt
 
-        elif geom.type == 'Polygon':
+        elif geom.geom_type == 'Polygon':
             for vertice in list(geom.exterior.coords):
                 newgeom = transformer.transform(vertice[0], vertice[1])
                 vertices.append(newgeom)

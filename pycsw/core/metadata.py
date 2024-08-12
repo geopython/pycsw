@@ -245,7 +245,8 @@ def _parse_csw(context, repos, record, identifier, pagesize=10):
         md.getrecords2(typenames=csw_typenames, resulttype='hits',
                        outputschema=csw_outputschema)
         matches = md.results['matches']
-    except:  # this is a CSW, but server rejects query
+    except Exception:  # this is a CSW, but server rejects query
+        LOGGER.debug('CSW query failed')
         raise RuntimeError(md.response)
 
     if pagesize > matches:
@@ -1244,7 +1245,8 @@ def _parse_fgdc(context, repos, exml):
         try:
             tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
-        except:  # coordinates are corrupted, do not include
+        except Exception:
+            LOGGER.debug('Coordinates are corrupt')
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
@@ -1324,7 +1326,8 @@ def _parse_gm03(context, repos, exml):
                                    data.geographic_bounding_box.east_bound_longitude,
                                    data.geographic_bounding_box.north_bound_latitude)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
-        except:  # coordinates are corrupted, do not include
+        except Exception:
+            LOGGER.debug('Coordinates are corrupt')
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
@@ -1636,7 +1639,8 @@ def _parse_iso(context, repos, exml):
         try:
             tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
-        except:  # coordinates are corrupted, do not include
+        except Exception:
+            LOGGER.debug('Coordinates are corrupt')
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
@@ -1714,7 +1718,8 @@ def _parse_dc(context, repos, exml):
         try:
             tmp = '%s,%s,%s,%s' % (bbox.minx, bbox.miny, bbox.maxx, bbox.maxy)
             _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(tmp))
-        except:  # coordinates are corrupted, do not include
+        except Exception:
+            LOGGER.debug('Coordinates are corrupt')
             _set(context, recobj, 'pycsw:BoundingBox', None)
     else:
         _set(context, recobj, 'pycsw:BoundingBox', None)
@@ -1725,12 +1730,17 @@ def _parse_dc(context, repos, exml):
 def _parse_json_record(context, repos, record):
     """Parse JSON record"""
 
+    recobj = None
+
     if 'http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core' in record.get('conformsTo', []):
         LOGGER.debug('Parsing OGC API - Records record model')
         recobj = _parse_oarec_record(context, repos, record)
     elif 'stac_version' in record:
         LOGGER.debug('Parsing STAC resource')
         recobj = _parse_stac_resource(context, repos, record)
+
+    if recobj is None:
+        raise RuntimeError('Unsupported JSON metadata format')
 
     atom_xml = atom.write_record(recobj, 'full', context)
 
@@ -1792,7 +1802,8 @@ def _parse_oarec_record(context, repos, record):
     if links:
         _set(context, recobj, 'pycsw:Links', json.dumps(links))
 
-    _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry'])))
+    if record.get('geometry') is not None:
+        _set(context, recobj, 'pycsw:BoundingBox', util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry'])))
 
     if 'temporal' in record['properties'].get('extent', []):
         _set(context, recobj, 'pycsw:TempExtent_begin', record['properties']['extent']['temporal']['interval'][0])
@@ -1807,6 +1818,7 @@ def _parse_stac_resource(context, repos, record):
     recobj = repos.dataset()
     keywords = []
     links = []
+    bbox_wkt = None
 
     stac_type = record.get('type', 'Feature')
     if stac_type == 'Feature':
@@ -1816,7 +1828,8 @@ def _parse_stac_resource(context, repos, record):
         stype = 'item'
         title = record['properties'].get('title')
         abstract = record['properties'].get('description')
-        bbox_wkt = util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry']))
+        if record.get('geometry') is not None:
+            bbox_wkt = util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry']))
     elif stac_type == 'Collection':
         LOGGER.debug('Parsing STAC Collection')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/collection-spec/collection-spec.md'
@@ -1827,8 +1840,6 @@ def _parse_stac_resource(context, repos, record):
         if 'extent' in record and 'spatial' in record['extent']:
             bbox_csv = ','.join(str(t) for t in record['extent']['spatial']['bbox'][0])
             bbox_wkt = util.bbox2wktpolygon(bbox_csv)
-        else:
-            bbox_wkt = None
         if 'extent' in record and 'temporal' in record['extent'] and 'interval' in record['extent']['temporal']:
             _set(context, recobj, 'pycsw:TempExtent_begin', record['extent']['temporal']['interval'][0][0])
             _set(context, recobj, 'pycsw:TempExtent_end', record['extent']['temporal']['interval'][0][1])
@@ -1839,7 +1850,6 @@ def _parse_stac_resource(context, repos, record):
         stype = 'catalog'
         title = record.get('title')
         abstract = record.get('description')
-        bbox_wkt = None
 
     _set(context, recobj, 'pycsw:Identifier', record['id'])
     _set(context, recobj, 'pycsw:Typename', typename)

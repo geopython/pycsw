@@ -83,6 +83,19 @@ def test_conformance(config):
         assert conformance in content['conformsTo']
 
 
+def test_collections(config):
+    api = STACAPI(config)
+    headers, status, content = api.collections({}, {'f': 'json'})
+    content = json.loads(content)
+
+    assert headers['Content-Type'] == 'application/json'
+    assert status == 200
+    assert len(content['links']) == 3
+
+    assert len(content['collections']) == 1
+    assert len(content['collections']) == content['numberMatched']
+    assert len(content['collections']) == content['numberReturned']
+
 def test_queryables(config):
     api = STACAPI(config)
     headers, status, content = api.queryables({}, {})
@@ -117,6 +130,15 @@ def test_items(config):
 
     assert record['stac_version'] == '1.0.0'
     assert record['collection'] == 'metadata:main'
+
+    for feature in content['features']:
+        if feature.get('geometry') is not None:
+            assert 'bbox' in feature
+            assert isinstance(feature['bbox'], list)
+
+        for link in feature['links']:
+            assert 'href' in link
+            assert 'rel' in link
 
     # test GET KVP requests
     content = json.loads(api.items({}, None, {'bbox': '-180,-90,180,90'})[2])
@@ -193,6 +215,10 @@ def test_item(config):
     assert content['id'] == item
     assert content['stac_version'] == '1.0.0'
     assert content['collection'] == 'metadata:main'
+
+    for link in content['links']:
+        assert 'href' in link
+        assert 'rel' in link
 
     headers, status, content = api.item({}, {}, 'foo', item)
     assert status == 400
