@@ -1806,8 +1806,8 @@ class Csw3(object):
             if tmp is not None:
                 request['distributedsearch'] = True
                 hopcount = tmp.attrib.get('hopCount')
-                request['hopcount'] = int(hopcount)-1 if hopcount is not None \
-                else 1
+                request['hopcount'] = int(hopcount) if hopcount is not None \
+                else 2
             else:
                 request['distributedsearch'] = False
 
