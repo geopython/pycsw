@@ -167,16 +167,16 @@ class APISO(profile.Profile):
             model['operations']['Harvest']['parameters']['ResourceType']['values'].append('http://www.isotc211.org/schemas/2005/gmd/')
 
         # set INSPIRE config
-        if config['metadata']['inspire']['enabled']:
+        if config['metadata:inspire']['enabled']:
             self.inspire_config = {}
-            self.inspire_config['languages_supported'] = config['metadata']['inspire']['languages_supported']
-            self.inspire_config['default_language'] = config['metadata']['inspire']['default_language']
-            self.inspire_config['date'] = config['metadata']['inspire']['date']
-            self.inspire_config['gemet_keywords'] = config['metadata']['inspire']['gemet_keywords']
-            self.inspire_config['conformity_service'] = config['metadata']['inspire']['conformity_service']
-            self.inspire_config['contact_name'] = config['metadata']['inspire']['contact_name']
-            self.inspire_config['contact_email'] = config['metadata']['inspire']['contact_email']
-            self.inspire_config['temp_extent'] = config['metadata']['inspire']['temp_extent']
+            self.inspire_config['languages_supported'] = config['metadata:inspire']['languages_supported']
+            self.inspire_config['default_language'] = config['metadata:inspire']['default_language']
+            self.inspire_config['date'] = config['metadata:inspire']['date']
+            self.inspire_config['gemet_keywords'] = config['metadata:inspire']['gemet_keywords']
+            self.inspire_config['conformity_service'] = config['metadata:inspire']['conformity_service']
+            self.inspire_config['contact_name'] = config['metadata:inspire']['contact_name']
+            self.inspire_config['contact_email'] = config['metadata:inspire']['contact_email']
+            self.inspire_config['temp_extent'] = config['metadata:inspire']['temp_extent']
         else:
             self.inspire_config = None
 

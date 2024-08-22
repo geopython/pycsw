@@ -350,11 +350,11 @@ class Csw(object):
                 self.config['server']['maxrecords']]
 
         # load profiles
-        if 'profiles' in self.config:
+        if 'profiles' in self.config['server']:
             self.profiles = pprofile.load_profiles(
                 os.path.join('pycsw', 'plugins', 'profiles'),
                 pprofile.Profile,
-                self.config['profiles']
+                self.config['server']['profiles'].split(',')
             )
 
             for prof in self.profiles['plugins'].keys():
