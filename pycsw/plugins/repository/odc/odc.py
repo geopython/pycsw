@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2024 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,11 +28,8 @@
 #
 # =================================================================
 
-import os, sys
-
-from django.db import models
 from django.db import connection
-from django.db.models import Avg, Max, Min, Count
+from django.db.models import Max, Min, Count
 from django.conf import settings
 
 from pycsw.core import repository, util
@@ -109,7 +106,6 @@ class OpenDataCatalogRepository(object):
 
     def query_insert(self, direction='max'):
         ''' Query to get latest (default) or earliest update to repository '''
-        from datetime import datetime
         if direction == 'min':
             return Resource.objects.aggregate(
                 Min('last_updated'))['last_updated__min'].strftime('%Y-%m-%dT%H:%M:%SZ')

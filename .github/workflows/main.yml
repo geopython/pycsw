@@ -21,10 +21,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - python-version: "3.8"
-            toxenv: "py38-sqlite"
-          - python-version: "3.9"
-            toxenv: "py39-sqlite"
           - python-version: "3.10"
             toxenv: "py310-sqlite"
           - python-version: "3.11"

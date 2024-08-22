@@ -320,12 +320,6 @@ msgstr ""
 "除了OGC ``ExceptionReport`` XML运行方式为个别例外，通常会指定合适的 ``定"
 "位器`` 和 ``代码`` 参数"
 
-#: ../../../CONTRIBUTING.rst:99
-msgid ""
-"the pycsw wiki documents `developer tasks`_ for things like releasing "
-"documentation, testing, etc."
-msgstr "pycsw wiki 文档的 `developer tasks`_ 类似于发布文档，测试等。"
-
 #: ../../../CONTRIBUTING.rst:102
 msgid "Submitting a Pull Request"
 msgstr "提交pull请求"

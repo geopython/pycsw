@@ -26,31 +26,98 @@
 
 {% set nav_links = namespace(prev=None, next=None, self=None) %}
 {% for link in data['links'] %}
-{% if link['rel'] == 'prev' %}
-{% set nav_links.prev = link['href'] %}
-{% endif %}
-{% if link['rel'] == 'self' %}
-{% set nav_links.self = link['href'] %}
-{% endif %}
-{% if link['rel'] == 'next' %}
-{% set nav_links.next = link['href'] %}
-{% endif %}
+  {% if link['rel'] == 'prev' %}
+    {% set nav_links.prev = link['href'] %}
+  {% endif %}
+  {% if link['rel'] == 'self' %}
+    {% set nav_links.self = link['href'] %}
+  {% endif %}
+  {% if link['rel'] == 'next' %}
+    {% set nav_links.next = link['href'] %}
+  {% endif %}
 {% endfor %}
+
+{# parse the querystring as dict #}
+{% set attrs = {} %}
+{% if '?' in nav_links.self %}
+  {% for kv in nav_links.self.split('#')[0].split('?').pop().split('&') %}
+    {% if kv.split('=')[0] not in [None,'']  %}
+      {{ attrs.update({kv.split('=')[0] : kv.split('=')[1]}) or '' }} 
+    {% endif %}
+  {% endfor %}
+{% else %}
+  {% set nav_links.self = link['href'].split('#')[0] + '?' %}  
+{% endif %}
+
+{# update existing url with new key,val. indent prevents spaces in output #}
+{# reset pagination, else you may end up in empty result #}
+{% macro updateurl(key=None,val=None) %}{{ nav_links.self.split('?')[0] }}?{% 
+  for at in attrs.keys() %}{%
+    if at != 'offset' %}{%
+      if attrs[at] not in [None,''] %}{% 
+        if key not in [None,''] and key == at %}&{{ at }}={{ val }}{% 
+        else %}&{{ at }}={{ attrs[at] }}{% 
+        endif %}{% 
+      endif %}{% 
+    endif %}{%
+    if key not in attrs.keys() %}&{{ key }}={{ val }}{% endif %}{% 
+  endfor %}{% 
+endmacro %}
+
+{% macro reseturl(key,val) %}{{ 
+  nav_links.self.split('?')[0]}}?facets=true{% 
+    if 'q' in attrs %}&q={{ attrs['q'] }}{% endif %}{%
+    if 'sortby' in attrs %}&sortby={{ attrs['sortby'] }}{% endif %}{%
+endmacro %}
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-lg-6">
+    <div class="col-md-8">
+      <select name="order" class="p-1 pe-3" onchange="sort(this.value)">
+        <option value="">Sort by...</option>
+        <option value="title" {% if attrs['sortby'] == 'title' %}selected{% endif %}>Title</option>
+        <option value="-updated" {% if attrs['sortby'] == '-updated' %}selected{% endif %}>Date</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <form action="{{ nav_links.self.split('?')[0] }}" method="GET">
+      <div class="input-group mb-3"> 
+          <input type="text" class="form-control" name="q" placeholder="Search" value="{{ attrs['q'] }}">
+          <input class="btn btn-outline-secondary" type="submit" value="Search"></input>
+      </div>
+      </form>
+    </div>
+  </div>
+  <hr class="my-1"/>
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="my-2">
+          <b>{{ data['numberMatched'] }} results.</b>
+      </div>
       <div id="records-map"></div>
-      <div id="facets">
+      <div id="facets" class="pt-3">
+        <div class="d-flex justify-content-between">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" {% if 'facets=true' in nav_links.self %}checked="true"{% endif %} onchange="facet(this.checked)"  role="switch" id="enableFacets">
+            <label class="form-check-label" for="enableFacets">Facets</label>
+          </div>
+          <div>
+            {% if 'facets=true' in nav_links.self %}
+            <a href="{{ reseturl() }}">Reset</a>
+            {% endif %}
+          </div>
+        </div>
         {% if data['facets'] %}
         {% for facet in data['facets'].keys() %}
         <div class="card mt-3">
           <div class="card-header text-capitalize">{{ facet }}</div>
           <div class="card-body">
             {% for bucket in data['facets'][facet].buckets %}
-            <a href="{{ nav_links.self.split('?')[0] }}?{{facet}}={{bucket['value']}}"
-              class="text-capitalize">{{bucket['value']}}</a>
+            {% if bucket['value'] %}
+            <a href="{{ updateurl(facet,bucket['value']) }}" title="{{bucket['value']}}"
+              >{{(bucket['value'] or "") | truncate(20, False, '..') | capitalize }}</a>
             <span class="badge rounded-pill bg-secondary" style="float:right">{{bucket['count']}}</span><br>
+            {% endif %}
             {% endfor %}
           </div>
         </div>
@@ -58,27 +125,14 @@
         {% endif %}
       </div>
     </div>
-    <div class="col-lg-6">
-      {% if nav_links.prev %}
-      <a href="{{ nav_links.prev }}"><button type="button" class="btn btn-sm btn-primary">Prev</button></a>
-      {% else %}
-      <button type="button" class="btn btn-sm btn-primary" disabled>Prev</button>
-      {% endif %}
-      {% if nav_links.next %}
-      <a href="{{ nav_links.next }}"><button type="button" class="btn btn-sm btn-primary">Next</button></a>
-      {% else %}
-      <button type="button" class="btn btn-sm btn-primary" disabled>Next</button>
-      {% endif %}
-      <!--<form id="items-query-form" action="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items">-->
-      <form id="items-query-form">
-        <input id="q" class="form-control" name="q"/>
-      </form>
-      <div class="row">
+    <div class="col-lg-8">
+      <div class="row ps-2">
         <table class="table table-striped table-hover" id="items-table-table">
           <thead>
             <tr>
               <th>Title</th>
               <th>Type</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody>
@@ -112,26 +166,42 @@
                 <td>{{ rec.get('type') }}</td>
                 {% endif %}
               {% endif %}
+              <td>{{ rec['properties']['updated'].split('T')[0].replace('-','/') }}</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
+        <div class="d-flex justify-content-between">
+        <div>
+        {% if nav_links.prev %}
+        <a href="{{ nav_links.prev }}"><button type="button" class="btn btn-sm btn-primary">Prev</button></a>
+        {% else %}
+        <button type="button" class="btn btn-sm btn-primary" disabled>Prev</button>
+        {% endif %}</div>
+        <div>
+        Showing {{ data['numberReturned'] }} of {{ data['numberMatched'] }} results.</div>
+        <div>
+        {% if nav_links.next %}
+        <a href="{{ nav_links.next }}"><button type="button" class="btn btn-sm btn-primary">Next</button></a>
+        {% else %}
+        <button type="button" class="btn btn-sm btn-primary" disabled>Next</button>
+        {% endif %}</div>
       </div>
-      {% if nav_links.prev %}
-      <a href="{{ nav_links.prev }}"><button type="button" class="btn btn-sm btn-primary">Prev</button></a>
-      {% else %}
-      <button type="button" class="btn btn-sm btn-primary" disabled>Prev</button>
-      {% endif %}
-      {% if nav_links.next %}
-      <a href="{{ nav_links.next }}"><button type="button" class="btn btn-sm btn-primary">Next</button></a>
-      {% else %}
-      <button type="button" class="btn btn-sm btn-primary" disabled>Next</button>
-      {% endif %}
+      
     </div>
   </div>
 </div>
 
 </section>
+
+<script>
+function sort(val){
+  location.href="{{updateurl('sortby','sortprop')}}".replace('sortprop',val);
+}
+function facet(val){
+  location.href="{{updateurl('facets','facetprop')}}".replace('facetprop',val);
+}
+</script>
 
 {% endblock %}
 

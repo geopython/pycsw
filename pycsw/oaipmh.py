@@ -274,7 +274,11 @@ class OAIPMH(object):
                     cursor = str(int(complete_list_size) - int(next_record) - 1)
 
                     resumption_token = etree.SubElement(verbnode, util.nspath_eval('oai:resumptionToken', self.namespaces),
-                                                        completeListSize=complete_list_size, cursor=cursor).text = next_record
+                                                        completeListSize=complete_list_size, cursor=cursor)
+
+                    if int(next_record) > 0:
+                        resumption_token.text = next_record
+
         return node
 
     def _get_metadata_prefix(self, prefix):
