@@ -972,7 +972,7 @@ class Csw3(object):
                         'Record serialization failed: %s' % str(err))
                         return self.parent.response
 
-        hopcount = int(self.parent.kvp.get('hopcount', 2))
+        hopcount = int(self.parent.kvp.get('hopcount', 2)) - 1
 
         if ('federatedcatalogues' in self.parent.config and
                 self.parent.kvp.get('distributedsearch') and

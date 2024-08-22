@@ -823,7 +823,7 @@ class Csw2(object):
 
         dsresults = []
 
-        hopcount = int(self.parent.kvp.get('hopcount', 2))
+        hopcount = int(self.parent.kvp.get('hopcount', 2)) - 1
 
         if ('federatedcatalogues' in self.parent.config and
                 self.parent.kvp.get('distributedsearch') and
