@@ -823,13 +823,13 @@ class Csw2(object):
 
         dsresults = []
 
-        if ('federatedcatalogues' in self.parent.config and
-            'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
-            self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
-            # do distributed search
+        hopcount = int(self.parent.kvp.get('hopcount', 2)) - 1
 
-            LOGGER.debug('DistributedSearch specified (hopCount: %s).',
-            self.parent.kvp['hopcount'])
+        if ('federatedcatalogues' in self.parent.config and
+                self.parent.kvp.get('distributedsearch') and
+                hopcount > 0):
+
+            LOGGER.debug('DistributedSearch specified (hopCount: %s).', hopcount)
 
             from owslib.csw import CatalogueServiceWeb
             from owslib.ows import ExceptionReport
@@ -1736,8 +1736,8 @@ class Csw2(object):
             if tmp is not None:
                 request['distributedsearch'] = True
                 hopcount = tmp.attrib.get('hopCount')
-                request['hopcount'] = int(hopcount)-1 if hopcount is not None \
-                else 1
+                request['hopcount'] = int(hopcount) if hopcount is not None \
+                else 2
             else:
                 request['distributedsearch'] = False
 

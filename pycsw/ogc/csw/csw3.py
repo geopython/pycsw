@@ -972,19 +972,13 @@ class Csw3(object):
                         'Record serialization failed: %s' % str(err))
                         return self.parent.response
 
+        hopcount = int(self.parent.kvp.get('hopcount', 2)) - 1
+
         if ('federatedcatalogues' in self.parent.config and
-            'distributedsearch' in self.parent.kvp and 'hopcount' in self.parent.kvp and
-            self.parent.kvp['distributedsearch'] and int(self.parent.kvp['hopcount']) > 0):
-            # do distributed search
+                self.parent.kvp.get('distributedsearch') and
+                hopcount > 0):
 
-#        if all(['federatedcatalogues' in self.parent.config,
-#                'distributedsearch' in self.parent.kvp,
-#                self.parent.kvp['distributedsearch'],
-#                'hopcount' in self.parent.kvp,
-#                int(self.parent.kvp['hopcount']) > 0]):  # do distributed search
-
-            LOGGER.debug('DistributedSearch specified (hopCount: %s)',
-            self.parent.kvp['hopcount'])
+            LOGGER.debug('DistributedSearch specified (hopCount: %s).', hopcount)
 
             from owslib.csw import CatalogueServiceWeb
             from owslib.ows import ExceptionReport
@@ -1812,8 +1806,8 @@ class Csw3(object):
             if tmp is not None:
                 request['distributedsearch'] = True
                 hopcount = tmp.attrib.get('hopCount')
-                request['hopcount'] = int(hopcount)-1 if hopcount is not None \
-                else 1
+                request['hopcount'] = int(hopcount) if hopcount is not None \
+                else 2
             else:
                 request['distributedsearch'] = False
 
