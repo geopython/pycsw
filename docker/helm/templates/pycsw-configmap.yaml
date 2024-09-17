@@ -61,8 +61,8 @@ data:
 {{- end }}
 {{ end }}
     manager:
-{{ if .Values.pycsw.config.manager.transactions }}        transactions: {{ .Values.pycsw.config.manager.transactions }}
-{{ end }}{{ if .Values.pycsw.config.manager.allowed_ips }}        allowed_ips:
+        transactions: {{ .Values.pycsw.config.manager.transactions }}
+{{ if .Values.pycsw.config.manager.allowed_ips }}        allowed_ips:
 {{- range $.Values.pycsw.config.manager.allowed_ips }}
             - {{ . }}
 {{- end }}
@@ -79,9 +79,14 @@ data:
 {{ end }}{{ if .Values.pycsw.config.metadata.identification.keywords_type }}            keywords_type: {{ .Values.pycsw.config.metadata.identification.keywords_type }}
 {{ end }}{{ if .Values.pycsw.config.metadata.identification.fees }}            fees: {{ .Values.pycsw.config.metadata.identification.fees }}
 {{ end }}{{ if .Values.pycsw.config.metadata.identification.accessconstraints }}            accessconstraints: {{ .Values.pycsw.config.metadata.identification.accessconstraints }}
+{{ end }}{{ if .Values.pycsw.config.metadata.identification.terms_of_service }}            terms_of_service: {{ .Values.pycsw.config.metadata.identification.terms_of_service }}
+{{ end }}{{ if .Values.pycsw.config.metadata.identification.url }}            url: {{ .Values.pycsw.config.metadata.identification.url }}
+{{ end }}        license:
+{{ if .Values.pycsw.config.metadata.license.name }}            name: {{ .Values.pycsw.config.metadata.license.name }}
+{{ end }}{{ if .Values.pycsw.config.metadata.license.url }}            url: {{ .Values.pycsw.config.metadata.license.url }}
 {{ end }}        provider:
 {{ if .Values.pycsw.config.metadata.provider.name }}            name: {{ .Values.pycsw.config.metadata.provider.name }}
-{{ end }}{{ if .Values.pycsw.config.metadata.provider_url }}            url: {{ .Values.pycsw.config.metadata.provider.url }}
+{{ end }}{{ if .Values.pycsw.config.metadata.provider.url }}            url: {{ .Values.pycsw.config.metadata.provider.url }}
 {{ end }}        contact:
 {{ if .Values.pycsw.config.metadata.contact.name }}            name: {{ .Values.pycsw.config.metadata.contact.name }}
 {{ end }}{{ if .Values.pycsw.config.metadata.contact.position }}            position: {{ .Values.pycsw.config.metadata.contact.position }}
@@ -113,8 +118,8 @@ data:
 {{ end }}{{ if .Values.pycsw.config.metadata.inspire.contact_name }}            contact_name: {{ .Values.pycsw.config.metadata.inspire.contact_name }}
 {{ end }}{{ if .Values.pycsw.config.metadata.inspire.contact_email }}            contact_email: {{ .Values.pycsw.config.metadata.inspire.contact_email }}
 {{ end }}{{ if .Values.pycsw.config.metadata.inspire.temp_extent }}            temp_extent:
-{{- range $.Values.pycsw.config.metadata.inspire.temp_extent }}
-                - {{ . }}
+{{ if .Values.pycsw.config.metadata.inspire.temp_extent.begin }}                begin: {{ .Values.pycsw.config.metadata.inspire.temp_extent.begin }}
+{{ end }}{{ if .Values.pycsw.config.metadata.inspire.temp_extent.end }}                end: {{ .Values.pycsw.config.metadata.inspire.temp_extent.end }}
 {{- end }}
 {{ end }}
     repository:
@@ -122,6 +127,7 @@ data:
 {{ end }}{{ if .Values.pycsw.config.repository.mappings }}        mappings: {{ .Values.pycsw.config.repository.mappings }}
 {{ end }}{{ if .Values.pycsw.config.repository.table }}        table: {{ .Values.pycsw.config.repository.table }}
 {{ end }}{{ if .Values.pycsw.config.repository.filter }}        filter: {{ .Values.pycsw.config.repository.filter }}
+{{ end }}{{ if .Values.pycsw.config.repository.max_retries }}        max_retries: {{ .Values.pycsw.config.repository.max_retries }}
 {{ end }}{{ if .Values.pycsw.config.repository.facets }}        facets:
 {{- range $.Values.pycsw.config.repository.facets }}
             - {{ . }}

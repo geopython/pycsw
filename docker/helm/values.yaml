@@ -29,13 +29,11 @@ pycsw:
   volume_path: /etc/pycsw
   config:
     server:
-      home: /home/pycsw
       url: http://localhost:8000
       mimetype: application/xml; charset=UTF-8
       encoding: UTF-8
       language: en-US
       maxrecords: 10
-      # logfile: " "
       # ogc_schemas_base: http://foo
       # pretty_print: true
       # gzip_compresslevel: 8
@@ -44,17 +42,18 @@ pycsw:
       # spatial_ranking: true
       # workers: 2
       timeout: 30
+    logging:
+      level: DEBUG
+      # logfile: /tmp/pycsw.log
     profiles:
       - apiso
     # federatedcatalogues:
     #   - http://catalog.data.gov/csw
-    logging:
-      level: DEBUG
     manager:
       transactions: false
       allowed_ips:
         - 127.0.0.1
-      # csw_harvest_pagesize: 10
+      csw_harvest_pagesize: 10
     metadata:
       identification:
         title: pycsw Geospatial Catalogue
@@ -66,6 +65,11 @@ pycsw:
         keywords_type: theme
         fees: None
         accessconstraints: None
+        terms_of_service: https://creativecommons.org/licenses/by/4.0
+        url: https://example.org
+      license:
+        name: CC-BY 4.0 license
+        url: https://creativecommons.org/licenses/by/4.0
       provider:
         name: Organization Name
         url: https://pycsw.org/
@@ -104,6 +108,7 @@ pycsw:
       table: records
       # mappings: path/to/mappings.py
       # filter: type = 'http://purl.org/dc/dcmitype/Dataset'
+      # max_retries: 5
       facets:
         - type
         - title
