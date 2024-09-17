@@ -1181,7 +1181,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         record_dict['properties']['description'] = record.abstract
 
     if record.format:
-        record_dict['properties']['formats'] = [{'name': record.format}]
+        record_dict['properties']['formats'] = [{'name': f} for f in record.format.split(',') if len(f) > 1]
 
     if record.keywords:
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]

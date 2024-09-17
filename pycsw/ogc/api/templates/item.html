@@ -48,11 +48,19 @@
             {% for key, value in data['properties'].items() %}
               <tr>
                 <td>{{ key | capitalize }}</td>
-                {% if key == 'keywords' or key == 'formats' %}
+                {% if key == 'keywords' %}
                   <td>
                     <ul>
                     {% for keyword in value %}
                       <li>{{ keyword }}</li>
+                    {% endfor %}
+                    </ul>
+                  </td>
+                {% elif key == 'formats' %}
+                  <td>
+                    <ul>
+                    {% for f in value %}
+                      <li>{{ f.get('name') }}</li>
                     {% endfor %}
                     </ul>
                   </td>
