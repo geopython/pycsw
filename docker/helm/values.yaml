@@ -43,14 +43,14 @@ pycsw:
       # workers: 2
       timeout: 30
     logging:
-      level: DEBUG
+      level: ERROR
       # logfile: /tmp/pycsw.log
     profiles:
       - apiso
     # federatedcatalogues:
     #   - http://catalog.data.gov/csw
     manager:
-      transactions: false
+      transactions: "false"
       allowed_ips:
         - 127.0.0.1
       csw_harvest_pagesize: 10
@@ -89,7 +89,7 @@ pycsw:
         instructions: During hours of service.  Off on weekends.
         role: pointOfContact
       inspire:
-        enabled: true
+        enabled: "true"
         languages_supported:
           - eng
           - gre
