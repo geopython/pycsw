@@ -166,7 +166,7 @@ endmacro %}
                 <td>{{ rec.get('type') }}</td>
                 {% endif %}
               {% endif %}
-              <td>{{ rec['properties']['updated'].split('T')[0].replace('-','/') }}</td>
+              <td>{{ rec['properties'].get('updated', '').split('T')[0].replace('-','/') }}</td>
             </tr>
             {% endfor %}
           </tbody>
