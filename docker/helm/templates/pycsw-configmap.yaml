@@ -61,8 +61,8 @@ data:
 {{- end }}
 {{ end }}
     manager:
-        transactions: {{ .Values.pycsw.config.manager.transactions }}
-{{ if .Values.pycsw.config.manager.allowed_ips }}        allowed_ips:
+{{ if .Values.pycsw.config.manager.transactions }}        transactions: {{ .Values.pycsw.config.manager.transactions }}
+{{ end }}{{ if .Values.pycsw.config.manager.allowed_ips }}        allowed_ips:
 {{- range $.Values.pycsw.config.manager.allowed_ips }}
             - {{ . }}
 {{- end }}
