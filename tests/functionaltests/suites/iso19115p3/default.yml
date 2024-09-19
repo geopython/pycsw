@@ -99,5 +99,5 @@ metadata:
 
 repository:
     # sqlite
-    database: sqlite:///tests/functionaltests/suites/mdb/data/records.db
+    database: sqlite:///tests/functionaltests/suites/iso19115p3/data/records.db
     table: records

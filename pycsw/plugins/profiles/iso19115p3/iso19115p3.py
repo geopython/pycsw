@@ -194,8 +194,6 @@ class ISO19115p3(profile.Profile):
                                           'dbcol': self.context.md_core_model['mappings']['pycsw:Publisher']},
                         'mdb:Contributor': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:citedResponsibleParty/cit:CI_Responsibility/cit:role/cit:CI_RoleCode[text()="contributor"]',
                                             'dbcol': self.context.md_core_model['mappings']['pycsw:Contributor']},
-                        'mdb:Funder': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:citedResponsibleParty/cit:CI_Responsibility/cit:role/cit:CI_RoleCode[text()="funder"]',
-                                       'dbcol': self.context.md_core_model['mappings']['pycsw:Funder']},
                         'mdb:Relation': {'xpath': 'mdb:identificationInfo/mri:MD_DataIdentification/mri:aggregationInfo',
                                          'dbcol': self.context.md_core_model['mappings']['pycsw:Relation']},
                         # 19115-2

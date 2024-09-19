@@ -1469,12 +1469,6 @@ def _parse_iso(context, repos, exml):
             len(md_identification.contributor) > 0):
             all_orgs = set([item.organization for item in md_identification.contributor if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Contributor', ';'.join(all_orgs))
-        # Funder
-        if (hasattr(md_identification, 'funder') and
-            len(md_identification.funder) > 0):
-            all_orgs = set([item.organization for item in md_identification.funder if hasattr(item, 'organization') and item.organization is not None])
-            _set(context, recobj, 'pycsw:Funder', ';'.join(all_orgs))
-
 
         if (hasattr(md_identification, 'contact') and
             len(md_identification.contact) > 0):

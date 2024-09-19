@@ -147,7 +147,6 @@
         <ows:Value>mdb:Contributor</ows:Value>
         <ows:Value>mdb:Creator</ows:Value>
         <ows:Value>mdb:Degree</ows:Value>
-        <ows:Value>mdb:Funder</ows:Value>
         <ows:Value>mdb:Instrument</ows:Value>
         <ows:Value>mdb:Lineage</ows:Value>
         <ows:Value>mdb:OtherConstraints</ows:Value>

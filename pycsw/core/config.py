@@ -173,7 +173,6 @@ class StaticContext(object):
                 'pycsw:Creator': 'creator',
                 'pycsw:Publisher': 'publisher',
                 'pycsw:Contributor': 'contributor',
-                'pycsw:Funder': 'funder',
                 'pycsw:Relation': 'relation',
                 'pycsw:Platform': 'platform',
                 'pycsw:Instrument': 'instrument',
