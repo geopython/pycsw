@@ -85,7 +85,8 @@ setup(
         'fgdc',
         'dif',
         'ebrim',
-        'inspire'
+        'inspire',
+        'ISO 19115-3 XML'
     ]),
     author='Tom Kralidis',
     author_email='tomkralidis@gmail.com',

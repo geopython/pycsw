@@ -82,6 +82,7 @@ class StaticContext(object):
             'gmd': 'http://www.isotc211.org/2005/gmd',
             'gml': 'http://www.opengis.net/gml',
             'gml32': 'http://www.opengis.net/gml/3.2',
+            'mdb': 'http://standards.iso.org/iso/19115/-3/mdb/2.0',
             'ogc': 'http://www.opengis.net/ogc',
             'os': 'http://a9.com/-/spec/opensearch/1.1/',
             'ows': 'http://www.opengis.net/ows',
@@ -118,7 +119,7 @@ class StaticContext(object):
                 'pycsw:Metadata': 'metadata',
                 # raw metadata payload type, xml as default for now
                 'pycsw:MetadataType': 'metadata_type',
-                # bag of metadata element and attributes ONLY, no XML tages
+                # bag of metadata element and attributes ONLY, no XML tags
                 'pycsw:AnyText': 'anytext',
                 'pycsw:Language': 'language',
                 'pycsw:Title': 'title',
@@ -134,6 +135,8 @@ class StaticContext(object):
                 'pycsw:Type': 'type',
                 # geometry, specified in OGC WKT
                 'pycsw:BoundingBox': 'wkt_geometry',
+                'pycsw:VertExtentMin': 'vert_extent_min',
+                'pycsw:VertExtentMax': 'vert_extent_max',
                 'pycsw:CRS': 'crs',
                 'pycsw:AlternateTitle': 'title_alternate',
                 'pycsw:RevisionDate': 'date_revision',

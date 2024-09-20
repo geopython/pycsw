@@ -162,6 +162,9 @@ def _parse_metadata(context, repos, record):
         return [_parse_dc(context, repos, exml)]
     elif root == '{%s}DIF' % context.namespaces['dif']:  # DIF
         pass  # TODO
+    elif root == '{%s}MD_Metadata' % context.namespaces['mdb']:
+        # ISO 19115p3 XML
+        return [_parse_iso(context, repos, exml)]
     else:
         raise RuntimeError('Unsupported metadata format')
 
@@ -1364,6 +1367,7 @@ def _parse_gm03(context, repos, exml):
     return recobj
 
 def _parse_iso(context, repos, exml):
+    """ Parses ISO 19139, ISO 19115p3 """
 
     from owslib.iso import MD_ImageDescription, MD_Metadata, SV_ServiceIdentification
     from owslib.iso_che import CHE_MD_Metadata
@@ -1371,16 +1375,21 @@ def _parse_iso(context, repos, exml):
     recobj = repos.dataset()
     bbox = None
     links = []
+    mdmeta_ns = 'gmd'
 
     if exml.tag == '{http://www.geocat.ch/2008/che}CHE_MD_Metadata':
         md = CHE_MD_Metadata(exml)
+    elif exml.tag == '{http://standards.iso.org/iso/19115/-3/mdb/2.0}MD_Metadata':
+        from owslib.iso3 import MD_Metadata
+        md = MD_Metadata(exml)
+        mdmeta_ns = 'mdb'
     else:
         md = MD_Metadata(exml)
 
     md_identification = md.identification[0]
 
     _set(context, recobj, 'pycsw:Identifier', md.identifier)
-    _set(context, recobj, 'pycsw:Typename', 'gmd:MD_Metadata')
+    _set(context, recobj, 'pycsw:Typename', f'{mdmeta_ns}:MD_Metadata')
     _set(context, recobj, 'pycsw:Schema', context.namespaces['gmd'])
     _set(context, recobj, 'pycsw:MdSource', 'local')
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
@@ -1394,7 +1403,7 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:Modified', md.datestamp)
     _set(context, recobj, 'pycsw:Source', md.dataseturi)
 
-    if md.referencesystem is not None:
+    if md.referencesystem is not None and md.referencesystem.code is not None:
         try:
             code_ = 'urn:ogc:def:crs:EPSG::%d' % int(md.referencesystem.code)
         except ValueError:
@@ -1421,10 +1430,20 @@ def _parse_iso(context, repos, exml):
         elif len(md_identification.resourcelanguagecode) > 0:
             _set(context, recobj, 'pycsw:ResourceLanguage', md_identification.resourcelanguagecode[0])
 
+        # Geographic bounding box
         if hasattr(md_identification, 'bbox'):
             bbox = md_identification.bbox
         else:
             bbox = None
+
+        # Vertical extent of a bounding box
+        if hasattr(md_identification, 'extent'):
+            if hasattr(md_identification.extent, 'vertExtMin') and \
+                md_identification.extent.vertExtMin is not None:
+                _set(context, recobj, 'pycsw:VertExtentMin', md_identification.extent.vertExtMin)
+            if hasattr(md_identification.extent, 'vertExtMax') and \
+                md_identification.extent.vertExtMax is not None:
+                _set(context, recobj, 'pycsw:VertExtentMax', md_identification.extent.vertExtMax)
 
         if (hasattr(md_identification, 'keywords') and
             len(md_identification.keywords) > 0):
@@ -1435,14 +1454,17 @@ def _parse_iso(context, repos, exml):
                  json.dumps([t for t in md_identification.keywords if t.thesaurus is not None], 
                             default=lambda o: o.__dict__))
 
+        # Creator
         if (hasattr(md_identification, 'creator') and
             len(md_identification.creator) > 0):
             all_orgs = set([item.organization for item in md_identification.creator if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Creator', ';'.join(all_orgs))
+        # Publisher
         if (hasattr(md_identification, 'publisher') and
             len(md_identification.publisher) > 0):
             all_orgs = set([item.organization for item in md_identification.publisher if hasattr(item, 'organization') and item.organization is not None])
             _set(context, recobj, 'pycsw:Publisher', ';'.join(all_orgs))
+        # Contributor
         if (hasattr(md_identification, 'contributor') and
             len(md_identification.contributor) > 0):
             all_orgs = set([item.organization for item in md_identification.contributor if hasattr(item, 'organization') and item.organization is not None])
@@ -1527,18 +1549,18 @@ def _parse_iso(context, repos, exml):
 
                     _set(context, recobj, 'pycsw:Keywords', keywords)
 
-            bands = []
-            for band in ci.bands:
-                band_info = {
-                    'id': band.id,
-                    'units': band.units,
-                    'min': band.min,
-                    'max': band.max
-                }
-                bands.append(band_info)
+                bands = []
+                for band in ci.bands:
+                    band_info = {
+                        'id': band.id,
+                        'units': band.units,
+                        'min': band.min,
+                        'max': band.max
+                    }
+                    bands.append(band_info)
 
-            if len(bands) > 0:
-                _set(context, recobj, 'pycsw:Bands', json.dumps(bands))
+                if len(bands) > 0:
+                    _set(context, recobj, 'pycsw:Bands', json.dumps(bands))
 
     if hasattr(md, 'acquisition') and md.acquisition is not None:
         platform = md.acquisition.platforms[0]
@@ -1557,10 +1579,10 @@ def _parse_iso(context, repos, exml):
     if hasattr(md, 'distribution'):
         dist_links = []
         if hasattr(md.distribution, 'online'):
-            LOGGER.debug('Scanning for gmd:transferOptions element(s)')
+            LOGGER.debug(f'Scanning for {mdmeta_ns}:transferOptions element(s)')
             dist_links.extend(md.distribution.online)
         if hasattr(md.distribution, 'distributor'):
-            LOGGER.debug('Scanning for gmd:distributorTransferOptions element(s)')
+            LOGGER.debug(f'Scanning for {mdmeta_ns}:distributorTransferOptions element(s)')
             for dist_member in md.distribution.distributor:
                 dist_links.extend(dist_member.online)
         for link in dist_links:

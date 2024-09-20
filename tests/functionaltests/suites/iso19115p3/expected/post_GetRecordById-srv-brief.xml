@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<csw:GetRecordByIdResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gml32="http://www.opengis.net/gml/3.2" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <mdb:MD_Metadata xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 http://schemas.opengis.net/csw/2.0.2/csw.xsd">
+    <mdb:metadataIdentifier>
+      <mcc:MD_Identifier>
+        <mcc:code>
+          <gco:CharacterString>1714cd1e-6685-4dea-a6f4-b51612a15ed0</gco:CharacterString>
+        </mcc:code>
+      </mcc:MD_Identifier>
+    </mdb:metadataIdentifier>
+    <mdb:metadataScope>
+      <mdb:MD_MetadataScope>
+        <mdb:resourceScope>
+          <mcc:MD_ScopeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#MD_ScopeCode" codeListValue="service">service</mcc:MD_ScopeCode>
+        </mdb:resourceScope>
+      </mdb:MD_MetadataScope>
+    </mdb:metadataScope>
+    <mdb:identificationInfo>
+      <srv:SV_ServiceIdentification id="1714cd1e-6685-4dea-a6f4-b51612a15ed0">
+        <mri:citation>
+          <cit:CI_Citation>
+            <cit:title>
+              <gco:CharacterString>INSPIRE - Santé et sécurité des personnes en Wallonie (BE) - Service de visualisation WMS</gco:CharacterString>
+            </cit:title>
+          </cit:CI_Citation>
+        </mri:citation>
+        <srv:serviceType>
+          <gco:LocalName></gco:LocalName>
+        </srv:serviceType>
+        <srv:serviceTypeVersion>
+          <gco:CharacterString/>
+        </srv:serviceTypeVersion>
+        <srv:descriptiveKeywords>
+          <mri:MD_Keywords>
+            <mri:keyword>
+              <gco:CharacterString>Industrie et services</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>Société et activités</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>Santé et sécurité des personnes</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>aspects sociaux</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString> population</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>santé humaine</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>santé</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>sécurité</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>Reporting INSPIRE</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>Human health and safety</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>HH</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>health</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>inspire</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>WMS</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>View</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>validationtest</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>Service d’accès aux cartes</gco:CharacterString>
+            </mri:keyword>
+            <mri:keyword>
+              <gco:CharacterString>Régional</gco:CharacterString>
+            </mri:keyword>
+          </mri:MD_Keywords>
+        </srv:descriptiveKeywords>
+        <srv:extent>
+          <gex:EX_Extent>
+            <gex:geographicElement>
+              <gex:EX_GeographicBoundingBox>
+                <gex:westBoundLongitude>
+                  <gco:Decimal>2.75</gco:Decimal>
+                </gex:westBoundLongitude>
+                <gex:eastBoundLongitude>
+                  <gco:Decimal>6.51</gco:Decimal>
+                </gex:eastBoundLongitude>
+                <gex:southBoundLatitude>
+                  <gco:Decimal>49.45</gco:Decimal>
+                </gex:southBoundLatitude>
+                <gex:northBoundLatitude>
+                  <gco:Decimal>50.85</gco:Decimal>
+                </gex:northBoundLatitude>
+              </gex:EX_GeographicBoundingBox>
+            </gex:geographicElement>
+          </gex:EX_Extent>
+        </srv:extent>
+      </srv:SV_ServiceIdentification>
+    </mdb:identificationInfo>
+    <mdb:dateInfo>
+      <cit:CI_Date>
+        <cit:date>
+          <gco:Date>2018-03-01</gco:Date>
+        </cit:date>
+        <cit:dateType>
+          <cit:CI_DateTypeCode codeSpace="http://standards.iso.org/iso/19115" codeList="http://standards.iso.org/iso/19115/resources/Codelist/cat/codelists.xml#CI_DateTypeCode" codeListValue="publication">publication</cit:CI_DateTypeCode>
+        </cit:dateType>
+      </cit:CI_Date>
+    </mdb:dateInfo>
+    <mdb:distributionInfo>
+      <mrd:MD_Distribution>
+        <mrd:transferOptions>
+          <mrd:MD_DigitalTransferOptions>
+            <mrd:onLine>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <gco:CharacterString>https://geoservices.test.wallonie.be/geoserver/inspire_hh/ows?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</gco:CharacterString>
+                </cit:linkage>
+                <cit:protocol>
+                  <gco:CharacterString>OGC:WMS</gco:CharacterString>
+                </cit:protocol>
+                <cit:name>
+                  <gco:CharacterString>INSPIRE Santé et sécurité des personnes - Service de visualisation WMS</gco:CharacterString>
+                </cit:name>
+                <cit:description>
+                  <gco:CharacterString>Adresse de connexion au service de visualisation WMS-Inspire des couches de données du thème "Santé et sécurité des personnes".</gco:CharacterString>
+                </cit:description>
+              </cit:CI_OnlineResource>
+            </mrd:onLine>
+            <mrd:onLine>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <gco:CharacterString>https://metawal.wallonie.be/geonetwork/inspire/api/records/1714cd1e-6685-4dea-a6f4-b51612a15ed0/attachments/wms_inspire_20190430.png</gco:CharacterString>
+                </cit:linkage>
+                <cit:protocol>
+                  <gco:CharacterString>WWW:LINK-1.0-http--image-thumbnail</gco:CharacterString>
+                </cit:protocol>
+                <cit:name>
+                  <gco:CharacterString>preview</gco:CharacterString>
+                </cit:name>
+                <cit:description>
+                  <gco:CharacterString>Web image thumbnail (URL)</gco:CharacterString>
+                </cit:description>
+              </cit:CI_OnlineResource>
+            </mrd:onLine>
+          </mrd:MD_DigitalTransferOptions>
+        </mrd:transferOptions>
+      </mrd:MD_Distribution>
+    </mdb:distributionInfo>
+  </mdb:MD_Metadata>
+</csw:GetRecordByIdResponse>
