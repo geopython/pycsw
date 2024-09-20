@@ -1,5 +1,5 @@
-MDB Data
-========
+ISO 19115 Part 3 XML Data
+=========================
 
 This directory provides data used to check conformance against pycsw's ISO 19115 Part 3 XML support.
 

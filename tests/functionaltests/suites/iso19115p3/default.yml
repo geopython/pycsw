@@ -28,7 +28,7 @@
 # =================================================================
 
 server:
-    url: http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/mdb/default.yml
+    url: http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/iso19115p3/default.yml
     mimetype: application/xml; charset=UTF-8
     encoding: UTF-8
     language: en-US
