@@ -1448,12 +1448,12 @@ def _parse_iso(context, repos, exml):
         if (hasattr(md_identification, 'keywords') and
             len(md_identification.keywords) > 0):
             all_keywords = [item for sublist in md_identification.keywords for item in sublist.keywords if item is not None]
-            if all_keywords:
-                _set(context, recobj, 'pycsw:Keywords', ','.join([k.name for k in all_keywords if hasattr(k,'name')]))
-                _set(context, recobj, 'pycsw:KeywordType', md_identification.keywords[0].type)
-                _set(context, recobj, 'pycsw:Themes', 
-                    json.dumps([t for t in md_identification.keywords if t.thesaurus is not None], 
-                                default=lambda o: o.__dict__))
+            _set(context, recobj, 'pycsw:Keywords', ','.join([
+                k.name for k in all_keywords if hasattr(k,'name') and k.name not in [None,'']]))
+            _set(context, recobj, 'pycsw:KeywordType', md_identification.keywords[0].type)
+            _set(context, recobj, 'pycsw:Themes', 
+                json.dumps([t for t in md_identification.keywords if t.thesaurus is not None], 
+                            default=lambda o: o.__dict__))
 
         # Creator
         if (hasattr(md_identification, 'creator') and
