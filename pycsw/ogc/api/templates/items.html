@@ -3,8 +3,11 @@
 
 {% block extrahead %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
     <style>
         #records-map {
             height: 350px;
@@ -95,7 +98,14 @@ endmacro %}
           <b>{{ data['numberMatched'] }} results.</b>
       </div>
       <div id="records-map"></div>
-      <div id="facets" class="pt-3">
+      <div id="spatial-filter" class="mt-2">
+        <div class="form-check form-switch">
+          <input class="form-check-input my-2" onchange="trigger_spatial_filter()" {% if 'bbox' in attrs.keys() %}checked{% endif %} type="checkbox" id="spatial-filter-check">
+          <label class="form-check-label" for="spatial-filter-check">Spatial filter</label>
+          <btn class="btn btn-sm border border-rounded" onclick="apply_spatial_filter()">Apply</btn>
+        </div>  
+      </div>
+      <div id="facets" class="mt-2">
         <div class="d-flex justify-content-between">
           <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" {% if 'facets=true' in nav_links.self %}checked="true"{% endif %} onchange="facet(this.checked)"  role="switch" id="enableFacets">
@@ -203,13 +213,31 @@ function sort(val){
 function facet(val){
   location.href="{{updateurl('facets','facetprop')}}".replace('facetprop',val);
 }
+
+//if url has a bbox, enable the spatial filter 
+var bbox;
+{% if 'bbox' in attrs.keys() %}
+  {% set bbox_tokens = attrs['bbox'].split('%2C') %}
+  {% if bbox_tokens|length == 4 %}
+    bbox = [[{{ 
+      bbox_tokens[1] }}, {{ bbox_tokens[0] }}], [{{ 
+      bbox_tokens[3] }}, {{ bbox_tokens[2] }}]];
+  {% endif %}
+{% endif %}
+
+//if filter enabled, apply the spatial filter
+function apply_spatial_filter(){
+  if (map.hasLayer(rectangle)){
+    location.href="{{ updateurl('bbox','tmptmp') }}".replace('tmptmp',yx(rectangle.getBounds()));
+  }
+}
 </script>
 
 {% endblock %}
 
 {% block extrafoot %}
-{% if data['features'] %}
-    <script>
+
+<script>
     var map = L.map('records-map').setView([0, 0], 1);
     map.addLayer(new L.TileLayer(
         'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -218,6 +246,7 @@ function facet(val){
         }
     ));
     var geojson_data = {{ data['features'] | to_json }};
+    {% if data['features'] %}
     var items = new L.GeoJSON(geojson_data, {
         onEachFeature: function (feature, layer) {
             var url = './items/' + feature.id;
@@ -228,10 +257,19 @@ function facet(val){
     });
 
     map.addLayer(items);
-    var bounds = items.getBounds();
-    if (bounds.isValid() === true) {
-        map.fitBounds(bounds);
+    if (!bbox){
+      var bounds = items.getBounds();
+      if (bounds.isValid() === true) {
+          map.fitBounds(bounds);
+      }
     }
+    {% endif %}
+    
+    //set rectangle if page initializes with a spatial filter
+    if (bbox){
+      setRectangle(bbox);
+      map.fitBounds(bbox);
+    } 
 
     var highlightStyle = {
         color: 'red',
@@ -239,6 +277,7 @@ function facet(val){
         fillOpacity: 0.5
     }
 
+    {% if data['features'] %}
     $(document).ready(function() {
         $('#items-table-table tr').on('mouseenter', function(e){
             id_ = $(this).find('[id]').attr('id');
@@ -254,7 +293,6 @@ function facet(val){
         $("#q").on("keypress", function(event){
             if (event.which == 13 && !event.shiftKey) {
                 event.preventDefault();
-
                 var queryParams = new URLSearchParams(window.location.search);
                 queryParams.set("q", $("#q").val());
                 var new_url = '{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items?' + queryParams.toString();
@@ -262,6 +300,35 @@ function facet(val){
             }
         });
     });
-    </script>
-{% endif %}
+    {% endif %}
+
+// Generates a pycsw bbox from leaflet bounds    
+function yx (b){
+  if (b && b._southWest){
+    return [b._southWest.lng,b._southWest.lat,b._northEast.lng,b._northEast.lat].join(',');
+  }
+}
+
+// Creates or sets the filter rectangle and adds it to map
+var rectangle;
+function setRectangle(bbox){
+  if (rectangle){
+      rectangle.setBounds(bbox)
+  } else {
+      rectangle = L.rectangle(bbox);
+      rectangle.editing.enable();
+      rectangle.setStyle({color :'green'});
+  }
+  map.addLayer(rectangle);
+}
+
+// Dis/en-ables the spatial filter, the layer is removed or added at 95% map bounds
+function trigger_spatial_filter(){
+    if (map.hasLayer(rectangle)){
+      rectangle.remove();
+    } else {
+      setRectangle(map.getBounds().pad(-0.95));
+    }
+}
+</script>
 {% endblock %}
