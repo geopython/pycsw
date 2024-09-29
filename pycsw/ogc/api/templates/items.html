@@ -166,7 +166,9 @@ endmacro %}
                 <td>{{ rec.get('type') }}</td>
                 {% endif %}
               {% endif %}
+              {% if 'properties' in rec %}
               <td>{{ rec['properties'].get('updated', '').split('T')[0].replace('-','/') }}</td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>
