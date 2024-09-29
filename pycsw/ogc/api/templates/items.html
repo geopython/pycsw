@@ -211,14 +211,16 @@ function sort(val){
 function facet(val){
   location.href="{{updateurl('facets','facetprop')}}".replace('facetprop',val);
 }
+
 //if url has a bbox, enable the spatial filter 
-{% if 'bbox' in attrs.keys() and (attrs['bbox'].split('%2C')|length) == 4 %}
-var bbox = [
-          [{{ attrs['bbox'].split('%2C')[1] }}, {{ attrs['bbox'].split('%2C')[0] }}], 
-          [{{ attrs['bbox'].split('%2C')[3] }}, {{ attrs['bbox'].split('%2C')[2] }}]
-        ]
-{% else %}
-var bbox = null;
+var bbox;
+{% if 'bbox' in attrs.keys() %}
+  {% set bbox_tokens = attrs['bbox'].split('%2C') %}
+  {% if bbox_tokens|length == 4 %}
+    bbox = [[{{ 
+      bbox_tokens[1] }}, {{ bbox_tokens[0] }}], [{{ 
+      bbox_tokens[3] }}, {{ bbox_tokens[2] }}]];
+  {% endif %}
 {% endif %}
 
 //if filter enabled, apply the spatial filter
@@ -298,16 +300,15 @@ function apply_spatial_filter(){
     });
     {% endif %}
 
-//generates a pycsw bbox from leaflet bounds    
+// Generates a pycsw bbox from leaflet bounds    
 function yx (b){
   if (b && b._southWest){
     return [b._southWest.lng,b._southWest.lat,b._northEast.lng,b._northEast.lat].join(',');
   }
 }
 
+// Creates or sets the filter rectangle and adds it to map
 var rectangle;
-
-// creates or sets the filter rectangle and adds it to map
 function setRectangle(bbox){
   if (rectangle){
       rectangle.setBounds(bbox)
@@ -319,7 +320,7 @@ function setRectangle(bbox){
   map.addLayer(rectangle);
 }
 
-// en/disables the spatial filter, the layer is removed or added at 95% map bounds
+// Dis/en-ables the spatial filter, the layer is removed or added at 95% map bounds
 function trigger_spatial_filter(){
     if (map.hasLayer(rectangle)){
       rectangle.remove();
@@ -327,7 +328,5 @@ function trigger_spatial_filter(){
       setRectangle(map.getBounds().pad(-0.95));
     }
 }
-  
 </script>
-
 {% endblock %}
