@@ -1147,9 +1147,14 @@ def record2json(record, url, collection, mode='ogcapi-records'):
 
     # todo; for keywords with a scheme use the theme property
     if record.topicategory:
-        themes = []
-        themes.append({'concepts': [record.topicategory],
-                       'scheme': 'https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_TopicCategoryCode'})
+        themes = [{
+            'concepts': [],
+            'scheme': 'https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_TopicCategoryCode'
+        }]
+
+        for rtp in record.topicategory:
+            themes['concepts'].append({'id': rtp})
+
         record_dict['properties']['themes'] = themes
 
     if record.otherconstraints:
@@ -1229,7 +1234,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                 try:
                     ogcapi_themes.append({
                         'scheme': theme['thesaurus'].get('url', theme['thesaurus'].get('title', '')),
-                        'concepts': [c for c in theme.get('keywords_object', []) if c not in [None, '']]
+                        'concepts': [{'id': c} for c in theme.get('keywords_object', []) if c not in [None, '']]
                     })
                 except Exception as err:
                     LOGGER.exception(f"failed to parse theme of {record.identifier}: {err}")

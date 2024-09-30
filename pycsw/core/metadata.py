@@ -1727,7 +1727,7 @@ def _parse_json_record(context, repos, record):
 
     recobj = None
 
-    if 'http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core' in record.get('conformsTo', []):
+    if 'conformsTo' in record:
         LOGGER.debug('Parsing OGC API - Records record model')
         recobj = _parse_oarec_record(context, repos, record)
     elif 'stac_version' in record:
