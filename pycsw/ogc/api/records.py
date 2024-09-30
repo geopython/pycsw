@@ -1147,15 +1147,18 @@ def record2json(record, url, collection, mode='ogcapi-records'):
 
     # todo; for keywords with a scheme use the theme property
     if record.topicategory:
-        themes = [{
+        tctheme = {
             'concepts': [],
             'scheme': 'https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_TopicCategoryCode'
-        }]
+        }
 
-        for rtp in record.topicategory:
-            themes['concepts'].append({'id': rtp})
-
-        record_dict['properties']['themes'] = themes
+        if isinstance(record.topicategory, list):
+            for rtp in record.topicategory:
+                tctheme['concepts'].append({'id': rtp})
+        elif isinstance(record.topicategory, str):
+            tctheme['concepts'].append({'id': record.topicategory})
+        
+        record_dict['properties']['themes'] = [tctheme]
 
     if record.otherconstraints:
         if isinstance(record.otherconstraints, str) and record.otherconstraints not in [None, 'None']:
@@ -1226,15 +1229,15 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         record_dict['properties']['contacts'] = rcnt
 
     if record.themes not in [None, '', 'null']:
-        ogcapi_themes = []
+        ogcapi_themes = record_dict['properties'].get('themes', []) 
         # For a scheme, prefer uri over label
         # OWSlib currently uses .keywords_object for keywords with url, see https://github.com/geopython/OWSLib/pull/765
         try:
             for theme in json.loads(record.themes):
                 try:
                     ogcapi_themes.append({
-                        'scheme': theme['thesaurus'].get('url', theme['thesaurus'].get('title', '')),
-                        'concepts': [{'id': c} for c in theme.get('keywords_object', []) if c not in [None, '']]
+                        'scheme': theme['thesaurus'].get('url') or theme['thesaurus'].get('title'),
+                        'concepts': [{'id': c.get('name','')} for c in theme.get('keywords', []) if 'name' in c and c['name'] not in [None, '']]
                     })
                 except Exception as err:
                     LOGGER.exception(f"failed to parse theme of {record.identifier}: {err}")
