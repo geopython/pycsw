@@ -1217,9 +1217,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                             'postalCode': cnt.get('postcode', ''),
                             'country': cnt.get('country', '')
                         }],
-                        'links': [{
-                            'href': cnt.get('onlineresource')
-                        }]
+                        'links': [cnt.get('onlineresource')]
                     })
                 except Exception as err:
                     LOGGER.exception(f"failed to parse contact of {record.identifier}: {err}")
