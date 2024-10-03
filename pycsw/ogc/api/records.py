@@ -1293,6 +1293,14 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         'href': f'{url}/collections/{collection}/items/{record.identifier}'
     })
 
+    if hasattr(record, 'uri') and record.uri not in [None,'']:
+        record_dict['links'].append({
+            'rel': 'alternate',
+            'name': 'URI',
+            'description': 'original URI of the record',
+            'href': record.uri
+        })
+
     record_dict['links'].append({
         'rel': 'collection',
         'type': 'application/json',

@@ -144,6 +144,7 @@ class StaticContext(object):
                 'pycsw:PublicationDate': 'date_publication',
                 'pycsw:OrganizationName': 'organization',
                 'pycsw:SecurityConstraints': 'securityconstraints',
+                'pycsw:URI': 'uri',
                 'pycsw:ParentIdentifier': 'parentidentifier',
                 'pycsw:TopicCategory': 'topicategory',
                 'pycsw:ResourceLanguage': 'resourcelanguage',
