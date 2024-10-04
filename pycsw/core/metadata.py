@@ -1651,8 +1651,6 @@ def _parse_dc(context, repos, exml):
 
     md = CswRecord(exml)
 
-    print(md)
-
     if md.bbox is None:
         bbox = None
     else:
