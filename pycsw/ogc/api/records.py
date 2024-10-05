@@ -1196,9 +1196,11 @@ def record2json(record, url, collection, mode='ogcapi-records'):
 
     if record.contacts not in [None, '', 'null']:
         rcnt = []
+        roles = [] 
         try:
             for cnt in json.loads(record.contacts):
                 try:
+                    roles.append(cnt.get('role', '').lower())
                     rcnt.append({
                         'name': cnt['name'],
                         'organization': cnt.get('organization', ''),
@@ -1223,6 +1225,13 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                     })
                 except Exception as err:
                     LOGGER.exception(f"failed to parse contact of {record.identifier}: {err}")
+            for r2 in "creator,publisher,contributor".split(","): # match role-fields with contacts
+                if r2 not in roles and hasattr(record,r2) and record[r2] not in [None,'']:
+                    rcnt.append({
+                        'organization': record[r2],
+                        'roles': [r2]
+                    })
+
         except Exception as err:
             LOGGER.exception(f"failed to parse contacts json of {record.identifier}: {err}")
 
