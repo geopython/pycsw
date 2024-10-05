@@ -807,6 +807,7 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
         Column('keywordstype', Text, index=True),
         Column('themes', Text, index=True),
         Column('parentidentifier', Text, index=True),
+        Column('uri', Text, index=True),
         Column('relation', Text, index=True),
         Column('time_begin', Text, index=True),
         Column('time_end', Text, index=True),

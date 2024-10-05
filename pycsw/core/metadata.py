@@ -1399,6 +1399,10 @@ def _parse_iso(context, repos, exml):
     _set(context, recobj, 'pycsw:Language', md.language or md.languagecode)
     _set(context, recobj, 'pycsw:Type', md.hierarchy)
     _set(context, recobj, 'pycsw:ParentIdentifier', md.parentidentifier)
+    if hasattr(md, 'dataseturi') and md.dataseturi not in [None,'']:
+        _set(context, recobj, 'pycsw:URI', md.dataseturi)
+    elif md_identification and hasattr(md_identification, 'uricode') and len(md_identification.uricode) > 0:
+        _set(context, recobj, 'pycsw:URI', ','.join(md_identification.uricode)) 
     _set(context, recobj, 'pycsw:Date', md.datestamp)
     _set(context, recobj, 'pycsw:Modified', md.datestamp)
     _set(context, recobj, 'pycsw:Source', md.dataseturi)
