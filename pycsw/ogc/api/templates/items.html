@@ -85,8 +85,11 @@ endmacro %}
     <div class="col-md-4">
       <form action="{{ nav_links.self.split('?')[0] }}" method="GET">
       <div class="input-group mb-3"> 
-          <input type="text" class="form-control" name="q" placeholder="Search" value="{{ attrs['q'] }}">
-          <input class="btn btn-outline-secondary" type="submit" value="Search"></input>
+        <input type="text" class="form-control" name="q" placeholder="Search" id="tbq" value="">
+        <script>
+          $('#tbq').val(decodeURIComponent("{{ attrs['q'].replace('+',' ') }}"))
+        </script>
+        <input class="btn btn-outline-secondary" type="submit" value="Search"></input>
       </div>
       </form>
     </div>
