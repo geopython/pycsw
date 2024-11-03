@@ -35,9 +35,9 @@ import os
 from pygeofilter.parsers.ecql import parse as parse_ecql
 
 from pycsw import __version__
-from pycsw.ogc.api.oapi import gen_oapi
-from pycsw.ogc.api.records import API
 from pycsw.core.pygeofilter_evaluate import to_filter
+from pycsw.ogc.api.oapi import gen_oapi
+from pycsw.ogc.api.records import API, build_anytext
 from pycsw.core.util import geojson_geometry2bbox
 
 LOGGER = logging.getLogger(__name__)
@@ -54,6 +54,7 @@ THISDIR = os.path.dirname(os.path.realpath(__file__))
 CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections',
+    'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/simple-query',
     'http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core',
     'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/queryables',
     'http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/queryables-query-parameters',
@@ -66,7 +67,9 @@ CONFORMANCE_CLASSES = [
     'https://api.stacspec.org/v1.0.0/ogcapi-features',
     'https://api.stacspec.org/v1.0.0/item-search',
     'https://api.stacspec.org/v1.0.0/item-search#filter',
-    'https://api.stacspec.org/v1.0.0/item-search#free-text'
+    'https://api.stacspec.org/v1.0.0/item-search#free-text',
+    'https://api.stacspec.org/v1.0.0-rc.1/collection-search',
+    'https://api.stacspec.org/v1.0.0-rc.1/collection-search#free-text'
 ]
 
 
@@ -205,13 +208,41 @@ class STACAPI(API):
 
         collections = []
 
-        LOGGER.debug('Generating default metadata:main collection')
-        collection_info = self.get_collection_info()
-
-        collections.append(collection_info)
+        # LOGGER.debug('Generating default metadata:main collection')
+        # collection_info = self.get_collection_info()
+        # collections.append(collection_info)
 
         LOGGER.debug('Generating virtual collections')
-        virtual_collections = self.repository.query_collections()
+
+        filters = None
+        query_args = []
+
+        LOGGER.debug('Handling collection level search')
+        for k, v in args.items():
+            if k == 'bbox':
+                query_args.append(f'BBOX(geometry, {v})')
+            elif k == 'datetime':
+                if '/' not in v:
+                    query_args.append(f'date = "{v}"')
+                else:
+                    begin, end = v.split('/')
+                    if begin != '..':
+                        query_args.append(f'time_begin >= "{begin}"')
+                    if end != '..':
+                        query_args.append(f'time_end <= "{end}"')
+            elif k == 'q':
+                if v not in [None, '']:
+                    query_args.append(build_anytext('anytext', v))
+
+        limit = int(args.get('limit', self.config['server']['maxrecords']))
+
+        if query_args:
+            ast = parse_ecql(' AND '.join(query_args))
+            LOGGER.debug(f'Abstract syntax tree: {ast}')
+            filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
+            LOGGER.debug(f'Filter: {filters}')
+
+        virtual_collections = self.repository.query_collections(filters, limit)
 
         for virtual_collection in virtual_collections:
             virtual_collection_info = self.get_collection_info(
@@ -226,13 +257,14 @@ class STACAPI(API):
         }
 
         LOGGER.debug('Generating STAC collections')
-        mapping = {'typename': self.repository.dataset.typename}
-        ast = parse_ecql("typename = 'stac:Collection'")
+
+        query_args.append("typename = 'stac:Collection'")
+        ast = parse_ecql(' AND '.join(query_args))
         LOGGER.debug(f'Abstract syntax tree: {ast}')
-        filters = to_filter(ast, self.repository.dbtype, mapping)
+        filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
         LOGGER.debug(f'Filter: {filters}')
         sc_query = self.repository.session.query(
-            self.repository.dataset).filter(filters).all()
+            self.repository.dataset).filter(filters).limit(limit).all()
 
         for sc in sc_query:
             response['collections'].append(self.get_collection_info(
@@ -265,6 +297,7 @@ class STACAPI(API):
             'href': self.config['server']['url']
         }]
 
+        response['collections'] = response['collections'][:limit]
         response['numberMatched'] = len(response['collections'])
         response['numberReturned'] = len(response['collections'])
 
@@ -434,7 +467,7 @@ class STACAPI(API):
 
         :param collection_name: name of collection
                                 default is 'metadata:main' main collection
-        :param collection_info: `dict` of collecton info
+        :param collection_info: `dict` of collection info
 
         :returns: `dict` of collection
         """

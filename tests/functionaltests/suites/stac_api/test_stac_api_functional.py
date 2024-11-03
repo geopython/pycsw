@@ -49,7 +49,7 @@ def test_landing_page(config):
 
     assert content['stac_version'] == '1.0.0'
     assert content['type'] == 'Catalog'
-    assert len(content['conformsTo']) == 15
+    assert len(content['conformsTo']) == 18
     assert len(content['keywords']) == 3
 
 
@@ -70,13 +70,16 @@ def test_conformance(config):
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
 
-    assert len(content['conformsTo']) == 15
+    assert len(content['conformsTo']) == 18
 
     conformances = [
+        'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/simple-query',
         'https://api.stacspec.org/v1.0.0/core',
         'https://api.stacspec.org/v1.0.0/ogcapi-features',
         'https://api.stacspec.org/v1.0.0/item-search',
-        'https://api.stacspec.org/v1.0.0/item-search#filter'
+        'https://api.stacspec.org/v1.0.0/item-search#filter',
+        'https://api.stacspec.org/v1.0.0-rc.1/collection-search',
+        'https://api.stacspec.org/v1.0.0-rc.1/collection-search#free-text'
     ]
 
     for conformance in conformances:
@@ -92,9 +95,17 @@ def test_collections(config):
     assert status == 200
     assert len(content['links']) == 3
 
-    assert len(content['collections']) == 1
+    assert len(content['collections']) == 0
     assert len(content['collections']) == content['numberMatched']
     assert len(content['collections']) == content['numberReturned']
+
+    headers, status, content = api.collections({}, {'limit': 0, 'f': 'json'})
+    content = json.loads(content)
+
+    assert headers['Content-Type'] == 'application/json'
+    assert status == 200
+    assert len(content['collections']) == 0
+
 
 def test_queryables(config):
     api = STACAPI(config)

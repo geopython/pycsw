@@ -77,6 +77,7 @@ class Repository(object):
             # for sqlite < 0.7, we need to to this on a per-connection basis
             if engine.name in ['sqlite', 'sqlite3'] and __version__ >= '0.7':
                 from sqlalchemy import event
+
                 @event.listens_for(engine, "connect")
                 def connect(dbapi_connection, connection_rec):
                     create_custom_sql_functions(dbapi_connection)
@@ -335,7 +336,7 @@ class Repository(object):
         query = self.session.query(self.dataset).filter(column.in_(ids))
         return self._get_repo_filter(query).all()
 
-    def query_collections(self):
+    def query_collections(self, filters=None, limit=10):
         ''' Query for parent collections '''
 
         column = getattr(self.dataset,
@@ -352,7 +353,11 @@ class Repository(object):
 
         query = self.session.query(self.dataset).filter(column.in_(ids))
 
-        return self._get_repo_filter(query).all()
+        if filters is not None:
+            LOGGER.debug('Querying repository with additional filters')
+            return self._get_repo_filter(query).filter(filters).limit(limit).all()
+
+        return self._get_repo_filter(query).limit(limit).all()
 
     def query_domain(self, domain, typenames, domainquerytype='list',
                      count=False):

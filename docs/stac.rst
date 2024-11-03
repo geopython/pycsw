@@ -61,6 +61,15 @@ Request Examples
   http://localhost:8000/stac/openapi
   # collections
   http://localhost:8000/stac/collections
+  # collections query, full text search
+  http://localhost:8000/stac/collections?q=sentinel
+  # collections query, spatial query
+  http://localhost:8000/stac/collections?bbox=-142,42,-52,84
+  # collections query, full text search and spatial query
+  http://localhost:8000/stac/collections?q=sentinel,bbox=-142,42,-52,84
+  # collections query, limiting results
+  http://localhost:8000/stac/collections?limit=2
+  # collections query, spatial query
   # single collection
   http://localhost:8000/stac/collections/metadata:main
   # collection queryables, all records
