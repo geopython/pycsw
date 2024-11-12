@@ -1262,7 +1262,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
             if link.get('description') not in [None, 'None']:
                 link2['description'] = link['description']
             if link.get('protocol') not in [None, 'None']:
-                link2['procotol'] = link['protocol']
+                link2['protocol'] = link['protocol']
             if 'rel' in link:
                 link2['rel'] = link['rel']
             elif link['protocol'] == 'WWW:LINK-1.0-http--image-thumbnail':
