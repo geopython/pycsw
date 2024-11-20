@@ -1165,16 +1165,20 @@ def record2json(record, url, collection, mode='ogcapi-records'):
             record.otherconstraints = [record.otherconstraints]
             record_dict['properties']['license'] = ", ".join(record.otherconstraints)
 
-    record_dict['properties']['updated'] = record.insert_date
 
     if record.type:
         record_dict['properties']['type'] = record.type
 
-    if record.date_creation:
-        record_dict['properties']['created'] = record.date_creation
+    record_dict['properties']['updated'] = record.insert_date # this is always populated
+    
+    if record.date: # date is used in some schema's (DC)
+        record_dict['properties']['updated'] = record.date   
 
-    if record.date_modified:
+    if record.date_modified: # used in ISO
         record_dict['properties']['updated'] = record.date_modified
+
+    # pycsw does not capture date of record creation, use updated
+    record_dict['properties']['created'] = record_dict['properties']['updated']
 
     if record.language:
         record_dict['properties']['language'] = record.language
