@@ -1528,7 +1528,10 @@ class Csw2(object):
                             self.parent.context.namespaces))
                         if link.get('protocol'):
                             ref.attrib['scheme'] = link['protocol']
-
+                        if link.get('name'):
+                            ref.attrib['name'] = link['name']
+                        if link.get('description'):
+                            ref.attrib['description'] = link['description']
                         ref.text = link['url']
 
                 for i in ['dc:relation', 'dct:modified', 'dct:abstract']:

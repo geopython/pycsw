@@ -23,6 +23,8 @@
                <xs:any processContents="lax" minOccurs="0" maxOccurs="0"/>
             </xs:sequence>
             <xs:attribute name="scheme" type="xs:anyURI" use="optional"/>
+            <xs:attribute name="name" use="optional"/>
+            <xs:attribute name="description" use="optional"/>
          </xs:restriction>
       </xs:complexContent>
    </xs:complexType>
