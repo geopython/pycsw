@@ -68,7 +68,8 @@ from pycsw import server
 def application(env, start_response):
     """WSGI wrapper"""
 
-    print(env['PATH_INFO'])
+    if (env['PATH_INFO'] != '/csw'):
+        print(env['PATH_INFO'])
 
 
     pycsw_root = get_pycsw_root_path(os.environ, env)
