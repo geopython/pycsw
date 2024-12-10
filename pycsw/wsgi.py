@@ -128,7 +128,10 @@ def compress_response(response, compression_level):
     gzipfile.write(response)
     gzipfile.close()
     compressed_response = buf.getvalue()
-    compression_headers = {'Content-Encoding': 'gzip'}
+    compression_headers = {
+        'Content-Encoding': 'gzip',
+        'Content-Length': str(len(compressed_response)),
+    }
     return compressed_response, compression_headers
 
 
