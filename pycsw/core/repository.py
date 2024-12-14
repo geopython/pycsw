@@ -147,6 +147,7 @@ class Repository(object):
         self.query_mappings = {
             'identifier': self.dataset.identifier,
             'type': self.dataset.type,
+            'typename': self.dataset.typename,
             'parentidentifier': self.dataset.parentidentifier,
             'collections': self.dataset.parentidentifier,
             'updated': self.dataset.insert_date,
