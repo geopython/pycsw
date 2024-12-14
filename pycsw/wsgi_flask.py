@@ -46,9 +46,6 @@ APP.url_map.strict_slashes = False
 with open(os.getenv('PYCSW_CONFIG'), encoding='utf8') as fh:
     APP.config['PYCSW_CONFIG'] = yaml_load(fh)
 
-pretty_print = APP.config['PYCSW_CONFIG']['server'].get('pretty_print', True)
-APP.config['JSONIFY_PRETTYPRINT_REGULAR'] = pretty_print
-
 BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC,
                       static_url_path='/static')
 
