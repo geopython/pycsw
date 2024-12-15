@@ -41,6 +41,14 @@ STAC support will render links as follows:
 * links that are enclosures will be encoded as STAC assets (in ``assets``)
 * all other links remain as record links (in ``links``)
 
+Transactions
+^^^^^^^^^^^^
+
+STAC Transactions are supported as per the following STAC API specifications:
+
+* `STAC API - Transaction Extension Specification`_.
+* `STAC API - Collection Transaction Extension`_.
+
 Request Examples
 ----------------
 
@@ -106,3 +114,5 @@ Request Examples
   http://localhost:8000/stac/collections/metadata:main/items/{itemId}
 
 .. _`SpatioTemporal Asset Catalog API version v1.0.0`: https://github.com/radiantearth/stac-api-spec
+.. _`STAC API - Transaction Extension Specification`: https://github.com/stac-api-extensions/transaction
+.. _`STAC API - Collection Transaction Extension`: https://github.com/stac-api-extensions/collection-transaction

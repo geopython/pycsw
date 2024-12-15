@@ -49,7 +49,7 @@ def test_landing_page(config):
 
     assert content['stac_version'] == '1.0.0'
     assert content['type'] == 'Catalog'
-    assert len(content['conformsTo']) == 18
+    assert len(content['conformsTo']) == 20
     assert len(content['keywords']) == 3
 
 
@@ -70,7 +70,7 @@ def test_conformance(config):
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
 
-    assert len(content['conformsTo']) == 18
+    assert len(content['conformsTo']) == 20
 
     conformances = [
         'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/simple-query',
@@ -118,7 +118,7 @@ def test_queryables(config):
     assert content['$id'] == 'http://localhost/pycsw/oarec/stac/collections/metadata:main/queryables'  # noqa
     assert content['$schema'] == 'http://json-schema.org/draft/2019-09/schema'
 
-    assert len(content['properties']) == 13
+    assert len(content['properties']) == 14
 
     assert 'geometry' in content['properties']
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
@@ -233,3 +233,151 @@ def test_item(config):
 
     headers, status, content = api.item({}, {}, 'foo', item)
     assert status == 400
+
+
+def test_json_transaction(config, sample_collection, sample_item,
+                          sample_item_collection):
+    api = STACAPI(config)
+    request_headers = {
+        'Content-Type': 'application/json'
+    }
+
+    # insert item
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_item, collection='metadata:main')
+
+    assert status == 201
+
+    # test that item is in repository
+    content = json.loads(api.item({}, {}, 'metadata:main',
+                         '20201211_223832_CS2')[2])
+
+    assert content['id'] == '20201211_223832_CS2'
+    assert content['geometry'] is None
+    assert content['properties']['datetime'] == '2020-12-11T22:38:32.125000Z'
+    assert content['collection'] == 'metadata:main'
+
+    # update item
+    sample_item['properties']['datetime'] = '2021-12-11T22:38:32.125000Z'
+
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'update', item='20201211_223832_CS2',
+        data=sample_item, collection='metadata:main')
+
+    assert status == 204
+
+    # test that item is in repository
+    content = json.loads(api.item({}, {}, 'metadata:main',
+                         '20201211_223832_CS2')[2])
+
+    assert content['id'] == '20201211_223832_CS2'
+    assert content['properties']['datetime'] == sample_item['properties']['datetime']
+    assert content['collection'] == 'metadata:main'
+
+    # delete item
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'delete', item='20201211_223832_CS2')
+
+    assert status == 200
+
+    # test that item is not in repository
+    headers, status, content = api.item({}, {}, 'metadata:main',
+                                        '20201211_223832_CS2')
+
+    assert status == 404
+
+    content = api.items({}, None, {})[2]
+
+    matched = json.loads(content)['numberMatched']
+
+    assert matched == 12
+
+    # insert item collection
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_item_collection, collection='metadata:main')
+
+    assert status == 201
+
+    content = api.items({}, None, {})[2]
+
+    matched = json.loads(content)['numberMatched']
+
+    assert matched == 14
+
+    # delete items from item collection
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'delete', item='20201211_223832_CS2')
+
+    assert status == 200
+
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'delete', item='20201212_223832_CS2')
+
+    assert status == 200
+
+    collection_id = '123e4567-e89b-12d3-a456-426614174000'
+
+    # insert collection
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_collection)
+
+    assert status == 201
+
+    # test that collection is in repository
+    headers, status, content = api.collections({}, {'f': 'json'})
+    content = json.loads(content)
+
+    collection_found = False
+
+    for collection in content['collections']:
+        if collection['id'] == collection_id:
+            collection_found = True
+
+    assert collection_found
+
+    headers, status, content = api.collection({}, {'f': 'json'}, collection=collection_id)
+
+    content = json.loads(content)
+
+    assert content['id'] == collection_id
+
+    assert content['title'] == 'ORT_SPOT7_20190922_094920500_000'
+
+    # update collection
+    sample_collection['title'] = 'test title update'
+
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'update', item=collection_id,
+        data=sample_collection, collection='metadata:main')
+
+    assert status == 204
+
+    headers, status, content = api.collection({}, {'f': 'json'}, collection=collection_id)
+
+    content = json.loads(content)
+
+    assert content['title'] == sample_collection['title']
+
+    # test that item is in repository
+    content = json.loads(api.item({}, {}, 'metadata:main',
+                         '20201211_223832_CS2')[2])
+
+    # delete collection
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'delete', item=collection_id)
+
+    content = json.loads(content)
+
+    assert status == 200
+
+    # test that collection is not in repository
+    headers, status, content = api.collections({}, {'f': 'json'})
+    content = json.loads(content)
+
+    collection_found = False
+
+    for collection in content['collections']:
+        if collection['id'] == collection_id:
+            collection_found = True
+
+    assert not collection_found

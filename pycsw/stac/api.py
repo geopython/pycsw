@@ -69,7 +69,9 @@ CONFORMANCE_CLASSES = [
     'https://api.stacspec.org/v1.0.0/item-search#filter',
     'https://api.stacspec.org/v1.0.0/item-search#free-text',
     'https://api.stacspec.org/v1.0.0-rc.1/collection-search',
-    'https://api.stacspec.org/v1.0.0-rc.1/collection-search#free-text'
+    'https://api.stacspec.org/v1.0.0-rc.1/collection-search#free-text',
+    'https://api.stacspec.org/v1.0.0/collections/extensions/transaction',
+    'https://api.stacspec.org/v1.0.0/ogcapi-features/extensions/transaction'
 ]
 
 
@@ -321,11 +323,15 @@ class STACAPI(API):
         if collection == 'metadata:main':
             collection_info = self.get_collection_info()
         else:
-            virtual_collection = self.repository.query_ids([collection])[0]
-            collection_info = self.get_collection_info(
-                virtual_collection.identifier,
-                dict(title=virtual_collection.title,
+            try:
+                virtual_collection = self.repository.query_ids([collection])[0]
+                collection_info = self.get_collection_info(
+                    virtual_collection.identifier,
+                    dict(title=virtual_collection.title,
                      description=virtual_collection.abstract))
+            except IndexError:
+                return self.get_exception(
+                    404, headers_, 'InvalidParameterValue', 'STAC collection not found')
 
         response = collection_info
         url_base = f"{self.config['server']['url']}/collections/{collection}"
@@ -456,6 +462,11 @@ class STACAPI(API):
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
         response = json.loads(response)
+
+        if 'id' not in response:
+            return self.get_exception(
+                    404, headers_, 'InvalidParameterValue', 'item not found')
+
         response = links2stacassets(collection, response)
 
         return self.get_response(status, headers_, response)
@@ -496,6 +507,27 @@ class STACAPI(API):
                 'href': f"{self.config['server']['url']}/collections/{collection_name}/items"
             }]
         }
+
+    def manage_collection_item(self, headers_, action='create', item=None, data=None, collection=None):
+        if action == 'create' and 'features' in data:
+            LOGGER.debug('STAC Collection detected')
+
+            for feature in data['features']:
+                data2 = feature
+                if collection is not None:
+                    data2['collection'] = collection
+
+                headers, status, content = super().manage_collection_item(
+                    headers_=headers_, action='create', data=data2)
+
+            return self.get_response(201, headers_, {})
+
+        else:  # default/super
+            if collection is not None:
+                data['collection'] = collection
+
+            return super().manage_collection_item(
+                headers_=headers_, action=action, item=item, data=data)
 
 
 def links2stacassets(collection, record):

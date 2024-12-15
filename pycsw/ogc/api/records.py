@@ -184,7 +184,8 @@ class API:
         if headers.get('Content-Type') == 'text/html' and template is not None:
             content = render_j2_template(self.config, template, data)
         else:
-            content = to_json(data)
+            pretty_print = str2bool(self.config['server'].get('pretty_print', False))
+            content = to_json(data, pretty_print)
 
         headers['Content-Length'] = len(content)
 

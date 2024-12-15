@@ -46,9 +46,6 @@ APP.url_map.strict_slashes = False
 with open(os.getenv('PYCSW_CONFIG'), encoding='utf8') as fh:
     APP.config['PYCSW_CONFIG'] = yaml_load(fh)
 
-pretty_print = APP.config['PYCSW_CONFIG']['server'].get('pretty_print', True)
-APP.config['JSONIFY_PRETTYPRINT_REGULAR'] = pretty_print
-
 BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC,
                       static_url_path='/static')
 
@@ -137,8 +134,8 @@ def conformance():
         return get_response(api_.conformance(dict(request.headers), request.args))
 
 
-@BLUEPRINT.route('/collections')
-@BLUEPRINT.route('/stac/collections')
+@BLUEPRINT.route('/collections', methods=['GET', 'POST'])
+@BLUEPRINT.route('/stac/collections', methods=['GET', 'POST'])
 def collections():
     """
     OGC API collections endpoint
@@ -147,13 +144,19 @@ def collections():
     """
 
     if get_api_type(request.url_rule.rule) == 'stac-api':
-        return get_response(stacapi.collections(dict(request.headers), request.args))  # noqa
+        if request.method == 'POST':
+            data = request.get_json(silent=True)
+            return get_response(stacapi.manage_collection_item(dict(request.headers),
+                                'create', data=data))
+        else:
+            return get_response(stacapi.collections(dict(request.headers),
+                                request.args))
     else:
         return get_response(api_.collections(dict(request.headers), request.args))
 
 
-@BLUEPRINT.route('/collections/<collection>')
-@BLUEPRINT.route('/stac/collections/<collection>')
+@BLUEPRINT.route('/collections/<collection>', methods=['GET', 'PUT', 'DELETE'])
+@BLUEPRINT.route('/stac/collections/<collection>', methods=['GET', 'PUT', 'DELETE'])
 def collection(collection='metadata:main'):
     """
     OGC API collection endpoint
@@ -164,8 +167,18 @@ def collection(collection='metadata:main'):
     """
 
     if get_api_type(request.url_rule.rule) == 'stac-api':
-        return get_response(stacapi.collection(dict(request.headers),
-                            request.args, collection))
+        if request.method == 'PUT':
+            return get_response(
+                stacapi.manage_collection_item(
+                    dict(request.headers), 'update', collection,
+                    data=request.get_json(silent=True)))
+        elif request.method == 'DELETE':
+            return get_response(
+                stacapi.manage_collection_item(dict(request.headers),
+                                               'delete', collection))
+        else:
+            return get_response(stacapi.collection(dict(request.headers),
+                                request.args, collection))
     else:
         return get_response(api_.collection(dict(request.headers),
                             request.args, collection))
@@ -203,14 +216,22 @@ def items(collection='metadata:main'):
     :returns: HTTP response
     """
 
-    if request.method == 'POST' and request.content_type not in [None, 'application/json']:  # noqa
+    if all([get_api_type(request.url_rule.rule) == 'ogcapi-records',
+            request.method == 'POST',
+            request.content_type not in [None, 'application/json']]):
+
         data = None
         if request.content_type == 'application/geo+json':  # JSON grammar
             data = request.get_json(silent=True)
         elif 'xml' in request.content_type:  # XML grammar
             data = request.data
+
         return get_response(api_.manage_collection_item(dict(request.headers),
                             'create', data=data))
+    elif request.method == 'POST' and get_api_type(request.url_rule.rule) == 'stac-api':
+        data = request.get_json(silent=True)
+        return get_response(stacapi.manage_collection_item(dict(request.headers),
+                            'create', data=data, collection=collection))
     else:
         if get_api_type(request.url_rule.rule) == 'stac-api':
             return get_response(stacapi.items(dict(request.headers),
