@@ -220,6 +220,7 @@ def items(collection='metadata:main'):
             request.method == 'POST',
             request.content_type not in [None, 'application/json']]):
 
+        # OGC API Transaction - create
         data = None
         if request.content_type == 'application/geo+json':  # JSON grammar
             data = request.get_json(silent=True)
@@ -229,18 +230,18 @@ def items(collection='metadata:main'):
         return get_response(api_.manage_collection_item(dict(request.headers),
                             'create', data=data))
     elif request.method == 'POST' and get_api_type(request.url_rule.rule) == 'stac-api':
-        data = request.get_json(silent=True)
-        return get_response(stacapi.manage_collection_item(dict(request.headers),
-                            'create', data=data, collection=collection))
-    else:
-        if get_api_type(request.url_rule.rule) == 'stac-api':
+        if request.url_rule.rule.endswith('items'):  # STAC API transaction - create
+            data = request.get_json(silent=True)
+            return get_response(stacapi.manage_collection_item(dict(request.headers),
+                                'create', data=data, collection=collection))
+        else:  # STAC API search
             return get_response(stacapi.items(dict(request.headers),
                                 request.get_json(silent=True), dict(request.args),
                                 collection))
-        else:
-            return get_response(api_.items(dict(request.headers),
-                                request.get_json(silent=True), dict(request.args),
-                                collection))
+    else:  # OGC API - Records items search
+        return get_response(api_.items(dict(request.headers),
+                            request.get_json(silent=True), dict(request.args),
+                            collection))
 
 
 @BLUEPRINT.route('/collections/<collection>/items/<path:item>',

@@ -644,7 +644,7 @@ class API:
                 LOGGER.debug('No CQL specified, only query parameters')
                 json_post_data = {}
             if not json_post_data and collections and collections != ['metadata:main']:
-                json_post_data = {'eq': [{'property': 'parentidentifier'}, collections[0]]}
+                json_post_data = {'op': 'eq', 'args': [{'property': 'parentidentifier'}, collections[0]]}
 
             cql_query = json_post_data
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
@@ -1158,7 +1158,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                 tctheme['concepts'].append({'id': rtp})
         elif isinstance(record.topicategory, str):
             tctheme['concepts'].append({'id': record.topicategory})
-        
+
         record_dict['properties']['themes'] = [tctheme]
 
     if record.otherconstraints:
@@ -1197,7 +1197,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
 
     if record.contacts not in [None, '', 'null']:
         rcnt = []
-        roles = [] 
+        roles = []
         try:
             for cnt in json.loads(record.contacts):
                 try:
@@ -1226,8 +1226,8 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                     })
                 except Exception as err:
                     LOGGER.exception(f"failed to parse contact of {record.identifier}: {err}")
-            for r2 in "creator,publisher,contributor".split(","): # match role-fields with contacts
-                if r2 not in roles and hasattr(record,r2) and record[r2] not in [None,'']:
+            for r2 in "creator,publisher,contributor".split(","):  # match role-fields with contacts
+                if r2 not in roles and hasattr(record, r2) and record[r2] not in [None, '']:
                     rcnt.append({
                         'organization': record[r2],
                         'roles': [r2]
@@ -1239,7 +1239,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         record_dict['properties']['contacts'] = rcnt
 
     if record.themes not in [None, '', 'null']:
-        ogcapi_themes = record_dict['properties'].get('themes', []) 
+        ogcapi_themes = record_dict['properties'].get('themes', [])
         # For a scheme, prefer uri over label
         # OWSlib currently uses .keywords_object for keywords with url, see https://github.com/geopython/OWSLib/pull/765
         try:
@@ -1247,7 +1247,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                 try:
                     ogcapi_themes.append({
                         'scheme': theme['thesaurus'].get('url') or theme['thesaurus'].get('title'),
-                        'concepts': [{'id': c.get('name','')} for c in theme.get('keywords', []) if 'name' in c and c['name'] not in [None, '']]
+                        'concepts': [{'id': c.get('name', '')} for c in theme.get('keywords', []) if 'name' in c and c['name'] not in [None, '']]
                     })
                 except Exception as err:
                     LOGGER.exception(f"failed to parse theme of {record.identifier}: {err}")
