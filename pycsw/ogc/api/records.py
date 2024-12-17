@@ -541,6 +541,7 @@ class API:
         query_parser = None
         sortby = None
         limit = None
+        bbox = []
         facets_requested = False
         collections = []
 
@@ -553,7 +554,7 @@ class API:
             LOGGER.debug(f'JSON POST data: {json_post_data}')
             LOGGER.debug('Transforming JSON POST data into request args')
 
-            for p in ['limit', 'bbox', 'datetime']:
+            for p in ['limit', 'bbox', 'datetime', 'collections']:
                 if p in json_post_data:
                     if p == 'bbox':
                         args[p] = ','.join(map(str, json_post_data.get(p)))
@@ -588,7 +589,10 @@ class API:
                     ids = ','.join(f'"{x}"' for x in v.split(','))
                     query_args.append(f"identifier IN ({ids})")
                 elif k == 'collections':
-                    collections = ','.join(f'"{x}"' for x in v.split(','))
+                    if isinstance(collections, str):
+                        collections = ','.join(f'"{x}"' for x in v.split(','))
+                    else:
+                        collections = ','.join(f'"{x}"' for x in v)
                     query_args.append(f"parentidentifier IN ({collections})")
                 elif k == 'anytext':
                     query_args.append(build_anytext(k, v))
@@ -634,17 +638,32 @@ class API:
             query_parser = parse_ecql
 
         elif json_post_data is not None:
+
             if 'limit' in json_post_data:
                 limit = json_post_data.pop('limit')
             if 'sortby' in json_post_data:
                 sortby = json_post_data.pop('sortby')
             if 'collections' in json_post_data:
                 collections = json_post_data.pop('collections')
+            if 'bbox' in json_post_data:
+                bbox = json_post_data.pop('bbox')
             if not json_post_data:
                 LOGGER.debug('No CQL specified, only query parameters')
                 json_post_data = {}
             if not json_post_data and collections and collections != ['metadata:main']:
                 json_post_data = {'op': 'eq', 'args': [{'property': 'parentidentifier'}, collections[0]]}
+                if bbox:
+                    json_post_data = {
+                        'op': 'and',
+                        'args': [{
+                           'op': 's_intersects',
+                           'args': [
+                               {'property': 'geometry2'},
+                               {'bbox': [bbox]}
+                           ]},
+                           json_post_data
+                        ]
+                    }
 
             cql_query = json_post_data
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
@@ -654,6 +673,8 @@ class API:
 
         if query_parser is not None and json_post_data != {}:
             LOGGER.debug('Parsing CQL into AST')
+            LOGGER.debug(json_post_data)
+            LOGGER.debug(cql_query)
             try:
                 ast = query_parser(cql_query)
                 LOGGER.debug(f'Abstract syntax tree: {ast}')
@@ -1234,7 +1255,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                     })
 
         except Exception as err:
-            LOGGER.exception(f"failed to parse contacts json of {record.identifier}: {err}")
+            LOGGER.warning(f"failed to parse contacts json of {record.identifier}: {err}")
 
         record_dict['properties']['contacts'] = rcnt
 
