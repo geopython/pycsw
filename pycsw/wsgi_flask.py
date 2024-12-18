@@ -238,6 +238,10 @@ def items(collection='metadata:main'):
             return get_response(stacapi.items(dict(request.headers),
                                 request.get_json(silent=True), dict(request.args),
                                 collection))
+    elif get_api_type(request.url_rule.rule) == 'stac-api':
+        return get_response(stacapi.items(dict(request.headers),
+                            request.get_json(silent=True), dict(request.args),
+                            collection))
     else:  # OGC API - Records items search
         return get_response(api_.items(dict(request.headers),
                             request.get_json(silent=True), dict(request.args),
