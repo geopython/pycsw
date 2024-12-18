@@ -269,12 +269,20 @@ class STACAPI(API):
             self.repository.dataset).filter(filters).limit(limit).all()
 
         for sc in sc_query:
-            response['collections'].append(self.get_collection_info(
-                sc.identifier, {
-                    'title': sc.title or sc.identifier,
-                    'description': sc.abstract or sc.identifier
-                })
-            )
+            id_found = False
+
+            for collection_ in response['collections']:
+                if sc.identifier == collection_['id']:
+                    id_found = True
+
+            if not id_found:
+                LOGGER.debug('Adding STAC collection')
+                response['collections'].append(self.get_collection_info(
+                    sc.identifier, {
+                        'title': sc.title or sc.identifier,
+                        'description': sc.abstract or sc.identifier
+                    })
+                )
 
         url_base = f"{self.config['server']['url']}/collections"
 
@@ -328,7 +336,7 @@ class STACAPI(API):
                 collection_info = self.get_collection_info(
                     virtual_collection.identifier,
                     dict(title=virtual_collection.title,
-                     description=virtual_collection.abstract))
+                         description=virtual_collection.abstract))
             except IndexError:
                 return self.get_exception(
                     404, headers_, 'InvalidParameterValue', 'STAC collection not found')
