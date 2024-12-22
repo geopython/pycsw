@@ -511,6 +511,7 @@ class Repository(object):
                                 self.dataset, self.context.md_core_model['mappings']['pycsw:XML']))
                         }, synchronize_session='fetch')
                 self.session.commit()
+                LOGGER.debug('Updated %d records', rows)
                 return rows
             except Exception as err:
                 self.session.rollback()
@@ -521,6 +522,7 @@ class Repository(object):
     def delete(self, constraint):
         ''' Delete a record from the repository '''
 
+        LOGGER.debug('Deleting record with constraint: %s', constraint)
         try:
             self.session.begin()
             rows = self._get_repo_filter(self.session.query(self.dataset)).filter(
@@ -542,6 +544,7 @@ class Repository(object):
                             synchronize_session='fetch')
 
             self.session.commit()
+            LOGGER.debug('Deleted %d records', rows)
         except Exception as err:
             self.session.rollback()
             msg = 'Cannot commit to repository'

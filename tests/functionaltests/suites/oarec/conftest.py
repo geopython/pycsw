@@ -233,7 +233,9 @@ def sample_record():
                     ]
                 }
             ],
-            "language": "en",
+            "language": {
+                "code": "en"
+            },
             "type": "dataset",
             "created": "2011-11-11",
             "updated": "2000-09-01",

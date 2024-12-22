@@ -1764,7 +1764,7 @@ def _parse_oarec_record(context, repos, record):
 
     _set(context, recobj, 'pycsw:AnyText', ' '.join([str(t) for t in util.get_anytext_from_obj(record)]))
 
-    _set(context, recobj, 'pycsw:Language', record['properties'].get('language'))
+    _set(context, recobj, 'pycsw:Language', record['properties'].get('language', {}).get('code'))
     _set(context, recobj, 'pycsw:Type', record['properties']['type'])
     _set(context, recobj, 'pycsw:Title', record['properties']['title'])
     _set(context, recobj, 'pycsw:Abstract', record['properties'].get('description'))
