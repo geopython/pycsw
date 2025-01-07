@@ -38,7 +38,7 @@ from pycsw import __version__
 from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.records import API, build_anytext
-from pycsw.core.util import geojson_geometry2bbox
+from pycsw.core.util import geojson_geometry2bbox, wkt2geom
 
 LOGGER = logging.getLogger(__name__)
 
@@ -247,10 +247,9 @@ class STACAPI(API):
         virtual_collections = self.repository.query_collections(filters, limit)
 
         for virtual_collection in virtual_collections:
+            print("VIRTUAL COLLECTION", virtual_collection)
             virtual_collection_info = self.get_collection_info(
-                virtual_collection.identifier,
-                dict(title=virtual_collection.title,
-                     description=virtual_collection.abstract))
+                virtual_collection.identifier, virtual_collection)
 
             collections.append(virtual_collection_info)
 
@@ -277,12 +276,12 @@ class STACAPI(API):
 
             if not id_found:
                 LOGGER.debug('Adding STAC collection')
+                sc2 = sc
+                sc2.title = sc.title or sc.identifier
+                sc2.abstract = sc.abstract or sc.identifier
                 response['collections'].append(self.get_collection_info(
-                    sc.identifier, {
-                        'title': sc.title or sc.identifier,
-                        'description': sc.abstract or sc.identifier
-                    })
-                )
+                    sc2.identifier, sc2
+                ))
 
         url_base = f"{self.config['server']['url']}/collections"
 
@@ -334,9 +333,7 @@ class STACAPI(API):
             try:
                 virtual_collection = self.repository.query_ids([collection])[0]
                 collection_info = self.get_collection_info(
-                    virtual_collection.identifier,
-                    dict(title=virtual_collection.title,
-                         description=virtual_collection.abstract))
+                    virtual_collection.identifier, virtual_collection)
             except IndexError:
                 return self.get_exception(
                     404, headers_, 'InvalidParameterValue', 'STAC collection not found')
@@ -497,11 +494,21 @@ class STACAPI(API):
             description = self.config['metadata']['identification']['description']  # noqa
         else:
             id_ = collection_name
-            title = collection_info.get('title')
-            description = collection_info.get('description')
+            title = collection_info.title
+            description = collection_info.abstract
 
         return {
             'id': id_,
+            'stac_version': '1.0.0',
+            'license': 'other',
+            'extent': {
+                'spatial': {
+                    'bbox': [wkt2geom(collection_info.wkt_geometry)]
+                },
+                'temporal': {'interval': [[
+                    collection_info.time_begin, collection_info.time_end
+                ]]}
+            },
             'title': title,
             'description': description,
             'type': 'Collection',
