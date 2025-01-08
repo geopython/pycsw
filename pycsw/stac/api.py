@@ -247,7 +247,6 @@ class STACAPI(API):
         virtual_collections = self.repository.query_collections(filters, limit)
 
         for virtual_collection in virtual_collections:
-            print("VIRTUAL COLLECTION", virtual_collection)
             virtual_collection_info = self.get_collection_info(
                 virtual_collection.identifier, virtual_collection)
 
@@ -524,8 +523,8 @@ class STACAPI(API):
         }
 
     def manage_collection_item(self, headers_, action='create', item=None, data=None, collection=None):
-        if action == 'create' and 'features' in data:
-            LOGGER.debug('STAC Collection detected')
+        if action == 'create' and data is not None and 'features' in data:
+            LOGGER.debug('STAC ItemCollection detected')
 
             for feature in data['features']:
                 data2 = feature
@@ -538,11 +537,12 @@ class STACAPI(API):
             return self.get_response(201, headers_, {})
 
         else:  # default/super
+            LOGGER.debug('STAC Collection detected')
             if collection is not None:
                 data['collection'] = collection
 
             return super().manage_collection_item(
-                headers_=headers_, action=action, item=item, data=data)
+                headers_=headers_, action=action, item=data['id'], data=data)
 
 
 def links2stacassets(collection, record):
