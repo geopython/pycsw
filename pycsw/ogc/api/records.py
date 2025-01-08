@@ -936,7 +936,7 @@ class API:
             try:
                 _ = self.repository.query_ids([record.identifier])[0]
                 return self.get_exception(
-                    404, headers_, 'InvalidParameterValue', 'item exists')
+                    400, headers_, 'InvalidParameterValue', 'item exists')
             except Exception:
                 LOGGER.debug('Identifier does not exist')
 

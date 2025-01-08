@@ -250,7 +250,8 @@ def items(collection='metadata:main'):
 
 @BLUEPRINT.route('/collections/<collection>/items/<path:item>',
                  methods=['GET', 'PUT', 'DELETE'])
-@BLUEPRINT.route('/stac/collections/<collection>/items/<item>')
+@BLUEPRINT.route('/stac/collections/<collection>/items/<item>',
+                 methods=['GET', 'PUT', 'DELETE'])
 def item(collection='metadata:main', item=None):
     """
     OGC API collection items endpoint
