@@ -540,9 +540,11 @@ class STACAPI(API):
             LOGGER.debug('STAC Collection detected')
             if collection is not None:
                 data['collection'] = collection
+            if 'id' in data:
+                item=data['id']
 
             return super().manage_collection_item(
-                headers_=headers_, action=action, item=data['id'], data=data)
+                headers_=headers_, action=action, item=item, data=data)
 
 
 def links2stacassets(collection, record):
