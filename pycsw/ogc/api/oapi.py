@@ -437,7 +437,9 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
             'description': 'Adds Records items',
             'tags': ['metadata'],
             'operationId': 'addRecord',
-            'consumes': ['application/json', 'application/xml'],
+            'consumes': [
+                'application/geo+json', 'application/json', 'application/xml'
+            ],
             'produces': ['application/json'],
             'parameters': [{
                 'in': 'body',
@@ -505,7 +507,9 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
             'description': 'Updates Records items',
             'tags': ['metadata'],
             'operationId': 'updateRecord',
-            'consumes': ['application/json', 'application/xml'],
+            'consumes': [
+                'application/geo+json', 'application/json', 'application/xml'
+            ],
             'produces': ['application/json'],
             'parameters': [
                 {'$ref': '#/components/parameters/collectionId'},
