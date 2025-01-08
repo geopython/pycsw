@@ -540,7 +540,7 @@ class STACAPI(API):
             LOGGER.debug('STAC Collection detected')
             if collection is not None:
                 data['collection'] = collection
-            if 'id' in data:
+            if data is not None and 'id' in data:
                 item=data['id']
 
             return super().manage_collection_item(
