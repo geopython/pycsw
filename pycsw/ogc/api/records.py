@@ -1098,6 +1098,22 @@ class API:
                     'value': fq[0],
                     'count': fq[1]
                 })
+            
+            if facet in ['keywords']:
+                splitkws = {}
+                for k in facets_results[facet]['buckets']:
+                    if 'value' in k.keys() and k['value'] not in [None,''] and int(k['count']) > 0:
+                        if ',' in k['value']: # split kws by ,
+                            for k2 in k['value'].split(','):
+                                splitkws[k2.lower()] = int(k['count']) + int(splitkws.get(k2.lower(),0))
+                        else: 
+                            splitkws[k['value'].lower()] = int(k['count']) + int(splitkws.get(k['value'].lower(),0))
+                facets_results[facet]['buckets'] = [] # reset facet, populate it again       
+                for k,v in splitkws.items():
+                    facets_results[facet]['buckets'].append({
+                        'value': k,
+                        'count': v
+                    })
 
         return facets_results
 
