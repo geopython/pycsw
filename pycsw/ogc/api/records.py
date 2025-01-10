@@ -31,6 +31,7 @@
 
 import json
 import logging
+from operator import itemgetter
 import os
 from urllib.parse import urlencode, quote
 
@@ -1098,6 +1099,8 @@ class API:
                     'value': fq[0],
                     'count': fq[1]
                 })
+
+            facets_results[facet]['buckets'].sort(key=itemgetter('count'), reverse=True)
 
         return facets_results
 
