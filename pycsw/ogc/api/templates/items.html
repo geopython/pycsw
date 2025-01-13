@@ -58,13 +58,14 @@
   for at in attrs.keys() %}{%
     if at != 'offset' %}{%
       if attrs[at] not in [None,''] %}{% 
-        if key not in [None,''] and key == at %}&{{ at }}={{ val }}{% 
+        if key not in [None,''] and key == at %}{% 
+          if val != '' %}&{{ at }}={{ val }}{% endif %}{% 
         else %}&{{ at }}={{ attrs[at] }}{% 
         endif %}{% 
       endif %}{% 
     endif %}{%
-    if key not in attrs.keys() %}&{{ key }}={{ val }}{% endif %}{% 
-  endfor %}{% 
+  endfor %}{%
+  if key not in attrs.keys() %}&{{ key }}={{ val }}{% endif %}{% 
 endmacro %}
 
 {% macro reseturl(key,val) %}{{ 
@@ -122,18 +123,30 @@ endmacro %}
         </div>
         {% if data['facets'] %}
         {% for facet in data['facets'].keys() %}
+        {% if data['facets'][facet]['buckets']|length > 0 %}
         <div class="card mt-3">
-          <div class="card-header text-capitalize">{{ facet }}</div>
+          <div class="card-header text-capitalize">{{ facet }} {% if facet in attrs.keys() %}
+            <a href="{{ updateurl(facet,'') }}"
+            class="btn btn-sm btn-outline-secondary" style="float:right">Reset</a>
+            {% endif %}</div>
           <div class="card-body">
-            {% for bucket in data['facets'][facet].buckets %}
+            {% for bucket in data['facets'][facet]['buckets'] %}
+            {% if loop.index == 8 %}
+              <div id="more-{{facet}}" class="collapse">
+            {% endif %}
             {% if bucket['value'] %}
             <a href="{{ updateurl(facet,bucket['value']) }}" title="{{bucket['value']}}"
               >{{(bucket['value'] or "") | truncate(20, False, '..') | capitalize }}</a>
             <span class="badge rounded-pill bg-secondary" style="float:right">{{bucket['count']}}</span><br>
             {% endif %}
             {% endfor %}
+            {% if data['facets'][facet]['buckets']|length > 7 %}</div>
+            <button onclick="$('#more-{{facet}}').toggle()" 
+              class="btn btn-sm btn-outline-secondary mt-2">Show more</button>
+            {% endif %}
           </div>
         </div>
+        {% endif %}
         {% endfor %}
         {% endif %}
       </div>
