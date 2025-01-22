@@ -286,6 +286,11 @@ class API:
               'type': 'application/json',
               'title': 'Main collection',
               'href': f"{self.config['server']['url']}/collections/metadata:main"
+            },{
+              'rel': 'http://www.opengis.net/def/rel/ogc/1.0/ogc-catalog',
+              'type': 'application/json',
+              'title': 'Record catalogue collection',
+              'href': f"{self.config['server']['url']}/collections/metadata:main"
             }
         ]
 
@@ -1029,6 +1034,12 @@ class API:
                 'rel': 'collection',
                 'type': 'application/json',
                 'title': 'Collection URL',
+                'href': f"{self.config['server']['url']}/collections/{collection_name}",
+                'hreflang': self.config['server']['language']
+            }, {
+                'rel': 'http://www.opengis.net/def/rel/ogc/1.0/ogc-catalog',
+                'type': 'application/json',
+                'title': 'Record catalog collection',
                 'href': f"{self.config['server']['url']}/collections/{collection_name}",
                 'hreflang': self.config['server']['language']
             }, {

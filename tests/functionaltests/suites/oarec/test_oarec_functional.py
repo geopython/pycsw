@@ -48,7 +48,7 @@ def test_landing_page(config):
 
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
-    assert len(content['links']) == 14
+    assert len(content['links']) == 15
 
     for link in content['links']:
         assert link['href'].startswith(api.config['server']['url'])
@@ -89,7 +89,7 @@ def test_collections(config):
     assert len(content['collections']) == 1
 
     content = json.loads(api.collections({}, {})[2])['collections'][0]
-    assert len(content['links']) == 3
+    assert len(content['links']) == 4
     assert content['id'] == 'metadata:main'
     assert content['title'] == 'pycsw Geospatial Catalogue'
     assert content['description'] == 'pycsw is an OARec and OGC CSW server implementation written in Python'  # noqa
