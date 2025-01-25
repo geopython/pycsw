@@ -106,7 +106,7 @@ def config():
             }
         },
         'repository': {
-            'database': 'sqlite:///tests/functionaltests/suites/cite/data/cite.db',
+            'database': 'sqlite:///tests/functionaltests/suites/stac_api/data/records.db',
             'table': 'records',
         }
     }
