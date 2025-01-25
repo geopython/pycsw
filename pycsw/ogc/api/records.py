@@ -595,7 +595,7 @@ class API:
                     ids = ','.join(f'"{x}"' for x in v.split(','))
                     query_args.append(f"identifier IN ({ids})")
                 elif k == 'collections':
-                    if isinstance(collections, str):
+                    if isinstance(v, str):
                         collections = ','.join(f'"{x}"' for x in v.split(','))
                     else:
                         collections = ','.join(f'"{x}"' for x in v)
