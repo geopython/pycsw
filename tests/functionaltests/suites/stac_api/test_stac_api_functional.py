@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <gcpp.kalxas@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2022 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -95,7 +95,7 @@ def test_collections(config):
     assert status == 200
     assert len(content['links']) == 3
 
-    assert len(content['collections']) == 0
+    assert len(content['collections']) == 4
     assert len(content['collections']) == content['numberMatched']
     assert len(content['collections']) == content['numberReturned']
 
@@ -140,7 +140,7 @@ def test_items(config):
     record = content['features'][0]
 
     assert record['stac_version'] == '1.0.0'
-    assert record['collection'] == 'metadata:main'
+    assert record['collection'] == 'S2MSI2A'
 
     for feature in content['features']:
         if feature.get('geometry') is not None:
@@ -153,70 +153,90 @@ def test_items(config):
 
     # test GET KVP requests
     content = json.loads(api.items({}, None, {'bbox': '-180,-90,180,90'})[2])
-    assert len(content['features']) == 3
+    assert len(content['features']) == 10
 
-    content = json.loads(api.items({}, None, {'datetime': '2006-03-26'})[2])
-    assert len(content['features']) == 1
+    content = json.loads(api.items({}, None, {'datetime': '2021-02-16'})[2])
+    assert len(content['features']) == 2
 
     content = json.loads(api.items({}, None,
                                    {'bbox': '-180,-90,180,90',
-                                   'datetime': '2006-03-26'})[2])
-    assert len(content['features']) == 1
+                                   'datetime': '2021-02-16'})[2])
+    assert len(content['features']) == 2
 
     content = json.loads(api.items({}, None, {'sortby': 'title'})[2])
 
     assert len(content['features']) == 10
-    assert content['features'][5]['properties']['title'] == 'Lorem ipsum'
+    assert content['features'][5]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({}, None, {'sortby': '-title'})[2])
 
     assert len(content['features']) == 10
-    assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
+    assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE'  # noqa
 
-    params = {'filter': "title LIKE '%%Lorem%%'"}
+    params = {'filter': "title LIKE '%%sentinel%%'"}
     content = json.loads(api.items({}, None, params)[2])
-    assert content['numberMatched'] == 2
-    assert content['numberReturned'] == 2
+    assert content['numberMatched'] == 3
+    assert content['numberReturned'] == 3
     assert len(content['features']) == content['numberReturned']
 
-    params = {'filter': "title LIKE '%%Lorem%%'", 'q': 'iPsUm'}
+    params = {'filter': "title LIKE '%%sentinel%%'", 'q': 'specTral'}
     content = json.loads(api.items({}, None, params)[2])
-    assert content['numberMatched'] == 2
-    assert content['numberReturned'] == 2
+    assert content['numberMatched'] == 3
+    assert content['numberReturned'] == 3
     assert len(content['features']) == content['numberReturned']
 
     # test POST JSON requests
     content = json.loads(api.items({}, {'bbox': [-180, -90, 180, 90]}, {})[2])
-    assert len(content['features']) == 3
+    assert len(content['features']) == 10
 
     content = json.loads(api.items({},
-                                   {'bbox': [-180, -90, 180, 90], 'datetime': '2006-03-26'},  # noqa
+                                   {'bbox': [-180, -90, 180, 90], 'datetime': '2019-09-10T09:50:29.024000Z'},  # noqa
                                    {})[2])
-    assert len(content['features']) == 1
+    assert len(content['features']) == 10
 
-    content = json.loads(api.items({}, {'datetime': '2006-03-26'}, {})[2])
-    assert len(content['features']) == 1
+    content = json.loads(api.items({}, {'datetime': '2024-11-28T09:23:31.024000Z'}, {})[2])  # noqa
+    assert len(content['features']) == 2
 
     content = json.loads(api.items({},
                                    {'sortby': [{'field': 'title', 'direction': 'asc'}]},  # noqa
                                    {})[2])
 
     assert len(content['features']) == 10
-    assert content['features'][5]['properties']['title'] == 'Lorem ipsum'
+    assert content['features'][5]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({},
                                    {'sortby': [{'field': 'title', 'direction': 'desc'}]},  # noqa
                                    {})[2])
     assert len(content['features']) == 10
-    assert content['features'][5]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
+    assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE'  # noqa
 
     headers, status, content = api.items({}, None, {}, 'foo')
     assert status == 400
 
+    # test items from a specific collection
+    headers, status, content = api.items({}, None, {}, 'S2MSI2A')
+    assert status == 200
+
+    content = json.loads(content)
+
+    assert content['numberMatched'] == 11
+    for feature in content['features']:
+        assert feature['collection'] == 'S2MSI2A'
+
+    # test items from a specific collection with a temporal query predicate
+    headers, status, content = api.items({}, None, {'datetime': '2018-10-09T21:00:00.000Z/2019-10-23T12:51:01.271Z'}, 'S2MSI1C')  # noqa
+    assert status == 200
+
+    content = json.loads(content)
+
+    assert content['numberMatched'] == 12
+    for feature in content['features']:
+        assert feature['collection'] == 'S2MSI1C'
+
 
 def test_item(config):
     api = STACAPI(config)
-    item = 'urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f'
+    item = 'S2B_MSIL2A_20190910T095029_N0500_R079_T33TXN_20230430T083712.SAFE'
     headers, status, content = api.item({}, {}, 'metadata:main', item)
     content = json.loads(content)
 
@@ -225,7 +245,7 @@ def test_item(config):
 
     assert content['id'] == item
     assert content['stac_version'] == '1.0.0'
-    assert content['collection'] == 'metadata:main'
+    assert content['collection'] == 'S2MSI2A'
 
     for link in content['links']:
         assert 'href' in link
@@ -244,7 +264,8 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     # insert item
     headers, status, content = api.manage_collection_item(
-        request_headers, 'create', data=sample_item, collection='metadata:main')
+        request_headers, 'create', data=sample_item,
+        collection='metadata:main')
 
     assert status == 201
 
@@ -254,11 +275,11 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     assert content['id'] == '20201211_223832_CS2'
     assert content['geometry'] is None
-    assert content['properties']['datetime'] == '2020-12-11T22:38:32.125000Z'
+    assert content['properties']['datetime'] == '2020-12-11T22:38:32Z'
     assert content['collection'] == 'metadata:main'
 
     # update item
-    sample_item['properties']['datetime'] = '2021-12-11T22:38:32.125000Z'
+    sample_item['properties']['datetime'] = '2021-12-14T22:38:32Z'
 
     headers, status, content = api.manage_collection_item(
         request_headers, 'update', item='20201211_223832_CS2',
@@ -271,7 +292,7 @@ def test_json_transaction(config, sample_collection, sample_item,
                          '20201211_223832_CS2')[2])
 
     assert content['id'] == '20201211_223832_CS2'
-    assert content['properties']['datetime'] == sample_item['properties']['datetime']
+    assert content['properties']['datetime'] == sample_item['properties']['datetime']  # noqa
     assert content['collection'] == 'metadata:main'
 
     # delete item
@@ -290,11 +311,12 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     matched = json.loads(content)['numberMatched']
 
-    assert matched == 12
+    assert matched == 30
 
     # insert item collection
     headers, status, content = api.manage_collection_item(
-        request_headers, 'create', data=sample_item_collection, collection='metadata:main')
+        request_headers, 'create', data=sample_item_collection,
+        collection='metadata:main')
 
     assert status == 201
 
@@ -302,7 +324,7 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     matched = json.loads(content)['numberMatched']
 
-    assert matched == 14
+    assert matched == 32
 
     # delete items from item collection
     headers, status, content = api.manage_collection_item(
@@ -335,7 +357,8 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     assert collection_found
 
-    headers, status, content = api.collection({}, {'f': 'json'}, collection=collection_id)
+    headers, status, content = api.collection(
+        {}, {'f': 'json'}, collection=collection_id)
 
     content = json.loads(content)
 
@@ -352,7 +375,8 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     assert status == 204
 
-    headers, status, content = api.collection({}, {'f': 'json'}, collection=collection_id)
+    headers, status, content = api.collection(
+        {}, {'f': 'json'}, collection=collection_id)
 
     content = json.loads(content)
 

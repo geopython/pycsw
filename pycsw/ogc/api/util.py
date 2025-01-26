@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -91,10 +91,10 @@ def json_serial(obj):
     """
 
     if isinstance(obj, (datetime, date, time)):
-        if isinstance(obj, date):
+        if isinstance(obj, (datetime, time)):
+            return obj.strftime('%Y-%m-%dT%H:%M:%SZ')
+        else:  # date
             return obj.strftime('%Y-%m-%d')
-        else:
-            return obj.isoformat() + 'Z'
     elif isinstance(obj, bytes):
         try:
             LOGGER.debug('Returning as UTF-8 decoded bytes')
@@ -247,6 +247,7 @@ def to_rfc3339(value: str) -> Union[tuple, None]:
     if len(value) < 11:
         dt_type = 'date'
     else:
+        dt_type = 'date-time'
         dt_type = 'date-time'
 
     return dt, dt_type

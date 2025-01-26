@@ -1,0 +1,667 @@
+{
+    "type": "Feature",
+    "stac_version": "1.0.0",
+    "id": "S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE",
+    "properties": {
+        "providers": [
+            {
+                "name": "ESA",
+                "roles": [
+                    "producer",
+                    "processor",
+                    "licensor"
+                ],
+                "url": "https://earth.esa.int/web/guest/home"
+            }
+        ],
+        "platform": "Sentinel-2B",
+        "constellation": "Sentinel 2",
+        "instruments": [
+            "msi"
+        ],
+        "eo:cloud_cover": 98.647794798292,
+        "sat:orbit_state": "descending",
+        "sat:relative_orbit": 79,
+        "proj:epsg": 32633,
+        "s2:product_uri": "S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE",
+        "s2:generation_time": "2023-04-29T15:13:37.000000Z",
+        "s2:processing_baseline": "05.00",
+        "s2:product_type": "S2MSI1C",
+        "s2:datatake_id": "GS2B_20190910T095029_013118_N05.00",
+        "s2:datatake_type": "INS-NOBS",
+        "s2:datastrip_id": "S2B_OPER_MSI_L1C_DS_S2RP_20230429T151337_S20190910T095200_N05.00",
+        "s2:granule_id": "S2B_OPER_MSI_L1C_TL_S2RP_20230429T151337_A013118_T33TXN_N05.00",
+        "s2:mgrs_tile": "33TXN",
+        "s2:reflectance_conversion_factor": 0.984745756818796,
+        "s2:degraded_msi_data_percentage": 0.0104,
+        "s2:mean_solar_zenith": 43.7863531473642,
+        "s2:mean_solar_azimuth": 161.36129143083,
+        "datetime": "2019-09-10T09:50:29.024000Z",
+        "title": "S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE"
+    },
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [
+                    16.33660021997006,
+                    47.84592105208886
+                ],
+                [
+                    17.80284668292451,
+                    47.81947440295927
+                ],
+                [
+                    17.751084998620154,
+                    46.83262831925138
+                ],
+                [
+                    16.31188688551243,
+                    46.85818197246455
+                ],
+                [
+                    16.33660021997006,
+                    47.84592105208886
+                ]
+            ]
+        ]
+    },
+    "links": [
+        {
+            "rel": "license",
+            "href": "https://sentinel.esa.int/documents/247904/690755/Sentinel_Data_Legal_Notice"
+        },
+        {
+            "rel": "alternate",
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/",
+            "type": "application/octet-stream",
+            "name": "product",
+            "description": "product"
+        },
+        {
+            "rel": "http://www.opengis.net/def/serviceType/ogc/wms",
+            "href": "https://data-access-v1x.develop.eoepca.org/ows?rel=http%3A%2F%2Fwww.opengis.net%2Fdef%2FserviceType%2Fogc%2Fwms&service=WMS&version=1.3.0&request=GetCapabilities&cql=identifier%3D%22S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE%22",
+            "type": "OGC:WMS",
+            "name": "OGC WMS",
+            "description": "WMS URL for S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE"
+        },
+        {
+            "rel": "http://www.opengis.net/def/serviceType/ogc/wcs",
+            "href": "https://data-access-v1x.develop.eoepca.org/ows?rel=http%3A%2F%2Fwww.opengis.net%2Fdef%2FserviceType%2Fogc%2Fwcs&service=WCS&version=2.0.1&request=DescribeEOCoverageSet&eoid=S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE",
+            "type": "OGC:WCS",
+            "name": "OGC WCS",
+            "description": "WCS URL for S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE"
+        }
+    ],
+    "assets": {
+        "safe-manifest": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/manifest.safe",
+            "type": "application/xml",
+            "roles": [
+                "metadata"
+            ]
+        },
+        "product-metadata": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/MTD_MSIL1C.xml",
+            "type": "application/xml",
+            "roles": [
+                "metadata"
+            ]
+        },
+        "granule-metadata": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/MTD_TL.xml",
+            "type": "application/xml",
+            "roles": [
+                "metadata"
+            ]
+        },
+        "inspire-metadata": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/INSPIRE.xml",
+            "type": "application/xml",
+            "roles": [
+                "metadata"
+            ]
+        },
+        "datastrip-metadata": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/DATASTRIP/DS_S2RP_20230429T151337_S20190910T095200/MTD_DS.xml",
+            "type": "application/xml",
+            "roles": [
+                "metadata"
+            ]
+        },
+        "B01": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B01.jp2",
+            "type": "image/jp2",
+            "title": "Band 1 - Coastal aerosol - 60m",
+            "eo:bands": [
+                {
+                    "name": "B01",
+                    "common_name": "coastal",
+                    "description": "Band 1 - Coastal aerosol",
+                    "center_wavelength": 0.443,
+                    "full_width_half_max": 0.027
+                }
+            ],
+            "gsd": 60,
+            "proj:shape": [
+                1830,
+                1830
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                60.0,
+                0.0,
+                600000.0,
+                0.0,
+                -60.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B02": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B02.jp2",
+            "type": "image/jp2",
+            "title": "Band 2 - Blue - 10m",
+            "eo:bands": [
+                {
+                    "name": "B02",
+                    "common_name": "blue",
+                    "description": "Band 2 - Blue",
+                    "center_wavelength": 0.49,
+                    "full_width_half_max": 0.098
+                }
+            ],
+            "gsd": 10,
+            "proj:shape": [
+                10980,
+                10980
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                10.0,
+                0.0,
+                600000.0,
+                0.0,
+                -10.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B03": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B03.jp2",
+            "type": "image/jp2",
+            "title": "Band 3 - Green - 10m",
+            "eo:bands": [
+                {
+                    "name": "B03",
+                    "common_name": "green",
+                    "description": "Band 3 - Green",
+                    "center_wavelength": 0.56,
+                    "full_width_half_max": 0.045
+                }
+            ],
+            "gsd": 10,
+            "proj:shape": [
+                10980,
+                10980
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                10.0,
+                0.0,
+                600000.0,
+                0.0,
+                -10.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B04": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B04.jp2",
+            "type": "image/jp2",
+            "title": "Band 4 - Red - 10m",
+            "eo:bands": [
+                {
+                    "name": "B04",
+                    "common_name": "red",
+                    "description": "Band 4 - Red",
+                    "center_wavelength": 0.665,
+                    "full_width_half_max": 0.038
+                }
+            ],
+            "gsd": 10,
+            "proj:shape": [
+                10980,
+                10980
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                10.0,
+                0.0,
+                600000.0,
+                0.0,
+                -10.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B05": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B05.jp2",
+            "type": "image/jp2",
+            "title": "Band 5 - Vegetation red edge 1 - 20m",
+            "eo:bands": [
+                {
+                    "name": "B05",
+                    "common_name": "rededge",
+                    "description": "Band 5 - Vegetation red edge 1",
+                    "center_wavelength": 0.704,
+                    "full_width_half_max": 0.019
+                }
+            ],
+            "gsd": 20,
+            "proj:shape": [
+                5490,
+                5490
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                20.0,
+                0.0,
+                600000.0,
+                0.0,
+                -20.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B06": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B06.jp2",
+            "type": "image/jp2",
+            "title": "Band 6 - Vegetation red edge 2 - 20m",
+            "eo:bands": [
+                {
+                    "name": "B06",
+                    "common_name": "rededge",
+                    "description": "Band 6 - Vegetation red edge 2",
+                    "center_wavelength": 0.74,
+                    "full_width_half_max": 0.018
+                }
+            ],
+            "gsd": 20,
+            "proj:shape": [
+                5490,
+                5490
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                20.0,
+                0.0,
+                600000.0,
+                0.0,
+                -20.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B07": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B07.jp2",
+            "type": "image/jp2",
+            "title": "Band 7 - Vegetation red edge 3 - 20m",
+            "eo:bands": [
+                {
+                    "name": "B07",
+                    "common_name": "rededge",
+                    "description": "Band 7 - Vegetation red edge 3",
+                    "center_wavelength": 0.783,
+                    "full_width_half_max": 0.028
+                }
+            ],
+            "gsd": 20,
+            "proj:shape": [
+                5490,
+                5490
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                20.0,
+                0.0,
+                600000.0,
+                0.0,
+                -20.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B08": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B08.jp2",
+            "type": "image/jp2",
+            "title": "Band 8 - NIR - 10m",
+            "eo:bands": [
+                {
+                    "name": "B08",
+                    "common_name": "nir",
+                    "description": "Band 8 - NIR",
+                    "center_wavelength": 0.842,
+                    "full_width_half_max": 0.145
+                }
+            ],
+            "gsd": 10,
+            "proj:shape": [
+                10980,
+                10980
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                10.0,
+                0.0,
+                600000.0,
+                0.0,
+                -10.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B8A": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B8A.jp2",
+            "type": "image/jp2",
+            "title": "Band 8A - Vegetation red edge 4 - 20m",
+            "eo:bands": [
+                {
+                    "name": "B8A",
+                    "common_name": "rededge",
+                    "description": "Band 8A - Vegetation red edge 4",
+                    "center_wavelength": 0.865,
+                    "full_width_half_max": 0.033
+                }
+            ],
+            "gsd": 20,
+            "proj:shape": [
+                5490,
+                5490
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                20.0,
+                0.0,
+                600000.0,
+                0.0,
+                -20.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B09": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B09.jp2",
+            "type": "image/jp2",
+            "title": "Band 9 - Water vapor - 60m",
+            "eo:bands": [
+                {
+                    "name": "B09",
+                    "description": "Band 9 - Water vapor",
+                    "center_wavelength": 0.945,
+                    "full_width_half_max": 0.026
+                }
+            ],
+            "gsd": 60,
+            "proj:shape": [
+                1830,
+                1830
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                60.0,
+                0.0,
+                600000.0,
+                0.0,
+                -60.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B10": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B10.jp2",
+            "type": "image/jp2",
+            "title": "Band 10 - SWIR - Cirrus - 60m",
+            "eo:bands": [
+                {
+                    "name": "B10",
+                    "description": "Band 10 - SWIR - Cirrus",
+                    "center_wavelength": 1.3735,
+                    "full_width_half_max": 0.075
+                }
+            ],
+            "gsd": 60,
+            "proj:shape": [
+                1830,
+                1830
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                60.0,
+                0.0,
+                600000.0,
+                0.0,
+                -60.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B11": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B11.jp2",
+            "type": "image/jp2",
+            "title": "Band 11 - SWIR (1.6) - 20m",
+            "eo:bands": [
+                {
+                    "name": "B11",
+                    "common_name": "swir16",
+                    "description": "Band 11 - SWIR (1.6)",
+                    "center_wavelength": 1.61,
+                    "full_width_half_max": 0.143
+                }
+            ],
+            "gsd": 20,
+            "proj:shape": [
+                5490,
+                5490
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                20.0,
+                0.0,
+                600000.0,
+                0.0,
+                -20.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "B12": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_B12.jp2",
+            "type": "image/jp2",
+            "title": "Band 12 - SWIR (2.2) - 20m",
+            "eo:bands": [
+                {
+                    "name": "B12",
+                    "common_name": "swir22",
+                    "description": "Band 12 - SWIR (2.2)",
+                    "center_wavelength": 2.19,
+                    "full_width_half_max": 0.242
+                }
+            ],
+            "gsd": 20,
+            "proj:shape": [
+                5490,
+                5490
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                20.0,
+                0.0,
+                600000.0,
+                0.0,
+                -20.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "visual": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/GRANULE/L1C_T33TXN_A013118_20190910T095200/IMG_DATA/T33TXN_20190910T095029_TCI.jp2",
+            "type": "image/jp2",
+            "title": "True color image",
+            "eo:bands": [
+                {
+                    "name": "B04",
+                    "common_name": "red",
+                    "description": "Band 4 - Red",
+                    "center_wavelength": 0.665,
+                    "full_width_half_max": 0.038
+                },
+                {
+                    "name": "B03",
+                    "common_name": "green",
+                    "description": "Band 3 - Green",
+                    "center_wavelength": 0.56,
+                    "full_width_half_max": 0.045
+                },
+                {
+                    "name": "B02",
+                    "common_name": "blue",
+                    "description": "Band 2 - Blue",
+                    "center_wavelength": 0.49,
+                    "full_width_half_max": 0.098
+                }
+            ],
+            "proj:shape": [
+                10980,
+                10980
+            ],
+            "proj:bbox": [
+                600000.0,
+                5190240.0,
+                709800.0,
+                5300040.0
+            ],
+            "proj:transform": [
+                10.0,
+                0.0,
+                600000.0,
+                0.0,
+                -10.0,
+                5300040.0
+            ],
+            "roles": [
+                "data"
+            ]
+        },
+        "thumbnail": {
+            "href": "s3://EODATA/Sentinel-2/MSI/L1C_N0500/2019/09/10/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE/S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337-ql.jpg",
+            "type": "image/jpeg",
+            "roles": [
+                "thumbnail"
+            ]
+        }
+    },
+    "bbox": [
+        16.31188688551243,
+        46.83262831925138,
+        17.80284668292451,
+        47.84592105208886
+    ],
+    "stac_extensions": [
+        "https://stac-extensions.github.io/eo/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/sat/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/projection/v1.1.0/schema.json"
+    ],
+    "collection": "S2MSI1C"
+}

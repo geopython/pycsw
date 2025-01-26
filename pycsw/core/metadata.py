@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2016 James F. Dickens
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -1760,7 +1760,7 @@ def _parse_oarec_record(context, repos, record):
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', '')  # FIXME: transform into XML? or not, to validate
     _set(context, recobj, 'pycsw:Metadata', json.dumps(record))
-    _set(context, recobj, 'pycsw:MetadataType', 'application/json')
+    _set(context, recobj, 'pycsw:MetadataType', 'application/geo+json')
 
     _set(context, recobj, 'pycsw:AnyText', ' '.join([str(t) for t in util.get_anytext_from_obj(record)]))
 
@@ -1820,6 +1820,7 @@ def _parse_stac_resource(context, repos, record):
         LOGGER.debug('Parsing STAC Item')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/item-spec/item-spec.md'
         typename = 'stac:Item'
+        metadata_type = 'application/geo+json'
         stype = 'item'
         title = record['properties'].get('title')
         abstract = record['properties'].get('description')
@@ -1829,6 +1830,7 @@ def _parse_stac_resource(context, repos, record):
         LOGGER.debug('Parsing STAC Collection')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/collection-spec/collection-spec.md'
         typename = 'stac:Collection'
+        metadata_type = 'application/json'
         stype = 'collection'
         title = record.get('title')
         abstract = record.get('description')
@@ -1842,6 +1844,7 @@ def _parse_stac_resource(context, repos, record):
         LOGGER.debug('Parsing STAC Catalog')
         conformance = 'https://github.com/radiantearth/stac-spec/tree/master/catalog-spec/catalog-spec.md'
         typename = 'stac:Catalog'
+        metadata_type = 'application/json'
         stype = 'catalog'
         title = record.get('title')
         abstract = record.get('description')
@@ -1853,7 +1856,7 @@ def _parse_stac_resource(context, repos, record):
     _set(context, recobj, 'pycsw:InsertDate', util.get_today_and_now())
     _set(context, recobj, 'pycsw:XML', '')  # FIXME: transform into XML? or not, to validate
     _set(context, recobj, 'pycsw:Metadata', json.dumps(record))
-    _set(context, recobj, 'pycsw:MetadataType', 'application/json')
+    _set(context, recobj, 'pycsw:MetadataType', metadata_type)
     _set(context, recobj, 'pycsw:AnyText', ' '.join([str(t) for t in util.get_anytext_from_obj(record)]))
     _set(context, recobj, 'pycsw:Type', stype)
     _set(context, recobj, 'pycsw:Title', title)
