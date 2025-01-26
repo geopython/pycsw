@@ -248,6 +248,5 @@ def to_rfc3339(value: str) -> Union[tuple, None]:
         dt_type = 'date'
     else:
         dt_type = 'date-time'
-        dt_type = 'date-time'
 
     return dt, dt_type
