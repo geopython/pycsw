@@ -165,12 +165,7 @@ Returns the tracing url from global if exists or from the chart's values
 {{- range $k, $v := (split "," .Values.env.cors.allowedHeaders) -}}
 {{- $headerList = append $headerList $v -}}
 {{- end -}}
-{{- if ne $authentication.opa.customHeaderName "" -}}
-{{- $headerList = append $headerList $authentication.opa.customHeaderName -}}
-{{- end -}}
 {{- $headerList = uniq $headerList -}}
 {{-  quote (join "," $headerList) -}}
-{{- else -}}
-{{- $authentication.opa.customHeaderName | quote -}}
 {{- end -}}
 {{- end -}}

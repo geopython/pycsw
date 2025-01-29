@@ -26,12 +26,6 @@ Create deployment name as used by the service name label.
 {{- printf "%s-%s-%s" .Release.Name .Chart.Name "deployment" | indent 1 }}
 {{- end }}
 
-{{/*
-Create mapproxy envoy configmap name as used by the service name label.
-*/}}
-{{- define "envoy-configmap.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name .Chart.Name "envoy-configmap" | indent 1 }}
-{{- end }}
 
 {{/*
 Create route name as used by the service name label.

@@ -31,10 +31,5 @@ data:
   DB_SCHEMA: {{ quote .Values.env.db.schema }}
   PGAPPNAME: {{ $chartName }}
   COORDINATE_PRECISION: {{ quote .Values.env.bboxPrecisionDigits }}
-  AUTH_ENABLED: {{ .Values.nginx.authorization.domain | quote }}
-  {{ if and (not .Values.nginx.opalaEnabled) (.Values.nginx.authorization.domain) }}
-  AUTH_VALID_DOMAIN: {{ .Values.nginx.authorization.domain | quote }}
-  AUTH_HEADER_NAME: {{ .Values.nginx.opa.customHeaderName | quote }}
-  AUTH_QUERY_NAME: {{ .Values.nginx.authorization.token.queryName | quote }}
-  {{- end}}
+  AUTH_ENABLED: {{ .Values.nginx.authorization.enabled | quote }} #maybe deprecated or used in other networks
 {{- end }}
