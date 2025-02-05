@@ -1682,6 +1682,8 @@ def _parse_dc(context, repos, exml):
     _set(context, recobj, 'pycsw:Publisher', md.publisher)
     _set(context, recobj, 'pycsw:Contributor', md.contributor)
     _set(context, recobj, 'pycsw:OrganizationName', md.rightsholder)
+    if len(md.rights) > 0 and None not in md.rights:
+        _set(context, recobj, 'pycsw:ConditionApplyingToAccessAndUse', ','.join(md.rights))
     _set(context, recobj, 'pycsw:AccessConstraints', md.accessrights)
     _set(context, recobj, 'pycsw:OtherConstraints', md.license)
     _set(context, recobj, 'pycsw:Date', md.date)
