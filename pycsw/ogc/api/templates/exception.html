@@ -3,6 +3,6 @@
 {% block body %}
     <section id="exception">
       <h2>Exception</h2>
-      <p>{{ data['description'] }}</p>
+      <p>{{ data['description'] | striptags }}</p>
     </section>
 {% endblock %}
