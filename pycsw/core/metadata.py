@@ -1521,15 +1521,22 @@ def _parse_iso(context, repos, exml):
 
     _set(context, recobj, 'pycsw:ServiceType', ','.join(service_types))
 
-    if hasattr(md_identification, 'dataquality'):
-        _set(context, recobj, 'pycsw:Degree', md.dataquality.conformancedegree)
-        _set(context, recobj, 'pycsw:Lineage', md.dataquality.lineage)
-        _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
-        if hasattr(md.dataquality, 'specificationdate'):
-            _set(context, recobj, 'pycsw:specificationDate',
-            md.dataquality.specificationdate[0].date)
-            _set(context, recobj, 'pycsw:SpecificationDateType',
-            md.dataquality.specificationdate[0].datetype)
+    if hasattr(md, 'dataquality'):
+        try:
+            _set(context, recobj, 'pycsw:Degree', ','.join(md.dataquality.conformancedegree))
+        except:
+            None
+        try:    
+            _set(context, recobj, 'pycsw:Lineage', md.dataquality.lineage)
+        except:
+            None
+        try:
+            _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
+            _set(context, recobj, 'pycsw:specificationDate', md.dataquality.specificationDate[0])
+            # owslib does not provide datetype
+            # _set(context, recobj, 'pycsw:SpecificationDateType', md.dataquality.specificationDate[0].datetype)
+        except:
+            None
 
     if hasattr(md, 'contact') and len(md.contact) > 0:
         _set(context, recobj, 'pycsw:ResponsiblePartyRole', md.contact[0].role)
