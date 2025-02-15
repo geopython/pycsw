@@ -42,8 +42,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
-    def __init__(self, field_mapping=None, dbtype='sqlite'):
-        super().__init__(field_mapping)
+    def __init__(self, field_mapping=None, dbtype='sqlite', undefined_as_null=None):
+        super().__init__(field_mapping, undefined_as_null=undefined_as_null)
         self._pycsw_dbtype = dbtype
 
     @handle(ast.BBox)
