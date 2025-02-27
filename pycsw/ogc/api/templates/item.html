@@ -9,7 +9,11 @@
             height: 350px;
         }
     </style>
-
+  {% if data['schema-org'] %}
+    <script type="application/ld+json">
+      {{ data['schema-org'] | to_json  }}
+    </script>
+  {% endif %}
 {% endblock %}
 
 {% block crumbs %}
