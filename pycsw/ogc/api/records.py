@@ -897,6 +897,8 @@ class API:
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata']['identification']['title']
             response['collection'] = collection
+            response['schema-org'] = record2json(record, self.config['server']['url'],
+                                   collection, 'schema-org')
 
         if 'json' in headers_['Content-Type']:
             headers_['Content-Type'] = 'application/geo+json'
@@ -1390,9 +1392,119 @@ def record2json(record, url, collection, mode='ogcapi-records'):
 
             record_dict['properties']['start_datetime'] = start_date
             record_dict['properties']['end_datetime'] = end_date
+    elif mode == 'schema-org':
+        schema_org = record_dict['properties'].copy()
+        schema_org.update({
+            '@context':"http://schema.org/", 
+            '@type': f"schema:{type_iso2schema_org(record_dict['properties'].get('type',''))}", 
+            '@id':(f"{url}/collections/{collection}/items/{record_dict['id']}") 
+        })
+        schema_org.pop('title','') 
+        schema_org.pop('type','') 
+        schema_org['name'] = schema_org.pop('title', None)    
+        if record.links:
+            print('has links')
+            schema_org['distribution'] = []
+            for link in jsonify_links(record.links):
+                schema_org['distribution'].append({
+                   '@type':'schema:DataDownload',
+                   'contentUrl':link.get('url',''),
+                   'name': link.get('name',''),
+                   'description': link.get('description',''),
+                   'encodingFormat': link.get('type',link.get('protocol',''))
+                })
+        schema_org['keywords'] = []
+        for t in schema_org.pop('themes',[]):
+            for c in t.get('concepts',[]):
+                schema_org['keywords'].append(c.get('url') or c.get('id'))
+        schema_org['inLanguage'] = schema_org.pop('language', None)
+        schema_org['dateModified'] = schema_org.pop('updated', None)
+        schema_org['dateCreated'] = schema_org.pop('created', None)
+        schema_org['datePublished'] = schema_org.pop('published', None)
+        schema_org['encodingFormat'] = [f.get('name') for f in schema_org.pop('formats', [])]
+        for c in record_dict['properties'].get('contacts',{}):
+            role = role_iso2schema_org(next(iter(c.get('roles',[])), 'contact'))
+            if role not in schema_org.keys():
+                schema_org[role] = []
+            cbase = {
+                'url': next(iter(c.get('links',[])), None).get('href',{}).get('url',''),
+                'email': next(iter(c.get('emails',[])), None).get('value',''),
+                'address': next(iter(c.get('addresses',[])), None).get('value',''),
+                'telephone': next(iter(c.get('phones',[])), None).get('value','')
+            }
+            if 'name' in c.keys():
+                schema_org[role].append(cbase.update({
+                    '@type':'schema:Person',
+                    'familyName': c.get('name',''),
+                    'affiliation': c.get('organization','')
+                }))
+            else:
+                schema_org[role].append(cbase.update({
+                    '@type': 'schema:Organization',
+                    'name': c.get('organization','')
+                }))
+        schema_org.pop('contacts',None)
+        record_dict = schema_org
 
     return record_dict
 
+def type_iso2schema_org(tp):
+    tp = tp.split('/').pop().lower()
+    tps = {
+        "dataset": "Dataset",
+        "nongeographicdataset": "Dataset",
+        "service": "WebAPI",
+    	"series": "Series",
+    	"software": "SoftwareApplication",
+        "model": "ProductModel",
+        "document": "DigitalDocument",
+        "image": "ImageObject", # from dcmi
+        "text": "DigitalDocument",
+        "video": "VideoObject",
+        "sound": "AudioObject",
+        "party": "Organization",
+        "place": "Place",
+        "event": "Event",
+        "journalarticle": "ScholarlyArticle", # from Datacite
+        "audiovisual": "AudioObject",
+        "award": "Award",
+        "book": "Book",
+        "bookchapter": "Chapter",
+        "collection": "Collection",
+        "computationalnotebook": "SoftwareApplication",
+        "conferencepaper": "ScholarlyArticle",
+        "conferenceproceeding": "ScholarlyArticle",
+        "datapaper": "ScholarlyArticle",
+        "dissertation": "DigitalDocument",
+        "instrument": "Sensor",
+        "journal": "Periodical",
+        "outputmanagementplan": "DigitalDocument",
+        "peerreview": "Review",
+        "preprint": "ScholarlyArticle",
+        "project": "Project",
+        "report": "DigitalDocument",
+        "standard": "DigitalDocument",
+        "studyregistration": "DigitalDocument",
+        "workflow": "Workflow"
+    }
+    return tps.get(tp,'Thing')
+
+def role_iso2schema_org(rl):
+    rl = rl.split('/').pop().lower()
+    rls = {
+        "custodian": "maintainer",
+        "funder": "funder",
+        "resourceprovider": "provider",
+        "author": "author",
+        "processor": "contributor",
+        "owner": "copyrightHolder",
+        "originator": "creator",
+        "distributor": "publisher",
+        "publisher": "publisher",
+        "user": "contributor",
+        "pointofcontact": "contributor"
+    }
+    return rls.get(rl,'contributor')
 
 def build_anytext(name, value):
     """
