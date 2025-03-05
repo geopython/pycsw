@@ -188,7 +188,7 @@ class API:
             pretty_print = str2bool(self.config['server'].get('pretty_print', False))
             content = to_json(data, pretty_print)
 
-        headers['Content-Length'] = len(content)
+        headers['Content-Length'] = len(content.encode('utf-8'))
 
         return headers, status, content
 
