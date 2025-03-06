@@ -83,7 +83,7 @@ def application_dispatcher(env):
     csw = server.Csw(configuration_path, env)
     status, contents = csw.dispatch_wsgi()
     headers = {
-        'Content-Length': str(len(contents.encode("utf-8"))),
+        'Content-Length': str(len(contents)),
         'Content-Type': str(csw.contenttype)
     }
     if "gzip" in env.get("HTTP_ACCEPT_ENCODING", ""):
