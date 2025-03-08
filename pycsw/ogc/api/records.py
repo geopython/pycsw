@@ -897,8 +897,8 @@ class API:
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata']['identification']['title']
             response['collection'] = collection
-            response['schema-org'] = record2json(record, self.config['server']['url'],
-                                   collection, 'schema-org')
+            response['schema-org'] = record2json(
+                record, self.config['server']['url'], collection, 'schema-org')
 
         if 'json' in headers_['Content-Type']:
             headers_['Content-Type'] = 'application/geo+json'
@@ -1399,7 +1399,6 @@ def record2json(record, url, collection, mode='ogcapi-records'):
             '@type': f"schema:{type_iso2schema_org(record_dict['properties'].get('type',''))}", 
             '@id':(f"{url}/collections/{collection}/items/{record_dict['id']}") 
         })
-        schema_org.pop('title','') 
         schema_org.pop('type','') 
         schema_org['name'] = schema_org.pop('title', None)    
         if record.links:
@@ -1417,6 +1416,14 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         for t in schema_org.pop('themes',[]):
             for c in t.get('concepts',[]):
                 schema_org['keywords'].append(c.get('url') or c.get('id'))
+        if record.wkt_geometry:
+            minx, miny, maxx, maxy = wkt2geom(record.wkt_geometry)
+            schema_org['spatialCoverage'] = {
+                '@type': 'schema:Place',
+                'geo': {
+                    '@type': 'schema:GeoShape',
+                    'box': f'{miny},{minx} {maxy},{maxx}'}}
+        schema_org.pop('geometry', None)           
         schema_org['inLanguage'] = schema_org.pop('language', None)
         schema_org['dateModified'] = schema_org.pop('updated', None)
         schema_org['dateCreated'] = schema_org.pop('created', None)
