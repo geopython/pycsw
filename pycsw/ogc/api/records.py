@@ -1201,6 +1201,10 @@ def record2json(record, url, collection, mode='ogcapi-records'):
             record.otherconstraints = [record.otherconstraints]
             record_dict['properties']['license'] = ", ".join(record.otherconstraints)
 
+    if record.conditionapplyingtoaccessanduse:
+        if isinstance(record.conditionapplyingtoaccessanduse, str) and record.conditionapplyingtoaccessanduse not in [None, 'None']:
+            record_dict['properties']['rights'] = record.conditionapplyingtoaccessanduse
+
     record_dict['properties']['updated'] = record.insert_date
 
     if record.type:
