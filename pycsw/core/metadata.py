@@ -1523,24 +1523,29 @@ def _parse_iso(context, repos, exml):
 
     if hasattr(md, 'dataquality'):
         try:
-            _set(context, recobj, 'pycsw:Degree', ','.join(md.dataquality.conformancedegree))
-        except:
-            None
-        try:    
-            _set(context, recobj, 'pycsw:Lineage', md.dataquality.lineage)
-        except:
-            None
+            if hasattr(md.dataquality, 'conformancedegree'):
+                _set(context, recobj, 'pycsw:Degree', ','.join(md.dataquality.conformancedegree))
+        except Exception as err:
+            LOGGER.debug('No dq conformancedegree', err)
         try:
-            _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
-            _set(context, recobj, 'pycsw:specificationDate', md.dataquality.specificationDate[0])
-            # owslib does not provide datetype
-            # _set(context, recobj, 'pycsw:SpecificationDateType', md.dataquality.specificationDate[0].datetype)
-        except:
-            None
+            if hasattr(md.dataquality, 'lineage'):
+                _set(context, recobj, 'pycsw:Lineage', md.dataquality.lineage)
+        except Exception as err:
+            LOGGER.debug('No dq lineage', err)
+        try:
+            if hasattr(md.dataquality, 'specificationtitle'):
+                _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
+        except Exception as err:
+            LOGGER.debug('No dq specification title', err)
+        try:
+            if hasattr(md.dataquality, 'specificationdate'):
+                _set(context, recobj, 'pycsw:SpecificationDate', 
+                     next(iter(md.dataquality.specificationdate), None))
+        except Exception as err:
+            LOGGER.debug('No dq specification date', err)
 
     if hasattr(md, 'contact') and len(md.contact) > 0:
         _set(context, recobj, 'pycsw:ResponsiblePartyRole', md.contact[0].role)
-
 
     if hasattr(md, 'contentinfo') and len(md.contentinfo) > 0:
         for ci in md.contentinfo:
