@@ -114,7 +114,7 @@ PostgreSQL repositories
 Specifying a PostgreSQL repository is just a matter of configuring a custom
 pycsw.yml file with the correct specification.
 
-Check `pycsw's github repository`_ for an example of a docker-compose/stack
+Check `pycsw's GitHub repository`_ for an example of a docker compose/stack
 file that spins up a postgis database together with a pycsw instance.
 
 
@@ -175,6 +175,36 @@ example by running::
 
     firefox docs/_build/html/index.html
 
+Docker Compose
+==============
+
+For `Docker Compose`_ deployment, run the following in ``docker/compose``:
+
+.. code-block:: bash
+
+  PYCSW_DOCKER_IMAGE=latest docker compose up
+
+
+.. note::
+
+  The ``PYCSW_DOCKER_IMAGE`` setting is required to set the Docker image version/tag.
+
+
+Scaling
+-------
+
+To scale via Docker Compose, run the following in ``docker/compose``:
+
+.. code-block:: bash
+
+  PYCSW_DOCKER_IMAGE=latest docker compose -f docker-compose.scale.yml up
+
+.. note::
+
+  In ``docker/compose/docker-compose.scale.yml``, adjust the ``services.pycsw.deploy``
+  and services.pycsw.ports values to scale accordingly.  The port range specified must
+  match the number of replicas defined.
+
 Kubernetes
 ==========
 
@@ -200,6 +230,7 @@ For Kubernetes deployment via `Helm`_, run the following in ``docker/helm``:
 .. _`Docker`: https://www.docker.com
 .. _`geopython Docker Hub`: https://hub.docker.com/r/geopython/pycsw
 .. _`GitHub Container Registry`: https://github.com/geopython/pycsw/pkgs/container/pycsw
-.. _pycsw's github repository: https://github.com/geopython/pycsw/tree/master/docker
-.. _Kubernetes: https://kubernetes.io/
-.. _Helm: https://helm.sh
+.. _pycsw's GitHub repository: https://github.com/geopython/pycsw/tree/master/docker
+.. _`Docker Compose`: https://docs.docker.com/compose
+.. _`Kubernetes`: https://kubernetes.io/
+.. _`Helm`: https://helm.sh

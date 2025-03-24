@@ -58,18 +58,19 @@ services:
     networks:
       - pycsw-net
   pycsw:
-    container_name: pycsw
     image: geopython/pycsw:${PYCSW_DOCKER_IMAGE}
     environment:
         PYCSW_SERVER_URL: http://localhost:8000
+    # deploy 5 instances of pycsw, from ports 8000-8004
+    deploy:
+      replicas: 5
     ports:
-      - 8000:8000
+      - 8000-8004:8000
     volumes:
       - ./pycsw.yml:/etc/pycsw/pycsw.yml
     networks:
       - pycsw-net
-
-networks:
+  networks:
   pycsw-net:
 
 volumes:
