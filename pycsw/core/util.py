@@ -532,6 +532,19 @@ def load_custom_repo_mappings(repository_mappings: str) -> typing.Optional[typin
     return result
 
 
+def sanitize_db_connect (url):
+    """
+    helper function to remove user:pw from db connect for logging purposes
+
+    :param url: value to be sanitized
+
+    :returns: `str` sanitized
+    """
+    if '@' in url:
+        return url.split('://')[0] + '://***:***@' + url.split('@').pop()
+    else:
+        return url
+
 def str2bool(value: typing.Union[bool, str]) -> bool:
     """
     helper function to return Python boolean

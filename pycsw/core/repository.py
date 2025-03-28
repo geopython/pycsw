@@ -69,7 +69,7 @@ class Repository(object):
         Engines are memoized by url
         '''
         if url not in clazz._engines:
-            LOGGER.info('creating new engine: %s', url)
+            LOGGER.info('creating new engine: %s', util.sanitize_db_connect(url))
             engine = create_engine('%s' % url, echo=False, pool_pre_ping=True)
 
             # load SQLite query bindings
@@ -238,7 +238,7 @@ class Repository(object):
         self.queryables['_all'].update(self.context.md_core_model['mappings'])
 
     def ping(self, max_tries=10, wait_seconds=10):
-        LOGGER.debug(f"Waiting for {self.database}...")
+        LOGGER.debug(f"Waiting for {util.sanitize_db_connect(self.database)}...")
 
         if self.database.startswith('sqlite'):
             sql = 'SELECT sqlite_version();'
@@ -258,12 +258,12 @@ class Repository(object):
                 sleep(wait_seconds)
         else:
             raise RuntimeError(
-                f"Database not responding at {self.database} after {max_tries} tries. ")
+                f"Database not responding at {util.sanitize_db_connect(self.database)} after {max_tries} tries. ")
 
     def rebuild_db_indexes(self):
         """Rebuild database indexes"""
 
-        LOGGER.info('Rebuilding database %s, table %s', self.database, self.table)
+        LOGGER.info('Rebuilding database %s, table %s', util.sanitize_db_connect(self.database), self.table)
         connection = self.engine.connect()
         connection.autocommit = True
         connection.execute('REINDEX %s' % self.table)
@@ -274,7 +274,7 @@ class Repository(object):
         """Optimize database"""
         from sqlalchemy.exc import ArgumentError, OperationalError
 
-        LOGGER.info('Optimizing database %s', self.database)
+        LOGGER.info('Optimizing database %s', util.sanitize_db_connect(self.database))
         connection = self.engine.connect()
         try:
             # PostgreSQL
@@ -720,7 +720,7 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
     from sqlalchemy.types import Float
     from sqlalchemy.orm import create_session
 
-    LOGGER.info('Creating database %s', database)
+    LOGGER.info('Creating database %s', util.sanitize_db_connect(database))
     if database.startswith('sqlite:///'):
         _, filepath = database.split('sqlite:///')
         dirname = os.path.dirname(filepath)
