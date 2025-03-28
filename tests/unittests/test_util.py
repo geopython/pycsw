@@ -366,3 +366,7 @@ def test_programmatic_import(import_path, expected_attribute):
 def test_programmatic_import_with_invalid_path(invalid_import_path):
     result = util.programmatic_import(invalid_import_path)
     assert result is None
+
+def test_sanitize_url():
+    result = util.sanitize_db_connect("postgresql://username:password@localhost/pycsw")
+    assert result == "postgresql://***:***@localhost/pycsw"
