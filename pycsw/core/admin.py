@@ -354,14 +354,16 @@ def validate_xml(xml, xsd):
         raise RuntimeError('ERROR: %s' % str(err)) from err
 
 
-def delete_records(context, database, table):
+def delete_records(context, source, database, table):
     """Deletes all records from repository"""
 
     LOGGER.info('Deleting all records')
 
     repo = repository.Repository(database, context, table=table)
-    repo.delete(constraint={'where': '', 'values': []})
-
+    if source == 'all':
+        repo.delete(constraint={'where': '', 'values': []})
+    else:
+        repo.delete(constraint={'where': f"mdsource == '{source}'", 'values': []})
 
 def cli_option_verbosity(f):
     def callback(ctx, param, value):
@@ -385,7 +387,7 @@ CLI_OPTION_YES = click.option('--yes', '-y', is_flag=True, default=False,
 
 CLI_OPTION_YES_PROMPT = click.option('--yes', '-y', is_flag=True,
                                      default=False,
-                                     prompt='This will delete all records! Continue?',
+                                     prompt='This will delete all or a set of records! Continue?',
                                      help='Bypass confirmation')
 
 
@@ -455,9 +457,11 @@ def cli_load_records(ctx, config, path, recursive, hashidentifier, source, yes, 
 @cli_callbacks
 @click.pass_context
 @CLI_OPTION_CONFIG
+@click.option('--source', '-s', required=False,
+              default='all', help='Remove only records from a source')
 @CLI_OPTION_YES_PROMPT
-def cli_delete_records(ctx, config, yes, verbosity):
-    """Delete all records from repository"""
+def cli_delete_records(ctx, config, source, yes, verbosity):
+    """Delete records from repository"""
 
     with open(config, encoding='utf8') as fh:
         cfg = yaml_load(fh)
@@ -466,6 +470,7 @@ def cli_delete_records(ctx, config, yes, verbosity):
 
     delete_records(
         context,
+        source,
         cfg['repository']['database'],
         cfg['repository']['table']
     )
