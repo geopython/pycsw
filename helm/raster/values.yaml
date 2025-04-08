@@ -71,6 +71,8 @@ servicePort: 8080
 # annotation2: annotation-value-2
 podAnnotations: {}
 
+filterProductStatus: false
+
 env:
   loglevel: WARNING
   maxrecords: null

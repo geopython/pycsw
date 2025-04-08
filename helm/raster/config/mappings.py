@@ -56,6 +56,7 @@ MD_CORE_MODEL = {
         'pycsw:maxResolutionMeter': 'max_resolution_meter',
         'pycsw:minResolutionMeter': 'min_resolution_meter',
         'pycsw:productBBox':'product_bbox',
+        'pycsw:productStatus': 'product_status',
 
         # Added for mc-raster 
         'pycsw:Rms': 'rms',
