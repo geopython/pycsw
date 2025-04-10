@@ -31,6 +31,7 @@ from copy import deepcopy
 import logging
 
 from pycsw import __version__
+from pycsw.core.util import str2bool
 from pycsw.ogc.api.util import yaml_load
 
 LOGGER = logging.getLogger(__name__)
@@ -429,7 +430,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         }
     }
 
-    if config['manager'].get('transactions', False):
+    if str2bool(config['manager'].get('transactions', False)):
         LOGGER.debug('Transactions enabled; adding post')
 
         path['post'] = {
@@ -499,7 +500,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         }
     }
 
-    if config['manager'].get('transactions', False):
+    if str2bool(config['manager'].get('transactions', False)):
         LOGGER.debug('Transactions enabled; adding put/delete')
 
         path['put'] = {

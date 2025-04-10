@@ -745,7 +745,7 @@ class Csw(object):
 
     def _gen_manager(self):
         """ Update self.context.model with CSW-T advertising """
-        if self.config['manager'].get('transactions', False):
+        if util.str2bool(self.config['manager'].get('transactions', False)):
 
             self.manager = True
 
@@ -792,7 +792,7 @@ class Csw(object):
     def _test_manager(self):
         """ Verify that transactions are allowed """
 
-        if not self.config['manager'].get('transactions', False):
+        if not util.str2bool(self.config['manager'].get('transactions', False)):
             raise RuntimeError('CSW-T interface is disabled')
 
         # get the client first forwarded ip
