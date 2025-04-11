@@ -41,7 +41,7 @@ pytestmark = pytest.mark.unit
             "POLYGON ((0 0, 0 1, 1 1, 1 0, 0 0))",
             "POLYGON ((2 2, 2 3, 3 3, 3 2, 2 2))",
         ],
-        "POLYGON((0.0 0.0, 0.0 3.0, 3.0 3.0, 3.0 0.0, 0.0 0.0))"
+        "POLYGON((0.00 0.00, 0.00 3.00, 3.00 3.00, 3.00 0.00, 0.00 0.00))"
     ),
 ])
 def test_bbox_from_polygons(bboxes, expected):
