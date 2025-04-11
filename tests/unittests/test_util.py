@@ -141,14 +141,20 @@ def test_wkt2geom(wkt, bounds, expected):
 @pytest.mark.parametrize("bbox, expected", [
     (
         "0.0, 10.0, 30.0, 15.0",
-        "POLYGON((0.00 10.00, 0.00 15.00, 30.00 15.00, "
-        "30.00 10.00, 0.00 10.00))"
+        "POLYGON((0.0 10.0, 0.0 15.0, 30.0 15.0, "
+        "30.0 10.0, 0.0 10.0))"
     ),
     (
         "-10.0, 10.0, 30.0, 15.0",
-        "POLYGON((-10.00 10.00, -10.00 15.00, 30.00 15.00, "
-        "30.00 10.00, -10.00 10.00))"
+        "POLYGON((-10.0 10.0, -10.0 15.0, 30.0 15.0, "
+        "30.0 10.0, -10.0 10.0))"
     ),
+    (
+        "25.0815883093, 62.1306897126, 27.1935425597, 63.129387237",
+        "POLYGON((25.0815883093 62.1306897126, 25.0815883093 63.129387237, "
+        "27.1935425597 63.129387237, 27.1935425597 62.1306897126, "
+        "25.0815883093 62.1306897126))"
+    )
 ])
 def test_bbox2wktpolygon(bbox, expected):
     result = util.bbox2wktpolygon(bbox)
@@ -366,6 +372,7 @@ def test_programmatic_import(import_path, expected_attribute):
 def test_programmatic_import_with_invalid_path(invalid_import_path):
     result = util.programmatic_import(invalid_import_path)
     assert result is None
+
 
 def test_sanitize_url():
     result = util.sanitize_db_connect("postgresql://username:password@localhost/pycsw")
