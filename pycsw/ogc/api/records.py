@@ -1128,7 +1128,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
     :returns: `dict` of record GeoJSON
     """
 
-    if record.metadata_type == 'application/json':
+    if record.metadata_type in ['application/json', 'application/geo+json']:
         rec = json.loads(record.metadata)
         if rec.get('stac_version') is not None and rec['type'] == 'Feature' and mode == 'stac-api':
             LOGGER.debug('Returning native STAC representation')

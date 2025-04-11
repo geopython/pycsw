@@ -247,6 +247,12 @@ def test_item(config):
     assert content['stac_version'] == '1.0.0'
     assert content['collection'] == 'S2MSI2A'
 
+    assert content['geometry']['coordinates'][0][0][0] == 16.33660021997006
+
+    assert 'assets' in content
+    assert 'B02' in content['assets']
+    assert 'product-metadata' in content['assets']
+
     for link in content['links']:
         assert 'href' in link
         assert 'rel' in link
@@ -275,7 +281,7 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     assert content['id'] == '20201211_223832_CS2'
     assert content['geometry'] is None
-    assert content['properties']['datetime'] == '2020-12-11T22:38:32Z'
+    assert content['properties']['datetime'] == '2020-12-11T22:38:32.125000Z'
     assert content['collection'] == 'metadata:main'
 
     # update item

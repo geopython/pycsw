@@ -565,7 +565,12 @@ def links2stacassets(collection, record):
         if 'assets' not in record:
             record['assets'] = {}
 
-        for count, value in enumerate(links_assets):
-            record['assets'][count] = value
+        for count, asset in enumerate(links_assets):
+            if 'name' in asset:
+                asset_key = asset.pop('name')
+            else:
+                asset_key = count
+
+            record['assets'][asset_key] = asset
 
     return record

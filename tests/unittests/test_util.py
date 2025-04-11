@@ -1,8 +1,10 @@
 # =================================================================
 #
 # Authors: Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+# Authors: Tom Kralidis
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2025 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -148,7 +150,7 @@ def test_wkt2geom(wkt, bounds, expected):
         "-10.0, 10.0, 30.0, 15.0",
         "POLYGON((-10.00 10.00, -10.00 15.00, 30.00 15.00, "
         "30.00 10.00, -10.00 10.00))"
-    ),
+    )
 ])
 def test_bbox2wktpolygon(bbox, expected):
     result = util.bbox2wktpolygon(bbox)
@@ -367,6 +369,20 @@ def test_programmatic_import_with_invalid_path(invalid_import_path):
     result = util.programmatic_import(invalid_import_path)
     assert result is None
 
+
 def test_sanitize_url():
     result = util.sanitize_db_connect("postgresql://username:password@localhost/pycsw")
     assert result == "postgresql://***:***@localhost/pycsw"
+
+
+def test_str2bool():
+    assert util.str2bool('true')
+    assert util.str2bool(True)
+    assert util.str2bool('1')
+    assert util.str2bool('yes')
+    assert util.str2bool('on')
+    assert not util.str2bool('0')
+    assert not util.str2bool('false')
+    assert not util.str2bool(False)
+    assert not util.str2bool('off')
+    assert not util.str2bool('no')
