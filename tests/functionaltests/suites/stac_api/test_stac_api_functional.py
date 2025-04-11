@@ -281,7 +281,7 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     assert content['id'] == '20201211_223832_CS2'
     assert content['geometry'] is None
-    assert content['properties']['datetime'] == '2020-12-11T22:38:32Z'
+    assert content['properties']['datetime'] == '2020-12-11T22:38:32.125000Z'
     assert content['collection'] == 'metadata:main'
 
     # update item
