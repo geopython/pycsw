@@ -247,6 +247,10 @@ def test_item(config):
     assert content['stac_version'] == '1.0.0'
     assert content['collection'] == 'S2MSI2A'
 
+    assert 'assets' in content
+    assert 'B02' in content['assets']
+    assert 'product-metadata' in content['assets']
+
     for link in content['links']:
         assert 'href' in link
         assert 'rel' in link

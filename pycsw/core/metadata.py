@@ -1890,7 +1890,7 @@ def _parse_stac_resource(context, repos, record):
             }
 
             if link.get('title') is not None:
-                new_link['name'] = link.get('title')
+                new_link['name'] = key
                 new_link['description'] = link.get('title')
             if link.get('type') is not None:
                 new_link['protocol'] = link.get('type')
