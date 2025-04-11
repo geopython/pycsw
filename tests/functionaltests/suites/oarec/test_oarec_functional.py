@@ -31,6 +31,7 @@
 #
 # =================================================================
 
+from copy import deepcopy
 import json
 from xml.etree import ElementTree as etree
 
@@ -131,6 +132,7 @@ def test_items(config):
 
     params = {'q': 'Lorem'}
     content = json.loads(api.items({}, None, params)[2])
+
     assert content['numberMatched'] == 5
     assert content['numberReturned'] == 5
     assert len(content['features']) == content['numberReturned']
@@ -356,6 +358,33 @@ def test_json_transaction(config, sample_record):
     headers, status, content = api.item({}, {}, 'metadata:main', 'record-123')
 
     assert status == 404
+
+    config2 = deepcopy(config)
+    config2['manager']['transactions'] = False
+
+    api = API(config2)
+    request_headers = {
+        'Content-Type': 'application/json'
+    }
+
+    # fail on insert record attempt
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_record)
+
+    assert status == 405
+
+    config2['manager']['transactions'] = 'false'
+
+    api = API(config2)
+    request_headers = {
+        'Content-Type': 'application/json'
+    }
+
+    # fail on insert record attempt
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_record)
+
+    assert status == 405
 
 
 def test_xml_transaction(config):

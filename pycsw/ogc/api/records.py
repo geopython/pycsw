@@ -286,7 +286,7 @@ class API:
               'type': 'application/json',
               'title': 'Main collection',
               'href': f"{self.config['server']['url']}/collections/metadata:main"
-            },{
+            }, {
               'rel': 'http://www.opengis.net/def/rel/ogc/1.0/ogc-catalog',
               'type': 'application/json',
               'title': 'Record catalogue collection',
@@ -912,7 +912,7 @@ class API:
         :returns: tuple of headers, status code, content
         """
 
-        if not self.config['manager']['transactions']:
+        if not str2bool(self.config['manager'].get('transactions', False)):
             return self.get_exception(
                     405, headers_, 'InvalidParameterValue',
                     'transactions not allowed')
@@ -1284,10 +1284,15 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         try:
             for theme in json.loads(record.themes):
                 try:
-                    ogcapi_themes.append({
-                        'scheme': theme['thesaurus'].get('url') or theme['thesaurus'].get('title'),
+                    theme_ = {
                         'concepts': [{'id': c.get('name', '')} for c in theme.get('keywords', []) if 'name' in c and c['name'] not in [None, '']]
-                    })
+                    }
+                    if 'thesaurus' in theme:
+                        theme_['scheme'] = theme['thesaurus'].get('url') or theme['thesaurus'].get('title'),
+                    elif 'scheme' in theme:
+                        theme_['scheme'] = theme['scheme']
+
+                    ogcapi_themes.append(theme_)
                 except Exception as err:
                     LOGGER.exception(f"failed to parse theme of {record.identifier}: {err}")
         except Exception as err:
