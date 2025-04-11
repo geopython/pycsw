@@ -1995,7 +1995,7 @@ def bbox_from_polygons(bboxs):
         multi_pol = MultiPolygon(
             [loads(bbox) for bbox in bboxs]
         )
-        bstr = ",".join([f"{b:.2f}" for b in multi_pol.bounds])
+        bstr = ",".join([str(b) for b in multi_pol.bounds])
         return util.bbox2wktpolygon(bstr)
     except Exception as err:
         raise RuntimeError('Cannot aggregate polygons: %s' % str(err)) from err
