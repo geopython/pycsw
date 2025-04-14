@@ -37,6 +37,7 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
+from shapely import from_geojson
 from shapely.wkt import loads
 
 from pycsw.core import util
@@ -386,3 +387,53 @@ def test_str2bool():
     assert not util.str2bool(False)
     assert not util.str2bool('off')
     assert not util.str2bool('no')
+
+
+@pytest.mark.parametrize("geometry,expected", [
+    ({
+        'type': 'Point',
+        'coordinates': [102.0, 0.5]
+     }, '102.0,0.5,102.0,0.5'), ({
+         'type': 'LineString',
+         'coordinates': [
+             [102.0, 0.0],
+             [103.0, 1.0],
+             [104.0, 0.0],
+             [105.0, 1.0]
+         ]
+      }, '102.0,0.0,105.0,1.0'), ({
+         'type': 'Polygon',
+         'coordinates': [[
+             [100.0, 0.0],
+             [101.0, 0.0],
+             [101.0, 1.0],
+             [100.0, 1.0],
+             [100.0, 0.0]
+         ]]
+      }, '100.0,0.0,101.0,1.0'), ({
+         'type': 'MultiPolygon',
+         'coordinates': [[[
+             [30.0, 20.0],
+             [45.0, 40.0],
+             [10.0, 40.0],
+             [30.0, 20.0]
+         ]], [[
+             [15.0, 5.0],
+             [40.0, 10.0],
+             [10.0, 20.0],
+             [5.0, 10.0],
+             [15.0, 5.0]
+         ]]]
+      }, '5.0,5.0,45.0,40.0'), ({
+         'type': 'MultiPoint',
+         'coordinates': [
+             [10.0, 40.0],
+             [40.0, 30.0],
+             [20.0, 20.0],
+             [30.0, 10.0]
+         ]
+      }, '10.0,10.0,40.0,40.0')
+])
+def test_geojson_geometry2bbox(geometry, expected):
+    bounds = util.geojson_geometry2bbox(geometry)
+    assert bounds == expected
