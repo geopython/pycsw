@@ -30,6 +30,7 @@
 #
 # =================================================================
 
+import hashlib
 import json
 import logging
 import os
@@ -49,7 +50,7 @@ from pycsw.ogc.api.util import get_typed_value, yaml_dump, yaml_load
 LOGGER = logging.getLogger(__name__)
 
 
-def load_records(context, database, table, xml_dirpath, recursive=False, force_update=False):
+def load_records(context, database, table, xml_dirpath, recursive=False, hashidentifier='NEVER', source='local', force_update=False):
     """Load metadata records from directory of files to database"""
 
     repo = repository.Repository(database, context, table=table)
@@ -99,9 +100,16 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
             LOGGER.info('Inserting %s %s into database %s, table %s ....',
                         rec.typename, rec.identifier, database, table)
 
+            # hash identifier to prevent 404 when using it as parameter
+            if hashidentifier.upper() == 'ALWAYS' or (hashidentifier.upper() == 'DOUBLESLASH' and rec.identifier.contains('//')): #noqa
+                rec.identifier = hashlib.md5(rec.identifier.encode()).hexdigest()
+
             # TODO: do this as CSW Harvest
             try:
-                repo.insert(rec, 'local', util.get_today_and_now())
+
+                if source != 'local':
+                    rec.mdsource = source
+                repo.insert(rec, source, util.get_today_and_now())
                 loaded_files.add(recfile)
                 LOGGER.info('Inserted %s', recfile)
             except Exception as err:
@@ -346,14 +354,16 @@ def validate_xml(xml, xsd):
         raise RuntimeError('ERROR: %s' % str(err)) from err
 
 
-def delete_records(context, database, table):
+def delete_records(context, source, database, table):
     """Deletes all records from repository"""
 
     LOGGER.info('Deleting all records')
 
     repo = repository.Repository(database, context, table=table)
-    repo.delete(constraint={'where': '', 'values': []})
-
+    if source == 'all':
+        repo.delete(constraint={'where': '', 'values': []})
+    else:
+        repo.delete(constraint={'where': f"mdsource == '{source}'", 'values': []})
 
 def cli_option_verbosity(f):
     def callback(ctx, param, value):
@@ -377,7 +387,7 @@ CLI_OPTION_YES = click.option('--yes', '-y', is_flag=True, default=False,
 
 CLI_OPTION_YES_PROMPT = click.option('--yes', '-y', is_flag=True,
                                      default=False,
-                                     prompt='This will delete all records! Continue?',
+                                     prompt='This will delete all or a set of records! Continue?',
                                      help='Bypass confirmation')
 
 
@@ -417,9 +427,13 @@ def cli_setup_repository(ctx, config, verbosity):
               help='File or directory path to metadata records',
               type=click.Path(exists=True, resolve_path=True, file_okay=True))
 @click.option('--recursive', '-r', is_flag=True,
-              default=False, help='Bypass confirmation')
+              default=False, help='Recurse into subfolders')
+@click.option('--hashidentifier', '-h', required=False,
+              default='NEVER', help='MD5 Hash of the identifier, values NEVER|ALWAYS|DOUBLESLASH') # noqa
+@click.option('--source', '-s', required=False,
+              default='local', help='The source of the record')
 @CLI_OPTION_YES
-def cli_load_records(ctx, config, path, recursive, yes, verbosity):
+def cli_load_records(ctx, config, path, recursive, hashidentifier, source, yes, verbosity):
     """Load metadata records from directory or file into repository"""
 
     with open(config, encoding='utf8') as fh:
@@ -433,6 +447,8 @@ def cli_load_records(ctx, config, path, recursive, yes, verbosity):
         cfg['repository']['table'],
         path,
         recursive,
+        hashidentifier,
+        source,
         yes
     )
 
@@ -441,9 +457,11 @@ def cli_load_records(ctx, config, path, recursive, yes, verbosity):
 @cli_callbacks
 @click.pass_context
 @CLI_OPTION_CONFIG
+@click.option('--source', '-s', required=False,
+              default='all', help='Remove only records from a source')
 @CLI_OPTION_YES_PROMPT
-def cli_delete_records(ctx, config, yes, verbosity):
-    """Delete all records from repository"""
+def cli_delete_records(ctx, config, source, yes, verbosity):
+    """Delete records from repository"""
 
     with open(config, encoding='utf8') as fh:
         cfg = yaml_load(fh)
@@ -452,6 +470,7 @@ def cli_delete_records(ctx, config, yes, verbosity):
 
     delete_records(
         context,
+        source,
         cfg['repository']['database'],
         cfg['repository']['table']
     )
