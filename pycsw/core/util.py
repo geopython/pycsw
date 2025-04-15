@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2023 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -47,6 +47,7 @@ import typing
 
 from urllib.request import Request, urlopen
 from urllib.parse import urlparse
+from shapely.geometry import shape
 from shapely.wkt import loads
 from owslib.util import http_post
 
@@ -182,15 +183,8 @@ def wktenvelope2bbox(envelope):
 def geojson_geometry2bbox(geometry):
     """returns bbox string of GeoJSON geometry"""
 
-    geom_type = geometry.get('type')
-    coords = geometry.get('coordinates')
-
-    if geom_type == 'Point':
-        bbox = '%s,%s,%s,%s' % (coords[0], coords[1], coords[0], coords[1])
-    elif geom_type == 'Polygon':
-        bbox = '%s,%s,%s,%s' % (coords[0][0][0], coords[0][0][1], coords[0][2][0], coords[0][2][1])
-
-    return bbox
+    bounds = shape(geometry).bounds
+    return ','.join([str(b) for b in bounds])
 
 
 def wkt2geom(ewkt, bounds=True):
