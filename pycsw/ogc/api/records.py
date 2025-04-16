@@ -739,6 +739,8 @@ class API:
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
             if limit > self.limit:
                 limit = self.limit
+        elif limit is not None:
+            pass
         else:
             limit = self.limit
 
@@ -747,6 +749,9 @@ class API:
         LOGGER.debug(f'Query: {query}')
         LOGGER.debug('Querying repository')
         count = query.count()
+        LOGGER.debug(f'count: {count}')
+        LOGGER.debug(f'limit: {limit}')
+        LOGGER.debug(f'offset: {offset}')
         records = query.limit(limit).offset(offset).all()
 
         returned = len(records)

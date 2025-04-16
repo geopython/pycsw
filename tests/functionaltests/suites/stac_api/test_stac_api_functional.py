@@ -233,6 +233,11 @@ def test_items(config):
     for feature in content['features']:
         assert feature['collection'] == 'S2MSI1C'
 
+    # test limit
+    content = json.loads(api.items({}, {'limit': 1}, {})[2])
+
+    assert content['numberReturned'] == 1
+    assert content['numberMatched'] == 30
 
 def test_item(config):
     api = STACAPI(config)
