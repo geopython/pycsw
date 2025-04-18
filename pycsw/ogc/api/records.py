@@ -547,9 +547,11 @@ class API:
         query_parser = None
         sortby = None
         limit = None
+        ids = []
         bbox = []
         facets_requested = False
         collections = []
+        cql_ops_list = []
 
         if collection not in self.get_all_collections():
             msg = 'Invalid collection'
@@ -644,7 +646,6 @@ class API:
             query_parser = parse_ecql
 
         elif json_post_data is not None:
-
             if 'limit' in json_post_data:
                 limit = json_post_data.pop('limit')
             if 'sortby' in json_post_data:
@@ -653,23 +654,36 @@ class API:
                 collections = json_post_data.pop('collections')
             if 'bbox' in json_post_data:
                 bbox = json_post_data.pop('bbox')
+            if 'ids' in json_post_data:
+                ids = json_post_data.pop('ids')
             if not json_post_data:
                 LOGGER.debug('No CQL specified, only query parameters')
                 json_post_data = {}
+
             if not json_post_data and collections and collections != ['metadata:main']:
-                json_post_data = {'op': 'eq', 'args': [{'property': 'parentidentifier'}, collections[0]]}
-                if bbox:
-                    json_post_data = {
-                        'op': 'and',
-                        'args': [{
-                           'op': 's_intersects',
-                           'args': [
-                               {'property': 'geometry2'},
-                               {'bbox': [bbox]}
-                           ]},
-                           json_post_data
-                        ]
-                    }
+                cql_ops_list.append({'op': 'eq', 'args': [{'property': 'parentidentifier'}, collections[0]]})
+            if bbox:
+                cql_ops_list.append({
+                   'op': 's_intersects',
+                   'args': [
+                       {'property': 'geometry'},
+                       {'bbox': [bbox]}
+                   ]}
+                )
+
+            if ids:
+                cql_ops_list.append({
+                    'op': 'in',
+                    'args': [{'property': 'identifier'}, ids]
+                })
+
+            if len(cql_ops_list) > 1:
+                json_post_data = {
+                    'op': 'and',
+                    'args': cql_ops_list
+                }
+            elif len(cql_ops_list) == 1:
+                json_post_data = cql_ops_list[0]
 
             cql_query = json_post_data
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
