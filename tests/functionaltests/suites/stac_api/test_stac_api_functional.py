@@ -239,6 +239,17 @@ def test_items(config):
     assert content['numberReturned'] == 1
     assert content['numberMatched'] == 30
 
+    # test ids
+    ids = [
+        'S2B_MSIL2A_20190910T095029_N0213_R079_T33UXQ_20190910T124513.SAFE',
+        'S2B_MSIL2A_20190910T095029_N0213_R079_T33UXP_20190910T124513.SAFE'
+    ]
+    content = json.loads(api.items({}, {'ids': ids}, {})[2])
+
+    assert content['numberReturned'] == 2
+    assert content['numberMatched'] == 2
+
+
 def test_item(config):
     api = STACAPI(config)
     item = 'S2B_MSIL2A_20190910T095029_N0500_R079_T33TXN_20230430T083712.SAFE'
