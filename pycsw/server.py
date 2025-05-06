@@ -422,7 +422,7 @@ class Csw(object):
                         LOGGER.debug(
                             'Repository loaded (local): %s.' % self.repository.dbtype)
                         connection_done = True
-                    except Exception:
+                    except Exception as err:
                         LOGGER.debug(f'Repository not loaded retry connection {max_attempts}: {err}')
                         max_attempts += 1
             except Exception as err:
