@@ -417,7 +417,7 @@ def cli_setup_repository(ctx, config, verbosity):
               help='File or directory path to metadata records',
               type=click.Path(exists=True, resolve_path=True, file_okay=True))
 @click.option('--recursive', '-r', is_flag=True,
-              default=False, help='Bypass confirmation')
+              default=False, help='Recurse subdirectories')
 @CLI_OPTION_YES
 def cli_load_records(ctx, config, path, recursive, yes, verbosity):
     """Load metadata records from directory or file into repository"""
