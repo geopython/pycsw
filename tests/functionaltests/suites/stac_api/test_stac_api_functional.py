@@ -173,6 +173,16 @@ def test_items(config):
     assert len(content['features']) == 10
     assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE'  # noqa
 
+    content = json.loads(api.items({}, None, {'sortby': 'datetime'})[2])
+
+    assert len(content['features']) == 10
+    assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXP_20230430T083712.SAFE'  # noqa
+
+    content = json.loads(api.items({}, None, {'sortby': '-datetime'})[2])
+
+    assert len(content['features']) == 10
+    assert content['features'][5]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE'  # noqa
+
     params = {'filter': "title LIKE '%%sentinel%%'"}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 3
