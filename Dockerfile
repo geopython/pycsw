@@ -75,7 +75,7 @@ COPY --chown=pycsw . .
 COPY docker/pycsw.yml ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
-RUN pip3 install --editable .
+RUN pip3 install .
 
 WORKDIR /home/pycsw
 
