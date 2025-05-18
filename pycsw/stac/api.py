@@ -68,6 +68,7 @@ CONFORMANCE_CLASSES = [
     'https://api.stacspec.org/v1.0.0/item-search',
     'https://api.stacspec.org/v1.0.0/item-search#filter',
     'https://api.stacspec.org/v1.0.0/item-search#free-text',
+    'https://api.stacspec.org/v1.0.0/item-search#sort',
     'https://api.stacspec.org/v1.0.0-rc.1/collection-search',
     'https://api.stacspec.org/v1.0.0-rc.1/collection-search#free-text',
     'https://api.stacspec.org/v1.0.0/collections/extensions/transaction',

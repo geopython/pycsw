@@ -49,7 +49,7 @@ def test_landing_page(config):
 
     assert content['stac_version'] == '1.0.0'
     assert content['type'] == 'Catalog'
-    assert len(content['conformsTo']) == 20
+    assert len(content['conformsTo']) == 21
     assert len(content['keywords']) == 3
 
 
@@ -70,7 +70,7 @@ def test_conformance(config):
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
 
-    assert len(content['conformsTo']) == 20
+    assert len(content['conformsTo']) == 21
 
     conformances = [
         'http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/simple-query',
@@ -78,6 +78,7 @@ def test_conformance(config):
         'https://api.stacspec.org/v1.0.0/ogcapi-features',
         'https://api.stacspec.org/v1.0.0/item-search',
         'https://api.stacspec.org/v1.0.0/item-search#filter',
+        'https://api.stacspec.org/v1.0.0/item-search#sort',
         'https://api.stacspec.org/v1.0.0-rc.1/collection-search',
         'https://api.stacspec.org/v1.0.0-rc.1/collection-search#free-text'
     ]
