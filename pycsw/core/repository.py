@@ -355,11 +355,22 @@ class Repository(object):
 
         query = self.session.query(self.dataset).filter(column.in_(ids))
 
+        collection_typenames = [
+            'stac:Collection'
+        ]
+
+        column = getattr(self.dataset,
+                         self.context.md_core_model['mappings']['pycsw:Typename'])
+
+        query2 = self.session.query(self.dataset).filter(column.in_(collection_typenames))
+
         if filters is not None:
             LOGGER.debug('Querying repository with additional filters')
-            return self._get_repo_filter(query).filter(filters).limit(limit).all()
+            return list(set(self._get_repo_filter(query).filter(filters).limit(limit).all()) |
+                        set(self._get_repo_filter(query2).filter(filters).limit(limit).all()))
 
-        return self._get_repo_filter(query).limit(limit).all()
+        return list(set(self._get_repo_filter(query).limit(limit).all()) |
+                    set(self._get_repo_filter(query2).limit(limit).all()))
 
     def query_domain(self, domain, typenames, domainquerytype='list',
                      count=False):
