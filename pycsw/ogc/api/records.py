@@ -691,7 +691,7 @@ class API:
 
         LOGGER.debug(f'query parser: {query_parser}')
 
-        if query_parser is not None and json_post_data != {}:
+        if query_parser is not None and cql_query != {}:
             LOGGER.debug('Parsing CQL into AST')
             LOGGER.debug(json_post_data)
             LOGGER.debug(cql_query)

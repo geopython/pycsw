@@ -389,13 +389,13 @@ class STACAPI(API):
         :returns: tuple of headers, status code, content
         """
 
-        headers_['Accept'] = 'application/json'
-        headers, status, response = super().items(headers_, json_post_data, args, collection)
-
         if collection not in self.get_all_collections():
             msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+        headers_['Accept'] = 'application/json'
+        headers, status, response = super().items(headers_, json_post_data, args, collection)
 
         response = json.loads(response)
         response2 = deepcopy(response)
@@ -458,13 +458,13 @@ class STACAPI(API):
         :returns: tuple of headers, status code, content
         """
 
-        headers_['Accept'] = 'application/geo+json'
-        headers, status, response = super().item(headers_, args, collection, item)
-
         if collection not in self.get_all_collections():
             msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+        headers_['Accept'] = 'application/geo+json'
+        headers, status, response = super().item(headers_, args, collection, item)
 
         response = json.loads(response)
 
@@ -524,6 +524,13 @@ class STACAPI(API):
         }
 
     def manage_collection_item(self, headers_, action='create', item=None, data=None, collection=None):
+        if action in ['create', 'update']:
+            if (data is not None and data.get('type', '') == 'Feature' and
+                    collection not in self.get_all_collections()):
+                msg = 'Invalid collection'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
         if action == 'create' and data is not None and 'features' in data:
             LOGGER.debug('STAC ItemCollection detected')
 

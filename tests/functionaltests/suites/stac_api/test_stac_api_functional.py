@@ -295,6 +295,13 @@ def test_json_transaction(config, sample_collection, sample_item,
         'Content-Type': 'application/json'
     }
 
+    # ensure an item insert is part of a collection
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_item,
+        collection='non-existent-collection')
+
+    assert status == 400
+
     # insert item
     headers, status, content = api.manage_collection_item(
         request_headers, 'create', data=sample_item,
@@ -398,6 +405,14 @@ def test_json_transaction(config, sample_collection, sample_item,
     assert content['id'] == collection_id
 
     assert content['title'] == 'ORT_SPOT7_20190922_094920500_000'
+
+    # ensure collection is empty
+
+    headers, status, content = api.items({}, {}, {'collections': collection_id, 'f': 'json'})  # , collection=collection_id)
+
+    content = json.loads(content)
+
+    assert len(content['features']) == 0
 
     # update collection
     sample_collection['title'] = 'test title update'
