@@ -192,11 +192,11 @@ class Csw2(object):
 
             etree.SubElement(phone, util.nspath_eval('ows:Voice',
             self.parent.context.namespaces)).text = \
-            metadata_main['contact'].get('phone', 'missing')
+            str(metadata_main['contact'].get('phone', 'missing'))
 
             etree.SubElement(phone, util.nspath_eval('ows:Facsimile',
             self.parent.context.namespaces)).text = \
-            metadata_main['contact'].get('fax', 'missing')
+            str(metadata_main['contact'].get('fax', 'missing'))
 
             address = etree.SubElement(contactinfo,
             util.nspath_eval('ows:Address', self.parent.context.namespaces))
@@ -218,7 +218,7 @@ class Csw2(object):
             etree.SubElement(address,
             util.nspath_eval('ows:PostalCode',
             self.parent.context.namespaces)).text = \
-            metadata_main['contact'].get('postalcode', 'missing')
+            str(metadata_main['contact'].get('postalcode', 'missing'))
 
             etree.SubElement(address,
             util.nspath_eval('ows:Country', self.parent.context.namespaces)).text = \

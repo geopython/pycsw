@@ -61,10 +61,10 @@ pycsw's runtime configuration is defined by ``default.yml``.  pycsw ships with a
 - **address**: the address of the provider contact
 - **city**: the city of the provider contact
 - **stateorprovince**: the province or territory of the provider contact
-- **postalcode**: the postal code of the provider contact
+- **postalcode**: the postal code of the provider contact (enclose in quotes)
 - **country**: the country of the provider contact
-- **phone**: the phone number of the provider contact
-- **fax**: the facsimile number of the provider contact
+- **phone**: the phone number of the provider contact (enclose in quotes)
+- **fax**: the facsimile number of the provider contact (enclose in quotes)
 - **email**: the email address of the provider contact
 - **url**: the URL to more information about the provider contact
 - **hours**: the hours of service to contact the provider
