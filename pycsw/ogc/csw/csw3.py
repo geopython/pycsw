@@ -227,11 +227,11 @@ class Csw3(object):
 
             etree.SubElement(phone, util.nspath_eval('ows20:Voice',
             self.parent.context.namespaces)).text = \
-            metadata_main['contact'].get('phone', 'missing')
+            str(metadata_main['contact'].get('phone', 'missing'))
 
             etree.SubElement(phone, util.nspath_eval('ows20:Facsimile',
             self.parent.context.namespaces)).text = \
-            metadata_main['contact'].get('fax', 'missing')
+            str(metadata_main['contact'].get('fax', 'missing'))
 
             address = etree.SubElement(contactinfo,
             util.nspath_eval('ows20:Address', self.parent.context.namespaces))
