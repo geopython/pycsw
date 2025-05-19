@@ -80,7 +80,7 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     except Exception as err:
         LOGGER.debug(err)
 
-    repo = Repository(database, StaticContext(), table=table)
+    repo = Repository(database, StaticContext())
 
     repo.ping()
 
