@@ -126,19 +126,52 @@ class API:
 
         self.orm = 'sqlalchemy'
         from pycsw.core import repository
-        try:
-            LOGGER.info('Loading default repository')
-            self.repository = repository.Repository(
-                self.config['repository']['database'],
-                self.context,
-                table=self.config['repository']['table'],
-                repo_filter=repo_filter
-            )
-            LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
-        except Exception as err:
-            msg = f'Could not load repository {err}'
-            LOGGER.exception(msg)
-            raise
+
+        if 'source' in self.config['repository']:  # load custom repository
+            rs = self.config['repository']['source']
+            rs_modname, rs_clsname = rs.rsplit('.', 1)
+
+            rs_mod = __import__(rs_modname, globals(), locals(), [rs_clsname])
+            rs_cls = getattr(rs_mod, rs_clsname)
+
+            print("JJJ", rs_cls)
+
+            try:
+                connection_done = False
+                max_attempts = 0
+                max_retries = self.config['repository'].get('maxretries', 5)
+                while not connection_done and max_attempts <= max_retries:
+                    try:
+                        self.repository = rs_cls(self.context, repo_filter)
+                        LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
+                        connection_done = True
+                    except Exception as err:
+                        import traceback
+                        print(traceback.format_exc())
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}: {err}')
+                        max_attempts += 1
+            except Exception as err:
+                msg = 'Could not load custom repository %s: %s' % (rs, err)
+                LOGGER.exception(msg)
+                error = 1
+                code = 'NoApplicableCode'
+                locator = 'service'
+                text = 'Could not initialize repository. Check server logs'
+
+        else:
+            try:
+                LOGGER.info('Loading default repository')
+                self.repository = repository.Repository(
+                    self.config['repository']['database'],
+                    self.context,
+                    table=self.config['repository']['table'],
+                    repo_filter=repo_filter
+                )
+                LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
+            except Exception as err:
+                msg = f'Could not load repository {err}'
+                LOGGER.exception(msg)
+                raise
 
     def get_content_type(self, headers, args):
         """
