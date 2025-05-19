@@ -29,6 +29,7 @@
 #
 # =================================================================
 
+from copy import deepcopy
 import json
 from xml.etree import ElementTree as etree
 
@@ -88,6 +89,22 @@ def test_collections(config_virtual_collections):
     assert content['title'] == 'pycsw Geospatial Catalogue'
     assert content['description'] == 'pycsw is an OARec and OGC CSW server implementation written in Python'  # noqa
     assert content['itemType'] == 'record'
+
+    cvc = deepcopy(config_virtual_collections)
+    cvc['server']['maxrecords'] = 0
+    api = API(cvc)
+    content = json.loads(api.collections({}, {})[2])
+
+    assert len(content['links']) == 2
+    assert len(content['collections']) == 1
+
+    cvc = deepcopy(config_virtual_collections)
+    cvc['server']['maxrecords'] = 1
+    api = API(cvc)
+    content = json.loads(api.collections({}, {})[2])
+
+    assert len(content['links']) == 2
+    assert len(content['collections']) == 2
 
 
 def test_queryables(config_virtual_collections):
