@@ -70,7 +70,7 @@ def _poslist2wkt(poslist, axisorder, geomtype):
     return ', '.join(poslist2)
 
 
-class Geometry(object):
+class Geometry:
     """base geometry class"""
 
     def __init__(self, element, nsmap):

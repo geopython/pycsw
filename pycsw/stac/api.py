@@ -35,7 +35,7 @@ import os
 from pygeofilter.parsers.ecql import parse as parse_ecql
 
 from pycsw import __version__
-from pycsw.core.pygeofilter_evaluate import to_filter
+from pycsw.core.pygeofilter_ext import to_filter
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.records import API, build_anytext
 from pycsw.core.util import geojson_geometry2bbox, wkt2geom
@@ -272,10 +272,9 @@ class STACAPI(API):
         query_args.append("typename = 'stac:Collection'")
         ast = parse_ecql(' AND '.join(query_args))
         LOGGER.debug(f'Abstract syntax tree: {ast}')
-        filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
-        LOGGER.debug(f'Filter: {filters}')
-        sc_query = self.repository.session.query(
-            self.repository.dataset).filter(filters).limit(limit).all()
+
+        _, sc_query = self.repository.query(constraint={'ast': ast},
+                                            maxrecords=limit)
 
         for sc in sc_query:
             id_found = False
