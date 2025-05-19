@@ -178,7 +178,7 @@ def test_transform_mappings():
     ("some_callable", os.getcwd, os.getcwd()),
 ])
 def test_getqattr_no_link(name, value, expected):
-    class Phony(object):
+    class Phony:
         pass
 
     instance = Phony()

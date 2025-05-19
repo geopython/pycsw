@@ -35,7 +35,7 @@ from pycsw.core.etree import etree
 
 LOGGER = logging.getLogger(__name__)
 
-class OAIPMH(object):
+class OAIPMH:
     """OAI-PMH wrapper class"""
     def __init__(self, context, config):
         LOGGER.debug('Initializing OAI-PMH constants')
