@@ -33,7 +33,7 @@ from pycsw.core.etree import etree
 from pycsw.ogc.fes import fes1
 
 
-class Sru(object):
+class Sru:
     """SRU wrapper class"""
     def __init__(self, context):
         self.sru_version = '1.1'
