@@ -2,7 +2,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2021 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -38,6 +38,9 @@ from pygeofilter.values import Envelope
 from pygeofilter.backends.evaluator import handle
 from pygeofilter.backends.sqlalchemy import filters
 from pygeofilter.backends.sqlalchemy.evaluate import SQLAlchemyFilterEvaluator
+from pygeofilter.parsers.fes.util import Element
+from pygeofilter.parsers.fes.util import handle as fhandle
+from pygeofilter.parsers.fes.v11 import FES11Parser
 
 from pycsw.core.util import bbox2wktpolygon
 
@@ -105,6 +108,7 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
     def ilike(self, node, lhs):
         LOGGER.debug('Overriding ILIKE filter handling')
         LOGGER.debug(f'Term: {node.pattern}')
+        print("DBTYPE", self._pycsw_dbtype)
         if (str(lhs.prop) == 'dataset.anytext' and
                 self._pycsw_dbtype.startswith('postgres')):
             if '%' not in node.pattern:
@@ -122,3 +126,17 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
 
 def to_filter(ast, dbtype, field_mapping=None):
     return PycswFilterEvaluator(field_mapping, dbtype).evaluate(ast)
+
+
+class PycswCSWFES11Parser(FES11Parser):
+    def parse(self, input_):
+        return FES11Parser().parse(input_)
+
+#    @fhandle('BBOX')
+#    def geometry_bbox(self, node: Element, lhs, rhs, crs=None):
+#        minx = rhs.geometry['coordinates'][0][0][1]
+#        miny = rhs.geometry['coordinates'][0][0][0]
+#        maxx = rhs.geometry['coordinates'][0][2][1]
+#        maxy = rhs.geometry['coordinates'][0][2][0]
+
+#        return ast.BBox(lhs, minx, miny, maxx, maxy, crs)
