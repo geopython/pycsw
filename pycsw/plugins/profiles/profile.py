@@ -33,7 +33,7 @@
 import os
 import warnings
 
-class Profile(object):
+class Profile:
     ''' base Profile class '''
     def __init__(self, name, version, title, url,
     namespace, typename, outputschema, prefixes, model, core_namespaces,

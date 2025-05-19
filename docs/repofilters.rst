@@ -58,9 +58,9 @@ The same CSW `GetRecords` filter as per above then yields the following results:
 
 Another example:
 
-.. code-block:: text
+.. code-block:: yaml
 
-  repository:0
+  repository:
       database: sqlite:///records.db
       filter: "pycsw:ParentIdentifier != '33'"
 
