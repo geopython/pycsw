@@ -80,7 +80,42 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     except Exception as err:
         LOGGER.debug(err)
 
-    repo = Repository(database, StaticContext(), table=table)
+    if 'source' in pycsw_config['repository']:  # load custom repository
+        rs = pycsw_config['repository']['source']
+        rs_modname, rs_clsname = rs.rsplit('.', 1)
+
+        rs_mod = __import__(rs_modname, globals(), locals(), [rs_clsname])
+        rs_cls = getattr(rs_mod, rs_clsname)
+
+        try:
+            connection_done = False
+            max_attempts = 0
+            max_retries = pycsw_config['repository'].get('maxretries', 5)
+            while not connection_done and max_attempts <= max_retries:
+                try:
+                    repo = rs_cls(pycsw_config['repository'], StaticContext())
+                    LOGGER.debug('Custom repository %s loaded' % pycsw_config['repository']['source'])
+                    connection_done = True
+                except Exception as err:
+                    LOGGER.debug(f'Repository not loaded retry connection {max_attempts}: {err}')
+                    max_attempts += 1
+        except Exception as err:
+            msg = 'Could not load custom repository %s: %s' % (rs, err)
+            LOGGER.exception(msg)
+            error = 1
+            code = 'NoApplicableCode'
+            locator = 'service'
+            text = 'Could not initialize repository. Check server logs'
+
+    else:
+        try:
+            LOGGER.info('Loading default repository')
+            repo = repository.Repository(pycsw_config, StaticContext())
+            LOGGER.debug(f'Repository loaded {repo.dbtype}')
+        except Exception as err:
+            msg = f'Could not load repository {err}'
+            LOGGER.exception(msg)
+            raise
 
     repo.ping()
 
