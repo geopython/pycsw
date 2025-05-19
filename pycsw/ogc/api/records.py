@@ -354,7 +354,8 @@ class API:
         collections.append(collection_info)
 
         LOGGER.debug('Generating virtual collections')
-        virtual_collections = self.repository.query_collections()
+        limit = int(args.get('limit', self.config['server']['maxrecords']))
+        virtual_collections = self.repository.query_collections(limit=limit)
 
         for virtual_collection in virtual_collections:
             virtual_collection_info = self.get_collection_info(
