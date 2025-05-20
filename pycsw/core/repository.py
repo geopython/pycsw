@@ -89,14 +89,15 @@ class Repository(object):
         return clazz._engines[url]
 
     ''' Class to interact with underlying repository '''
-    def __init__(self, database, context, app_root=None, table='records', repo_filter=None):
+    def __init__(self, repo_object, context, app_root=None):
         ''' Initialize repository '''
 
         self.context = context
-        self.filter = repo_filter
+        self.filter = repo_object.get('filter')
         self.fts = False
-        self.database = database
-        self.table = table
+        self.database = repo_object['database']
+        self.table = repo_object['table']
+        self.facets = repo_object.get('facets', [])
 
         # Don't use relative paths, this is hack to get around
         # most wsgi restriction...
@@ -112,7 +113,7 @@ class Repository(object):
 
         self.postgis_geometry_column = None
 
-        schema_name, table_name = table.rpartition(".")[::2]
+        schema_name, table_name = self.table.rpartition(".")[::2]
 
         default_table_args = {
             "autoload": True,
@@ -465,7 +466,7 @@ class Repository(object):
         return [total, self._get_repo_filter(query).limit(
             maxrecords).offset(startposition).all()]
 
-    def get_facets(self, facets=[], ast=None) -> dict:
+    def get_facets(self, ast=None) -> dict:
         """
         Gets all facets for a given query
 
@@ -474,7 +475,7 @@ class Repository(object):
 
         facets_results = {}
 
-        for facet in facets:
+        for facet in self.facets:
             LOGGER.debug(f'Running facet for {facet}')
             facetq = self.session.query(self.query_mappings[facet], self.func.count(facet)).group_by(facet)
 
@@ -505,7 +506,6 @@ class Repository(object):
             facets_results[facet]['buckets'].sort(key=itemgetter('count'), reverse=True)
 
         return facets_results
-
 
     def insert(self, record, source, insert_date):
         ''' Insert a record into the repository '''

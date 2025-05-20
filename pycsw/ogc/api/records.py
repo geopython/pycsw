@@ -42,7 +42,6 @@ from pycsw import __version__
 from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.metadata import parse_record
-from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, str2bool, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json, to_rfc3339
@@ -112,8 +111,6 @@ class API:
             self.limit = 10
         LOGGER.debug(f'limit: {self.limit}')
 
-        repo_filter = self.config['repository'].get('filter')
-
         custom_mappings_path = self.config['repository'].get('mappings')
         if custom_mappings_path is not None:
             md_core_model = load_custom_repo_mappings(custom_mappings_path)
@@ -139,7 +136,7 @@ class API:
                 max_retries = self.config['repository'].get('maxretries', 5)
                 while not connection_done and max_attempts <= max_retries:
                     try:
-                        self.repository = rs_cls(self.context, repo_filter)
+                        self.repository = rs_cls(self.repository['repository'], self.context)
                         LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
                         connection_done = True
                     except Exception as err:
@@ -156,12 +153,7 @@ class API:
         else:
             try:
                 LOGGER.info('Loading default repository')
-                self.repository = repository.Repository(
-                    self.config['repository']['database'],
-                    self.context,
-                    table=self.config['repository']['table'],
-                    repo_filter=repo_filter
-                )
+                self.repository = repository.Repository(self.config['repository'], self.context)
                 LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
             except Exception as err:
                 msg = f'Could not load repository {err}'
@@ -771,7 +763,7 @@ class API:
 
         if facets_requested:
             LOGGER.debug('Running facet query')
-            response['facets'] = self.repository.get_facets(self.facets, ast)
+            response['facets'] = self.repository.get_facets(ast)
 
         returned = len(records)
 
