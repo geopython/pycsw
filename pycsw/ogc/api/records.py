@@ -136,8 +136,8 @@ class API:
                 max_retries = self.config['repository'].get('maxretries', 5)
                 while not connection_done and max_attempts <= max_retries:
                     try:
-                        self.repository = rs_cls(self.repository['repository'], self.context)
-                        LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
+                        self.repository = rs_cls(self.config['repository'], self.context)
+                        LOGGER.debug('Custom repository %s loaded' % self.config['repository']['source'])
                         connection_done = True
                     except Exception as err:
                         LOGGER.debug(f'Repository not loaded retry connection {max_attempts}: {err}')
