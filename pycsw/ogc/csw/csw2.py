@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -852,7 +852,7 @@ class Csw2(object):
                         remotecsw_matches = int(remotecsw.results['matches'])
                         plural = 's' if remotecsw_matches != 1 else ''
                         if remotecsw_matches > 0:
-                            matched = str(int(matched) + remotecsw_matches)
+                            matched = str(matched + remotecsw_matches)
                             dsresults.append(etree.Comment(
                             ' %d result%s from %s ' %
                             (remotecsw_matches, plural, fedcat)))
@@ -869,22 +869,22 @@ class Csw2(object):
                     ' %s\n\n%s ' % (error_string, err)))
                     LOGGER.exception(error_string)
 
-        if int(matched) == 0:
+        if matched == 0:
             returned = nextrecord = '0'
         elif int(self.parent.kvp['maxrecords']) == 0:
             returned = '0'
             nextrecord = '1'
-        elif int(matched) < int(self.parent.kvp['startposition']):
+        elif matched < int(self.parent.kvp['startposition']):
             returned = '0'
             nextrecord = '1'
-        elif int(matched) <= int(self.parent.kvp['startposition']) + int(self.parent.kvp['maxrecords']) - 1:
-            returned = str(int(matched) - int(self.parent.kvp['startposition']) + 1)
+        elif matched <= int(self.parent.kvp['startposition']) + int(self.parent.kvp['maxrecords']) - 1:
+            returned = str(matched - int(self.parent.kvp['startposition']) + 1)
             nextrecord = '0'
         else:
             returned = str(self.parent.kvp['maxrecords'])
             nextrecord = str(int(self.parent.kvp['startposition']) + int(self.parent.kvp['maxrecords']))
 
-        LOGGER.debug('Results: matched: %s, returned: %s, next: %s',
+        LOGGER.debug('Results: matched: %d, returned: %s, next: %s',
         matched, returned, nextrecord)
 
         node = etree.Element(util.nspath_eval('csw:GetRecordsResponse',
@@ -909,7 +909,7 @@ class Csw2(object):
 
         searchresults = etree.SubElement(node,
         util.nspath_eval('csw:SearchResults', self.parent.context.namespaces),
-        numberOfRecordsMatched=matched, numberOfRecordsReturned=returned,
+        numberOfRecordsMatched=str(matched), numberOfRecordsReturned=returned,
         nextRecord=nextrecord, recordSchema=self.parent.kvp['outputschema'])
 
         if self.parent.kvp['elementsetname'] is not None:

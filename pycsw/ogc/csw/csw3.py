@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -836,7 +836,7 @@ class Csw3(object):
             # query repository
             LOGGER.info('Querying repository with RECORD ids: %s', self.parent.kvp['recordids'])
             results = self.parent.repository.query_ids(self.parent.kvp['recordids'].split(','))
-            matched = str(len(results))
+            matched = len(results)
             if len(results) == 0:
                 return self.exceptionreport('NotFound', 'recordids',
                 'No records found for \'%s\'' % self.parent.kvp['recordids'])
@@ -859,20 +859,20 @@ class Csw3(object):
                 return self.exceptionreport('InvalidParameterValue', 'constraint',
                 'Invalid query syntax')
 
-        if int(matched) == 0:
+        if matched == 0:
             returned = nextrecord = '0'
         elif int(self.parent.kvp['maxrecords']) == 0:
             returned = nextrecord = '0'
-        elif int(matched) < int(self.parent.kvp['startposition']):
+        elif matched < int(self.parent.kvp['startposition']):
             returned = nextrecord = '0'
-        elif int(matched) <= int(self.parent.kvp['startposition']) + int(self.parent.kvp['maxrecords']) - 1:
-            returned = str(int(matched) - int(self.parent.kvp['startposition']) + 1)
+        elif matched <= int(self.parent.kvp['startposition']) + int(self.parent.kvp['maxrecords']) - 1:
+            returned = str(matched - int(self.parent.kvp['startposition']) + 1)
             nextrecord = '0'
         else:
             returned = str(self.parent.kvp['maxrecords'])
             nextrecord = str(int(self.parent.kvp['startposition']) + int(self.parent.kvp['maxrecords']))
 
-        LOGGER.debug('Results: matched: %s, returned: %s, next: %s',
+        LOGGER.debug('Results: matched: %d, returned: %s, next: %s',
         matched, returned, nextrecord)
 
         node = etree.Element(util.nspath_eval('csw30:GetRecordsResponse',
@@ -897,7 +897,7 @@ class Csw3(object):
 
         searchresults = etree.SubElement(node,
         util.nspath_eval('csw30:SearchResults', self.parent.context.namespaces),
-        numberOfRecordsMatched=matched, numberOfRecordsReturned=returned,
+        numberOfRecordsMatched=str(matched), numberOfRecordsReturned=returned,
         nextRecord=nextrecord, recordSchema=self.parent.kvp['outputschema'],
         expires=timestamp, status=get_resultset_status(matched, nextrecord))
 

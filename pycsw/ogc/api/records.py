@@ -31,7 +31,6 @@
 
 import json
 import logging
-from operator import itemgetter
 import os
 from urllib.parse import urlencode, quote
 
@@ -134,8 +133,6 @@ class API:
             rs_mod = __import__(rs_modname, globals(), locals(), [rs_clsname])
             rs_cls = getattr(rs_mod, rs_clsname)
 
-            print("JJJ", rs_cls)
-
             try:
                 connection_done = False
                 max_attempts = 0
@@ -146,8 +143,6 @@ class API:
                         LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
                         connection_done = True
                     except Exception as err:
-                        import traceback
-                        print(traceback.format_exc())
                         LOGGER.debug(f'Repository not loaded retry connection {max_attempts}: {err}')
                         max_attempts += 1
             except Exception as err:
@@ -572,7 +567,6 @@ class API:
 
         response = {
             'type': 'FeatureCollection',
-            'facets': [],
             'features': [],
             'links': []
         }
@@ -723,60 +717,24 @@ class API:
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
             query_parser = parse_cql2_json
 
-        LOGGER.debug(f'query parser: {query_parser}')
-
-        if query_parser is not None and cql_query != {}:
-            LOGGER.debug('Parsing CQL into AST')
-            LOGGER.debug(json_post_data)
-            LOGGER.debug(cql_query)
-            try:
-                ast = query_parser(cql_query)
-                LOGGER.debug(f'Abstract syntax tree: {ast}')
-            except Exception as err:
-                msg = f'CQL parsing error: {str(err)}'
-                LOGGER.exception(msg)
-                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
-
-            LOGGER.debug('Transforming AST into filters')
-            try:
-                filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
-                LOGGER.debug(f'Filter: {filters}')
-            except Exception as err:
-                msg = f'CQL evaluator error: {str(err)}'
-                LOGGER.exception(msg)
-                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
-
-            query = self.repository.session.query(self.repository.dataset).filter(filters)
-            if facets_requested:
-                LOGGER.debug('Running facet query')
-                facets_results = self.get_facets(filters)
-        else:
-            query = self.repository.session.query(self.repository.dataset)
-            facets_results = self.get_facets()
-
-        if facets_requested:
-            response['facets'] = facets_results
-        else:
-            response.pop('facets')
-
-        if 'sortby' in args:
+        if 'sortby' in args and args['sortby'] is not None:
             LOGGER.debug('sortby specified')
-            sortby = args['sortby']
+            sortby = {
+                'order': 'ASC',
+                'propertyname': None
+            }
 
-        if sortby is not None:
             LOGGER.debug('processing sortby')
-            if sortby.startswith('-'):
-                sortby = sortby.lstrip('-')
+            if args['sortby'].startswith('-'):
+                sortby['order'] = 'DESC'
+                sortby['propertyname'] = args['sortby'].lstrip('-')
 
-            if sortby not in list(self.repository.query_mappings.keys()):
+            if sortby['propertyname'] not in list(self.repository.query_mappings.keys()):
                 msg = 'Invalid sortby property'
                 LOGGER.exception(msg)
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
-
-            if args['sortby'].startswith('-'):
-                query = query.order_by(self.repository.query_mappings[sortby].desc())
-            else:
-                query = query.order_by(self.repository.query_mappings[sortby])
+        else:
+            sortby = None
 
         if limit is None and 'limit' in args:
             limit = int(args['limit'])
@@ -794,13 +752,26 @@ class API:
 
         offset = int(args.get('offset', 0))
 
-        LOGGER.debug(f'Query: {query}')
-        LOGGER.debug('Querying repository')
-        count = query.count()
-        LOGGER.debug(f'count: {count}')
-        LOGGER.debug(f'limit: {limit}')
-        LOGGER.debug(f'offset: {offset}')
-        records = query.limit(limit).offset(offset).all()
+        if query_parser is not None and cql_query != {}:
+            LOGGER.debug('Parsing CQL into AST')
+            LOGGER.debug(json_post_data)
+            LOGGER.debug(cql_query)
+            try:
+                ast = query_parser(cql_query)
+                LOGGER.debug(f'Abstract syntax tree: {ast}')
+            except Exception as err:
+                msg = f'CQL parsing error: {str(err)}'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+        else:
+            ast = None
+
+        count, records = self.repository.query(ast=ast, sortby=sortby, maxrecords=limit, startposition=offset)
+
+        if facets_requested:
+            LOGGER.debug('Running facet query')
+            response['facets'] = self.repository.get_facets(self.facets, ast)
 
         returned = len(records)
 
@@ -1134,39 +1105,6 @@ class API:
         virtual_collections = self.repository.query_collections(limit=self.limit)
 
         return [default_collection] + [vc.identifier for vc in virtual_collections]
-
-    def get_facets(self, filters=None) -> dict:
-        """
-        Gets all facets for a given query
-
-        :returns: `dict` of facets
-        """
-
-        facets_results = {}
-
-        for facet in self.facets:
-            LOGGER.debug(f'Running facet for {facet}')
-            facetq = self.repository.session.query(self.repository.query_mappings[facet], self.repository.func.count(facet)).group_by(facet)
-
-            if filters is not None:
-                facetq = facetq.filter(filters)
-
-            LOGGER.debug('Writing facet query results')
-            facets_results[facet] = {
-                'type': 'terms',
-                'property': facet,
-                'buckets': []
-            }
-
-            for fq in facetq.all():
-                facets_results[facet]['buckets'].append({
-                    'value': fq[0],
-                    'count': fq[1]
-                })
-
-            facets_results[facet]['buckets'].sort(key=itemgetter('count'), reverse=True)
-
-        return facets_results
 
 
 def record2json(record, url, collection, mode='ogcapi-records'):
