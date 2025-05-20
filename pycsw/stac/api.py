@@ -237,7 +237,7 @@ class STACAPI(API):
                 if v not in [None, '']:
                     query_args.append(build_anytext('anytext', v))
 
-        limit = int(args.get('limit', self.config['server']['maxrecords']))
+        limit = int(args.get('limit', self.config['server'].get('maxrecords', 10)))
 
         if query_args:
             ast = parse_ecql(' AND '.join(query_args))
