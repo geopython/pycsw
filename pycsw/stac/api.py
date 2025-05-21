@@ -262,10 +262,8 @@ class STACAPI(API):
         query_args.append("typename = 'stac:Collection'")
         ast = parse_ecql(' AND '.join(query_args))
         LOGGER.debug(f'Abstract syntax tree: {ast}')
-        filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
-        LOGGER.debug(f'Filter: {filters}')
-        sc_query = self.repository.session.query(
-            self.repository.dataset).filter(filters).limit(limit).all()
+
+        _, sc_query = self.repository.query(ast=ast, maxrecords=limit)
 
         for sc in sc_query:
             id_found = False
@@ -549,7 +547,7 @@ class STACAPI(API):
             if collection is not None:
                 data['collection'] = collection
             if data is not None and 'id' in data:
-                item=data['id']
+                item = data['id']
 
             return super().manage_collection_item(
                 headers_=headers_, action=action, item=item, data=data)
