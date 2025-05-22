@@ -1098,7 +1098,7 @@ class API:
         """
 
         default_collection = 'metadata:main'
-        virtual_collections = self.repository.query_collections()
+        virtual_collections = self.repository.query_collections(limit=self.limit)
 
         return [default_collection] + [vc.identifier for vc in virtual_collections]
 
