@@ -30,10 +30,13 @@
 #
 # =================================================================
 
+import logging
 import os
 from pycsw.core import util
 from pycsw.core.etree import etree
 from pycsw.plugins.profiles import profile
+
+LOGGER = logging.getLogger(__name__)
 
 CODELIST = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml'
 CODESPACE = 'ISOTC211/19115'
