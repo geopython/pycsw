@@ -389,7 +389,7 @@ class Csw(object):
                 max_attempts = 0
                 while not connection_done and max_attempts <= self.max_retries:
                     try:
-                        self.repository = rs_cls(self.context, repo_filter)
+                        self.repository = rs_cls(self.config['repository'], self.context)
                         LOGGER.debug('Custom repository %s loaded (%s)', rs, self.repository.dbtype)
                         connection_done = True
                     except Exception as err:
@@ -413,11 +413,7 @@ class Csw(object):
                 while not connection_done and max_attempts <= self.max_retries:
                     try:
                         self.repository = repository.Repository(
-                            self.config['repository']['database'],
-                            self.context,
-                            self.environ.get('local.app_root', None),
-                            self.config['repository'].get('table'),
-                            repo_filter
+                            self.config['repository'], self.context
                         )
                         LOGGER.debug(
                             'Repository loaded (local): %s.' % self.repository.dbtype)
