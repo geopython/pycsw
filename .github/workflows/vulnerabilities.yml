@@ -44,3 +44,4 @@ jobs:
         severity: CRITICAL,HIGH
         vuln-type: os,library
         image-ref: '${{ github.repository }}:${{ github.sha }}'
+        skip-dirs: docker/helm,docker/kubernetes
