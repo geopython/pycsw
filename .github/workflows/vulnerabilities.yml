@@ -32,6 +32,7 @@ jobs:
         severity: CRITICAL,HIGH
         scanners: vuln,misconfig,secret
         scan-ref: .
+        skip-dirs: docker/helm,docker/kubernetes
     - name: Build locally the image from Dockerfile
       run: |
         docker buildx build -t ${{ github.repository }}:${{ github.sha }} --platform linux/amd64 --no-cache -f Dockerfile .

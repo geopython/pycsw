@@ -488,6 +488,9 @@ class STACAPI(API):
         :returns: `dict` of collection
         """
 
+        if 'json' in collection_info.metadata_type and collection_info.type == 'collection':
+            return json.loads(collection_info.metadata)
+
         if collection_name == 'metadata:main':
             id_ = collection_name
             title = self.config['metadata']['identification']['title']
@@ -549,7 +552,7 @@ class STACAPI(API):
             if collection is not None:
                 data['collection'] = collection
             if data is not None and 'id' in data:
-                item=data['id']
+                item = data['id']
 
             return super().manage_collection_item(
                 headers_=headers_, action=action, item=item, data=data)

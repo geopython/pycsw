@@ -108,6 +108,21 @@ def test_collections(config):
     assert len(content['collections']) == 0
 
 
+def test_collection(config):
+    api = STACAPI(config)
+    headers, status, content = api.collection({}, {'f': 'json'}, 'simple-collection')  # noqa
+    content = json.loads(content)
+
+    assert headers['Content-Type'] == 'application/json'
+    assert status == 200
+    assert len(content['links']) == 4
+
+    assert content['id'] == 'simple-collection'
+    assert content['title'] == 'Simple Example Collection'
+    assert 'summaries' in content
+    assert 'statistics' in content['summaries']
+
+
 def test_queryables(config):
     api = STACAPI(config)
     headers, status, content = api.queryables({}, {})
@@ -408,7 +423,7 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     # ensure collection is empty
 
-    headers, status, content = api.items({}, {}, {'collections': collection_id, 'f': 'json'})  # , collection=collection_id)
+    headers, status, content = api.items({}, {}, {'collections': collection_id, 'f': 'json'})  # noqa
 
     content = json.loads(content)
 
