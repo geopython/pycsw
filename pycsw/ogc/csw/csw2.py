@@ -1543,8 +1543,13 @@ class Csw2(object):
                 'dc:language', 'dc:rights', 'dct:alternative']:
                     val = util.getqattr(recobj, queryables[i]['dbcol'])
                     if val:
-                        etree.SubElement(record,
-                        util.nspath_eval(i, self.parent.context.namespaces)).text = val
+                        if isinstance(val, list): # if there are multiple publishers or contributors
+                            for v in val:
+                                etree.SubElement(record,
+                                util.nspath_eval(i, self.parent.context.namespaces)).text = str(v)
+                        else:
+                            etree.SubElement(record,
+                            util.nspath_eval(i, self.parent.context.namespaces)).text = val
                 val = util.getqattr(recobj, queryables['dct:spatial']['dbcol'])
                 if val:
                     etree.SubElement(record,
