@@ -182,7 +182,7 @@ def test_items(config):
     content = json.loads(api.items({}, None, {'sortby': 'title'})[2])
 
     assert len(content['features']) == 10
-    assert content['features'][5]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
+    assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({}, None, {'sortby': '-title'})[2])
 
@@ -197,7 +197,7 @@ def test_items(config):
     content = json.loads(api.items({}, None, {'sortby': '-datetime'})[2])
 
     assert len(content['features']) == 10
-    assert content['features'][5]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE'  # noqa
+    assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0500_R079_T33TXN_20230429T151337.SAFE'  # noqa
 
     params = {'filter': "title LIKE '%%sentinel%%'"}
     content = json.loads(api.items({}, None, params)[2])
@@ -228,7 +228,7 @@ def test_items(config):
                                    {})[2])
 
     assert len(content['features']) == 10
-    assert content['features'][5]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
+    assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({},
                                    {'sortby': [{'field': 'title', 'direction': 'desc'}]},  # noqa
@@ -263,7 +263,7 @@ def test_items(config):
     content = json.loads(api.items({}, {'limit': 1}, {})[2])
 
     assert content['numberReturned'] == 1
-    assert content['numberMatched'] == 30
+    assert content['numberMatched'] == 31
 
     # test ids
     ids = [
@@ -274,6 +274,10 @@ def test_items(config):
 
     assert content['numberReturned'] == 2
     assert content['numberMatched'] == 2
+
+    content = json.loads(api.items({}, None, {'off_nadir': '3.8'})[2])
+    assert len(content['features']) == 1
+    assert content['features'][0]['properties']['view:off_nadir'] == 3.8
 
 
 def test_item(config):
@@ -366,7 +370,7 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     matched = json.loads(content)['numberMatched']
 
-    assert matched == 30
+    assert matched == 31
 
     # insert item collection
     headers, status, content = api.manage_collection_item(
@@ -379,7 +383,7 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     matched = json.loads(content)['numberMatched']
 
-    assert matched == 32
+    assert matched == 33
 
     # delete items from item collection
     headers, status, content = api.manage_collection_item(

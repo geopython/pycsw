@@ -163,7 +163,8 @@ class Repository(object):
             'time_end': self.dataset.time_end,
             'platform': self.dataset.platform,
             'instrument': self.dataset.instrument,
-            'sensortype': self.dataset.sensortype
+            'sensortype': self.dataset.sensortype,
+            'off_nadir': self.dataset.illuminationelevationangle
         }
 
         if self.dbtype == 'postgresql':
@@ -891,6 +892,8 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
         Column('cloudcover', Text, index=True),
         # bands: JSON list of dicts with properties: name, units, min, max
         Column('bands', Text, index=True),
+        # STAC: view:off_nadir
+        Column('illuminationelevationangle', Text, index=True),
 
         # distribution
         # links: JSON list of dicts with properties: name, description, protocol, url

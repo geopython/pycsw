@@ -119,6 +119,7 @@ class APISO(profile.Profile):
                         'apiso:SensorType': {'xpath': 'gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:instrument/gmi:MI_Instrument/gmi:type', 'dbcol': self.context.md_core_model['mappings']['pycsw:SensorType']},
                         'apiso:CloudCover': {'xpath': 'gmd:contentInfo/gmd:MD_ImageDescription/gmd:cloudCoverPercentage', 'dbcol': self.context.md_core_model['mappings']['pycsw:CloudCover']},
                         'apiso:Bands': {'xpath': 'gmd:contentInfo/gmd:MD_ImageDescription/gmd:dimension/MD_Band/@id', 'dbcol': self.context.md_core_model['mappings']['pycsw:Bands']},
+                        'apiso:IlluminationElevationAngle': {'xpath': 'gmd:contentInfo/gmd:MD_ImageDescription/gmd:illuminationElevationAngle/gco:Real', 'dbcol': self.context.md_core_model['mappings']['pycsw:IlluminationElevationAngle']},
                     }
                 },
                 'mappings': {

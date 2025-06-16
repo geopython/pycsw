@@ -59,6 +59,7 @@ Supported Query Parameters
 - ``eo:sensorType``
 - ``eo:snowCover``
 - ``eo:spectralRange``
+- ``eo:illuminationElevationAngle``
 
 Mapping of non-19115 Queryable Mappings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

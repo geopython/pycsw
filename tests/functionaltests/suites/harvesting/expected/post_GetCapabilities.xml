@@ -147,6 +147,7 @@
         <ows:Value>apiso:Contributor</ows:Value>
         <ows:Value>apiso:Creator</ows:Value>
         <ows:Value>apiso:Degree</ows:Value>
+        <ows:Value>apiso:IlluminationElevationAngle</ows:Value>
         <ows:Value>apiso:Lineage</ows:Value>
         <ows:Value>apiso:OtherConstraints</ows:Value>
         <ows:Value>apiso:Publisher</ows:Value>

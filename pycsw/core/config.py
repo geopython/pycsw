@@ -179,6 +179,7 @@ class StaticContext(object):
                 'pycsw:SensorType': 'sensortype',
                 'pycsw:CloudCover': 'cloudcover',
                 'pycsw:Bands': 'bands',
+                'pycsw:IlluminationElevationAngle': 'illuminationelevationangle',
                 # links: list of dicts with properties: name, description, protocol, url
                 'pycsw:Links': 'links',
                 # contacts: list of dicts with properties: name, organization, address, postcode, city, region, country, email, phone, fax, onlineresource, position, role
