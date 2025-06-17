@@ -1539,6 +1539,7 @@ def _parse_iso(context, repos, exml):
         for ci in md.contentinfo:
             if isinstance(ci, MD_ImageDescription):
                 _set(context, recobj, 'pycsw:CloudCover', ci.cloud_cover)
+                _set(context, recobj, 'pycsw:IlluminationElevationAngle', ci.illumination_elevation_angle)
 
                 keywords = _get(context, recobj, 'pycsw:Keywords')
                 if ci.processing_level is not None:
@@ -1926,6 +1927,8 @@ def _parse_stac_resource(context, repos, record):
 
         if 'collection' in record:
             _set(context, recobj, 'pycsw:ParentIdentifier', record['collection'])
+
+        _set(context, recobj, 'pycsw:IlluminationElevationAngle', record['properties'].get('view:off_nadir'))
 
     if stac_type in ['Collection', 'Catalog']:
         if 'keywords' in record:

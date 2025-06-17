@@ -54,7 +54,8 @@ QUERY_PARAMETERS = [
     'eo:spectralrange',
     'eo:bands',
     'eo:orbitnumber',
-    'eo:orbitdirection'
+    'eo:orbitdirection',
+    'eo:illuminationelevationangle'
 ]
 
 
@@ -176,7 +177,8 @@ class OpenSearch(object):
                 'eo:productType': '{eo:productType?}',
                 'eo:sensorType': '{eo:sensorType?}',
                 'eo:snowCover': '{eo:snowCover?}',
-                'eo:spectralRange': '{eo:spectralRange?}'
+                'eo:spectralRange': '{eo:spectralRange?}',
+                'eo:illuminationElevationAngle': '{eo:illuminationElevationAngle?}'
             }
 
             node1.set('template', '%s%s' % (self.bind_url,
@@ -286,7 +288,8 @@ class OpenSearch(object):
                 'eo:productType': '{eo:productType?}',
                 'eo:sensorType': '{eo:sensorType?}',
                 'eo:snowCover': '{eo:snowCover?}',
-                'eo:spectralRange': '{eo:spectralRange?}'
+                'eo:spectralRange': '{eo:spectralRange?}',
+                'eo:illuminationElevationAngle': '{eo:illuminationElevationAngle?}'
             }
 
             node1.set('template', '%s%s' % (self.bind_url,
@@ -394,6 +397,7 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
     eo_producttype_element = None
     eo_sensortype_element = None
     eo_snowcover_element = None
+    eo_illuminationelevationangle_element = None
 
     if profiles is not None and 'plugins' in profiles and 'APISO' in profiles['plugins']:
         query_temporal_by_iso = True
@@ -665,6 +669,15 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
         etree.SubElement(eo_bands_element, util.nspath_eval(
             'ogc:Literal', context.namespaces)).text = '*%s*' % kvp['eo:spectralrange']
 
+    if not util.is_none_or_empty(kvp.get('eo:illuminationelevationangle')):
+        par_count += 1
+        eo_illuminationelevationangle_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
+            matchCase='false', wildCard='*', singleChar='?', escapeChar='\\')
+        etree.SubElement(eo_illuminationelevationangle_element,
+           util.nspath_eval('ogc:PropertyName', context.namespaces)).text = 'apiso:IlluminationElevationAngle'
+        etree.SubElement(eo_illuminationelevationangle_element, util.nspath_eval(
+            'ogc:Literal', context.namespaces)).text = '*%s*' % kvp['eo:illuminationelevationangle']
+
     if not util.is_none_or_empty(kvp.get('eo:orbitnumber')):
         par_count += 1
         eo_orbitnumber_element = etree.Element(util.nspath_eval('ogc:PropertyIsLike', context.namespaces),
@@ -720,7 +733,7 @@ def kvp2filterxml(kvp, context, profiles, fes_version='1.0'):
     for eo_element in [eo_producttype_element, eo_platform_element, eo_instrument_element,
                        eo_sensortype_element, eo_cloudcover_element, eo_snowcover_element,
                        eo_bands_element, eo_orbitnumber_element, eo_orbitdirection_element,
-                       eo_processinglevel_element, eo_parentidentifier_element]:
+                       eo_processinglevel_element, eo_parentidentifier_element, eo_illuminationelevationangle_element]:
         if eo_element is not None:
             node_to_append.append(eo_element)
 
