@@ -3,4 +3,5 @@ alter table records add column metadata_type TEXT default 'application/xml';
 alter table records add column edition TEXT;
 alter table records add column contacts TEXT;
 alter table records add column themes TEXT;
+alter table records add column illuminationelevationangle TEXT;
 vacuum;
