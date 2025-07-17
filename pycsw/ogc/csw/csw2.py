@@ -738,6 +738,7 @@ class Csw2(object):
                         return self.exceptionreport('InvalidParameterValue',
                         'constraint', 'Invalid Filter syntax')
                 elif self.parent.kvp['constraintlanguage'] == 'FILTER':
+                    tmp = self.parent.kvp['constraint']
                     # validate filter XML
                     try:
                         self.parent.kvp['constraint'] = {
