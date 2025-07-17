@@ -72,17 +72,16 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     for more information on how to control gunicorn by sending UNIX signals.
     """
 
-    database = pycsw_config['repository'].get('database')
-    table = pycsw_config['repository'].get('table')
+    database = pycsw_config['repository']
 
-    try:
-        setup(database, table)
-    except Exception as err:
-        LOGGER.debug(err)
+    #try:
+    #    setup(database)
+    #except Exception as err:
+    #    LOGGER.debug(err)
 
-    repo = Repository(database, StaticContext())
+    # repo = Repository(database, StaticContext())
 
-    repo.ping()
+    # repo.ping()
 
     sys.stdout.flush()
     # we're using --reload-engine=poll because there is a bug with gunicorn
