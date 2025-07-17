@@ -1576,6 +1576,7 @@ class Csw2(object):
         request = {}
         try:
             LOGGER.info('Parsing %s', postdata)
+            print("JJJ", postdata)
             doc = etree.fromstring(postdata, self.parent.context.parser)
         except Exception as err:
             errortext = \
