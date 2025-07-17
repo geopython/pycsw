@@ -147,7 +147,9 @@ class Repository(object):
 
         temp_dbtype = None
 
+        print("JJJ", self.context.md_core_model['mappings']['pycsw:Title'])
         self.query_mappings = {
+            # OGC API - Records mappings
             'identifier': self.dataset.identifier,
             'type': self.dataset.type,
             'typename': self.dataset.typename,
@@ -168,6 +170,10 @@ class Repository(object):
             'instrument': self.dataset.instrument,
             'sensortype': self.dataset.sensortype
         }
+
+        LOGGER.debug('adding OGC CSW mappings')
+        for key, value in self.context.models['csw']['typenames']['csw:Record']['queryables']['SupportedDublinCoreQueryables'].items():
+            self.query_mappings[key] = util.getqattr(self.dataset, value['dbcol'])
 
         if self.dbtype == 'postgresql':
             # check if PostgreSQL is enabled with PostGIS 1.x

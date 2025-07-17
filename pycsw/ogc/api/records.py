@@ -1113,7 +1113,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
 
     if record.metadata_type in ['application/json', 'application/geo+json']:
         rec = json.loads(record.metadata)
-        if rec.get('stac_version') is not None and rec['type'] == 'Feature' and mode == 'stac-api':
+        if rec.get('stac_version') is not None and rec['type'] in ['Collection', 'Feature'] and mode == 'stac-api':
             LOGGER.debug('Returning native STAC representation')
             rec['links'].extend([{
                 'rel': 'self',

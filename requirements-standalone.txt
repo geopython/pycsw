@@ -1,5 +1,5 @@
 SQLAlchemy<2.0.0
 Flask
-pygeofilter
+pygeofilter[fes]
 PyYAML
 pygeoif
