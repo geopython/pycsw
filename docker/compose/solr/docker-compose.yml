@@ -46,6 +46,14 @@ services:
   solr:
     container_name: solr
     image: solr:slim
+    healthcheck:
+      test: >-
+        curl -s -A 'healthcheck'  http://localhost:8983/solr/gettingstarted/admin/ping?wt=json \
+        | grep -q '"status":"OK"'
+      start_period: 15s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     volumes:
       - solr-data:/var/solr
     ports:
@@ -58,7 +66,8 @@ services:
   pycsw:
     container_name: pycsw
     depends_on:
-      - solr
+      solr:
+        condition: service_healthy
     build: ../../..
     environment:
         PYCSW_SERVER_URL: http://localhost:8000
@@ -66,8 +75,8 @@ services:
       - 8000:8000
     volumes:
       - ./pycsw-solr.yml:/etc/pycsw/pycsw.yml
-      - ./solr_helper.py:/usr/local/lib/python3.10/site-packages/pycsw/pycsw/plugins/repository/solr_helper.py
-      - ./solr_pycsw.py:/usr/local/lib/python3.10/site-packages/pycsw/pycsw/plugins/repository/solr_pycsw.py
+      - ./solr_helper.py:/usr/local/lib/python3.10/site-packages/pycsw/plugins/repository/solr_helper.py
+      - ./solr_pycsw.py:/usr/local/lib/python3.10/site-packages/pycsw/plugins/repository/solr_pycsw.py
     networks:
       - pycsw-net
 
