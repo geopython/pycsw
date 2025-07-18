@@ -37,6 +37,7 @@ pycsw |release| Documentation
    repositories
    outputschemas
    xslt
+   html-templating
    geonode
    hhypermap
    odc

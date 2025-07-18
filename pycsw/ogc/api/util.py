@@ -52,9 +52,8 @@ LOGGER = logging.getLogger(__name__)
 
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 
-TEMPLATES = f'{os.path.dirname(os.path.realpath(__file__))}{os.sep}templates'
-
-STATIC = f'{TEMPLATES}/static'
+TEMPLATES = pathlib.Path(__file__).resolve().parent.parent.parent / 'templates'
+STATIC = TEMPLATES / 'static'
 
 mimetypes.add_type('text/plain', '.yaml')
 mimetypes.add_type('text/plain', '.yml')
