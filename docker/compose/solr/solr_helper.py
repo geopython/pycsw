@@ -1,37 +1,25 @@
 import os
-import configparser
-from pycsw import wsgi
-from pycsw.core import util
 import dateutil.parser as dparser
+
+from pycsw.core import util
+from pycsw.ogc.api.util import STATIC, yaml_load
 
 
 def get_config():
-    pycsw_root = wsgi.get_pycsw_root_path(os.environ, os.environ)
-    configuration_path = wsgi.get_configuration_path(os.environ, os.environ, pycsw_root)
-
-    return util.parse_ini_config(configuration_path)
-
+    with open(os.getenv('PYCSW_CONFIG'), encoding='utf8') as fh:
+        return yaml_load(fh)
 
 def get_config_parser(section, entry):
-    return get_config().get(section, entry)
+    return get_config().get(section,{}).get(entry, "")
 
 
 def get_iso_transformer():
-    mmd_to_iso = get_config_parser("repository", "xslt_iso_transformer")
-    return get_config_parser("xslt", mmd_to_iso)
-
+    return get_config_parser("repository", "xslt_iso_transformer")
 
 
 def get_collection_filter():
-    pycsw_root = wsgi.get_pycsw_root_path(os.environ, os.environ)
-    configuration_path = wsgi.get_configuration_path(os.environ, os.environ, pycsw_root)
-
-    config = configparser.ConfigParser(interpolation=util.EnvInterpolation())
-
-    with open(configuration_path, encoding="utf-8") as scp:
-        config.read_file(scp)
-        collection_filter = config.get("repository", "adc_collection")
-    return collection_filter.replace(",", " ")
+    config = get_config()
+    return config.get("repository", {}).get('filter', "metadata:main")
 
 
 def parse_bbox_OR_query(constraint, right_hand_envelope=False):
