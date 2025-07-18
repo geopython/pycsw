@@ -31,7 +31,6 @@
 # =================================================================
 
 import base64
-import configparser
 from datetime import datetime, timezone
 import dateutil.parser as dparser
 import logging
@@ -52,7 +51,6 @@ LOGGER = logging.getLogger(__name__)
 
 from pycsw.plugins.repository.solr_helper import (
     get_collection_filter,
-    get_config_parser,
     parse_time_query,
     parse_field_query,
     parse_field_OR_query,
@@ -85,7 +83,6 @@ class SOLRPYCSWRepository(object):
         self.solr_select_url = "%s/select" % self.filter
         self.dbtype = "SOLR"
 
-        # self.config_obj = get_config()
         self.adc_collection_filter = get_collection_filter()
         # print(self.adc_collection_filter)
 
@@ -486,7 +483,6 @@ class SOLRPYCSWRepository(object):
 
         # xslt = os.environ.get('MMD_TO_ISO')
         xslt_file = get_iso_transformer()
-        # xslt_file = get_config_parser("xslt", "mmd_to_iso")
 
         transform = etree.XSLT(etree.parse(xslt_file))
         xml_ = base64.b64decode(doc["mmd_xml_file"])
