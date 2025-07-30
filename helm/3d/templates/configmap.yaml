@@ -1,0 +1,37 @@
+{{- $chartName := include "pycsw.name" . -}}
+{{- $fullName := include "pycsw.fullname" . -}}
+{{- $ca := (include "merged.ca" . ) | fromYaml }}
+{{- $tracing := (include "merged.tracing" . ) | fromYaml }}
+{{- $metrics := (include "merged.metrics" . ) | fromYaml }}
+{{- $postgres := (include "merged.postgres" . ) | fromYaml }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+data:
+  {{ if $tracing.enabled }}
+  TELEMETRY_TRACING_ENABLED: 'true'
+  TELEMETRY_TRACING_URL: {{ $tracing.url }}
+  {{ end }}
+  {{ if $metrics.enabled }}
+  TELEMETRY_METRICS_ENABLED: 'true'
+  TELEMETRY_METRICS_URL: {{ $metrics.url }}
+  {{ end }}
+  {{- if $ca.enabled }}
+  REQUESTS_CA_BUNDLE: {{ printf "%s/%s" $ca.path $ca.key | quote }}
+  NODE_EXTRA_CA_CERTS: {{ printf "%s/%s" $ca.path $ca.key | quote }}
+  {{- end }}
+  pycsw.cfg: {{ tpl (.Files.Get "config/pycsw.cfg") . | quote }}
+  mappings.py: {{ .Files.Get "config/mappings.py" | quote }}
+  uwsgi.ini: {{ tpl (.Files.Get "config/pycswWsgi.ini") . | quote }}
+  CORS_ENABLED: {{ .Values.authentication.cors.enabled | quote }}
+  CORS_ALLOWED_HEADERS: {{ template "pycsw.cors.allowedHeaders" . }}
+  CORS_ALLOWED_ORIGIN: {{ .Values.authentication.cors.allowedOrigin | quote }}
+  LOG_FORMAT: {{ .Values.env.logFormat | quote }}
+  DB_HOST: {{ quote $postgres.host }}
+  DB_PORT:  {{ quote $postgres.port }}
+  DB_NAME: {{ quote $postgres.name }}
+  POSTGRES_ENABLE_SSL_AUTH: {{ quote $postgres.ssl.enabled }}
+  DB_SCHEMA: {{ quote $postgres.schema }}
+  COORDINATE_PRECISION: {{ quote .Values.env.bboxPrecisionDigits }}
+  PGAPPNAME: {{ $chartName }}

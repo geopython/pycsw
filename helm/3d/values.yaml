@@ -1,0 +1,203 @@
+global:
+  cloudProvider:
+    dockerRegistryUrl: 
+    flavor: openshift
+    imagePullSecretName: 
+  imagePullPolicy: IfNotPresent
+  tracing: {}
+  metrics: {}
+  opala:
+    enabled:
+  environment: 'development'
+
+  postgres:
+      host: 
+      port: 
+      schema: 
+      name: 
+      user:
+        requirePassword: false
+        rejectUnauthorized: false
+        useExternal: false
+        secretName: ''
+        username: ''
+        password: ''
+      ssl:
+        enabled: false
+        useExternal: false
+        secretName: ''
+        caFileName: ''
+        certFileName: ''
+        keyFileName: ''
+
+cloudProvider:
+    dockerRegistryUrl: # test # - Fill for Helm lint to pass
+    flavor: 
+    imagePullSecretName: 
+imagePullPolicy: 
+environment: 
+
+image:
+  repository: pycsw
+  tag: latest
+
+nodePort: 30030
+replicaCount: 1
+revisionHistoryLimit: 3 # Amount of revisions we keep
+
+authentication:
+  cors:
+    enabled: false
+    allowedOrigin: ''
+    allowedHeaders: ''
+
+postgres:
+    host: 
+    port: 
+    schema: 
+    name: 
+    user:
+      requirePassword: false
+      rejectUnauthorized: false
+      useExternal: false
+      secretName: ''
+      username: ''
+      password: ''
+    ssl:
+      enabled: false
+      useExternal: false
+      secretName: ''
+      caFileName: ''
+      certFileName: ''
+      keyFileName: ''
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  path: /csw?service=CSW&request=GetCapabilities&version=3.0.0
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  path: /csw?service=CSW&request=GetCapabilities&version=3.0.0
+
+ca:
+  enabled: false
+  useExternal: false
+  secretName: 
+  path: 
+  key: 
+
+extraVolumes: {}
+
+extraVolumeMounts: {}
+
+sidecars: {}
+
+podAnnotations: {}
+
+opala:
+  enabled:
+  domain:
+  url:
+
+env:
+  port: 8080
+  targetPort: 8000
+  protocol: TCP
+  logLevel: WARNING
+  maxRecords: 10000
+  logfile: ''
+  profiles: mc_3d
+  bboxPrecisionDigits: 10
+  logFormat: >-
+    %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+    %({x-forwarded-for}i)s %(L)s
+  tracing:
+    enabled: false
+    url: http://localhost:55681/v1/trace
+  metrics:
+    enabled: false
+    url: 'http://localhost:55681/v1/metrics'
+  uwsgi:
+    processes: 
+    threads: 
+    statsServer:
+      enabled: 
+      stats: 
+      statsMinify: 
+
+filterProductStatus: false
+
+resources:
+  enabled: true
+  value:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+route:
+  enabled: false
+  path: /
+  host: 
+  timeout:
+    enabled: false # defaults to 30s by openshift
+    duration: 60s # supported units (us, ms, s, m, h, d)
+  rewriteTarget: ''
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+    useCerts: false
+    certificate: ''
+    key: ''
+    caCertificate: ''
+
+ingress:
+  enabled: false
+  path: /
+  host: localhost
+  cors:
+    enabled: true
+    origin: '*'
+
+
+nginx:
+  enabled: false
+  nameOverride: 
+  replicaCount: 1
+  environment: development
+  image:
+    repository: nginx-otel-unprivileged
+    tag: latest
+  port: 8080
+  internalServicePort: 80
+  targetPort: 8080
+  servicePort: 8080
+  nodePort: 30001
+  route:
+      enabled:
+
+uwsgiExporter:
+  image:
+    repository: "timonwong/uwsgi-exporter"
+    tag: "latest"
+  env:
+    logLevel: info # one of [debug, info, warn, error]
+  port: 9117
+  resources:
+    enabled: true
+    value:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi

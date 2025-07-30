@@ -1,0 +1,202 @@
+{{- $releaseName := .Release.Name -}}
+{{- $chartName := include "pycsw.name" . -}}
+{{- $fullName := include "pycsw.fullname" . -}}
+{{- $cloudProviderFlavor := include "pycsw.cloudProviderFlavor" . -}}
+{{- $tag := include "pycsw.tag" . -}}
+{{- $cloudProviderImagePullSecretName := include "pycsw.cloudProviderImagePullSecretName" . -}}
+{{- $cloudProviderDockerRegistryUrl := include "pycsw.cloudProviderDockerRegistryUrl" . -}}
+{{- $ca := (include "merged.ca" . ) | fromYaml }}
+{{- $podAnnotations := (include "merged.podAnnotations" . ) | fromYaml }}
+{{- $extraVolumes := (include "merged.extraVolumes" . ) | fromYaml }}
+{{- $extraVolumeMounts := (include "merged.extraVolumeMounts" . ) | fromYaml }}
+{{- $sidecars := (include "merged.sidecars" . ) | fromYaml }}
+{{- $postgres := (include "merged.postgres" . ) | fromYaml }}
+{{- $serverURL := include "pycsw.serverURL" . -}}
+
+
+{{- if $ca.enabled }}
+{{- if and $ca.useExternal (not $ca.secretName) }}
+{{- fail "When using external ca secret the value for ca.secretName should be set" }}
+{{- end }}
+{{- end }}
+
+{{- if $postgres.ssl.enabled }}
+{{- if and $postgres.ssl.useExternal (not $postgres.ssl.secretName) }}
+{{- fail "When using external ssl secret the value for .Values.authentication.ssl.secretName should be set" }}
+{{- end }}
+{{- end }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ $chartName }}
+    component: {{ $chartName }}
+    environment: {{ include "pycsw.environment" . }}
+    release: {{ $releaseName }}
+    {{- include "pycsw.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      app: {{ $chartName }}
+      release: {{ $releaseName }}
+      run: {{ $fullName }}
+      {{- include "pycsw.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: {{ $chartName }}
+        release: {{ $releaseName }}
+        run: {{ $fullName }}
+        {{- include "pycsw.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{ include "merged.podAnnotations" . | nindent 8 }}
+        {{- if .Values.resetOnConfigChange }}
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- end }}
+    spec:
+      {{- if $cloudProviderImagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ $cloudProviderImagePullSecretName | quote }}
+      {{- end }}
+      containers:
+        - name: {{ $fullName }}-deployment
+          {{- with .Values.image }}
+          image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ $tag }}
+          {{- end }}
+          volumeMounts:
+            - name: pyscw-config
+              mountPath: /etc/pycsw/pycsw.cfg
+              subPath: pycsw.cfg
+            - name: pyscw-mappings
+              mountPath: /etc/pycsw/mappings.py
+              subPath: mappings.py
+            - mountPath: "/pycsw/uwsgi.ini"
+              name: uwsgi-config
+              subPath: uwsgi.ini
+            {{- if $ca.enabled }}
+            - mountPath: {{ printf "%s/%s" $ca.path $ca.key | quote }}
+              name: root-ca
+              subPath: {{ quote $ca.key }}
+            {{- end }}
+            {{- if $extraVolumeMounts -}}
+              {{ toYaml $extraVolumeMounts | nindent 12 }}
+            {{- end }}
+            {{- if $postgres.ssl.enabled }}
+            - name: ca-file
+              mountPath: /certs/ca.crt
+              subPath: ca.pem
+            - name: key-file
+              mountPath: /certs/key.pem
+              subPath: key.pem
+            - name: cert-file
+              mountPath: /certs/cert.pem
+              subPath: cert.pem
+            {{- end }}
+          env:
+            - name: PYCSW_SERVER_URL
+              value: {{ $serverURL }}
+            - name: PYCSW_MAPPINGS_FILEPATH
+              value: /etc/pycsw/mappings.py
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $postgres.user.secretName }}
+                  key: username
+            {{- if $postgres.user.requirePassword }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $postgres.user.secretName }}
+                  key: password
+            {{- end }}
+            {{- if $postgres.ssl.enabled }}
+            - name: POSTGRES_CERTS_MOUNT_PATH
+              value: /certs
+            - name: POSTGRES_CERT_FILE_NAME
+              value: cert.pem
+            - name: POSTGRES_KEY_FILE_NAME
+              value: key.pem
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ $fullName }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.env.targetPort }}
+              protocol: {{ .Values.env.protocol }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: {{ .Values.env.port }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: {{ .Values.env.port }}
+          {{- end }}
+          {{- if .Values.resources.enabled }}
+          resources:
+            {{- toYaml .Values.resources.value | nindent 12 }}
+          {{- end }}
+        {{- if $sidecars }}
+        {{ tpl ($sidecars) . | nindent 8 }}
+        {{- end }}
+      volumes:
+        {{- if $ca.enabled }}
+        - name: root-ca
+          secret:
+            secretName: {{ $ca.secretName }}
+        {{- end }}
+        {{- if $extraVolumes -}}
+          {{ tpl (toYaml $extraVolumes) . | nindent 8 }}
+        {{- end }}
+        - name: pyscw-config
+          configMap:
+              name: {{ $fullName }}
+              items:
+              - key: "pycsw.cfg"
+                path: "pycsw.cfg"
+        - name: pyscw-mappings
+          configMap:
+              name: {{ $fullName }}
+              items:
+              - key: "mappings.py"
+                path: "mappings.py"
+        - name: uwsgi-config
+          configMap:
+            name: {{ $fullName }}
+            items:
+            - key: "uwsgi.ini"
+              path: "uwsgi.ini"
+        {{- if $postgres.ssl.enabled }}
+        - name: ca-file
+          secret:
+            secretName: {{ $postgres.ssl.secretName }}
+            items:
+              - key: {{ $postgres.ssl.caFileName }}
+                path: ca.pem
+        - name: key-file
+          secret:
+            secretName: {{ $postgres.ssl.secretName }}
+            items:
+              - key: {{ $postgres.ssl.keyFileName }}
+                path: key.pem
+        - name: cert-file
+          secret:
+            secretName: {{ $postgres.ssl.secretName }}
+            items:
+              - key: {{ $postgres.ssl.certFileName }}
+                path: cert.pem
+        {{- end }}

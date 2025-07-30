@@ -1,0 +1,31 @@
+{{- $releaseName := .Release.Name -}}
+{{- $chartName := include "pycsw.name" . -}}
+{{- $fullName := include "pycsw.fullname" . -}}
+{{- $serviceName := include "pycsw.fullname" . -}}
+{{- $cloudProviderFlavor := include "pycsw.cloudProviderFlavor" . -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ $chartName }}
+    component: {{ $chartName }}
+    environment: {{ include "pycsw.environment" . }}
+    release: {{ $releaseName }}
+    {{- include "pycsw.labels" . | nindent 4 }}
+spec:
+  {{- if eq $cloudProviderFlavor "minikube" }}
+  type: NodePort
+  {{- end }}
+  ports:
+    - port: {{ .Values.env.port }}
+      targetPort: {{ .Values.env.targetPort }}
+      protocol: {{ .Values.env.protocol }}
+      {{- if eq $cloudProviderFlavor "minikube" }}
+      nodePort: {{ .Values.nodePort }}
+      {{- end }}
+  selector:
+    app: {{ $chartName }}
+    release: {{ $releaseName }}
+    run: {{ $fullName }}
+    {{- include "pycsw.selectorLabels" . | nindent 4 }}

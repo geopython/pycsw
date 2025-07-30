@@ -1,0 +1,9 @@
+{{- $fullName := include "pycsw.fullname" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}-nginx-configmap
+data:
+  default.conf: {{ tpl (.Files.Get "config/default.conf") . | quote }}
+  nginx.conf: {{ tpl (.Files.Get "config/nginx.conf") . | quote }}
+  log_format.conf: {{ tpl (.Files.Get "config/log_format.conf") . | quote }}

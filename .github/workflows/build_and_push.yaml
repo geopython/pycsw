@@ -36,39 +36,44 @@ jobs:
       - run: docker push ${{ env.Docker_Repository }}
 
   build_and_push_helm:
-    name: publish helm to acr
+    name: publish pycsw helm to acr
     runs-on: ubuntu-latest
-    steps:    
+    strategy:
+      fail-fast: false
+      matrix:
+        domain:
+          - 3d
+          - dem
+          - raster
+    steps:
+      - name: Display matrix and index
+        run: |
+          echo "Running on domain ${{ matrix.domain }}
+          echo "This is matrix job #${{ strategy.job-index }}"
+
       - name: checkout repo from latest commit
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: install helm
-        uses: Azure/setup-helm@v1
+      - name: Artifactory Login
+        uses: MapColonies/shared-workflows/actions/artifactory-login@artifactory-login-v1
         with:
-          version: 'v3.6.3'
+          registry: ${{ secrets.ACR_URL }}
+          username: ${{ secrets.ACR_PUSH_USER }}
+          password: ${{ secrets.ACR_PUSH_TOKEN }}
 
-      - name: login to acr using helm
-        run: |
-          helm registry login ${{ secrets.ACR_URL }} --username ${{ secrets.ACR_PUSH_USER }} --password ${{ secrets.ACR_PUSH_TOKEN }} 
+      - name: Build and Push Helm Chart
+        uses: MapColonies/shared-workflows/actions/build-and-push-helm@build-and-push-helm-v1.0.1
+        with:
+          context: ./helm/${{ matrix.domain }}
+          domain: ${{ matrix.domain }}
+          registry: ${{ secrets.ACR_URL }}
 
-      - name: Get Chart name
-        run: |
-          export "CHART=$(cat Chart.yaml | grep name | awk '{print $2; exit}')"
-          echo "CHART=$CHART" >> $GITHUB_ENV
-        working-directory: ./helm
-
-      - name: Get version 
-        run: |
-          export "VER=$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
-          echo "VER=$VER" >> $GITHUB_ENV
-        working-directory: ./helm
-
-      - name: save helm chart to local registry
-        run: |
-          helm chart save . '${{ secrets.ACR_URL }}/helm/${{ env.CHART }}:${{ env.VER }}'
-        working-directory: ./helm
-      
-      - name: publish chart to acr
-        run: |
-          helm chart push ${{ secrets.ACR_URL }}/helm/${{ env.CHART }}:${{ env.VER }}
-        working-directory: ./helm
+      - name: Update Helm Package in artifacts.json
+        uses: MapColonies/shared-workflows/actions/update-artifacts-file@update-artifacts-file-v1
+        with:
+          domain: ${{ matrix.domain }}
+          type: helm
+          artifact_name: ${{ steps.build_helm_chart.outputs.chart }}
+          artifact_tag: ${{ steps.build_helm_chart.outputs.ver }}
+          registry: ${{ secrets.ACR_URL }}
+          github_token: ${{ secrets.GH_PAT }}
