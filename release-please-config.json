@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "python",
+  "include-component-in-tag": false,
+  "packages": {
+    ".": {
+        "extra-files": [
+        {
+          "type": "yaml",
+          "path": "helm/3d/Chart.yaml",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "yaml",
+          "path": "helm/3d/Chart.yaml",
+          "jsonpath": "$.appVersion"
+        },
+        {
+          "type": "yaml",
+          "path": "helm/dem/Chart.yaml",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "yaml",
+          "path": "helm/dem/Chart.yaml",
+          "jsonpath": "$.appVersion"
+        },
+        {
+          "type": "yaml",
+          "path": "helm/raster/Chart.yaml",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "yaml",
+          "path": "helm/raster/Chart.yaml",
+          "jsonpath": "$.appVersion"
+        }
+    ]
+    }
+  },
+  "changelog-sections": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "revert", "section": "Reverts" },
+    { "type": "helm", "section": "Helm Changes", "hidden": false },
+    { "type": "deps", "section": "Dependency Updates", "hidden": false },
+    { "type": "devdeps", "section": "Dev Dependency Updates", "hidden": true },
+    { "type": "refactor", "section": "Code Refactoring", "hidden": false },
+    { "type": "build", "section": "Build System", "hidden": false },
+    { "type": "chore", "section": "Miscellaneous Chores", "hidden": true },
+    { "type": "docs", "section": "Documentation", "hidden": true },
+    { "type": "style", "section": "Styles", "hidden": true },
+    { "type": "test", "section": "Tests", "hidden": true },
+    { "type": "ci", "section": "Continuous Integration", "hidden": true }
+  ]
+}
