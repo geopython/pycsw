@@ -1285,16 +1285,15 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                     })
                 except Exception as err:
                     LOGGER.exception(f"failed to parse contact of {record.identifier}: {err}")
-            for r2 in "creator,publisher,contributor".split(","):  # match role-fields with contacts
-                if r2 not in roles and hasattr(record, r2) and record[r2] not in [None, '']:
-                    rcnt.append({
-                        'organization': record[r2],
-                        'roles': [r2]
-                    })
-
         except Exception as err:
             LOGGER.warning(f"failed to parse contacts json of {record.identifier}: {err}")
-
+    for r2 in ["creator","publisher","contributor"]:  # match role-fields with contacts
+        if r2 not in roles and hasattr(record, r2) and getattr(record, r2) not in [None, '']:
+            rcnt.append({
+                'organization': getattr(record, r2),
+                'roles': [r2]
+            })
+    if len(rcnt) > 0:    
         record_dict['properties']['contacts'] = rcnt
 
     if record.themes not in [None, '', 'null']:
