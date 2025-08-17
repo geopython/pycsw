@@ -1,0 +1,19 @@
+name: build docker image
+
+on: [pull_request]
+
+jobs:
+  pull_request:
+    runs-on: ubuntu-latest
+    env:
+      Docker_Repository: ${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}
+    steps:
+      - name: Check out Project Git repository
+        uses: actions/checkout@v4
+
+      - name: downcase repository
+        run: |
+          echo "Docker_Repository=${Docker_Repository,,}" >>${GITHUB_ENV}
+      
+      - name: Build Docker Image
+        run: docker build .
