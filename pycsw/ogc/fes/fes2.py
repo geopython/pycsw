@@ -142,7 +142,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
                 LOGGER.debug('Testing existence of ogc:PropertyName')
                 pname = queryables[elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text]['dbcol']
             except Exception as err:
-                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err)))
+                raise RuntimeError('Invalid PropertyName: %s.  %s' % (elem.find(util.nspath_eval('ogc:Function/ogc:PropertyName', nsmap)).text, str(err))) from err
 
         else:
             try:
@@ -152,7 +152,7 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             except Exception as err:
                 raise RuntimeError('Invalid PropertyName: %s.  %s' %
                                    (elem.find(util.nspath_eval('ogc:PropertyName',
-                                   nsmap)).text, str(err)))
+                                   nsmap)).text, str(err))) from err
 
         if (elem.tag != util.nspath_eval('ogc:PropertyIsBetween', nsmap)):
             if elem.tag in [util.nspath_eval('ogc:%s' % n, nsmap) for n in
@@ -238,7 +238,6 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
         return expression
 
     queries = []
-    queries_nested = []
     values = []
 
     LOGGER.debug('Scanning children elements')
@@ -303,8 +302,10 @@ def parse(element, queryables, dbtype, nsmap, orm='sqlalchemy', language='englis
             tagname = ' %s ' % child_tag_name.lower()
             if tagname in [' or ', ' and ']:  # this is a nested binary logic query
                 LOGGER.debug('Nested binary logic detected; operator=%s', tagname)
+                queries_nested = []
                 for child2 in child.xpath('child::*'):
                     queries_nested.append(_get_comparison_expression(child2))
+                LOGGER.debug('Nested binary logic queries: %s', queries_nested)
                 queries.append('(%s)' % tagname.join(queries_nested))
             else:
                 queries.append(_get_comparison_expression(child))

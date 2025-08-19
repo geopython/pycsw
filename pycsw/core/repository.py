@@ -71,7 +71,8 @@ class Repository(object):
         '''
         if url not in clazz._engines:
             LOGGER.info('creating new engine: %s', url)
-            engine = create_engine('%s' % url, echo=False)
+            echo = LOGGER.isEnabledFor(logging.DEBUG)
+            engine = create_engine('%s' % url, echo=echo)
 
             # load SQLite query bindings
             # This can be directly bound via events
