@@ -110,7 +110,7 @@ env:
   targetPort: 8000
   protocol: TCP
   logLevel: WARNING
-  maxRecords: 10000
+  maxRecords: 50
   logfile: ''
   profiles: mc_3d
   bboxPrecisionDigits: 10
