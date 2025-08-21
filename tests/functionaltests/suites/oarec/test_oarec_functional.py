@@ -4,7 +4,7 @@
 #          Angelos Tzotsos <gcpp.kalxas@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2022 Angelos Tzotsos
 # Copyright (c) 2023 Ricardo Garcia Silva
 #
@@ -125,6 +125,7 @@ def test_items(config):
     assert headers['Content-Type'] == 'application/json'
     assert content['type'] == 'FeatureCollection'
     assert len(content['links']) == 4
+    assert 'timeStamp' in content
     assert content['numberMatched'] == 12
     assert content['numberReturned'] == 10
     assert len(content['features']) == 10
