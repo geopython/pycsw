@@ -36,6 +36,7 @@ helm.sh/chart: {{ include "pycsw.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "mc-labels-and-annotations.labels" . }}
 {{- end }}
 
 {{/*
@@ -44,18 +45,8 @@ Selector labels
 {{- define "pycsw.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "pycsw.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "mc-labels-and-annotations.selectorLabels" . }}
 {{- end }}
-
-{{/*
-Returns the environment from the chart's values if exists or from global, defaults to development
-*/}}
-{{- define "pycsw.environment" -}}
-{{- if .Values.environment }}
-    {{- .Values.environment -}}
-{{- else -}}
-    {{- .Values.global.environment | default "development" -}}
-{{- end -}}
-{{- end -}}
 
 {{/*
   Returns the pycsw server url based on the provided values.  

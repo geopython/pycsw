@@ -10,7 +10,6 @@ metadata:
   labels:
     app: {{ $chartName }}
     component: {{ $chartName }}
-    environment: {{ include "pycsw.environment" . }}
     release: {{ $releaseName }}
     {{- include "pycsw.labels" . | nindent 4 }}
 spec:

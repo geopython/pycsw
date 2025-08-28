@@ -33,7 +33,6 @@ metadata:
   labels:
     app: {{ $chartName }}
     component: {{ $chartName }}
-    environment: {{ include "pycsw.environment" . }}
     release: {{ $releaseName }}
     {{- include "pycsw.labels" . | nindent 4 }}
 spec:
@@ -53,6 +52,7 @@ spec:
         run: {{ $fullName }}
         {{- include "pycsw.selectorLabels" . | nindent 8 }}
       annotations:
+        {{ include "mc-labels-and-annotations.annotations" . | nindent 8 }}
         {{ include "merged.podAnnotations" . | nindent 8 }}
         {{- if .Values.resetOnConfigChange }}
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}

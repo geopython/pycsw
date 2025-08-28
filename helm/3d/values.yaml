@@ -1,20 +1,19 @@
 global:
   cloudProvider:
-    dockerRegistryUrl: 
+    dockerRegistryUrl:
     flavor: openshift
-    imagePullSecretName: 
+    imagePullSecretName:
   imagePullPolicy: IfNotPresent
   tracing: {}
   metrics: {}
   opala:
     enabled:
-  environment: 'development'
 
   postgres:
-      host: 
-      port: 
-      schema: 
-      name: 
+      host:
+      port:
+      schema:
+      name:
       user:
         requirePassword: false
         rejectUnauthorized: false
@@ -31,11 +30,11 @@ global:
         keyFileName: ''
 
 cloudProvider:
-    dockerRegistryUrl: # test # - Fill for Helm lint to pass
-    flavor: 
-    imagePullSecretName: 
-imagePullPolicy: 
-environment: 
+    dockerRegistryUrl:    # test # - Fill for Helm lint to pass
+    flavor:
+    imagePullSecretName:
+
+imagePullPolicy:
 
 image:
   repository: pycsw
@@ -43,7 +42,7 @@ image:
 
 nodePort: 30030
 replicaCount: 1
-revisionHistoryLimit: 3 # Amount of revisions we keep
+revisionHistoryLimit: 3    # Amount of revisions we keep
 
 authentication:
   cors:
@@ -52,10 +51,10 @@ authentication:
     allowedHeaders: ''
 
 postgres:
-    host: 
-    port: 
-    schema: 
-    name: 
+    host:
+    port:
+    schema:
+    name:
     user:
       requirePassword: false
       rejectUnauthorized: false
@@ -88,9 +87,9 @@ readinessProbe:
 ca:
   enabled: false
   useExternal: false
-  secretName: 
-  path: 
-  key: 
+  secretName:
+  path:
+  key:
 
 extraVolumes: {}
 
@@ -99,6 +98,12 @@ extraVolumeMounts: {}
 sidecars: {}
 
 podAnnotations: {}
+
+mcLabelsAndAnnotations:
+  component: backend
+  partOf: serving
+  owner: 3d
+  gisDomain: 3d
 
 opala:
   enabled:
@@ -124,12 +129,12 @@ env:
     enabled: false
     url: 'http://localhost:55681/v1/metrics'
   uwsgi:
-    processes: 
-    threads: 
+    processes:
+    threads:
     statsServer:
-      enabled: 
-      stats: 
-      statsMinify: 
+      enabled:
+      stats:
+      statsMinify:
 
 filterProductStatus: false
 
@@ -146,7 +151,7 @@ resources:
 route:
   enabled: false
   path: /
-  host: 
+  host:
   timeout:
     enabled: false # defaults to 30s by openshift
     duration: 60s # supported units (us, ms, s, m, h, d)
@@ -168,10 +173,9 @@ ingress:
     enabled: true
     origin: '*'
 
-
 nginx:
   enabled: false
-  nameOverride: 
+  nameOverride:
   replicaCount: 1
   environment: development
   image:
@@ -190,7 +194,7 @@ uwsgiExporter:
     repository: "timonwong/uwsgi-exporter"
     tag: "latest"
   env:
-    logLevel: info # one of [debug, info, warn, error]
+    logLevel: info    # one of [debug, info, warn, error]
   port: 9117
   resources:
     enabled: true
