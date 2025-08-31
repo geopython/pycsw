@@ -46,9 +46,9 @@ revisionHistoryLimit: 3    # Amount of revisions we keep
 
 authentication:
   cors:
-    enabled: false
-    allowedOrigin: ''
-    allowedHeaders: ''
+    enabled: true
+    allowedOrigin: '*'
+    allowedHeaders: '*'
 
 postgres:
     host:
