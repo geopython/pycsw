@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.2.1](https://github.com/MapColonies/pycsw/compare/v6.2.0...v6.2.1) (2025-08-31)
+
+
+### Bug Fixes
+
+* set default helm value cors behavior ([#96](https://github.com/MapColonies/pycsw/issues/96)) ([c8dc178](https://github.com/MapColonies/pycsw/commit/c8dc178fb219baf3a93e87bb15a31dbba606ea3f))
+
+
+### Helm Changes
+
+* 3D helm add mc labels and annotations package (MAPCO-8035) ([#97](https://github.com/MapColonies/pycsw/issues/97)) ([22d4df5](https://github.com/MapColonies/pycsw/commit/22d4df5df476cb893b6a4b52e4c9a95774a0a43e))
+
 ## [6.2.0](https://github.com/MapColonies/pycsw/compare/v6.1.0...v6.2.0) (2025-08-21)
 
 
