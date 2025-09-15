@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.2](https://github.com/MapColonies/pycsw/compare/v6.2.1...v6.2.2) (2025-09-15)
+
+
+### Dependency Updates
+
+* update mc labels package ([#99](https://github.com/MapColonies/pycsw/issues/99)) ([77a8ffe](https://github.com/MapColonies/pycsw/commit/77a8ffe9d6a7b03a84d9ecfd5c1dbc5a139c94d0))
+
 ## [6.2.1](https://github.com/MapColonies/pycsw/compare/v6.2.0...v6.2.1) (2025-08-31)
 
 
