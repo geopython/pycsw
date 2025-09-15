@@ -1,6 +1,6 @@
 global:
   cloudProvider:
-    dockerRegistryUrl:
+    dockerRegistryUrl: test    # - Filled for Helm lint to pass
     flavor: openshift
     imagePullSecretName:
   imagePullPolicy: IfNotPresent
@@ -99,11 +99,12 @@ sidecars: {}
 
 podAnnotations: {}
 
-mcLabelsAndAnnotations:
+mclabels:
   component: backend
   partOf: serving
   owner: 3d
   gisDomain: 3d
+  logScraping: true
 
 opala:
   enabled:
