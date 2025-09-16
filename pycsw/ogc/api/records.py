@@ -1308,7 +1308,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                         'concepts': [{'id': c.get('name', '')} for c in theme.get('keywords', []) if 'name' in c and c['name'] not in [None, '']]
                     }
                     if 'thesaurus' in theme:
-                        theme_['scheme'] = theme['thesaurus'].get('url') or theme['thesaurus'].get('title'),
+                        theme_['scheme'] = theme['thesaurus'].get('url') or theme['thesaurus'].get('title')
                     elif 'scheme' in theme:
                         theme_['scheme'] = theme['scheme']
 
