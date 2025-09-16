@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -186,6 +186,7 @@ def collection(collection='metadata:main'):
 
 @BLUEPRINT.route('/collections/<collection>/queryables')
 @BLUEPRINT.route('/stac/queryables')
+@BLUEPRINT.route('/stac/collections/<collection>/queryables')
 def queryables(collection='metadata:main'):
     """
     OGC API collection queryables endpoint
