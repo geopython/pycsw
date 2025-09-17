@@ -291,6 +291,11 @@ class STACAPI(API):
                 'type': 'application/json',
                 'href': f"{url_base}/{collection['id']}"
                 })
+            collection['links'].append({
+                'rel': 'http://www.opengis.net/def/rel/ogc/1.0/queryables',
+                'type': 'application/schema+json',
+                'href': f"{url_base}/{collection['id']}/queryables"
+                })
 
         response['links'] = [{
             'rel': 'self',
@@ -374,8 +379,23 @@ class STACAPI(API):
 
         headers_['Accept'] = 'application/json'
         headers, status, response = super().queryables(headers_, args, collection)
+        response = json.loads(response)
 
-        return self.get_response(status, headers, json.loads(response))
+        if 'properties' in response:
+            eo_schema = 'https://raw.githubusercontent.com/ceos-org/stac-collection-and-granule-discovery-best-practices/refs/heads/main/schemas/opensearch-eo.json'
+            eo_props = {
+                'platform': 'platform',
+                'instrument': 'instrument',
+                'sensortype': 'sensorType',
+                'cloudcover': 'cloudCover',
+                'illuminationelevationangle': 'illuminationElevationAngle'
+            }
+
+            for key, value in eo_props.items():
+                if key in response['properties']:
+                    response['properties'][key]['$id'] = f'{eo_schema}#/properties/{eo_props[key]}'
+
+        return self.get_response(status, headers, response)
 
     def items(self, headers_, json_post_data, args, collection='metadata:main'):
         """
@@ -500,7 +520,7 @@ class STACAPI(API):
             title = collection_info.title
             description = collection_info.abstract
 
-        return {
+        collection_ = {
             'id': id_,
             'stac_version': '1.0.0',
             'license': 'other',
@@ -525,6 +545,19 @@ class STACAPI(API):
                 'href': f"{self.config['server']['url']}/collections/{collection_name}/items"
             }]
         }
+
+        date_types = {
+            'date_creation': 'created',
+            'date_modified': 'updated',
+            'date_publication': 'published'
+        }
+
+        for key, value in date_types.items():
+            value2 = getattr(collection_info, key)
+            if value2 is not None:
+                collection_[date_types[key]] = value2
+
+        return collection_
 
     def manage_collection_item(self, headers_, action='create', item=None, data=None, collection=None):
         if action in ['create', 'update']:

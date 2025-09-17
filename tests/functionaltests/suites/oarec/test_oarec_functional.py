@@ -124,7 +124,7 @@ def test_items(config):
 
     assert headers['Content-Type'] == 'application/json'
     assert content['type'] == 'FeatureCollection'
-    assert len(content['links']) == 4
+    assert len(content['links']) == 5
     assert 'timeStamp' in content
     assert content['numberMatched'] == 12
     assert content['numberReturned'] == 10

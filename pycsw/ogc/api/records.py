@@ -829,36 +829,65 @@ class API:
             'hreflang': self.config['server']['language']
         }])
 
-        if offset > 0:
-            link_args.pop('offset', None)
+        if count > 0:
+            if offset > 0:
+                link_args.pop('offset', None)
 
-            prev = max(0, offset - limit)
+                prev = max(0, offset - limit)
 
-            url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
+                url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
 
-            response['links'].append(
-                {
+                response['links'].append(
+                    {
+                        'type': 'application/geo+json',
+                        'rel': 'prev',
+                        'title': 'items (prev)',
+                        'href': f'{bind_url(url_)}offset={prev}',
+                        'hreflang': self.config['server']['language']
+                    })
+            else:
+                link_args.pop('offset', None)
+
+                url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
+
+                response['links'].append(
+                    {
+                        'type': 'application/geo+json',
+                        'rel': 'first',
+                        'title': 'items (first)',
+                        'href': f'{bind_url(url_)}',
+                        'href': url_,
+                        'hreflang': self.config['server']['language']
+                    })
+
+            if (offset + returned) < count:
+                link_args.pop('offset', None)
+
+                next_ = offset + returned
+
+                url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
+
+                response['links'].append({
+                    'rel': 'next',
                     'type': 'application/geo+json',
-                    'rel': 'prev',
-                    'title': 'items (prev)',
-                    'href': f"{bind_url(url_)}offset={prev}",
+                    'title': 'items (next)',
+                    'href': f"{bind_url(url_)}offset={next_}",
                     'hreflang': self.config['server']['language']
                 })
+            elif (offset + returned) >= count:
+                link_args.pop('offset', None)
 
-        if (offset + returned) < count:
-            link_args.pop('offset', None)
+                last = offset + returned
 
-            next_ = offset + returned
+                url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
 
-            url_ = f"{self.config['server']['url']}/{fragment}?{urlencode(link_args)}"
-
-            response['links'].append({
-                'rel': 'next',
-                'type': 'application/geo+json',
-                'title': 'items (next)',
-                'href': f"{bind_url(url_)}offset={next_}",
-                'hreflang': self.config['server']['language']
-            })
+                response['links'].append({
+                    'rel': 'last',
+                    'type': 'application/geo+json',
+                    'title': 'items (last)',
+                    'href': f"{bind_url(url_)}offset={last}",
+                    'hreflang': self.config['server']['language']
+                })
 
         response['timeStamp'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
