@@ -29,6 +29,7 @@
 #
 # =================================================================
 
+from datetime import datetime
 import json
 import logging
 from operator import itemgetter
@@ -858,6 +859,8 @@ class API:
                 'href': f"{bind_url(url_)}offset={next_}",
                 'hreflang': self.config['server']['language']
             })
+
+        response['timeStamp'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata']['identification']['title']
