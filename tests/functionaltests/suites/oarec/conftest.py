@@ -56,10 +56,16 @@ def config():
                 '127.0.0.1'
             ]
         },
+        'pubsub': {
+            'broker': {
+                'type': 'mqtt',
+                'url': 'mqtt://localhost:1883'
+            }
+        },
         'metadata': {
             'identification': {
                 'title': 'pycsw Geospatial Catalogue',
-                'description': 'pycsw is an OARec and OGC CSW server implementation written in Python',
+                'description': 'pycsw is an OARec and OGC CSW server implementation written in Python',  # noqa
                 'keywords': [
                     'catalogue',
                     'discovery',
@@ -110,7 +116,7 @@ def config():
             }
         },
         'repository': {
-            'database': 'sqlite:///tests/functionaltests/suites/cite/data/cite.db',
+            'database': 'sqlite:///tests/functionaltests/suites/cite/data/cite.db',  # noqa
             'table': 'records'
         }
     }
@@ -239,7 +245,7 @@ def sample_record():
             "type": "dataset",
             "created": "2011-11-11",
             "updated": "2000-09-01",
-            "rights": "Copyright (c) 2010 Her Majesty the Queen in Right of Canada"
+            "rights": "Copyright (c) 2010 Her Majesty the Queen in Right of Canada"  # noqa
         },
         "links": [
             {

@@ -47,10 +47,15 @@ def test_landing_page(config_virtual_collections):
 
     assert headers['Content-Type'] == 'application/json'
     assert status == 200
-    assert len(content['links']) == 15
+    assert len(content['links']) == 16
+
+    links = (
+        api.config['server']['url'],
+        api.config['pubsub']['broker']['url']
+    )
 
     for link in content['links']:
-        assert link['href'].startswith(api.config['server']['url'])
+        assert link['href'].startswith(links)
 
     headers, status, content = api.landing_page({}, {'f': 'html'})
     assert status == 200

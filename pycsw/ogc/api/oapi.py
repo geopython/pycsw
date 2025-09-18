@@ -441,20 +441,24 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
             'consumes': [
                 'application/geo+json', 'application/json', 'application/xml'
             ],
-            'produces': ['application/json'],
-            'parameters': [{
-                'in': 'body',
-                'name': 'body',
-                'description': 'Adds item to collection',
-                'required': True,
-            }],
+            'produces': ['application/geo+json'],
+            'requestBody': {
+                'content': {
+                    'application/geo+json': {
+                        'schema': {}
+                    }
+                }
+            },
+            'parameters': [
+                {'$ref': '#/components/parameters/collectionId'}
+            ],
             'responses': {
                 '201': {'description': 'Successful creation'},
                 '400': {
-                    '$ref': '{}#/components/responses/InvalidParameter'
+                    '$ref': '#/components/responses/InvalidParameter'
                 },
                 '500': {
-                    '$ref': '{}#/components/responses/ServerError'
+                    '$ref': '#/components/responses/ServerError'
                 }
             }
         }
@@ -512,23 +516,24 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
                 'application/geo+json', 'application/json', 'application/xml'
             ],
             'produces': ['application/json'],
+            'requestBody': {
+                'content': {
+                    'application/geo+json': {
+                        'schema': {}
+                    }
+                }
+            },
             'parameters': [
                 {'$ref': '#/components/parameters/collectionId'},
-                {'$ref': '#/components/parameters/recordId'},
-                {
-                    'in': 'body',
-                    'name': 'body',
-                    'description': 'Updates item to collection',
-                    'required': True,
-                }
+                {'$ref': '#/components/parameters/recordId'}
             ],
             'responses': {
                 '204': {'description': 'Successful update'},
                 '400': {
-                    '$ref': '{}#/components/responses/InvalidParameter'
+                    '$ref': '#/components/responses/InvalidParameter'
                 },
                 '500': {
-                    '$ref': '{}#/components/responses/ServerError'
+                    '$ref': '#/components/responses/ServerError'
                 }
             }
         }
@@ -546,10 +551,10 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
             'responses': {
                 '204': {'description': 'Successful delete'},
                 '400': {
-                    '$ref': '{}#/components/responses/InvalidParameter'
+                    '$ref': '#/components/responses/InvalidParameter'
                 },
                 '500': {
-                    '$ref': '{}#/components/responses/ServerError'
+                    '$ref': '#/components/responses/ServerError'
                 }
             }
         }

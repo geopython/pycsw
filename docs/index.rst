@@ -23,6 +23,7 @@ pycsw |release| Documentation
    metadata-model-reference
    oarec-support
    csw-support
+   pubsub
    stac
    distributedsearching
    sru

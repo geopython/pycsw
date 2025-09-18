@@ -10,6 +10,7 @@ Features
 
 - implements `OGC API - Records - Part 1: Core`_
 - implements `OGC API - Features - Part 3: Filtering`_
+- implements `STAC API`_
 - implements `Common Query Language (CQL2)`_
 - certified OGC `Compliant`_ and OGC Reference Implementation for both CSW 2.0.2 and CSW 3.0.0
 - harvesting support for WMS, WFS, WCS, WPS, WAF, CSW, SOS
@@ -20,6 +21,7 @@ Features
 - implements Full Text Search capabilities
 - implements OGC OpenSearch Geo and Time Extensions
 - implements Open Archives Initiative Protocol for Metadata Harvesting
+- implements Pub/Sub capability via `OGC API Publish-Subscribe Workflow - Part 1: Core`_
 - supports ISO, Dublin Core, DIF, FGDC, Atom, GM03 and DataCite metadata models
 - CGI or WSGI deployment
 - simple YAML configuration
@@ -42,6 +44,7 @@ Standards Support
   `OGC API - Records - Part 1: Core`_,1.0
   `OGC API - Features - Part 3: Filtering`_,draft
   "`OGC API - Features - Part 4: Create, Replace, Update and Delete`_",draft
+  `OGC API Publish-Subscribe Workflow - Part 1: Core`_,draft
   `OGC CSW`_,2.0.2/3.0.0
   `OGC Filter`_,1.1.0/2.0.0
   `OGC OWS Common`_,1.0.0/2.0.0
@@ -263,3 +266,6 @@ Paging
 .. _`GM03`: https://www.geocat.admin.ch/en/dokumentation/gm03.html
 .. _`OGC API - Features - Part 4: Create, Replace, Update and Delete`: https://cnn.com
 .. _`DataCite`: https://schema.datacite.org/meta/kernel-4.3/
+.. _`OGC API Publish-Subscribe Workflow - Part 1: Core`: https://docs.ogc.org/DRAFTS/25-030.html
+.. _`STAC API`: https://github.com/radiantearth/stac-api-spec
+

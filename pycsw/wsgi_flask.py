@@ -170,7 +170,7 @@ def collection(collection='metadata:main'):
         if request.method == 'PUT':
             return get_response(
                 stacapi.manage_collection_item(
-                    dict(request.headers), 'update', collection,
+                    dict(request.headers), 'update', collection=collection,
                     data=request.get_json(silent=True)))
         elif request.method == 'DELETE':
             return get_response(
@@ -229,12 +229,12 @@ def items(collection='metadata:main'):
             data = request.data
 
         return get_response(api_.manage_collection_item(dict(request.headers),
-                            'create', data=data))
+                            'create', collection=collection, data=data))
     elif request.method == 'POST' and get_api_type(request.url_rule.rule) == 'stac-api':
         if request.url_rule.rule.endswith('items'):  # STAC API transaction - create
             data = request.get_json(silent=True)
             return get_response(stacapi.manage_collection_item(dict(request.headers),
-                                'create', data=data, collection=collection))
+                                'create', collection=collection, data=data))
         else:  # STAC API search
             return get_response(stacapi.items(dict(request.headers),
                                 request.get_json(silent=True), dict(request.args),
@@ -266,11 +266,12 @@ def item(collection='metadata:main', item=None):
     if request.method == 'PUT':
         return get_response(
             api_.manage_collection_item(
-                dict(request.headers), 'update', item,
+                dict(request.headers), 'update', collection, item,
                 data=request.get_json(silent=True)))
     elif request.method == 'DELETE':
         return get_response(
-            api_.manage_collection_item(dict(request.headers), 'delete', item))
+            api_.manage_collection_item(dict(request.headers), 'delete',
+                                        collection, item))
     else:
         if get_api_type(request.url_rule.rule) == 'stac-api':
             return get_response(stacapi.item(dict(request.headers), request.args,
