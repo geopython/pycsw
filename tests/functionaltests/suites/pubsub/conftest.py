@@ -56,6 +56,12 @@ def config():
                 '127.0.0.1'
             ]
         },
+        'pubsub': {
+            'broker': {
+                'type': 'mqtt',
+                'url': 'mqtt://localhost:1883'
+            }
+        },
         'metadata': {
             'identification': {
                 'title': 'pycsw Geospatial Catalogue',

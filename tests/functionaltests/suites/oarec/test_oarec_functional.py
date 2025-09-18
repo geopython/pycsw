@@ -295,6 +295,7 @@ def test_item(config):
 
 def test_json_transaction(config, sample_record):
     api = API(config)
+    api
     request_headers = {
         'Content-Type': 'application/json'
     }

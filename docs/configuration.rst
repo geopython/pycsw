@@ -38,6 +38,20 @@ pycsw's runtime configuration is defined by ``default.yml``.  pycsw ships with a
 - **allowed_ips**: comma delimited list of IP addresses (e.g. 192.168.0.103), wildcards (e.g. 192.168.0.*) or CIDR notations (e.g. 192.168.100.0/24) allowed to perform transactions (see :ref:`transactions`)
 - **csw_harvest_pagesize**: when harvesting other CSW servers, the number of records per request to page by (default is 10)
 
+**pubsub**
+
+- **broker**: Publish-Subscribe definition
+
+**pubsub.broker**
+
+- **show_link**: whether to display as a link in the landing page (``true`` or ``false``)
+- **type**: type of broker
+- **url**: endpoint of broker
+
+.. note::
+
+  See :ref:`pubsub` for configuring your instance with Pub/Sub capability.
+
 **metadata**
 
 **metadata.identification**
