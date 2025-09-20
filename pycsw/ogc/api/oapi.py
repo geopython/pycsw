@@ -388,6 +388,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
     }
 
     oapi['paths']['/collections/{collectionId}/queryables'] = path2
+    oapi['components']['parameters']['collectionId']['default'] = 'metadata:main'  # noqa
 
     path = {
         'get': {
