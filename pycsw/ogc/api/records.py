@@ -579,7 +579,7 @@ class API:
 
             LOGGER.debug(f'Transformed args: {args}')
 
-        if 'filter' in args:
+        if args.get('filter', {}):
             LOGGER.debug(f'CQL query specified {args["filter"]}')
             cql_query = args['filter']
             filter_lang = args.get('filter-lang')
@@ -856,7 +856,6 @@ class API:
                         'rel': 'first',
                         'title': 'items (first)',
                         'href': f'{bind_url(url_)}',
-                        'href': url_,
                         'hreflang': self.config['server']['language']
                     })
 
