@@ -22,14 +22,14 @@ jobs:
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       packages: write
       contents: read
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
 
       - name: Build image
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
@@ -63,7 +63,7 @@ jobs:
         run: docker push ${{ env.FULLCONTAINERNAME }}
 
   on-failure:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
       - name: Print Test Fail

@@ -9,7 +9,7 @@
 #
 # Copyright (c) 2020 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
-# Copyright (c) 2020 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2024 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -36,7 +36,7 @@
 #
 # =================================================================
 
-FROM python:3.10-slim-bookworm
+FROM python:3.12-slim-bookworm
 LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
 
 # Build arguments
@@ -63,12 +63,13 @@ COPY --chown=pycsw \
     requirements-dev.txt \
     ./
 
-RUN pip3 install -U pip setuptools && \
-    pip3 install \
+RUN python3 -m venv /venv && \
+    /venv/bin/pip3 install -U pip setuptools && \
+    /venv/bin/pip3 install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
     psycopg2-binary gunicorn \
-    && if [ "$BUILD_DEV_IMAGE" = "true" ] ; then python3 -m pip3 install -r requirements-dev.txt; fi
+    && if [ "$BUILD_DEV_IMAGE" = "true" ] ; then /venv/bin/pip3 install -r requirements-dev.txt; fi
 
 COPY --chown=pycsw . .
 
@@ -83,4 +84,4 @@ EXPOSE 8000
 
 USER pycsw
 
-ENTRYPOINT [ "python3", "/usr/local/bin/entrypoint.py" ]
+ENTRYPOINT [ "/venv/bin/python3", "/usr/local/bin/entrypoint.py" ]

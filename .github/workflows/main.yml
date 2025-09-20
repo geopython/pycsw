@@ -17,25 +17,24 @@ on:
 
 jobs:
   main:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         include:
-          - python-version: "3.10"
-            toxenv: "py310-sqlite"
-          - python-version: "3.11"
-            toxenv: "py311-sqlite"
+          - python-version: "3.12"
+            toxenv: "py312-sqlite"
     env:
         TOXENV: ${{ matrix.toxenv }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - uses: actions/checkout@master
+    - uses: actions/setup-python@v5
       name: Setup Python ${{ matrix.python-version }}
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install requirements 📦
       run: |
-        sudo apt install -y libgeos-dev libpq-dev libxml2-dev libxslt1-dev libz-dev libexpat1
+        sudo apt install -y libgeos-dev libpq-dev libxml2-dev libxslt1-dev libz-dev libexpat1 python3-distutils-extra
+        pip3 install setuptools
         pip3 install -r requirements.txt
         pip3 install -r requirements-standalone.txt
         pip3 install -r requirements-dev.txt

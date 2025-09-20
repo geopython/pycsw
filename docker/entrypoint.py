@@ -105,7 +105,7 @@ def launch_pycsw(pycsw_config, workers=2, reload=False):
     ]
     LOGGER.debug(f"Launching pycsw with {' '.join(execution_args)} ...")
     os.execlp(
-        "gunicorn",
+        "/venv/bin/gunicorn",
         *execution_args
     )
 

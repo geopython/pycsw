@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
@@ -109,8 +109,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
         'Topic :: Scientific/Engineering :: GIS'
     ]
 )

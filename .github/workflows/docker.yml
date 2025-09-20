@@ -14,13 +14,13 @@ jobs:
   # Single job now to build Docker Image and push to DockerHub
   on-success:
     name: Build, Test and Push Docker Image to DockerHub
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     
     # v2 https://github.com/docker/build-push-action/blob/master/UPGRADE.md
     steps:
       - name: Checkout ✅
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
 
       - name: Prepare 📦
         id: prep
@@ -71,7 +71,7 @@ jobs:
         run: docker push ${{ steps.prep.outputs.image }}:${{ steps.prep.outputs.version }}
 
   on-failure:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
       - name: Print Test Fail
