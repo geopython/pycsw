@@ -528,6 +528,9 @@ class SolrMETNORepository:
 
         return self.dataset(record)
 
+    def ping(self):
+        pass
+
 
 def keywords2themes(doc: dict) -> list:
     schemes = {}
