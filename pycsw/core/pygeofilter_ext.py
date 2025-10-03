@@ -45,7 +45,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
-    def __init__(self, field_mapping=None, dbtype='sqlite', undefined_as_null=None):
+    def __init__(self, field_mapping=None, dbtype='sqlite',
+                 undefined_as_null=None):
         super().__init__(field_mapping, undefined_as_null=undefined_as_null)
         self._pycsw_dbtype = dbtype
 
@@ -85,9 +86,10 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
 def to_filter(ast, dbtype, field_mapping=None):
     return PycswFilterEvaluator(field_mapping, dbtype).evaluate(ast)
 
+
 class PycswCSWFES11Parser(FES11Parser):
-#    def __init__(self):
-#        super().__init__()
+    def parse(self, input_):
+        return FES11Parser().parse(input_)
 
     @fhandle('BBOX')
     def geometry_bbox(self, node: Element, lhs, rhs, crs=None):

@@ -33,7 +33,6 @@
 import os
 
 from pygeofilter.parsers.ecql.parser import parse as ecql_parse
-from pygeofilter.parsers.fes.v11 import parse as fes1_parse
 from pycsw.core.pygeofilter_ext import PycswCSWFES11Parser
 
 from pycsw.core.etree import etree
@@ -771,8 +770,9 @@ class Csw2:
                             self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                             self.parent.kvp['constraint']['_dict'] = xml2dict(etree.tostring(doc), self.parent.context.namespaces)
                         else:
+                            pc = PycswCSWFES11Parser()
                             self.parent.kvp['constraint'] = {
-                                'ast': fes1_parse(tmp)
+                                'ast': pc.parse(tmp)
                             }
                     except Exception as err:
                         errortext = \
@@ -1602,8 +1602,8 @@ class Csw2:
                     self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                     query['_dict'] = xml2dict(etree.tostring(tmp), self.parent.context.namespaces)
                 else:
-                    #query['ast'] = PycswCSWFES11Parser().parse(etree.tostring(tmp))
-                    query['ast'] = fes1_parse(etree.tostring(tmp))
+                    pc = PycswCSWFES11Parser()
+                    query['ast'] = pc.parse(tmp)
             except Exception as err:
                 return 'Invalid Filter request: %s' % err
 
