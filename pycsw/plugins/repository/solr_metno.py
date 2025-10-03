@@ -366,12 +366,9 @@ class SolrMETNORepository:
             record['type'] = "series"
         else:
             record['type'] = "dataset"
-        #
-#        print('child', doc["isChild"])
-#        print('parent', doc["isParent"])
+
         if 'isChild' in doc and doc["isChild"]:
             record['parentidentifier'] = doc["related_dataset"][0]  
-            print('parent', record['parentidentifier'])
         else:
             record['parentidentifier'] = None
 
@@ -381,6 +378,8 @@ class SolrMETNORepository:
 
         if 'iso_topic_category' in doc:
             record['topicategory'] = ','.join(doc['iso_topic_category'])
+        else:
+            record['topicategory'] = None
 
 #        if 'keywords_keyword' in doc:
 #            record['keywords'] = ','.join(doc['keywords_keyword'])
@@ -483,10 +482,8 @@ class SolrMETNORepository:
                 contacts.append(personnel2contact(doc, ct))
 
         record['contacts'] = json.dumps(contacts)
-        print('met', record['contacts'])
         #record['themes'] = keywords2themes(doc)
         record['themes'], record['keywords'] = keywords2themes(doc)
-        print(record['themes'], record['keywords'])
 
         # TODO: rights is mapped to accessconstraint, although we provide this
         # info in the use constraint.
