@@ -37,6 +37,7 @@ jobs:
         pip3 install setuptools
         pip3 install -r requirements.txt
         pip3 install -r requirements-standalone.txt
+        pip3 install -r requirements-pubsub.txt
         pip3 install -r requirements-dev.txt
         pip3 install --upgrade https://github.com/geopython/OWSLib/archive/master.zip
         pip3 install tox

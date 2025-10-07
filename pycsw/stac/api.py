@@ -156,6 +156,16 @@ class STACAPI(API):
             }
         ]
 
+        if self.pubsub_client is not None and self.pubsub_client.show_link:
+            LOGGER.debug('Adding PubSub broker link')
+            pubsub_link = {
+              'rel': 'hub',
+              'type': 'application/json',
+              'title': 'Pub/Sub broker',
+              'href': self.pubsub_client.broker_safe_url
+            }
+            response['links'].append(pubsub_link)
+
         return self.get_response(200, headers_, response)
 
     def openapi(self, headers_, args):

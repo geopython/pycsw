@@ -41,6 +41,7 @@ from pygeofilter.parsers.ecql import parse as parse_ecql
 from pygeofilter.parsers.cql2_json import parse as parse_cql2_json
 
 from pycsw import __version__
+from pycsw.broker import load_client
 from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.metadata import parse_record
@@ -48,6 +49,7 @@ from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, str2bool, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json, to_rfc3339
+from pycsw.ogc.pubsub import publish_message
 
 LOGGER = logging.getLogger(__name__)
 
@@ -92,6 +94,7 @@ class API:
 
         self.mode = 'ogcapi-records'
         self.config = config
+        self.pubsub_client = None
 
         log.setup_logger(self.config.get('logging', {}))
 
@@ -140,6 +143,10 @@ class API:
             msg = f'Could not load repository {err}'
             LOGGER.exception(msg)
             raise
+
+        if self.config.get('pubsub') is not None:
+            LOGGER.debug('Loading PubSub client')
+            self.pubsub_client = load_client(self.config['pubsub']['broker'])
 
     def get_content_type(self, headers, args):
         """
@@ -295,6 +302,16 @@ class API:
             }
         ]
 
+        if self.pubsub_client is not None and self.pubsub_client.show_link:
+            LOGGER.debug('Adding PubSub broker link')
+            pubsub_link = {
+              'rel': 'hub',
+              'type': 'application/json',
+              'title': 'Pub/Sub broker',
+              'href': self.pubsub_client.broker_safe_url
+            }
+            response['links'].append(pubsub_link)
+
         return self.get_response(200, headers_, response, 'landing_page.html')
 
     def openapi(self, headers_, args):
@@ -332,6 +349,14 @@ class API:
         response = {
             'conformsTo': CONFORMANCE_CLASSES
         }
+
+        if self.pubsub_client is not None:
+            LOGGER.debug('Adding conformance classes for OGC API - Publish-Subscribe')  # noqa
+            pubsub_conformance_classes = [
+                'https://www.opengis.net/spec/ogcapi-pubsub-1/1.0/conf/message-payload-cloudevents-json',  # noqa
+                'https://www.opengis.net/spec/ogcapi-pubsub-1/1.0/conf/discovery'  # noqa
+            ]
+            response['conformsTo'] += pubsub_conformance_classes
 
         return self.get_response(200, headers_, response, 'conformance.html')
 
@@ -954,9 +979,11 @@ class API:
 
         return self.get_response(200, headers_, response, 'item.html')
 
-    def manage_collection_item(self, headers_, action='create', item=None, data=None):
+    def manage_collection_item(self, headers_, action='create', collection=None,
+                               item=None, data=None):
         """
         :param action: action (create, update, delete)
+        :param collection: collection identifier
         :param item: record identifier
         :param data: raw data / payload
 
@@ -1031,6 +1058,10 @@ class API:
 
             code = 200
             response = {}
+
+        if self.pubsub_client is not None:
+            LOGGER.debug('Publishing message')
+            publish_message(self.pubsub_client, action, collection, item, data)
 
         return self.get_response(code, headers_, response)
 
