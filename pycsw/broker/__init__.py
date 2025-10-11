@@ -27,8 +27,9 @@
 #
 # =================================================================
 
+import importlib
+
 from pycsw.broker.base import BasePubSubClient
-from pycsw.broker.mqtt import MQTTPubSubClient
 
 
 def load_client(def_: dict) -> BasePubSubClient:
@@ -40,11 +41,12 @@ def load_client(def_: dict) -> BasePubSubClient:
     :returns: PubSubClient object
     """
 
-    class_ = CLIENTS[def_['type']]
+    module, class_ = CLIENTS[def_['type']].rsplit('.', 1)
+    module = importlib.import_module(module)
 
-    return class_(def_)
+    return getattr(module, class_)(def_)
 
 
 CLIENTS = {
-    'mqtt': MQTTPubSubClient
+    'mqtt': 'pycsw.broker.mqtt.MQTTPubSubClient'
 }
