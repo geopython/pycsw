@@ -59,7 +59,7 @@ QUERY_PARAMETERS = [
 ]
 
 
-class OpenSearch(object):
+class OpenSearch:
     """OpenSearch wrapper class"""
 
     def __init__(self, context):

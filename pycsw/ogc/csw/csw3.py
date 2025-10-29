@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2025 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -30,18 +30,22 @@
 
 import os
 from time import time
+
+from pygeofilter.parsers.ecql.parser import parse as ecql_parse
+
 from pycsw.core.etree import etree
 from pycsw.ogc.csw.cql import cql2fes
 from pycsw import opensearch
 from pycsw.core import metadata, util
 from pycsw.core.formats.fmt_json import xml2dict
+from pycsw.core.pygeofilter_ext import PycswCSWFES11Parser
 from pycsw.ogc.fes import fes1, fes2
 import logging
 
 LOGGER = logging.getLogger(__name__)
 
 
-class Csw3(object):
+class Csw3:
     ''' CSW 3.x server '''
     def __init__(self, server_csw):
         ''' Initialize CSW3 '''
@@ -755,15 +759,20 @@ class Csw3(object):
                 if self.parent.kvp['constraintlanguage'] == 'CQL_TEXT':
                     tmp = self.parent.kvp['constraint']
                     try:
-                        LOGGER.info('Transforming CQL into fes1')
                         LOGGER.debug('CQL: %s', tmp)
-                        self.parent.kvp['constraint'] = {}
-                        self.parent.kvp['constraint']['type'] = 'filter'
-                        cql = cql2fes(tmp, self.parent.context.namespaces, fes_version='1.0')
-                        self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = fes1.parse(cql,
-                        self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
-                        self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
-                        self.parent.kvp['constraint']['_dict'] = xml2dict(etree.tostring(cql), self.parent.context.namespaces)
+                        LOGGER.info('Transforming CQL into fes1')
+                        if self.parent.repository.database is not None:
+                            self.parent.kvp['constraint'] = {}
+                            self.parent.kvp['constraint']['type'] = 'filter'
+                            cql = cql2fes(tmp, self.parent.context.namespaces, fes_version='1.0')
+                            self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = fes1.parse(cql,
+                            self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
+                            self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
+                            self.parent.kvp['constraint']['_dict'] = xml2dict(etree.tostring(cql), self.parent.context.namespaces)
+                        else:
+                            self.parent.kvp['constraint'] = {
+                                'ast': ecql_parse(etree.tostring(tmp))
+                            }
                     except Exception as err:
                         LOGGER.exception('Invalid CQL query %s', tmp)
                         return self.exceptionreport('InvalidParameterValue',
@@ -778,14 +787,20 @@ class Csw3(object):
                         parser = etree.XMLParser(schema=schema, resolve_entities=False)
                         doc = etree.fromstring(self.parent.kvp['constraint'], parser)
                         LOGGER.debug('Filter is valid XML.')
-                        self.parent.kvp['constraint'] = {}
-                        self.parent.kvp['constraint']['type'] = 'filter'
-                        self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = \
-                        fes2.parse(doc,
-                        self.parent.repository.queryables['_all'],
-                        self.parent.repository.dbtype,
-                        self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
-                        self.parent.kvp['constraint']['_dict'] = xml2dict(etree.tostring(doc), self.parent.context.namespaces)
+                        if self.parent.repository.database is not None:
+                            self.parent.kvp['constraint'] = {}
+                            self.parent.kvp['constraint']['type'] = 'filter'
+                            self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = \
+                            fes2.parse(doc,
+                            self.parent.repository.queryables['_all'],
+                            self.parent.repository.dbtype,
+                            self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
+                            self.parent.kvp['constraint']['_dict'] = xml2dict(etree.tostring(doc), self.parent.context.namespaces)
+                        else:
+                            pc = PycswCSWFES11Parser()
+                            self.parent.kvp['constraint'] = {
+                                'ast': pc.parse(self.parent.kvp['constraint'])
+                            }
                     except Exception as err:
                         errortext = \
                         'Exception: document not valid.\nError: %s' % str(err)
@@ -794,7 +809,12 @@ class Csw3(object):
                         return self.exceptionreport('InvalidParameterValue',
                         'bbox', 'Invalid Filter query: %s' % errortext)
             else:
-                self.parent.kvp['constraint'] = {}
+                if self.parent.repository.database is not None:
+                    self.parent.kvp['constraint'] = {}
+                else:
+                    self.parent.kvp['constraint'] = {
+                        'ast': None
+                    }
 
         if 'sortby' not in self.parent.kvp:
             self.parent.kvp['sortby'] = None
@@ -897,8 +917,8 @@ class Csw3(object):
 
         searchresults = etree.SubElement(node,
         util.nspath_eval('csw30:SearchResults', self.parent.context.namespaces),
-        numberOfRecordsMatched=matched, numberOfRecordsReturned=returned,
-        nextRecord=nextrecord, recordSchema=self.parent.kvp['outputschema'],
+        numberOfRecordsMatched=str(matched), numberOfRecordsReturned=str(returned),
+        nextRecord=str(nextrecord), recordSchema=self.parent.kvp['outputschema'],
         expires=timestamp, status=get_resultset_status(matched, nextrecord))
 
         if self.parent.kvp['elementsetname'] is not None:
@@ -1646,11 +1666,15 @@ class Csw3(object):
         if tmp is not None:
             LOGGER.debug('Filter constraint specified')
             try:
-                query['type'] = 'filter'
-                query['where'], query['values'] = fes2.parse(tmp,
-                self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
-                self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
-                query['_dict'] = xml2dict(etree.tostring(tmp), self.parent.context.namespaces)
+                if self.parent.repository.database is not None:
+                    query['type'] = 'filter'
+                    query['where'], query['values'] = fes2.parse(tmp,
+                    self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
+                    self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
+                    query['_dict'] = xml2dict(etree.tostring(tmp), self.parent.context.namespaces)
+                else:
+                    pc = PycswCSWFES11Parser()
+                    query['ast'] = pc.parse(tmp)
             except Exception as err:
                 return 'Invalid Filter request: %s' % err
 
@@ -1658,13 +1682,16 @@ class Csw3(object):
         if tmp is not None:
             LOGGER.debug('CQL specified: %s.', tmp.text)
             try:
-                LOGGER.info('Transforming CQL into OGC Filter')
-                query['type'] = 'filter'
-                cql = cql2fes(tmp.text, self.parent.context.namespaces, fes_version='2.0')
-                query['where'], query['values'] = fes2.parse(cql,
-                self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
-                self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
-                query['_dict'] = xml2dict(etree.tostring(cql), self.parent.context.namespaces)
+                if self.parent.repository.database is not None:
+                    LOGGER.info('Transforming CQL into OGC Filter')
+                    query['type'] = 'filter'
+                    cql = cql2fes(tmp.text, self.parent.context.namespaces, fes_version='2.0')
+                    query['where'], query['values'] = fes2.parse(cql,
+                    self.parent.repository.queryables['_all'], self.parent.repository.dbtype,
+                    self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
+                    query['_dict'] = xml2dict(etree.tostring(cql), self.parent.context.namespaces)
+                else:
+                    query['ast'] = ecql_parse(etree.tostring(tmp))
             except Exception as err:
                 LOGGER.exception('Invalid CQL request: %s', tmp.text)
                 LOGGER.exception('Error message: %s', err)
