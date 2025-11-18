@@ -35,19 +35,13 @@ import logging
 import os
 import re
 
-import apipkg
+import psycopg2
 import pytest
 
 from pycsw.core import admin
 from pycsw.core.config import StaticContext
 from pycsw.core.repository import Repository, setup
 from pycsw.ogc.api.util import yaml_load
-
-apipkg.initpkg("optionaldependencies", {
-    "psycopg2": "psycopg2",
-})
-
-from optionaldependencies import psycopg2  # NOQA: E402
 
 TESTS_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
