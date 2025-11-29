@@ -1,5 +1,6 @@
 click
 geolinks
+legacy-cgi; python_version >= '3.13'
 lxml
 OWSLib
 pyproj
