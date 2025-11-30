@@ -384,6 +384,10 @@ class Csw(object):
         if self.config.has_option('repository', 'filter'):
             repo_filter = self.config.get('repository', 'filter')
 
+        stable_sort = None
+        if self.config.has_option('repository', 'stable_sort'):
+            stable_sort = self.config.get('repository', 'stable_sort') == 'true'
+
         if self.config.has_option('repository', 'source'):  # load custom repository
             rs = self.config.get('repository', 'source')
             rs_modname, rs_clsname = rs.rsplit('.', 1)
@@ -412,7 +416,8 @@ class Csw(object):
                     self.context,
                     self.environ.get('local.app_root', None),
                     self.config.get('repository', 'table'),
-                    repo_filter
+                    repo_filter,
+                    stable_sort,
                 )
                 LOGGER.debug(
                     'Repository loaded (local): %s.' % self.repository.dbtype)

@@ -1,0 +1,6 @@
+GetRecords-page1,service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&sortby=dc:type:D&maxRecords=4&startPosition=1
+GetRecords-page2,service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&sortby=dc:type:D&maxRecords=4&startPosition=5
+GetRecords-page3,service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&sortby=dc:type:D&maxRecords=4&startPosition=9
+GetRecords-unsorted,service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results
+GetRecords-sorted-by-id-desc,service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&sortby=dc:identifier:D
+GetRecords-sorted-by-id-asc,service=CSW&version=2.0.2&request=GetRecords&typenames=csw:Record&elementsetname=full&resulttype=results&sortby=dc:identifier:A

@@ -88,11 +88,12 @@ class Repository(object):
         return clazz._engines[url]
 
     ''' Class to interact with underlying repository '''
-    def __init__(self, database, context, app_root=None, table='records', repo_filter=None):
+    def __init__(self, database, context, app_root=None, table='records', repo_filter=None, stable_sort = False):
         ''' Initialize repository '''
 
         self.context = context
         self.filter = repo_filter
+        self.stable_sort = stable_sort
         self.fts = False
 
         # Don't use relative paths, this is hack to get around
@@ -290,6 +291,9 @@ class Repository(object):
                     query = query.order_by(func.get_geometry_area(sortby_column))
                 else:  # aspatial sort
                     query = query.order_by(sortby_column)
+            if self.stable_sort:
+                identifier = self.context.md_core_model['mappings']['pycsw:Identifier']
+                query = query.order_by(identifier)
 
         # always apply limit and offset
         return [str(total), self._get_repo_filter(query).limit(
