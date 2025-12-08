@@ -167,6 +167,11 @@ def test_items(config):
             assert 'href' in link
             assert 'rel' in link
 
+    for link in content['links']:
+        assert 'href' in link
+        assert 'rel' in link
+        assert 'metadata:main' not in link['href']
+
     # test GET KVP requests
     content = json.loads(api.items({}, None, {'bbox': '-180,-90,180,90'})[2])
     assert len(content['features']) == 10
