@@ -591,7 +591,7 @@ class API:
 
             for p in ['limit', 'bbox', 'datetime', 'collections']:
                 if p in json_post_data:
-                    if p == 'bbox':
+                    if p in ['bbox', 'collections']:
                         args[p] = ','.join(map(str, json_post_data.get(p)))
                     else:
                         args[p] = json_post_data.get(p)
