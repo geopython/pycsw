@@ -463,9 +463,15 @@ class STACAPI(API):
                     LOGGER.debug('Missing link relation; adding rel=related')
                     link['rel'] = 'related'
 
-        for count, value in enumerate(response2['links']):
-            if value['rel'] == 'alternate':
-                response2['links'].pop(count)
+        links2 = []
+
+        for link in response2['links']:
+            if link['rel'] in ['alternate', 'collection']:
+                continue
+            link['href'] = link['href'].replace('collections/metadata:main/items', 'search')
+            links2.append(link)
+
+        response2['links'] = links2
 
         response2['links'].extend([{
             'rel': 'root',
