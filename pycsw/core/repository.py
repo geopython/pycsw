@@ -158,10 +158,12 @@ class Repository(object):
             'anytext': self.dataset.anytext,
             'bbox': self.dataset.wkt_geometry,
             'date': self.dataset.date,
+            'date_creation': self.dataset.date_creation,
             'datetime': self.dataset.date,
             'time_begin': self.dataset.time_begin,
             'time_end': self.dataset.time_end,
             'platform': self.dataset.platform,
+            'cloudcover': self.dataset.cloudcover,
             'instrument': self.dataset.instrument,
             'sensortype': self.dataset.sensortype,
             'off_nadir': self.dataset.illuminationelevationangle

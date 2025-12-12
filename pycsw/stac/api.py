@@ -425,6 +425,37 @@ class STACAPI(API):
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
         headers_['Accept'] = 'application/json'
+
+        if json_post_data is None:
+            LOGGER.debug('Empty JSON payload')
+            json_post_data = {}
+
+        if 'filter' in json_post_data:
+            LOGGER.debug('Detected filter query parameter')
+            json_post_data = json_post_data.pop('filter')
+
+        if 'bbox' in json_post_data:
+            LOGGER.debug('Detected bbox query parameter')
+            bbox_ = json_post_data.pop('bbox')
+            bbox_ = ','.join([str(b) for b in bbox_])
+            args['bbox'] = bbox_
+
+        if 'limit' in json_post_data:
+            LOGGER.debug('Detected limit query parameter')
+            args['limit'] = json_post_data.pop('limit')
+
+        if 'collections' in json_post_data:
+            LOGGER.debug('Detected limit query parameter')
+            args['collections'] = ','.join(json_post_data.pop('collections'))
+
+        if 'ids' in json_post_data:
+            LOGGER.debug('Detected ids query parameter')
+            args['ids'] = ','.join(json_post_data.pop('ids'))
+
+        if 'intersects' in json_post_data:
+            LOGGER.debug('Detected intersects query parameter')
+            # TODO
+
         headers, status, response = super().items(headers_, json_post_data, args, collection)
 
         response = json.loads(response)
