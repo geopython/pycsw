@@ -158,10 +158,12 @@ class Repository(object):
             'anytext': self.dataset.anytext,
             'bbox': self.dataset.wkt_geometry,
             'date': self.dataset.date,
+            'date_creation': self.dataset.date_creation,
             'datetime': self.dataset.date,
             'time_begin': self.dataset.time_begin,
             'time_end': self.dataset.time_end,
             'platform': self.dataset.platform,
+            'cloudcover': self.dataset.cloudcover,
             'instrument': self.dataset.instrument,
             'sensortype': self.dataset.sensortype,
             'off_nadir': self.dataset.illuminationelevationangle
@@ -889,7 +891,7 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
         Column('platform', Text, index=True),
         Column('instrument', Text, index=True),
         Column('sensortype', Text, index=True),
-        Column('cloudcover', Text, index=True),
+        Column('cloudcover', Float, index=True),
         # bands: JSON list of dicts with properties: name, units, min, max
         Column('bands', Text, index=True),
         # STAC: view:off_nadir
