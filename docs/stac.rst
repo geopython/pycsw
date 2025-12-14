@@ -31,7 +31,12 @@ Search
 ^^^^^^
 
 * In addition to OGC API - Records ``/collections/metadata:main/items`` search,
-  STAC API specific searches are realized via ``/stac/search``
+  STAC API specific searches are realized via ``/stac/search`` which conforms to the STAC API items-search conformance class.
+
+Filtering
+^^^^^^^^^
+
+STAC API filtering is realized by `OGC Common Query Language (CQL2)`_ via HTTP GET and POST.  For GET requests, the `filter=` query parameter can be used.  For POST requests, a JSON payload with a `filter` property expressing the CQL2 can be used.
 
 Links and Assets
 ^^^^^^^^^^^^^^^^
@@ -113,6 +118,49 @@ Request Examples
   # collection item as GeoJSON
   http://localhost:8000/stac/collections/metadata:main/items/{itemId}
 
+  # CQL2 JSON (as curl commands)
+
+  # search by creation date
+  curl --location --request POST 'http://localhost:8000/stac/search' \
+      --header 'Content-Type: application/query-cql-json' \
+      --data-raw '{
+          "filter-lang": "cql2-json",
+          "filter": {
+              "op": "<=",
+              "args": [
+                  {
+                      "property": "date_creation"
+                  },
+                  "2025-12-15"
+              ]
+          }
+      }'
+
+  # search by creation date
+  curl --location --request POST 'http://localhost:8000/stac/search' \
+      --header 'Content-Type: application/query-cql-json' \
+      --data-raw '{
+        "filter-lang": "cql2-json",
+        "filter": {
+            "op": "and",
+            "args": [
+                {   
+                    "op": "in",
+                    "args": [
+                        {   
+                            "property": "parentidentifier"
+                        },  
+                        [   
+                            "sentinel-2-l2a"
+                        ]   
+                    ]   
+                }   
+            ]   
+        }   
+    }'
+
 .. _`SpatioTemporal Asset Catalog API version v1.0.0`: https://github.com/radiantearth/stac-api-spec
 .. _`STAC API - Transaction Extension Specification`: https://github.com/stac-api-extensions/transaction
 .. _`STAC API - Collection Transaction Extension`: https://github.com/stac-api-extensions/collection-transaction
+.. _`OGC Common Query Language (CQL2)`: https://docs.ogc.org/is/21-065r2/21-065r2.html
+

@@ -134,7 +134,7 @@ def test_queryables(config):
     assert content['$id'] == 'http://localhost/pycsw/oarec/stac/collections/metadata:main/queryables'  # noqa
     assert content['$schema'] == 'http://json-schema.org/draft/2019-09/schema'
 
-    assert len(content['properties']) == 14
+    assert len(content['properties']) == 16
 
     assert 'geometry' in content['properties']
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
@@ -156,7 +156,7 @@ def test_items(config):
     record = content['features'][0]
 
     assert record['stac_version'] == '1.0.0'
-    #assert record['collection'] == 'S2MSI2A'
+    # assert record['collection'] == 'S2MSI2A'
 
     for feature in content['features']:
         if feature.get('geometry') is not None:
@@ -283,6 +283,89 @@ def test_items(config):
     content = json.loads(api.items({}, None, {'off_nadir': '3.8'})[2])
     assert len(content['features']) == 1
     assert content['features'][0]['properties']['view:off_nadir'] == 3.8
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': '=',
+            'args': [{
+                'property': 'parentidentifier'
+                },
+                'S2MSI1C']
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 12
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': 'in',
+                    'args': [
+                        {
+                            'property': 'parentidentifier'
+                        },
+                        [
+                            'ARD_S3',
+                            'S3SLSTR'
+                        ]
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 0
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': 'in',
+                    'args': [
+                        {
+                            'property': 'parentidentifier'
+                        },
+                        [
+                            'foo',
+                            'sentinel-2-l2a'
+                        ]
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 2
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': '<=',
+                    'args': [
+                        {
+                            'property': 'date_creation'
+                        },
+                        '2025-12-15'
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 2
 
 
 def test_item(config):
