@@ -29,7 +29,7 @@
 #
 # =================================================================
 
-from datetime import datetime
+from datetime import datetime, UTC
 import json
 import logging
 from operator import itemgetter
@@ -913,7 +913,7 @@ class API:
                     'hreflang': self.config['server']['language']
                 })
 
-        response['timeStamp'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        response['timeStamp'] = datetime.now(UTC).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
         if headers_['Content-Type'] == 'text/html':
             response['title'] = self.config['metadata']['identification']['title']

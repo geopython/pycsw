@@ -28,7 +28,7 @@
 #
 # =================================================================
 
-from datetime import datetime
+from datetime import datetime, UTC
 import json
 import uuid
 from typing import Union
@@ -87,7 +87,7 @@ def generate_ogc_cloudevent(type_: str, media_type: str,
         'source': 'TODO',
         'subject': subject,
         'id': str(uuid.uuid4()),
-        'time': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'time': datetime.now(UTC).strftime('%Y-%m-%dT%H:%M:%SZ'),
         'datacontenttype': media_type,
         # 'dataschema': 'TODO',
         'data': data2

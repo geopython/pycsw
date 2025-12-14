@@ -357,8 +357,8 @@ class ISO19115p3(profile.Profile):
             try:
                 val = util.getqattr(result, queryables['mdb:ResourceLanguage']['dbcol'])
             except Exception as e:
-                print(f"{queryables=}")
-                print("exc=", e)
+                LOGGER.error(f"{queryables=}")
+                LOGGER.error("exc=", e)
             if val is None:
                 val = util.getqattr(result, queryables['mdb:Language']['dbcol'])
             lang_code = build_path(node,['mdb:defaultLocale', 'lan:PT_Locale', 'lan:language', 'lan:LanguageCode'], self.namespaces)
@@ -466,7 +466,7 @@ class ISO19115p3(profile.Profile):
                             # Organisation address
                             self._write_contact_address(ci_resp, ci_contact, **contact)
                     except Exception as err:
-                        print(f"failed to parse contacts json of {cjson}: {err}")
+                        LOGGER.error(f"failed to parse contacts json of {cjson}: {err}")
 
             # Creation date for record
             val = util.getqattr(result, queryables['mdb:Modified']['dbcol'])
