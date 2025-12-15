@@ -425,6 +425,8 @@ class Csw(object):
                     except Exception as err:
                         LOGGER.debug(f'Repository not loaded retry connection {max_attempts}: {err}')
                         max_attempts += 1
+                        if max_attempts == self.max_retries:
+                            raise
             except Exception as err:
                 msg = 'Could not load repository (local): %s' % err
                 LOGGER.exception(msg)
