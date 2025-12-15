@@ -1521,19 +1521,31 @@ def _parse_iso(context, repos, exml):
 
     _set(context, recobj, 'pycsw:ServiceType', ','.join(service_types))
 
-    if hasattr(md_identification, 'dataquality'):
-        _set(context, recobj, 'pycsw:Degree', md.dataquality.conformancedegree)
-        _set(context, recobj, 'pycsw:Lineage', md.dataquality.lineage)
-        _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
-        if hasattr(md.dataquality, 'specificationdate'):
-            _set(context, recobj, 'pycsw:specificationDate',
-            md.dataquality.specificationdate[0].date)
-            _set(context, recobj, 'pycsw:SpecificationDateType',
-            md.dataquality.specificationdate[0].datetype)
+    if hasattr(md, 'dataquality'):
+        try:
+            if hasattr(md.dataquality, 'conformancedegree'):
+                _set(context, recobj, 'pycsw:Degree', ','.join(md.dataquality.conformancedegree))
+        except Exception as err:
+            LOGGER.debug('No dq conformancedegree', err)
+        try:
+            if hasattr(md.dataquality, 'lineage'):
+                _set(context, recobj, 'pycsw:Lineage', md.dataquality.lineage)
+        except Exception as err:
+            LOGGER.debug('No dq lineage', err)
+        try:
+            if hasattr(md.dataquality, 'specificationtitle'):
+                _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
+        except Exception as err:
+            LOGGER.debug('No dq specification title', err)
+        try:
+            if hasattr(md.dataquality, 'specificationdate'):
+                _set(context, recobj, 'pycsw:SpecificationDate', 
+                     next(iter(md.dataquality.specificationdate), None))
+        except Exception as err:
+            LOGGER.debug('No dq specification date', err)
 
     if hasattr(md, 'contact') and len(md.contact) > 0:
         _set(context, recobj, 'pycsw:ResponsiblePartyRole', md.contact[0].role)
-
 
     if hasattr(md, 'contentinfo') and len(md.contentinfo) > 0:
         for ci in md.contentinfo:
