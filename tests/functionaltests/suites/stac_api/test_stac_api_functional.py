@@ -402,6 +402,61 @@ def test_items(config):
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 2
 
+    cql_json = {
+        "filter": {
+            "op": "and",
+            "args": [
+                {
+                    "op": "=",
+                    "args": [
+                        {
+                            "property": "parentidentifier"
+                        },
+                        "S2MSI2A"
+                    ]
+                },
+                {
+                    "op": "s_intersects",
+                    "args": [
+                        {
+                            "property": "geometry"
+                        },
+                        {
+                            "type": "Polygon",
+                            "coordinates": [
+                                [
+                                    [
+                                        1.230469,
+                                        33.72434
+                                    ],
+                                    [
+                                        30.585938,
+                                        33.72434
+                                    ],
+                                    [
+                                        30.585938,
+                                        52.802761
+                                    ],
+                                    [
+                                        1.230469,
+                                        52.802761
+                                    ],
+                                    [
+                                        1.230469,
+                                        33.72434
+                                    ]
+                                ]
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 11
+
 
 def test_item(config):
     api = STACAPI(config)
