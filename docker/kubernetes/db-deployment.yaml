@@ -26,7 +26,7 @@ spec:
           value: mypass
         - name: POSTGRES_USER
           value: postgres
-        image: postgis/postgis:12-3.0-alpine
+        image: postgis/postgis:17-3.5
         name: db
         ports:
         - containerPort: 5432
