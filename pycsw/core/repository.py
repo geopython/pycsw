@@ -214,6 +214,7 @@ class Repository(object):
         if self.dbtype == 'postgresql+postgis+native':
             LOGGER.debug('Adjusting to PostGIS geometry column  (wkb_geometry)')
             self.query_mappings['bbox'] = self.dataset.wkb_geometry
+            self.query_mappings['geometry'] = self.dataset.wkb_geometry
 
         if self.dbtype in ['sqlite', 'sqlite3']:  # load SQLite query bindings
             # <= 0.6 behaviour

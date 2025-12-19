@@ -29,6 +29,7 @@
 
 import logging
 
+from shapely.geometry import shape
 from sqlalchemy import text
 
 from pygeofilter import ast
@@ -45,6 +46,22 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
     def __init__(self, field_mapping=None, dbtype='sqlite', undefined_as_null=None):
         super().__init__(field_mapping, undefined_as_null=undefined_as_null)
         self._pycsw_dbtype = dbtype
+
+    @handle(ast.GeometryIntersects)
+    def intersects(self, node, lhs, rhs):
+        LOGGER.debug('Overriding INTERSECT filter handling')
+        geometry = self.field_mapping['bbox'].key
+        try:
+            crs = node.crs
+        except AttributeError:
+            crs = 4326
+
+        wkt = shape(node.rhs.geometry).wkt
+
+        if self._pycsw_dbtype == 'postgresql+postgis+native':
+            return text(f"ST_Intersects({geometry}, 'SRID={crs};{wkt}')")
+        else:
+            return text(f"query_spatial({geometry}, '{wkt}', 'intersects', 'false') = 'true'")  # noqa
 
     @handle(ast.BBox)
     def bbox(self, node, lhs):
