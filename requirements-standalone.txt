@@ -1,6 +1,6 @@
 SQLAlchemy<2.0.0
 Flask
 Jinja2
-pygeofilter
+pygeofilter @ git+https://github.com/geopython/pygeofilter@18c382b6632598b3ea6186f0c03a6b5a56d828cd
 PyYAML
 pygeoif
