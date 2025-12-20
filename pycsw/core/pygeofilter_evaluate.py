@@ -29,10 +29,12 @@
 
 import logging
 
+from shapely import box
 from shapely.geometry import shape
 from sqlalchemy import text
 
 from pygeofilter import ast
+from pygeofilter.values import Envelope
 from pygeofilter.backends.evaluator import handle
 from pygeofilter.backends.sqlalchemy import filters
 from pygeofilter.backends.sqlalchemy.evaluate import SQLAlchemyFilterEvaluator
@@ -43,7 +45,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
-    def __init__(self, field_mapping=None, dbtype='sqlite', undefined_as_null=None):
+    def __init__(self, field_mapping=None, dbtype='sqlite',
+                 undefined_as_null=None):
         super().__init__(field_mapping, undefined_as_null=undefined_as_null)
         self._pycsw_dbtype = dbtype
 
@@ -56,7 +59,11 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
         except AttributeError:
             crs = 4326
 
-        wkt = shape(node.rhs.geometry).wkt
+        if isinstance(node.rhs, Envelope):
+            wkt = box(node.rhs.x1, node.rhs.x2,
+                      node.rhs.y1, node.rhs.y2, ccw=False).wkt
+        else:
+            wkt = shape(node.rhs.geometry).wkt
 
         if self._pycsw_dbtype == 'postgresql+postgis+native':
             return text(f"ST_Intersects({geometry}, 'SRID={crs};{wkt}')")

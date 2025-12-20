@@ -39,6 +39,7 @@ def publish_message(pubsub_client, action: str, collection: str = None,
     """
     Publish broker message
 
+    :param pubsub_client: `paho.mqtt.client.Client` instance
     :param action: `str` of action trigger name (create, update, delete)
     :param collection: `str` of collection identifier
     :param item: `str` of item identifier
