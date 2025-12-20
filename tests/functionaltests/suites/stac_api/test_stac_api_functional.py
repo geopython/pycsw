@@ -174,34 +174,34 @@ def test_items(config):
 
     # test GET KVP requests
     content = json.loads(api.items({}, None, {'bbox': '-180,-90,180,90'})[2])
-    assert len(content['features']) == 10
+    assert content['numberMatched'] == 31
 
     content = json.loads(api.items({}, None, {'datetime': '2021-02-16'})[2])
-    assert len(content['features']) == 2
+    assert content['numberMatched'] == 2
 
     content = json.loads(api.items({}, None,
                                    {'bbox': '-180,-90,180,90',
                                    'datetime': '2021-02-16'})[2])
-    assert len(content['features']) == 2
+    assert content['numberMatched'] == 2
 
     content = json.loads(api.items({}, None, {'sortby': 'title'})[2])
 
-    assert len(content['features']) == 10
+    assert content['numberMatched'] == 31
     assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({}, None, {'sortby': '-title'})[2])
 
-    assert len(content['features']) == 10
+    assert content['numberMatched'] == 31
     assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE'  # noqa
 
     content = json.loads(api.items({}, None, {'sortby': 'datetime'})[2])
 
-    assert len(content['features']) == 10
+    assert content['numberMatched'] == 31
     assert content['features'][5]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWP_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({}, None, {'sortby': '-datetime'})[2])
 
-    assert len(content['features']) == 10
+    assert content['numberMatched'] == 31
     assert content['features'][6]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXP_20230430T083712.SAFE'  # noqa
 
     params = {'filter': "title LIKE '%%sentinel%%'"}
@@ -218,27 +218,27 @@ def test_items(config):
 
     # test POST JSON requests
     content = json.loads(api.items({}, {'bbox': [-180, -90, 180, 90]}, {})[2])
-    assert len(content['features']) == 10
+    assert content['numberMatched'] == 31
 
     content = json.loads(api.items({},
                                    {'bbox': [-180, -90, 180, 90], 'datetime': '2019-09-10T09:50:29.024000Z'},  # noqa
                                    {})[2])
-    assert len(content['features']) == 10
+    assert content['numberMatched'] == 23
 
     content = json.loads(api.items({}, {'datetime': '2024-11-28T09:23:31.024000Z'}, {})[2])  # noqa
-    assert len(content['features']) == 2
+    assert content['numberMatched'] == 2
 
     content = json.loads(api.items({},
                                    {'sortby': [{'field': 'title', 'direction': 'asc'}]},  # noqa
                                    {})[2])
 
-    assert len(content['features']) == 10
+    assert content['numberMatched'] == 31
     assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({},
                                    {'sortby': [{'field': 'title', 'direction': 'desc'}]},  # noqa
                                    {})[2])
-    assert len(content['features']) == 10
+    assert content['numberMatched'] == 31
     assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE'  # noqa
 
     headers, status, content = api.items({}, None, {}, 'foo')
@@ -281,7 +281,7 @@ def test_items(config):
     assert content['numberMatched'] == 2
 
     content = json.loads(api.items({}, None, {'off_nadir': '3.8'})[2])
-    assert len(content['features']) == 1
+    assert content['numberMatched'] == 1
     assert content['features'][0]['properties']['view:off_nadir'] == 3.8
 
     cql_json = {
@@ -609,7 +609,7 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     content = json.loads(content)
 
-    assert len(content['features']) == 0
+    assert content['numberMatched'] == 0
 
     # update collection
     sample_collection['title'] = 'test title update'
