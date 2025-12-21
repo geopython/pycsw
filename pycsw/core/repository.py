@@ -893,7 +893,7 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
         Column('platform', Text, index=True),
         Column('instrument', Text, index=True),
         Column('sensortype', Text, index=True),
-        Column('cloudcover', Text, index=True),
+        Column('cloudcover', Float, index=True),
         # bands: JSON list of dicts with properties: name, units, min, max
         Column('bands', Text, index=True),
         # STAC: view:off_nadir

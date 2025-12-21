@@ -1536,7 +1536,7 @@ def _parse_iso(context, repos, exml):
     if hasattr(md, 'contentinfo') and len(md.contentinfo) > 0:
         for ci in md.contentinfo:
             if isinstance(ci, MD_ImageDescription):
-                _set(context, recobj, 'pycsw:CloudCover', ci.cloud_cover)
+                _set(context, recobj, 'pycsw:CloudCover', float(ci.cloud_cover))
                 _set(context, recobj, 'pycsw:IlluminationElevationAngle', ci.illumination_elevation_angle)
 
                 keywords = _get(context, recobj, 'pycsw:Keywords')
@@ -1949,7 +1949,7 @@ def _parse_stac_resource(context, repos, record):
                 _set(context, recobj, 'pycsw:TempExtent_end', record['properties']['datetime'])
 
         if 'eo:cloud_cover' in record['properties']:
-            _set(context, recobj, 'pycsw:CloudCover', record['properties']['eo:cloud_cover'])
+            _set(context, recobj, 'pycsw:CloudCover', float(record['properties']['eo:cloud_cover']))
 
         if 'collection' in record:
             _set(context, recobj, 'pycsw:ParentIdentifier', record['collection'])
