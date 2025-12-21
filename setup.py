@@ -58,8 +58,6 @@ def get_package_version():
 DESCRIPTION = ('pycsw is an OGC API - Records and OGC CSW server '
                'implementation written in Python')
 
-print("JJJ", DESCRIPTION)
-
 # ensure a fresh MANIFEST file is generated
 if (os.path.exists('MANIFEST')):
     os.unlink('MANIFEST')
