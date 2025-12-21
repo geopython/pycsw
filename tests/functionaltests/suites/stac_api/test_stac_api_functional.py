@@ -220,6 +220,9 @@ def test_items(config):
     content = json.loads(api.items({}, {'bbox': [-180, -90, 180, 90]}, {})[2])
     assert content['numberMatched'] == 31
 
+    content = json.loads(api.items({}, {'bbox': [-142, 42, -52, 84]}, {})[2])
+    assert content['numberMatched'] == 4
+
     content = json.loads(api.items({},
                                    {'bbox': [-180, -90, 180, 90], 'datetime': '2019-09-10T09:50:29.024000Z'},  # noqa
                                    {})[2])
@@ -284,6 +287,107 @@ def test_items(config):
     assert content['numberMatched'] == 1
     assert content['features'][0]['properties']['view:off_nadir'] == 3.8
 
+    # test post CQL2 JSON requests
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [{
+                'op': '=',
+                'args': [{
+                    'property': 'parentidentifier'
+                    },
+                    'S2MSI1C']
+            }]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 12
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [{
+                'op': '=',
+                'args': [{
+                    'property': 'parentidentifier'
+                    },
+                    'S2MSI1C']
+            }]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {'limit': 1})[2])
+    assert content['numberMatched'] == 12
+    assert content['numberReturned'] == 1
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'limit': 1,
+        'filter': {
+            'op': 'and',
+            'args': [{
+                'op': '=',
+                'args': [{
+                    'property': 'parentidentifier'
+                    },
+                    'S2MSI1C']
+            }]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 12
+    assert content['numberReturned'] == 1
+
+    cql_json = {
+        'bbox': [15,48,17,50],
+        'filter-lang': 'cql2-json',
+        'collections': ['S2MSI1Ci'],
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': '=',
+                    'args': [
+                        {
+                            'property': 'identifier'
+                        },
+                        'S2B_MSIL1C_20190910T095029_N0500_R079_T33UWQ_20230429T151337.SAFE'
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 0
+
+    cql_json = {
+        'bbox': [15,48,17,50],
+        'filter-lang': 'cql2-json',
+        'collections': ['S2MSI1C'],
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': '=',
+                    'args': [
+                        {
+                            'property': 'identifier'
+                        },
+                        'S2B_MSIL1C_20190910T095029_N0500_R079_T33UWQ_20230429T151337.SAFE'
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 1
+
     cql_json = {
         'filter-lang': 'cql2-json',
         'filter': {
@@ -331,11 +435,86 @@ def test_items(config):
                     'op': 'in',
                     'args': [
                         {
+                            'property': 'collections'
+                        },
+                        [
+                            'ARD_S3',
+                            'sentinel-2-l2a'
+                        ]
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 2
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': 'in',
+                    'args': [
+                        {
                             'property': 'parentidentifier'
                         },
                         [
                             'foo',
                             'sentinel-2-l2a'
+                        ]
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 2
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [{
+                    'op': '=',
+                    'args': [{
+                            'property': 'identifier'
+                        },
+                        'S2B_MSIL2A_20190910T095029_N0500_R079_T33TXN_20230430T083712.SAFE'  # noqa
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 1
+
+    cql_json = {
+        "filter": {
+            "op": "and",
+            "args": [
+                {
+                    "op": "=",
+                    "args": [
+                        {
+                            "property": "parentidentifier"
+                        },
+                        "S2MSI2A"
+                    ]
+                },
+                {
+                    "op": "in",
+                    "args": [
+                        {
+                            "property": "title"
+                        },
+                        [
+                            "S2B_MSIL2A_20190910T095029_N0500_R079_T33UXP_20230430T083712.SAFE",  # noqa
+                            "S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE"  # noqa
                         ]
                     ]
                 }
