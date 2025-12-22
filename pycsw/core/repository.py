@@ -167,7 +167,8 @@ class Repository(object):
             'cloudcover': self.dataset.cloudcover,
             'instrument': self.dataset.instrument,
             'sensortype': self.dataset.sensortype,
-            'off_nadir': self.dataset.illuminationelevationangle
+            'off_nadir': self.dataset.illuminationelevationangle,
+            'gsd': self.dataset.distancevalue
         }
 
         if self.dbtype == 'postgresql':
@@ -864,7 +865,7 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
         Column('crs', Text, index=True),
         Column('geodescode', Text, index=True),
         Column('denominator', Text, index=True),
-        Column('distancevalue', Text, index=True),
+        Column('distancevalue', Float, index=True),
         Column('distanceuom', Text, index=True),
         Column('wkt_geometry', Text),
         Column('vert_extent_min', Float, index=True),
