@@ -506,18 +506,45 @@ class STACAPI(API):
 
         if not json_post_data and not cql_ops:
             LOGGER.debug('No JSON POST data or CQL ops')
+            args['type'] = 'item'
         elif not json_post_data and cql_ops:
             LOGGER.debug('No JSON POST data left')
+            cql_ops.append({
+                'op': '=',
+                'args': [
+                    {'property': 'type'},
+                    'item'
+                ]
+            })
             json_post_data = {
                 'op': 'and',
                 'args': cql_ops
             }
         else:
             LOGGER.debug('JSON POST data is CQL2 JSON')
-            if cql_ops:
-                print("JJ2", json_post_data)
-                LOGGER.debug('Adding STAC API query parameters to CQL2 JSON')
+            cql_ops.append({
+                'op': '=',
+                'args': [
+                    {'property': 'type'},
+                    'item'
+                ]
+            })
+            LOGGER.debug('Adding STAC API query parameters to CQL2 JSON')
+            if json_post_data.get('op') in ['and', 'or']:
                 json_post_data['args'].extend(cql_ops)
+            else:
+                op_, args_ = json_post_data.get('op'), json_post_data.get('args')
+                if None not in [op_, args_]:
+                    cql_ops.append({
+                        'op': op_,
+                        'args': args_,
+                    })
+                    json_post_data = {
+                        'op': 'and',
+                        'args': cql_ops
+                    }
+                else:
+                    json_post_data.update(*cql_ops)
 
         headers, status, response = super().items(headers_, json_post_data, args, collection)
 
@@ -526,7 +553,7 @@ class STACAPI(API):
         response2['features'] = []
 
         LOGGER.debug('Filtering on STAC items')
-        for record in response['features']:
+        for record in response.get('features', []):
             if record.get('stac_version') is None:
                 record['links'].extend([{
                     'rel': 'self',
@@ -559,7 +586,7 @@ class STACAPI(API):
 
         links2 = []
 
-        for link in response2['links']:
+        for link in response2.get('links', []):
             if link['rel'] in ['alternate', 'collection']:
                 continue
             link['href'] = link['href'].replace('collections/metadata:main/items', 'search')
@@ -573,6 +600,10 @@ class STACAPI(API):
             'href': f"{self.config['server']['url']}/"
             }
         ])
+
+        if 'code' in response2:
+            response2.pop('features')
+            response2.pop('links')
 
         return self.get_response(status, headers, response2)
 

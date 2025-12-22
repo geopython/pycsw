@@ -224,7 +224,7 @@ Model Crosswalk
      - ``gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date/gco:Date``
      - 
      - ``properties.updated``
-     - ``properties.updated``
+     - ``created`` or ``properties.updated``
      - 
    * - ``date_creation``
      - ``pycsw:CreationDate``
@@ -232,7 +232,7 @@ Model Crosswalk
      - ``gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="creation"]/gmd:date/gco:Date``
      - 
      - ``properties.created``
-     - ``properties.created``
+     - ``created`` or ``properties.created``
      - 
    * - ``date_publication``
      - ``pycsw:PublicationDate``
@@ -304,7 +304,7 @@ Model Crosswalk
      - ``gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance``
      - 
      - 
-     - 
+     - ``gsd`` or ``properties.gsd``
      - 
    * - ``distanceuom``
      - ``pycsw:DistanceUOM``
@@ -312,7 +312,7 @@ Model Crosswalk
      - ``gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom``
      - 
      - 
-     - 
+     - fixed to ``m``
      - 
    * - ``time_begin``
      - ``pycsw:TempExtent_begin``
@@ -504,7 +504,7 @@ Model Crosswalk
      - ``gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:identifier``
      - 
      - 
-     - 
+     - ``platform`` or ``properties.platform``
      - 
    * - ``instrument``
      - ``pycsw:Instrument``
@@ -512,7 +512,7 @@ Model Crosswalk
      - ``gmi:acquisitionInfo/gmi:MI_AcquisitionInformation/gmi:platform/gmi:MI_Platform/gmi:instrument/gmi:MI_Instrument/gmi:identifier``
      - 
      - 
-     - 
+     - ``instruments`` or ``properties.instruments``
      - 
    * - ``sensortype``
      - ``pycsw:SensorType``

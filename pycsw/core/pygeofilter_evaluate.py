@@ -84,6 +84,23 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
         else:
             return text(f"query_spatial({geometry}, '{wkt}', 'bbox', 'false') = 'true'")  # noqa
 
+    @handle(ast.Equal)
+    def equal(self, node, lhs, rhs):
+        list_props = [
+            'dataset.keywords',
+            'dataset.instrument'
+        ]
+
+        if str(lhs.prop) in list_props:
+            LOGGER.debug(f'Overriding {lhs.prop} "=" with "ilike"')
+            node.pattern = f'%{rhs}%'
+            node.nocase = False
+            node.not_ = False
+
+            return self.ilike(node, lhs)
+
+        return filters.runop(lhs, rhs, '=')
+
     @handle(ast.Like)
     def ilike(self, node, lhs):
         LOGGER.debug('Overriding ILIKE filter handling')
