@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.3.0](https://github.com/MapColonies/pycsw/compare/v6.2.2...v6.3.0) (2025-12-18)
+
+
+### Features
+
+* **repository:** Add option for stable sort (MAPCO-8487) ([#102](https://github.com/MapColonies/pycsw/issues/102)) ([03b54c0](https://github.com/MapColonies/pycsw/commit/03b54c016fcb0b2a7f237edefe1c86dfe5c0116c))
+
+
+### Helm Changes
+
+* infra labels and annotations in raster pycsw MAPCO-9060 ([#87](https://github.com/MapColonies/pycsw/issues/87)) ([13f5ab6](https://github.com/MapColonies/pycsw/commit/13f5ab692a0f80865d7b449ec136cdc94d163187))
+
 ## [6.2.2](https://github.com/MapColonies/pycsw/compare/v6.2.1...v6.2.2) (2025-09-15)
 
 
