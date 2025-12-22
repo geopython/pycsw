@@ -45,7 +45,7 @@ class MQTTPubSubClient(BasePubSubClient):
 
         :param publisher_def: provider definition
 
-        :returns: pycsw.pubsub.mqtt.MQTTClient
+        :returns: pycsw.pubsub.mqtt.MQTTPubSubClient
         """
 
         super().__init__(broker_url)
@@ -79,25 +79,28 @@ class MQTTPubSubClient(BasePubSubClient):
     def connect(self) -> None:
         """
         Connect to an MQTT broker
+
         :returns: None
         """
 
         self.conn.connect(self.broker_url.hostname, self.port)
         LOGGER.debug('Connected to broker')
 
-    def pub(self, topic: str, message: str, qos: int = 1) -> bool:
+    def pub(self, channel: str, message: str, qos: int = 1) -> bool:
         """
-        Publish a message to a broker/topic
-        :param topic: `str` of topic
+        Publish a message to a broker/channel
+
+        :param channel: `str` of channel
         :param message: `str` of message
+
         :returns: `bool` of publish result
         """
 
         LOGGER.debug(f'Publishing to broker {self.broker_safe_url}')
-        LOGGER.debug(f'Topic: {topic}')
+        LOGGER.debug(f'Channel: {channel}')
         LOGGER.debug(f'Message: {message}')
 
-        result = self.conn.publish(topic, message, qos)
+        result = self.conn.publish(channel, message, qos)
         LOGGER.debug(f'Result: {result}')
 
         # TODO: investigate implication
