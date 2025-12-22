@@ -1504,12 +1504,11 @@ def _parse_iso(context, repos, exml):
             _set(context, recobj, 'pycsw:DistanceValue', md_identification.distance[0])
         if len(md_identification.uom) > 0:
             _set(context, recobj, 'pycsw:DistanceUOM', md_identification.uom[0])
-
         if len(md_identification.classification) > 0:
             _set(context, recobj, 'pycsw:Classification', md_identification.classification[0])
         if len(md_identification.uselimitation) > 0:
             _set(context, recobj, 'pycsw:ConditionApplyingToAccessAndUse',
-            md_identification.uselimitation[0])
+                 md_identification.uselimitation[0])
 
     service_types = []
     from owslib.iso import SV_ServiceIdentification
@@ -1527,13 +1526,12 @@ def _parse_iso(context, repos, exml):
         _set(context, recobj, 'pycsw:SpecificationTitle', md.dataquality.specificationtitle)
         if hasattr(md.dataquality, 'specificationdate'):
             _set(context, recobj, 'pycsw:specificationDate',
-            md.dataquality.specificationdate[0].date)
+                 md.dataquality.specificationdate[0].date)
             _set(context, recobj, 'pycsw:SpecificationDateType',
-            md.dataquality.specificationdate[0].datetype)
+                 md.dataquality.specificationdate[0].datetype)
 
     if hasattr(md, 'contact') and len(md.contact) > 0:
         _set(context, recobj, 'pycsw:ResponsiblePartyRole', md.contact[0].role)
-
 
     if hasattr(md, 'contentinfo') and len(md.contentinfo) > 0:
         for ci in md.contentinfo:
@@ -1545,9 +1543,9 @@ def _parse_iso(context, repos, exml):
                 if ci.processing_level is not None:
                     pl_keyword = 'eo:processingLevel:' + ci.processing_level
                     if keywords is None:
-                        keywords  = pl_keyword
+                        keywords = pl_keyword
                     else:
-                        keywords  += ',' + pl_keyword
+                        keywords += ',' + pl_keyword
 
                     _set(context, recobj, 'pycsw:Keywords', keywords)
 
@@ -1573,7 +1571,7 @@ def _parse_iso(context, repos, exml):
             _set(context, recobj, 'pycsw:Instrument', instrument.identifier)
             _set(context, recobj, 'pycsw:SensorType', instrument.type)
 
-    all_formats=[]
+    all_formats = []
     if hasattr(md.distribution, 'format') and md.distribution.format is not None:
         all_formats.append(md.distribution.format)
 
@@ -1616,11 +1614,11 @@ def _parse_iso(context, repos, exml):
                             'url': scpt.url
                         }
                         links.append(linkobj)
-    except Exception as err:  # srv: identification does not exist
+    except Exception:  # srv: identification does not exist
         LOGGER.exception('no srv:SV_ServiceIdentification links found')
 
     if hasattr(md_identification, 'graphicoverview'):
-        for thumb in  md_identification.graphicoverview:
+        for thumb in md_identification.graphicoverview:
             links.append({
                 'name': 'preview',
                 'description': 'Web image thumbnail (URL)',
@@ -1642,6 +1640,7 @@ def _parse_iso(context, repos, exml):
         _set(context, recobj, 'pycsw:BoundingBox', None)
 
     return recobj
+
 
 def _parse_dc(context, repos, exml):
 
@@ -1830,6 +1829,15 @@ def _parse_stac_resource(context, repos, record):
         stype = 'item'
         title = record['properties'].get('title')
         abstract = record['properties'].get('description')
+        _set(context, recobj, 'pycsw:CreationDate', record['properties'].get('created'))
+        _set(context, recobj, 'pycsw:Modified', record['properties'].get('updated'))
+        _set(context, recobj, 'pycsw:Platform', record['properties'].get('platform'))
+        instruments = record['properties'].get('instruments')
+        if instruments is not None:
+            _set(context, recobj, 'pycsw:Instrument', ','.join(instruments))
+        if record['properties'].get('gsd') is not None:
+            _set(context, recobj, 'pycsw:DistanceValue', record['properties']['gsd'])
+            _set(context, recobj, 'pycsw:DistanceUOM', 'm')
         if record.get('geometry') is not None:
             bbox_wkt = util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry']))
     elif stac_type == 'Collection':
@@ -1840,6 +1848,15 @@ def _parse_stac_resource(context, repos, record):
         stype = 'collection'
         title = record.get('title')
         abstract = record.get('description')
+        _set(context, recobj, 'pycsw:CreationDate', record.get('created'))
+        _set(context, recobj, 'pycsw:Modified', record.get('updated'))
+        _set(context, recobj, 'pycsw:Platform', record.get('platform'))
+        instruments = record.get('instruments')
+        if instruments is not None:
+            _set(context, recobj, 'pycsw:Instrument', ','.join(instruments))
+        if record.get('gsd') is not None:
+            _set(context, recobj, 'pycsw:DistanceValue', record['gsd'])
+            _set(context, recobj, 'pycsw:DistanceUOM', 'm')
         if 'extent' in record and 'spatial' in record['extent']:
             bbox_csv = ','.join(str(t) for t in record['extent']['spatial']['bbox'][0])
             bbox_wkt = util.bbox2wktpolygon(bbox_csv)
@@ -1854,6 +1871,12 @@ def _parse_stac_resource(context, repos, record):
         stype = 'catalog'
         title = record.get('title')
         abstract = record.get('description')
+        _set(context, recobj, 'pycsw:CreationDate', record.get('created'))
+        _set(context, recobj, 'pycsw:Modified', record.get('updated'))
+        _set(context, recobj, 'pycsw:Platform', record.get('platform'))
+        instruments = record.get('instruments')
+        if instruments is not None:
+            _set(context, recobj, 'pycsw:Instrument', ','.join(instruments))
 
     _set(context, recobj, 'pycsw:Identifier', record['id'])
     _set(context, recobj, 'pycsw:Typename', typename)
@@ -1952,21 +1975,24 @@ def _parse_stac_resource(context, repos, record):
 
     return recobj
 
+
 def fgdccontact2iso(cnt, role='pointOfContact'):
     """Creates a iso format contact (owslib style) from fgdc format"""
 
-    return {'name': cnt.cntper, 
-            'organization': cnt.cntorg, 
-            'position': cnt.cntpos, 
-            'phone': cnt.voice, 
-            'address': cnt.address, 
-            'city': cnt.city, 
-            'region': cnt.state,
-            'postcode': cnt.postal, 
-            'country': cnt.country, 
-            'email': cnt.email, 
-            'role': role
+    return {
+        'name': cnt.cntper,
+        'organization': cnt.cntorg,
+        'position': cnt.cntpos,
+        'phone': cnt.voice,
+        'address': cnt.address,
+        'city': cnt.city,
+        'region': cnt.state,
+        'postcode': cnt.postal,
+        'country': cnt.country,
+        'email': cnt.email,
+        'role': role
     }
+
 
 def caps2iso(record, caps, context):
     """Creates ISO metadata from Capabilities XML"""

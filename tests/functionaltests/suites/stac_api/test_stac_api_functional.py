@@ -134,7 +134,7 @@ def test_queryables(config):
     assert content['$id'] == 'http://localhost/pycsw/oarec/stac/collections/metadata:main/queryables'  # noqa
     assert content['$schema'] == 'http://json-schema.org/draft/2019-09/schema'
 
-    assert len(content['properties']) == 16
+    assert len(content['properties']) == 17
 
     assert 'geometry' in content['properties']
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
@@ -174,54 +174,54 @@ def test_items(config):
 
     # test GET KVP requests
     content = json.loads(api.items({}, None, {'bbox': '-180,-90,180,90'})[2])
-    assert content['numberMatched'] == 31
+    assert content['numberMatched'] == 26
 
-    content = json.loads(api.items({}, None, {'datetime': '2021-02-16'})[2])
-    assert content['numberMatched'] == 2
+    content = json.loads(api.items({}, None, {'datetime': '2020-12-11T22:38:32.125Z'})[2])  # noqa
+    assert content['numberMatched'] == 1
 
     content = json.loads(api.items({}, None,
                                    {'bbox': '-180,-90,180,90',
-                                   'datetime': '2021-02-16'})[2])
-    assert content['numberMatched'] == 2
+                                   'datetime': '2020-12-11T22:38:32.125Z'})[2])
+    assert content['numberMatched'] == 1
 
     content = json.loads(api.items({}, None, {'sortby': 'title'})[2])
 
-    assert content['numberMatched'] == 31
+    assert content['numberMatched'] == 26
     assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({}, None, {'sortby': '-title'})[2])
 
-    assert content['numberMatched'] == 31
-    assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE'  # noqa
+    assert content['numberMatched'] == 26
+    assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33TWN_20230430T083712.SAFE'  # noqa
 
     content = json.loads(api.items({}, None, {'sortby': 'datetime'})[2])
 
-    assert content['numberMatched'] == 31
-    assert content['features'][5]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWP_20190910T120910.SAFE'  # noqa
+    assert content['numberMatched'] == 26
+    assert content['features'][5]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UXQ_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({}, None, {'sortby': '-datetime'})[2])
 
-    assert content['numberMatched'] == 31
-    assert content['features'][6]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXP_20230430T083712.SAFE'  # noqa
+    assert content['numberMatched'] == 26
+    assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
-    params = {'filter': "title LIKE '%%sentinel%%'"}
+    params = {'filter': "title LIKE '%%T33TWN%%'"}
     content = json.loads(api.items({}, None, params)[2])
-    assert content['numberMatched'] == 3
-    assert content['numberReturned'] == 3
+    assert content['numberMatched'] == 4
+    assert content['numberReturned'] == 4
     assert len(content['features']) == content['numberReturned']
 
-    params = {'filter': "title LIKE '%%sentinel%%'", 'q': 'specTral'}
+    params = {'filter': "title LIKE '%%T33TWN%%'", 'q': 'aeroSol'}
     content = json.loads(api.items({}, None, params)[2])
-    assert content['numberMatched'] == 3
-    assert content['numberReturned'] == 3
+    assert content['numberMatched'] == 4
+    assert content['numberReturned'] == 4
     assert len(content['features']) == content['numberReturned']
 
     # test POST JSON requests
     content = json.loads(api.items({}, {'bbox': [-180, -90, 180, 90]}, {})[2])
-    assert content['numberMatched'] == 31
+    assert content['numberMatched'] == 26
 
     content = json.loads(api.items({}, {'bbox': [-142, 42, -52, 84]}, {})[2])
-    assert content['numberMatched'] == 4
+    assert content['numberMatched'] == 0
 
     content = json.loads(api.items({},
                                    {'bbox': [-180, -90, 180, 90], 'datetime': '2019-09-10T09:50:29.024000Z'},  # noqa
@@ -235,14 +235,14 @@ def test_items(config):
                                    {'sortby': [{'field': 'title', 'direction': 'asc'}]},  # noqa
                                    {})[2])
 
-    assert content['numberMatched'] == 31
+    assert content['numberMatched'] == 26
     assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
     content = json.loads(api.items({},
                                    {'sortby': [{'field': 'title', 'direction': 'desc'}]},  # noqa
                                    {})[2])
-    assert content['numberMatched'] == 31
-    assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE'  # noqa
+    assert content['numberMatched'] == 26
+    assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33TWN_20230430T083712.SAFE'  # noqa
 
     headers, status, content = api.items({}, None, {}, 'foo')
     assert status == 400
@@ -271,7 +271,7 @@ def test_items(config):
     content = json.loads(api.items({}, {'limit': 1}, {})[2])
 
     assert content['numberReturned'] == 1
-    assert content['numberMatched'] == 31
+    assert content['numberMatched'] == 26
 
     # test ids
     ids = [
@@ -343,7 +343,7 @@ def test_items(config):
     assert content['numberReturned'] == 1
 
     cql_json = {
-        'bbox': [15,48,17,50],
+        'bbox': [15, 48, 17, 50],
         'filter-lang': 'cql2-json',
         'collections': ['S2MSI1Ci'],
         'filter': {
@@ -355,7 +355,7 @@ def test_items(config):
                         {
                             'property': 'identifier'
                         },
-                        'S2B_MSIL1C_20190910T095029_N0500_R079_T33UWQ_20230429T151337.SAFE'
+                        'S2B_MSIL1C_20190910T095029_N0500_R079_T33UWQ_20230429T151337.SAFE'  # noqa
                     ]
                 }
             ]
@@ -366,7 +366,7 @@ def test_items(config):
     assert content['numberMatched'] == 0
 
     cql_json = {
-        'bbox': [15,48,17,50],
+        'bbox': [15, 48, 17, 50],
         'filter-lang': 'cql2-json',
         'collections': ['S2MSI1C'],
         'filter': {
@@ -378,7 +378,7 @@ def test_items(config):
                         {
                             'property': 'identifier'
                         },
-                        'S2B_MSIL1C_20190910T095029_N0500_R079_T33UWQ_20230429T151337.SAFE'
+                        'S2B_MSIL1C_20190910T095029_N0500_R079_T33UWQ_20230429T151337.SAFE'  # noqa
                     ]
                 }
             ]
@@ -398,7 +398,6 @@ def test_items(config):
                 'S2MSI1C']
         }
     }
-
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 12
 
@@ -544,7 +543,70 @@ def test_items(config):
     }
 
     content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 1
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': '=',
+                    'args': [
+                        {
+                            'property': 'platform'
+                        },
+                        'Sentinel-2A'
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 2
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': '=',
+                    'args': [
+                        {
+                            'property': 'instrument'
+                        },
+                        'msi'
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 25
+
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': '<=',
+                    'args': [
+                        {
+                            'property': 'date_modified'
+                        },
+                        '2025-12-15'
+                    ]
+                }
+            ]
+        }
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 1
 
     cql_json = {
         "filter": {
@@ -727,7 +789,7 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     matched = json.loads(content)['numberMatched']
 
-    assert matched == 31
+    assert matched == 26
 
     # insert item collection
     headers, status, content = api.manage_collection_item(
@@ -740,7 +802,7 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     matched = json.loads(content)['numberMatched']
 
-    assert matched == 33
+    assert matched == 28
 
     # delete items from item collection
     headers, status, content = api.manage_collection_item(
