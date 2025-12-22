@@ -1836,7 +1836,7 @@ def _parse_stac_resource(context, repos, record):
         if instruments is not None:
             _set(context, recobj, 'pycsw:Instrument', ','.join(instruments))
         if record['properties'].get('gsd') is not None:
-            _set(context, recobj, 'pycsw:DistanceValue', record['properties']['gsd'])
+            _set(context, recobj, 'pycsw:DistanceValue', float(record['properties']['gsd']))
             _set(context, recobj, 'pycsw:DistanceUOM', 'm')
         if record.get('geometry') is not None:
             bbox_wkt = util.bbox2wktpolygon(util.geojson_geometry2bbox(record['geometry']))
@@ -1855,7 +1855,7 @@ def _parse_stac_resource(context, repos, record):
         if instruments is not None:
             _set(context, recobj, 'pycsw:Instrument', ','.join(instruments))
         if record.get('gsd') is not None:
-            _set(context, recobj, 'pycsw:DistanceValue', record['gsd'])
+            _set(context, recobj, 'pycsw:DistanceValue', float(record['gsd']))
             _set(context, recobj, 'pycsw:DistanceUOM', 'm')
         if 'extent' in record and 'spatial' in record['extent']:
             bbox_csv = ','.join(str(t) for t in record['extent']['spatial']['bbox'][0])
