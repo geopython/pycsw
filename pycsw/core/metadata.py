@@ -1501,7 +1501,7 @@ def _parse_iso(context, repos, exml):
         if len(md_identification.denominators) > 0:
             _set(context, recobj, 'pycsw:Denominator', md_identification.denominators[0])
         if len(md_identification.distance) > 0:
-            _set(context, recobj, 'pycsw:DistanceValue', md_identification.distance[0])
+            _set(context, recobj, 'pycsw:DistanceValue', float(md_identification.distance[0]))
         if len(md_identification.uom) > 0:
             _set(context, recobj, 'pycsw:DistanceUOM', md_identification.uom[0])
         if len(md_identification.classification) > 0:
