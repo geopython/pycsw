@@ -734,6 +734,11 @@ def test_items(config):
     }
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 11
+    for link in content['links']:
+        if link['rel'] == 'root':
+            continue
+        assert link['method'] == 'POST'
+        assert link['body'] == cql_json
 
 
 def test_item(config):
