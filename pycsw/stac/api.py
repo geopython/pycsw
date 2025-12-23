@@ -544,7 +544,11 @@ class STACAPI(API):
                         'args': cql_ops
                     }
                 else:
-                    json_post_data.update(*cql_ops)
+                    json_post_data['filter-lang'] = 'cql2-json'
+                    json_post_data['filter'] = {
+                        'op': 'and',
+                        'args': cql_ops
+                    }
 
         headers, status, response = super().items(headers_, json_post_data, args, collection)
 

@@ -493,27 +493,27 @@ def test_items(config):
     assert content['numberMatched'] == 1
 
     cql_json = {
-        "filter": {
-            "op": "and",
-            "args": [
+        'filter': {
+            'op': 'and',
+            'args': [
                 {
-                    "op": "=",
-                    "args": [
+                    'op': '=',
+                    'args': [
                         {
-                            "property": "parentidentifier"
+                            'property': 'parentidentifier'
                         },
-                        "S2MSI2A"
+                        'S2MSI2A'
                     ]
                 },
                 {
-                    "op": "in",
-                    "args": [
+                    'op': 'in',
+                    'args': [
                         {
-                            "property": "title"
+                            'property': 'title'
                         },
                         [
-                            "S2B_MSIL2A_20190910T095029_N0500_R079_T33UXP_20230430T083712.SAFE",  # noqa
-                            "S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE"  # noqa
+                            'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXP_20230430T083712.SAFE',  # noqa
+                            'S2B_MSIL2A_20190910T095029_N0500_R079_T33UXQ_20230430T083712.SAFE'  # noqa
                         ]
                     ]
                 }
@@ -609,27 +609,27 @@ def test_items(config):
     assert content['numberMatched'] == 1
 
     cql_json = {
-        "filter": {
-            "op": "and",
-            "args": [
+        'filter': {
+            'op': 'and',
+            'args': [
                 {
-                    "op": "=",
-                    "args": [
+                    'op': '=',
+                    'args': [
                         {
-                            "property": "parentidentifier"
+                            'property': 'parentidentifier'
                         },
-                        "S2MSI1C"
+                        'S2MSI1C'
                     ]
                 },
                 {
-                    "op": "s_intersects",
-                    "args": [
+                    'op': 's_intersects',
+                    'args': [
                         {
-                            "property": "geometry"
+                            'property': 'geometry'
                         },
                         {
-                            "type": "Point",
-                            "coordinates": [
+                            'type': 'Point',
+                            'coordinates': [
                                 15.32,
                                 46.88
                             ]
@@ -644,27 +644,27 @@ def test_items(config):
     assert content['numberMatched'] == 2
 
     cql_json = {
-        "filter": {
-            "op": "and",
-            "args": [
+        'filter': {
+            'op': 'and',
+            'args': [
                 {
-                    "op": "=",
-                    "args": [
+                    'op': '=',
+                    'args': [
                         {
-                            "property": "parentidentifier"
+                            'property': 'parentidentifier'
                         },
-                        "S2MSI2A"
+                        'S2MSI2A'
                     ]
                 },
                 {
-                    "op": "s_intersects",
-                    "args": [
+                    'op': 's_intersects',
+                    'args': [
                         {
-                            "property": "geometry"
+                            'property': 'geometry'
                         },
                         {
-                            "type": "Polygon",
-                            "coordinates": [
+                            'type': 'Polygon',
+                            'coordinates': [
                                 [
                                     [
                                         1.230469,
@@ -695,6 +695,43 @@ def test_items(config):
         }
     }
 
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 11
+
+    cql_json = {
+        'collections': [
+            'S2MSI2A'
+        ],
+        'intersects': {
+            'geometry': {
+                'type': 'Polygon',
+                'coordinates': [
+                    [
+                        [
+                            1.230469,
+                            33.72434
+                        ],
+                        [
+                            30.585938,
+                            33.72434
+                        ],
+                        [
+                            30.585938,
+                            52.802761
+                        ],
+                        [
+                            1.230469,
+                            52.802761
+                        ],
+                        [
+                            1.230469,
+                            33.72434
+                        ]
+                    ]
+                ]
+            }
+        }
+    }
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 11
 
