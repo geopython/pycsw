@@ -420,6 +420,7 @@ class STACAPI(API):
         """
 
         cql_ops = []
+        json_post_data2 = {}
 
         if collection not in self.get_all_collections():
             msg = 'Invalid collection'
@@ -432,57 +433,59 @@ class STACAPI(API):
             LOGGER.debug('Empty JSON payload')
             json_post_data = {}
 
-        if 'bbox' in json_post_data:
+        json_post_data2 = deepcopy(json_post_data)
+
+        if 'bbox' in json_post_data2:
             LOGGER.debug('Detected bbox query parameter')
 
             cql_ops.append({
                 'op': 's_intersects', 'args': [{
                     'property': 'geometry'
                     },
-                    {'bbox': json_post_data.pop('bbox')}]
+                    {'bbox': json_post_data2.pop('bbox')}]
             })
 
-        if 'limit' in json_post_data:
+        if 'limit' in json_post_data2:
             LOGGER.debug('Detected limit query parameter')
-            args['limit'] = json_post_data.pop('limit')
+            args['limit'] = json_post_data2.pop('limit')
 
-        if 'collections' in json_post_data:
+        if 'collections' in json_post_data2:
             LOGGER.debug('Detected collections query parameter')
             cql_ops.append({
                 'op': 'in',
                 'args': [{
                     'property': 'collections',
                     },
-                    json_post_data.pop('collections')
+                    json_post_data2.pop('collections')
                 ]
             })
 
-        if 'ids' in json_post_data:
+        if 'ids' in json_post_data2:
             LOGGER.debug('Detected ids query parameter')
             cql_ops.append({
                 'op': 'in',
                 'args': [{
                     'property': 'identifier',
                     },
-                    json_post_data.pop('ids')
+                    json_post_data2.pop('ids')
                 ]
             })
 
-        if 'intersects' in json_post_data:
+        if 'intersects' in json_post_data2:
             LOGGER.debug('Detected intersects query parameter')
             # TODO
 
-        if 'datetime' in json_post_data:
-            if '/' not in json_post_data['datetime']:
+        if 'datetime' in json_post_data2:
+            if '/' not in json_post_data2['datetime']:
                 cql_ops.append({
                     'op': '=',
                     'args': [
                         {'property': 'date'},
-                        json_post_data.pop('datetime')
+                        json_post_data2.pop('datetime')
                     ]
                 })
             else:
-                begin, end = json_post_data.pop('datetime').split('/')
+                begin, end = json_post_data2.pop('datetime').split('/')
                 if begin != '..':
                     cql_ops.append({
                         'op': '>=',
@@ -500,14 +503,14 @@ class STACAPI(API):
                         ]
                     })
 
-        if 'filter' in json_post_data:
+        if 'filter' in json_post_data2:
             LOGGER.debug('Detected filter query parameter')
-            json_post_data = json_post_data.pop('filter')
+            json_post_data2 = json_post_data2.pop('filter')
 
-        if not json_post_data and not cql_ops:
+        if not json_post_data2 and not cql_ops:
             LOGGER.debug('No JSON POST data or CQL ops')
             args['type'] = 'item'
-        elif not json_post_data and cql_ops:
+        elif not json_post_data2 and cql_ops:
             LOGGER.debug('No JSON POST data left')
             cql_ops.append({
                 'op': '=',
@@ -516,7 +519,7 @@ class STACAPI(API):
                     'item'
                 ]
             })
-            json_post_data = {
+            json_post_data2 = {
                 'op': 'and',
                 'args': cql_ops
             }
@@ -530,23 +533,27 @@ class STACAPI(API):
                 ]
             })
             LOGGER.debug('Adding STAC API query parameters to CQL2 JSON')
-            if json_post_data.get('op') in ['and', 'or']:
-                json_post_data['args'].extend(cql_ops)
+            if json_post_data2.get('op') in ['and', 'or']:
+                json_post_data2['args'].extend(cql_ops)
             else:
-                op_, args_ = json_post_data.get('op'), json_post_data.get('args')
+                op_, args_ = json_post_data2.get('op'), json_post_data2.get('args')
                 if None not in [op_, args_]:
                     cql_ops.append({
                         'op': op_,
                         'args': args_,
                     })
-                    json_post_data = {
+                    json_post_data2 = {
                         'op': 'and',
                         'args': cql_ops
                     }
                 else:
-                    json_post_data.update(*cql_ops)
+                    json_post_data2['filter-lang'] = 'cql2-json'
+                    json_post_data2['filter'] = {
+                        'op': 'and',
+                        'args': cql_ops
+                    }
 
-        headers, status, response = super().items(headers_, json_post_data, args, collection)
+        headers, status, response = super().items(headers_, json_post_data2, args, collection)
 
         response = json.loads(response)
         response2 = deepcopy(response)
@@ -587,6 +594,11 @@ class STACAPI(API):
         links2 = []
 
         for link in response2.get('links', []):
+            if json_post_data is not None:
+                LOGGER.debug('Adding link body')
+                link['method'] = 'POST'
+                link['body'] = json_post_data
+
             if link['rel'] in ['alternate', 'collection']:
                 continue
             link['href'] = link['href'].replace('collections/metadata:main/items', 'search')
