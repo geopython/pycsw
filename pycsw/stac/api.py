@@ -594,8 +594,8 @@ class STACAPI(API):
         links2 = []
 
         for link in response2.get('links', []):
-            if json_post_data is not None:
-                LOGGER.debug('Adding link body')
+            if json_post_data:
+                LOGGER.debug('Adding link method and body')
                 link['method'] = 'POST'
                 link['body'] = json_post_data
 

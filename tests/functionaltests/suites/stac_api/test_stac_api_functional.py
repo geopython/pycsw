@@ -171,6 +171,8 @@ def test_items(config):
         assert 'href' in link
         assert 'rel' in link
         assert 'metadata:main' not in link['href']
+        assert 'method' not in link
+        assert 'body' not in link
 
     # test GET KVP requests
     content = json.loads(api.items({}, None, {'bbox': '-180,-90,180,90'})[2])
