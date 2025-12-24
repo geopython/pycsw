@@ -417,7 +417,8 @@ class Csw(object):
                             self.context,
                             self.environ.get('local.app_root', None),
                             self.config['repository'].get('table'),
-                            repo_filter
+                            repo_filter,
+                            self.config['repository'].get('stable_sort', False)
                         )
                         LOGGER.debug(
                             'Repository loaded (local): %s.' % self.repository.dbtype)
