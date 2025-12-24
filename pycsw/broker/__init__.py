@@ -48,5 +48,6 @@ def load_client(def_: dict) -> BasePubSubClient:
 
 
 CLIENTS = {
-    'mqtt': 'pycsw.broker.mqtt.MQTTPubSubClient'
+    'mqtt': 'pycsw.broker.mqtt.MQTTPubSubClient',
+    'http': 'pycsw.broker.http.HTTPPubSubClient'
 }
