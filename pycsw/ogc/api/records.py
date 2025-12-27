@@ -948,6 +948,37 @@ class API:
             record = self.repository.query_ids([item])[0]
             response = record2json(record, self.config['server']['url'],
                                    collection, self.mode)
+            query = self.repository.session.query(
+                self.repository.dataset.identifier
+            ).order_by(
+                self.repository.dataset.identifier
+            )
+
+            ids = [r[0] for r in query.all()]
+
+            if item in ids:
+                idx = ids.index(item)
+
+                prev_id = ids[idx - 1] if idx > 0 else None
+                next_id = ids[idx + 1] if idx < len(ids) - 1 else None
+
+                response.setdefault('links', [])
+
+                if prev_id:
+                    response['links'].append({
+                        'rel': 'prev',
+                        'type': 'text/html',
+                        'title': 'Previous item',
+                        'href': f"{self.config['server']['url']}/collections/{collection}/items/{prev_id}?f=html"
+                    })
+
+                if next_id:
+                    response['links'].append({
+                        'rel': 'next',
+                        'type': 'text/html',
+                        'title': 'Next item',
+                        'href': f"{self.config['server']['url']}/collections/{collection}/items/{next_id}?f=html"
+                    })
         except IndexError:
             distributed = str2bool(args.get('distributed', False))
 
@@ -977,6 +1008,7 @@ class API:
         if 'json' in headers_['Content-Type']:
             headers_['Content-Type'] = 'application/geo+json'
 
+        print(response['links'])
         return self.get_response(200, headers_, response, 'item.html')
 
     def manage_collection_item(self, headers_, action='create', collection=None,
