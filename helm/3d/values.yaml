@@ -38,7 +38,7 @@ imagePullPolicy:
 
 image:
   repository: pycsw
-  tag: v6.2.2
+  tag:
 
 nodePort: 30030
 replicaCount: 1
