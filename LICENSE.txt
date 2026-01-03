@@ -1,7 +1,7 @@
 The MIT License (MIT)
 =====================
 
-Copyright &copy; 2010-2025 Tom Kralidis
+Copyright &copy; 2010-2026 Tom Kralidis
 Copyright &copy; 2011-2025 Angelos Tzotsos
 Copyright &copy; 2012-2015 Adam Hinz
 Copyright &copy; 2015-2021 Ricardo Garcia Silva
