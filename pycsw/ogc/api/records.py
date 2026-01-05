@@ -1243,6 +1243,8 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         for key, value in assets.items():
             value['rel'] = 'enclosure'
             value['name'] = key
+            if 'links' not in rec:
+                rec['links'] = []
             rec['links'].append(value)
 
         return rec
