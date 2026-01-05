@@ -63,7 +63,7 @@ extensions = []
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = {'.rst': 'restructuredtext'}
 
 locale_dirs = ['locale/'] # path is example but recommended.
 

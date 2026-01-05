@@ -48,7 +48,7 @@ def publish_message(pubsub_client, action: str, collection: str = None,
     :returns: `bool` of whether message publishing was successful
     """
 
-    channel = f'collections/{collection}'
+    channel = pubsub_client.channel or f'collections/{collection}'
     type_ = f'org.ogc.api.collection.item.{action}'
 
     if action in ['create', 'update']:

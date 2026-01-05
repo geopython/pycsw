@@ -1,8 +1,10 @@
 # =================================================================
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2025 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,55 +30,71 @@
 # =================================================================
 
 import logging
-import random
-from urllib.parse import urlparse
 
-from pycsw.core.util import remove_url_auth
+import requests
+
+from pycsw.broker.base import BasePubSubClient
 
 LOGGER = logging.getLogger(__name__)
 
 
-class BasePubSubClient:
-    """Base Pub/Sub client"""
+class HTTPPubSubClient(BasePubSubClient):
+    """HTTP client"""
 
-    def __init__(self, publisher_def: dict):
+    def __init__(self, broker_url):
         """
         Initialize object
 
-        :param publisher_def: publisher definition
+        :param publisher_def: provider definition
 
-        :returns: pycsw.broker.base.BasePubSubClient
+        :returns: pycsw.pubsub.http.HTTPPubSubClient
         """
 
-        self.type = None
-        self.client_id = f'pycsw-pubsub-{random.randint(0, 1000)}'
-        self.channel = publisher_def.get('channel')
+        super().__init__(broker_url)
+        self.type = 'http'
+        self.auth = None
 
-        self.show_link = publisher_def.get('show_link', True)
-        self.broker = publisher_def['url']
-        self.broker_url = urlparse(publisher_def['url'])
-        self.broker_safe_url = remove_url_auth(self.broker)
+        msg = f'Initializing to broker {self.broker_safe_url} with id {self.client_id}'  # noqa
+        LOGGER.debug(msg)
+
+        if None not in [self.broker_url.username, self.broker_url.password]:
+            LOGGER.debug('Setting credentials')
+            self.auth = (
+                self.broker_url.username,
+                self.broker_url.password
+            )
 
     def connect(self) -> None:
         """
-        Connect to a Pub/Sub broker
+        Connect to an HTTP broker
 
         :returns: None
         """
 
-        raise NotImplementedError()
+        LOGGER.debug('No connection to HTTP')
+        pass
 
-    def pub(self, channel: str, message: str) -> bool:
+    def pub(self, channel: str, message: str, qos: int = 1) -> bool:
         """
         Publish a message to a broker/channel
 
-        :param channel: `str` of channel
+        :param channel: `str` of topic
         :param message: `str` of message
 
         :returns: `bool` of publish result
         """
 
-        raise NotImplementedError()
+        LOGGER.debug(f'Publishing to broker {self.broker_safe_url}')
+        LOGGER.debug(f'Channel: {channel}')
+        LOGGER.debug(f'Message: {message}')
+
+        url = f'{self.broker}/{channel}'
+
+        try:
+            response = requests.post(url, auth=self.auth, json=message)
+            response.raise_for_status()
+        except Exception as err:
+            LOGGER.debug(f'Message publishing failed: {err}')
 
     def __repr__(self):
-        return f'<BasePubSubClient> {self.broker_safe_url}'
+        return f'<HTTPPubSubClient> {self.broker_safe_url}'
