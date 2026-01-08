@@ -40,7 +40,7 @@ Example directive:
        broker:
            type: http
            url: https://ntfy.sh
-           channel: messages/a/data  # optional
+           channel: messages-a-data  # optional
 
 .. note::
 
