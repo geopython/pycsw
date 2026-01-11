@@ -1817,7 +1817,7 @@ def _parse_oarec_record(context, repos, record):
 def _parse_stac_resource(context, repos, record):
     """Parse STAC resource"""
 
-    recobj = repos.dataset(record)
+    recobj = repos.dataset()
     keywords = []
     links = []
     bbox_wkt = None
