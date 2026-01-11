@@ -10,7 +10,7 @@
 # Copyright (c) 2020 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
 # Copyright (c) 2025 Tom Kralidis
-# Copyright (c) 2024 Angelos Tzotsos
+# Copyright (c) 2026 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -36,8 +36,8 @@
 #
 # =================================================================
 
-FROM python:3.12-slim-bookworm
-LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com"
+FROM python:3.12-slim-trixie
+LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com,gcpp.kalxas@gmail.com"
 
 # Build arguments
 # add "--build-arg BUILD_DEV_IMAGE=true" to Docker build command when building with test/doc tools
