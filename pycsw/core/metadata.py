@@ -3,10 +3,12 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
 #
 # Copyright (c) 2025 Tom Kralidis
 # Copyright (c) 2016 James F. Dickens
 # Copyright (c) 2017 Ricardo Garcia Silva
+# Copyright (c) 2026 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -1950,6 +1952,9 @@ def _parse_stac_resource(context, repos, record):
 
         if 'eo:cloud_cover' in record['properties']:
             _set(context, recobj, 'pycsw:CloudCover', float(record['properties']['eo:cloud_cover']))
+
+        if 'processing:lineage' in record['properties']:
+            _set(context, recobj, 'pycsw:Lineage', record['properties']['processing:lineage'])
 
         if 'collection' in record:
             _set(context, recobj, 'pycsw:ParentIdentifier', record['collection'])
