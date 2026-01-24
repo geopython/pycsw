@@ -2,7 +2,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -27,12 +27,12 @@
 #
 # =================================================================
 
+from datetime import datetime
 import json
 import logging
-from urllib.parse import urlencode
 
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import connections, Document, Index, Search, Text
+from elasticsearch_dsl import Document, Index, Search, Text
 from pygeofilter.backends.elasticsearch import to_filter
 import requests
 
@@ -40,8 +40,10 @@ LOGGER = logging.getLogger(__name__)
 
 ES_VERSION = '8.3'
 
+
 class Record(Document):
     identifier = Text()
+    parentidentifier = Text()
 
 
 class ElasticsearchRepository:
@@ -167,7 +169,9 @@ class ElasticsearchRepository:
         ''' Query for parent collections '''
 
         results = []
-        params = {}
+        params = {
+            'size': limit
+        }
 
         try:
             response = requests.get(self.es_search_url, params=params,
@@ -180,7 +184,12 @@ class ElasticsearchRepository:
             raise RuntimeError(msg)
 
         for hit in response['hits']['hits']:
-            if hit['_source']['type'] in ['collection', 'stac:Collection']:
+            if hit['_source']['type'] in ['Collection', 'stac:Collection']:
+                dataset = type('dataset', (object,), hit['_source'])
+                dataset.identifier = dataset.id
+                dataset.title = hit['_source'].get('title')
+                dataset.abstract = hit['_source'].get('description')
+
                 results.append(self._doc2record(hit['_source']))
 
         return results
@@ -266,8 +275,8 @@ class ElasticsearchRepository:
 
         return NotImplementedError()
 
-    def query(self, constraint=None, sortby=None, typenames=None, maxrecords=10,
-              startposition=0) -> tuple:
+    def query(self, constraint=None, sortby=None, typenames=None,
+              maxrecords=10, startposition=0) -> tuple:
         """
         Query records from underlying repository
         """
@@ -275,13 +284,13 @@ class ElasticsearchRepository:
         results = []
         record = Record()
 
-        print(record.search.__doc__)
         es_query = record.search(using=self.es, index=self.index_name)
 
         if constraint.get('ast') is not None:
             LOGGER.debug('Applying filter')
             es_query = es_query.query(
-                to_filter(constraint['ast'], {'ows:BoundingBox': 'geometry'}, version=ES_VERSION)).extra(track_total_hits=True)
+                to_filter(constraint['ast'], {'ows:BoundingBox': 'geometry'},
+                          version=ES_VERSION)).extra(track_total_hits=True)
 
         es_response = es_query.execute()
 
@@ -298,7 +307,14 @@ class ElasticsearchRepository:
         Transform a Solr doc into a pycsw dataset object
         """
 
-        record = doc.to_dict()
+        if not isinstance(doc, dict):
+            record = doc.to_dict()
+        else:
+            record = doc
+
         record['metadata_type'] = 'application/geo+json'
-        record['metadata'] = json.dumps(doc.to_dict())
+        record['metadata'] = json.dumps(record)
+        record['identifier'] = record['id']
+        record['parentidentifier'] = record.get('collection')
+        record['abstract'] = record.get('description')
         return self.dataset(record)
