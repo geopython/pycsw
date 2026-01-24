@@ -780,7 +780,6 @@ class API:
             LOGGER.debug(json_post_data)
             LOGGER.debug(cql_query)
             try:
-                print("CQL QUERY", cql_query)
                 ast = query_parser(cql_query)
                 LOGGER.debug(f'Abstract syntax tree: {ast}')
             except Exception as err:
