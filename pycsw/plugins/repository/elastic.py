@@ -44,6 +44,8 @@ ES_VERSION = '8.3'
 class Record(Document):
     identifier = Text()
     parentidentifier = Text()
+    title = Text()
+    description = Text()
 #    anytext = Text()
 #    datetime = Text()
 
@@ -288,17 +290,22 @@ class ElasticsearchRepository:
 
         results = []
         record = Record()
+        extra = {
+            'track_total_hits': True,
+            'from_': startposition,
+            'size': maxrecords
+        }
 
         es_query = record.search(using=self.es, index=self.index_name)
 
         if constraint.get('ast') is not None:
-            LOGGER.debug('Applying filter')
+            LOGGER.debug(f"Applying filter {constraint['ast']}")
 
             es_query = es_query.query(
                 to_filter(constraint['ast'], self.query_mappings,
-                          version=ES_VERSION)).extra(track_total_hits=True)
+                          version=ES_VERSION))
 
-        es_response = es_query.execute()
+        es_response = es_query.extra(**extra).execute()
 
         total = es_response.hits.total.value
         LOGGER.debug(f'Found: {total}')
