@@ -44,6 +44,8 @@ ES_VERSION = '8.3'
 class Record(Document):
     identifier = Text()
     parentidentifier = Text()
+#    anytext = Text()
+#    datetime = Text()
 
 
 class ElasticsearchRepository:
@@ -69,17 +71,20 @@ class ElasticsearchRepository:
 
         self.query_mappings = {
             # OGC API - Records mappings
+            'geometry': 'geometry',
             'identifier': 'identifier',
             'type': 'type',
             'typename': 'typename',
             'parentidentifier': 'parentidentifier',
+            'collection': 'parentidentifier',
             'collections': 'parentidentifier',
             'updated': 'insert_date',
             'title': 'title',
+            'abstract': 'abstract',
             'description': 'abstract',
             'keywords': 'keywords',
             'edition': 'edition',
-            'anytext': 'anytext',
+            'anytext': 'title',
             'bbox': 'wkt_geometry',
             'date': 'date',
             'datetime': 'date',
@@ -184,7 +189,7 @@ class ElasticsearchRepository:
             raise RuntimeError(msg)
 
         for hit in response['hits']['hits']:
-            if hit['_source']['type'] in ['Collection', 'stac:Collection']:
+            if hit['_source']['type'] == 'Collection':
                 dataset = type('dataset', (object,), hit['_source'])
                 dataset.identifier = dataset.id
                 dataset.title = hit['_source'].get('title')
@@ -288,8 +293,9 @@ class ElasticsearchRepository:
 
         if constraint.get('ast') is not None:
             LOGGER.debug('Applying filter')
+
             es_query = es_query.query(
-                to_filter(constraint['ast'], {'ows:BoundingBox': 'geometry'},
+                to_filter(constraint['ast'], self.query_mappings,
                           version=ES_VERSION)).extra(track_total_hits=True)
 
         es_response = es_query.execute()
