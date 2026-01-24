@@ -825,8 +825,6 @@ class Csw2:
             self.parent.kvp['startposition'] = 1
 
         # query repository
-        # print("AST", self.parent.kvp['constraint']['ast'])
-        # print("AST", dir(self.parent.kvp['constraint']['ast']))
         LOGGER.debug('Querying repository with constraint: %s,\
         sortby: %s, typenames: %s, maxrecords: %s, startposition: %s',
         self.parent.kvp['constraint'], self.parent.kvp['sortby'], self.parent.kvp['typenames'],
@@ -1007,8 +1005,6 @@ class Csw2:
                         self.parent.response = self.exceptionreport(
                         'NoApplicableCode', 'service',
                         'Record serialization failed: %s' % str(err))
-                        import traceback
-                        print(traceback.format_exc())
                         return self.parent.response
 
         if len(dsresults) > 0:  # return DistributedSearch results
@@ -1552,7 +1548,6 @@ class Csw2:
                     if isinstance(rlinks, str):
                         rlinks = util.jsonify_links(rlinks)
                     for link in rlinks:
-                        print("LINK", link)
                         ref = etree.SubElement(record, util.nspath_eval('dct:references',
                             self.parent.context.namespaces))
                         if link.get('protocol'):
