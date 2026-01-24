@@ -1495,7 +1495,9 @@ def build_anytext(name, value, repository):
         predicates2 = []
         for p in predicates:
             p2 = p
+            predicates2.append(p2.replace(name, '"title"'))
             predicates2.append(p2.replace(name, '"properties.title"'))
+            predicates2.append(p2.replace(name, '"description"'))
             predicates2.append(p2.replace(name, '"properties.description"'))
 
         predicates = predicates2
