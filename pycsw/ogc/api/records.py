@@ -647,9 +647,9 @@ class API:
                         collections = ','.join(f'"{x}"' for x in v.split(','))
                     else:
                         collections = ','.join(f'"{x}"' for x in v)
-                    query_args.append(f"parentidentifier IN ({collections})")
+                    query_args.append(f"collection IN ({collections})")
                 elif k == 'anytext':
-                    query_args.append(build_anytext(k, v))
+                    query_args.append(build_anytext(k, v, self.repository))
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
                 elif k == 'keywords':
@@ -660,12 +660,13 @@ class API:
                     else:
                         begin, end = v.split('/')
                         if begin != '..':
-                            query_args.append(f'time_begin >= "{begin}"')
+                            query_args.append(f'"properties.datetime" >= "{begin}"')
+                            #query_args.append(f'time_begin >= "{begin}"')
                         if end != '..':
                             query_args.append(f'time_end <= "{end}"')
                 elif k == 'q':
                     if v not in [None, '']:
-                        query_args.append(build_anytext('anytext', v))
+                        query_args.append(build_anytext('anytext', v, self.repository))
                 else:
                     query_args.append(f'{k} = "{v}"')
 
@@ -673,7 +674,10 @@ class API:
 
         if collection != 'metadata:main':
             LOGGER.debug('Adding virtual collection filter')
-            query_args.append(f'parentidentifier = "{collection}"')
+            query_args.append(f'collection = "{collection}"')
+
+        if self.repository.dbtype == 'Elasticsearch':
+            query_args = [qa.replace('"', "'") for qa in query_args]
 
         LOGGER.debug('Evaluating CQL and other specified filtering parameters')
         if cql_query is not None and query_args:
@@ -772,9 +776,11 @@ class API:
 
         if query_parser is not None and cql_query != {}:
             LOGGER.debug('Parsing CQL into AST')
+            LOGGER.debug('Parsing CQL into AST')
             LOGGER.debug(json_post_data)
             LOGGER.debug(cql_query)
             try:
+                print("CQL QUERY", cql_query)
                 ast = query_parser(cql_query)
                 LOGGER.debug(f'Abstract syntax tree: {ast}')
             except Exception as err:
@@ -1452,13 +1458,13 @@ def record2json(record, url, collection, mode='ogcapi-records'):
 
     return record_dict
 
-
-def build_anytext(name, value):
+def build_anytext(name, value, repository):
     """
     deconstructs free-text search into CQL predicate(s)
 
     :param name: property name
-    :param name: property value
+    :param value: property value
+    :param repository: repository object
 
     :returns: string of CQL predicate(s)
     """
@@ -1471,17 +1477,30 @@ def build_anytext(name, value):
 
     if len(tokens) == 1 and ' ' not in value:  # single term
         LOGGER.debug('Single term with no spaces')
-        return f"{name} ILIKE '%{value}%'"
+        predicates = [f"{name} ILIKE '%{value}%'"]
 
-    for token in tokens:
-        if ' ' in token:
-            tokens2 = token.split()
-            predicates2 = []
-            for token2 in tokens2:
-                predicates2.append(f"{name} ILIKE '%{token2}%'")
+    else:
+        for token in tokens:
+            if ' ' in token:
+                tokens2 = token.split()
+                predicates2 = []
+                for token2 in tokens2:
+                    predicates2.append(f"{name} ILIKE '%{token2}%'")
 
-            predicates.append('(' + ' AND '.join(predicates2) + ')')
-        else:
-            predicates.append(f"{name} ILIKE '%{token}%'")
+                predicates.append('(' + ' AND '.join(predicates2) + ')')
+            else:
+                predicates.append(f"{name} ILIKE '%{token}%'")
 
-    return f"({' OR '.join(predicates)})"
+    if name == 'anytext' and repository.dbtype == 'Elasticsearch':
+        predicates2 = []
+        for p in predicates:
+            p2 = p
+            predicates2.append(p2.replace(name, '"properties.title"'))
+            predicates2.append(p2.replace(name, '"properties.description"'))
+
+        predicates = predicates2
+
+    if len(predicates) == 1:
+        return predicates[0]
+    else:
+        return f"({' OR '.join(predicates)})"
