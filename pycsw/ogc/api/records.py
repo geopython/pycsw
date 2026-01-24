@@ -1600,7 +1600,21 @@ def build_anytext(name, value, repository):
             else:
                 predicates.append(f"{name} ILIKE '%{token}%'")
 
-    return f"({' OR '.join(predicates)})"
+    if name == 'anytext' and repository.dbtype == 'Elasticsearch':
+        predicates2 = []
+        for p in predicates:
+            p2 = p
+            predicates2.append(p2.replace(name, '"title"'))
+            predicates2.append(p2.replace(name, '"properties.title"'))
+            predicates2.append(p2.replace(name, '"description"'))
+            predicates2.append(p2.replace(name, '"properties.description"'))
+
+        predicates = predicates2
+
+    if len(predicates) == 1:
+        return predicates[0]
+    else:
+        return f"({' OR '.join(predicates)})"
 
 
 def sortby_to_order_by(sortby: Union[str, List[dict]], mappings: dict) -> list:
@@ -1636,20 +1650,3 @@ def sortby_to_order_by(sortby: Union[str, List[dict]], mappings: dict) -> list:
             value_list.append(mappings[sb['field']].asc())
 
     return value_list
-
-
-#=======
-#    if name == 'anytext' and repository.dbtype == 'Elasticsearch':
-#        predicates2 = []
-#        for p in predicates:
-#            p2 = p
-#            predicates2.append(p2.replace(name, '"properties.title"'))
-#            predicates2.append(p2.replace(name, '"properties.description"'))
-#
-#        predicates = predicates2
-#
-#    if len(predicates) == 1:
-#        return predicates[0]
-#    else:
-#        return f"({' OR '.join(predicates)})"
-#>>>>>>> 49e1347e (test fixes)
