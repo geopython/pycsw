@@ -711,7 +711,10 @@ class API:
                 json_post_data = {}
 
             if not json_post_data and collections and collections != ['metadata:main']:
-                cql_ops_list.append({'op': 'eq', 'args': [{'property': 'parentidentifier'}, collections[0]]})
+                propname = 'parentidentifier'
+                if self.repository.dbtype == 'Elasticsearch':
+                   propname = 'collection'
+                cql_ops_list.append({'op': 'eq', 'args': [{'property': propname}, collections[0]]})
             if bbox:
                 cql_ops_list.append({
                    'op': 's_intersects',
