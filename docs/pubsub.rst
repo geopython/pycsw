@@ -28,6 +28,7 @@ Example directive:
            type: mqtt
            url: mqtt://localhost:1883
            channel: messages/a/data  # optional
+           show_link: false  # default true
 
 HTTP
 ----
@@ -41,6 +42,7 @@ Example directive:
            type: http
            url: https://ntfy.sh
            channel: messages-a-data  # optional
+           show_link: true  # default true
 
 .. note::
 
@@ -51,6 +53,8 @@ Example directive:
 
 .. note::
 
-   If no ``channel`` is defined, the relevant OGC API endpoint is used.
+   If a ``channel`` is defined, it is used as a prefix to the relevant OGC API endpoint is used.
+
+   If a ``channel`` is not defined, only the relevant OGC API endpoint is used.
 
 .. _`OGC API Publish-Subscribe Workflow - Part 1: Core`: https://docs.ogc.org/DRAFTS/25-030.html
