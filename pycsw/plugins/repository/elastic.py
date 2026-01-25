@@ -149,12 +149,12 @@ class ElasticsearchRepository:
 
         return properties
 
-    def dataset(self, record):
+    def dataset(self):
         """
         Stub to mock a pycsw dataset object for Transactions
         """
 
-        return type('dataset', (object,), record)
+        return type('dataset', (object,))
 
     def query_ids(self, ids: list) -> list:
         """
