@@ -87,6 +87,9 @@ class HTTPPubSubClient(BasePubSubClient):
         LOGGER.debug(f'Publishing to broker {self.broker_safe_url}')
         LOGGER.debug(f'Channel: {channel}')
         LOGGER.debug(f'Message: {message}')
+        LOGGER.debug(f'Santizing channel for HTTP')
+        channel = channel.replace('/', '-')
+        LOGGER.debug(f'Santized channel: {channel}')
 
         url = f'{self.broker}/{channel}'
 
