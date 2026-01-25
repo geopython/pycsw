@@ -78,7 +78,7 @@ class ElasticsearchRepository:
             'type': 'type',
             'typename': 'typename',
             'parentidentifier': 'parentidentifier',
-            'collection': 'parentidentifier',
+            'collection': 'collection',
             'collections': 'parentidentifier',
             'updated': 'insert_date',
             'title': 'title',
@@ -301,9 +301,11 @@ class ElasticsearchRepository:
         if constraint.get('ast') is not None:
             LOGGER.debug(f"Applying filter {constraint['ast']}")
 
-            es_query = es_query.query(
-                to_filter(constraint['ast'], self.query_mappings,
-                          version=ES_VERSION))
+            filter_ = to_filter(constraint['ast'], self.query_mappings,
+                                version=ES_VERSION)
+
+            LOGGER.debug(f'filter {filter_}')
+            es_query = es_query.query(filter_)
 
         es_response = es_query.extra(**extra).execute()
 
