@@ -663,7 +663,8 @@ class API:
                             query_args.append(f'"properties.datetime" >= "{begin}"')
                             #query_args.append(f'time_begin >= "{begin}"')
                         if end != '..':
-                            query_args.append(f'time_end <= "{end}"')
+                            #query_args.append(f'time_end <= "{end}"')
+                            query_args.append(f'"properties.datetime" <= "{end}"')
                 elif k == 'q':
                     if v not in [None, '']:
                         query_args.append(build_anytext('anytext', v, self.repository))
