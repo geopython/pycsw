@@ -149,7 +149,7 @@ class ElasticsearchRepository:
 
         return properties
 
-    def dataset(self, record):
+    def dataset(self, record={}):
         """
         Stub to mock a pycsw dataset object for Transactions
         """
@@ -316,6 +316,21 @@ class ElasticsearchRepository:
             results.append(self._doc2record(doc))
 
         return total, results
+
+    def insert(self, record, source, insert_date):
+        item = json.loads(record.metadata)
+        LOGGER.debug(f"Inserting/updating item with identifier {item['id']}")
+        _ = self.es.index(index=self.index_name, id=item['id'], body=item)
+        LOGGER.debug('Item added')
+
+        return item['id']
+
+    def update(self, record=None, recprops=None, constraint=None):
+        self.insert(record, None, None)
+
+    def delete(self, constraint):
+        LOGGER.debug(f"Deleting item with {constraint['values'][0]}")
+        _ = self.es.delete(index=self.index_name, id=constraint['values'][0])
 
     def _doc2record(self, doc: dict):
         """
