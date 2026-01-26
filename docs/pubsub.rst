@@ -51,6 +51,11 @@ Example directive:
    * ``mqtt://username:password@localhost:1883``
    * ``https://username:password@localhost``
 
+   As with any section of the pycsw configuration, environment variables may be used as needed, for example
+   to set username/password information in a URL.  If ``pubsub.broker.url`` contains authentication, and
+   ``pubsub.broker.show_link`` is ``true``, the authentification inforation will be stripped from the URL
+   before displaying it on the landing page.
+
 .. note::
 
    If a ``channel`` is defined, it is used as a prefix to the relevant OGC API endpoint is used.

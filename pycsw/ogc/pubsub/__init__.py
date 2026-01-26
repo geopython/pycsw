@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -34,12 +34,14 @@ import uuid
 from typing import Union
 
 
-def publish_message(pubsub_client, action: str, collection: str = None,
-                    item: str = None, data: str = None) -> bool:
+def publish_message(pubsub_client, action: str, url: str,
+                    collection: str = None, item: str = None,
+                    data: str = None) -> bool:
     """
     Publish broker message
 
     :param pubsub_client: `paho.mqtt.client.Client` instance
+    :param url: `str` of server base URL
     :param action: `str` of action trigger name (create, update, delete)
     :param collection: `str` of collection identifier
     :param item: `str` of item identifier
@@ -62,34 +64,38 @@ def publish_message(pubsub_client, action: str, collection: str = None,
         media_type = 'text/plain'
         data_ = item
 
-    message = generate_ogc_cloudevent(type_, media_type, channel, data_)
+    message = generate_ogc_cloudevent(type_, media_type, url, channel, data_)
 
     pubsub_client.connect()
     pubsub_client.pub(channel, json.dumps(message))
 
 
-def generate_ogc_cloudevent(type_: str, media_type: str,
+def generate_ogc_cloudevent(type_: str, media_type: str, source: str,
                             subject: str, data: Union[dict, str]) -> dict:
     """
     Generate WIS2 Monitoring Event Message of WCMP2 report
 
     :param type_: `str` of CloudEvents type
-    :param subject: `str` of centre-id being reported
+    :param source: `str` of source
+    :param subject: `str` of subject
     :param media_type: `str` of media type
     :param data: `str` or `dict` of data
 
     :returns: `dict` of OGC CloudEvent payload
     """
 
-    if isinstance(data, bytes):
-        data2 = data.decode('utf-8')
-    else:
-        data2 = data
+    try:
+        data2 = json.loads(data)
+    except Exception:
+        if isinstance(data, bytes):
+            data2 = data.decode('utf-8')
+        else:
+            data2 = data
 
     message = {
         'specversion': '1.0',
         'type': type_,
-        'source': 'TODO',
+        'source': source,
         'subject': subject,
         'id': str(uuid.uuid4()),
         'time': datetime.now(UTC).strftime('%Y-%m-%dT%H:%M:%SZ'),
