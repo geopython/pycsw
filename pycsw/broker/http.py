@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2025 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -71,8 +71,7 @@ class HTTPPubSubClient(BasePubSubClient):
         :returns: None
         """
 
-        LOGGER.debug('No connection to HTTP')
-        pass
+        LOGGER.debug('Passing; connection to HTTP is lazy')
 
     def pub(self, channel: str, message: str, qos: int = 1) -> bool:
         """
@@ -87,9 +86,10 @@ class HTTPPubSubClient(BasePubSubClient):
         LOGGER.debug(f'Publishing to broker {self.broker_safe_url}')
         LOGGER.debug(f'Channel: {channel}')
         LOGGER.debug(f'Message: {message}')
-        LOGGER.debug(f'Santizing channel for HTTP')
+        LOGGER.debug(f'Sanitizing channel for HTTP')
         channel = channel.replace('/', '-')
-        LOGGER.debug(f'Santized channel: {channel}')
+        channel = channel.replace(':', '-')
+        LOGGER.debug(f'Sanitized channel: {channel}')
 
         url = f'{self.broker}/{channel}'
 

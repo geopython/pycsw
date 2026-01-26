@@ -1061,7 +1061,8 @@ class API:
 
         if self.pubsub_client is not None:
             LOGGER.debug('Publishing message')
-            publish_message(self.pubsub_client, action, collection, item, data)
+            publish_message(self.pubsub_client, self.config['server']['url'],
+                            action, collection, item, data)
 
         return self.get_response(code, headers_, response)
 
