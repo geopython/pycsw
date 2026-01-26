@@ -34,7 +34,7 @@ import uuid
 from typing import Union
 
 
-def publish_message(pubsub_client, action: str, url: str,
+def publish_message(pubsub_client, url: str, action: str,
                     collection: str = None, item: str = None,
                     data: str = None) -> bool:
     """
