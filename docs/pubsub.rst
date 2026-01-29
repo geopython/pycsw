@@ -53,7 +53,7 @@ Example directive:
 
    As with any section of the pycsw configuration, environment variables may be used as needed, for example
    to set username/password information in a URL.  If ``pubsub.broker.url`` contains authentication, and
-   ``pubsub.broker.show_link`` is ``true``, the authentication inforation will be stripped from the URL
+   ``pubsub.broker.show_link`` is ``true``, the authentication information will be stripped from the URL
    before displaying it on the landing page.
 
 .. note::
