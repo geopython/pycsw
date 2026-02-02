@@ -35,7 +35,7 @@ from pycsw import __version__
 LOGGER = logging.getLogger(__name__)
 
 
-class StaticContext(object):
+class StaticContext:
     """core configuration"""
     def __init__(self, prefix='csw30'):
         """initializer"""

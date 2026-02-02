@@ -211,9 +211,13 @@ def configuration(request, tests_directory, log_level):
 
     table_name = _get_table_name(suite_name, config, repository_url)
 
+    repo_config = {
+        'database': repository_url,
+        'table': table_name
+    }
+
     if not _repository_exists(repository_url, table_name):
-        _initialize_database(repository_url=repository_url,
-                             table_name=table_name,
+        _initialize_database(repo_config,
                              data_dir=data_dir,
                              test_dir=tests_directory,
                              export_dir=export_dir)
@@ -398,7 +402,7 @@ def _get_table_name(suite, config, repository_url):
     return result
 
 
-def _initialize_database(repository_url, table_name, data_dir, test_dir, export_dir):
+def _initialize_database(repo_config, data_dir, test_dir, export_dir):
     """Initialize database for tests.
 
     This function will create the database and load any test data that
@@ -406,10 +410,8 @@ def _initialize_database(repository_url, table_name, data_dir, test_dir, export_
 
     Parameters
     ----------
-    repository_url: str
-        URL for the repository, as used by SQLAlchemy engines
-    table_name: str
-        Name of the table that is to be used to store pycsw records
+    repo_config: dict
+        repository configuration
     data_dir: str
         Path to a directory that contains sample data records to be loaded
         into the database
@@ -419,6 +421,9 @@ def _initialize_database(repository_url, table_name, data_dir, test_dir, export_
         Diretory where the exported records are to be saved, if any
 
     """
+
+    repository_url = repo_config['database']
+    table_name = repo_config['table']
 
     context = StaticContext()
 
@@ -431,7 +436,7 @@ def _initialize_database(repository_url, table_name, data_dir, test_dir, export_
         extra_kwargs = {}
 
     setup(repository_url, table_name, **extra_kwargs)
-    repo = Repository(repository_url, context, table=table_name)
+    repo = Repository(repo_config, context)
 
     if len(os.listdir(data_dir)) > 0:
         print("Loading database data...")

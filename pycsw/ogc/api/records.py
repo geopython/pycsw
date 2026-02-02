@@ -32,7 +32,6 @@
 from datetime import datetime, UTC
 import json
 import logging
-from operator import itemgetter
 import os
 from urllib.parse import urlencode, quote
 
@@ -45,7 +44,6 @@ from pycsw.broker import load_client
 from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.metadata import parse_record
-from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, str2bool, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json, to_rfc3339
@@ -117,8 +115,6 @@ class API:
             self.limit = 10
         LOGGER.debug(f'limit: {self.limit}')
 
-        repo_filter = self.config['repository'].get('filter')
-
         custom_mappings_path = self.config['repository'].get('mappings')
         if custom_mappings_path is not None:
             md_core_model = load_custom_repo_mappings(custom_mappings_path)
@@ -130,19 +126,43 @@ class API:
 
         self.orm = 'sqlalchemy'
         from pycsw.core import repository
-        try:
-            LOGGER.info('Loading default repository')
-            self.repository = repository.Repository(
-                self.config['repository']['database'],
-                self.context,
-                table=self.config['repository']['table'],
-                repo_filter=repo_filter
-            )
-            LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
-        except Exception as err:
-            msg = f'Could not load repository {err}'
-            LOGGER.exception(msg)
-            raise
+
+        if 'source' in self.config['repository']:  # load custom repository
+            rs = self.config['repository']['source']
+            rs_modname, rs_clsname = rs.rsplit('.', 1)
+
+            rs_mod = __import__(rs_modname, globals(), locals(), [rs_clsname])
+            rs_cls = getattr(rs_mod, rs_clsname)
+
+            try:
+                connection_done = False
+                max_attempts = 0
+                max_retries = self.config['repository'].get('maxretries', 5)
+                while not connection_done and max_attempts <= max_retries:
+                    try:
+                        self.repository = rs_cls(self.config['repository'], self.context)
+                        LOGGER.debug('Custom repository %s loaded' % self.config['repository']['source'])
+                        connection_done = True
+                    except Exception as err:
+                        LOGGER.debug(f'Repository not loaded retry connection {max_attempts}: {err}')
+                        max_attempts += 1
+            except Exception as err:
+                msg = 'Could not load custom repository %s: %s' % (rs, err)
+                LOGGER.exception(msg)
+                error = 1
+                code = 'NoApplicableCode'
+                locator = 'service'
+                text = 'Could not initialize repository. Check server logs'
+
+        else:
+            try:
+                LOGGER.info('Loading default repository')
+                self.repository = repository.Repository(self.config['repository'], self.context)
+                LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
+            except Exception as err:
+                msg = f'Could not load repository {err}'
+                LOGGER.exception(msg)
+                raise
 
         if self.config.get('pubsub') is not None:
             LOGGER.debug('Loading PubSub client')
@@ -565,7 +585,6 @@ class API:
 
         response = {
             'type': 'FeatureCollection',
-            'facets': [],
             'features': [],
             'links': []
         }
@@ -628,9 +647,9 @@ class API:
                         collections = ','.join(f'"{x}"' for x in v.split(','))
                     else:
                         collections = ','.join(f'"{x}"' for x in v)
-                    query_args.append(f"parentidentifier IN ({collections})")
+                    query_args.append(f"collection IN ({collections})")
                 elif k == 'anytext':
-                    query_args.append(build_anytext(k, v))
+                    query_args.append(build_anytext(k, v, self.repository))
                 elif k == 'bbox':
                     query_args.append(f'BBOX(geometry, {v})')
                 elif k == 'keywords':
@@ -641,12 +660,14 @@ class API:
                     else:
                         begin, end = v.split('/')
                         if begin != '..':
-                            query_args.append(f'time_begin >= "{begin}"')
+                            query_args.append(f'"properties.datetime" >= "{begin}"')
+                            #query_args.append(f'time_begin >= "{begin}"')
                         if end != '..':
-                            query_args.append(f'time_end <= "{end}"')
+                            #query_args.append(f'time_end <= "{end}"')
+                            query_args.append(f'"properties.datetime" <= "{end}"')
                 elif k == 'q':
                     if v not in [None, '']:
-                        query_args.append(build_anytext('anytext', v))
+                        query_args.append(build_anytext('anytext', v, self.repository))
                 else:
                     query_args.append(f'{k} = "{v}"')
 
@@ -654,7 +675,10 @@ class API:
 
         if collection != 'metadata:main':
             LOGGER.debug('Adding virtual collection filter')
-            query_args.append(f'parentidentifier = "{collection}"')
+            query_args.append(f'collection = "{collection}"')
+
+        if self.repository.dbtype == 'Elasticsearch':
+            query_args = [qa.replace('"', "'") for qa in query_args]
 
         LOGGER.debug('Evaluating CQL and other specified filtering parameters')
         if cql_query is not None and query_args:
@@ -688,7 +712,10 @@ class API:
                 json_post_data = {}
 
             if not json_post_data and collections and collections != ['metadata:main']:
-                cql_ops_list.append({'op': 'eq', 'args': [{'property': 'parentidentifier'}, collections[0]]})
+                propname = 'parentidentifier'
+                if self.repository.dbtype == 'Elasticsearch':
+                   propname = 'collection'
+                cql_ops_list.append({'op': 'eq', 'args': [{'property': propname}, collections[0]]})
             if bbox:
                 cql_ops_list.append({
                    'op': 's_intersects',
@@ -716,60 +743,24 @@ class API:
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
             query_parser = parse_cql2_json
 
-        LOGGER.debug(f'query parser: {query_parser}')
-
-        if query_parser is not None and cql_query != {}:
-            LOGGER.debug('Parsing CQL into AST')
-            LOGGER.debug(json_post_data)
-            LOGGER.debug(cql_query)
-            try:
-                ast = query_parser(cql_query)
-                LOGGER.debug(f'Abstract syntax tree: {ast}')
-            except Exception as err:
-                msg = f'CQL parsing error: {str(err)}'
-                LOGGER.exception(msg)
-                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
-
-            LOGGER.debug('Transforming AST into filters')
-            try:
-                filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
-                LOGGER.debug(f'Filter: {filters}')
-            except Exception as err:
-                msg = f'CQL evaluator error: {str(err)}'
-                LOGGER.exception(msg)
-                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
-
-            query = self.repository.session.query(self.repository.dataset).filter(filters)
-            if facets_requested:
-                LOGGER.debug('Running facet query')
-                facets_results = self.get_facets(filters)
-        else:
-            query = self.repository.session.query(self.repository.dataset)
-            facets_results = self.get_facets()
-
-        if facets_requested:
-            response['facets'] = facets_results
-        else:
-            response.pop('facets')
-
-        if 'sortby' in args:
+        if args.get('sortby') is not None:
             LOGGER.debug('sortby specified')
-            sortby = args['sortby']
+            sortby = {
+                'order': 'ASC',
+                'propertyname': args['sortby']
+            }
 
-        if sortby is not None:
             LOGGER.debug('processing sortby')
-            if sortby.startswith('-'):
-                sortby = sortby.lstrip('-')
+            if args['sortby'].startswith('-'):
+                sortby['order'] = 'DESC'
+                sortby['propertyname'] = args['sortby'].lstrip('-')
 
-            if sortby not in list(self.repository.query_mappings.keys()):
+            if sortby['propertyname'] not in list(self.repository.query_mappings.keys()):
                 msg = 'Invalid sortby property'
                 LOGGER.exception(msg)
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
-
-            if args['sortby'].startswith('-'):
-                query = query.order_by(self.repository.query_mappings[sortby].desc())
-            else:
-                query = query.order_by(self.repository.query_mappings[sortby])
+        else:
+            sortby = None
 
         if limit is None and 'limit' in args:
             limit = int(args['limit'])
@@ -787,13 +778,29 @@ class API:
 
         offset = int(args.get('offset', 0))
 
-        LOGGER.debug(f'Query: {query}')
-        LOGGER.debug('Querying repository')
-        count = query.count()
-        LOGGER.debug(f'count: {count}')
-        LOGGER.debug(f'limit: {limit}')
-        LOGGER.debug(f'offset: {offset}')
-        records = query.limit(limit).offset(offset).all()
+        if query_parser is not None and cql_query != {}:
+            LOGGER.debug('Parsing CQL into AST')
+            LOGGER.debug('Parsing CQL into AST')
+            LOGGER.debug(json_post_data)
+            LOGGER.debug(cql_query)
+            try:
+                ast = query_parser(cql_query)
+                LOGGER.debug(f'Abstract syntax tree: {ast}')
+            except Exception as err:
+                msg = f'CQL parsing error: {str(err)}'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+        else:
+            ast = None
+
+        count, records = self.repository.query(
+            constraint={'ast': ast}, sortby=sortby, maxrecords=limit,
+            startposition=offset)
+
+        if facets_requested:
+            LOGGER.debug('Running facet query')
+            response['facets'] = self.repository.get_facets(ast)
 
         returned = len(records)
 
@@ -1165,39 +1172,6 @@ class API:
 
         return [default_collection] + [vc.identifier for vc in virtual_collections]
 
-    def get_facets(self, filters=None) -> dict:
-        """
-        Gets all facets for a given query
-
-        :returns: `dict` of facets
-        """
-
-        facets_results = {}
-
-        for facet in self.facets:
-            LOGGER.debug(f'Running facet for {facet}')
-            facetq = self.repository.session.query(self.repository.query_mappings[facet], self.repository.func.count(facet)).group_by(facet)
-
-            if filters is not None:
-                facetq = facetq.filter(filters)
-
-            LOGGER.debug('Writing facet query results')
-            facets_results[facet] = {
-                'type': 'terms',
-                'property': facet,
-                'buckets': []
-            }
-
-            for fq in facetq.all():
-                facets_results[facet]['buckets'].append({
-                    'value': fq[0],
-                    'count': fq[1]
-                })
-
-            facets_results[facet]['buckets'].sort(key=itemgetter('count'), reverse=True)
-
-        return facets_results
-
 
 def record2json(record, url, collection, mode='ogcapi-records'):
     """
@@ -1213,7 +1187,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
 
     if record.metadata_type in ['application/json', 'application/geo+json']:
         rec = json.loads(record.metadata)
-        if rec.get('stac_version') is not None and rec['type'] == 'Feature' and mode == 'stac-api':
+        if rec.get('stac_version') is not None and rec['type'] in ['Collection', 'Feature'] and mode == 'stac-api':
             LOGGER.debug('Returning native STAC representation')
             rec['links'].extend([{
                 'rel': 'self',
@@ -1487,13 +1461,13 @@ def record2json(record, url, collection, mode='ogcapi-records'):
 
     return record_dict
 
-
-def build_anytext(name, value):
+def build_anytext(name, value, repository):
     """
     deconstructs free-text search into CQL predicate(s)
 
     :param name: property name
-    :param name: property value
+    :param value: property value
+    :param repository: repository object
 
     :returns: string of CQL predicate(s)
     """
@@ -1506,17 +1480,32 @@ def build_anytext(name, value):
 
     if len(tokens) == 1 and ' ' not in value:  # single term
         LOGGER.debug('Single term with no spaces')
-        return f"{name} ILIKE '%{value}%'"
+        predicates = [f"{name} ILIKE '%{value}%'"]
 
-    for token in tokens:
-        if ' ' in token:
-            tokens2 = token.split()
-            predicates2 = []
-            for token2 in tokens2:
-                predicates2.append(f"{name} ILIKE '%{token2}%'")
+    else:
+        for token in tokens:
+            if ' ' in token:
+                tokens2 = token.split()
+                predicates2 = []
+                for token2 in tokens2:
+                    predicates2.append(f"{name} ILIKE '%{token2}%'")
 
-            predicates.append('(' + ' AND '.join(predicates2) + ')')
-        else:
-            predicates.append(f"{name} ILIKE '%{token}%'")
+                predicates.append('(' + ' AND '.join(predicates2) + ')')
+            else:
+                predicates.append(f"{name} ILIKE '%{token}%'")
 
-    return f"({' OR '.join(predicates)})"
+    if name == 'anytext' and repository.dbtype == 'Elasticsearch':
+        predicates2 = []
+        for p in predicates:
+            p2 = p
+            predicates2.append(p2.replace(name, '"title"'))
+            predicates2.append(p2.replace(name, '"properties.title"'))
+            predicates2.append(p2.replace(name, '"description"'))
+            predicates2.append(p2.replace(name, '"properties.description"'))
+
+        predicates = predicates2
+
+    if len(predicates) == 1:
+        return predicates[0]
+    else:
+        return f"({' OR '.join(predicates)})"
