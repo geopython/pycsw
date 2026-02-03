@@ -168,7 +168,7 @@ class Repository(object):
             'instrument': self.dataset.instrument,
             'sensortype': self.dataset.sensortype,
             'off_nadir': self.dataset.illuminationelevationangle,
-            'gsd': self.dataset.distancevalue
+            'distancevalue': self.dataset.distancevalue
         }
 
         if self.dbtype == 'postgresql':
@@ -307,7 +307,8 @@ class Repository(object):
 
         type_mappings = {
             'TEXT': 'string',
-            'VARCHAR': 'string'
+            'VARCHAR': 'string',
+            'FLOAT': 'number'
         }
 
         properties = {
