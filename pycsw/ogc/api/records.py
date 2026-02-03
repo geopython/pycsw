@@ -1214,11 +1214,12 @@ def record2json(record, url, collection, mode='ogcapi-records'):
     if record.metadata_type in ['application/json', 'application/geo+json']:
         rec = json.loads(record.metadata)
         if rec.get('stac_version') is not None and rec['type'] == 'Feature' and mode == 'stac-api':
+            collection_ = rec.get('collection', collection)
             LOGGER.debug('Returning native STAC representation')
             rec['links'].extend([{
                 'rel': 'self',
                 'type': 'application/geo+json',
-                'href': f"{url}/collections/{collection}/items/{rec['id']}"
+                'href': f"{url}/collections/{collection_}/items/{rec['id']}"
                 }, {
                 'rel': 'root',
                 'type': 'application/json',
@@ -1226,11 +1227,11 @@ def record2json(record, url, collection, mode='ogcapi-records'):
                 }, {
                 'rel': 'parent',
                 'type': 'application/json',
-                'href': f"{url}/collections/{collection}"
+                'href': f"{url}/collections/{collection_}"
                 }, {
                 'rel': 'collection',
                 'type': 'application/json',
-                'href': f"{url}/collections/{collection}"
+                'href': f"{url}/collections/{collection_}"
                 }
             ])
 

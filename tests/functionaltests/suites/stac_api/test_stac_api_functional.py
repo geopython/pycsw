@@ -389,6 +389,11 @@ def test_items(config):
 
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 1
+    for feature in content['features']:
+        for link in feature['links']:
+            if link['rel'] in ['self', 'parent', 'collection']:
+                collection_match = f"collections/{cql_json['collections'][0]}"
+                assert collection_match in link['href']
 
     cql_json = {
         'filter-lang': 'cql2-json',
