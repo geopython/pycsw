@@ -134,7 +134,7 @@ def test_queryables(config):
     assert content['$id'] == 'http://localhost/pycsw/oarec/stac/collections/metadata:main/queryables'  # noqa
     assert content['$schema'] == 'http://json-schema.org/draft/2019-09/schema'
 
-    assert len(content['properties']) == 17
+    assert len(content['properties']) == 18
 
     assert 'geometry' in content['properties']
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
@@ -389,6 +389,11 @@ def test_items(config):
 
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 1
+    for feature in content['features']:
+        for link in feature['links']:
+            if link['rel'] in ['self', 'parent', 'collection']:
+                collection_match = f"collections/{cql_json['collections'][0]}"
+                assert collection_match in link['href']
 
     cql_json = {
         'filter-lang': 'cql2-json',
@@ -774,7 +779,7 @@ def test_items(config):
                     'op': '<=',
                     'args': [
                         {
-                            'property': 'gsd'
+                            'property': 'distancevalue'
                         },
                         0.66
                     ]
