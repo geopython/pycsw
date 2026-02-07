@@ -446,8 +446,14 @@ class STACAPI(API):
             })
 
         if 'limit' in json_post_data2:
-            LOGGER.debug('Detected limit query parameter')
+            LOGGER.debug('Detected limit parameter')
             args['limit'] = json_post_data2.pop('limit')
+
+        if 'sortby' in json_post_data2:
+            LOGGER.debug('Detected sortby parameter')
+            args['sortby'] = json_post_data2['sortby'][0]['field']
+            if json_post_data2['sortby'][0].get('direction', 'asc') == 'desc':
+                args['sortby'] = f"-{args['sortby']}"
 
         if 'collections' in json_post_data2:
             LOGGER.debug('Detected collections query parameter')

@@ -791,6 +791,31 @@ def test_items(config):
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 1
 
+    cql_json = {
+        'filter-lang': 'cql2-json',
+        'filter': {
+            'op': 'and',
+            'args': [
+                {
+                    'op': '=',
+                    'args': [
+                        {
+                            'property': 'instrument'
+                        },
+                        'msi'
+                    ]
+                }
+            ]
+        },
+        'sortby': [{'field': 'datetime', 'direction': 'asc'}]
+    }
+
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['features'][0]['id'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33TWN_20190910T120910.SAFE'  # noqa
+    cql_json['sortby'][0]['direction'] = 'desc'
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['features'][0]['id'] == 'S2A_MSIL2A_20241128T092331_R093_T34SEJ_20241128T122153'  # noqa
+
 
 def test_item(config):
     api = STACAPI(config)
