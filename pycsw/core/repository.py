@@ -903,7 +903,7 @@ def setup(database, table, create_sfsql_tables=True, postgis_geometry_column='wk
 
         # distribution
         # links: JSON list of dicts with properties: name, description, protocol, url
-        Column('links', Text, index=True),
+        Column('links', Text, index=False),
         # contacts: JSON list of dicts with owslib contact properties, name, organization, email, role, etc.
         Column('contacts', Text, index=True),
     )
