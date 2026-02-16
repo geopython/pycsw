@@ -20,6 +20,14 @@
 <a href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items/{{ data['id'] }}">{{ data['id'] }}</a>
 {% endblock %}
 {% block body %}
+{% set nav_links = namespace(prev=None, next=None) %}
+{% for link in data['links'] %}
+  {% if link['rel'] == 'prev' %}
+    {% set nav_links.prev = link['href'] %}
+  {% elif link['rel'] == 'next' %}
+    {% set nav_links.next = link['href'] %}
+  {% endif %}
+{% endfor %}
 
 <section id="item">
 <div class="container-fluid">
@@ -179,6 +187,28 @@
           {% endif %}
         </tbody>
       </table>
+        <div class="d-flex justify-content-between mt-2">
+  <div>
+    {% if nav_links.prev %}
+      <a href="{{ nav_links.prev }}">
+        <button type="button" class="btn btn-sm btn-primary">Prev</button>
+      </a>
+    {% else %}
+      <button type="button" class="btn btn-sm btn-primary" disabled>Prev</button>
+    {% endif %}
+  </div>
+
+  <div>
+    {% if nav_links.next %}
+      <a href="{{ nav_links.next }}">
+        <button type="button" class="btn btn-sm btn-primary">Next</button>
+      </a>
+    {% else %}
+      <button type="button" class="btn btn-sm btn-primary" disabled>Next</button>
+    {% endif %}
+  </div>
+
+      </div>
     </div>
   </div>
 </div>
