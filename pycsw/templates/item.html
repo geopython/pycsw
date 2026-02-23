@@ -131,15 +131,19 @@
           <tr>
             <td>Temporal</td>
             <td>
+              {% if data['time'].get('date') %}
+              {{ data['time']['date'] }}
+              {% elif data['time'].get('timestamp') %}
+              {{ data['time']['timestamp'] }}
+              {% elif data['time'].get('interval') %}
               <ul>
-                {% if data['time'] is string  %}
-                  <li>{{ data['time'] }}</li>
-                {% else %}
-                  {% for d in data['time'] %}
-                    <li>{{ d }}</li>
-                  {% endfor %}
-                {% endif %}
+                <li>begin: {{ data['time']['interval'][0] }}</li>
+                <li>end: {{ data['time']['interval'][1] }}</li>
               </ul>
+              {% endif %}
+              {% if data['time'].get('resolution') %}
+              Resolution: {{ data['time']['resolution'] }}
+              {% endif %}
             </td>
           </tr>
           {% endif %}
