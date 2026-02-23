@@ -89,32 +89,60 @@
                       {% endfor %}
                     </ul>
                   </td>
-                {% elif key == 'providers' %}
+                {% elif key == 'contacts' %}
                   <td>
-                    {% for cnt in data['properties']['providers'] %}
-                      {% if 'name' in cnt and cnt['name'] not in [None,''] %}
-                        {{ cnt['name'] }} <br/>
-                      {% endif %}
-                      {% if 'roles' in cnt and cnt['roles'] is not string %}
-                      Role: {{ cnt['roles'] | map(attribute='name') | join(',') }} <br/>
-                      {% endif %}
-                      {% if 'positionName' in cnt and cnt['positionName'] not in [None,''] %}
-                      Position: {{ cnt['positionName'] }})<br/>
-                      {% endif %}
-                      {% if 'contactInfo' in cnt and cnt['contactInfo'] is not string %}
-                        {% for k,e in cnt['contactInfo'].get('phone',{}).items() %}
-                          {% if e %}{{ k }}: {{ e }}<br/>{% endif %}
-                        {% endfor %}
-                        {% for k,e in cnt['contactInfo'].get('email',{}).items() %}
-                          {% if e not in [None,''] %}{{ k }}: {{ e | urlize }}<br/>{% endif %}
-                        {% endfor %}
-                        {% for k,e in cnt['contactInfo'].get('address',{}).items() %}
-                          {{ k }}: {% for a,b in e.items() %}{% if b %}{{ b }}, {% endif %}{% endfor %}<br/>
-                        {% endfor %}
-                        {% if cnt['contactInfo']['url'] %}
-                          {{ cnt['contactInfo']['url'].get('href','') | urlize }}
+                    {% for cnt in data['properties']['contacts'] %}
+                      <table>
+                        {% if cnt.name %}
+                        <tr>
+                          <td>Name: {{ cnt.name }}</td>
+                        </tr>
                         {% endif %}
-                      {% endif %}
+                        <tr>
+                          <td>Roles: {{ cnt.roles | join(',') }} </td>
+                        </tr>
+                        {% if cnt.position %}
+                        <tr>
+                          <td>Position: {{ cnt['position'] }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td>Addresses</td>
+                        </tr>
+                        {% for address in cnt.addresses %}
+                        <tr>
+                          <td>
+                            <table>
+                              <tr>
+                                <td>
+                                  Address: {{ address['deliveryPoint'] | join(',') }}<br/>
+                                  City: {{ address['city'] }}<br/>
+                                  Administrative area: {{ address['administrativeArea'] }}<br/>
+                                  Postal code: {{ address['postalCode'] }}<br/>
+                                 Country: {{ address['country'] }}<br/>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                          <td>Phone: {{ cnt.phones | map(attribute='value') | join(', ') }}</td>
+                        </tr>
+                        <tr>
+                          <td>Email: {{ cnt.emails | map(attribute='value') | join(', ') }}</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Links:
+                            <ul>
+                              {% for link in cnt.links %}
+                              <li>{{ link.href | urlize }}</li>
+                              {% endfor %}
+                            </ul>
+                          </td>
+                        </tr>
+                      </table>
                     {% endfor %}
                   </td>
                 {% else %}
