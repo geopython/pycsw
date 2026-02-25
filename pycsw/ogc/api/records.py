@@ -1259,14 +1259,6 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         'links': []
     }
 
-    try:
-        dt, dt_type = to_rfc3339(record.date)
-        record_dict['time'] = {
-            dt_type: dt
-        }
-    except Exception:
-        record_dict['time'] = None
-
     # todo; for keywords with a scheme use the theme property
     if record.topicategory:
         tctheme = {
@@ -1456,23 +1448,29 @@ def record2json(record, url, collection, mode='ogcapi-records'):
         }
         record_dict['geometry'] = geometry
 
+    record_dict['time'] = None
+
     if record.time_begin or record.time_end:
+        LOGGER.debug('One of time_begin / time_end exists')
         if record.time_end not in [None, '']:
             if record.time_begin not in [None, '']:
+                LOGGER.debug('Start and end defined')
                 begin, _ = to_rfc3339(record.time_begin)
                 end, _ = to_rfc3339(record.time_end)
                 record_dict['time'] = {
                     'interval': [begin, end]
                 }
             else:
-                end, end_type = to_rfc3339(record.time_end)
+                LOGGER.debug('End only defined')
+                end, _ = to_rfc3339(record.time_end)
                 record_dict['time'] = {
-                    end_type: end
+                    'interval': ['..', end]
                 }
         else:
-            begin, begin_type = to_rfc3339(record.time_begin)
+            LOGGER.debug('Start only defined')
+            begin, _ = to_rfc3339(record.time_begin)
             record_dict['time'] = {
-                begin_type: begin
+                'interval': [begin, '..']
             }
 
     if mode == 'stac-api':
