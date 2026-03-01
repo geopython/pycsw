@@ -93,6 +93,7 @@ pycsw's runtime configuration is defined by ``default.yml``.  pycsw ships with a
 - **source**: the source of this repository only if not local (e.g. :ref:`geonode`, :ref:`odc`).  Supported values are ``geonode``, ``odc``
 - **filter**: server side database filter to apply as mask to all CSW requests (see :ref:`repofilters`)
 - **max_retries**: max number of retry attempts when connecting to records-repository database
+- **stable_sort**: enables stable sorting by appending an identifier sort as the last sortable. Default is ``false``
 - **facets**: comma-separated list of facetable properties for search results
 
 .. note::
