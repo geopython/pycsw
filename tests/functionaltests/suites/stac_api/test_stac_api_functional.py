@@ -206,6 +206,16 @@ def test_items(config):
     assert content['numberMatched'] == 26
     assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
+    content = json.loads(api.items({}, None, {'sortby': '-description,-title'})[2])  # noqa
+
+    assert content['numberMatched'] == 26
+    assert content['features'][6]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0213_R079_T33UXQ_20190910T124513.SAFE'  # noqa
+
+    content = json.loads(api.items({}, None, {'sortby': '-description,title'})[2])  # noqa
+
+    assert content['numberMatched'] == 26
+    assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
+
     params = {'filter': "title LIKE '%%T33TWN%%'"}
     content = json.loads(api.items({}, None, params)[2])
     assert content['numberMatched'] == 4
@@ -245,6 +255,14 @@ def test_items(config):
                                    {})[2])
     assert content['numberMatched'] == 26
     assert content['features'][5]['properties']['title'] == 'S2B_MSIL2A_20190910T095029_N0500_R079_T33TWN_20230430T083712.SAFE'  # noqa
+
+    content = json.loads(api.items({},
+                                   {'sortby': [{'field': 'title', 'direction': 'asc'},  # noqa
+                                               {'field': 'description', 'direction': 'desc'}  # noqa
+                                              ]},  # noqa
+                                   {})[2])
+    assert content['numberMatched'] == 26
+    assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
 
     headers, status, content = api.items({}, None, {}, 'foo')
     assert status == 400
