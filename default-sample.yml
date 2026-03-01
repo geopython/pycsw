@@ -129,6 +129,7 @@ repository:
     table: records
     #filter: type = 'http://purl.org/dc/dcmitype/Dataset'
     #max_retries: 5
+    #stable_sort: true
     facets:
         - type
         - title
