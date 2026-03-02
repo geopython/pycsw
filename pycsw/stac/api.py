@@ -451,9 +451,7 @@ class STACAPI(API):
 
         if 'sortby' in json_post_data2:
             LOGGER.debug('Detected sortby parameter')
-            args['sortby'] = json_post_data2['sortby'][0]['field']
-            if json_post_data2['sortby'][0].get('direction', 'asc') == 'desc':
-                args['sortby'] = f"-{args['sortby']}"
+            args['sortby'] = json_post_data2['sortby']
 
         if 'collections' in json_post_data2:
             LOGGER.debug('Detected collections query parameter')

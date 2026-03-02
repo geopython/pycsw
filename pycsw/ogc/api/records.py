@@ -34,6 +34,7 @@ import json
 import logging
 from operator import itemgetter
 import os
+from typing import List, Union
 from urllib.parse import urlencode, quote
 
 from owslib.ogcapi.records import Records
@@ -136,7 +137,8 @@ class API:
                 self.config['repository']['database'],
                 self.context,
                 table=self.config['repository']['table'],
-                repo_filter=repo_filter
+                repo_filter=repo_filter,
+                stable_sort=self.config['repository'].get('stable_sort', False)
             )
             LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
         except Exception as err:
@@ -598,9 +600,7 @@ class API:
 
             if 'sortby' in json_post_data:
                 LOGGER.debug('Detected sortby')
-                args['sortby'] = json_post_data['sortby'][0]['field']
-                if json_post_data['sortby'][0].get('direction', 'asc') == 'desc':
-                    args['sortby'] = f"-{args['sortby']}"
+                args['sortby'] = json_post_data['sortby']
 
             LOGGER.debug(f'Transformed args: {args}')
 
@@ -757,19 +757,12 @@ class API:
             sortby = args['sortby']
 
         if sortby is not None:
-            LOGGER.debug('processing sortby')
-            if sortby.startswith('-'):
-                sortby = sortby.lstrip('-')
+            sortbys = sortby_to_order_by(sortby, self.repository.query_mappings)
+            query = query.order_by(*sortbys)
 
-            if sortby not in list(self.repository.query_mappings.keys()):
-                msg = 'Invalid sortby property'
-                LOGGER.exception(msg)
-                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
-
-            if args['sortby'].startswith('-'):
-                query = query.order_by(self.repository.query_mappings[sortby].desc())
-            else:
-                query = query.order_by(self.repository.query_mappings[sortby])
+        if self.repository.stable_sort:
+            LOGGER.debug('Adding additional stable sort on identifier')
+            query = query.order_by(self.repository.query_mappings['identifier'].asc())
 
         if limit is None and 'limit' in args:
             limit = int(args['limit'])
@@ -1519,3 +1512,38 @@ def build_anytext(name, value):
             predicates.append(f"{name} ILIKE '%{token}%'")
 
     return f"({' OR '.join(predicates)})"
+
+
+def sortby_to_order_by(sortby: Union[str, List[dict]], mappings: dict) -> list:
+
+    sortby_ = []
+    value_list = []
+
+    if isinstance(sortby, str):
+        LOGGER.debug('Normalizing sortby into list of dicts')
+        for s in sortby.split(','):
+            s2 = s.lstrip('-')
+            if s.startswith('-'):
+                s2dir = 'desc'
+            else:
+                s2dir = 'asc'
+
+            sortby_.append({
+                'field': s2,
+                'direction': s2dir
+            })
+    else:
+       sortby_ = sortby
+
+    for sb in sortby_:
+        if sb['field'] not in list(mappings.keys()):
+            msg = 'Invalid sortby property'
+            LOGGER.exception(msg)
+            raise ValueError(msg)
+
+        if sb['direction'] == 'desc':
+            value_list.append(mappings[sb['field']].desc())
+        else:
+            value_list.append(mappings[sb['field']].asc())
+
+    return value_list
