@@ -689,6 +689,7 @@
     },
     "collection": "sentinel-2-l2a",
     "properties": {
+        "license": "other",
         "datetime": "2024-11-28T09:23:31.024000Z",
         "platform": "Sentinel-2A",
         "proj:epsg": 32634,

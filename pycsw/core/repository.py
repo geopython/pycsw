@@ -169,7 +169,8 @@ class Repository(object):
             'instrument': self.dataset.instrument,
             'sensortype': self.dataset.sensortype,
             'off_nadir': self.dataset.illuminationelevationangle,
-            'distancevalue': self.dataset.distancevalue
+            'distancevalue': self.dataset.distancevalue,
+            'otherconstraints': self.dataset.otherconstraints
         }
 
         if self.dbtype == 'postgresql':

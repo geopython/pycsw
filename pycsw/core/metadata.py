@@ -1834,6 +1834,7 @@ def _parse_stac_resource(context, repos, record):
         _set(context, recobj, 'pycsw:CreationDate', record['properties'].get('created'))
         _set(context, recobj, 'pycsw:Modified', record['properties'].get('updated'))
         _set(context, recobj, 'pycsw:Platform', record['properties'].get('platform'))
+        _set(context, recobj, 'pycsw:OtherConstraints', record['properties'].get('license'))
         instruments = record['properties'].get('instruments')
         if instruments is not None:
             _set(context, recobj, 'pycsw:Instrument', ','.join(instruments))
@@ -1853,6 +1854,7 @@ def _parse_stac_resource(context, repos, record):
         _set(context, recobj, 'pycsw:CreationDate', record.get('created'))
         _set(context, recobj, 'pycsw:Modified', record.get('updated'))
         _set(context, recobj, 'pycsw:Platform', record.get('platform'))
+        _set(context, recobj, 'pycsw:OtherConstraints', record.get('license'))
         instruments = record.get('instruments')
         if instruments is not None:
             _set(context, recobj, 'pycsw:Instrument', ','.join(instruments))
@@ -1876,6 +1878,7 @@ def _parse_stac_resource(context, repos, record):
         _set(context, recobj, 'pycsw:CreationDate', record.get('created'))
         _set(context, recobj, 'pycsw:Modified', record.get('updated'))
         _set(context, recobj, 'pycsw:Platform', record.get('platform'))
+        _set(context, recobj, 'pycsw:OtherConstraints', record.get('license'))
         instruments = record.get('instruments')
         if instruments is not None:
             _set(context, recobj, 'pycsw:Instrument', ','.join(instruments))

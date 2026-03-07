@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <gcpp.kalxas@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2022 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -134,7 +134,7 @@ def test_queryables(config):
     assert content['$id'] == 'http://localhost/pycsw/oarec/stac/collections/metadata:main/queryables'  # noqa
     assert content['$schema'] == 'http://json-schema.org/draft/2019-09/schema'
 
-    assert len(content['properties']) == 18
+    assert len(content['properties']) == 19
 
     assert 'geometry' in content['properties']
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
@@ -190,6 +190,11 @@ def test_items(config):
 
     assert content['numberMatched'] == 26
     assert content['features'][6]['properties']['title'] == 'S2B_MSIL1C_20190910T095029_N0208_R079_T33UWQ_20190910T120910.SAFE'  # noqa
+
+    content = json.loads(api.items({}, None, {'otherconstraints': 'other'})[2])
+
+    assert content['numberMatched'] == 1
+    assert content['features'][0]['properties']['license'] == 'other'
 
     content = json.loads(api.items({}, None, {'sortby': '-title'})[2])
 
