@@ -2,7 +2,7 @@
 -r requirements-standalone.txt
 -r requirements-pg.txt
 
-pytest==6.2.4
+pytest==9.0.3
 pytest-cov==2.12.0
 pytest-flake8==1.0.7
 pytest-timeout==1.4.2
