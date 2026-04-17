@@ -1021,8 +1021,8 @@ class API:
             try:
                 self.repository.insert(record, 'local', get_today_and_now())
             except Exception as err:
-                msg = f'Record creation failed: {err}'
-                LOGGER.exception(msg)
+                msg = 'Record creation failed'
+                LOGGER.exception(f'{msg}: {err}')
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
             code = 201
@@ -1533,7 +1533,7 @@ def sortby_to_order_by(sortby: Union[str, List[dict]], mappings: dict) -> list:
                 'direction': s2dir
             })
     else:
-       sortby_ = sortby
+        sortby_ = sortby
 
     for sb in sortby_:
         if sb['field'] not in list(mappings.keys()):
