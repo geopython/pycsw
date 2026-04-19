@@ -7,7 +7,7 @@ data:
     #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
     #          Angelos Tzotsos <tzotsos@gmail.com>
     #
-    # Copyright (c) 2024 Tom Kralidis
+    # Copyright (c) 2026 Tom Kralidis
     # Copyright (c) 2017 Ricardo Garcia Silva
     # Copyright (c) 2024 Angelos Tzotsos
     #
@@ -57,7 +57,10 @@ data:
         - apiso
     
     federatedcatalogues:
-        - http://catalog.data.gov/csw
+        - id: fedcat01
+          type: CSW 
+          title: Arctic SDI 
+          url: https://catalogue.arctic-sdi.org/csw
     
     manager:
         transactions: false

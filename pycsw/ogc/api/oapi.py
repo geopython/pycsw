@@ -2,7 +2,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -199,10 +199,10 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         'style': 'form',
         'explode': False
     }
-    oapi['components']['parameters']['distributed'] = {
-        'name': 'distributed',
+    oapi['components']['parameters']['distributedSearch'] = {
+        'name': 'distributedSearch',
         'in': 'query',
-        'description': 'Whether to invoke distributed mode',
+        'description': 'Whether to invoke distributed search',
         'schema': {
             'type': 'boolean',
             'default': False
@@ -392,6 +392,60 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
 
     path = {
         'get': {
+            'tags': ['Federated catalogs'],
+            'summary': 'Federated catalogs page',
+            'description': 'Federated catalogs page',
+            'operationId': 'getFederatedCatalogs',
+            'parameters': [
+                {'$ref': '#/components/parameters/collectionId'},
+                {'$ref': '#/components/parameters/f'}
+            ],
+            'responses': {
+                '200': {
+                    '$ref': '#/components/responses/FederatedCatalogs'
+                },
+                '500': {
+                    '$ref': '#/components/responses/ServerError'
+                }
+            }
+        }
+    }
+
+    oapi['paths']['/collections/{collectionId}/federatedCatalogs'] = path
+
+    path = {
+        'get': {
+            'tags': ['Federated catalogs'],
+            'summary': 'Federated catalogs page',
+            'description': 'Federated catalogs page',
+            'operationId': 'getFederatedCatalog',
+            'parameters': [
+                {'$ref': '#/components/parameters/collectionId'},
+                {'name': 'catalogId',
+                 'in': 'path',
+                 'description': 'catalog ID',
+                 'required': True,
+                 'schema': {
+                     'type': 'string'
+                 }
+                },
+                {'$ref': '#/components/parameters/f'}
+            ],
+            'responses': {
+                '200': {
+                    '$ref': '#/components/responses/FederatedCatalog'
+                },
+                '500': {
+                    '$ref': '#/components/responses/ServerError'
+                }
+            }
+        }
+    }
+
+    oapi['paths']['/collections/{collectionId}/federatedCatalogs/{catalogId}'] = path
+
+    path = {
+        'get': {
             'tags': ['metadata'],
             'summary': 'Records search items page',
             'description': 'Records search items page',
@@ -411,7 +465,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
                 {'$ref': '#/components/parameters/f'},
                 {'$ref': '#/components/parameters/offset'},
                 {'$ref': '#/components/parameters/facets'},
-                {'$ref': '#/components/parameters/distributed'},
+                {'$ref': '#/components/parameters/distributedSearch'},
                 {'$ref': '#/components/parameters/vendorSpecificParameters'}
             ],
             'responses': {
@@ -488,7 +542,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
             'parameters': [
                 {'$ref': '#/components/parameters/collectionId'},
                 {'$ref': '#/components/parameters/recordId'},
-                {'$ref': '#/components/parameters/distributed'},
+                {'$ref': '#/components/parameters/distributedSearch'},
                 f
             ],
             'responses': {

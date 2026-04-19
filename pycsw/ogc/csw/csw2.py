@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -834,9 +834,12 @@ class Csw2(object):
             from owslib.csw import CatalogueServiceWeb
             from owslib.ows import ExceptionReport
             for fedcat in self.parent.config.get('federatedcatalogues', []):
+                if fedcat['type'] != 'CSW':
+                    LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
+                    continue
                 LOGGER.debug('Performing distributed search on federated \
-                catalogue: %s.', fedcat)
-                remotecsw = CatalogueServiceWeb(fedcat, version='2.0.2', skip_caps=True)
+                catalogue: %s.', fedcat['url'])
+                remotecsw = CatalogueServiceWeb(fedcat['url'], version='2.0.2', skip_caps=True)
                 try:
                     if str(self.parent.request).startswith('http'):
                         self.parent.request = self.parent.request.split('?')[-1]
@@ -847,7 +850,7 @@ class Csw2(object):
                     if hasattr(remotecsw, 'results'):
                         LOGGER.debug(
                         'Distributed search results from catalogue \
-                        %s: %s.', fedcat, remotecsw.results)
+                        %s: %s.', fedcat['url'], remotecsw.results)
 
                         remotecsw_matches = int(remotecsw.results['matches'])
                         plural = 's' if remotecsw_matches != 1 else ''
@@ -855,16 +858,16 @@ class Csw2(object):
                             matched = str(int(matched) + remotecsw_matches)
                             dsresults.append(etree.Comment(
                             ' %d result%s from %s ' %
-                            (remotecsw_matches, plural, fedcat)))
+                            (remotecsw_matches, plural, fedcat['url'])))
 
                             dsresults.append(remotecsw.records)
                 except ExceptionReport as err:
-                    error_string = 'remote CSW %s returned exception: ' % fedcat
+                    error_string = 'remote CSW %s returned exception: ' % fedcat['url']
                     dsresults.append(etree.Comment(
                     ' %s\n\n%s ' % (error_string, err)))
                     LOGGER.exception(error_string)
                 except Exception as err:
-                    error_string = 'remote CSW %s returned error: ' % fedcat
+                    error_string = 'remote CSW %s returned error: ' % fedcat['url']
                     dsresults.append(etree.Comment(
                     ' %s\n\n%s ' % (error_string, err)))
                     LOGGER.exception(error_string)

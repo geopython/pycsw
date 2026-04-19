@@ -9,6 +9,9 @@ Features
 ========
 
 - implements `OGC API - Records - Part 1: Core`_
+- implements `OGC API - Records - Part 2: Facets`_
+- implements `OGC API - Records - Part 3: Create, Replace, Update, Delete, Harvest`_
+- implements `OGC API - Records - Part 4: Federated Search`_
 - implements `OGC API - Features - Part 3: Filtering`_
 - implements `STAC API`_
 - implements `Common Query Language (CQL2)`_
@@ -235,7 +238,10 @@ Paging
 
 - resumptionToken
 
-.. _`OGC API - Records - Part 1: Core`: https://ogcapi.ogc.org/records
+.. _`OGC API - Records - Part 1: Core`: https://docs.ogc.org/is/20-004r1/20-004r1.html
+.. _`OGC API - Records - Part 2: Facets`: https://docs.ogc.org/DRAFTS/25-013.html
+.. _`OGC API - Records - Part 3: Create, Replace, Update, Delete, Harvest`: https://docs.ogc.org/DRAFTS/25-015.html
+.. _`OGC API - Records - Part 4: Federated Search`: https://github.com/opengeospatial/ogcapi-records/blob/master/extensions/federated-search/document.adoc
 .. _`OGC API - Features - Part 3: Filtering`: http://docs.ogc.org/DRAFTS/19-079.html
 .. _`Common Query Language (CQL2)`: https://docs.ogc.org/DRAFTS/21-065.html
 .. _`OGC CSW`: https://www.ogc.org/standards/cat

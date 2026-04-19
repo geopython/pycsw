@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -202,6 +202,35 @@ def queryables(collection='metadata:main'):
     else:
         return get_response(api_.queryables(dict(request.headers), request.args,
                             collection))
+
+
+@BLUEPRINT.route('/collections/<collection>/federatedCatalogs')
+def federated_catalogues(collection='metadata:main'):
+    """
+    OGC API collection federated catalogues endpoint
+
+    :param collection: collection name
+
+    :returns: HTTP response
+    """
+
+    return get_response(api_.federated_catalogues(dict(request.headers), request.args,
+                        collection))
+
+
+@BLUEPRINT.route('/collections/<collection>/federatedCatalogs/<catalogue>')
+def federated_catalogue(collection='metadata:main', catalogue=None):
+    """
+    OGC API collection federated catalogue endpoint
+
+    :param collection: collection name
+    :param catalogue: catalogue
+
+    :returns: HTTP response
+    """
+
+    return get_response(api_.federated_catalogue(dict(request.headers), request.args,
+                        collection, catalogue))
 
 
 @BLUEPRINT.route('/collections/<collection>/items', methods=['GET', 'POST'])

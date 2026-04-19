@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2024 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -55,7 +55,20 @@ profiles:
     - apiso
 
 federatedcatalogues:
-    - http://catalog.data.gov/csw
+    - id: arctic-sdi-csw
+      type: CSW
+      title: Arctic SDI
+      url: https://catalogue.arctic-sdi.org/csw
+    - id: pycsw-cite-demo
+      type: OARec
+      title: pycsw OGC CITE demo and Reference Implementation
+      uresultsrl: https://demo.pycsw.org/cite
+    - id: fedcat03
+      type: STAC-API
+      title: Copernicus Data Space Ecosystem (CDSE) asset-level STAC catalogue
+      url: https://stac.dataspace.copernicus.eu/v1
+      collections:
+          - daymet-annual-pr
 
 manager:
     transactions: false

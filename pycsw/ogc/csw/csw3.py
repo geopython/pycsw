@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -983,12 +983,15 @@ class Csw3(object):
             from owslib.csw import CatalogueServiceWeb
             from owslib.ows import ExceptionReport
             for fedcat in self.parent.config.get('federatedcatalogues', []):
+                if fedcat['type'] != 'CSW':
+                    LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
+                    continue
                 LOGGER.info('Performing distributed search on federated \
-                catalogue: %s', fedcat)
+                catalogue: %s', fedcat['url'])
                 try:
                     start_time = time()
 
-                    remotecsw = CatalogueServiceWeb(fedcat, version='3.0.0', skip_caps=True)
+                    remotecsw = CatalogueServiceWeb(fedcat['url'], version='3.0.0', skip_caps=True)
                     if str(self.parent.request).startswith('http'):
                         self.parent.request = self.parent.request.split('?')[-1]
                         self.parent.request = self.parent.request.replace('mode=opensearch', '')
@@ -999,9 +1002,9 @@ class Csw3(object):
                     fsr = etree.SubElement(searchresults, util.nspath_eval(
                         'csw30:FederatedSearchResult',
                          self.parent.context.namespaces),
-                         catalogueURL=fedcat)
+                         catalogueURL=fedcat['url'])
 
-                    msg = 'Distributed search results from catalogue %s: %s.' % (fedcat, remotecsw.results)
+                    msg = 'Distributed search results from catalogue %s: %s.' % (fedcat['url'], remotecsw.results)
                     LOGGER.debug(msg)
                     fsr.append(etree.Comment(msg))
 
@@ -1021,12 +1024,12 @@ class Csw3(object):
                         search_result.append(etree.fromstring(result.xml, self.parent.context.parser))
 
                 except ExceptionReport as err:
-                    error_string = 'remote CSW %s returned exception: ' % fedcat
+                    error_string = 'remote CSW %s returned exception: ' % fedcat['url']
                     searchresults.append(etree.Comment(
                     ' %s\n\n%s ' % (error_string, err)))
                     LOGGER.exception(error_string)
                 except Exception as err:
-                    error_string = 'remote CSW %s returned error: ' % fedcat
+                    error_string = 'remote CSW %s returned error: ' % fedcat['url']
                     searchresults.append(etree.Comment(
                     ' %s\n\n%s ' % (error_string, err)))
                     LOGGER.exception(error_string)
