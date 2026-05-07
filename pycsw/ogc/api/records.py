@@ -1181,7 +1181,7 @@ class API:
 
         if collection == 'metadata:main':
             for fedcat_ in self.config.get('federatedcatalogues', []):
-                if fedcat_ == 'OARec':
+                if fedcat_['type'] == 'OARec':
                     fedcats.append(fedcat_)
 
         if headers_['Content-Type'] == 'text/html':
