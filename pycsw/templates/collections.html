@@ -34,6 +34,9 @@
         <td>
            <a title="items" href="{{ config['server']['url'] }}/collections/{{ col.id }}/items">items</a>
            <a title="queryables" href="{{ config['server']['url'] }}/collections/{{ col.id }}/queryables">queryables</a>
+           {% if col.id == 'metadata:main' and config['federatedcatalogues'] %}
+           <a title="federated catalogs" href="{{ config['server']['url'] }}/collections/{{ col.id }}/federatedCatalogs">federated catalogs</a>
+           {% endif %}
         </td>
       </tr>
       {% endfor %}

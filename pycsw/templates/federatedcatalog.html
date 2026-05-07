@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+{% block title %}{{ super() }} Federated catalog {% endblock %}
+
+{% block crumbs %}
+{{ super() }} /
+<a href="{{ config['server']['url'] }}/collections">Collections</a> /
+<a href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}">{{ data['title'] }}</a> /
+<a href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/federatedCatalogs">Federated catalogs</a> /
+<a href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/federatedCatalogs/{{ data['fedcat']['id'] }}">{{ data['fedcat']['title'] }}</a>
+{% endblock %}
+
+{% block body %}
+
+<section id="federatedcatalogue">
+  <h2>Federated catalog</h2>
+  <h2>{{ data['title'] }}</h2>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Type</th>
+        <th>Title</th>
+        <th>URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ data['fedcat']['id'] }}</td>
+        <td>{{ data['fedcat']['type'] }}</td>
+        <td>{{ data['fedcat']['title'] }}</td>
+        <td><a title="{{ data['fedcat']['title'] }}" href="{{ data['fedcat']['url'] }}">{{ data['fedcat']['url'] }}</a></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

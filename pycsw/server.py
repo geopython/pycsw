@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2016 James Dickens
 # Copyright (c) 2016 Ricardo Silva
@@ -330,7 +330,8 @@ class Csw(object):
 
             for fedcat in self.config['federatedcatalogues']:
                 LOGGER.debug('federated catalogue: %s', fedcat)
-                constraints['FederatedCatalogues']['values'].append(fedcat)
+                if fedcat['type'] == 'CSW':
+                    constraints['FederatedCatalogues']['values'].append(fedcat['url'])
 
         for key, value in self.outputschemas.items():
             get_records_params = ops['GetRecords']['parameters']

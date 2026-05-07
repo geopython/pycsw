@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -632,7 +632,9 @@ def cli_migrate_config(ctx, config, verbosity):
         elif name == 'profiles':
             dict_[name] = value.split(',')
         elif name == 'federatedcatalogues':
-            dict_[name] = value.split(',')
+            dict_[name] = []
+            for count, fc in enumerate(value.split(',')):
+                dict_[name].append({'id': f'fedcat{count}', 'url': fc})
         else:
             dict_['server'][name] = get_typed_value(value)
 

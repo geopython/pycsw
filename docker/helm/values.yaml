@@ -48,7 +48,10 @@ pycsw:
     profiles:
       - apiso
     # federatedcatalogues:
-    #   - http://catalog.data.gov/csw
+    #  - id: fedcat01
+    #    type: CSW 
+    #    title: Arctic SDI 
+    #    url: https://catalogue.arctic-sdi.org/csw
     manager:
       transactions: "false"
       allowed_ips:

@@ -57,9 +57,18 @@ in the CSW-all configuration:
 .. code-block:: yaml
 
   federatedcatalogues:
-      - http://localhost/pycsw/csw.py?config=CSW-1.yml
-      - http://localhost/pycsw/csw.py?config=CSW-2.yml
-      - http://localhost/pycsw/csw.py?config=CSW-3.yml
+      - id: fedcat01
+        type: CSW
+        title: Federated catalogue 1
+        url: http://localhost/pycsw/csw.py?config=CSW-1.yml
+      - id: fedcat02
+        type: CSW
+        title: Federated catalogue 2
+        url: http://localhost/pycsw/csw.py?config=CSW-2.yml
+      - id: fedcat03
+        type: CSW
+        title: Federated catalogue 3
+        url: http://localhost/pycsw/csw.py?config=CSW-3.yml
  
 At which point a CSW client request to CSW-all with ``distributedsearch=TRUE``, while specifying an optional ``hopCount``.  Query network topology:
 
@@ -88,7 +97,7 @@ A very important facet of distributed search is as per Annex B of OGC:CSW 2.0.2.
 OGC API - Records
 -----------------
 
-Experimental support for distibuted searching is available in pycsw's OGC API - Records support to allow for searching remote services.  The implementation uses the same approach as described above, operating in OGC API - Records mode.
+Experimental support for distibuted searching is available in pycsw's OGC API - Records support to allow for searching remote services.  The implementation uses the same approach as described above, operating in OGC API - Records mode as per `OGC API - Records - Part 4: Federated Search`_ (draft).
 
 .. note::
 
@@ -97,9 +106,46 @@ Experimental support for distibuted searching is available in pycsw's OGC API - 
 .. code-block:: yaml
 
   federatedcatalogues:
-      - https://example.org/collections/collection1
-      - https://example.org/collections/collection2
+      - id: fedcat01
+        type: OARec
+        title: Federated catalogue 1
+        url: https://example.org/collections/collection1
+      - id: fedcat02
+        type: OARec
+        title: Federated catalogue 2
+        url: https://example.org/collections/collection2
  
 With the above configured, a distributed search can be invoked as follows:
 
-http://localhost/collections/metadata:main/items?distributed=true
+http://localhost/collections/metadata:main/items?distributedSearch=true
+
+STAC API
+--------
+
+Experimental support for distibuted searching is available in pycsw's STAC API support to allow for searching remote services.  The implementation uses the same approach as described above.
+
+.. note::
+
+   The ``federatedcatalogues`` directives must point to a STAC API endpoint.
+
+.. code-block:: yaml
+
+  federatedcatalogues:
+    - id: fedcat03
+      type: STAC-API
+      title: Copernicus Data Space Ecosystem (CDSE) asset-level STAC catalogue
+      url: https://stac.dataspace.copernicus.eu/v1
+      collections:
+          - daymet-annual-pr
+
+
+.. note::
+
+   To constrain STAC API distributed search to specific collections, define one to many in the `collections` (array) directive.
+
+
+With the above configured, a distributed search can be invoked as follows:
+
+http://localhost/stac/search?distributedSearch=true
+
+.. _`OGC API - Records - Part 4: Federated Search`: https://github.com/opengeospatial/ogcapi-records/blob/master/extensions/federated-search/document.adoc

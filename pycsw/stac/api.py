@@ -2,7 +2,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -33,16 +33,17 @@ import logging
 import os
 
 from pygeofilter.parsers.ecql import parse as parse_ecql
+import requests
 
 from pycsw import __version__
 from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.records import API, build_anytext
-from pycsw.core.util import geojson_geometry2bbox, wkt2geom
+from pycsw.core.util import geojson_geometry2bbox, str2bool, wkt2geom
 
 LOGGER = logging.getLogger(__name__)
 
-#: Return headers for requests (e.g:X-Powered-By)
+# Return headers for requests (e.g:X-Powered-By)
 HEADERS = {
     'Content-Type': 'application/json',
     'X-Powered-By': f'pycsw {__version__}'
@@ -421,6 +422,15 @@ class STACAPI(API):
 
         cql_ops = []
         json_post_data2 = {}
+        distributed_search_args = {}
+
+        distributed = str2bool(args.get('distributedSearch', False))
+
+        if distributed:
+            LOGGER.debug('Setting distributed search args')
+            args.pop('distributedSearch', None)
+            distributed_search_args = deepcopy(args)
+            distributed_search_args.pop('type', None)
 
         if collection not in self.get_all_collections():
             msg = 'Invalid collection'
@@ -608,6 +618,39 @@ class STACAPI(API):
             link['href'] = link['href'].replace('collections/metadata:main/items', 'search')
             links2.append(link)
 
+        if distributed:
+            for fc in self.config.get('federatedcatalogues', []):
+                distributed_search_args2 = deepcopy(distributed_search_args)
+                if 'collections' in fc:
+                    if 'collections' in distributed_search_args2:
+                        distributed_search_args2['collections'] += ','.join(fc['collections'])
+                    else:
+                        distributed_search_args2['collections'] = ','.join(fc['collections'])
+
+                if fc['type'] != 'STAC-API':
+                    LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
+                    continue
+
+                LOGGER.debug(f"Running distributed search against {fc['url']}")
+                url = get_stac_search_url(fc['url'])
+                if url is None:
+                    LOGGER.debug('Unable to detect STAC API search URL; skipping')
+                    continue
+
+                response2['federatedSearchResults'][fc['id']] = {
+                    'type': 'FeatureCollection',
+                    'features': []
+                }
+
+                try:
+                    LOGGER.debug(f'Querying STAC API search: {url}')
+                    stac_search_results = requests.get(url, params=distributed_search_args2).json()
+                    for feature in stac_search_results['features']:
+                        response2['federatedSearchResults'][fc['id']]['features'].append(feature)
+                except Exception as err:
+                    LOGGER.warning(err)
+
+
         response2['links'] = links2
 
         response2['links'].extend([{
@@ -748,7 +791,16 @@ class STACAPI(API):
                 headers_=headers_, action=action, item=item, data=data)
 
 
-def links2stacassets(collection, record):
+def links2stacassets(collection: str, record: dict) -> dict:
+    """
+    Transform record enclosure links to STAC assets
+
+    :param collection: `str` of collection
+    :param record: `dict` of record
+
+    :returns: `dict` of updated record with link assets
+    """
+
     LOGGER.debug('Transforming enclosure links to STAC assets')
 
     if 'stac_version' not in record:
@@ -775,3 +827,30 @@ def links2stacassets(collection, record):
             record['assets'][asset_key] = asset
 
     return record
+
+
+def get_stac_search_url(url: str) -> str:
+    """
+    Get STAC search URL from a STAC API
+
+    :param url: `str` of STAC API landing page
+
+    :returns: `str` of STAC API search URL
+    """
+
+    stac_search_url = None
+
+    LOGGER.debug(f'Deriving STAC API search URL from {url}')
+    stac_root = requests.get(url).json()
+
+    for link in stac_root['links']:
+        if all([
+            link['rel'] == 'search',
+            link['type'] == 'application/geo+json',
+            link.get('method', 'GET') == 'GET'
+        ]):
+            LOGGER.debug(f"Found STAC search URL at {link['href']}")
+            stac_search_url = link['href']
+            break
+
+    return stac_search_url

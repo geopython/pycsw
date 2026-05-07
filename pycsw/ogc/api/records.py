@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -483,6 +483,23 @@ class API:
             'hreflang': self.config['server']['language']
         }]
 
+        if collection == 'metadata:main' and 'federatedcatalogues' in self.config:
+            LOGGER.debug('Adding federated catalogues')
+            response['links'].append({
+                'rel': 'http://www.opengis.net/def/rel/ogc/1.0/federatedCatalogues',
+                'type': 'application/json',
+                'title': 'Federated catalogs as JSON',
+                'href': f"{url_base}/federatedCatalogs?f=json",
+                'hreflang': self.config['server']['language']
+            })
+            response['links'].append({
+                'rel': 'http://www.opengis.net/def/rel/ogc/1.0/federatedCatalogues',
+                'type': 'text/html',
+                'title': 'Federated catalogs as HTML',
+                'href': f"{url_base}/federatedCatalogs?f=html",
+                'hreflang': self.config['server']['language']
+            })
+
         return self.get_response(200, headers_, response, 'collection.html')
 
     def queryables(self, headers_, args, collection='metadata:main'):
@@ -550,7 +567,7 @@ class API:
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
         reserved_query_params = [
-            'distributed',
+            'distributedsearch',
             'f',
             'facets',
             'filter',
@@ -796,19 +813,27 @@ class API:
         for record in records:
             response['features'].append(record2json(record, self.config['server']['url'], collection, self.mode))
 
-        response['distributedFeatures'] = []
+        response['federatedSearchResults'] = {}
 
-        distributed = str2bool(args.get('distributed', False))
+        distributed = str2bool(args.get('distributedsearch', False))
 
         if distributed:
             for fc in self.config.get('federatedcatalogues', []):
-                LOGGER.debug(f'Running distributed search against {fc}')
-                fc_url, _, fc_collection = fc.rsplit('/', 2)
+                if fc['type'] != 'OARec':
+                    LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
+                    continue
+                LOGGER.debug(f"Running distributed search against {fc['url']}")
+                fc_url, _, fc_collection = fc['url'].rsplit('/', 2)
+                response['federatedSearchResults'][fc['id']] = {
+                    'type': 'FeatureCollection',
+                    'features': []
+                }
                 try:
                     w = Records(fc_url)
+                    args.pop('distributedsearch')
                     fc_results = w.collection_items(fc_collection, **args)
                     for feature in fc_results['features']:
-                        response['distributedFeatures'].append(feature)
+                        response['federatedSearchResults'][fc['id']]['features'].append(feature)
                 except Exception as err:
                     LOGGER.warning(err)
 
@@ -946,7 +971,10 @@ class API:
 
             if distributed:
                 for fc in self.config.get('federatedcatalogues', []):
-                    LOGGER.debug(f'Running distributed item search against {fc}')
+                    if fc['type'] != 'OARec':
+                        LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
+                        continue
+                    LOGGER.debug(f"Running distributed item search against {fc['url']}")
                     fc_url, _, fc_collection = fc.rsplit('/', 2)
                     try:
                         w = Records(fc_url)
@@ -1133,18 +1161,79 @@ class API:
             }]
         }
 
-        if collection_name == 'metadata:main':
-            if 'federatedcatalogues' in self.config:
-                LOGGER.debug('Adding federated catalogues')
-                collection_info['federatedCatalogues'] = []
-                if self.config.get('federatedcatalogues') not in [None, '']:  # if empty in config
-                    for fc in self.config.get('federatedcatalogues'):
-                        collection_info['federatedCatalogues'].append({
-                            'type': 'OGC API - Records',
-                            'url': fc
-                        })
-
         return collection_info
+
+    def federated_catalogues(self, headers_, args, collection):
+        """
+        Provide federated catalogues
+
+        :param headers_: copy of HEADERS object
+        :param args: request parameters
+        :param collection: name of collection
+
+        :returns: tuple of headers, status code, content
+        """
+
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
+
+        response = {}
+        fedcats = []
+
+        if collection == 'metadata:main':
+            for fedcat_ in self.config.get('federatedcatalogues', []):
+                if fedcat_ == 'OARec':
+                    fedcats.append(fedcat_)
+
+        if headers_['Content-Type'] == 'text/html':
+            response['title'] = self.config['metadata']['identification']['title']
+            response['collection'] = collection
+            response['fedcats'] = fedcats
+        else:
+            response = fedcats
+
+        template = 'federatedcatalogs.html'
+
+        return self.get_response(200, headers_, response, template)
+
+    def federated_catalogue(self, headers_, args, collection, catalogue):
+        """
+        Provide federated catalogue
+
+        :param headers_: copy of HEADERS object
+        :param args: request parameters
+        :param collection: name of collection
+        :param catalogue: id of catalogue
+
+        :returns: tuple of headers, status code, content
+        """
+
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
+
+        response = {}
+        fedcat = None
+
+        if collection == 'metadata:main':
+            fedcats = self.config.get('federatedcatalogues')
+            for fedcat_ in fedcats:
+                if fedcat_['id'] == catalogue and fedcat_['type'] == 'OARec':
+                    fedcat = fedcat_
+                    break
+
+        if fedcat is None:
+            msg = 'Federated catalogue does not exist'
+            LOGGER.exception(msg)
+            return self.get_exception(404, headers_, 'InvalidParameterValue', msg)
+
+        if headers_['Content-Type'] == 'text/html':
+            response['title'] = self.config['metadata']['identification']['title']
+            response['collection'] = collection
+            response['fedcat'] = fedcat
+        else:
+            response = fedcat
+
+        template = 'federatedcatalog.html'
+
+        return self.get_response(200, headers_, response, template)
 
     def get_all_collections(self) -> list:
         """
