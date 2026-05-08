@@ -50,9 +50,11 @@ BLUEPRINT = Blueprint('pycsw', __name__, static_folder=STATIC,
                       static_url_path='/static')
 
 api_ = API(APP.config['PYCSW_CONFIG'])
+
 with open(os.getenv('PYCSW_CONFIG'), encoding='utf8') as fh:
     stacapi = STACAPI(yaml_load(fh))
 
+BLUEPRINT.config = api_.config
 
 def get_api_type(urlpath):
     """
