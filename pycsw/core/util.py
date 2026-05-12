@@ -239,7 +239,7 @@ def bbox2wktpolygon(bbox):
         bbox = wktenvelope2bbox(bbox)
     minx, miny, maxx, maxy = [f"{float(coord):.{precision}f}" for coord in bbox.split(",")]
     wktGeometry = 'POLYGON((%s %s, %s %s, %s %s, %s %s, %s %s))' \
-        % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
+        % (minx, miny, maxx, miny, maxx, maxy, minx, maxy, minx, miny)
     return wktGeometry
 
 
