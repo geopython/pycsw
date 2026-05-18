@@ -15,7 +15,7 @@ Distributed Searching
 CSW 2 / 3
 ---------
 
-pycsw has the ability to perform distributed searching against other CSW servers.  Distributed searching is disabled by default; to enable, ``federatedcatalogues`` must be set.  A CSW client must issue a GetRecords request with ``csw:DistributedSearch`` specified, along with an optional ``hopCount`` attribute (see subclause 10.8.4.13 of the CSW specification).  When enabled, pycsw will search all specified catalogues and return a unified set of search results to the client.  Due to the distributed nature of this functionality, requests will take extra time to process compared to queries against the local repository.
+pycsw has the ability to perform distributed searching against other CSW servers.  Distributed searching is disabled by default; to enable, ``distributedsearch`` must be set.  A CSW client must issue a GetRecords request with ``csw:DistributedSearch`` specified, along with an optional ``hopCount`` attribute (see subclause 10.8.4.13 of the CSW specification).  When enabled, pycsw will search all specified catalogues and return a unified set of search results to the client.  Due to the distributed nature of this functionality, requests will take extra time to process compared to queries against the local repository.
 
 Scenario: Federated Search
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -56,19 +56,21 @@ in the CSW-all configuration:
 
 .. code-block:: yaml
 
-  federatedcatalogues:
-      - id: fedcat01
-        type: CSW
-        title: Federated catalogue 1
-        url: http://localhost/pycsw/csw.py?config=CSW-1.yml
-      - id: fedcat02
-        type: CSW
-        title: Federated catalogue 2
-        url: http://localhost/pycsw/csw.py?config=CSW-2.yml
-      - id: fedcat03
-        type: CSW
-        title: Federated catalogue 3
-        url: http://localhost/pycsw/csw.py?config=CSW-3.yml
+  distributedsearch:
+      merge_results: false
+      catalogues:
+          - id: fedcat01
+            type: CSW
+            title: Federated catalogue 1
+            url: http://localhost/pycsw/csw.py?config=CSW-1.yml
+          - id: fedcat02
+            type: CSW
+            title: Federated catalogue 2
+            url: http://localhost/pycsw/csw.py?config=CSW-2.yml
+          - id: fedcat03
+            type: CSW
+            title: Federated catalogue 3
+            url: http://localhost/pycsw/csw.py?config=CSW-3.yml
  
 At which point a CSW client request to CSW-all with ``distributedsearch=TRUE``, while specifying an optional ``hopCount``.  Query network topology:
 
@@ -101,23 +103,29 @@ Experimental support for distibuted searching is available in pycsw's OGC API - 
 
 .. note::
 
-   The ``federatedcatalogues`` directives must point to an OGC API - Records **collections** endpoint.
+   The ``distributedsearch.catalogues`` directives must point to an OGC API - Records **collections** endpoint.
 
 .. code-block:: yaml
 
-  federatedcatalogues:
-      - id: fedcat01
-        type: OARec
-        title: Federated catalogue 1
-        url: https://example.org/collections/collection1
-      - id: fedcat02
-        type: OARec
-        title: Federated catalogue 2
-        url: https://example.org/collections/collection2
+  distributedsearch
+      catalogues:
+          - id: fedcat01
+            type: OARec
+            title: Federated catalogue 1
+            url: https://example.org/collections/collection1
+          - id: fedcat02
+            type: OARec
+            title: Federated catalogue 2
+            url: https://example.org/collections/collection2
  
 With the above configured, a distributed search can be invoked as follows:
 
 http://localhost/collections/metadata:main/items?distributedSearch=true
+
+Merging results
+^^^^^^^^^^^^^^^
+
+When `distributedsearch.merge_results` exists and is set to ``true``, pycsw will merge all results in ``federatedSearchResults``.  To prevent identifier collision, merged federated search results will have identifiers prefixed by their catalogue ``id`` (as defined in ``distributedsearch.catalogues[*].id``.  In addition, a ``federatedCatalogueId`` property is added to the feature with the catalogue id.
 
 STAC API
 --------
@@ -126,17 +134,18 @@ Experimental support for distibuted searching is available in pycsw's STAC API s
 
 .. note::
 
-   The ``federatedcatalogues`` directives must point to a STAC API endpoint.
+   The ``distributedsearch.catalogues`` directives must point to a STAC API endpoint.
 
 .. code-block:: yaml
 
-  federatedcatalogues:
-    - id: fedcat03
-      type: STAC-API
-      title: Copernicus Data Space Ecosystem (CDSE) asset-level STAC catalogue
-      url: https://stac.dataspace.copernicus.eu/v1
-      collections:
-          - daymet-annual-pr
+  distributedsearch:
+      catalogues:
+          - id: fedcat03
+            type: STAC-API
+            title: Copernicus Data Space Ecosystem (CDSE) asset-level STAC catalogue
+            url: https://stac.dataspace.copernicus.eu/v1
+            collections:
+                - daymet-annual-pr
 
 
 .. note::
@@ -147,5 +156,11 @@ Experimental support for distibuted searching is available in pycsw's STAC API s
 With the above configured, a distributed search can be invoked as follows:
 
 http://localhost/stac/search?distributedSearch=true
+
+Merging results
+^^^^^^^^^^^^^^^
+
+Merging behaviour is implemented in the same manner as OGC API - Records support.
+
 
 .. _`OGC API - Records - Part 4: Federated Search`: https://github.com/opengeospatial/ogcapi-records/blob/master/extensions/federated-search/document.adoc

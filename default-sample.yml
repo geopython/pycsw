@@ -54,21 +54,23 @@ logging:
 profiles:
     - apiso
 
-federatedcatalogues:
-    - id: arctic-sdi-csw
-      type: CSW
-      title: Arctic SDI
-      url: https://catalogue.arctic-sdi.org/csw
-    - id: pycsw-cite-demo
-      type: OARec
-      title: pycsw OGC CITE demo and Reference Implementation
-      uresultsrl: https://demo.pycsw.org/cite
-    - id: fedcat03
-      type: STAC-API
-      title: Copernicus Data Space Ecosystem (CDSE) asset-level STAC catalogue
-      url: https://stac.dataspace.copernicus.eu/v1
-      collections:
-          - daymet-annual-pr
+distributedsearch:
+    merge_results: false
+    catalogues:
+        - id: arctic-sdi-csw
+          type: CSW
+          title: Arctic SDI
+          url: https://catalogue.arctic-sdi.org/csw
+        - id: pycsw-cite-demo
+          type: OARec
+          title: pycsw OGC CITE demo and Reference Implementation
+          uresultsrl: https://demo.pycsw.org/cite
+        - id: fedcat03
+          type: STAC-API
+          title: Copernicus Data Space Ecosystem (CDSE) asset-level STAC catalogue
+          url: https://stac.dataspace.copernicus.eu/v1
+          collections:
+              - daymet-annual-pr
 
 manager:
     transactions: false

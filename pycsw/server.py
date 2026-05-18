@@ -323,12 +323,12 @@ class Csw(object):
             ops['GetDomain'] = self.context.gen_domains()
 
         # generate distributed search model, if specified in config
-        if 'federatedcatalogues' in self.config:
+        if 'distributedsearch' in self.config:
             LOGGER.info('Configuring distributed search')
 
             constraints['FederatedCatalogues'] = {'values': []}
 
-            for fedcat in self.config['federatedcatalogues']:
+            for fedcat in self.config['distributedsearch'].get('catalogues', []):
                 LOGGER.debug('federated catalogue: %s', fedcat)
                 if fedcat['type'] == 'CSW':
                     constraints['FederatedCatalogues']['values'].append(fedcat['url'])

@@ -41,15 +41,16 @@ logging:
     level: DEBUG
 #    logfile: /tmp/pycsw.log
 
-#federatedcatalogues:
-#    - id: fedcat01
-#      type: CSW
-#      title: Arctic SDI
-#      url: https://catalogue.arctic-sdi.org/csw
-#    - id: fedcat02
-#      type: OARec
-#      title: pycsw OGC CITE demo and Reference Implementation
-#      url: https://demo.pycsw.org/cite/collections/metadata:main
+#distributedsearch:
+#    catalogues
+#        - id: fedcat01
+#          type: CSW
+#          title: Arctic SDI
+#          url: https://catalogue.arctic-sdi.org/csw
+#        - id: fedcat02
+#          type: OARec
+#          title: pycsw OGC CITE demo and Reference Implementation
+#          url: https://demo.pycsw.org/cite/collections/metadata:main
 
 manager:
     transactions: false
