@@ -41,11 +41,13 @@ logging:
     level: DEBUG
 #    logfile: /tmp/pycsw.log
 
-federatedcatalogues:
-    - id: fedcat01
-      type: CSW
-      title: Demo of gisdata GitHub repository
-      url: https://demo.pycsw.org/gisdata/csw
+distributedsearch:
+    merge_results: false
+    catalogues:
+        - id: fedcat01
+          type: CSW
+          title: Demo of gisdata GitHub repository
+          url: https://demo.pycsw.org/gisdata/csw
 
 manager:
     transactions: false

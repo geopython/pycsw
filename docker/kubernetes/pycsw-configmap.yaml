@@ -56,11 +56,12 @@ data:
     profiles:
         - apiso
     
-    federatedcatalogues:
-        - id: fedcat01
-          type: CSW 
-          title: Arctic SDI 
-          url: https://catalogue.arctic-sdi.org/csw
+    distributedsearch:
+        catalogues:
+            - id: fedcat01
+              type: CSW 
+              title: Arctic SDI 
+              url: https://catalogue.arctic-sdi.org/csw
     
     manager:
         transactions: false

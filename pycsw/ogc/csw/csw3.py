@@ -974,7 +974,7 @@ class Csw3(object):
 
         hopcount = int(self.parent.kvp.get('hopcount', 2)) - 1
 
-        if ('federatedcatalogues' in self.parent.config and
+        if ('distributedsearch' in self.parent.config and
                 self.parent.kvp.get('distributedsearch') and
                 hopcount > 0):
 
@@ -982,7 +982,7 @@ class Csw3(object):
 
             from owslib.csw import CatalogueServiceWeb
             from owslib.ows import ExceptionReport
-            for fedcat in self.parent.config.get('federatedcatalogues', []):
+            for fedcat in self.parent.config.get('distributedsearch', {}).get('catalogues', []):
                 if fedcat['type'] != 'CSW':
                     LOGGER.debug(f"Federated catalogue type {fedcat['type']} not supported; skipping")
                     continue

@@ -618,7 +618,9 @@ def cli_migrate_config(ctx, config, verbosity):
             'inspire': {}
         },
         'profiles': [],
-        'federatedcatalogues': [],
+        'distributedsearch': {
+            'catalogues': []
+        },
         'repository': {}
     }
 
@@ -634,7 +636,7 @@ def cli_migrate_config(ctx, config, verbosity):
         elif name == 'federatedcatalogues':
             dict_[name] = []
             for count, fc in enumerate(value.split(',')):
-                dict_[name].append({'id': f'fedcat{count}', 'url': fc})
+                dict_['distributedsearch']['catalogues'].append({'id': f'fedcat{count}', 'url': fc})
         else:
             dict_['server'][name] = get_typed_value(value)
 

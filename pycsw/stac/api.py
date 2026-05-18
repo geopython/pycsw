@@ -424,7 +424,7 @@ class STACAPI(API):
         json_post_data2 = {}
         distributed_search_args = {}
 
-        distributed = str2bool(args.get('distributedSearch', False))
+        distributed = str2bool(args.get('distributedsearch', False))
 
         if distributed:
             LOGGER.debug('Setting distributed search args')
@@ -619,7 +619,10 @@ class STACAPI(API):
             links2.append(link)
 
         if distributed:
-            for fc in self.config.get('federatedcatalogues', []):
+            distributed_search = self.config.get('distributedsearch', {})
+            merge_results = distributed_search.get('merge_results', False)
+
+            for fc in distributed_search.get('catalogues', []):
                 distributed_search_args2 = deepcopy(distributed_search_args)
                 if 'collections' in fc:
                     if 'collections' in distributed_search_args2:
@@ -646,10 +649,18 @@ class STACAPI(API):
                     LOGGER.debug(f'Querying STAC API search: {url}')
                     stac_search_results = requests.get(url, params=distributed_search_args2).json()
                     for feature in stac_search_results['features']:
+                        if merge_results:
+                            feature['id'] = f"{fc['id']}::{feature['id']}"
+                            feature['federatedCatalogueId'] = fc['id']
                         response2['federatedSearchResults'][fc['id']]['features'].append(feature)
                 except Exception as err:
                     LOGGER.warning(err)
 
+            if merge_results:
+                LOGGER.debug('Merging federated search results into main items')
+                fsrs = response.pop('federatedSearchResults', None)
+                for key, value in fsrs.items():
+                    response2['features'].extend(value['features'])
 
         response2['links'] = links2
 

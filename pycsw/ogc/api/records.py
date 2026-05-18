@@ -483,7 +483,7 @@ class API:
             'hreflang': self.config['server']['language']
         }]
 
-        if collection == 'metadata:main' and 'federatedcatalogues' in self.config:
+        if collection == 'metadata:main' and 'distributedsearch' in self.config:
             LOGGER.debug('Adding federated catalogues')
             response['links'].append({
                 'rel': 'http://www.opengis.net/def/rel/ogc/1.0/federatedCatalogues',
@@ -818,7 +818,10 @@ class API:
         distributed = str2bool(args.get('distributedsearch', False))
 
         if distributed:
-            for fc in self.config.get('federatedcatalogues', []):
+            distributed_search = self.config.get('distributedsearch', {})
+            merge_results = distributed_search.get('merge_results', False)
+
+            for fc in distributed_search.get('catalogues', []):
                 if fc['type'] != 'OARec':
                     LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
                     continue
@@ -833,9 +836,18 @@ class API:
                     args.pop('distributedsearch')
                     fc_results = w.collection_items(fc_collection, **args)
                     for feature in fc_results['features']:
+                        if merge_results:
+                            feature['id'] = f"{fc['id']}::{feature['id']}"
+                            feature['federatedCatalogueId'] = fc['id']
                         response['federatedSearchResults'][fc['id']]['features'].append(feature)
                 except Exception as err:
                     LOGGER.warning(err)
+
+            if merge_results:
+                LOGGER.debug('Merging federated search results into main items')
+                fsrs = response.pop('federatedSearchResults', None)
+                for key, value in fsrs.items():
+                    response['features'].extend(value['features'])
 
         LOGGER.debug('Creating links')
 
@@ -970,7 +982,7 @@ class API:
             distributed = str2bool(args.get('distributed', False))
 
             if distributed:
-                for fc in self.config.get('federatedcatalogues', []):
+                for fc in self.config.get('distributedsearch', {}).get('catalogues', []):
                     if fc['type'] != 'OARec':
                         LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
                         continue
@@ -1180,7 +1192,7 @@ class API:
         fedcats = []
 
         if collection == 'metadata:main':
-            for fedcat_ in self.config.get('federatedcatalogues', []):
+            for fedcat_ in self.config.get('distributedsearch', {}).get('catalogues', []):
                 if fedcat_['type'] == 'OARec':
                     fedcats.append(fedcat_)
 
@@ -1213,7 +1225,7 @@ class API:
         fedcat = None
 
         if collection == 'metadata:main':
-            fedcats = self.config.get('federatedcatalogues')
+            fedcats = self.config.get('distributedsearch', {}).get('catalogues', [])
             for fedcat_ in fedcats:
                 if fedcat_['id'] == catalogue and fedcat_['type'] == 'OARec':
                     fedcat = fedcat_
