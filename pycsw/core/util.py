@@ -292,7 +292,7 @@ def getqattr(obj, name):
 def http_request(method, url, request=None, timeout=30):
     """Perform HTTP request"""
     if method == 'POST':
-        return http_post(url, request, timeout=timeout)
+        return http_post(url, request, timeout=timeout).text
     else:  # GET
         request = Request(url)
         request.add_header('User-Agent', 'pycsw (https://pycsw.org/)')
