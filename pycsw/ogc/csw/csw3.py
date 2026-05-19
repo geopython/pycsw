@@ -984,7 +984,7 @@ class Csw3(object):
             from owslib.ows import ExceptionReport
             for fedcat in self.parent.config.get('federatedcatalogues', []):
                 if fedcat['type'] != 'CSW':
-                    LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
+                    LOGGER.debug(f"Federated catalogue type {fedcat['type']} not supported; skipping")
                     continue
                 LOGGER.info('Performing distributed search on federated \
                 catalogue: %s', fedcat['url'])
