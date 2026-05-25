@@ -55,7 +55,7 @@ class ElasticsearchRepository:
     Class to interact with Elasticsearch metadata repository
     """
 
-    def __init__(self, repo_object: dict, context):
+    def __init__(self, repo_object: dict, context, stable_sort=False):
         """
         Initialize repository
         """
@@ -70,6 +70,7 @@ class ElasticsearchRepository:
         self.username = repo_object.get('username')
         self.password = repo_object.get('password')
         self.authentication = None
+        self.stable_sort = repo_object.get('stable_sort', False)
 
         self.query_mappings = {
             # OGC API - Records mappings
