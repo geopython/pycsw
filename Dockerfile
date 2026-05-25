@@ -76,7 +76,8 @@ COPY --chown=pycsw . .
 COPY docker/pycsw.yml ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
-RUN /venv/bin/pip3 install -e . --config-settings editable_mode=strict
+RUN /venv/bin/pip3 install --force-reinstall https://github.com/geopython/pygeofilter/archive/main.zip && \
+    /venv/bin/pip3 install -e . --config-settings editable_mode=strict
 
 WORKDIR /home/pycsw
 
