@@ -55,7 +55,7 @@ class ElasticsearchRepository:
     Class to interact with Elasticsearch metadata repository
     """
 
-    def __init__(self, repo_object: dict, context, stable_sort=False):
+    def __init__(self, repo_object: dict, context):
         """
         Initialize repository
         """
