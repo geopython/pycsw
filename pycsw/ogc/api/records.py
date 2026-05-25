@@ -159,11 +159,8 @@ class API:
             try: 
                 LOGGER.info('Loading default repository')
                 self.repository = repository.Repository(
-                    self.config['repository']['database'],
-                    self.context,
-                    table=self.config['repository']['table'],
-                    repo_filter=repo_filter,
-                    stable_sort=self.config['repository'].get('stable_sort', False)
+                    self.config['repository'],
+                    self.context
                 )    
                 LOGGER.debug(f'Repository loaded {self.repository.dbtype}')
             except Exception as err: 
