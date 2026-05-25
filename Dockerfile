@@ -9,7 +9,7 @@
 #
 # Copyright (c) 2020 Ricardo Garcia Silva
 # Copyright (c) 2020 Massimo Di Stefano
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2026 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -76,9 +76,9 @@ COPY --chown=pycsw . .
 COPY docker/pycsw.yml ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
-RUN /venv/bin/pip3 install -e . --config-settings editable_mode=strict && \
+RUN /venv/bin/pip3 install --force-reinstall https://github.com/geopython/pygeofilter/archive/main.zip && \
+    /venv/bin/pip3 install -e . --config-settings editable_mode=strict && \
     echo 'alias pycsw-admin.py="/venv/bin/pycsw-admin.py"' >> /etc/bash.bashrc
-
 
 WORKDIR /home/pycsw
 
