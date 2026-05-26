@@ -45,7 +45,7 @@ LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com,gcpp
 ARG BUILD_DEV_IMAGE="false"
 
 RUN apt-get update --yes && \
-    apt-get install --yes --no-install-recommends ca-certificates python3-setuptools libcap2 libssl3t64 libsystemd0 && \
+    apt-get install --yes --no-install-recommends ca-certificates python3-setuptools libcap2 libssl3t64 libsystemd0 git && \
     rm -rf /var/lib/apt/lists/*
 
 RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
@@ -76,7 +76,7 @@ COPY --chown=pycsw . .
 COPY docker/pycsw.yml ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
-RUN /venv/bin/pip3 install --force-reinstall https://github.com/geopython/pygeofilter/archive/main.zip && \
+RUN /venv/bin/pip3 install --force-reinstall git+https://github.com/magnarem/pygeofilter@fixes-05-2026 && \
     /venv/bin/pip3 install -e . --config-settings editable_mode=strict
 
 WORKDIR /home/pycsw
