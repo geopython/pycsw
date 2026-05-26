@@ -856,6 +856,7 @@ def test_item(config):
     assert content['geometry']['coordinates'][0][0][0] == 16.33660021997006
 
     assert 'assets' in content
+    assert 'bbox' in content
     assert 'B02' in content['assets']
     assert 'product-metadata' in content['assets']
 
