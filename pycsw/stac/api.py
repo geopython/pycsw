@@ -703,6 +703,13 @@ class STACAPI(API):
             return self.get_exception(
                     404, headers_, 'InvalidParameterValue', 'item not found')
 
+        if response.get('bbox') is None:
+            geometry = response.get('geometry')
+            if geometry is not None:
+                LOGGER.debug('Calculating bbox from geometry')
+                bbox = geojson_geometry2bbox(geometry)
+                response['bbox'] = [float(t) for t in bbox.split(',')]
+
         response = links2stacassets(collection, response)
 
         return self.get_response(status, headers_, response)
