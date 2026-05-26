@@ -471,27 +471,11 @@ class Repository:
             util.ranking_query_geometry = ''
 
         if sortby is not None:  # apply sorting
-            LOGGER.debug('sorting detected')
-            # TODO: Check here for dbtype so to extract wkt from postgis native to wkt
-            try:
-                sortby_column = getattr(self.dataset, sortby['propertyname'])
-            except:
-                sortby_column = self.query_mappings.get(sortby['propertyname'])
+            query = query.order_by(*sortby)
 
-            if sortby['order'] == 'DESC':  # descending sort
-                if 'spatial' in sortby and sortby['spatial']:  # spatial sort
-                    query = query.order_by(func.get_geometry_area(sortby_column).desc())
-                else:  # aspatial sort
-                    query = query.order_by(sortby_column.desc())
-            else:  # ascending sort
-                if 'spatial' in sortby and sortby['spatial']:  # spatial sort
-                    query = query.order_by(func.get_geometry_area(sortby_column))
-                else:  # aspatial sort
-                    query = query.order_by(sortby_column)
-            
-            if self.stable_sort:
-                identifier = self.context.md_core_model['mappings']['pycsw:Identifier']
-                query = query.order_by(identifier)
+        if self.stable_sort:
+            identifier = self.context.md_core_model['mappings']['pycsw:Identifier']
+            query = query.order_by(identifier)
             
         # always apply limit and offset
         return [total, self._get_repo_filter(query).limit(

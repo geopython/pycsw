@@ -762,21 +762,6 @@ class API:
             LOGGER.debug('Detected CQL JSON; ignoring all other query predicates')
             query_parser = parse_cql2_json
 
-        if args.get('sortby') is not None:
-            LOGGER.debug('sortby specified')
-            sortby = {
-                'order': 'ASC',
-                'propertyname': args['sortby']
-            }
-
-        if sortby is not None:
-            sortbys = sortby_to_order_by(sortby, self.repository.query_mappings)
-            query = query.order_by(*sortbys)
-
-        if self.repository.stable_sort:
-            LOGGER.debug('Adding additional stable sort on identifier')
-            query = query.order_by(self.repository.query_mappings['identifier'].asc())
-
         if limit is None and 'limit' in args:
             limit = int(args['limit'])
             LOGGER.debug('limit specified')
@@ -809,8 +794,21 @@ class API:
         else:
             ast = None
 
+        if 'sortby' in args:
+            LOGGER.debug('sortby specified')
+            sortby = args['sortby']
+
+        if sortby is not None:
+            sortbys = sortby_to_order_by(sortby, self.repository.query_mappings)
+        else:
+            sortbys = None
+
+#        if self.repository.stable_sort:
+#            LOGGER.debug('Adding additional stable sort on identifier')
+#            query = query.order_by(self.repository.query_mappings['identifier'].asc())
+
         count, records = self.repository.query(
-            constraint={'ast': ast}, sortby=sortby, maxrecords=limit,
+            constraint={'ast': ast}, sortby=sortbys, maxrecords=limit,
             startposition=offset)
 
         if facets_requested:
