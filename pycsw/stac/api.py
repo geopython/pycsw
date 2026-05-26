@@ -600,6 +600,11 @@ class STACAPI(API):
                     bbox = geojson_geometry2bbox(geometry)
                     record['bbox'] = [float(t) for t in bbox.split(',')]
 
+            contacts = record.get('properties', {}).get('contacts')
+
+            if contacts is not None:
+                record['properties']['providers'] = record['properties'].pop('contacts', None)
+
             for link in record['links']:
                 if link.get('rel') is None:
                     LOGGER.debug('Missing link relation; adding rel=related')
@@ -709,6 +714,11 @@ class STACAPI(API):
                 LOGGER.debug('Calculating bbox from geometry')
                 bbox = geojson_geometry2bbox(geometry)
                 response['bbox'] = [float(t) for t in bbox.split(',')]
+
+        contacts = response.get('properties', {}).get('contacts')
+
+        if contacts is not None:
+            response['properties']['providers'] = response['properties'].pop('contacts', None)
 
         response = links2stacassets(collection, response)
 
