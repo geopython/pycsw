@@ -1406,6 +1406,15 @@ def record2json(record, url, collection, mode='ogcapi-records'):
     if record.keywords:
         record_dict['properties']['keywords'] = [x for x in record.keywords.split(',')]
 
+    if record.cloudcover:
+        record_dict['properties']['cloudcover'] = record.cloudcover
+
+    if record.platform:
+        record_dict['properties']['platform'] = record.platform
+
+    if record.instrument:
+        record_dict['properties']['instrument'] = record.instrument
+
     if record.contacts not in [None, '', 'null']:
         rcnt = []
         roles = []
