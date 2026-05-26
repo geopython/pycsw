@@ -460,19 +460,34 @@ class Repository:
 
         total = self._get_repo_filter(query).count()
 
-        if util.ranking_pass:  # apply spatial ranking
-            # TODO: Check here for dbtype so to extract wkt from postgis native to wkt
-            LOGGER.debug('spatial ranking detected')
-            LOGGER.debug('Target WKT: %s', getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']))
-            LOGGER.debug('Query WKT: %s', util.ranking_query_geometry)
-            query = query.order_by(func.get_spatial_overlay_rank(getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']), util.ranking_query_geometry).desc())
-            # trying to make this wsgi safe
-            util.ranking_pass = False
-            util.ranking_query_geometry = ''
-
         if sortby is not None:  # apply sorting
-            query = query.order_by(*sortby)
+            if isinstance(sortby, list):
+                query = query.order_by(*sortby)
+            else:
+                if util.ranking_pass:  # apply spatial ranking
+                    # TODO: Check here for dbtype so to extract wkt from postgis native to wkt
+                    LOGGER.debug('spatial ranking detected')
+                    LOGGER.debug('Target WKT: %s', getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']))
+                    LOGGER.debug('Query WKT: %s', util.ranking_query_geometry)
+                    query = query.order_by(func.get_spatial_overlay_rank(getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']), util.ranking_query_geometry).desc())
+                    # trying to make this wsgi safe
+                    util.ranking_pass = False
+                    util.ranking_query_geometry = ''
 
+                # TODO: Check here for dbtype so to extract wkt from postgis native to wkt
+                sortby_column = getattr(self.dataset, sortby['propertyname'])
+
+                if sortby['order'] == 'DESC':  # descending sort
+                    if 'spatial' in sortby and sortby['spatial']:  # spatial sort
+                        query = query.order_by(func.get_geometry_area(sortby_column).desc())
+                    else:  # aspatial sort
+                        query = query.order_by(sortby_column.desc())
+                else:  # ascending sort
+                    if 'spatial' in sortby and sortby['spatial']:  # spatial sort
+                        query = query.order_by(func.get_geometry_area(sortby_column))
+                    else:  # aspatial sort
+                        query = query.order_by(sortby_column)
+            
         if self.stable_sort:
             identifier = self.context.md_core_model['mappings']['pycsw:Identifier']
             query = query.order_by(identifier)
