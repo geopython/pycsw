@@ -662,11 +662,14 @@ class API:
                     ids = ','.join(f'"{x}"' for x in v.split(','))
                     query_args.append(f"identifier IN ({ids})")
                 elif k == 'collections':
+                    collections_ = k
+                    if self.repository.dbtype == 'Elasticsearch':
+                        collections_ = 'parentidentifier'
                     if isinstance(v, str):
                         collections = ','.join(f'"{x}"' for x in v.split(','))
                     else:
                         collections = ','.join(f'"{x}"' for x in v)
-                    query_args.append(f"collection IN ({collections})")
+                    query_args.append(f"{collections_} IN ({collections})")
                 elif k == 'anytext':
                     query_args.append(build_anytext(k, v, self.repository))
                 elif k == 'bbox':
@@ -679,22 +682,30 @@ class API:
                     else:
                         begin, end = v.split('/')
                         if begin != '..':
-                            query_args.append(f'"properties.datetime" >= "{begin}"')
+                            query_args.append(f'"datetime" >= "{begin}"')
                             #query_args.append(f'time_begin >= "{begin}"')
                         if end != '..':
                             #query_args.append(f'time_end <= "{end}"')
-                            query_args.append(f'"properties.datetime" <= "{end}"')
+                            query_args.append(f'"datetime" <= "{end}"')
                 elif k == 'q':
                     if v not in [None, '']:
                         query_args.append(build_anytext('anytext', v, self.repository))
                 else:
-                    query_args.append(f'{k} = "{v}"')
+                    if k not in self.repository.query_mappings:
+                        msg = f'Invalid property specified'
+                        LOGGER.exception(f'{msg}: {k}')
+                        return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+                    else:
+                        query_args.append(f'{k} = "{v}"')
 
         facets_requested = str2bool(args.get('facets', False))
 
         if collection != 'metadata:main':
             LOGGER.debug('Adding virtual collection filter')
-            query_args.append(f'collection = "{collection}"')
+            collection_ = 'parentidentifier'
+            if self.orm == 'sqlalchemy':
+                collection_ = 'parentidentifier'
+                query_args.append(f'{collection_} = "{collection}"')
 
         if self.repository.dbtype == 'Elasticsearch':
             query_args = [qa.replace('"', "'") for qa in query_args]
@@ -730,11 +741,12 @@ class API:
                 LOGGER.debug('No CQL specified, only query parameters')
                 json_post_data = {}
 
-            if not json_post_data and collections and collections != ['metadata:main']:
-                propname = 'parentidentifier'
-                if self.repository.dbtype == 'Elasticsearch':
-                   propname = 'collection'
-                cql_ops_list.append({'op': 'eq', 'args': [{'property': propname}, collections[0]]})
+#            if not json_post_data and collections and collections != ['metadata:main']:
+#                propname = 'parentidentifier'
+#                if self.repository.dbtype == 'Elasticsearch':
+#                   propname = 'collection'
+#                cql_ops_list.append({'op': 'eq', 'args': [{'property': propname}, collections[0]]})
+
             if bbox:
                 cql_ops_list.append({
                    'op': 's_intersects',
@@ -749,6 +761,15 @@ class API:
                     'op': 'in',
                     'args': [{'property': 'identifier'}, ids]
                 })
+
+            #if collections and collections != ['metadata:main']:
+            print("COLL", collections)
+            if collections:
+                print("COLL")
+                propname = 'parentidentifier'
+                if self.orm != 'sqlalchemy':
+                   propname = 'collection'
+                cql_ops_list.append({'op': 'eq', 'args': [{'property': propname}, collections[0]]})
 
             if len(cql_ops_list) > 1:
                 json_post_data = {
@@ -1285,6 +1306,7 @@ def record2json(record, url, collection, mode='ogcapi-records'):
     if record.metadata_type in ['application/json', 'application/geo+json']:
         rec = json.loads(record.metadata)
         if rec.get('stac_version') is not None and rec['type'] in ['Collection', 'Feature'] and mode == 'stac-api':
+            collection_ = rec.get('collection', collection)
             LOGGER.debug('Returning native STAC representation')
             rec['links'].extend([{
                 'rel': 'self',
