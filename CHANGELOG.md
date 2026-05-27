@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.4.2](https://github.com/MapColonies/pycsw/compare/v6.4.1...v6.4.2) (2026-05-27)
+
+
+### Helm Changes
+
+* upgrade nginx version and refactor configuration files tosupport nginx extensions( MAPCO-10120) ([#113](https://github.com/MapColonies/pycsw/issues/113)) ([8d97c67](https://github.com/MapColonies/pycsw/commit/8d97c6743053821ad451a5cf3ee6e3482200e28d))
+
 ## [6.4.1](https://github.com/MapColonies/pycsw/compare/v6.4.0...v6.4.1) (2026-01-19)
 
 
