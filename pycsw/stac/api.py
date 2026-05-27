@@ -256,7 +256,7 @@ class STACAPI(API):
             filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
             LOGGER.debug(f'Filter: {filters}')
 
-        virtual_collections = self.repository.query_collections(filters, limit)
+        virtual_collections = self.repository.query_collections(filters=filters, limit=limit)
 
         for virtual_collection in virtual_collections:
             virtual_collection_info = self.get_collection_info(
@@ -432,7 +432,7 @@ class STACAPI(API):
             distributed_search_args = deepcopy(args)
             distributed_search_args.pop('type', None)
 
-        if collection not in self.get_all_collections():
+        if collection not in self.get_collections(collection=collection):
             msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
@@ -694,7 +694,7 @@ class STACAPI(API):
         :returns: tuple of headers, status code, content
         """
 
-        if collection not in self.get_all_collections():
+        if collection not in self.get_collections(collection=collection):
             msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
@@ -790,7 +790,7 @@ class STACAPI(API):
     def manage_collection_item(self, headers_, action='create', item=None, data=None, collection=None):
         if action in ['create', 'update']:
             if (data is not None and data.get('type', '') == 'Feature' and
-                    collection not in self.get_all_collections()):
+                    collection not in self.get_collections(collection=collection)):
                 msg = 'Invalid collection'
                 LOGGER.exception(msg)
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
