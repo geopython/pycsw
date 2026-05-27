@@ -518,7 +518,7 @@ class API:
         if 'json' in headers_['Content-Type']:
             headers_['Content-Type'] = 'application/schema+json'
 
-        if collection not in self.get_all_collections():
+        if collection not in self.get_collections(collection=collection):
             msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
@@ -599,7 +599,7 @@ class API:
         collections = []
         cql_ops_list = []
 
-        if collection not in self.get_all_collections():
+        if collection not in self.get_collections(collection=collection):
             msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
@@ -968,7 +968,7 @@ class API:
         record = None
         headers_['Content-Type'] = self.get_content_type(headers_, args)
 
-        if collection not in self.get_all_collections():
+        if collection not in self.get_collections(collection=collection):
             msg = 'Invalid collection'
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
@@ -1247,7 +1247,7 @@ class API:
 
         return self.get_response(200, headers_, response, template)
 
-    def get_all_collections(self) -> list:
+    def get_collections(self, collection=None) -> list:
         """
         Get all collections
 
@@ -1255,7 +1255,7 @@ class API:
         """
 
         default_collection = 'metadata:main'
-        virtual_collections = self.repository.query_collections(limit=self.limit)
+        virtual_collections = self.repository.query_collections(collection=collection, limit=self.limit)
 
         return [default_collection] + [vc.identifier for vc in virtual_collections]
 

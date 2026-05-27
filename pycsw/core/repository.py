@@ -347,15 +347,18 @@ class Repository(object):
         query = self.session.query(self.dataset).filter(column.in_(ids))
         return self._get_repo_filter(query).all()
 
-    def query_collections(self, filters=None, limit=10):
+    def query_collections(self, collection=None, filters=None, limit=10):
         ''' Query for parent collections '''
 
         column = getattr(self.dataset,
                          self.context.md_core_model['mappings']['pycsw:ParentIdentifier'])
 
-        collections = self.session.query(column).distinct()
+        if collection is not None:
+            collections = self.session.query(column).filter(column==collection)
+        else:
+            collections = self.session.query(column)
 
-        results = self._get_repo_filter(collections).all()
+        results = self._get_repo_filter(collections).distinct().all()
 
         ids = [res[0] for res in results if res[0] is not None]
 
