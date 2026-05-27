@@ -131,14 +131,47 @@ nginx:
   fullnameOverride: ""
   replicaCount: 2
   image:
-    repository: nginx-otel-unprivileged
-    tag: "v1.0.0"
-
+    repository: common/nginx
+    tag: "v2.1.6"
+  nginx:
+    extensions:
+      server:
+        enabled: true
+        fileName: pycsw-server.conf
+      location:
+        enabled: true
+        fileName: pycsw-location.conf
   port: 8080
   internalServicePort: 80
-  nginxTargetPort: 8080
   targetPort: 8080
   nodePort: 30003
+  clientMaxBodySize: 5000
+
+  opentelemetry:
+    serviceName: pycsw-nginx
+    exporterHost: infra-otel.infra-services
+    exporterPort: 4317
+    samplerMethod: "AlwaysOff"
+    ratio: 10
+
+  backend:
+    enabled: false
+
+  prometheusExporter:
+    enabled: true
+    image:
+      repository: common/nginx/nginx-prometheus-exporter
+      tag: latest
+      pullPolicy: IfNotPresent
+    resources:
+      enabled: true
+      value:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
 
   authorization:
     enabled: true
@@ -148,20 +181,17 @@ nginx:
       queryName: token
 
   extraVolumes:
-  - name: nginx-config
-    configMap:
-      name: "{{ .Release.Name }}-pycsw-nginx-configmap"
+    - name: nginx-config
+      configMap:
+        name: "{{ .Release.Name }}-pycsw-nginx-configmap"
 
   extraVolumeMounts:
-  - name: nginx-config
-    mountPath: "/etc/nginx/conf.d/default.conf"
-    subPath: default.conf
-  - mountPath: "/etc/nginx/nginx.conf"
-    name: nginx-config
-    subPath: nginx.conf
-  - name: nginx-config
-    mountPath: "/etc/nginx/log_format.conf"
-    subPath: log_format.conf
+    - name: nginx-config
+      mountPath: "/etc/nginx/conf.d/extensions/pycsw-location.conf"
+      subPath: pycsw-location.conf
+    - name: nginx-config
+      mountPath: "/etc/nginx/conf.d/extensions/pycsw-server.conf"
+      subPath: pycsw-server.conf
 
   resources:
     enabled: true
@@ -175,8 +205,9 @@ nginx:
 
   route:
     enabled: true
-    path: /api/raster/v1
-    host:
+    routesMapping:
+      - path: /api/raster/v1
+        host:
     timeout:
       enabled: false # defaults to 30s by openshift
       duration: 60s # supported units (us, ms, s, m, h, d)
@@ -189,8 +220,11 @@ nginx:
 
   ingress:
     enabled: false
-    path: /api/raster/v1
-    host: "localhost"
+    ingressClassName: ""
+    ingressMapping:
+      - host: "localhost"
+        path: /api/raster/v1
+        pathType: Prefix
     tls:
       enabled: true
       useExternal: ""
