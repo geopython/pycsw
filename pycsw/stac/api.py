@@ -246,7 +246,7 @@ class STACAPI(API):
                         query_args.append(f'time_end <= "{end}"')
             elif k == 'q':
                 if v not in [None, '']:
-                    query_args.append(build_anytext('anytext', v))
+                    query_args.append(build_anytext('anytext', v, self.repository))
 
         limit = int(args.get('limit', self.config['server'].get('maxrecords', 10)))
 
