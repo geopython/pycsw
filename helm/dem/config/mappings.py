@@ -58,7 +58,9 @@ MD_CORE_MODEL = {
         'pycsw:noDataValue': 'no_data_value',
         'pycsw:areaOrPoint': 'area_or_point',
         'pycsw:dataType': 'data_type',
-        'pycsw:geoidModel': 'geoid_model',
+        'pycsw:verticalType': 'vertical_type',
+        'pycsw:verticalSrsId': 'vertical_srs_id',
+        'pycsw:verticalSrsName': 'vertical_srs_name',
 
         'pycsw:productBBox':'product_bbox',
         'pycsw:productStatus': 'product_status',
