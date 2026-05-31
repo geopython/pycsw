@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.5.0](https://github.com/MapColonies/pycsw/compare/v6.4.2...v6.5.0) (2026-05-31)
+
+
+### Features
+
+* add vertical metadata mappings to dem and remove geoid model ([#114](https://github.com/MapColonies/pycsw/issues/114)) ([3f38e70](https://github.com/MapColonies/pycsw/commit/3f38e703dc5a7b877c078c8e92e3e2192d1bb908))
+
 ## [6.4.2](https://github.com/MapColonies/pycsw/compare/v6.4.1...v6.4.2) (2026-05-27)
 
 
