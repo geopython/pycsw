@@ -101,6 +101,10 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
                 'description': 'a reference to the formal definition of the type',  # noqa
                 'format': 'url',
                 'type': 'string'
+            },
+            'facet': {
+                'description': 'whether the queryable is also a facet',
+                'type': 'boolean'
             }
         },
         'required': [
@@ -109,6 +113,75 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         ],
         'type': 'object'
     }
+    oapi['components']['schemas']['queryables'] = {
+        'properties': {
+            'id': {
+                'type': 'string',
+                'description': 'collection identifier'
+            },
+            'title': {
+                'type': 'string',
+                'description': 'collection title'
+            },
+            'queryables2': {
+                'items': {
+                    '$ref': '#/components/schemas/queryable'
+                },
+                'type': 'array'
+            }
+        },
+        'required': [
+            'queryables'
+        ],
+        'type': 'object'
+    }
+
+    oapi['components']['responses']['Facets'] = {
+        'content': {
+            'application/facets+json': {
+                'schema': {
+                    '$ref': '#/components/schemas/facets'
+                }
+            }
+        },
+        'description': 'successful facets operation'
+    }
+    oapi['components']['schemas']['facets'] = {
+        'type': 'object',
+        'properties': {
+            'id': {
+                'type': 'string',
+                'description': 'collection identifier'
+            },
+            'title': {
+                'type': 'string',
+                'description': 'collection title'
+            },
+            'facets': {
+                'type': 'object',
+                'patternProperties': {
+                    '^.*': {
+                        'type': 'object',
+                        'properties': {
+                            'type': {
+                                'type': 'string',
+                                'enum': [
+                                    'term',
+                                    'histogram',
+                                    'filter'
+                                ]
+                            },
+                            'property': {
+                                'type': 'string',
+                                'description': 'property name'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     oapi['components']['schemas']['queryables'] = {
         'properties': {
             'queryables': {
@@ -388,6 +461,30 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
     }
 
     oapi['paths']['/collections/{collectionId}/queryables'] = path2
+
+    path = {
+        'get': {
+            'tags': ['Facets'],
+            'summary': 'Facets page',
+            'description': 'Facets page',
+            'operationId': 'getFacets',
+            'parameters': [
+                {'$ref': '#/components/parameters/f'},
+                {'$ref': '#/components/parameters/collectionId'}
+            ],
+            'responses': {
+                '200': {
+                    '$ref': '#/components/responses/Facets'
+                },
+                '500': {
+                    '$ref': '#/components/responses/ServerError'
+                }
+            }
+        }
+    }
+
+    oapi['paths']['/collections/{collectionId}/facets'] = path
+
     oapi['components']['parameters']['collectionId']['default'] = 'metadata:main'  # noqa
 
     path = {
@@ -419,18 +516,19 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
             'summary': 'Federated catalogs page',
             'description': 'Federated catalogs page',
             'operationId': 'getFederatedCatalog',
-            'parameters': [
-                {'$ref': '#/components/parameters/collectionId'},
-                {'name': 'catalogId',
-                 'in': 'path',
-                 'description': 'catalog ID',
-                 'required': True,
-                 'schema': {
+            'parameters': [{
+                '$ref': '#/components/parameters/collectionId'
+            }, {
+                'name': 'catalogId',
+                'in': 'path',
+                'description': 'catalog ID',
+                'required': True,
+                'schema': {
                      'type': 'string'
                  }
-                },
-                {'$ref': '#/components/parameters/f'}
-            ],
+            }, {
+                '$ref': '#/components/parameters/f'
+            }],
             'responses': {
                 '200': {
                     '$ref': '#/components/responses/FederatedCatalog'
@@ -442,7 +540,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         }
     }
 
-    oapi['paths']['/collections/{collectionId}/federatedCatalogs/{catalogId}'] = path
+    oapi['paths']['/collections/{collectionId}/federatedCatalogs/{catalogId}'] = path  # noqa
 
     path = {
         'get': {

@@ -4,7 +4,7 @@
 #          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2023 Ricardo Garcia Silva
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -111,7 +111,10 @@ def config():
         },
         'repository': {
             'database': 'sqlite:///tests/functionaltests/suites/cite/data/cite.db',  # noqa
-            'table': 'records'
+            'table': 'records',
+            'facets': [
+                'type'
+            ]
         }
     }
 

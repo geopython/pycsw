@@ -3,7 +3,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2023 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
@@ -73,7 +73,7 @@ def test_conformance(config_virtual_collections):
     api = API(config_virtual_collections)
     content = json.loads(api.conformance({}, {})[2])
 
-    assert len(content['conformsTo']) == 14
+    assert len(content['conformsTo']) == 16
 
 
 def test_collections(config_virtual_collections):
