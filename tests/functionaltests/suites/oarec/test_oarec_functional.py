@@ -365,11 +365,11 @@ def test_json_transaction(config, sample_record):
     element = e.find('{http://www.w3.org/2005/Atom}title').text
     assert element == 'title in English'
 
-    # update record
+    # update (full) record
     sample_record['properties']['title'] = 'new title'
 
     headers, status, content = api.manage_collection_item(
-        request_headers, 'update', item='record-123', data=sample_record)
+        request_headers, 'replace', item='record-123', data=sample_record)
 
     assert status == 204
 
@@ -378,6 +378,20 @@ def test_json_transaction(config, sample_record):
 
     assert content['id'] == 'record-123'
     assert content['properties']['title'] == 'new title'
+
+    # update (partial) record
+    data2 = {'properties': {'title': 'new title merge patch'}}
+
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'update', item='record-123', data=data2)
+
+    assert status == 204
+
+    # test that record is in repository
+    content = json.loads(api.item({}, {}, 'metadata:main', 'record-123')[2])
+
+    assert content['id'] == 'record-123'
+    assert content['properties']['title'] == 'new title merge patch'
 
     # test XML representation
     params = {'f': 'xml'}
@@ -389,7 +403,7 @@ def test_json_transaction(config, sample_record):
     assert element == 'record-123'
 
     element = e.find('{http://www.w3.org/2005/Atom}title').text
-    assert element == 'new title'
+    assert element == 'new title merge patch'
 
     # delete record
     headers, status, content = api.manage_collection_item(
@@ -479,7 +493,7 @@ def test_xml_transaction(config):
         b'Ut facilisis justo ut lacus', b'new title')
 
     headers, status, content = api.manage_collection_item(
-        request_headers, 'update', item='record-456', data=test_data_xml)
+        request_headers, 'replace', item='record-456', data=test_data_xml)
 
     assert status == 204
 

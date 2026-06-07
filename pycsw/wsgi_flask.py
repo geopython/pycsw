@@ -56,6 +56,7 @@ with open(os.getenv('PYCSW_CONFIG'), encoding='utf8') as fh:
 
 BLUEPRINT.config = api_.config
 
+
 def get_api_type(urlpath):
     """
     Decorator to detect API type
@@ -157,8 +158,8 @@ def collections():
         return get_response(api_.collections(dict(request.headers), request.args))
 
 
-@BLUEPRINT.route('/collections/<collection>', methods=['GET', 'PUT', 'DELETE'])
-@BLUEPRINT.route('/stac/collections/<collection>', methods=['GET', 'PUT', 'DELETE'])
+@BLUEPRINT.route('/collections/<collection>', methods=['GET', 'PATCH', 'PUT', 'DELETE'])
+@BLUEPRINT.route('/stac/collections/<collection>', methods=['GET', 'PATCH', 'PUT', 'DELETE'])
 def collection(collection='metadata:main'):
     """
     OGC API collection endpoint
@@ -172,12 +173,17 @@ def collection(collection='metadata:main'):
         if request.method == 'PUT':
             return get_response(
                 stacapi.manage_collection_item(
-                    dict(request.headers), 'update', collection=collection,
+                    dict(request.headers), 'replace', collection=collection,
                     data=request.get_json(silent=True)))
         elif request.method == 'DELETE':
             return get_response(
                 stacapi.manage_collection_item(dict(request.headers),
                                                'delete', collection))
+        elif request.method == 'PATCH':
+            return get_response(
+                api_.manage_collection_item(dict(request.headers), 'update',
+                                            collection, item,
+                                            data=request.get_json(silent=True)))
         else:
             return get_response(stacapi.collection(dict(request.headers),
                                 request.args, collection))
@@ -295,9 +301,9 @@ def items(collection='metadata:main'):
 
 
 @BLUEPRINT.route('/collections/<collection>/items/<path:item>',
-                 methods=['GET', 'PUT', 'DELETE'])
+                 methods=['GET', 'PATCH', 'PUT', 'DELETE'])
 @BLUEPRINT.route('/stac/collections/<collection>/items/<item>',
-                 methods=['GET', 'PUT', 'DELETE'])
+                 methods=['GET', 'PATCH', 'PUT', 'DELETE'])
 def item(collection='metadata:main', item=None):
     """
     OGC API collection items endpoint
@@ -311,12 +317,17 @@ def item(collection='metadata:main', item=None):
     if request.method == 'PUT':
         return get_response(
             api_.manage_collection_item(
-                dict(request.headers), 'update', collection, item,
+                dict(request.headers), 'replace', collection, item,
                 data=request.get_json(silent=True)))
     elif request.method == 'DELETE':
         return get_response(
             api_.manage_collection_item(dict(request.headers), 'delete',
                                         collection, item))
+    elif request.method == 'PATCH':
+        return get_response(
+            api_.manage_collection_item(dict(request.headers), 'update',
+                                        collection, item,
+                                        data=request.get_json(silent=True)))
     else:
         if get_api_type(request.url_rule.rule) == 'stac-api':
             return get_response(stacapi.item(dict(request.headers), request.args,

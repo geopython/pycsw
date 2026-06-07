@@ -100,8 +100,11 @@ The below examples demonstrate transactional workflow using pycsw's OGC API - Re
    # insert GeoJSON metadata
    curl -v -H "Content-Type: application/geo+json" -XPOST http://localhost:8000/collections/metadata:main/items -d @foorecord.json
 
-   # update metadata
+   # update (full) metadata
    curl -v -H "Content-Type: application/geo+json" -XPUT http://localhost:8000/collections/metadata:main/items/foorecord -d @foorecord.json
+
+   # update (partial) metadata
+   curl -v -H "Content-Type: application/merge-patch+json" -XPATCH http://localhost:8000/collections/metadata:main/items/foorecord -d '{"properties": {"title": "newtitle"}}'
 
    # delete metadata
    curl -v -XDELETE http://localhost:8000/collections/metadata:main/items/foorecord
@@ -136,8 +139,11 @@ The below examples demonstrate transactional workflow using pycsw's OGC API - Re
    # insert STAC Item
    curl -v -H "Content-Type: application/json" -XPOST http://localhost:8000/stac/collections/metadata:main/items -d @fooitem.json
 
-   # update STAC Item
+   # update (full) STAC Item
    curl -v -H "Content-Type: application/json" -XPUT http://localhost:8000/stac/collections/metadata:main/items/fooitem -d @fooitem.json
+
+   # update (partial) STAC Item
+   curl -v -H "Content-Type: application/merge-patch+json" -XPATCH http://localhost:8000/stac/collections/metadata:main/items/fooitem -d '{"properties": {"title": "newtitle"}}'
 
    # delete STAC Item
    curl -v -XDELETE http://localhost:8000/stac/collections/metadata:main/items/fooitem
@@ -148,8 +154,11 @@ The below examples demonstrate transactional workflow using pycsw's OGC API - Re
    # insert STAC Collection
    curl -v -H "Content-Type: application/json" -XPOST http://localhost:8000/stac/collections -d @foocollection.json
 
-   # update STAC Collection
+   # update (full) STAC Collection
    curl -v -H "Content-Type: application/json" -XPUT http://localhost:8000/stac/collections/foocollection -d @foocollection.json
+
+   # update (partial) STAC Collection
+   curl -v -H "Content-Type: application/merge-patch+json" -XPATCH http://localhost:8000/stac/collections/foocollection -d '{"title": "newtitle"}'
 
    # delete STAC Collection
    curl -v -XDELETE http://localhost:8000/stac/collections/foocollection

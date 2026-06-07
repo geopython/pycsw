@@ -661,10 +661,10 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         LOGGER.debug('Transactions enabled; adding put/delete')
 
         path['put'] = {
-            'summary': 'Updates Records items',
-            'description': 'Updates Records items',
+            'summary': 'Updates (full) Records items',
+            'description': 'Updates (full) Records items',
             'tags': ['metadata'],
-            'operationId': 'updateRecord',
+            'operationId': 'replaceRecord',
             'consumes': [
                 'application/geo+json', 'application/json', 'application/xml'
             ],
@@ -681,7 +681,38 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
                 {'$ref': '#/components/parameters/recordId'}
             ],
             'responses': {
-                '204': {'description': 'Successful update'},
+                '204': {'description': 'Successful update (full)'},
+                '400': {
+                    '$ref': '#/components/responses/InvalidParameter'
+                },
+                '500': {
+                    '$ref': '#/components/responses/ServerError'
+                }
+            }
+        }
+
+        path['patch'] = {
+            'summary': 'Updates (partial) Records items',
+            'description': 'Updates (partial) Records items',
+            'tags': ['metadata'],
+            'operationId': 'updateRecord',
+            'consumes': [
+                'application/geo+json', 'application/json', 'application/xml'
+            ],
+            'produces': ['application/json'],
+            'requestBody': {
+                'content': {
+                    'application/merge-patch+json': {
+                        'schema': {}
+                    }
+                }
+            },
+            'parameters': [
+                {'$ref': '#/components/parameters/collectionId'},
+                {'$ref': '#/components/parameters/recordId'}
+            ],
+            'responses': {
+                '204': {'description': 'Successful update (partial)'},
                 '400': {
                     '$ref': '#/components/responses/InvalidParameter'
                 },

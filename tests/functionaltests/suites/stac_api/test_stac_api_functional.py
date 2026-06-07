@@ -902,7 +902,7 @@ def test_json_transaction(config, sample_collection, sample_item,
     sample_item['properties']['datetime'] = '2021-12-14T22:38:32Z'
 
     headers, status, content = api.manage_collection_item(
-        request_headers, 'update', item='20201211_223832_CS2',
+        request_headers, 'replace', item='20201211_223832_CS2',
         data=sample_item, collection='metadata:main')
 
     assert status == 204
@@ -994,11 +994,11 @@ def test_json_transaction(config, sample_collection, sample_item,
 
     assert content['numberMatched'] == 0
 
-    # update collection
+    # update (full) collection
     sample_collection['title'] = 'test title update'
 
     headers, status, content = api.manage_collection_item(
-        request_headers, 'update', item=collection_id,
+        request_headers, 'replace', item=collection_id,
         data=sample_collection, collection='metadata:main')
 
     assert status == 204
@@ -1009,6 +1009,22 @@ def test_json_transaction(config, sample_collection, sample_item,
     content = json.loads(content)
 
     assert content['title'] == sample_collection['title']
+
+    # update (partial) collection
+    data2 = {'title': 'test title update merge patch'}
+
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'update', item=collection_id,
+        data=data2, collection='metadata:main')
+
+    assert status == 204
+
+    headers, status, content = api.collection(
+        {}, {'f': 'json'}, collection=collection_id)
+
+    content = json.loads(content)
+
+    assert content['title'] == 'test title update merge patch'
 
     # test that item is in repository
     content = json.loads(api.item({}, {}, 'metadata:main',
