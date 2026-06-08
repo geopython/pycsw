@@ -4,7 +4,7 @@
 #          Angelos Tzotsos <gcpp.kalxas@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2022 Angelos Tzotsos
 # Copyright (c) 2023 Ricardo Garcia Silva
 #
@@ -77,7 +77,7 @@ def test_conformance(config):
     content = json.loads(content)
 
     assert headers['Content-Type'] == 'application/json'
-    assert len(content['conformsTo']) == 14
+    assert len(content['conformsTo']) == 16
 
 
 def test_collections(config):
@@ -113,7 +113,31 @@ def test_queryables(config):
     assert 'geometry' in content['properties']
     assert content['properties']['geometry']['$ref'] == 'https://geojson.org/schema/Polygon.json'  # noqa
 
+    assert content['properties']['type']['facet']  # test is truthy
+
     headers, status, content = api.queryables({}, {}, collection='foo')
+    assert status == 400
+
+
+def test_facets(config):
+    api = API(config)
+    headers, status, content = api.facets_({}, {})
+    content = json.loads(content)
+
+    assert headers['Content-Type'] == 'application/facets+json'
+    assert content['type'] == 'object'
+    assert content['title'] == 'pycsw Geospatial Catalogue'
+    assert content['$id'] == 'http://localhost/pycsw/oarec/collections/metadata:main/facets'  # noqa
+    assert content['$schema'] == 'http://json-schema.org/draft/2019-09/schema'
+
+    assert len(content['facets']) == 1
+
+    assert 'type' in content['facets']
+    assert content['facets']['type']['type'] == 'term'
+    assert content['facets']['type']['property'] == 'type'
+    assert content['facets']['type']['sortedBy'] == 'count'
+
+    headers, status, content = api.facets_({}, {}, collection='foo')
     assert status == 400
 
 

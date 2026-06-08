@@ -35,6 +35,7 @@
         <td>
            <a title="items" href="{{ config['server']['url'] }}/collections/{{ data.id }}/items">items</a>
            <a title="queryables" href="{{ config['server']['url'] }}/collections/{{ data.id }}/queryables">queryables</a>
+           <a title="facets" href="{{ config['server']['url'] }}/collections/{{ data.id }}/facets">facets</a>
            {% if data.id == 'metadata:main' and config['distributedsearch'] %}
            <a title="federated catalogs" href="{{ config['server']['url'] }}/collections/{{ data.id }}/federatedCatalogs">federated catalogs</a>
            {% endif %}

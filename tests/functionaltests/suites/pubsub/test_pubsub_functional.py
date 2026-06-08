@@ -2,7 +2,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -64,4 +64,4 @@ def test_conformance(config):
     content = json.loads(content)
 
     assert headers['Content-Type'] == 'application/json'
-    assert len(content['conformsTo']) == 16
+    assert len(content['conformsTo']) == 18

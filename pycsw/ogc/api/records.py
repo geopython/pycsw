@@ -76,6 +76,8 @@ CONFORMANCE_CLASSES = [
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/sorting',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/json',
     'http://www.opengis.net/spec/ogcapi-records-1/1.0/conf/html',
+    'http://www.opengis.net/spec/ogcapi-records-2/1.0/conf/simple',
+    'http://www.opengis.net/spec/ogcapi-records-4/1.0/conf/federated-search',
     'http://www.opengis.net/spec/cql2/1.0/conf/cql2-json',
     'http://www.opengis.net/spec/cql2/1.0/conf/cql2-text'
 ]
@@ -529,6 +531,8 @@ class API:
         for key, value in properties.items():
             if key in self.repository.query_mappings or key == 'geometry':
                 properties2[key] = value
+                if key in self.facets:
+                    properties2[key]['facet'] = True
 
         if collection == 'metadata:main':
             title = self.config['metadata']['identification']['title']
@@ -547,6 +551,53 @@ class API:
         }
 
         return self.get_response(200, headers_, response, 'queryables.html')
+
+    def facets_(self, headers_, args, collection='metadata:main'):
+        """
+        Provide collection facets
+
+        :param headers_: copy of HEADERS object
+        :param args: request parameters
+        :param collection: name of collection
+
+        :returns: tuple of headers, status code, content
+        """
+
+        facets_ = {}
+        headers_['Content-Type'] = self.get_content_type(headers_, args)
+
+        if 'json' in headers_['Content-Type']:
+            headers_['Content-Type'] = 'application/facets+json'
+
+        if collection not in self.get_collections(collection=collection):
+            msg = 'Invalid collection'
+            LOGGER.exception(msg)
+            return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+        for value in self.config['repository']['facets']:
+            facets_[value] = {
+                'type': 'term',
+                'property': value,
+                'sortedBy': 'count'
+            }
+
+        if collection == 'metadata:main':
+            title = self.config['metadata']['identification']['title']
+        else:
+            title = self.config['metadata']['identification']['title']
+            virtual_collection = self.repository.query_ids([collection])[0]
+            title = virtual_collection.title
+
+        response = {
+            'id': collection,
+            'type': 'object',
+            'title': title,
+            'facets': facets_,
+            '$schema': 'http://json-schema.org/draft/2019-09/schema',
+            '$id': f"{self.config['server']['url']}/collections/{collection}/facets"
+        }
+
+        return self.get_response(200, headers_, response, 'facets.html')
 
     def items(self, headers_, json_post_data, args, collection='metadata:main'):
         """
@@ -818,6 +869,7 @@ class API:
         distributed = str2bool(args.get('distributedsearch', False))
 
         if distributed:
+            args.pop('distributedsearch')
             distributed_search = self.config.get('distributedsearch', {})
             merge_results = distributed_search.get('merge_results', False)
 
@@ -833,7 +885,6 @@ class API:
                 }
                 try:
                     w = Records(fc_url)
-                    args.pop('distributedsearch')
                     fc_results = w.collection_items(fc_collection, **args)
                     for feature in fc_results['features']:
                         if merge_results:
@@ -848,6 +899,8 @@ class API:
                 fsrs = response.pop('federatedSearchResults', None)
                 for key, value in fsrs.items():
                     response['features'].extend(value['features'])
+
+            args['distributedSearch'] = 'true'
 
         LOGGER.debug('Creating links')
 

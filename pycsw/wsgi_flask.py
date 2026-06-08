@@ -206,6 +206,20 @@ def queryables(collection='metadata:main'):
                             collection))
 
 
+@BLUEPRINT.route('/collections/<collection>/facets')
+def facets(collection='metadata:main'):
+    """
+    OGC API collection facets endpoint
+
+    :param collection: collection name
+
+    :returns: HTTP response
+    """
+
+    return get_response(api_.facets_(dict(request.headers), request.args,
+                        collection))
+
+
 @BLUEPRINT.route('/collections/<collection>/federatedCatalogs')
 def federated_catalogues(collection='metadata:main'):
     """

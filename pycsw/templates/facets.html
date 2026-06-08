@@ -1,17 +1,17 @@
 {% extends "_base.html" %}
-{% block title %}{{ super() }} Queryables {% endblock %}
+{% block title %}{{ super() }} Facets {% endblock %}
 
 {% block crumbs %}
 {{ super() }} /
 <a href="{{ config['server']['url'] }}/collections">Collections</a> /
 <a href="{{ config['server']['url'] }}/collections/{{ data['id'] }}">{{ data['title'] }}</a> /
-<a href="{{ config['server']['url'] }}/collections/{{ data['id'] }}/queryables">Queryables</a>
+<a href="{{ config['server']['url'] }}/collections/{{ data['id'] }}/facets">Facets</a>
 {% endblock %}
 
 {% block body %}
 
 <section id="queryables">
-  <h2>Queryables</h2>
+  <h2>Facets</h2>
   <h2>{{ data['title'] }}</h2>
 
   <table class="table table-striped table-hover">
@@ -23,7 +23,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for qname, qinfo in data['properties'].items() %}
+      {% for qname, qinfo in data['facets'].items() %}
       {% if qname == 'geometry' %}
       <tr>
         <td colspan="3"><a href="{{ qinfo['$ref'] }}">{{ qname }}</a></td>
