@@ -240,8 +240,8 @@ Model Crosswalk
      - ``gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="publication"]/gmd:date/gco:Date``
      - 
      - 
-     - 
-     - 
+     - ``published`` or ``properties.published``
+     - Date of publication of the metadata record
    * - ``organization``
      - ``pycsw:OrganizationName``
      - ``apiso:OrganisationName``
