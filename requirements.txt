@@ -1,5 +1,6 @@
 click
 geolinks
+json_merge_patch
 legacy-cgi; python_version >= '3.13'
 lxml
 OWSLib

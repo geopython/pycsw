@@ -37,6 +37,7 @@ import os
 from typing import List, Union
 from urllib.parse import urlencode, quote
 
+import json_merge_patch
 from owslib.ogcapi.records import Records
 from pygeofilter.parsers.ecql import parse as parse_ecql
 from pygeofilter.parsers.cql2_json import parse as parse_cql2_json
@@ -1068,7 +1069,7 @@ class API:
     def manage_collection_item(self, headers_, action='create', collection=None,
                                item=None, data=None):
         """
-        :param action: action (create, update, delete)
+        :param action: action (create, replace, update, delete)
         :param collection: collection identifier
         :param item: record identifier
         :param data: raw data / payload
@@ -1081,13 +1082,13 @@ class API:
                     405, headers_, 'InvalidParameterValue',
                     'transactions not allowed')
 
-        if action in ['create', 'update'] and data is None:
+        if action in ['create', 'replace', 'update'] and data is None:
             msg = 'No data found'
             LOGGER.error(msg)
             return self.get_exception(
                 400, headers_, 'InvalidParameterValue', msg)
 
-        if action in ['create', 'update']:
+        if action in ['create', 'replace']:
             try:
                 record = parse_record(self.context, data, self.repository)[0]
             except Exception as err:
@@ -1121,7 +1122,7 @@ class API:
             code = 201
             response = {}
 
-        elif action == 'update':
+        elif action == 'replace':
             LOGGER.debug(f'Querying repository for item {item}')
             try:
                 _ = self.repository.query_ids([record.identifier])[0]
@@ -1129,6 +1130,40 @@ class API:
                 msg = 'Identifier does not exist'
                 LOGGER.debug(msg)
                 return self.get_exception(404, headers_, 'InvalidParameterValue', msg)
+
+            _ = self.repository.update(record)
+
+            code = 204
+            response = {}
+
+        elif action == 'update':
+            LOGGER.debug(f'Querying repository for item {item}')
+            try:
+                content = self.repository.query_ids([item])[0]
+            except Exception:
+                msg = 'Identifier does not exist'
+                LOGGER.debug(msg)
+                return self.get_exception(404, headers_, 'InvalidParameterValue', msg)
+
+            if 'id' in data:
+                msg = 'Update cannot alter id'
+                LOGGER.debug(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+            content = json.loads(content.metadata)
+            record = json_merge_patch.merge(content, data)
+
+            try:
+                record = parse_record(self.context, record, self.repository)[0]
+            except Exception as err:
+                msg = f'Failed to parse data: {err}'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+
+            if not hasattr(record, 'identifier'):
+                msg = 'Record requires an identifier'
+                LOGGER.exception(msg)
+                return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
             _ = self.repository.update(record)
 
