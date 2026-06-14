@@ -161,6 +161,7 @@ class Repository(object):
             'date': self.dataset.date,
             'date_creation': self.dataset.date_creation,
             'date_modified': self.dataset.date_modified,
+            'date_publication': self.dataset.date_publication,
             'datetime': self.dataset.date,
             'time_begin': self.dataset.time_begin,
             'time_end': self.dataset.time_end,
