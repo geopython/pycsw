@@ -36,7 +36,7 @@ from pygeofilter.parsers.ecql import parse as parse_ecql
 import requests
 
 from pycsw import __version__
-from pycsw.core.pygeofilter_evaluate import to_filter
+from pycsw.core.pygeofilter_ext import to_filter
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.records import API, build_anytext
 from pycsw.core.util import geojson_geometry2bbox, str2bool, wkt2geom
@@ -246,7 +246,7 @@ class STACAPI(API):
                         query_args.append(f'time_end <= "{end}"')
             elif k == 'q':
                 if v not in [None, '']:
-                    query_args.append(build_anytext('anytext', v))
+                    query_args.append(build_anytext('anytext', v, self.repository))
 
         limit = int(args.get('limit', self.config['server'].get('maxrecords', 10)))
 
@@ -273,10 +273,9 @@ class STACAPI(API):
         query_args.append("typename = 'stac:Collection'")
         ast = parse_ecql(' AND '.join(query_args))
         LOGGER.debug(f'Abstract syntax tree: {ast}')
-        filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
-        LOGGER.debug(f'Filter: {filters}')
-        sc_query = self.repository.session.query(
-            self.repository.dataset).filter(filters).limit(limit).all()
+
+        _, sc_query = self.repository.query(constraint={'ast': ast},
+                                            maxrecords=limit)
 
         for sc in sc_query:
             id_found = False

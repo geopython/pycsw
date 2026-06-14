@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -33,7 +33,7 @@ from pycsw.core.etree import etree
 from pycsw.ogc.fes import fes1
 
 
-class Sru(object):
+class Sru:
     """SRU wrapper class"""
     def __init__(self, context):
         self.sru_version = '1.1'

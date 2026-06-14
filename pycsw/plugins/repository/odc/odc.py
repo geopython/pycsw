@@ -35,7 +35,7 @@ from django.conf import settings
 from pycsw.core import repository, util
 from OpenDataCatalog.opendata.models import Resource
 
-class OpenDataCatalogRepository(object):
+class OpenDataCatalogRepository:
     ''' Class to interact with underlying repository '''
     def __init__(self, context, repo_filter=None):
         ''' Initialize repository '''
