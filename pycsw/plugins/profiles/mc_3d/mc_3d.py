@@ -28,6 +28,7 @@ class MC3D(base_profile.base_profile):
                         'mc:productName': Queryable(context.md_core_model['mappings']['pycsw:title'], 'mc:productName'),
                         'mc:productVersion': Queryable(context.md_core_model['mappings']['pycsw:productVersion'], 'mc:productVersion'),
                         'mc:productType': Queryable(context.md_core_model['mappings']['pycsw:productType'], 'mc:productType'),
+                        'mc:productSubType': Queryable(context.md_core_model['mappings']['pycsw:productSubType'], 'mc:productSubType'),
                         'mc:description': Queryable(context.md_core_model['mappings']['pycsw:abstract'], 'mc:description'),
                         'mc:creationDateUTC': Queryable(context.md_core_model['mappings']['pycsw:creationDate'], 'mc:creationDateUTC'),
                         'mc:updateDateUTC': Queryable(context.md_core_model['mappings']['pycsw:updateDate'], 'mc:updateDateUTC'),

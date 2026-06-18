@@ -20,6 +20,7 @@ MD_CORE_MODEL = {
         'pycsw:title': 'product_name',
         'pycsw:productVersion': 'product_version',
         'pycsw:productType': 'product_type',
+        'pycsw:productSubType': 'product_sub_type',
         'pycsw:abstract': 'description',
         'pycsw:creationDate': 'creation_date',
         'pycsw:updateDate': 'update_date',
