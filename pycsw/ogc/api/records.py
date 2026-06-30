@@ -48,7 +48,7 @@ from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.metadata import parse_record
 from pycsw.core.pygeofilter_evaluate import to_filter
-from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, str2bool, wkt2geom
+from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, load_record_transform, str2bool, wkt2geom
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json, to_rfc3339
 from pycsw.ogc.pubsub import publish_message
@@ -148,6 +148,10 @@ class API:
             msg = f'Could not load repository {err}'
             LOGGER.exception(msg)
             raise
+
+        self._record_transform_func = load_record_transform(
+            self.config['server'].get('record_transform')
+        )
 
         if self.config.get('pubsub') is not None:
             LOGGER.debug('Loading PubSub client')
@@ -863,6 +867,7 @@ class API:
         response['numberReturned'] = returned
 
         for record in records:
+            record = self._record_transform(record)
             response['features'].append(record2json(record, self.config['server']['url'], collection, self.mode))
 
         response['federatedSearchResults'] = {}
@@ -1030,6 +1035,7 @@ class API:
         LOGGER.debug(f'Querying repository for item {item}')
         try:
             record = self.repository.query_ids([item])[0]
+            record = self._record_transform(record)
             response = record2json(record, self.config['server']['url'],
                                    collection, self.mode)
         except IndexError:
@@ -1379,6 +1385,12 @@ class API:
             facets_results[facet]['buckets'].sort(key=itemgetter('count'), reverse=True)
 
         return facets_results
+
+    def _record_transform(self, record):
+        """Apply record transform hook if configured"""
+        if self._record_transform_func is not None:
+            return self._record_transform_func(record)
+        return record
 
 
 def record2json(record, url, collection, mode='ogcapi-records'):

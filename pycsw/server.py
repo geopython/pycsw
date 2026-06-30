@@ -435,6 +435,10 @@ class Csw(object):
                 locator = 'service'
                 text = 'Could not initialize repository. Check server logs'
 
+        self._record_transform_func = util.load_record_transform(
+            self.config['server'].get('record_transform')
+        )
+
         if self.requesttype == 'POST':
             LOGGER.debug('HTTP POST request')
             LOGGER.debug('CSW version: %s', self.iface.version)
@@ -891,6 +895,12 @@ class Csw(object):
                     LOGGER.debug(f'{uprh.scheme} sent successfully.')
                 except Exception as err:
                     LOGGER.exception(f'Error processing {uprh.scheme}')
+
+    def _record_transform(self, record):
+        """Apply record transform hook if configured"""
+        if self._record_transform_func is not None:
+            return self._record_transform_func(record)
+        return record
 
     def _render_xslt(self, res):
         ''' Validate and render XSLT '''

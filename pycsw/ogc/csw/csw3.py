@@ -918,6 +918,7 @@ class Csw3(object):
             self.parent.kvp['startposition'], max1)
 
             for res in results:
+                res = self.parent._record_transform(res)
                 node_ = None
                 if self.parent.xslts:
                     try:
@@ -1116,6 +1117,7 @@ class Csw3(object):
                 self.parent.context.md_core_model['mappings']['pycsw:XML']), self.parent.context.parser)
 
         for result in results:
+            result = self.parent._record_transform(result)
             node_ = None
             if self.parent.xslts:
                 try:

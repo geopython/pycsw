@@ -518,6 +518,29 @@ def programmatic_import(target_module: str) -> typing.Optional[typing.Any]:
     return result
 
 
+def load_record_transform(transform_path: str) -> typing.Optional[typing.Callable]:
+    """
+    Load a record transform callable from a file path or dotted module path.
+
+    The referenced module must define a callable named ``record_transform``.
+
+    :param transform_path: path to a Python file or dotted module name
+    :returns: callable, or ``None`` if ``transform_path`` is falsy
+    :raises ValueError: if the module cannot be loaded or lacks ``record_transform``
+    """
+    if not transform_path:
+        return None
+    module = programmatic_import(transform_path)
+    if module is None:
+        raise ValueError(f'Could not load record transform module: {transform_path!r}')
+    func = getattr(module, 'record_transform', None)
+    if func is None or not callable(func):
+        raise ValueError(
+            f"Module {transform_path!r} must define a callable named 'record_transform'"
+        )
+    return func
+
+
 def load_custom_repo_mappings(repository_mappings: str) -> typing.Optional[typing.Dict]:
     imported_mappings_module = programmatic_import(repository_mappings)
     result = None
