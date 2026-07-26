@@ -38,9 +38,9 @@ from typing import List, Union
 from urllib.parse import urlencode, quote
 
 import json_merge_patch
-from owslib.ogcapi.records import Records
 from pygeofilter.parsers.ecql import parse as parse_ecql
 from pygeofilter.parsers.cql2_json import parse as parse_cql2_json
+import requests
 
 from pycsw import __version__
 from pycsw.broker import load_client
@@ -48,7 +48,9 @@ from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.metadata import parse_record
 from pycsw.core.pygeofilter_evaluate import to_filter
-from pycsw.core.util import bind_url, get_today_and_now, jsonify_links, load_custom_repo_mappings, str2bool, wkt2geom
+from pycsw.core.util import (bind_url, get_iam_access_token, get_today_and_now,
+                             jsonify_links, load_custom_repo_mappings,
+                             str2bool, wkt2geom)
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json, to_rfc3339
 from pycsw.ogc.pubsub import publish_message
@@ -879,14 +881,22 @@ class API:
                     LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
                     continue
                 LOGGER.debug(f"Running distributed search against {fc['url']}")
-                fc_url, _, fc_collection = fc['url'].rsplit('/', 2)
                 response['federatedSearchResults'][fc['id']] = {
                     'type': 'FeatureCollection',
                     'features': []
                 }
                 try:
-                    w = Records(fc_url)
-                    fc_results = w.collection_items(fc_collection, **args)
+                    ds_headers = {}
+                    if 'auth' in fc and fc['auth'].get('type', '') == 'iam':
+                        LOGGER.debug('Getting IAM acces token')
+                        ds_access_token = get_iam_access_token(fc['auth'])
+                        if ds_access_token is not None:
+                            ds_headers = {
+                                'Content-Type': 'application/json',
+                                'Authorization': f'Bearer {ds_access_token}'
+                            }
+                    items_url = f"{fc['url']}/items"
+                    fc_results = requests.get(items_url, params=args, headers=ds_headers).json()
                     for feature in fc_results['features']:
                         if merge_results:
                             feature['id'] = f"{fc['id']}::{feature['id']}"
@@ -1041,11 +1051,19 @@ class API:
                         LOGGER.debug(f"Federated catalogue type {fc['type']} not supported; skipping")
                         continue
                     LOGGER.debug(f"Running distributed item search against {fc['url']}")
-                    fc_url, _, fc_collection = fc.rsplit('/', 2)
                     try:
-                        w = Records(fc_url)
-                        response = record = w.collection_item(fc_collection, item)
-                        LOGGER.debug(f'Found item from {fc}')
+                        if 'auth' in fc and fc['auth'].get('type', '') == 'iam':
+                            LOGGER.debug('Getting IAM acces token')
+                            ds_access_token = get_iam_access_token(fc['auth'])
+                            if ds_access_token is not None:
+                                ds_headers = {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': f'Bearer {ds_access_token}'
+                                }
+
+                        item_url = f"{fc['url']}/items/{item}"
+                        response = record = requests.get(item_url, headers=ds_headers).json()
+                        LOGGER.debug(f"Found item {item} from {fc['url']}")
                         break
                     except RuntimeError:
                         continue

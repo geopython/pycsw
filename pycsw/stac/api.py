@@ -39,7 +39,8 @@ from pycsw import __version__
 from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.records import API, build_anytext
-from pycsw.core.util import geojson_geometry2bbox, str2bool, wkt2geom
+from pycsw.core.util import (geojson_geometry2bbox, get_iam_access_token,
+                             str2bool, wkt2geom)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -424,9 +425,16 @@ class STACAPI(API):
         json_post_data2 = {}
         distributed_search_args = {}
 
-        distributed = str2bool(args.get('distributedsearch', False))
+        distributed = str2bool(args.get('distributedSearch', False))
 
         if distributed:
+
+            distributed_endpoints = [c for c in self.config['distributedsearch']['catalogues'] if c['type'] == 'STAC-API']
+
+            if not distributed_endpoints:
+                LOGGER.debug('Did not find any STAC-API endpoints; skipping')
+                distributed = False
+
             LOGGER.debug('Setting distributed search args')
             args.pop('distributedSearch', None)
             distributed_search_args = deepcopy(args)
@@ -652,8 +660,22 @@ class STACAPI(API):
 
                 try:
                     LOGGER.debug(f'Querying STAC API search: {url}')
-                    stac_search_results = requests.get(url, params=distributed_search_args2).json()
-                    for feature in stac_search_results['features']:
+                    ds_headers = {}
+
+                    if 'auth' in fc and fc['auth'].get('type', '') == 'iam':
+                        LOGGER.debug('Getting IAM acces token')
+                        ds_access_token = get_iam_access_token(fc['auth'])
+                        if ds_access_token is not None:
+                            ds_headers = {
+                                'Content-Type': 'application/json',
+                                'Authorization': f'Bearer {ds_access_token}'
+                            }
+
+                    stac_search_results = requests.get(
+                        url, params=distributed_search_args2,
+                        headers=ds_headers).json()
+
+                    for feature in stac_search_results.get('features', []):
                         if merge_results:
                             feature['id'] = f"{fc['id']}::{feature['id']}"
                             feature['federatedCatalogueId'] = fc['id']
