@@ -39,7 +39,7 @@ from pycsw import __version__
 from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.records import API, build_anytext
-from pycsw.core.util import (geojson_geometry2bbox, get_iam_access_token,
+from pycsw.core.util import (geojson_geometry2bbox, get_oidc_access_token,
                              str2bool, wkt2geom)
 
 LOGGER = logging.getLogger(__name__)
@@ -662,9 +662,9 @@ class STACAPI(API):
                     LOGGER.debug(f'Querying STAC API search: {url}')
                     ds_headers = {}
 
-                    if 'auth' in fc and fc['auth'].get('type', '') == 'iam':
-                        LOGGER.debug('Getting IAM acces token')
-                        ds_access_token = get_iam_access_token(fc['auth'])
+                    if 'auth' in fc and fc['auth'].get('type', '') == 'oidc':
+                        LOGGER.debug('Getting OIDC acces token')
+                        ds_access_token = get_oidc_access_token(fc['auth'])
                         if ds_access_token is not None:
                             ds_headers = {
                                 'Content-Type': 'application/json',

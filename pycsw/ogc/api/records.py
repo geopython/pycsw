@@ -48,7 +48,7 @@ from pycsw.core import log
 from pycsw.core.config import StaticContext
 from pycsw.core.metadata import parse_record
 from pycsw.core.pygeofilter_evaluate import to_filter
-from pycsw.core.util import (bind_url, get_iam_access_token, get_today_and_now,
+from pycsw.core.util import (bind_url, get_oidc_access_token, get_today_and_now,
                              jsonify_links, load_custom_repo_mappings,
                              str2bool, wkt2geom)
 from pycsw.ogc.api.oapi import gen_oapi
@@ -887,9 +887,9 @@ class API:
                 }
                 try:
                     ds_headers = {}
-                    if 'auth' in fc and fc['auth'].get('type', '') == 'iam':
-                        LOGGER.debug('Getting IAM acces token')
-                        ds_access_token = get_iam_access_token(fc['auth'])
+                    if 'auth' in fc and fc['auth'].get('type', '') == 'oidc':
+                        LOGGER.debug('Getting OIDC acces token')
+                        ds_access_token = get_oidc_access_token(fc['auth'])
                         if ds_access_token is not None:
                             ds_headers = {
                                 'Content-Type': 'application/json',
@@ -1052,9 +1052,9 @@ class API:
                         continue
                     LOGGER.debug(f"Running distributed item search against {fc['url']}")
                     try:
-                        if 'auth' in fc and fc['auth'].get('type', '') == 'iam':
-                            LOGGER.debug('Getting IAM acces token')
-                            ds_access_token = get_iam_access_token(fc['auth'])
+                        if 'auth' in fc and fc['auth'].get('type', '') == 'oidc':
+                            LOGGER.debug('Getting OIDC acces token')
+                            ds_access_token = get_oidc_access_token(fc['auth'])
                             if ds_access_token is not None:
                                 ds_headers = {
                                     'Content-Type': 'application/json',

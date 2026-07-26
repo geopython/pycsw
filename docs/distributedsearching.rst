@@ -124,7 +124,7 @@ http://localhost/collections/metadata:main/items?distributedSearch=true
 
 .. note::
 
-   To define access control as part of a distributed catalogue, see :ref:`auth`.
+   To define access control as part of a distributed catalogue, see :ref:`access-control`.
 
 Merging results
 ^^^^^^^^^^^^^^^
@@ -157,7 +157,7 @@ Experimental support for distibuted searching is available in pycsw's STAC API s
 
 .. note::
 
-   To define access control as part of a distributed catalogue, see :ref:`auth`.
+   To define access control as part of a distributed catalogue, see :ref:`access-control`.
 
 With the above configured, a distributed search can be invoked as follows:
 
@@ -171,17 +171,17 @@ Merging behaviour is implemented in the same manner as OGC API - Records support
 
 .. _`OGC API - Records - Part 4: Federated Search`: https://github.com/opengeospatial/ogcapi-records/blob/master/extensions/federated-search/document.adoc
 
-.. _auth:
+.. _access-control:
 
-Authentication and Authorization support
-----------------------------------------
+Access control
+--------------
 
 Distributed search support includes the ability to query federated catalogues which are access controlled.  The various types of access control are defined below.
 
-Identity and Access Management (IAM)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OpenID Connect (OIDC)
+^^^^^^^^^^^^^^^^^^^^^
 
-To add an IAM definition as part of a distributed catalogue, define am ``auth`` object per below:
+To add an OIDC definition as part of a distributed catalogue, define an ``auth`` object per below:
 
 .. code-block:: yaml
 
@@ -192,9 +192,9 @@ To add an IAM definition as part of a distributed catalogue, define am ``auth`` 
               title: My OGC API - Records endpoint
               url: https://example.org/ogc/api/collections/my-catalogue
               auth:
-                  type: iam
+                  type: oidc
                   client_id: foo
                   client_secret: bar
                   realm: realm123
                   grant_type: client_credentials  # optional, defaults to 'client_credentials'
-                  url: https://example.org/iam
+                  url: https://example.org/oidc

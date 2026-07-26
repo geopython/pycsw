@@ -575,28 +575,28 @@ def remove_url_auth(url: str) -> str:
     return url.replace(auth, '')
 
 
-def get_iam_access_token(iam: dict) -> str:
+def get_oidc_access_token(oidc: dict) -> str:
     """
-    Helper function to return access token from IAM
+    Helper function to return access token from OIDC
 
-    :param iam: `dict` of IAM settings:
-                - client_id: client id
-                - client_secret: client secret
-                - realm: realm
-                - url: URL of IAM
-                - grant_type: grant type (optional)
+    :param oidc: `dict` of OIDC settings:
+                 - client_id: client id
+                 - client_secret: client secret
+                 - realm: realm
+j                - url: URL of OIDC
+                 - grant_type: grant type (optional)
 
     :returns: `str` of access token or `None`
     """
 
-    client_id = iam['client_id']
-    client_secret = iam['client_secret']
-    url = iam['url']
-    realm = iam['realm']
-    grant_type = iam.get('grant_type', 'client_credentials')
+    client_id = oidc['client_id']
+    client_secret = oidc['client_secret']
+    url = oidc['url']
+    realm = oidc['realm']
+    grant_type = oidc.get('grant_type', 'client_credentials')
 
     if None in [client_id, client_secret, realm, url]:
-        LOGGER.warning('Missing IAM credential information in environment')
+        LOGGER.warning('Missing OIDC credential information in environment')
 
     payload = {
         'client_id': client_id,
@@ -615,7 +615,7 @@ def get_iam_access_token(iam: dict) -> str:
         response = requests.post(url, data=payload, headers=headers)
         response.raise_for_status()
     except requests.exceptions.HTTPError as err:
-        LOGGER.warning(f'IAM auth error: {err}')
+        LOGGER.warning(f'OIDC auth error: {err}')
         return None
     except requests.exceptions.MissingSchema as err:
         LOGGER.warning(f'Invalid URL: {err}')
