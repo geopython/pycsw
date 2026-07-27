@@ -122,10 +122,14 @@ With the above configured, a distributed search can be invoked as follows:
 
 http://localhost/collections/metadata:main/items?distributedSearch=true
 
+.. note::
+
+   To define access control as part of a distributed catalogue, see :ref:`access-control`.
+
 Merging results
 ^^^^^^^^^^^^^^^
 
-When `distributedsearch.merge_results` exists and is set to ``true``, pycsw will merge all results in ``federatedSearchResults``.  To prevent identifier collision, merged federated search results will have identifiers prefixed by their catalogue ``id`` (as defined in ``distributedsearch.catalogues[*].id``.  In addition, a ``federatedCatalogueId`` property is added to the feature with the catalogue id.
+When ``distributedsearch.merge_results`` exists and is set to ``true``, pycsw will merge all results in ``federatedSearchResults``.  To prevent identifier collision, merged federated search results will have identifiers prefixed by their catalogue ``id`` (as defined in ``distributedsearch.catalogues[*].id``.  In addition, a ``federatedCatalogueId`` property is added to the feature with the catalogue id.
 
 STAC API
 --------
@@ -147,11 +151,13 @@ Experimental support for distibuted searching is available in pycsw's STAC API s
             collections:
                 - daymet-annual-pr
 
-
 .. note::
 
    To constrain STAC API distributed search to specific collections, define one to many in the `collections` (array) directive.
 
+.. note::
+
+   To define access control as part of a distributed catalogue, see :ref:`access-control`.
 
 With the above configured, a distributed search can be invoked as follows:
 
@@ -164,3 +170,31 @@ Merging behaviour is implemented in the same manner as OGC API - Records support
 
 
 .. _`OGC API - Records - Part 4: Federated Search`: https://github.com/opengeospatial/ogcapi-records/blob/master/extensions/federated-search/document.adoc
+
+.. _access-control:
+
+Access control
+--------------
+
+Distributed search support includes the ability to query federated catalogues which are access controlled.  The various types of access control are defined below.
+
+OpenID Connect (OIDC)
+^^^^^^^^^^^^^^^^^^^^^
+
+To add an OIDC definition as part of a distributed catalogue, define an ``auth`` object per below:
+
+.. code-block:: yaml
+
+    distributedsearch:
+        catalogues:
+            - id: fedcat04
+              type: OARec
+              title: My OGC API - Records endpoint
+              url: https://example.org/ogc/api/collections/my-catalogue
+              auth:
+                  type: oidc
+                  client_id: foo
+                  client_secret: bar
+                  realm: realm123
+                  grant_type: client_credentials  # optional, defaults to 'client_credentials'
+                  url: https://example.org/oidc

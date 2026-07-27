@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -33,23 +33,24 @@
 # =================================================================
 
 from configparser import BasicInterpolation, ConfigParser
-from pathlib import Path
+import datetime
 import importlib
 import importlib.util
 import json
-import os
-import re
-import datetime
 import logging
+import os
+from pathlib import Path
+import re
 import sys
 import time
 import typing
 
-from urllib.request import Request, urlopen
-from urllib.parse import urlparse
+from owslib.util import http_post
 from shapely.geometry import shape
 from shapely.wkt import loads
-from owslib.util import http_post
+import requests
+from urllib.request import Request, urlopen
+from urllib.parse import urlparse
 
 from pycsw.core.etree import etree, PARSER
 
@@ -175,7 +176,7 @@ def nspath_eval(xpath, nsmap):
 def wktenvelope2bbox(envelope):
     """returns bbox string of WKT ENVELOPE definition"""
 
-    tmparr = [x.strip() for x in envelope.split('(')[1].split(')')[0].split(',')]
+    tmparr = [x.strip() for x in envelope.split('(')[1].split(')')[0].split(',')]  # noqa
     bbox = '%s,%s,%s,%s' % (tmparr[0], tmparr[3], tmparr[1], tmparr[2])
     return bbox
 
@@ -237,7 +238,7 @@ def bbox2wktpolygon(bbox):
     precision = int(os.environ.get('COORDINATE_PRECISION', 2))
     if bbox.startswith('ENVELOPE'):
         bbox = wktenvelope2bbox(bbox)
-    minx, miny, maxx, maxy = [f"{float(coord):.{precision}f}" for coord in bbox.split(",")]
+    minx, miny, maxx, maxy = [f"{float(coord):.{precision}f}" for coord in bbox.split(",")]  # noqa
     wktGeometry = 'POLYGON((%s %s, %s %s, %s %s, %s %s, %s %s))' \
         % (minx, miny, minx, maxy, maxx, maxy, maxx, miny, minx, miny)
     return wktGeometry
@@ -500,9 +501,9 @@ def programmatic_import(target_module: str) -> typing.Optional[typing.Any]:
     target_module_path = Path(target_module)
     if target_module_path.is_file():
         module_name = target_module_path.stem
-        # this is an adaptation of the Python docs on using importlib to import a
-        # filepath:
-        # https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
+        # this is an adaptation of the Python docs on using importlib
+        # to import a filepath:
+        # https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly  # noqa
         spec = importlib.util.spec_from_file_location(
             module_name, target_module_path)
         if spec is not None:
@@ -518,7 +519,7 @@ def programmatic_import(target_module: str) -> typing.Optional[typing.Any]:
     return result
 
 
-def load_custom_repo_mappings(repository_mappings: str) -> typing.Optional[typing.Dict]:
+def load_custom_repo_mappings(repository_mappings: str) -> typing.Optional[typing.Dict]:  # noqa
     imported_mappings_module = programmatic_import(repository_mappings)
     result = None
     if imported_mappings_module is not None:
@@ -526,7 +527,7 @@ def load_custom_repo_mappings(repository_mappings: str) -> typing.Optional[typin
     return result
 
 
-def sanitize_db_connect (url):
+def sanitize_db_connect(url):
     """
     helper function to remove user:pw from db connect for logging purposes
 
@@ -538,6 +539,7 @@ def sanitize_db_connect (url):
         return url.split('://')[0] + '://***:***@' + url.split('@').pop()
     else:
         return url
+
 
 def str2bool(value: typing.Union[bool, str]) -> bool:
     """
@@ -571,3 +573,52 @@ def remove_url_auth(url: str) -> str:
     u = urlparse(url)
     auth = f'{u.username}:{u.password}@'
     return url.replace(auth, '')
+
+
+def get_oidc_access_token(oidc: dict) -> str:
+    """
+    Helper function to return access token from OIDC
+
+    :param oidc: `dict` of OIDC settings:
+                 - client_id: client id
+                 - client_secret: client secret
+                 - realm: realm
+j                - url: URL of OIDC
+                 - grant_type: grant type (optional)
+
+    :returns: `str` of access token or `None`
+    """
+
+    client_id = oidc['client_id']
+    client_secret = oidc['client_secret']
+    url = oidc['url']
+    realm = oidc['realm']
+    grant_type = oidc.get('grant_type', 'client_credentials')
+
+    if None in [client_id, client_secret, realm, url]:
+        LOGGER.warning('Missing OIDC credential information in environment')
+
+    payload = {
+        'client_id': client_id,
+        'client_secret': client_secret
+    }
+
+    if grant_type is not None:
+        payload['grant_type'] = grant_type
+
+    url = f'{url}/realms/{realm}/protocol/openid-connect/token'
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    try:
+        response = requests.post(url, data=payload, headers=headers)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        LOGGER.warning(f'OIDC auth error: {err}')
+        return None
+    except requests.exceptions.MissingSchema as err:
+        LOGGER.warning(f'Invalid URL: {err}')
+        return None
+
+    return response.json().get('access_token')
