@@ -544,7 +544,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
 
     path = {
         'get': {
-            'tags': ['metadata'],
+            'tags': ['Metadata'],
             'summary': 'Records search items page',
             'description': 'Records search items page',
             'operationId': 'getRecords',
@@ -589,7 +589,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         path['post'] = {
             'summary': 'Adds Records items',
             'description': 'Adds Records items',
-            'tags': ['metadata'],
+            'tags': ['Metadata'],
             'operationId': 'addRecord',
             'consumes': [
                 'application/geo+json', 'application/json', 'application/xml'
@@ -633,7 +633,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
 
     path = {
         'get': {
-            'tags': ['metadata'],
+            'tags': ['Metadata'],
             'summary': 'Records item page',
             'description': 'Records item page',
             'operationId': 'getRecord',
@@ -663,7 +663,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         path['put'] = {
             'summary': 'Updates (full) Records items',
             'description': 'Updates (full) Records items',
-            'tags': ['metadata'],
+            'tags': ['Metadata'],
             'operationId': 'replaceRecord',
             'consumes': [
                 'application/geo+json', 'application/json', 'application/xml'
@@ -694,7 +694,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         path['patch'] = {
             'summary': 'Updates (partial) Records items',
             'description': 'Updates (partial) Records items',
-            'tags': ['metadata'],
+            'tags': ['Metadata'],
             'operationId': 'updateRecord',
             'consumes': [
                 'application/geo+json', 'application/json', 'application/xml'
@@ -725,7 +725,7 @@ def gen_oapi(config, oapi_filepath, mode='ogcapi-records'):
         path['delete'] = {
             'summary': 'Deletes Records items',
             'description': 'Deletes Records items',
-            'tags': ['metadata'],
+            'tags': ['Metadata'],
             'operationId': 'deleteRecord',
             'produces': ['application/json'],
             'parameters': [
