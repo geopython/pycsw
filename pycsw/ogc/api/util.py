@@ -219,6 +219,8 @@ def render_j2_template(config, template, data):
             LOGGER.debug(err)
             LOGGER.debug('Custom template not found; using default')
             env = Environment(loader=FileSystemLoader(TEMPLATES))
+            env.filters['to_json'] = to_json
+            env.globals.update(to_json=to_json)
             template = env.get_template(template)
         else:
             raise
