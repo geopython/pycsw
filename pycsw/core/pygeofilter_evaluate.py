@@ -2,7 +2,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2021 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -109,7 +109,7 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
                 self._pycsw_dbtype.startswith('postgres')):
             if '%' not in node.pattern:
                 LOGGER.debug('Kicking into PostgreSQL FTS mode')
-                return text(f"plainto_tsquery('english', '{node.pattern}') @@ anytext_tsvector")  # noqa
+                return text("plainto_tsquery('english', :node_pattern') @@ anytext_tsvector").bindparams(node_pattern=node.pattern)  # noqa
 
         LOGGER.debug('Default ILIKE behaviour')
         return filters.like(
