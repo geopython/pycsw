@@ -165,9 +165,9 @@ endmacro %}
             {% for rec in data['features'] %}
             <tr>
               {% if 'properties' in rec %}
-              <td id="{{ rec['id'] }}"><a title="{{ rec['properties'].get('title', rec['id']) }}" href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items/{{ rec['id'] }}">{{ rec['properties'].get('title', rec['id']) }}</a></td>
+              <td id="{{ rec['id'] }}"><a title="{{ rec['properties'].get('title', rec['id']) | e }}" href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items/{{ rec['id'] }}">{{ rec['properties'].get('title', rec['id']) | e }}</a></td>
               {% else %}
-              <td id="{{ rec['id'] }}"><a title="{{ rec.get('title', rec['id']) }}" href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items/{{ rec['id'] }}">{{ rec.get('title', rec['id']) }}</a></td>
+              <td id="{{ rec['id'] }}"><a title="{{ rec.get('title', rec['id']) | e }}" href="{{ config['server']['url'] }}/collections/{{ data['collection'] }}/items/{{ rec['id'] }}">{{ rec.get('title', rec['id']) | e }}</a></td>
               {% endif %}
               {% if 'properties' in rec %}
                 {% if 'type' in rec['properties'] %}
