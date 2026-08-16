@@ -1,0 +1,19 @@
+<csw:Transaction xmlns:ogc="http://www.opengis.net/ogc" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:gml="http://www.opengis.net/gml" service="CSW" version="2.0.2">
+  <csw:Update>
+    <csw:RecordProperty>
+      <csw:Name>apiso:Title</csw:Name>
+      <csw:Value>sqli-noop-update</csw:Value>
+    </csw:RecordProperty>
+    <csw:Constraint version="1.1.0">
+      <ogc:Filter>
+        <ogc:DWithin>
+          <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+          <gml:Point>
+            <gml:pos>)','dwithin','1')/**/OR/**/(1=1)/**/-- 1</gml:pos>
+          </gml:Point>
+          <ogc:Distance units="m">1</ogc:Distance>
+        </ogc:DWithin>
+      </ogc:Filter>
+    </csw:Constraint>
+  </csw:Update>
+</csw:Transaction>
