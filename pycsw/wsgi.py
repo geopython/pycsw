@@ -7,7 +7,7 @@
 #
 # Copyright (c) 2015 Adam Hinz
 # Copyright (c) 2017 Ricardo Garcia Silva
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -207,9 +207,11 @@ def get_configuration_path(process_environment, request_environment,
     query_string = request_environment.get("QUERY_STRING", "").lower()
 
     for kvp in query_string.split('&'):
-        if "config" in kvp:
-            configuration_path = unquote(kvp.split('=')[1])
-            break
+        if kvp:
+            key, value = kvp.split('=')
+            if key == 'config':
+                configuration_path = unquote(value)
+                break
     else:
         # did not find any `config` parameter in the request
         # lets try the process env, request env and fallback to

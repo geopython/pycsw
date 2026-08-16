@@ -4,7 +4,7 @@
 #          Tom Kralidis <tomkralidis@gmail.com>
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -83,6 +83,12 @@ def test_get_pycsw_root_path(process_env, wsgi_env, fake_dir, expected):
         "dummy",
         "/other/path/other.yml"
     ),
+    (
+        {"PYCSW_CONFIG": "default.yml"},
+        {"QUERY_STRING": "configparam=/other/path/other.yml"},
+        "dummy",
+        "default.yml"
+    )
 ])
 def test_get_configuration_path(process_env, wsgi_env, pycsw_root, expected):
     result = wsgi.get_configuration_path(process_env, wsgi_env, pycsw_root)
