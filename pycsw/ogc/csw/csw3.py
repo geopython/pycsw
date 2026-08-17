@@ -1346,7 +1346,8 @@ class Csw3(object):
             # fetch content-based resource
             LOGGER.info('Fetching resource %s', self.parent.kvp['source'])
             try:
-                content = util.http_request('GET', self.parent.kvp['source'])
+                content = util.http_request('GET', self.parent.kvp['source'], self.parent.config['server'].get('allow_internal_     requests', False)
+
             except Exception as err:
                 errortext = 'Error fetching resource %s.\nError: %s.' % \
                 (self.parent.kvp['source'], str(err))

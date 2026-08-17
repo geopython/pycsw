@@ -36,20 +36,20 @@ from configparser import BasicInterpolation, ConfigParser
 import datetime
 import importlib
 import importlib.util
+import ipaddress
 import json
 import logging
 import os
 from pathlib import Path
 import re
+import socket
 import sys
 import time
 import typing
 
-from owslib.util import http_post
 from shapely.geometry import shape
 from shapely.wkt import loads
 import requests
-from urllib.request import Request, urlopen
 from urllib.parse import urlparse
 
 from pycsw.core.etree import etree, PARSER
@@ -290,14 +290,23 @@ def getqattr(obj, name):
     return result
 
 
-def http_request(method, url, request=None, timeout=30):
+def http_request(method, url, request=None, timeout=30,
+                 allow_internal_requests=False):
     """Perform HTTP request"""
+
+    if not is_request_allowed(url, allow_internal_requests):
+        raise ValueError('URL not allowed')
+
+    headers = {
+        'User-Agent': 'pycsw (https://pycsw.org/)'
+    }
+
     if method == 'POST':
-        return http_post(url, request, timeout=timeout).text
+        return requests.post(url, headers=headers, data=request,
+                             timeout=timeout, allow_redirects=False).text
     else:  # GET
-        request = Request(url)
-        request.add_header('User-Agent', 'pycsw (https://pycsw.org/)')
-        return urlopen(request, timeout=timeout).read()
+        return requests.get(url, headers=headers, timeout=timeout,
+                            allow_redirects=False).text
 
 
 def bind_url(url):
@@ -622,3 +631,30 @@ j                - url: URL of OIDC
         return None
 
     return response.json().get('access_token')
+
+
+def is_request_allowed(url: str, allow_internal: bool = False) -> bool:
+    """
+    Test whether an HTTP request is allowed to be executed
+
+    :param url: `str` of URL
+    :param allow_internal: `bool` of whether internal requests are
+                           allowed (default `False`)
+
+    :returns: `bool` of whether HTTP request execution is allowed
+    """
+
+    is_allowed = False
+
+    u = urlparse(url)
+
+    ip = socket.gethostbyname(u.hostname)
+
+    is_private = ipaddress.ip_address(ip).is_private
+
+    if not is_private:
+        is_allowed = True
+    if is_private and allow_internal:
+        is_allowed = True
+
+    return is_allowed
