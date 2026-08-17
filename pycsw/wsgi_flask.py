@@ -146,10 +146,12 @@ def collections():
     :returns: HTTP response
     """
 
+    headers2 = _get_headers_with_client_ip_address(request)
+
     if get_api_type(request.url_rule.rule) == 'stac-api':
         if request.method == 'POST':
             data = request.get_json(silent=True)
-            return get_response(stacapi.manage_collection_item(dict(request.headers),
+            return get_response(stacapi.manage_collection_item(headers2,
                                 'create', data=data))
         else:
             return get_response(stacapi.collections(dict(request.headers),
@@ -169,19 +171,21 @@ def collection(collection='metadata:main'):
     :returns: HTTP response
     """
 
+    headers2 = _get_headers_with_client_ip_address(request)
+
     if get_api_type(request.url_rule.rule) == 'stac-api':
         if request.method == 'PUT':
             return get_response(
                 stacapi.manage_collection_item(
-                    dict(request.headers), 'replace', collection=collection,
+                    headers2, 'replace', collection=collection,
                     data=request.get_json(silent=True)))
         elif request.method == 'DELETE':
             return get_response(
-                stacapi.manage_collection_item(dict(request.headers),
+                stacapi.manage_collection_item(headers2,
                                                'delete', collection))
         elif request.method == 'PATCH':
             return get_response(
-                api_.manage_collection_item(dict(request.headers), 'update',
+                api_.manage_collection_item(headers2, 'update',
                                             collection, item,
                                             data=request.get_json(silent=True)))
         else:
@@ -268,6 +272,8 @@ def items(collection='metadata:main'):
     :returns: HTTP response
     """
 
+    headers2 = _get_headers_with_client_ip_address(request)
+
     if all([get_api_type(request.url_rule.rule) == 'ogcapi-records',
             request.method == 'POST',
             request.content_type not in [None, 'application/json']]):
@@ -279,12 +285,12 @@ def items(collection='metadata:main'):
         elif 'xml' in request.content_type:  # XML grammar
             data = request.data
 
-        return get_response(api_.manage_collection_item(dict(request.headers),
+        return get_response(api_.manage_collection_item(headers2,
                             'create', collection=collection, data=data))
     elif request.method == 'POST' and get_api_type(request.url_rule.rule) == 'stac-api':
         if request.url_rule.rule.endswith('items'):  # STAC API transaction - create
             data = request.get_json(silent=True)
-            return get_response(stacapi.manage_collection_item(dict(request.headers),
+            return get_response(stacapi.manage_collection_item(headers2,
                                 'create', collection=collection, data=data))
         else:  # STAC API search
             return get_response(stacapi.items(dict(request.headers),
@@ -314,18 +320,20 @@ def item(collection='metadata:main', item=None):
     :returns: HTTP response
     """
 
+    headers2 = _get_headers_with_client_ip_address(request)
+
     if request.method == 'PUT':
         return get_response(
             api_.manage_collection_item(
-                dict(request.headers), 'replace', collection, item,
+                headers2, 'replace', collection, item,
                 data=request.get_json(silent=True)))
     elif request.method == 'DELETE':
         return get_response(
-            api_.manage_collection_item(dict(request.headers), 'delete',
+            api_.manage_collection_item(headers2, 'delete',
                                         collection, item))
     elif request.method == 'PATCH':
         return get_response(
-            api_.manage_collection_item(dict(request.headers), 'update',
+            api_.manage_collection_item(headers2, 'update',
                                         collection, item,
                                         data=request.get_json(silent=True)))
     else:
@@ -391,6 +399,16 @@ def sru():
     status, headers, content = application_dispatcher(request.environ)
 
     return get_response((headers, status, content))
+
+
+def _get_headers_with_client_ip_address(flask_request) -> dict:
+    headers2 = dict(flask_request.headers)
+    if 'X-Forwarded-For' in headers2:
+        headers2['x-client-ip-address'] = headers2['X-Forwarded-For']
+    else:
+        headers2['x-client-ip-address'] = flask_request.remote_addr
+
+    return headers2
 
 
 APP.register_blueprint(BLUEPRINT)
