@@ -350,7 +350,8 @@ def test_item(config):
 def test_json_transaction(config, sample_record):
     api = API(config)
     request_headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-client-ip-address': '127.0.0.1'
     }
 
     # insert record
@@ -433,7 +434,8 @@ def test_json_transaction(config, sample_record):
 
     api = API(config2)
     request_headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-client-ip-address': '127.0.0.1'
     }
 
     # fail on insert record attempt
@@ -473,7 +475,8 @@ def test_xml_transaction(config):
     """.strip()
 
     request_headers = {
-        'Content-Type': 'application/xml'
+        'Content-Type': 'application/xml',
+        'x-client-ip-address': '127.0.0.1'
     }
 
     # insert record
@@ -537,3 +540,16 @@ def test_xml_transaction(config):
     headers, status, content = api.item({}, {}, 'metadata:main', 'record-456')
 
     assert status == 404
+
+def test_transaction_ipaddress(config, sample_record):
+    api = API(config)
+    request_headers = {
+        'Content-Type': 'application/json',
+        'x-client-ip-address': '192.168.0.1'
+    }
+
+    # insert record
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_record)
+
+    assert status == 400
