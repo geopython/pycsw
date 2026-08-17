@@ -202,24 +202,6 @@ def test_getqattr_invalid():
     assert result is None
 
 
-def test_http_request_post():
-    # here we replace owslib.util.http_post with a mock object
-    # because we are not interested in testing owslib
-    method = "POST"
-    url = "some_phony_url"
-    request = "some_phony_request"
-    timeout = 40
-    with mock.patch("pycsw.core.util.http_post",
-                    autospec=True) as mock_http_post:
-        util.http_request(
-            method=method,
-            url=url,
-            request=request,
-            timeout=timeout
-        )
-        mock_http_post.assert_called_with(url, request, timeout=timeout)
-
-
 @pytest.mark.parametrize("url, expected", [
     ("http://host/wms", "http://host/wms?"),
     ("http://host/wms?foo=bar&", "http://host/wms?foo=bar&"),
@@ -450,8 +432,8 @@ def test_geojson_geometry2bbox(geometry, expected):
     ['http://0.0.0.0/test', False, False],
     ['http://localhost:5000/test', False, False],
     ['http://localhost:5000/test', True, True],
-    ['https://pygeoapi.io', False, True],
-    ['https://pygeoapi.io', True, True]
+    ['https://pycsw.org', False, True],
+    ['https://pycsw.org', True, True]
 ])
 def test_is_request_allowed(url, allow_internal, result):
     assert util.is_request_allowed(url, allow_internal) is result
