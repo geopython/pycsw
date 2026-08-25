@@ -65,7 +65,7 @@ COPY --chown=pycsw \
     ./
 
 RUN python3 -m venv /venv && \
-    /venv/bin/pip3 install -U pip setuptools && \
+    /venv/bin/pip3 install -U pip setuptools python-pkg && \
     /venv/bin/pip3 install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
