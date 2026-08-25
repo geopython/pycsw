@@ -1685,16 +1685,22 @@ class Csw3(object):
         schema = os.path.join(self.parent.config.get('server', 'home'),
         'core', 'schemas', 'ogc', 'cat', 'csw', '3.0', xsd_filename)
 
-        try:
+        try: 
             # it is virtually impossible to validate a csw:Transaction
             # csw:Insert|csw:Update (with single child) XML document.
             # Only validate non csw:Transaction XML
 
-            if doc.find('.//%s' % util.nspath_eval('csw30:Insert',
-            self.parent.context.namespaces)) is None and \
-            len(doc.xpath('//csw30:Update/child::*',
-            namespaces=self.parent.context.namespaces)) == 0:
+            if (doc.find('.//%s' % util.nspath_eval('csw30:Insert', self.parent.context.namespaces)) is None and \
+                len(doc.xpath('//csw30:Update/child::*', namespaces=self.parent.context.namespaces)) == 0):
+                validate_ = True 
+            elif len(doc.xpath('//csw30:RecordProperty', namespaces=self.parent.context.namespaces)) == 1:
+                validate_ = True 
+            elif len(doc.xpath('//csw30:Constraint', namespaces=self.parent.context.namespaces)) == 1:
+                validate_ = True 
+            else:
+                validate_ = False
 
+            if validate_:
                 LOGGER.info('Validating %s', postdata)
                 schema = etree.XMLSchema(file=schema)
                 parser = etree.XMLParser(schema=schema, resolve_entities=False)
@@ -1703,10 +1709,12 @@ class Csw3(object):
                     doc = etree.fromstring(etree.tostring(doc), parser)
                 else:  # validate the request normally
                     doc = etree.fromstring(postdata, parser)
-                LOGGER.debug('Request is valid XML')
+                LOGGER.debug('Request is valid XML.')
+
             else:  # parse Transaction without validation
                 doc = etree.fromstring(postdata, self.parent.context.parser)
-        except Exception as err:
+
+        except Exception as err: 
             errortext = \
             'Exception: the document is not valid.\nError: %s' % str(err)
             LOGGER.exception(errortext)
