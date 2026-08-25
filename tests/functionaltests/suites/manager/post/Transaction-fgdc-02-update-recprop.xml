@@ -7,7 +7,7 @@
     </csw:RecordProperty>
     <csw:Constraint version="1.1.0">
       <ogc:Filter>
-        <ogc:PropertyIsLike wildChar="%" singleChar="." escapeChar="\">
+        <ogc:PropertyIsLike wildCard="%" singleChar="." escapeChar="\">
           <ogc:PropertyName>dct:abstract</ogc:PropertyName>
           <ogc:Literal>NCEP%</ogc:Literal>
         </ogc:PropertyIsLike>
