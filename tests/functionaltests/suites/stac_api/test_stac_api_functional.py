@@ -839,6 +839,18 @@ def test_items(config):
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['features'][0]['id'] == 'S2A_MSIL2A_20241128T092331_R093_T34SEJ_20241128T122153'  # noqa
 
+    cql_json = {'op': 'like', 'args': [{'property': 'anytext'}, "x') OR (1=1) --"]}  # noqa
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 0
+    assert content['numberReturned'] == 0
+    assert len(content['features']) == content['numberReturned']
+
+    cql_json = {'op': 'like', 'args':[{'property': 'anytext'}, "nomatch') @@ anytext_tsvector OR (1=1) OR plainto_tsquery('english','x"]}  # noqa
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 0
+    assert content['numberReturned'] == 0
+    assert len(content['features']) == content['numberReturned']
+
 
 def test_item(config):
     api = STACAPI(config)

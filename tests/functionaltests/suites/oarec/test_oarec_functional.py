@@ -297,6 +297,18 @@ def test_items(config):
     assert content['numberReturned'] == 2
     assert len(content['features']) == content['numberReturned']
 
+    cql_json = {'op': 'like', 'args': [{'property': 'anytext'}, "x') OR (1=1) --"]}  # noqa
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 0
+    assert content['numberReturned'] == 0
+    assert len(content['features']) == content['numberReturned']
+
+    cql_json = {'op': 'like', 'args':[{'property': 'anytext'}, "nomatch') @@ anytext_tsvector OR (1=1) OR plainto_tsquery('english','x"]}  # noqa
+    content = json.loads(api.items({}, cql_json, {})[2])
+    assert content['numberMatched'] == 0
+    assert content['numberReturned'] == 0
+    assert len(content['features']) == content['numberReturned']
+
     headers, status, content = api.items({}, None, {}, collection='foo')
     assert status == 400
 
