@@ -65,7 +65,7 @@ COPY --chown=pycsw \
     ./
 
 RUN python3 -m venv /venv && \
-    /venv/bin/pip3 install -U pip setuptools python-pkg msgpack && \
+    /venv/bin/pip3 install -U pip setuptools python-pkg msgpack==1.2.1 && \
     /venv/bin/pip3 install \
     --requirement requirements.txt \
     --requirement requirements-standalone.txt \
