@@ -141,6 +141,17 @@ def test_facets(config):
     assert status == 400
 
 
+def test_facets_not_configured(config):
+    config['repository'].pop('facets')
+
+    api = API(config)
+    headers, status, content = api.facets_({}, {})
+    content = json.loads(content)
+
+    assert status == 200
+    assert 'type' in content['facets']
+
+
 def test_items(config):
     api = API(config)
     headers, status, content = api.items({}, None, {})
