@@ -24,6 +24,7 @@ pycsw's runtime configuration is defined by ``default.cfg``.  pycsw ships with a
 - **profiles**: comma delimited list of profiles to load at runtime (default is none).  See :ref:`profiles`
 - **smtp_host**: SMTP host for processing ``csw:ResponseHandler`` parameter via outgoing email requests (default is ``localhost``)
 - **spatial_ranking**: parameter that enables (``true`` or ``false``) ranking of spatial query results as per `K.J. Lanfear 2006 - A Spatial Overlay Ranking Method for a Geospatial Search of Text Objects  <http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf>`_.
+- **allow_internal_requests**: whether to allow for internal HTTP requests to be invoked (default is ``false``)
 
 **[manager]**
 

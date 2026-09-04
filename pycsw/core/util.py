@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -35,13 +35,13 @@
 import os
 import re
 import datetime
+import ipaddress
 import logging
+import socket
 import time
 
-from urllib.request import Request, urlopen
 from urllib.parse import urlparse
 from shapely.wkt import loads
-from owslib.util import http_post
 
 from pycsw.core.etree import etree, PARSER
 
@@ -271,15 +271,23 @@ def getqattr(obj, name):
     return result
 
 
-def http_request(method, url, request=None, timeout=30):
+def http_request(method, url, request=None, timeout=30,
+                 allow_internal_requests=False):
     """Perform HTTP request"""
-    if method == 'POST':
-        return http_post(url, request, timeout=timeout)
-    else:  # GET
-        request = Request(url)
-        request.add_header('User-Agent', 'pycsw (https://pycsw.org/)')
-        return urlopen(request, timeout=timeout).read()
 
+    if not is_request_allowed(url, allow_internal_requests):
+        raise ValueError('URL not allowed')
+
+    headers = {
+        'User-Agent': 'pycsw (https://pycsw.org)'
+    }
+
+    if method == 'POST':
+        return requests.post(url, headers=headers, data=request,
+                             timeout=timeout, allow_redirects=False).text
+    else:
+        return requests.get(url, headers=headers, timeout=timeout,
+                            allow_redirects=False).text
 
 def bind_url(url):
     """binds an HTTP GET query string endpoint"""
@@ -390,3 +398,30 @@ def secure_filename(filename):
         filename = '_' + filename
 
     return filename
+
+
+def is_request_allowed(url: str, allow_internal: bool = False) -> bool:
+    """
+    Test whether an HTTP request is allowed to be executed
+
+    :param url: `str` of URL
+    :param allow_internal: `bool` of whether internal requests are
+                           allowed (default `False`)
+
+    :returns: `bool` of whether HTTP request execution is allowed
+    """
+
+    is_allowed = False
+
+    u = urlparse(url)
+
+    ip = socket.gethostbyname(u.hostname)
+
+    is_private = ipaddress.ip_address(ip).is_private
+
+    if not is_private:
+        is_allowed = True
+    if is_private and allow_internal:
+        is_allowed = True
+
+    return is_allowed
