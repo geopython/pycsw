@@ -298,7 +298,7 @@ def http_request(method, url, request=None, timeout=30,
         raise ValueError('URL not allowed')
 
     headers = {
-        'User-Agent': 'pycsw (https://pycsw.org/)'
+        'User-Agent': 'pycsw (https://pycsw.org)'
     }
 
     if method == 'POST':
