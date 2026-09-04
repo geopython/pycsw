@@ -1613,11 +1613,17 @@ class Csw2(object):
             # csw:Insert|csw:Update (with single child) XML document.
             # Only validate non csw:Transaction XML
 
-            if doc.find('.//%s' % util.nspath_eval('csw:Insert',
-            self.parent.context.namespaces)) is None and \
-            len(doc.xpath('//csw:Update/child::*',
-            namespaces=self.parent.context.namespaces)) == 0:
+            if (doc.find('.//%s' % util.nspath_eval('csw:Insert', self.parent.context.namespaces)) is None and \
+                len(doc.xpath('//csw:Update/child::*', namespaces=self.parent.context.namespaces)) == 0):
+                validate_ = True
+            elif len(doc.xpath('//csw:RecordProperty', namespaces=self.parent.context.namespaces)) == 1:
+                validate_ = True
+            elif len(doc.xpath('//csw:Constraint', namespaces=self.parent.context.namespaces)) == 1:
+                validate_ = True
+            else:
+                validate_ = False
 
+            if validate_:
                 LOGGER.info('Validating %s', postdata)
                 schema = etree.XMLSchema(file=schema)
                 parser = etree.XMLParser(schema=schema, resolve_entities=False)
@@ -1627,8 +1633,10 @@ class Csw2(object):
                 else:  # validate the request normally
                     doc = etree.fromstring(postdata, parser)
                 LOGGER.debug('Request is valid XML.')
+
             else:  # parse Transaction without validation
                 doc = etree.fromstring(postdata, self.parent.context.parser)
+
         except Exception as err:
             errortext = \
             'Exception: the document is not valid.\nError: %s' % str(err)
