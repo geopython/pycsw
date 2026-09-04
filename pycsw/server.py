@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2016 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2016 James Dickens
 # Copyright (c) 2016 Ricardo Silva
@@ -137,6 +137,7 @@ class Csw(object):
             'server', 'home',
             os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
         )
+        self.config['server']['allow_internal_requests'] = self.config['server'].get('allow_internal_requests', False)
 
         self.context.pycsw_home = self.config.get('server', 'home')
         self.context.url = self.config.get('server', 'url')

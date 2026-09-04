@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2016 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -1266,7 +1266,7 @@ class Csw2(object):
             # fetch content-based resource
             LOGGER.debug('Fetching resource %s', self.parent.kvp['source'])
             try:
-                content = util.http_request('GET', self.parent.kvp['source'])
+                content = util.http_request('GET', self.parent.kvp['source'], self.parent.config['server'].get('allow_internal_requests', False))
             except Exception as err:
                 errortext = 'Error fetching resource %s.\nError: %s.' % \
                 (self.parent.kvp['source'], str(err))
