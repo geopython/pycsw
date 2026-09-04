@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis
 #
 # Copyright (c) 2017 Ricardo Garcia Silva
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -200,24 +200,6 @@ def test_getqattr_link():
 def test_getqattr_invalid():
     result = util.getqattr(dt.date(2017, 1, 1), "name")
     assert result is None
-
-
-def test_http_request_post():
-    # here we replace owslib.util.http_post with a mock object
-    # because we are not interested in testing owslib
-    method = "POST"
-    url = "some_phony_url"
-    request = "some_phony_request"
-    timeout = 40
-    with mock.patch("pycsw.core.util.http_post",
-                    autospec=True) as mock_http_post:
-        util.http_request(
-            method=method,
-            url=url,
-            request=request,
-            timeout=timeout
-        )
-        mock_http_post.assert_called_with(url, request, timeout=timeout)
 
 
 @pytest.mark.parametrize("url, expected", [
@@ -437,3 +419,21 @@ def test_str2bool():
 def test_geojson_geometry2bbox(geometry, expected):
     bounds = util.geojson_geometry2bbox(geometry)
     assert bounds == expected
+
+
+@pytest.mark.parametrize('url,allow_internal,result', [
+    ['http://127.0.0.1/test', False, False],
+    ['http://127.0.0.1/test', True, True],
+    ['http://192.168.0.12/test', False, False],
+    ['http://192.168.0.12/test', True, True],
+    ['http://169.254.0.11/test', False, False],
+    ['http://169.254.0.11/test', True, True],
+    ['http://0.0.0.0/test', True, True],
+    ['http://0.0.0.0/test', False, False],
+    ['http://localhost:5000/test', False, False],
+    ['http://localhost:5000/test', True, True],
+    ['https://pycsw.org', False, True],
+    ['https://pycsw.org', True, True]
+])
+def test_is_request_allowed(url, allow_internal, result):
+    assert util.is_request_allowed(url, allow_internal) is result

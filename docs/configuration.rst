@@ -27,6 +27,7 @@ pycsw's runtime configuration is defined by ``default.yml``.  pycsw ships with a
 - **smtp_ssl**: Option to choose between SMTP and SMTP_SSL. To enable it, set the value to ``true`` (default is ``false``)
 - **spatial_ranking**: parameter that enables (``true`` or ``false``) ranking of spatial query results as per `K.J. Lanfear 2006 - A Spatial Overlay Ranking Method for a Geospatial Search of Text Objects  <https://pubs.usgs.gov/of/2006/1279/2006-1279.pdf>`_.
 - **workers**: set the number of workers used by the wsgi server when lunching pycsw using the provided docker/entrypoint.py. If not set, it will use 2 workers as Default.
+- **allow_internal_requests**: whether to allow for internal HTTP requests to be invoked (default is ``false``)
 
 **profiles**
 

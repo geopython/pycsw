@@ -112,6 +112,7 @@ class Csw(object):
         # set server.home safely
         # TODO: make this more abstract
         self.config['server']['home'] = os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
+        self.config['server']['allow_internal_requests'] = self.config['server'].get('allow_internal_requests', False)
 
         if 'PYCSW_IS_CSW' in self.environ and self.environ['PYCSW_IS_CSW']:
             self.config['server']['url'] = self.config['server']['url'].rstrip('/') + '/csw'
