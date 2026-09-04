@@ -49,8 +49,8 @@ from pycsw.core.config import StaticContext
 from pycsw.core.metadata import parse_record
 from pycsw.core.pygeofilter_evaluate import to_filter
 from pycsw.core.util import (bind_url, get_oidc_access_token, get_today_and_now,
-                             jsonify_links, load_custom_repo_mappings,
-                             str2bool, wkt2geom)
+                             ipaddress_in_whitelist, jsonify_links,
+                             load_custom_repo_mappings, str2bool, wkt2geom)
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.util import match_env_var, render_j2_template, to_json, to_rfc3339
 from pycsw.ogc.pubsub import publish_message
@@ -1099,6 +1099,12 @@ class API:
             return self.get_exception(
                     405, headers_, 'InvalidParameterValue',
                     'transactions not allowed')
+
+        if ('allowed_ips' not in self.config['manager'] or not
+                ipaddress_in_whitelist(headers_['x-client-ip-address'], self.config['manager'].get('allowed_ips', []))):
+            return self.get_exception(
+                400, headers_, 'NoApplicableCode',
+                'Transaction operations not allowed for this IP address')
 
         if action in ['create', 'replace', 'update'] and data is None:
             msg = 'No data found'

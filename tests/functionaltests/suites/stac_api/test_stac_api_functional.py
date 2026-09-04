@@ -884,7 +884,8 @@ def test_json_transaction(config, sample_collection, sample_item,
                           sample_item_collection):
     api = STACAPI(config)
     request_headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-client-ip-address': '127.0.0.1'
     }
 
     # ensure an item insert is part of a collection
@@ -1061,3 +1062,17 @@ def test_json_transaction(config, sample_collection, sample_item,
             collection_found = True
 
     assert not collection_found
+
+
+def test_transaction_ipaddress(config, sample_item):
+    api = STACAPI(config)
+    request_headers = {
+        'Content-Type': 'application/json',
+        'x-client-ip-address': '192.168.0.1'
+    }
+
+    # insert record
+    headers, status, content = api.manage_collection_item(
+        request_headers, 'create', data=sample_item)
+
+    assert status == 400
