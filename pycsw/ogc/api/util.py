@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #
-# Copyright (c) 2025 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2021 Angelos Tzotsos
 #
 # Permission is hereby granted, free of charge, to any person
@@ -169,9 +169,9 @@ def yaml_dump(dict_: dict, destfile: str) -> bool:
     return True
 
 
-def to_json(dict_, pretty=False):
+def to_json(dict_: dict, pretty: bool = False) -> str:
     """
-    Serialize dict to json
+    Serialize dict to JSON
 
     :param dict_: `dict` of JSON representation
     :param pretty: `bool` of whether to prettify JSON (default is `False`)
@@ -184,8 +184,15 @@ def to_json(dict_, pretty=False):
     else:
         indent = None
 
-    return json.dumps(dict_, default=json_serial,
-                      indent=indent)
+    LOGGER.debug('Dumping JSON')
+    json_dump = json.dumps(dict_, default=json_serial, indent=indent,
+                           separators=(',', ':'))
+
+    LOGGER.debug('Escaping < and >')
+    json_dump = json_dump.replace('<', '&lt;')
+    json_dump = json_dump.replace('>', '&gt;')
+
+    return json_dump
 
 
 def render_j2_template(config, template, data):
