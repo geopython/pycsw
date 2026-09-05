@@ -4,7 +4,7 @@
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2015 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
 # Permission is hereby granted, free of charge, to any person
@@ -30,6 +30,6 @@
 #
 # =================================================================
 
-import pkg_resources
+from importlib.metadata import version
 
-__version__ = pkg_resources.require("pycsw")[0].version
+__version__ = version('pycsw')
