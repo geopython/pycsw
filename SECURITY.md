@@ -14,7 +14,4 @@ The pycsw Project Steering Committee (PSC) will release patches for security vul
 | Version | Supported          |
 | ------- | ------------------ |
 | 2.6.x   | :white_check_mark: |
-| 2.4.x   | :x: |
-| 2.2.x   | :x: |
-| 2.0.x   | :x: |
-| < 2.0   | :x:                |
+| < 2.6.x   | :x: |
