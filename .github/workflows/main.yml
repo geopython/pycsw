@@ -19,23 +19,17 @@ on:
 
 jobs:
   main:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         include:
-          - python-version: 3.6
-            toxenv: "py36-sqlite"
-          - python-version: 3.7
-            toxenv: "py37-sqlite"
-          - python-version: 3.8
-            toxenv: "py38-sqlite"
-          - python-version: 3.9
-            toxenv: "py39-sqlite"
+          - python-version: "3.12"
+            toxenv: "py312-sqlite"
     env:
         TOXENV: ${{ matrix.toxenv }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - uses: actions/checkout@master
+    - uses: actions/setup-python@v5
       name: Setup Python ${{ matrix.python-version }}
       with:
         python-version: ${{ matrix.python-version }}
