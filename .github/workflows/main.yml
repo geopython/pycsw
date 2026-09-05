@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - python-version: "3.10"
+          - python-version: "3.12"
             toxenv: "py310-sqlite"
     env:
         TOXENV: ${{ matrix.toxenv }}
