@@ -577,7 +577,7 @@ class API:
             LOGGER.exception(msg)
             return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
-        for value in self.config['repository']['facets']:
+        for value in self.facets:
             facets_[value] = {
                 'type': 'term',
                 'property': value,
