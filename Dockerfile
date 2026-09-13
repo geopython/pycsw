@@ -45,7 +45,8 @@ LABEL maintainer="massimods@met.no,aheimsbakk@met.no,tommkralidis@gmail.com,gcpp
 ARG BUILD_DEV_IMAGE="false"
 
 RUN apt-get update --yes && \
-    apt-get install --yes --no-install-recommends ca-certificates python3-setuptools libcap2 libssl3t64 libsystemd0 && \
+    apt-get install --yes --no-install-recommends ca-certificates python3-setuptools \
+    libcap2 libssl3t64 libsystemd0 gzip libpcre2-8-0 libsqlite3-0 perl-base  && \
     rm -rf /var/lib/apt/lists/*
 
 RUN adduser --uid 1000 --gecos '' --disabled-password pycsw
