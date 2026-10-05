@@ -5,7 +5,7 @@
 #          Angelos Tzotsos <tzotsos@gmail.com>
 #          Ricardo Garcia Silva <ricardo.garcia.silva@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 # Copyright (c) 2015 Angelos Tzotsos
 # Copyright (c) 2017 Ricardo Garcia Silva
 #
@@ -34,6 +34,7 @@
 
 import inspect
 import logging
+from operator import itemgetter
 import os
 from time import sleep
 
@@ -49,11 +50,12 @@ from sqlalchemy.orm import create_session
 from pycsw.core import util
 from pycsw.core.etree import etree
 from pycsw.core.etree import PARSER
+from pycsw.core.pygeofilter_ext import to_filter
 
 LOGGER = logging.getLogger(__name__)
 
 
-class Repository(object):
+class Repository:
     _engines = {}
 
     @classmethod
@@ -87,15 +89,16 @@ class Repository(object):
         return clazz._engines[url]
 
     ''' Class to interact with underlying repository '''
-    def __init__(self, database, context, app_root=None, table='records', repo_filter=None, stable_sort = False):
+    def __init__(self, repo_object, context, app_root=None):
         ''' Initialize repository '''
 
         self.context = context
-        self.filter = repo_filter
-        self.stable_sort = stable_sort
+        self.filter = repo_object.get('filter')
         self.fts = False
-        self.database = database
-        self.table = table
+        self.database = repo_object.get('database')
+        self.table = repo_object.get('table')
+        self.facets = repo_object.get('facets', [])
+        self.stable_sort = repo_object.get('stable_sort', False)
 
         # Don't use relative paths, this is hack to get around
         # most wsgi restriction...
@@ -111,7 +114,7 @@ class Repository(object):
 
         self.postgis_geometry_column = None
 
-        schema_name, table_name = table.rpartition(".")[::2]
+        schema_name, table_name = self.table.rpartition(".")[::2]
 
         default_table_args = {
             "autoload": True,
@@ -146,6 +149,7 @@ class Repository(object):
         temp_dbtype = None
 
         self.query_mappings = {
+            # OGC API - Records mappings
             'identifier': self.dataset.identifier,
             'type': self.dataset.type,
             'typename': self.dataset.typename,
@@ -173,6 +177,10 @@ class Repository(object):
             'distancevalue': self.dataset.distancevalue,
             'otherconstraints': self.dataset.otherconstraints
         }
+
+        LOGGER.debug('adding OGC CSW mappings')
+        for key, value in self.context.models['csw']['typenames']['csw:Record']['queryables']['SupportedDublinCoreQueryables'].items():
+            self.query_mappings[key] = util.getqattr(self.dataset, value['dbcol'])
 
         if self.dbtype == 'postgresql':
             # check if PostgreSQL is enabled with PostGIS 1.x
@@ -422,54 +430,113 @@ class Repository(object):
         query = self.session.query(self.dataset).filter(column == source)
         return self._get_repo_filter(query).all()
 
-    def query(self, constraint, sortby=None, typenames=None,
+    def query(self, constraint=None, sortby=None, typenames=None,
               maxrecords=10, startposition=0):
         ''' Query records from underlying repository '''
 
-        # run the raw query and get total
-        if 'where' in constraint:  # GetRecords with constraint
-            LOGGER.debug('constraint detected')
-            query = self.session.query(self.dataset).filter(
-                                       text(constraint['where'])).params(self._create_values(constraint['values']))
-        else:  # GetRecords sans constraint
-            LOGGER.debug('No constraint detected')
-            query = self.session.query(self.dataset)
+        if constraint.get('ast') is not None:  # GetRecords with pygeofilter AST
+            LOGGER.debug('pygeofilter AST detected')
+            LOGGER.debug('Transforming AST into filters')
+            try:
+                filters = to_filter(constraint['ast'], self.dbtype, self.query_mappings)
+                LOGGER.debug(f'Filter: {filters}')
+            except Exception as err:
+                msg = f'AST evaluator error: {str(err)}'
+                LOGGER.exception(msg)
+                raise RuntimeError(msg)
+
+            query = self.session.query(self.dataset).filter(filters)
+
+        else:  # GetRecords sans pygeofilter AST
+            LOGGER.debug('No pygeofilter AST detected')
+
+            # run the raw query and get total
+            if 'where' in constraint:  # GetRecords with constraint
+                LOGGER.debug('constraint detected')
+                query = self.session.query(self.dataset).filter(
+                                           text(constraint['where'])).params(self._create_values(constraint['values']))
+            else:  # GetRecords sans constraint
+                LOGGER.debug('No constraint detected')
+                query = self.session.query(self.dataset)
 
         total = self._get_repo_filter(query).count()
 
-        if util.ranking_pass:  # apply spatial ranking
-            # TODO: Check here for dbtype so to extract wkt from postgis native to wkt
-            LOGGER.debug('spatial ranking detected')
-            LOGGER.debug('Target WKT: %s', getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']))
-            LOGGER.debug('Query WKT: %s', util.ranking_query_geometry)
-            query = query.order_by(func.get_spatial_overlay_rank(getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']), util.ranking_query_geometry).desc())
-            # trying to make this wsgi safe
-            util.ranking_pass = False
-            util.ranking_query_geometry = ''
-
         if sortby is not None:  # apply sorting
-            LOGGER.debug('sorting detected')
-            # TODO: Check here for dbtype so to extract wkt from postgis native to wkt
-            sortby_column = getattr(self.dataset, sortby['propertyname'])
+            if isinstance(sortby, list):
+                query = query.order_by(*sortby)
+            else:
+                if util.ranking_pass:  # apply spatial ranking
+                    # TODO: Check here for dbtype so to extract wkt from postgis native to wkt
+                    LOGGER.debug('spatial ranking detected')
+                    LOGGER.debug('Target WKT: %s', getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']))
+                    LOGGER.debug('Query WKT: %s', util.ranking_query_geometry)
+                    query = query.order_by(func.get_spatial_overlay_rank(getattr(self.dataset, self.context.md_core_model['mappings']['pycsw:BoundingBox']), util.ranking_query_geometry).desc())
+                    # trying to make this wsgi safe
+                    util.ranking_pass = False
+                    util.ranking_query_geometry = ''
 
-            if sortby['order'] == 'DESC':  # descending sort
-                if 'spatial' in sortby and sortby['spatial']:  # spatial sort
-                    query = query.order_by(func.get_geometry_area(sortby_column).desc())
-                else:  # aspatial sort
-                    query = query.order_by(sortby_column.desc())
-            else:  # ascending sort
-                if 'spatial' in sortby and sortby['spatial']:  # spatial sort
-                    query = query.order_by(func.get_geometry_area(sortby_column))
-                else:  # aspatial sort
-                    query = query.order_by(sortby_column)
+                # TODO: Check here for dbtype so to extract wkt from postgis native to wkt
+                sortby_column = getattr(self.dataset, sortby['propertyname'])
+
+                if sortby['order'] == 'DESC':  # descending sort
+                    if 'spatial' in sortby and sortby['spatial']:  # spatial sort
+                        query = query.order_by(func.get_geometry_area(sortby_column).desc())
+                    else:  # aspatial sort
+                        query = query.order_by(sortby_column.desc())
+                else:  # ascending sort
+                    if 'spatial' in sortby and sortby['spatial']:  # spatial sort
+                        query = query.order_by(func.get_geometry_area(sortby_column))
+                    else:  # aspatial sort
+                        query = query.order_by(sortby_column)
             
-            if self.stable_sort:
-                identifier = self.context.md_core_model['mappings']['pycsw:Identifier']
-                query = query.order_by(identifier)
+        if self.stable_sort:
+            identifier = self.context.md_core_model['mappings']['pycsw:Identifier']
+            query = query.order_by(identifier)
             
         # always apply limit and offset
-        return [str(total), self._get_repo_filter(query).limit(
+        return [total, self._get_repo_filter(query).limit(
             maxrecords).offset(startposition).all()]
+
+    def get_facets(self, ast=None) -> dict:
+        """
+        Gets all facets for a given query
+
+        :returns: `dict` of facets
+        """
+
+        facets_results = {}
+
+        for facet in self.facets:
+            LOGGER.debug(f'Running facet for {facet}')
+            facetq = self.session.query(self.query_mappings[facet], self.func.count(facet)).group_by(facet)
+
+            if ast is not None:
+                try:
+                    filters = to_filter(ast, self.dbtype, self.query_mappings)
+                    LOGGER.debug(f'Filter: {filters}')
+                except Exception as err:
+                    msg = f'AST evaluator error: {str(err)}'
+                    LOGGER.exception(msg)
+                    raise RuntimeError(msg)
+
+                facetq = facetq.filter(filters)
+
+            LOGGER.debug('Writing facet query results')
+            facets_results[facet] = {
+                'type': 'terms',
+                'property': facet,
+                'buckets': []
+            }
+
+            for fq in facetq.all():
+                facets_results[facet]['buckets'].append({
+                    'value': fq[0],
+                    'count': fq[1]
+                })
+
+            facets_results[facet]['buckets'].sort(key=itemgetter('count'), reverse=True)
+
+        return facets_results
 
     def insert(self, record, source, insert_date):
         ''' Insert a record into the repository '''
