@@ -160,8 +160,8 @@ def collections():
         return get_response(api_.collections(dict(request.headers), request.args))
 
 
-@BLUEPRINT.route('/collections/<collection>', methods=['GET', 'PATCH', 'PUT', 'DELETE'])
-@BLUEPRINT.route('/stac/collections/<collection>', methods=['GET', 'PATCH', 'PUT', 'DELETE'])
+@BLUEPRINT.route('/collections/<path:collection>', methods=['GET', 'PATCH', 'PUT', 'DELETE'])
+@BLUEPRINT.route('/stac/collections/<path:collection>', methods=['GET', 'PATCH', 'PUT', 'DELETE'])
 def collection(collection='metadata:main'):
     """
     OGC API collection endpoint
@@ -196,9 +196,9 @@ def collection(collection='metadata:main'):
                             request.args, collection))
 
 
-@BLUEPRINT.route('/collections/<collection>/queryables')
+@BLUEPRINT.route('/collections/<path:collection>/queryables')
 @BLUEPRINT.route('/stac/queryables')
-@BLUEPRINT.route('/stac/collections/<collection>/queryables')
+@BLUEPRINT.route('/stac/collections/<path:collection>/queryables')
 def queryables(collection='metadata:main'):
     """
     OGC API collection queryables endpoint
@@ -216,7 +216,7 @@ def queryables(collection='metadata:main'):
                             collection))
 
 
-@BLUEPRINT.route('/collections/<collection>/facets')
+@BLUEPRINT.route('/collections/<path:collection>/facets')
 def facets(collection='metadata:main'):
     """
     OGC API collection facets endpoint
@@ -230,7 +230,7 @@ def facets(collection='metadata:main'):
                         collection))
 
 
-@BLUEPRINT.route('/collections/<collection>/federatedCatalogs')
+@BLUEPRINT.route('/collections/<path:collection>/federatedCatalogs')
 def federated_catalogues(collection='metadata:main'):
     """
     OGC API collection federated catalogues endpoint
@@ -244,7 +244,7 @@ def federated_catalogues(collection='metadata:main'):
                         collection))
 
 
-@BLUEPRINT.route('/collections/<collection>/federatedCatalogs/<catalogue>')
+@BLUEPRINT.route('/collections/<path:collection>/federatedCatalogs/<catalogue>')
 def federated_catalogue(collection='metadata:main', catalogue=None):
     """
     OGC API collection federated catalogue endpoint
@@ -259,9 +259,9 @@ def federated_catalogue(collection='metadata:main', catalogue=None):
                         collection, catalogue))
 
 
-@BLUEPRINT.route('/collections/<collection>/items', methods=['GET', 'POST'])
+@BLUEPRINT.route('/collections/<path:collection>/items', methods=['GET', 'POST'])
 @BLUEPRINT.route('/stac/search', methods=['GET', 'POST'])
-@BLUEPRINT.route('/stac/collections/<collection>/items', methods=['GET', 'POST'])
+@BLUEPRINT.route('/stac/collections/<path:collection>/items', methods=['GET', 'POST'])
 def items(collection='metadata:main'):
     """
     OGC API collection items endpoint
@@ -306,9 +306,9 @@ def items(collection='metadata:main'):
                             collection))
 
 
-@BLUEPRINT.route('/collections/<collection>/items/<path:item>',
+@BLUEPRINT.route('/collections/<path:collection>/items/<path:item>',
                  methods=['GET', 'PATCH', 'PUT', 'DELETE'])
-@BLUEPRINT.route('/stac/collections/<collection>/items/<item>',
+@BLUEPRINT.route('/stac/collections/<path:collection>/items/<path:item>',
                  methods=['GET', 'PATCH', 'PUT', 'DELETE'])
 def item(collection='metadata:main', item=None):
     """
