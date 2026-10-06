@@ -435,6 +435,14 @@ class Repository(object):
             LOGGER.debug('No constraint detected')
             query = self.session.query(self.dataset)
 
+        # filter by typename when specific typenames requested
+        _csw_generic = {'csw:Record', 'csw30:Record'}
+        if typenames and not any(t in _csw_generic for t in typenames):
+            typename_col = self.context.md_core_model['mappings']['pycsw:Typename']
+            query = query.filter(
+                getattr(self.dataset, typename_col).in_(typenames)
+            )
+
         total = self._get_repo_filter(query).count()
 
         if util.ranking_pass:  # apply spatial ranking
