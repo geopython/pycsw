@@ -4,9 +4,9 @@
 apipkg
 mock
 Paver
-pytest<9
+pytest
 pytest-cov
-pytest-flake8
+#pytest-flake8
 pytest-timeout
 sphinx
 twine
