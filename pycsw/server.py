@@ -137,7 +137,7 @@ class Csw(object):
             'server', 'home',
             os.path.dirname(os.path.join(os.path.dirname(__file__), '..'))
         )
-        self.config['server']['allow_internal_requests'] = self.config['server'].get('allow_internal_requests', False)
+        self.config['server']['allow_internal_requests'] = self.config['server'].get('allow_internal_requests', 'false')
 
         self.context.pycsw_home = self.config.get('server', 'home')
         self.context.url = self.config.get('server', 'url')
