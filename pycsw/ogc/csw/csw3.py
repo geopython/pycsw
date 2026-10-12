@@ -761,7 +761,7 @@ class Csw3(object):
                         self.parent.kvp['constraint']['type'] = 'filter'
                         cql = cql2fes(tmp, self.parent.context.namespaces, fes_version='1.0')
                         self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = fes1.parse(cql,
-                        self._scoped_queryables(self.parent.kvp.get('typenames')), self.parent.repository.dbtype,
+                        self.parent.repository.scoped_queryables(self.parent.kvp.get('typenames')), self.parent.repository.dbtype,
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                         self.parent.kvp['constraint']['_dict'] = xml2dict(etree.tostring(cql), self.parent.context.namespaces)
                     except Exception as err:
@@ -782,7 +782,7 @@ class Csw3(object):
                         self.parent.kvp['constraint']['type'] = 'filter'
                         self.parent.kvp['constraint']['where'], self.parent.kvp['constraint']['values'] = \
                         fes2.parse(doc,
-                        self._scoped_queryables(self.parent.kvp.get('typenames')),
+                        self.parent.repository.scoped_queryables(self.parent.kvp.get('typenames')),
                         self.parent.repository.dbtype,
                         self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                         self.parent.kvp['constraint']['_dict'] = xml2dict(etree.tostring(doc), self.parent.context.namespaces)
@@ -812,7 +812,7 @@ class Csw3(object):
 
             try:
                 self.parent.kvp['sortby']['propertyname'] = \
-                self.parent.repository.queryables['_all'][name]['dbcol']
+                self.parent.repository.scoped_queryables(self.parent.kvp.get('typenames'))[name]['dbcol']
                 if name.find('BoundingBox') != -1 or name.find('Envelope') != -1:
                     # it's a spatial sort
                     self.parent.kvp['sortby']['spatial'] = True
@@ -1641,20 +1641,6 @@ class Csw3(object):
 
         return record
 
-    def _scoped_queryables(self, typenames=None):
-        ''' Scope queryables to the requested typenames so profiles sharing a
-        property name resolve to the correct column '''
-        csw_generic = {'csw:Record', 'csw30:Record'}
-        tnames = typenames if isinstance(typenames, list) else (typenames.split() if typenames else [])
-        if not tnames or any(t in csw_generic for t in tnames):
-            return self.parent.repository.queryables['_all']
-        scoped = dict(self.parent.repository.queryables['_all'])
-        for tname in tnames:
-            if tname in self.parent.context.model['typenames']:
-                for qgroup in self.parent.context.model['typenames'][tname]['queryables']:
-                    scoped.update(self.parent.repository.queryables.get(qgroup, {}))
-        return scoped
-
     def _parse_constraint(self, element, typenames=None):
         ''' Parse csw:Constraint '''
 
@@ -1666,7 +1652,7 @@ class Csw3(object):
             try:
                 query['type'] = 'filter'
                 query['where'], query['values'] = fes2.parse(tmp,
-                self._scoped_queryables(typenames), self.parent.repository.dbtype,
+                self.parent.repository.scoped_queryables(typenames), self.parent.repository.dbtype,
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                 query['_dict'] = xml2dict(etree.tostring(tmp), self.parent.context.namespaces)
             except Exception as err:
@@ -1680,7 +1666,7 @@ class Csw3(object):
                 query['type'] = 'filter'
                 cql = cql2fes(tmp.text, self.parent.context.namespaces, fes_version='2.0')
                 query['where'], query['values'] = fes2.parse(cql,
-                self._scoped_queryables(typenames), self.parent.repository.dbtype,
+                self.parent.repository.scoped_queryables(typenames), self.parent.repository.dbtype,
                 self.parent.context.namespaces, self.parent.orm, self.parent.language['text'], self.parent.repository.fts)
                 query['_dict'] = xml2dict(etree.tostring(cql), self.parent.context.namespaces)
             except Exception as err:
@@ -1849,7 +1835,7 @@ class Csw3(object):
             tmp = doc.find(util.nspath_eval(
             'csw30:Query', self.parent.context.namespaces)).attrib.get('typeNames')
             request['typenames'] = tmp.split() if tmp is not None \
-            else 'csw:Record'
+            else ['csw:Record']
 
             request['elementname'] = [elname.text for elname in \
             doc.findall(util.nspath_eval('csw30:Query/csw30:ElementName',
@@ -1880,7 +1866,7 @@ class Csw3(object):
                     self.parent.context.namespaces)).text
 
                     request['sortby']['propertyname'] = \
-                    self.parent.repository.queryables['_all'][elname]['dbcol']
+                    self.parent.repository.scoped_queryables(request.get('typenames'))[elname]['dbcol']
 
                     if (elname.find('BoundingBox') != -1 or
                         elname.find('Envelope') != -1):

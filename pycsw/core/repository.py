@@ -422,9 +422,31 @@ class Repository(object):
         query = self.session.query(self.dataset).filter(column == source)
         return self._get_repo_filter(query).all()
 
+    def scoped_queryables(self, typenames=None):
+        ''' Return queryables dict scoped to the requested typenames.
+
+        Reads column mappings directly from the context model per typename,
+        avoiding last-wins collisions in the flattened self.queryables dict.
+        Falls back to _all for generic/wildcard types.
+        '''
+        _csw_generic = {'csw:Record', 'csw30:Record'}
+        if isinstance(typenames, str):
+            typenames = typenames.split()
+        if not typenames or any(t in _csw_generic for t in typenames):
+            return self.queryables['_all']
+        scoped = dict(self.queryables['_all'])
+        for tname in typenames:
+            if tname in self.context.model['typenames']:
+                for qmappings in self.context.model['typenames'][tname]['queryables'].values():
+                    scoped.update(qmappings)
+        return scoped
+
     def query(self, constraint, sortby=None, typenames=None,
               maxrecords=10, startposition=0):
         ''' Query records from underlying repository '''
+
+        if isinstance(typenames, str):
+            typenames = typenames.split()
 
         # run the raw query and get total
         if 'where' in constraint:  # GetRecords with constraint
