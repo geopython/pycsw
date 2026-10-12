@@ -127,3 +127,65 @@ def test_query_no_typename_returns_all(multiprofile_repo):
 
     assert total == '4'
     assert len(records) == 4
+
+
+def test_query_string_typename_no_crash(multiprofile_repo):
+    """Passing a bare string (the POST default when typeNames is absent) must
+    not crash with SQLAlchemy ArgumentError."""
+    total, records = multiprofile_repo.query(constraint={}, typenames='csw:Record')
+    assert total == '4'
+    assert len(records) == 4
+
+
+def test_scoped_queryables_generic_returns_all(multiprofile_repo):
+    """Generic typenames must return the full _all dict unchanged."""
+    result = multiprofile_repo.scoped_queryables(['csw:Record'])
+    assert result is multiprofile_repo.queryables['_all']
+
+
+def test_scoped_queryables_string_generic_returns_all(multiprofile_repo):
+    """String form of a generic typename must also return _all (no crash)."""
+    result = multiprofile_repo.scoped_queryables('csw:Record')
+    assert result is multiprofile_repo.queryables['_all']
+
+
+def test_scoped_queryables_none_returns_all(multiprofile_repo):
+    """No typename returns _all."""
+    result = multiprofile_repo.scoped_queryables(None)
+    assert result is multiprofile_repo.queryables['_all']
+
+
+def test_scoped_queryables_group_collision():
+    """Two profiles sharing a queryable group name must not collide.
+
+    scoped_queryables reads directly from context.model per typename,
+    so profile-A's column wins for profile-A queries even when both
+    profiles declare the same group name.
+    """
+    from unittest.mock import MagicMock
+
+    repo = MagicMock()
+    repo.queryables = {
+        '_all': {'dc:title': {'dbcol': 'title'}},
+        'SharedGroup': {'dc:title': {'dbcol': 'title'}},
+    }
+    repo.context.model = {
+        'typenames': {
+            'foo:ProfileA': {
+                'queryables': {
+                    'SharedGroup': {'dc:title': {'dbcol': 'col_a'}},
+                }
+            },
+            'foo:ProfileB': {
+                'queryables': {
+                    'SharedGroup': {'dc:title': {'dbcol': 'col_b'}},
+                }
+            },
+        }
+    }
+
+    result_a = repository.Repository.scoped_queryables(repo, ['foo:ProfileA'])
+    result_b = repository.Repository.scoped_queryables(repo, ['foo:ProfileB'])
+
+    assert result_a['dc:title']['dbcol'] == 'col_a'
+    assert result_b['dc:title']['dbcol'] == 'col_b'
