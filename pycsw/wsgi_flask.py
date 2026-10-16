@@ -43,6 +43,28 @@ from pycsw.wsgi import application_dispatcher
 APP = Flask(__name__, static_folder=STATIC, static_url_path='/static')
 APP.url_map.strict_slashes = False
 
+
+class StripTrailingSlash:
+    """
+    WSGI middleware routing `/a/b/` like `/a/b`.
+
+    Collection and item identifiers are `path` converters, so they can
+    contain `/`: without this, `/collections/foo/items/` would match the
+    collection route with the collection `foo/items/`.
+    """
+
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        path = environ.get('PATH_INFO', '')
+        if len(path) > 1 and path.endswith('/'):
+            environ['PATH_INFO'] = path.rstrip('/') or '/'
+        return self.app(environ, start_response)
+
+
+APP.wsgi_app = StripTrailingSlash(APP.wsgi_app)
+
 with open(os.getenv('PYCSW_CONFIG'), encoding='utf8') as fh:
     APP.config['PYCSW_CONFIG'] = yaml_load(fh)
 

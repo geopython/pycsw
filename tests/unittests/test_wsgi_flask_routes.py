@@ -71,3 +71,43 @@ assert (
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_trailing_slash_routes_like_no_slash_and_unknown_collection_is_404():
+    script = """
+import json
+from pycsw import wsgi_flask
+
+client = wsgi_flask.APP.test_client()
+
+def get(path):
+    response = client.get(path, query_string={'f': 'json'})
+    content = response.get_json()
+    if isinstance(content, dict):
+        content.pop('timeStamp', None)  # differs between any two requests
+    return response.status_code, content
+
+# a trailing slash must not turn into part of a path-converter identifier
+for path in ['/collections/metadata:main/items', '/collections/metadata:main/queryables',
+             '/collections/metadata:main', '/collections', '/stac/collections', '/']:
+    status, content = get(path)
+    status_slash, content_slash = get(path.rstrip('/') + '/')
+    assert status == 200, (path, status)
+    assert (status_slash, content_slash) == (status, content), path
+
+status, content = get('/collections/does-not-exist')
+assert status == 404, status
+assert content['description'] == 'collection not found', content
+"""
+    environment = os.environ.copy()
+    environment["PYCSW_CONFIG"] = str(CONFIG)
+    environment["PYTHONPATH"] = str(ROOT)
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        cwd=ROOT,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout[-2000:] + result.stderr[-2000:]
