@@ -41,7 +41,7 @@ from time import sleep
 from shapely.wkt import loads
 from shapely.errors import ShapelyError
 
-from sqlalchemy import create_engine, func, __version__, select
+from sqlalchemy import create_engine, func, or_, __version__, select
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
@@ -356,8 +356,8 @@ class Repository:
         query = self.session.query(self.dataset).filter(column.in_(ids))
         return self._get_repo_filter(query).all()
 
-    def query_collections(self, collection=None, filters=None, limit=10):
-        ''' Query for parent collections '''
+    def _collections_query(self, collection=None, filters=None):
+        ''' Query of parent collections and STAC collections '''
 
         column = getattr(self.dataset,
                          self.context.md_core_model['mappings']['pycsw:ParentIdentifier'])
@@ -371,27 +371,43 @@ class Repository:
 
         ids = [res[0] for res in results if res[0] is not None]
 
-        column = getattr(self.dataset,
-                         self.context.md_core_model['mappings']['pycsw:Identifier'])
-
-        query = self.session.query(self.dataset).filter(column.in_(ids))
+        identifier = getattr(self.dataset,
+                             self.context.md_core_model['mappings']['pycsw:Identifier'])
 
         collection_typenames = [
             'stac:Collection'
         ]
 
-        column = getattr(self.dataset,
-                         self.context.md_core_model['mappings']['pycsw:Typename'])
+        typename = getattr(self.dataset,
+                           self.context.md_core_model['mappings']['pycsw:Typename'])
 
-        query2 = self.session.query(self.dataset).filter(column.in_(collection_typenames))
+        query = self.session.query(self.dataset).filter(
+            or_(identifier.in_(ids), typename.in_(collection_typenames)))
+
+        query = self._get_repo_filter(query)
 
         if filters is not None:
             LOGGER.debug('Querying repository with additional filters')
-            return list(set(self._get_repo_filter(query).filter(filters).limit(limit).all()) |
-                        set(self._get_repo_filter(query2).filter(filters).limit(limit).all()))
+            query = query.filter(filters)
 
-        return list(set(self._get_repo_filter(query).limit(limit).all()) |
-                    set(self._get_repo_filter(query2).limit(limit).all()))
+        return query
+
+    def query_collections(self, collection=None, filters=None, limit=10,
+                          offset=0):
+        ''' Query for parent collections '''
+
+        identifier = getattr(self.dataset,
+                             self.context.md_core_model['mappings']['pycsw:Identifier'])
+
+        query = self._collections_query(collection, filters)
+
+        # a stable order, so that offset pages neither repeat nor skip
+        return query.order_by(identifier).offset(offset).limit(limit).all()
+
+    def count_collections(self, collection=None, filters=None):
+        ''' Count parent collections, for paging query_collections '''
+
+        return self._collections_query(collection, filters).count()
 
     def query_domain(self, domain, typenames, domainquerytype='list',
                      count=False):
