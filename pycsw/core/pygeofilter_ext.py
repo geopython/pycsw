@@ -27,8 +27,10 @@
 #
 # =================================================================
 
+from copy import deepcopy
 import logging
 
+from owslib import crs as owslib_crs
 from shapely import box
 from shapely.geometry import shape
 from sqlalchemy import text
@@ -42,9 +44,94 @@ from pygeofilter.parsers.fes.util import Element
 from pygeofilter.parsers.fes.util import handle as fhandle
 from pygeofilter.parsers.fes.v11 import FES11Parser
 
+from pycsw.core.etree import etree
 from pycsw.core.util import bbox2wktpolygon
+from pycsw.ogc.gml.gml3 import DEFAULT_SRS
 
 LOGGER = logging.getLogger(__name__)
+
+GML_NAMESPACES = ('http://www.opengis.net/gml', 'http://www.opengis.net/gml/3.2')
+# GML elements holding coordinates as whitespace-separated numbers
+GML_COORDINATE_LISTS = ('pos', 'posList', 'lowerCorner', 'upperCorner')
+# longitude/latitude, in the form pygml recognises (it swaps latitude-first
+# polygons, lines and points itself, so the swapped geometry must say xy)
+LONGITUDE_FIRST = 'urn:ogc:def:crs:OGC::CRS84'
+
+
+def _gml_name(element):
+    """Local name of a GML element, else None"""
+
+    if element is None or not isinstance(element.tag, str):
+        return None
+    qname = etree.QName(element)
+    return qname.localname if qname.namespace in GML_NAMESPACES else None
+
+
+def _axis_order(srs_name):
+    """Axis order ('xy' or 'yx') of a GML srsName, as gml3.Geometry reads it"""
+
+    if not srs_name:
+        return DEFAULT_SRS.axisorder
+    try:
+        return owslib_crs.Crs(srs_name).axisorder
+    except Exception:
+        LOGGER.debug(f'Unknown srsName {srs_name}: using the default axis order')
+        return DEFAULT_SRS.axisorder
+
+
+def _swap_xy(values, dimension):
+    """Swap the first two values of each `dimension`-tuple"""
+
+    for i in range(0, len(values) - 1, dimension):
+        values[i], values[i + 1] = values[i + 1], values[i]
+    return values
+
+
+def gml_to_xy(filter_):
+    """
+    Return a copy of an OGC Filter whose GML geometries are all in x/y
+    (longitude, latitude) order.
+
+    pygeofilter takes GML coordinates as written, whatever the axis order of
+    their CRS, while gml3.Geometry (used for database repositories) reads
+    them in that order: latitude first for EPSG:4326, which is also the
+    default when srsName is missing. Without this, a repository without a
+    database searched a swapped box for such filters (e.g. from QGIS
+    MetaSearch, which sends urn:ogc:def:crs:EPSG::4326).
+    """
+
+    if isinstance(filter_, (str, bytes)):
+        root = etree.fromstring(filter_)
+    else:
+        root = deepcopy(filter_)
+
+    for geometry in list(root.iter()):
+        # the outermost GML element of each spatial operand
+        if _gml_name(geometry) is None or _gml_name(geometry.getparent()) is not None:
+            continue
+        if _axis_order(geometry.get('srsName')) != 'yx':
+            continue
+
+        dimension = int(geometry.get('srsDimension', 2))
+        for node in geometry.iter():
+            name = _gml_name(node)
+            if name in GML_COORDINATE_LISTS and node.text:
+                node_dimension = int(node.get('srsDimension', dimension))
+                node.text = ' '.join(_swap_xy(node.text.split(), node_dimension))
+            elif name == 'coordinates' and node.text:  # GML 2: "y,x y,x"
+                cs, ts = node.get('cs', ','), node.get('ts', ' ')
+                node.text = ts.join(cs.join(_swap_xy(t.split(cs), len(t.split(cs))))
+                                    for t in node.text.split(ts) if t)
+            elif name == 'coord':  # GML 2: <gml:X/><gml:Y/>
+                x = next((c for c in node if _gml_name(c) == 'X'), None)
+                y = next((c for c in node if _gml_name(c) == 'Y'), None)
+                if x is not None and y is not None:
+                    x.text, y.text = y.text, x.text
+
+        LOGGER.debug(f"Swapping axes of gml:{_gml_name(geometry)} in {geometry.get('srsName')}")
+        geometry.set('srsName', LONGITUDE_FIRST)
+
+    return root
 
 
 class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
@@ -130,7 +217,9 @@ def to_filter(ast, dbtype, field_mapping=None):
 
 class PycswCSWFES11Parser(FES11Parser):
     def parse(self, input_):
-        return FES11Parser().parse(input_)
+        # GML coordinates in the axis order of their CRS, as for database
+        # repositories (see gml_to_xy)
+        return FES11Parser().parse(gml_to_xy(input_))
 
 #    @fhandle('BBOX')
 #    def geometry_bbox(self, node: Element, lhs, rhs, crs=None):
