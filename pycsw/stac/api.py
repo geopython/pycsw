@@ -238,14 +238,16 @@ class STACAPI(API):
             if k == 'bbox':
                 query_args.append(f'BBOX(geometry, {v})')
             elif k == 'datetime':
-                if '/' not in v:
-                    query_args.append(f'date = "{v}"')
-                else:
-                    begin, end = v.split('/')
-                    if begin != '..':
-                        query_args.append(f'time_begin >= "{begin}"')
-                    if end != '..':
-                        query_args.append(f'time_end <= "{end}"')
+                # collections whose temporal extent intersects the instant
+                # or interval; an extent without an end is still ongoing.
+                # Values are '...' literals: "..." is an attribute in ECQL.
+                begin, _, end = v.partition('/')
+                end = end or begin
+                if end not in ['', '..']:
+                    query_args.append(f"time_begin <= '{end}'")
+                if begin not in ['', '..']:
+                    query_args.append(
+                        f"(time_end >= '{begin}' OR time_end IS NULL)")
             elif k == 'q':
                 if v not in [None, '']:
                     query_args.append(build_anytext('anytext', v, self.repository))
@@ -266,7 +268,13 @@ class STACAPI(API):
         if query_args:
             ast = parse_ecql(' AND '.join(query_args))
             LOGGER.debug(f'Abstract syntax tree: {ast}')
-            filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
+            if self.repository.database is None:
+                # repositories without a database (Elasticsearch, external
+                # plugins) evaluate the AST themselves, as in query();
+                # to_filter() builds SQLAlchemy expressions
+                filters = {'ast': ast}
+            else:
+                filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
             LOGGER.debug(f'Filter: {filters}')
 
         virtual_collections = self.repository.query_collections(

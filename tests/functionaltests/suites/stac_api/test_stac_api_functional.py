@@ -148,6 +148,33 @@ def test_collections_paging(config):
         assert status == 400
 
 
+def test_collections_search(config):
+    api = STACAPI(config)
+
+    def ids(args):
+        headers, status, content = api.collections({}, {'f': 'json', **args})
+        assert status == 200
+        content = json.loads(content)
+        return content['numberMatched'], sorted(c['id'] for c in content['collections'])
+
+    assert ids({'q': 'Simple'}) == (1, ['simple-collection'])
+    # only the global collection reaches that far north
+    assert ids({'bbox': '0,85,10,89'}) == (1, ['sentinel-2-l2a'])
+
+    # temporal extents intersecting the instant or interval; collections
+    # without an end date are ongoing
+    assert ids({'datetime': '2020-12-12T00:00:00Z'}) == (
+        4, ['S2MSI1C', 'S2MSI2A', 'sentinel-2-l2a', 'simple-collection'])
+    assert ids({'datetime': '2021-01-01T00:00:00Z/..'}) == (
+        3, ['S2MSI1C', 'S2MSI2A', 'sentinel-2-l2a'])
+    assert ids({'datetime': '../2015-06-25T00:00:00Z'}) == (
+        2, ['S2MSI1C', 'S2MSI2A'])
+
+    # search and paging together
+    matched, page = ids({'q': 'Sentinel', 'limit': 2})
+    assert matched == 3 and len(page) == 2
+
+
 def test_collection(config):
     api = STACAPI(config)
     headers, status, content = api.collection({}, {'f': 'json'}, 'simple-collection')  # noqa
