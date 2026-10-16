@@ -173,12 +173,13 @@ class ElasticsearchRepository:
 
         return results
 
-    def query_collections(self, filters=None, limit=10) -> list:
+    def query_collections(self, filters=None, limit=10, offset=0) -> list:
         ''' Query for parent collections '''
 
         results = []
         params = {
-            'size': limit
+            'size': limit,
+            'from': offset
         }
 
         try:

@@ -31,6 +31,7 @@ from copy import deepcopy
 import json
 import logging
 import os
+from urllib.parse import urlencode
 
 from pygeofilter.parsers.ecql import parse as parse_ecql
 import requests
@@ -39,8 +40,8 @@ from pycsw import __version__
 from pycsw.core.pygeofilter_ext import to_filter
 from pycsw.ogc.api.oapi import gen_oapi
 from pycsw.ogc.api.records import API, build_anytext
-from pycsw.core.util import (geojson_geometry2bbox, get_oidc_access_token,
-                             str2bool, wkt2geom)
+from pycsw.core.util import (bind_url, geojson_geometry2bbox,
+                             get_oidc_access_token, str2bool, wkt2geom)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -249,7 +250,18 @@ class STACAPI(API):
                 if v not in [None, '']:
                     query_args.append(build_anytext('anytext', v, self.repository))
 
-        limit = int(args.get('limit', self.config['server'].get('maxrecords', 10)))
+        try:
+            limit = int(args.get('limit', self.limit))
+            offset = int(args.get('offset', 0))
+        except ValueError:
+            msg = 'limit and offset must be integers'
+            LOGGER.exception(msg)
+            return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+        if limit < 0 or offset < 0:
+            msg = 'limit and offset must not be negative'
+            LOGGER.exception(msg)
+            return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
+        limit = min(limit, self.limit)
 
         if query_args:
             ast = parse_ecql(' AND '.join(query_args))
@@ -257,7 +269,14 @@ class STACAPI(API):
             filters = to_filter(ast, self.repository.dbtype, self.repository.query_mappings)
             LOGGER.debug(f'Filter: {filters}')
 
-        virtual_collections = self.repository.query_collections(filters=filters, limit=limit)
+        virtual_collections = self.repository.query_collections(
+            filters=filters, limit=limit, offset=offset)
+
+        # repositories that can count their collections page through them;
+        # the others return at most `limit` of them, without paging links
+        matched = None
+        if hasattr(self.repository, 'count_collections'):
+            matched = self.repository.count_collections(filters=filters)
 
         for virtual_collection in virtual_collections:
             virtual_collection_info = self.get_collection_info(
@@ -269,30 +288,34 @@ class STACAPI(API):
             'collections': collections
         }
 
-        LOGGER.debug('Generating STAC collections')
+        if matched is None:
+            # a paging repository already includes STAC collections in
+            # query_collections; merging the first page of them into every
+            # page would break paging
+            LOGGER.debug('Generating STAC collections')
 
-        query_args.append("typename = 'stac:Collection'")
-        ast = parse_ecql(' AND '.join(query_args))
-        LOGGER.debug(f'Abstract syntax tree: {ast}')
+            query_args.append("typename = 'stac:Collection'")
+            ast = parse_ecql(' AND '.join(query_args))
+            LOGGER.debug(f'Abstract syntax tree: {ast}')
 
-        _, sc_query = self.repository.query(constraint={'ast': ast},
-                                            maxrecords=limit)
+            _, sc_query = self.repository.query(constraint={'ast': ast},
+                                                maxrecords=limit)
 
-        for sc in sc_query:
-            id_found = False
+            for sc in sc_query:
+                id_found = False
 
-            for collection_ in response['collections']:
-                if sc.identifier == collection_['id']:
-                    id_found = True
+                for collection_ in response['collections']:
+                    if sc.identifier == collection_['id']:
+                        id_found = True
 
-            if not id_found:
-                LOGGER.debug('Adding STAC collection')
-                sc2 = sc
-                sc2.title = sc.title or sc.identifier
-                sc2.abstract = sc.abstract or sc.identifier
-                response['collections'].append(self.get_collection_info(
-                    sc2.identifier, sc2
-                ))
+                if not id_found:
+                    LOGGER.debug('Adding STAC collection')
+                    sc2 = sc
+                    sc2.title = sc.title or sc.identifier
+                    sc2.abstract = sc.abstract or sc.identifier
+                    response['collections'].append(self.get_collection_info(
+                        sc2.identifier, sc2
+                    ))
 
         url_base = f"{self.config['server']['url']}/collections"
 
@@ -323,8 +346,25 @@ class STACAPI(API):
         }]
 
         response['collections'] = response['collections'][:limit]
-        response['numberMatched'] = len(response['collections'])
-        response['numberReturned'] = len(response['collections'])
+        returned = len(response['collections'])
+        response['numberMatched'] = returned if matched is None else matched
+        response['numberReturned'] = returned
+
+        if matched is not None:
+            link_args = {k: v for k, v in args.items() if k != 'offset'}
+            url_ = bind_url(f'{url_base}?{urlencode(link_args)}')
+            if offset > 0:
+                response['links'].append({
+                    'rel': 'prev',
+                    'type': 'application/json',
+                    'href': f'{url_}offset={max(0, offset - limit)}'
+                })
+            if returned and offset + returned < matched:
+                response['links'].append({
+                    'rel': 'next',
+                    'type': 'application/json',
+                    'href': f'{url_}offset={offset + returned}'
+                })
 
         return self.get_response(200, headers_, response)
 
@@ -769,13 +809,20 @@ class STACAPI(API):
             title = collection_info.title
             description = collection_info.abstract
 
+        # extent.spatial.bbox is required by STAC: the whole world when
+        # the collection record has no geometry
+        if collection_info.wkt_geometry:
+            bbox = wkt2geom(collection_info.wkt_geometry)
+        else:
+            bbox = [-180, -90, 180, 90]
+
         collection_ = {
             'id': id_,
             'stac_version': '1.0.0',
             'license': 'other',
             'extent': {
                 'spatial': {
-                    'bbox': [wkt2geom(collection_info.wkt_geometry)]
+                    'bbox': [bbox]
                 },
                 'temporal': {'interval': [[
                     collection_info.time_begin, collection_info.time_end

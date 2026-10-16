@@ -108,6 +108,46 @@ def test_collections(config):
     assert len(content['collections']) == 0
 
 
+def test_collections_paging(config):
+    api = STACAPI(config)
+
+    def get(args):
+        headers, status, content = api.collections({}, {'f': 'json', **args})
+        return status, json.loads(content)
+
+    def rels(content):
+        return {link['rel']: link['href'] for link in content['links']}
+
+    _, all_ = get({})
+    all_ids = [c['id'] for c in all_['collections']]
+
+    status, page1 = get({'limit': 3})
+    assert status == 200
+    assert page1['numberMatched'] == 4
+    assert page1['numberReturned'] == 3
+    assert 'prev' not in rels(page1)
+    assert rels(page1)['next'].endswith('offset=3')
+    assert 'limit=3' in rels(page1)['next']
+
+    status, page2 = get({'limit': 3, 'offset': 3})
+    assert status == 200
+    assert page2['numberMatched'] == 4
+    assert page2['numberReturned'] == 1
+    assert rels(page2)['prev'].endswith('offset=0')
+    assert 'next' not in rels(page2)
+
+    page_ids = [c['id'] for c in page1['collections'] + page2['collections']]
+    assert sorted(page_ids) == sorted(all_ids)
+
+    # limit is capped at server.maxrecords, like items
+    _, capped = get({'limit': 1000})
+    assert capped['numberReturned'] == 4
+
+    for args in ({'limit': -1}, {'offset': -1}, {'limit': 'x'}):
+        status, _ = get(args)
+        assert status == 400
+
+
 def test_collection(config):
     api = STACAPI(config)
     headers, status, content = api.collection({}, {'f': 'json'}, 'simple-collection')  # noqa
