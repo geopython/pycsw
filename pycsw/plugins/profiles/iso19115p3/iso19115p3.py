@@ -540,7 +540,7 @@ class ISO19115p3(profile.Profile):
             topic_cat = build_path(resident, ['mri:topicCategory'], self.namespaces)
             if val:
                 for v in val.split(','):
-                    etree.SubElement(topic_cat, util.nspath_eval('mri:MD_TopicCategoryCode', self.namespaces)).text = val
+                    etree.SubElement(topic_cat, util.nspath_eval('mri:MD_TopicCategoryCode', self.namespaces)).text = v.strip()
 
         # Bbox and vertical extent
         bbox = util.getqattr(result, queryables['mdb:BoundingBox']['dbcol'])
