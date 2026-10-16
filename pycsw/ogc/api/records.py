@@ -1476,7 +1476,10 @@ def record2json(record, url, collection, mode='ogcapi-records'):
             for rtp in record.topicategory:
                 tctheme['concepts'].append({'id': rtp})
         elif isinstance(record.topicategory, str):
-            tctheme['concepts'].append({'id': record.topicategory})
+            # repositories store several topic categories comma-separated
+            for rtp in record.topicategory.split(','):
+                if rtp.strip():
+                    tctheme['concepts'].append({'id': rtp.strip()})
 
         record_dict['properties']['themes'] = [tctheme]
 
