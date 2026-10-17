@@ -31,7 +31,7 @@ import logging
 
 from shapely import box
 from shapely.geometry import shape
-from sqlalchemy import text
+from sqlalchemy import bindparam, not_, text
 
 from pygeofilter import ast
 from pygeofilter.values import Envelope
@@ -109,7 +109,8 @@ class PycswFilterEvaluator(SQLAlchemyFilterEvaluator):
                 self._pycsw_dbtype.startswith('postgres')):
             if '%' not in node.pattern:
                 LOGGER.debug('Kicking into PostgreSQL FTS mode')
-                return text("plainto_tsquery('english', :node_pattern') @@ anytext_tsvector").bindparams(node_pattern=node.pattern)  # noqa
+                fts = text("plainto_tsquery('english', :node_pattern) @@ anytext_tsvector").bindparams(bindparam('node_pattern', node.pattern, unique=True))  # noqa
+                return not_(fts) if node.not_ else fts
 
         LOGGER.debug('Default ILIKE behaviour')
         return filters.like(
