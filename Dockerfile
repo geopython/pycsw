@@ -78,6 +78,7 @@ COPY docker/pycsw.yml ${PYCSW_CONFIG}
 COPY docker/entrypoint.py /usr/local/bin/entrypoint.py
 
 RUN /venv/bin/pip3 install -e . --config-settings editable_mode=strict && \
+    if [ "$BUILD_DEV_IMAGE" != "true" ] ; then /venv/bin/pip3 uninstall --yes pip; fi && \
     echo 'alias pycsw-admin.py="/venv/bin/pycsw-admin.py"' >> /etc/bash.bashrc
 
 
