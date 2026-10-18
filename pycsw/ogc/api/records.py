@@ -41,6 +41,7 @@ import json_merge_patch
 from pygeofilter.parsers.ecql import parse as parse_ecql
 from pygeofilter.parsers.cql2_json import parse as parse_cql2_json
 import requests
+from sqlalchemy.orm import defer
 
 from pycsw import __version__
 from pycsw.broker import load_client
@@ -789,6 +790,15 @@ class API:
 
         LOGGER.debug(f'query parser: {query_parser}')
 
+        dataset = self.repository.dataset
+        mappings = self.context.md_core_model['mappings']
+        # record2json does not read these columns
+        unread = [defer(getattr(dataset, name)) for name in (
+            mappings['pycsw:XML'], mappings['pycsw:AnyText'],
+            'anytext_tsvector', self.repository.postgis_geometry_column)
+            if name and name in dataset.__table__.columns]
+        query = self.repository.session.query(dataset).options(*unread)
+
         if query_parser is not None and cql_query != {}:
             LOGGER.debug('Parsing CQL into AST')
             LOGGER.debug(json_post_data)
@@ -810,12 +820,11 @@ class API:
                 LOGGER.exception(msg)
                 return self.get_exception(400, headers_, 'InvalidParameterValue', msg)
 
-            query = self.repository.session.query(self.repository.dataset).filter(filters)
+            query = query.filter(filters)
             if facets_requested:
                 LOGGER.debug('Running facet query')
                 facets_results = self.get_facets(filters)
         else:
-            query = self.repository.session.query(self.repository.dataset)
             facets_results = self.get_facets()
 
         if facets_requested:
