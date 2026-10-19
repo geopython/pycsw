@@ -21,3 +21,7 @@ ListRecords_dc_bad_metadata_prefix,mode=oaipmh&verb=ListRecords&metadataPrefix=c
 ListRecords_oai_dc,mode=oaipmh&verb=ListRecords&metadataPrefix=oai_dc
 ListRecords_datacite,mode=oaipmh&verb=ListRecords&metadataPrefix=datacite
 ListRecords_iso19139,mode=oaipmh&verb=ListRecords&metadataPrefix=iso19139
+ListIdentifiers_from,mode=oaipmh&verb=ListIdentifiers&metadataPrefix=oai_dc&from=2006-01-01
+ListIdentifiers_until,mode=oaipmh&verb=ListIdentifiers&metadataPrefix=oai_dc&until=2005-10-24
+ListIdentifiers_from_until,mode=oaipmh&verb=ListIdentifiers&metadataPrefix=oai_dc&from=2005-01-01&until=2006-03-26T00:00:00Z
+ListIdentifiers_bad_from,mode=oaipmh&verb=ListIdentifiers&metadataPrefix=oai_dc&from=2006-01

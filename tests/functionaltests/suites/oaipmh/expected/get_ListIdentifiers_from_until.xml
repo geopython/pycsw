@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- PYCSW_VERSION -->
+<oai:OAI-PMH xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <oai:responseDate>PYCSW_TIMESTAMP</oai:responseDate>
+  <oai:request verb="ListIdentifiers" from="2005-01-01" until="2006-03-26T00:00:00Z" metadataPrefix="oai_dc">http://localhost/pycsw/csw.py?config=tests/functionaltests/suites/oaipmh/default.yml&amp;mode=oaipmh</oai:request>
+  <oai:ListIdentifiers>
+    <oai:header>
+      <oai:identifier>urn:uuid:9a669547-b69b-469f-a11f-2d875366bbdc</oai:identifier>
+      <oai:datestamp/>
+      <oai:setSpec/>
+    </oai:header>
+    <oai:header>
+      <oai:identifier>urn:uuid:94bc9c83-97f6-4b40-9eb8-a8e8787a5c63</oai:identifier>
+      <oai:datestamp/>
+      <oai:setSpec/>
+    </oai:header>
+    <oai:resumptionToken completeListSize="2" cursor="1"/>
+  </oai:ListIdentifiers>
+</oai:OAI-PMH>
