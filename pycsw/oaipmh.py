@@ -29,11 +29,16 @@
 # =================================================================
 
 import logging
+import re
+
 from pycsw.core import util
 from pycsw.core.etree import etree
 
 
 LOGGER = logging.getLogger(__name__)
+
+# OAI-PMH UTCdatetime for from / until, day or seconds granularity
+DATESTAMP = re.compile(r'\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}Z)?')
 
 class OAIPMH:
     """OAI-PMH wrapper class"""
@@ -160,21 +165,19 @@ class OAIPMH:
                     del kvpout['outputschema']
 
 
-                start = end = None
+                # quoted: unquoted, CQL reads 2024-01-31 as a subtraction
+                time_filters = []
                 LOGGER.debug('Scanning temporal parameters')
-                if 'from' in kvp:
-                    start = 'dc:date >= %s' % kvp['from']
-                if 'until' in kvp:
-                    end = 'dc:date <= %s' % kvp['until']
-                if any([start is not None, end is not None]):
-                    if all([start is not None, end is not None]):
-                        time_query = '%s and %s' % (start, end)
-                    elif end is None:
-                        time_query = start
-                    elif start is None:
-                        time_query = end
+                if DATESTAMP.fullmatch(kvp.get('from', '')):
+                    time_filters.append("dc:date >= '%s'" % kvp['from'])
+                if DATESTAMP.fullmatch(kvp.get('until', '')):
+                    until = kvp['until']
+                    if 'T' not in until:  # until is inclusive: the whole day
+                        until += 'T23:59:59Z'
+                    time_filters.append("dc:date <= '%s'" % until)
+                if time_filters:
                     kvpout['constraintlanguage'] = 'CQL_TEXT'
-                    kvpout['constraint'] = time_query
+                    kvpout['constraint'] = ' AND '.join(time_filters)
         LOGGER.debug('Resulting parameters: %s', kvpout)
         return kvpout
 
@@ -221,6 +224,11 @@ class OAIPMH:
         for key, value in kvp.items():
             if key != 'mode' and key not in self.request_model[verb]:
                 etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Illegal parameter \'%s\'' % key
+                return node
+
+        for key in ['from', 'until']:
+            if key in kvp and not DATESTAMP.fullmatch(kvp[key]):
+                etree.SubElement(node, util.nspath_eval('oai:error', self.namespaces), code='badArgument').text = 'Invalid \'%s\' parameter' % key
                 return node
 
         verbnode = etree.SubElement(node, util.nspath_eval('oai:%s' % verb, self.namespaces))
