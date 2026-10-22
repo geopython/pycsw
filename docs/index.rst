@@ -38,6 +38,7 @@ pycsw |release| Documentation
    repositories
    outputschemas
    xslt
+   record-transform
    html-templating
    geonode
    hhypermap
