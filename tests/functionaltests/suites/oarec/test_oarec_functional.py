@@ -33,11 +33,14 @@
 
 from copy import deepcopy
 import json
+import re
 from xml.etree import ElementTree as etree
 
 import pytest
+from sqlalchemy import event
 
-from pycsw.ogc.api.records import API
+from pycsw.ogc.api.records import API, record2json
+from pycsw.ogc.api.util import to_json
 
 pytestmark = pytest.mark.functional
 
@@ -322,6 +325,53 @@ def test_items(config):
 
     headers, status, content = api.items({}, None, {}, collection='foo')
     assert status == 400
+
+
+@pytest.mark.parametrize('params', [
+    {'sortby': 'identifier'},
+    {'q': 'Lorem', 'sortby': 'identifier'}
+])
+def test_items_skip_unread_large_columns(config, params):
+    api = API(config)
+    large = [name for name in ('xml', 'anytext', 'anytext_tsvector',
+                               api.repository.postgis_geometry_column)
+             if name and name in api.repository.dataset.__table__.columns]
+    assert large
+
+    statements = []
+
+    def capture(_conn, _cursor, statement, *_):
+        statements.append(statement)
+
+    event.listen(api.repository.engine, 'before_cursor_execute', capture)
+    try:
+        content = json.loads(api.items({}, None, params)[2])
+    finally:
+        event.remove(api.repository.engine, 'before_cursor_execute', capture)
+
+    assert content['features']
+    page = [s for s in statements if 'LIMIT' in s][-1]
+    projection = re.split(r'\sFROM\s', page, maxsplit=1)[0]
+    for name in large:
+        assert not re.search(rf'\b{name}\b', projection)
+    # rendering the page issues no further (lazy load) statements
+    assert statements[-1] == page
+
+    # a separate API instance has its own session, so its records are
+    # fully loaded
+    baseline_api = API(config)
+    identifier = baseline_api.repository.query_mappings['identifier']
+    ids = [feature['id'] for feature in content['features']]
+    records = baseline_api.repository.session.query(
+        baseline_api.repository.dataset).filter(
+        identifier.in_(ids)).order_by(identifier).all()
+    baseline = [record2json(record, config['server']['url'],
+                            'metadata:main', baseline_api.mode)
+                for record in records]
+    assert to_json(content['features']) == to_json(baseline)
+
+    content = api.item({}, {'f': 'xml'}, 'metadata:main', ids[0])[2]
+    assert content == records[0].xml
 
 
 def test_item(config):
