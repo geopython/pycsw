@@ -27,13 +27,27 @@
 #
 # =================================================================
 
+import json
 from xml.sax.saxutils import unescape
 
 import pytest
 
-from pycsw.ogc.api.util import to_json
+from pycsw.ogc.api.util import to_json, to_json_html
 
 pytestmark = pytest.mark.functional
+
+
+@pytest.mark.parametrize('data,minified,pretty_printed', [
+    [{'foo': 'bar'}, '{"foo":"bar"}', '{\n    "foo":"bar"\n}'],
+    [{'foo<script>alert("hi")</script>': 'bar'},
+     '{"foo<script>alert(\\"hi\\")</script>":"bar"}',
+     '{\n    "foo<script>alert(\\"hi\\")</script>":"bar"\n}']
+])
+def test_to_json(data, minified, pretty_printed):
+    output = to_json(data)
+    assert output == minified
+    assert to_json(data, pretty=True) == pretty_printed
+    assert json.loads(output) == data
 
 
 @pytest.mark.parametrize('data,minified,pretty_printed', [
@@ -42,10 +56,10 @@ pytestmark = pytest.mark.functional
      '{"foo&lt;script&gt;alert(\\"hi\\")&lt;/script&gt;":"bar"}',
      '{\n    "foo&lt;script&gt;alert(\\"hi\\")&lt;/script&gt;":"bar"\n}']
 ])
-def test_to_json(data, minified, pretty_printed):
-    output = to_json(data)
+def test_to_json_html(data, minified, pretty_printed):
+    output = to_json_html(data)
     assert output == minified
-    assert to_json(data, pretty=True) == pretty_printed
+    assert to_json_html(data, pretty=True) == pretty_printed
 
     unescaped_output = unescape(output)
     if '&lt;' in output:

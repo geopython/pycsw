@@ -185,8 +185,21 @@ def to_json(dict_: dict, pretty: bool = False) -> str:
         indent = None
 
     LOGGER.debug('Dumping JSON')
-    json_dump = json.dumps(dict_, default=json_serial, indent=indent,
-                           separators=(',', ':'))
+    return json.dumps(dict_, default=json_serial, indent=indent,
+                      separators=(',', ':'))
+
+
+def to_json_html(dict_: dict, pretty: bool = False) -> str:
+    """
+    Serialize dict to JSON for embedding in HTML
+
+    :param dict_: `dict` of JSON representation
+    :param pretty: `bool` of whether to prettify JSON (default is `False`)
+
+    :returns: JSON string representation with < and > escaped
+    """
+
+    json_dump = to_json(dict_, pretty)
 
     LOGGER.debug('Escaping < and >')
     json_dump = json_dump.replace('<', '&lt;')
@@ -216,8 +229,9 @@ def render_j2_template(config, template, data):
         env = Environment(loader=FileSystemLoader(TEMPLATES))
         LOGGER.debug(f'using default templates: {TEMPLATES}')
 
-    env.filters['to_json'] = to_json
-    env.globals.update(to_json=to_json)
+    # templates embed to_json output in <script>
+    env.filters['to_json'] = to_json_html
+    env.globals.update(to_json=to_json_html)
 
     try:
         template = env.get_template(template)
@@ -226,8 +240,8 @@ def render_j2_template(config, template, data):
             LOGGER.debug(err)
             LOGGER.debug('Custom template not found; using default')
             env = Environment(loader=FileSystemLoader(TEMPLATES))
-            env.filters['to_json'] = to_json
-            env.globals.update(to_json=to_json)
+            env.filters['to_json'] = to_json_html
+            env.globals.update(to_json=to_json_html)
             template = env.get_template(template)
         else:
             raise

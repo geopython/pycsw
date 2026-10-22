@@ -68,3 +68,33 @@ def test_render_j2_template_fallback_keeps_filters(tmp_path, monkeypatch):
     config = {'server': {'templates': {'path': str(custom_templates)}}}
 
     assert util.render_j2_template(config, 'items.html', {}) == '{}'
+
+
+def test_to_json_keeps_html_characters():
+    """JSON responses keep the stored values unchanged"""
+
+    data = {'title': 'a < b & c > d', 'html': '</script>'}
+
+    assert util.to_json(data) == '{"title":"a < b & c > d","html":"</script>"}'
+
+
+@pytest.mark.parametrize('templates_path', [None, 'custom'])
+def test_render_j2_template_to_json_is_html_safe(tmp_path, monkeypatch,
+                                                 templates_path):
+    """templates embed to_json output in <script>, with default templates
+    and with the fallback from templates.path"""
+
+    default_templates = tmp_path / 'default'
+    default_templates.mkdir()
+    (default_templates / 'items.html').write_text(TEMPLATE_USING_TO_JSON)
+    monkeypatch.setattr(util, 'TEMPLATES', str(default_templates))
+
+    config = {}
+    if templates_path is not None:
+        (tmp_path / templates_path).mkdir()
+        config = {'server': {'templates': {'path': str(tmp_path / templates_path)}}}  # noqa
+
+    output = util.render_j2_template(config, 'items.html',
+                                     {'html': '</script>'})
+
+    assert '</script>' not in output
