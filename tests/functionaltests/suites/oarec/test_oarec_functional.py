@@ -290,6 +290,13 @@ def test_items(config):
     assert content['numberReturned'] == 10
     assert content['features'][6]['properties']['title'] == 'Lorem ipsum dolor sit amet'  # noqa
 
+    params = {'sortby': '-nosuchproperty'}
+    headers, status, content = api.items({}, None, params)
+    assert status == 400
+    content = json.loads(content)
+    assert content['code'] == 'InvalidParameterValue'
+    assert content['description'] == 'Invalid sortby property: nosuchproperty'
+
     cql_json = {'op': '=', 'args': [{'property': 'title'}, 'Lorem ipsum']}
     content = json.loads(api.items({}, cql_json, {})[2])
     assert content['numberMatched'] == 1
