@@ -1750,6 +1750,19 @@ def build_anytext(name, value, repository):
 
 
 def sortby_to_order_by(sortby: Union[str, List[dict]], mappings: dict) -> list:
+    """
+    Turn an OGC API sortby into the sort keys passed to `repository.query()`
+
+    :param sortby: `str` (`title,-updated`) or `list` of `dict`
+                   (`[{'field': 'title', 'direction': 'asc'}]`)
+    :param mappings: `dict` of queryable name to repository column / field
+
+    :returns: `list` of sort keys, in order: `column.asc()` /
+              `column.desc()` for a column that offers them (database
+              repositories), else `dict` of `field` (the mapped field name)
+              and `direction` (`asc` / `desc`), for repositories that map
+              queryables to plain field names
+    """
 
     sortby_ = []
     value_list = []
@@ -1776,9 +1789,12 @@ def sortby_to_order_by(sortby: Union[str, List[dict]], mappings: dict) -> list:
             LOGGER.exception(msg)
             raise ValueError(msg)
 
-        if sb['direction'] == 'desc':
-            value_list.append(mappings[sb['field']].desc())
+        column = mappings[sb['field']]
+        direction = 'desc' if sb['direction'] == 'desc' else 'asc'
+
+        if hasattr(column, direction):
+            value_list.append(getattr(column, direction)())
         else:
-            value_list.append(mappings[sb['field']].asc())
+            value_list.append({'field': column, 'direction': direction})
 
     return value_list
