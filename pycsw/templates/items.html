@@ -176,7 +176,7 @@ endmacro %}
                 <td>record</td>
                 {% elif rec.get('type') == 'Feature' and 'stac_version' in rec %}
                 <td>item</td>
-                {% else%}
+                {% else %}
                 <td>{{ rec.get('type') }}</td>
                 {% endif %}
               {% else %}
@@ -192,8 +192,8 @@ endmacro %}
                 <td>{{ rec.get('type') }}</td>
                 {% endif %}
               {% endif %}
-              {% if 'properties' in rec %}
-              <td>{{ rec['properties'].get('updated', '').split('T')[0].replace('-','/') }}</td>
+              {% if rec['properties'] and rec['properties']['updated'] %}
+              <td>{{ rec['properties']['updated'].split('T')[0].replace('-','/') }}</td>
               {% endif %}
             </tr>
             {% endfor %}
