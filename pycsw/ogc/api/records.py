@@ -828,7 +828,10 @@ class API:
             sortby = args['sortby']
 
         if sortby is not None:
-            sortbys = sortby_to_order_by(sortby, self.repository.query_mappings)
+            try:
+                sortbys = sortby_to_order_by(sortby, self.repository.query_mappings)
+            except ValueError as err:
+                return self.get_exception(400, headers_, 'InvalidParameterValue', str(err))
             query = query.order_by(*sortbys)
 
         if self.repository.stable_sort:
@@ -1759,8 +1762,8 @@ def sortby_to_order_by(sortby: Union[str, List[dict]], mappings: dict) -> list:
 
     for sb in sortby_:
         if sb['field'] not in list(mappings.keys()):
-            msg = 'Invalid sortby property'
-            LOGGER.exception(msg)
+            msg = f"Invalid sortby property: {sb['field']}"
+            LOGGER.error(msg)
             raise ValueError(msg)
 
         if sb['direction'] == 'desc':
