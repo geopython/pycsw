@@ -52,7 +52,11 @@ LOGGER = logging.getLogger(__name__)
 def load_records(context, database, table, xml_dirpath, recursive=False, force_update=False):
     """Load metadata records from directory of files to database"""
 
-    repo = repository.Repository(database, context, table=table)
+    repo_config = {
+        'database': database,
+        'table': table
+    }
+    repo = repository.Repository(repo_config, context)
 
     file_list = []
 
@@ -121,7 +125,13 @@ def load_records(context, database, table, xml_dirpath, recursive=False, force_u
 
 def export_records(context, database, table, xml_dirpath):
     """Export metadata records from database to directory of files"""
-    repo = repository.Repository(database, context, table=table)
+
+    repo_config = {
+        'database': database,
+        'table': table
+    }
+
+    repo = repository.Repository(repo_config, context)
 
     LOGGER.info('Querying database %s, table %s ....', database, table)
     records = repo.session.query(repo.dataset)
@@ -190,8 +200,13 @@ def refresh_harvested_records(context, database, table, url):
     """refresh / harvest all non-local records in repository"""
     from owslib.csw import CatalogueServiceWeb
 
+    repo_config = {
+        'database': database,
+        'table': table
+    }
+
     # get configuration and init repo connection
-    repos = repository.Repository(database, context, table=table)
+    repos = repository.Repository(repo_config, context)
 
     # get all harvested records
     count, records = repos.query(constraint={'where': "mdsource != 'local'", 'values': []})
@@ -228,8 +243,13 @@ def refresh_harvested_records(context, database, table, url):
 def gen_sitemap(context, database, table, url, output_file):
     """generate an XML sitemap from all records in repository"""
 
+    repo_config = {
+        'database': database,
+        'table': table
+    }
+
     # get configuration and init repo connection
-    repos = repository.Repository(database, context, table=table)
+    repos = repository.Repository(repo_config, context)
 
     # write out sitemap document
     urlset = etree.Element(util.nspath_eval('sitemap:urlset',
@@ -274,7 +294,7 @@ def post_xml(url, xml, timeout=30):
     from owslib.util import http_post
     try:
         with open(xml) as f:
-            return http_post(url=url, request=f.read(), timeout=timeout)
+            return http_post(url=url, request=f.read(), timeout=timeout).text
     except Exception as err:
         LOGGER.exception('HTTP XML POST error')
         raise RuntimeError(err) from err
@@ -351,7 +371,12 @@ def delete_records(context, database, table):
 
     LOGGER.info('Deleting all records')
 
-    repo = repository.Repository(database, context, table=table)
+    repo_config = {
+        'database', database,
+        'table', table
+    }
+
+    repo = repository.Repository(repo_config, context)
     repo.delete(constraint={'where': '', 'values': []})
 
 
@@ -493,7 +518,7 @@ def cli_rebuild_db_indexes(ctx, config, verbosity):
 
     context = pconfig.StaticContext()
 
-    repo = repository.Repository(cfg['repository']['database'], context, table=cfg['repository'].get('table'))
+    repo = repository.Repository(cfg['repository'], context)
     repo.rebuild_db_indexes()
 
 
@@ -509,7 +534,7 @@ def cli_optimize_db(ctx, config, verbosity):
 
     context = pconfig.StaticContext()
 
-    repo = repository.Repository(cfg['repository']['database'], context, table=cfg['repository'].get('table'))
+    repo = repository.Repository(cfg['repository'], context)
     repo.optimize_db()
 
 

@@ -270,6 +270,7 @@ def transform_mappings(queryables, typename):
 def getqattr(obj, name):
     """Get value of an object, safely"""
     result = None
+    item = None
     try:
         item = getattr(obj, name)
         value = item()

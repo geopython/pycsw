@@ -3,7 +3,7 @@
 #
 # Authors: Tom Kralidis <tomkralidis@gmail.com>
 #
-# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2026 Tom Kralidis
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -35,7 +35,7 @@ from pycsw.core.etree import etree
 
 LOGGER = logging.getLogger(__name__)
 
-class OAIPMH(object):
+class OAIPMH:
     """OAI-PMH wrapper class"""
     def __init__(self, context, config):
         LOGGER.debug('Initializing OAI-PMH constants')
