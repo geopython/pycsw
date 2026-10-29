@@ -439,7 +439,12 @@ class API:
         if collection == 'metadata:main':
             collection_info = self.get_collection_info()
         else:
-            virtual_collection = self.repository.query_ids([collection])[0]
+            virtual_collections = self.repository.query_ids([collection])
+            if not virtual_collections:
+                msg = 'collection not found'
+                LOGGER.debug(f'{msg}: {collection}')
+                return self.get_exception(404, headers_, 'InvalidParameterValue', msg)
+            virtual_collection = virtual_collections[0]
             collection_info = self.get_collection_info(
                 virtual_collection.identifier,
                 dict(title=virtual_collection.title,
